@@ -1,0 +1,60 @@
+import 'package:flutter/material.dart';
+
+import '../../../../core/core.dart';
+import '../widgets/employee_nav_bar_widget.dart';
+import 'employee_clock_screen.dart';
+import 'employee_home_screen.dart';
+import 'employee_leaves_screen.dart';
+import 'employee_plans_screen.dart';
+import 'employee_settings_screen.dart';
+import 'employee_tasks_screen.dart';
+
+class EmployeeMainScreen extends StatefulWidget {
+  const EmployeeMainScreen({super.key});
+
+  @override
+  State<EmployeeMainScreen> createState() => _EmployeeMainScreenState();
+}
+
+class _EmployeeMainScreenState extends State<EmployeeMainScreen> {
+  int _selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final screens = <Widget>[
+      EmployeeHomeScreen(
+        onViewAllTasks: () => setState(() => _selectedIndex = 2),
+        onViewAllPlans: () => setState(() => _selectedIndex = 3),
+      ),
+      const EmployeeClockScreen(),
+      const EmployeeTasksScreen(),
+      const EmployeePlansScreen(),
+      const EmployeeLeavesScreen(),
+      const EmployeeSettingsScreen(),
+    ];
+
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 220),
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        transitionBuilder: (child, animation) => FadeTransition(
+          opacity: animation,
+          child: child,
+        ),
+        child: IndexedStack(
+          key: ValueKey<int>(_selectedIndex),
+          index: _selectedIndex,
+          children: screens,
+        ),
+      ),
+      bottomNavigationBar: EmployeeNavBarWidget(
+        selectedIndex: _selectedIndex,
+        onTabSelected: (index) {
+          setState(() => _selectedIndex = index);
+        },
+      ),
+    );
+  }
+}

@@ -1,0 +1,164 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+
+import '../../../../core/core.dart';
+import '../widgets/admin_registration_request_card_widget.dart';
+
+class AdminRequestsScreen extends StatefulWidget {
+  const AdminRequestsScreen({super.key});
+
+  @override
+  State<AdminRequestsScreen> createState() => _AdminRequestsScreenState();
+}
+
+class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
+  final searchController = TextEditingController();
+  String selectedStatus = 'admin.requests.filterPending';
+  bool newestFirst = true;
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => SafeArea(
+        child: SingleChildScrollView(
+      padding: EdgeInsetsDirectional.fromSTEB(16.w, 18.h, 16.w, 28.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'admin.requests.title'.tr(context: context),
+                    style: AppTextStyles.font20Bold,
+                  ),
+                  hSpace(4),
+                  Text(
+                    'admin.requests.subtitle'.tr(context: context),
+                    style: AppTextStyles.font12Regular,
+                  ),
+                ],
+              ),
+              Image.asset(AppAssets.logo, height: 34.h),
+            ],
+          ),
+          hSpace(20),
+          Row(
+            children: [
+              Expanded(
+                child: CustomTextFormField(
+                  controller: searchController,
+                  hintText: 'admin.requests.searchHint'.tr(context: context),
+                  prefixIcon: Icon(Icons.search_rounded, size: 20.r),
+                  onChanged: (_) => setState(() {}),
+                ),
+              ),
+              vSpace(10),
+              InkWell(
+                onTap: () => setState(() => newestFirst = !newestFirst),
+                borderRadius: BorderRadius.circular(14.r),
+                child: Container(
+                  width: 48.r,
+                  height: 48.r,
+                  decoration: BoxDecoration(
+                    color: AppColors.cardBackground,
+                    borderRadius: BorderRadius.circular(14.r),
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: Icon(
+                    newestFirst
+                        ? Icons.arrow_downward_rounded
+                        : Icons.arrow_upward_rounded,
+                    color: AppColors.brandInk,
+                    size: 20.r,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          hSpace(14),
+          SizedBox(
+            height: 40.h,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                for (final status in [
+                  'admin.requests.filterAll',
+                  'admin.requests.filterPending',
+                  'admin.requests.filterApproved',
+                  'admin.requests.filterRejected',
+                ])
+                  Padding(
+                    padding: EdgeInsetsDirectional.only(end: 8.w),
+                    child: ChoiceChip(
+                      label: Text(status.tr(context: context)),
+                      selected: selectedStatus == status,
+                      onSelected: (_) =>
+                          setState(() => selectedStatus = status),
+                      selectedColor: AppColors.softBrandBackground,
+                      labelStyle: AppTextStyles.font13SemiBold.copyWith(
+                        color: selectedStatus == status
+                            ? AppColors.brandPrimary
+                            : AppColors.textSecondary,
+                      ),
+                      side: const BorderSide(color: AppColors.border),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          hSpace(18),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'admin.requests.pendingCount'.tr(context: context),
+                style: AppTextStyles.font14SemiBold,
+              ),
+              Text(
+                newestFirst
+                    ? 'admin.requests.sortNewest'.tr(context: context)
+                    : 'admin.requests.sortOldest'.tr(context: context),
+                style: AppTextStyles.font12Regular,
+              ),
+            ],
+          ),
+          hSpace(10),
+          if ((selectedStatus == 'admin.requests.filterAll' ||
+                  selectedStatus == 'admin.requests.filterPending') &&
+              (searchController.text.isEmpty ||
+                  'ahmed mohamed'.contains(
+                    searchController.text.toLowerCase(),
+                  )))
+            AdminRegistrationRequestCardWidget(
+              onView: () => context.pushNamed(AppRoutes.adminRequestDetails),
+              onApprove: () => context.pushNamed(AppRoutes.adminCreateEmployee),
+              onReject: () => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('admin.requests.rejected'.tr(context: context)),
+                ),
+              ),
+            )
+          else
+            Padding(
+              padding: EdgeInsets.only(top: 28.h),
+              child: Center(
+                child: Text(
+                  'admin.requests.emptyAll'.tr(context: context),
+                  style: AppTextStyles.font14Regular,
+                ),
+              ),
+            ),
+        ],
+      ),
+    ),
+  );
+}
