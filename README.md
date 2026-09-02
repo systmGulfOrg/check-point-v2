@@ -32,8 +32,8 @@ The implementation follows the project layering rules:
 
 - Retrofit service in `features/auth/data/apis/`
 - `json_serializable` request and response models in `features/auth/data/models/`
-- Repository contract and implementation in `domain/repos/` and `data/repos/`
-- Use cases in `domain/use_cases/`
+- Repository contract and implementation in `data/repos/` for this simple flow
+- Domain UseCases are introduced only when the feature needs business orchestration
 - Freezed Cubits and states in `presentation/cubit/`
 - Access tokens stored with `flutter_secure_storage`
 

@@ -3,11 +3,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../core/network/api_failure.dart';
 import '../../../../core/network/api_failure_mapper.dart';
 import '../../../../core/network/api_result.dart';
-import '../../domain/repos/auth_repo.dart';
 import '../apis/auth_api_service.dart';
 import '../models/account_request_model.dart';
 import '../models/login_request_model.dart';
 import '../models/login_response_model.dart';
+import 'auth_repo.dart';
 
 class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl({required this.api, required this.secureStorage});

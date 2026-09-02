@@ -4,9 +4,7 @@ import 'package:get_it/get_it.dart';
 
 import '../../features/auth/data/apis/auth_api_service.dart';
 import '../../features/auth/data/repos/auth_repo_impl.dart';
-import '../../features/auth/domain/repos/auth_repo.dart';
-import '../../features/auth/domain/use_cases/login_use_case.dart';
-import '../../features/auth/domain/use_cases/request_account_use_case.dart';
+import '../../features/auth/data/repos/auth_repo.dart';
 import '../../features/auth/presentation/cubit/login_cubit.dart';
 import '../../features/auth/presentation/cubit/request_account_cubit.dart';
 import '../app/app_config.dart';
@@ -27,17 +25,8 @@ Future<void> setupServiceLocator() async {
       secureStorage: sl<FlutterSecureStorage>(),
     ),
   );
-  sl.registerLazySingleton<LoginUseCase>(
-    () => LoginUseCase(authRepo: sl<AuthRepo>()),
-  );
-  sl.registerLazySingleton<RequestAccountUseCase>(
-    () => RequestAccountUseCase(authRepo: sl<AuthRepo>()),
-  );
-  sl.registerFactory<LoginCubit>(
-    () => LoginCubit(loginUseCase: sl<LoginUseCase>()),
-  );
+  sl.registerFactory<LoginCubit>(() => LoginCubit(authRepo: sl<AuthRepo>()));
   sl.registerFactory<RequestAccountCubit>(
-    () =>
-        RequestAccountCubit(requestAccountUseCase: sl<RequestAccountUseCase>()),
+    () => RequestAccountCubit(authRepo: sl<AuthRepo>()),
   );
 }
