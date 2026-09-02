@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/admin/presentation/screens/admin_main_screen.dart';
 import '../../features/admin/presentation/screens/admin_request_details_screen.dart';
@@ -14,6 +15,9 @@ import '../../features/admin/presentation/screens/admin_attendance_screen.dart';
 import '../../features/admin/presentation/screens/admin_shift_details_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/request_access_screen.dart';
+import '../di/service_locator.dart';
+import '../../features/auth/presentation/cubit/login_cubit.dart';
+import '../../features/auth/presentation/cubit/request_account_cubit.dart';
 import '../../features/employee/presentation/screens/employee_main_screen.dart';
 import '../../features/employee/presentation/screens/employee_settings_screen.dart';
 import '../../features/supervisor/presentation/screens/supervisor_main_screen.dart';
@@ -71,13 +75,19 @@ class AppRouter {
       case AppRoutes.login:
         return _fadeRoute(
           settings: const RouteSettings(name: AppRoutes.login),
-          child: const LoginScreen(),
+          child: BlocProvider<LoginCubit>(
+            create: (_) => sl<LoginCubit>(),
+            child: const LoginScreen(),
+          ),
         );
 
       case AppRoutes.requestAccess:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.requestAccess),
-          child: const RequestAccessScreen(),
+          child: BlocProvider<RequestAccountCubit>(
+            create: (_) => sl<RequestAccountCubit>(),
+            child: const RequestAccessScreen(),
+          ),
         );
 
       case AppRoutes.adminRequestDetails:

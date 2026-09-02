@@ -21,6 +21,22 @@ The current build focuses on the employee account-request journey and the admini
 - Responsive admin navigation with a desktop sidebar and mobile bottom navigation.
 - Shared white card decoration, orange brand buttons, and CHECK-POINT branding.
 
+## API Integration
+
+Authentication is implemented against the supplied `check_point_api.json` OpenAPI specification:
+
+- `POST /api/Auth/Login` sends `userName`, `password`, and the automatic `mobileId`.
+- `POST /api/AccountRequest` sends the employee `name`, automatic `mobileId`, and automatic `deviceToken`.
+
+The implementation follows the project layering rules:
+
+- Retrofit service in `features/auth/data/apis/`
+- `json_serializable` request and response models in `features/auth/data/models/`
+- Repository contract and implementation in `domain/repos/` and `data/repos/`
+- Use cases in `domain/use_cases/`
+- Freezed Cubits and states in `presentation/cubit/`
+- Access tokens stored with `flutter_secure_storage`
+
 ## Screens and Routes
 
 | Screen | Route |
@@ -111,14 +127,16 @@ Build-time configuration is read from Dart defines:
 ```bash
 flutter run \
   --dart-define=BASE_URL=https://api.example.com \
-  --dart-define=ENV=dev
+  --dart-define=ENV=dev \
+  --dart-define=MOBILE_ID=desktop-device \
+  --dart-define=DEVICE_TOKEN=desktop-device-token
 ```
 
 Do not commit API keys, tokens, credentials, or environment files. Use `--dart-define` for environment-specific values.
 
 ## Implementation Status
 
-The account request and admin creation flows currently use representative UI data and local interaction states for design validation. API integration, persistence, authentication, device registration, and notification delivery should be connected through the existing data and domain layers before production release.
+The login and employee account-request flows are API-connected. The admin registration and employee-creation screens still use representative UI data until their corresponding management endpoints are integrated. Device identifiers on desktop default to safe development values and should be provided through Dart defines or a platform device provider for production.
 
 ## Brand
 

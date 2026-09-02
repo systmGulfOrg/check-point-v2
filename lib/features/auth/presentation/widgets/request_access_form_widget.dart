@@ -1,13 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../../data/models/account_request_model.dart';
+import '../cubit/request_account_cubit.dart';
+import 'request_account_submit_button_widget.dart';
 
 class RequestAccessFormWidget extends StatefulWidget {
-  const RequestAccessFormWidget({required this.onSubmitted, super.key});
-
-  final VoidCallback onSubmitted;
+  const RequestAccessFormWidget({super.key});
 
   @override
   State<RequestAccessFormWidget> createState() =>
@@ -17,8 +19,6 @@ class RequestAccessFormWidget extends StatefulWidget {
 class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
   final formKey = GlobalKey<FormState>();
   late final TextEditingController fullNameController;
-  bool isLoading = false;
-  String? errorMessage;
 
   @override
   void initState() {
@@ -69,49 +69,19 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
             return null;
           },
         ),
-        if (errorMessage != null) ...[
-          hSpace(12),
-          Container(
-            padding: EdgeInsets.all(12.r),
-            decoration: BoxDecoration(
-              color: AppColors.softRedBackground,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Text(
-              errorMessage!.tr(context: context),
-              textAlign: TextAlign.right,
-              style: AppTextStyles.font13Regular.copyWith(
-                color: AppColors.error,
-              ),
-            ),
-          ),
-        ],
         hSpace(22),
-        CustomButton(
-          text: 'auth.requestAccess.submit'.tr(context: context),
-          onTap: () async {
+        RequestAccountSubmitButtonWidget(
+          onSubmit: () {
             FocusScope.of(context).unfocus();
-            setState(() => errorMessage = null);
             if (!(formKey.currentState?.validate() ?? false)) return;
-            setState(() => isLoading = true);
-            try {
-              await Future<void>.delayed(const Duration(milliseconds: 850));
-            } catch (_) {
-              if (mounted) {
-                setState(() {
-                  isLoading = false;
-                  errorMessage = 'auth.requestAccess.failed';
-                });
-              }
-              return;
-            }
-            if (!mounted) return;
-            setState(() => isLoading = false);
-            widget.onSubmitted();
+            context.read<RequestAccountCubit>().submit(
+              AccountRequestModel(
+                name: fullNameController.text.trim(),
+                mobileId: context.read<DeviceIdentityProvider>().mobileId,
+                deviceToken: context.read<DeviceIdentityProvider>().deviceToken,
+              ),
+            );
           },
-          isLoading: isLoading,
-          gradient: AppColors.brandGradient,
-          height: 54,
         ),
       ],
     ),
