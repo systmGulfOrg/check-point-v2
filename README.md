@@ -31,9 +31,10 @@ Authentication is implemented against the supplied `check_point_api.json` OpenAP
 The implementation follows the project layering rules:
 
 - Retrofit service in `features/auth/data/apis/`
+- `dio` and `retrofit` for API communication
 - `json_serializable` request and response models in `features/auth/data/models/`
 - Repository contract and implementation in `data/repos/` for this simple flow
-- Domain UseCases are introduced only when the feature needs business orchestration
+- The Domain layer is optional and is introduced only when business orchestration, validation, reuse, or multiple repositories justify it
 - Freezed Cubits and states in `presentation/cubit/`
 - Access tokens stored with `flutter_secure_storage`
 
@@ -56,7 +57,9 @@ Additional admin, supervisor, and employee routes are defined in `lib/core/route
 - `easy_localization` for Arabic, Arabic (Egypt), and English
 - `flutter_screenutil_plus` for responsive sizing
 - `get_it` for dependency injection
-- Freezed annotations for typed immutable state models
+- `dio` and `retrofit` for typed API services
+- `json_serializable` for API serialization
+- Freezed for typed immutable state models
 - Material 3 with centralized colors, typography, decorations, and theme tokens
 
 ## Getting Started
@@ -66,6 +69,10 @@ Additional admin, supervisor, and employee routes are defined in `lib/core/route
 - Flutter SDK compatible with Dart `^3.10.4`
 - Android Studio or Xcode for mobile development
 - A configured Flutter desktop target if running on desktop
+
+### Android NDK
+
+Android builds use NDK `28.2.13676358`. Install this version from Android Studio's SDK Manager under **SDK Tools > NDK (Side by side)** before building for Android.
 
 ### Install dependencies
 
