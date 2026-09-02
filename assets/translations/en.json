@@ -5,6 +5,8 @@
   "auth.login.selectedRole": "Selected role: {}",
   "auth.login.emailLabel": "Email address",
   "auth.login.emailHint": "name@company.com",
+  "auth.login.usernameLabel": "Username",
+  "auth.login.usernameHint": "Enter username",
   "auth.login.passwordLabel": "Password",
   "auth.login.passwordHint": "Enter your password",
   "auth.login.rememberMe": "Keep me signed in on this device",

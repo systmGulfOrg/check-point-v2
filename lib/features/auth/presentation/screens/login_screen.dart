@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
     'auth.role.employee',
   ];
 
-  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -76,10 +76,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     hSpace(18),
                     AuthLabeledFieldWidget(
-                      labelKey: 'auth.login.emailLabel',
-                      hintKey: 'auth.login.emailHint',
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
+                      labelKey: 'auth.login.usernameLabel',
+                      hintKey: 'auth.login.usernameHint',
+                      controller: _usernameController,
+                      keyboardType: TextInputType.text,
                       validator: (value) =>
                           value == null || value.trim().isEmpty
                           ? 'auth.login.required'.tr(context: context)
@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                         context.read<LoginCubit>().login(
                           LoginRequestModel(
-                            userName: _emailController.text.trim(),
+                            userName: _usernameController.text.trim(),
                             password: _passwordController.text,
                             mobileId: context
                                 .read<DeviceIdentityProvider>()

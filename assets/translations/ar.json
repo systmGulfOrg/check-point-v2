@@ -5,6 +5,8 @@
   "auth.login.selectedRole": "الدور المحدد: {}",
   "auth.login.emailLabel": "البريد الإلكتروني",
   "auth.login.emailHint": "name@company.com",
+  "auth.login.usernameLabel": "اسم المستخدم",
+  "auth.login.usernameHint": "أدخل اسم المستخدم",
   "auth.login.passwordLabel": "كلمة المرور",
   "auth.login.passwordHint": "أدخل كلمة المرور",
   "auth.login.rememberMe": "تذكرني على هذا الجهاز",
