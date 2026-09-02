@@ -45,16 +45,18 @@ dart run build_runner build --delete-conflicting-outputs
 
 ## 3. Architecture
 
-Strict layering: **presentation → domain → data**. Arrows only point downward. A lower layer never imports an upper layer.
+Default layering: **presentation → data** for simple feature flows. A **domain** layer is optional and should be introduced only when the feature genuinely needs it. Arrows only point downward. A lower layer never imports an upper layer.
+
+**Project rule:** Do not create `domain/`, repository contracts, or UseCases by default. Use `UI → Cubit → Repository` when a Cubit performs one straightforward repository operation. Add a domain layer only when there is meaningful business logic, multi-step orchestration, multiple repository coordination, reusable logic, or a validation/transformation boundary that benefits from a UseCase. Existing domain code may remain in place; this rule applies to new work and incremental changes.
 
 ```text
-presentation/  → uses → domain/
-domain/        → defines contracts (abstract repos + use cases only)
-data/          → implements domain contracts, talks to API/storage
+presentation/  → uses → data/ (or domain/ when the feature needs it)
+domain/        → optional; defines contracts and use cases only when needed
+data/          → talks to API/storage and implements contracts when applicable
 ```
 
 - **UI/presentation:** renders state, dispatches actions. No business logic.
-- **Domain:** abstract repository contracts, use cases. No Flutter imports — pure Dart. **No entities.**
+- **Domain (optional):** abstract repository contracts and use cases when needed. No Flutter imports — pure Dart. **No entities.**
 - **Data:** API services, DTOs/models, repository implementations.
 - In UI files, do not create private helper widgets or private helper methods for action flows. Keep the action code in the place where it is used, or extract a separate named widget/file if it truly needs reuse.
 
@@ -74,7 +76,7 @@ class UserModel { ... }                         // model in data layer
 
 ### Repository Contract and Implementation
 
-The abstract repository contract lives in the **domain layer**. The concrete implementation lives in the **data layer**. They must always come in pairs.
+When a domain layer is needed, the abstract repository contract lives in the **domain layer** and the concrete implementation lives in the **data layer**. For simple flows without a domain layer, the repository contract and implementation may live together in the feature's **data layer**.
 
 ```text
 domain/
@@ -86,10 +88,10 @@ data/
     auth_repo_impl.dart     ← concrete implementation
 ```
 
-- The abstract repo in domain defines **only method signatures** — no implementation, no imports from data.
+- A domain repo contract defines **only method signatures** — no implementation, no imports from data.
 - The impl in data implements the abstract contract, calls the API service, maps exceptions to `AppApiFailure`, and returns `ApiResult<T>` with the model directly.
 - **Never** put a repo implementation in the domain layer.
-- **Never** skip the abstract contract — every repo impl must implement its matching domain contract.
+- Do not add a domain contract solely to satisfy structure; simple repositories may expose their contract from the data layer until domain complexity is justified.
 - All constructors use **named parameters** (`{required this.field}`). Never use positional parameters for classes.
 - All injected fields are **public** (no leading underscore). Use `this.api`, `this.authRepo`, `this.loginUseCase` — not `this._api`, `this._authRepo`.
 
@@ -128,13 +130,13 @@ UI → Cubit → Repository
 
 Use this when the cubit makes one repository call and emits state.
 
-**Complex flow — MUST use a UseCase:**
+**Complex flow — use a UseCase:**
 
 ```text
 UI → Cubit → UseCase → Repository(ies)
 ```
 
-**You MUST move logic to a UseCase when any of the following is true:**
+**Move logic to a UseCase when any of the following is true:**
 
 - The logic is too big to sit cleanly in the Cubit method.
 - The flow is multi-step (e.g., login then fetch profile then store token).
@@ -143,7 +145,7 @@ UI → Cubit → UseCase → Repository(ies)
 - It is reused across multiple Cubits.
 - It involves validation, transformation, or orchestration that is not purely UI.
 
-**Rule:** If you catch yourself writing business logic inside a Cubit method or — worse — inside the presentation layer, **stop**. Move that logic to a UseCase in the domain layer. The Cubit's only job is: call the use case → receive `ApiResult<T>` → emit state.
+**Rule:** Keep a simple one-call Cubit direct to its repository. If business logic becomes substantial, multi-step, reusable, or orchestration-heavy, move it to a UseCase in the domain layer. The Cubit's job is to call its dependency, receive `ApiResult<T>`, and emit state.
 
 ```dart
 // domain/use_cases/login_use_case.dart
