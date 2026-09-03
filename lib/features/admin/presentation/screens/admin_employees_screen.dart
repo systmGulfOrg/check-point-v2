@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import '../widgets/admin_employee_card_widget.dart';
+import '../cubit/admin_employees_cubit.dart';
+import '../widgets/admin_employees_bloc_builder_widget.dart';
 import '../widgets/admin_employee_filter_row_widget.dart';
 
 class AdminEmployeesScreen extends StatefulWidget {
@@ -40,17 +42,14 @@ class _AdminEmployeesScreenState extends State<AdminEmployeesScreen> {
                     color: AppColors.textPrimary,
                   ),
                 ),
-                Image.asset(
-                  AppAssets.logo,
-                  height: 32.h,
-                  fit: BoxFit.contain,
-                ),
+                Image.asset(AppAssets.logo, height: 32.h, fit: BoxFit.contain),
               ],
             ),
             hSpace(16),
             CustomTextFormField(
               controller: _searchController,
               hintText: 'admin.employees.searchHint'.tr(context: context),
+              onChanged: context.read<AdminEmployeesCubit>().search,
               prefixIcon: Icon(
                 Icons.search_rounded,
                 size: 20.r,
@@ -62,62 +61,18 @@ class _AdminEmployeesScreenState extends State<AdminEmployeesScreen> {
               selectedFilter: _selectedFilter,
               onFilterSelected: (filter) {
                 setState(() => _selectedFilter = filter);
+                context.read<AdminEmployeesCubit>().setRoleFilter(
+                  switch (filter) {
+                    'admin.employees.filterEmployee' => 'employee',
+                    'admin.employees.filterSupervisor' => 'supervisor',
+                    'admin.employees.filterAdmin' => 'admin',
+                    _ => null,
+                  },
+                );
               },
             ),
             hSpace(14),
-            Text(
-              'admin.employees.countHeader'.tr(
-                context: context,
-                args: ['5'],
-              ),
-              style: AppTextStyles.font13Regular.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-            hSpace(12),
-            const AdminEmployeeCardWidget(
-              initials: 'SA',
-              name: 'System Administrator',
-              roleKey: 'auth.role.admin',
-              email: 'admin@checkpoint.app',
-              empCode: 'EMP-2024-0001',
-            ),
-            hSpace(10),
-            const AdminEmployeeCardWidget(
-              initials: 'SJ',
-              name: 'Sarah Johnson',
-              roleKey: 'auth.role.supervisor',
-              email: 'sarah.johnson@checkpoint.app',
-              empCode: 'EMP-2024-0042',
-              department: 'Operations',
-            ),
-            hSpace(10),
-            const AdminEmployeeCardWidget(
-              initials: 'JM',
-              name: 'James Martinez',
-              roleKey: 'auth.role.employee',
-              email: 'james.martinez@checkpoint.app',
-              empCode: 'EMP-2024-0087',
-              department: 'Operations',
-            ),
-            hSpace(10),
-            const AdminEmployeeCardWidget(
-              initials: 'PN',
-              name: 'Priya Nair',
-              roleKey: 'auth.role.employee',
-              email: 'priya.nair@checkpoint.app',
-              empCode: 'EMP-2024-0091',
-              department: 'Information Technology',
-            ),
-            hSpace(10),
-            const AdminEmployeeCardWidget(
-              initials: 'DC',
-              name: 'David Chen',
-              roleKey: 'auth.role.employee',
-              email: 'david.chen@checkpoint.app',
-              empCode: 'EMP-2024-0104',
-              department: 'Finance',
-            ),
+            const AdminEmployeesBlocBuilderWidget(),
           ],
         ),
       ),

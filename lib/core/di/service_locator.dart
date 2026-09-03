@@ -11,6 +11,10 @@ import '../../features/auth/data/repos/auth_repo.dart';
 import '../../features/auth/presentation/cubit/login_cubit.dart';
 import '../../features/auth/presentation/cubit/auth_session_cubit.dart';
 import '../../features/auth/presentation/cubit/request_account_cubit.dart';
+import '../../features/admin/data/apis/admin_employee_api_service.dart';
+import '../../features/admin/data/repos/admin_employee_repo.dart';
+import '../../features/admin/data/repos/admin_employee_repo_impl.dart';
+import '../../features/admin/presentation/cubit/admin_employees_cubit.dart';
 import '../app/app_config.dart';
 import '../network/device_identity_provider.dart';
 import '../auth/auth_session_storage.dart';
@@ -45,6 +49,12 @@ Future<void> setupServiceLocator() async {
   );
   await sl<DeviceIdentityProvider>().initialize();
   sl.registerLazySingleton<AuthApiService>(() => AuthApiService(sl<Dio>()));
+  sl.registerLazySingleton<AdminEmployeeApiService>(
+    () => AdminEmployeeApiService(sl<Dio>()),
+  );
+  sl.registerLazySingleton<AdminEmployeeRepo>(
+    () => AdminEmployeeRepoImpl(api: sl<AdminEmployeeApiService>()),
+  );
   sl.registerLazySingleton<AuthRepo>(
     () => AuthRepoImpl(
       api: sl<AuthApiService>(),
@@ -67,5 +77,8 @@ Future<void> setupServiceLocator() async {
       authRepo: sl<AuthRepo>(),
       deviceIdentityProvider: sl<DeviceIdentityProvider>(),
     ),
+  );
+  sl.registerFactory<AdminEmployeesCubit>(
+    () => AdminEmployeesCubit(employeeRepo: sl<AdminEmployeeRepo>()),
   );
 }
