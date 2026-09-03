@@ -15,6 +15,7 @@ import '../../features/admin/data/apis/admin_employee_api_service.dart';
 import '../../features/admin/data/repos/admin_employee_repo.dart';
 import '../../features/admin/data/repos/admin_employee_repo_impl.dart';
 import '../../features/admin/presentation/cubit/admin_employees_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_account_requests_cubit.dart';
 import '../app/app_config.dart';
 import '../network/device_identity_provider.dart';
 import '../network/auth_token_interceptor.dart';
@@ -84,5 +85,8 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<AdminEmployeesCubit>(
     () => AdminEmployeesCubit(employeeRepo: sl<AdminEmployeeRepo>()),
+  );
+  sl.registerFactory<AdminAccountRequestsCubit>(
+    () => AdminAccountRequestsCubit(employeeRepo: sl<AdminEmployeeRepo>()),
   );
 }

@@ -3,6 +3,7 @@ import 'package:retrofit/retrofit.dart';
 
 import '../../../../core/network/api_constants.dart';
 import '../models/employees_response_model.dart';
+import '../models/account_requests_response_model.dart';
 
 part 'admin_employee_api_service.g.dart';
 
@@ -21,4 +22,13 @@ abstract class AdminEmployeeApiService {
   Future<EmployeesResponseModel> searchEmployees(
     @Path('searchKey') String searchKey,
   );
+
+  @GET(ApiConstants.accountRequests)
+  Future<AccountRequestsResponseModel> getAccountRequests({
+    @Query('itemCount') int itemCount = 20,
+    @Query('index') int index = 0,
+  });
+
+  @DELETE(ApiConstants.accountRequests)
+  Future<void> deleteAccountRequest(@Query('id') int id);
 }

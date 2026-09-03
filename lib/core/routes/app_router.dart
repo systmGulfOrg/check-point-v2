@@ -20,6 +20,7 @@ import '../../features/auth/presentation/cubit/login_cubit.dart';
 import '../../features/auth/presentation/cubit/auth_session_cubit.dart';
 import '../../features/auth/presentation/cubit/request_account_cubit.dart';
 import '../../features/admin/presentation/cubit/admin_employees_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_account_requests_cubit.dart';
 import '../../features/employee/presentation/screens/employee_main_screen.dart';
 import '../../features/employee/presentation/screens/employee_settings_screen.dart';
 import '../../features/supervisor/presentation/screens/supervisor_main_screen.dart';
@@ -111,7 +112,10 @@ class AppRouter {
             create: (_) => sl<AuthSessionCubit>(),
             child: BlocProvider<AdminEmployeesCubit>(
               create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
-              child: const AdminMainScreen(),
+              child: BlocProvider<AdminAccountRequestsCubit>(
+                create: (_) => sl<AdminAccountRequestsCubit>()..loadRequests(),
+                child: const AdminMainScreen(),
+              ),
             ),
           ),
         );

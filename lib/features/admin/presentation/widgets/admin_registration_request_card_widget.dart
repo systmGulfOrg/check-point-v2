@@ -6,6 +6,9 @@ import '../../../../core/core.dart';
 
 class AdminRegistrationRequestCardWidget extends StatelessWidget {
   const AdminRegistrationRequestCardWidget({
+    required this.name,
+    required this.deviceId,
+    required this.date,
     required this.onView,
     required this.onApprove,
     required this.onReject,
@@ -15,6 +18,9 @@ class AdminRegistrationRequestCardWidget extends StatelessWidget {
   final VoidCallback onView;
   final VoidCallback onApprove;
   final VoidCallback onReject;
+  final String name;
+  final String deviceId;
+  final String date;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -29,7 +35,7 @@ class AdminRegistrationRequestCardWidget extends StatelessWidget {
               radius: 24.r,
               backgroundColor: AppColors.softBrandBackground,
               child: Text(
-                'AM',
+                name.isEmpty ? '?' : name.substring(0, 1).toUpperCase(),
                 style: AppTextStyles.font14SemiBold.copyWith(
                   color: AppColors.brandPrimary,
                 ),
@@ -40,10 +46,10 @@ class AdminRegistrationRequestCardWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Ahmed Mohamed', style: AppTextStyles.font16Bold),
+                  Text(name, style: AppTextStyles.font16Bold),
                   hSpace(4),
                   Text(
-                    'Samsung A54  •  02/09/2026',
+                    '$deviceId  •  $date',
                     style: AppTextStyles.font12Regular,
                   ),
                 ],

@@ -2,6 +2,7 @@ import '../../../../core/network/api_failure_mapper.dart';
 import '../../../../core/network/api_result.dart';
 import '../apis/admin_employee_api_service.dart';
 import '../models/employee_model.dart';
+import '../models/account_requests_response_model.dart';
 import 'admin_employee_repo.dart';
 
 class AdminEmployeeRepoImpl implements AdminEmployeeRepo {
@@ -48,6 +49,34 @@ class AdminEmployeeRepoImpl implements AdminEmployeeRepo {
         );
       }
       return ApiResult.success(response.value?.data ?? const []);
+    } catch (error) {
+      return ApiResult.failure(ApiFailureMapper.map(error));
+    }
+  }
+
+  @override
+  Future<ApiResult<List<AccountRequestModel>>> getAccountRequests() async {
+    try {
+      final response = await api.getAccountRequests();
+      if (response.isSuccess != true) {
+        return ApiResult.failure(
+          ApiFailureMapper.fromMessages(
+            response.errors,
+            fallbackMessageKey: 'errors.adminRequestsLoadFailed',
+          ),
+        );
+      }
+      return ApiResult.success(response.value?.data ?? const []);
+    } catch (error) {
+      return ApiResult.failure(ApiFailureMapper.map(error));
+    }
+  }
+
+  @override
+  Future<ApiResult<void>> deleteAccountRequest({required int id}) async {
+    try {
+      await api.deleteAccountRequest(id);
+      return const ApiResult.success(null);
     } catch (error) {
       return ApiResult.failure(ApiFailureMapper.map(error));
     }

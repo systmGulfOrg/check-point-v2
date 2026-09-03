@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import '../widgets/admin_registration_request_card_widget.dart';
+import '../widgets/admin_account_requests_bloc_builder_widget.dart';
 
 class AdminRequestsScreen extends StatefulWidget {
   const AdminRequestsScreen({super.key});
@@ -25,7 +25,7 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
 
   @override
   Widget build(BuildContext context) => SafeArea(
-        child: SingleChildScrollView(
+    child: SingleChildScrollView(
       padding: EdgeInsetsDirectional.fromSTEB(16.w, 18.h, 16.w, 28.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -116,47 +116,10 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
             ),
           ),
           hSpace(18),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'admin.requests.pendingCount'.tr(context: context),
-                style: AppTextStyles.font14SemiBold,
-              ),
-              Text(
-                newestFirst
-                    ? 'admin.requests.sortNewest'.tr(context: context)
-                    : 'admin.requests.sortOldest'.tr(context: context),
-                style: AppTextStyles.font12Regular,
-              ),
-            ],
+          AdminAccountRequestsBlocBuilderWidget(
+            onView: (_) => context.pushNamed(AppRoutes.adminRequestDetails),
+            onApprove: (_) => context.pushNamed(AppRoutes.adminCreateEmployee),
           ),
-          hSpace(10),
-          if ((selectedStatus == 'admin.requests.filterAll' ||
-                  selectedStatus == 'admin.requests.filterPending') &&
-              (searchController.text.isEmpty ||
-                  'ahmed mohamed'.contains(
-                    searchController.text.toLowerCase(),
-                  )))
-            AdminRegistrationRequestCardWidget(
-              onView: () => context.pushNamed(AppRoutes.adminRequestDetails),
-              onApprove: () => context.pushNamed(AppRoutes.adminCreateEmployee),
-              onReject: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('admin.requests.rejected'.tr(context: context)),
-                ),
-              ),
-            )
-          else
-            Padding(
-              padding: EdgeInsets.only(top: 28.h),
-              child: Center(
-                child: Text(
-                  'admin.requests.emptyAll'.tr(context: context),
-                  style: AppTextStyles.font14Regular,
-                ),
-              ),
-            ),
         ],
       ),
     ),
