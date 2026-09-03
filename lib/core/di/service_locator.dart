@@ -16,6 +16,10 @@ import '../../features/admin/data/repos/admin_employee_repo.dart';
 import '../../features/admin/data/repos/admin_employee_repo_impl.dart';
 import '../../features/admin/presentation/cubit/admin_employees_cubit.dart';
 import '../../features/admin/presentation/cubit/admin_account_requests_cubit.dart';
+import '../../features/admin/data/repos/admin_locations_repo.dart';
+import '../../features/admin/data/repos/admin_locations_repo_impl.dart';
+import '../../features/admin/presentation/cubit/admin_branches_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_departments_cubit.dart';
 import '../app/app_config.dart';
 import '../network/device_identity_provider.dart';
 import '../network/auth_token_interceptor.dart';
@@ -60,6 +64,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<AdminEmployeeRepo>(
     () => AdminEmployeeRepoImpl(api: sl<AdminEmployeeApiService>()),
   );
+  sl.registerLazySingleton<AdminLocationsRepo>(
+    () => AdminLocationsRepoImpl(api: sl<AdminEmployeeApiService>()),
+  );
   sl.registerLazySingleton<AuthRepo>(
     () => AuthRepoImpl(
       api: sl<AuthApiService>(),
@@ -88,5 +95,11 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<AdminAccountRequestsCubit>(
     () => AdminAccountRequestsCubit(employeeRepo: sl<AdminEmployeeRepo>()),
+  );
+  sl.registerFactory<AdminBranchesCubit>(
+    () => AdminBranchesCubit(locationsRepo: sl<AdminLocationsRepo>()),
+  );
+  sl.registerFactory<AdminDepartmentsCubit>(
+    () => AdminDepartmentsCubit(locationsRepo: sl<AdminLocationsRepo>()),
   );
 }

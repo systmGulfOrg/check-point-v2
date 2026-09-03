@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../widgets/admin_branches_bloc_builder_widget.dart';
 import '../widgets/admin_locations_filter_widget.dart';
 import '../widgets/admin_locations_tab_widget.dart';
 import '../widgets/admin_locations_add_button_widget.dart';
@@ -53,7 +54,9 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
                 ],
               ),
               hSpace(10),
-              AdminLocationsTabWidget(category: category),
+              category == AdminLocationCategory.branches
+                  ? const AdminBranchesBlocBuilderWidget()
+                  : AdminLocationsTabWidget(category: category),
             ],
           ),
         ),

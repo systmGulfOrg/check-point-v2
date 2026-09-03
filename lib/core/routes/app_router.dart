@@ -21,6 +21,8 @@ import '../../features/auth/presentation/cubit/auth_session_cubit.dart';
 import '../../features/auth/presentation/cubit/request_account_cubit.dart';
 import '../../features/admin/presentation/cubit/admin_employees_cubit.dart';
 import '../../features/admin/presentation/cubit/admin_account_requests_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_branches_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_departments_cubit.dart';
 import '../../features/employee/presentation/screens/employee_main_screen.dart';
 import '../../features/employee/presentation/screens/employee_settings_screen.dart';
 import '../../features/supervisor/presentation/screens/supervisor_main_screen.dart';
@@ -123,7 +125,17 @@ class AppRouter {
       case AppRoutes.adminLocations:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminLocations),
-          child: const AdminLocationsScreen(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AdminBranchesCubit>(
+                create: (_) => sl<AdminBranchesCubit>()..load(),
+              ),
+              BlocProvider<AdminDepartmentsCubit>(
+                create: (_) => sl<AdminDepartmentsCubit>()..load(),
+              ),
+            ],
+            child: const AdminLocationsScreen(),
+          ),
         );
 
       case AppRoutes.adminShiftsPolicies:
