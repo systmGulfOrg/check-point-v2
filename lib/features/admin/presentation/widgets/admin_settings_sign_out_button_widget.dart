@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../../../auth/presentation/cubit/auth_session_cubit.dart';
 
 class AdminSettingsSignOutButtonWidget extends StatelessWidget {
   const AdminSettingsSignOutButtonWidget({super.key});
@@ -12,7 +14,17 @@ class AdminSettingsSignOutButtonWidget extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
+        onPressed: () async {
+          final didLogout = await context.read<AuthSessionCubit>().logout();
+          if (!context.mounted) return;
+          if (!didLogout) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('errors.logoutFailed'.tr(context: context)),
+              ),
+            );
+            return;
+          }
           Navigator.pushNamedAndRemoveUntil(
             context,
             AppRoutes.login,
@@ -31,17 +43,11 @@ class AdminSettingsSignOutButtonWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.logout_rounded,
-              color: AppColors.white,
-              size: 20.r,
-            ),
+            Icon(Icons.logout_rounded, color: AppColors.white, size: 20.r),
             vSpace(8),
             Text(
               'admin.settings.signOut'.tr(context: context),
-              style: AppTextStyles.font16Bold.copyWith(
-                color: AppColors.white,
-              ),
+              style: AppTextStyles.font16Bold.copyWith(color: AppColors.white),
             ),
           ],
         ),

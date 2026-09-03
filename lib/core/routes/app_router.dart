@@ -17,6 +17,7 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/request_access_screen.dart';
 import '../di/service_locator.dart';
 import '../../features/auth/presentation/cubit/login_cubit.dart';
+import '../../features/auth/presentation/cubit/auth_session_cubit.dart';
 import '../../features/auth/presentation/cubit/request_account_cubit.dart';
 import '../../features/employee/presentation/screens/employee_main_screen.dart';
 import '../../features/employee/presentation/screens/employee_settings_screen.dart';
@@ -105,7 +106,10 @@ class AppRouter {
       case AppRoutes.admin:
         return _fadeRoute(
           settings: const RouteSettings(name: AppRoutes.admin),
-          child: const AdminMainScreen(),
+          child: BlocProvider<AuthSessionCubit>(
+            create: (_) => sl<AuthSessionCubit>(),
+            child: const AdminMainScreen(),
+          ),
         );
 
       case AppRoutes.adminLocations:
@@ -181,7 +185,10 @@ class AppRouter {
       case AppRoutes.supervisor:
         return _fadeRoute(
           settings: const RouteSettings(name: AppRoutes.supervisor),
-          child: const SupervisorMainScreen(),
+          child: BlocProvider<AuthSessionCubit>(
+            create: (_) => sl<AuthSessionCubit>(),
+            child: const SupervisorMainScreen(),
+          ),
         );
 
       case AppRoutes.supervisorLeaveManagement:
@@ -209,7 +216,10 @@ class AppRouter {
       case AppRoutes.employee:
         return _fadeRoute(
           settings: const RouteSettings(name: AppRoutes.employee),
-          child: const EmployeeMainScreen(),
+          child: BlocProvider<AuthSessionCubit>(
+            create: (_) => sl<AuthSessionCubit>(),
+            child: const EmployeeMainScreen(),
+          ),
         );
 
       case AppRoutes.employeeSettings:

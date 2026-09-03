@@ -5,6 +5,22 @@ import 'api_failure.dart';
 class ApiFailureMapper {
   const ApiFailureMapper._();
 
+  static ApiFailure fromMessages(
+    Iterable<String>? messages, {
+    required String fallbackMessageKey,
+  }) {
+    for (final message in messages ?? const <String>[]) {
+      final normalizedMessage = message.toLowerCase();
+      if ((normalizedMessage.contains('device') ||
+              normalizedMessage.contains('devise')) &&
+          normalizedMessage.contains('access') &&
+          normalizedMessage.contains('login')) {
+        return const ApiFailure(messageKey: 'errors.deviceLoginAccess');
+      }
+    }
+    return ApiFailure(messageKey: fallbackMessageKey);
+  }
+
   static ApiFailure map(Object error) {
     if (error is DioException) {
       return switch (error.type) {

@@ -13,7 +13,8 @@ Future<void> main() async {
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ar'), Locale('ar', 'EG')],
       path: 'assets/translations',
-      fallbackLocale: const Locale('en'),
+      startLocale: const Locale('ar'),
+      fallbackLocale: const Locale('ar'),
       child: const CheckPointApp(),
     ),
   );

@@ -1,10 +1,11 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import '../../data/models/login_request_model.dart';
 import '../cubit/login_cubit.dart';
 import '../widgets/auth_card_widget.dart';
 import '../widgets/auth_labeled_field_widget.dart';
@@ -33,8 +34,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
 
   bool _obscurePassword = true;
-  bool _rememberMe = true;
+  bool _enableBiometricLogin = false;
+  bool _biometricLoginAttempted = false;
   String _selectedRole = _roles.first;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_biometricLoginAttempted) return;
+    _biometricLoginAttempted = true;
+    unawaited(
+      context.read<LoginCubit>().loginWithBiometrics(
+        localizedReason: 'auth.login.biometricReason'.tr(context: context),
+      ),
+    );
+  }
 
   @override
   void dispose() {
@@ -121,17 +135,27 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     hSpace(14),
                     CheckboxListTile(
-                      value: _rememberMe,
+                      value: _enableBiometricLogin,
                       onChanged: (value) {
-                        setState(() => _rememberMe = value ?? false);
+                        setState(() => _enableBiometricLogin = value ?? false);
                       },
                       dense: true,
                       contentPadding: EdgeInsets.zero,
                       activeColor: AppColors.brandPrimary,
                       controlAffinity: ListTileControlAffinity.leading,
-                      title: Text(
-                        'auth.login.rememberMe'.tr(context: context),
-                        style: AppTextStyles.font14Regular,
+                      title: Row(
+                        children: [
+                          Icon(
+                            Icons.fingerprint_rounded,
+                            size: 21.r,
+                            color: AppColors.brandPrimary,
+                          ),
+                          wSpace(8),
+                          Text(
+                            'auth.login.biometricLogin'.tr(context: context),
+                            style: AppTextStyles.font14Regular,
+                          ),
+                        ],
                       ),
                     ),
                     hSpace(10),
@@ -141,13 +165,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           return;
                         }
                         context.read<LoginCubit>().login(
-                          LoginRequestModel(
-                            userName: _usernameController.text.trim(),
-                            password: _passwordController.text,
-                            mobileId: context
-                                .read<DeviceIdentityProvider>()
-                                .mobileId,
-                          ),
+                          userName: _usernameController.text.trim(),
+                          password: _passwordController.text,
+                          role: switch (_selectedRole) {
+                            'auth.role.admin' => 'Admin',
+                            'auth.role.supervisor' => 'Supervisor',
+                            _ => 'Employee',
+                          },
+                          enableBiometricLogin: _enableBiometricLogin,
                         );
                       },
                     ),

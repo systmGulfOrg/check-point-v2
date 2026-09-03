@@ -8,11 +8,13 @@ class RequestAccessWelcomeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Text(
         'auth.requestAccess.welcomeTitle'.tr(context: context),
-        textAlign: TextAlign.right,
+        textAlign: TextAlign.center,
         style: AppTextStyles.font24Bold.copyWith(
           color: AppColors.brandInk,
           height: 1.25,
@@ -21,7 +23,7 @@ class RequestAccessWelcomeWidget extends StatelessWidget {
       hSpace(8),
       Text(
         'auth.requestAccess.welcomeDescription'.tr(context: context),
-        textAlign: TextAlign.right,
+        textAlign: TextAlign.center,
         style: AppTextStyles.font14Regular.copyWith(height: 1.65),
       ),
     ],

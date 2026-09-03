@@ -13,6 +13,8 @@ export 'network/api_constants.dart';
 export 'network/api_failure_mapper.dart';
 export 'network/api_result.dart';
 export 'network/device_identity_provider.dart';
+export 'auth/auth_session_storage.dart';
+export 'auth/biometric_auth_service.dart';
 export 'widgets/custom_button.dart';
 export 'widgets/custom_bottom_nav_bar_widget.dart';
 export 'widgets/custom_text_form_field.dart';

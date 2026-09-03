@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import '../../data/models/account_request_model.dart';
 import '../cubit/request_account_cubit.dart';
 import 'request_account_submit_button_widget.dart';
 
@@ -50,7 +49,7 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
         hSpace(22),
         Text(
           'auth.requestAccess.fullName'.tr(context: context),
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
           style: AppTextStyles.font14SemiBold,
         ),
         hSpace(8),
@@ -75,11 +74,7 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
             FocusScope.of(context).unfocus();
             if (!(formKey.currentState?.validate() ?? false)) return;
             context.read<RequestAccountCubit>().submit(
-              AccountRequestModel(
-                name: fullNameController.text.trim(),
-                mobileId: context.read<DeviceIdentityProvider>().mobileId,
-                deviceToken: context.read<DeviceIdentityProvider>().deviceToken,
-              ),
+              name: fullNameController.text.trim(),
             );
           },
         ),

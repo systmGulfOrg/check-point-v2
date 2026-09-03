@@ -22,7 +22,10 @@ class AuthRepoImpl implements AuthRepo {
       final user = response.value;
       if (response.isSuccess != true || user == null) {
         return ApiResult.failure(
-          const ApiFailure(messageKey: 'errors.invalidCredentials'),
+          ApiFailureMapper.fromMessages(
+            response.errors,
+            fallbackMessageKey: 'errors.invalidCredentials',
+          ),
         );
       }
       final token = user.token;
