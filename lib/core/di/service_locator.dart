@@ -40,7 +40,10 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<BiometricAuthService>(
     () => BiometricAuthService(localAuthentication: LocalAuthentication()),
   );
-  sl.registerLazySingleton<DeviceIdentityProvider>(DeviceIdentityProvider.new);
+  sl.registerLazySingleton<DeviceIdentityProvider>(
+    () => DeviceIdentityProvider(secureStorage: sl<FlutterSecureStorage>()),
+  );
+  await sl<DeviceIdentityProvider>().initialize();
   sl.registerLazySingleton<AuthApiService>(() => AuthApiService(sl<Dio>()));
   sl.registerLazySingleton<AuthRepo>(
     () => AuthRepoImpl(

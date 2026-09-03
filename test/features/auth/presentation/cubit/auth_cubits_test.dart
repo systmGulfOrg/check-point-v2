@@ -15,7 +15,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
 
 class _FakeDeviceIdentityProvider extends DeviceIdentityProvider {
-  const _FakeDeviceIdentityProvider({
+  _FakeDeviceIdentityProvider({
     required this.fakeMobileId,
     required this.fakeDeviceToken,
   });
@@ -79,7 +79,7 @@ void main() {
       final repo = _FakeAuthRepo(loginResponse: loginResponse);
       final cubit = LoginCubit(
         authRepo: repo,
-        deviceIdentityProvider: const _FakeDeviceIdentityProvider(
+        deviceIdentityProvider: _FakeDeviceIdentityProvider(
           fakeMobileId: 'mobile-123',
           fakeDeviceToken: 'token-abc',
         ),
@@ -121,7 +121,7 @@ void main() {
         final repo = _FakeAuthRepo(loginResponse: loginResponse);
         final cubit = LoginCubit(
           authRepo: repo,
-          deviceIdentityProvider: const _FakeDeviceIdentityProvider(
+          deviceIdentityProvider: _FakeDeviceIdentityProvider(
             fakeMobileId: 'mobile-123',
             fakeDeviceToken: 'token-abc',
           ),
@@ -160,7 +160,7 @@ void main() {
       );
       final cubit = RequestAccountCubit(
         authRepo: repo,
-        deviceIdentityProvider: const _FakeDeviceIdentityProvider(
+        deviceIdentityProvider: _FakeDeviceIdentityProvider(
           fakeMobileId: 'mobile-456',
           fakeDeviceToken: 'device-token-456',
         ),
