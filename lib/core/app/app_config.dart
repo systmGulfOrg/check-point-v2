@@ -3,7 +3,7 @@ class AppConfig {
 
   static const String baseUrl = String.fromEnvironment(
     'BASE_URL',
-    defaultValue: 'http://localhost:5000',
+    defaultValue: 'http://emsdemo.runasp.net',
   );
   static const String env = String.fromEnvironment('ENV', defaultValue: 'dev');
   static const String mobileId = String.fromEnvironment(
