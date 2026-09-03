@@ -17,27 +17,31 @@ import '../../features/admin/data/repos/admin_employee_repo_impl.dart';
 import '../../features/admin/presentation/cubit/admin_employees_cubit.dart';
 import '../app/app_config.dart';
 import '../network/device_identity_provider.dart';
+import '../network/auth_token_interceptor.dart';
 import '../auth/auth_session_storage.dart';
 import '../auth/biometric_auth_service.dart';
 
 final sl = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
+  sl.registerLazySingleton<FlutterSecureStorage>(FlutterSecureStorage.new);
   sl.registerLazySingleton<Dio>(
     () => Dio(BaseOptions(baseUrl: AppConfig.baseUrl))
       ..interceptors.add(
+        AuthTokenInterceptor(secureStorage: sl<FlutterSecureStorage>()),
+      )
+      ..interceptors.add(
         PrettyDioLogger(
           requestHeader: false,
-          requestBody: true,
+          requestBody: false,
           responseHeader: false,
-          responseBody: true,
+          responseBody: false,
           error: true,
           compact: true,
           enabled: kDebugMode,
         ),
       ),
   );
-  sl.registerLazySingleton<FlutterSecureStorage>(FlutterSecureStorage.new);
   sl.registerLazySingleton<AuthSessionStorage>(
     () => AuthSessionStorage(secureStorage: sl<FlutterSecureStorage>()),
   );
