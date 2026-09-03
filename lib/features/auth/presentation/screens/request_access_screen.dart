@@ -47,7 +47,9 @@ class _RequestAccessScreenState extends State<RequestAccessScreen> {
                         child: Padding(
                           padding: EdgeInsets.all(24.r),
                           child: RequestAccessSuccessWidget(
-                            onBack: () => setState(() => requestSent = false),
+                            onBack: () => context.pushNamedAndRemoveUntil(
+                              AppRoutes.login,
+                            ),
                           ),
                         ),
                       )
