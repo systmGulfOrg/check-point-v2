@@ -1,11 +1,28 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../../data/models/account_requests_response_model.dart';
+import '../cubit/admin_account_requests_cubit.dart';
 
 class AdminRequestDetailsScreen extends StatelessWidget {
-  const AdminRequestDetailsScreen({super.key});
+  const AdminRequestDetailsScreen({required this.request, super.key});
+
+  final AccountRequestModel request;
+
+  String _getInitials(String? name) {
+    if (name == null || name.trim().isEmpty) return '?';
+    final parts = name.trim().split(RegExp(r'\s+'));
+    if (parts.length == 1) {
+      return parts.first
+          .substring(0, parts.first.length.clamp(1, 2))
+          .toUpperCase();
+    }
+    return (parts.first[0] + parts.last[0]).toUpperCase();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -33,7 +50,7 @@ class AdminRequestDetailsScreen extends StatelessWidget {
                   radius: 30.r,
                   backgroundColor: AppColors.softBrandBackground,
                   child: Text(
-                    'AM',
+                    _getInitials(request.name),
                     style: AppTextStyles.font16Bold.copyWith(
                       color: AppColors.brandPrimary,
                     ),
@@ -44,7 +61,9 @@ class AdminRequestDetailsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'admin.requests.employeeName'.tr(context: context),
+                      request.name?.trim().isNotEmpty == true
+                          ? request.name!
+                          : '-',
                       style: AppTextStyles.font18Bold,
                     ),
                     hSpace(5),
@@ -71,41 +90,128 @@ class AdminRequestDetailsScreen extends StatelessWidget {
                   style: AppTextStyles.font16Bold,
                 ),
                 hSpace(14),
-                for (final item in const [
-                  ('admin.requests.mobileId', 'xxxxxxxx'),
-                  ('admin.requests.deviceToken', 'xxxxxxxx'),
-                  ('admin.requests.deviceModel', 'Samsung A54'),
-                  ('admin.requests.osVersion', 'Android 15'),
-                  ('admin.requests.requestDate', '02/09/2026'),
-                ])
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 13.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            item.$2,
-                            style: AppTextStyles.font13SemiBold,
-                          ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 13.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                request.mobileId?.isNotEmpty == true
+                                    ? request.mobileId!
+                                    : '-',
+                                style: AppTextStyles.font13SemiBold,
+                              ),
+                            ),
+                            if (request.mobileId?.isNotEmpty == true) ...[
+                              vSpace(6),
+                              InkWell(
+                                onTap: () async {
+                                  await Clipboard.setData(
+                                    ClipboardData(text: request.mobileId!),
+                                  );
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'admin.requests.copiedMobileId'.tr(
+                                            context: context,
+                                          ),
+                                        ),
+                                        duration: const Duration(seconds: 2),
+                                      ),
+                                    );
+                                  }
+                                },
+                                borderRadius: BorderRadius.circular(6.r),
+                                child: Padding(
+                                  padding: EdgeInsets.all(4.r),
+                                  child: Icon(
+                                    Icons.copy_rounded,
+                                    size: 16.r,
+                                    color: AppColors.brandPrimary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
-                        Text(
-                          item.$1.tr(context: context),
-                          style: AppTextStyles.font13Regular,
-                        ),
-                      ],
-                    ),
+                      ),
+                      Text(
+                        'admin.requests.mobileId'.tr(context: context),
+                        style: AppTextStyles.font13Regular,
+                      ),
+                    ],
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 13.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          request.deviceToken?.isNotEmpty == true
+                              ? request.deviceToken!
+                              : '-',
+                          style: AppTextStyles.font13SemiBold,
+                        ),
+                      ),
+                      Text(
+                        'admin.requests.deviceToken'.tr(context: context),
+                        style: AppTextStyles.font13Regular,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 13.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          request.createdDate != null
+                              ? DateFormat(
+                                  'dd/MM/yyyy',
+                                ).format(request.createdDate!)
+                              : '-',
+                          style: AppTextStyles.font13SemiBold,
+                        ),
+                      ),
+                      Text(
+                        'admin.requests.requestDate'.tr(context: context),
+                        style: AppTextStyles.font13Regular,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
           hSpace(20),
           OutlinedButton(
-            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('admin.requests.rejected'.tr(context: context)),
-              ),
-            ),
+            onPressed: () async {
+              if (request.id != null) {
+                await context.read<AdminAccountRequestsCubit>().deleteRequest(
+                      id: request.id!,
+                    );
+              }
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'admin.requests.rejected'.tr(context: context),
+                    ),
+                  ),
+                );
+                context.pop();
+              }
+            },
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.error,
               side: const BorderSide(color: AppColors.error),

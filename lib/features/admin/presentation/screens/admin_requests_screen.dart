@@ -88,7 +88,10 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
           ),
           hSpace(18),
           AdminAccountRequestsBlocBuilderWidget(
-            onView: (_) => context.pushNamed(AppRoutes.adminRequestDetails),
+            onView: (request) => context.pushNamed(
+              AppRoutes.adminRequestDetails,
+              arguments: request,
+            ),
           ),
         ],
       ),

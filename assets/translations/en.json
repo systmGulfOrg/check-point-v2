@@ -318,6 +318,7 @@
   "admin.requests.sortOldest": "Oldest first",
   "admin.requests.viewDetails": "View Details",
   "admin.requests.rejected": "Request rejected",
+  "admin.requests.copiedMobileId": "Mobile ID copied to clipboard",
   "admin.requests.detailsTitle": "Registration Request Details",
   "admin.requests.employeeName": "Ahmed Mohamed",
   "admin.requests.pendingLabel": "Under review",

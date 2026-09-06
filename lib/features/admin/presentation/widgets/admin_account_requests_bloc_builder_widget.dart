@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
+import '../../data/models/account_requests_response_model.dart';
 import '../cubit/admin_account_requests_cubit.dart';
 import '../cubit/admin_account_requests_state.dart';
 import 'admin_registration_request_card_widget.dart';
@@ -13,7 +14,7 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
     super.key,
   });
 
-  final void Function(int id) onView;
+  final void Function(AccountRequestModel request) onView;
 
   @override
   Widget build(BuildContext context) =>
@@ -49,8 +50,10 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
                           child: AdminRegistrationRequestCardWidget(
                             name: request.name ?? '-',
                             deviceId: request.mobileId ?? '-',
-                            date: request.createdDate?.toIso8601String() ?? '-',
-                            onView: () => onView(request.id ?? 0),
+                            date: request.createdDate != null
+                                ? DateFormat('dd/MM/yyyy').format(request.createdDate!)
+                                : '-',
+                            onView: () => onView(request),
                             onDelete: () => context
                                 .read<AdminAccountRequestsCubit>()
                                 .deleteRequest(id: request.id ?? 0),

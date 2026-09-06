@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../features/admin/data/models/account_requests_response_model.dart';
 import '../../features/admin/presentation/cubit/admin_account_requests_cubit.dart';
 import '../../features/admin/presentation/cubit/admin_attendance_cubit.dart';
 import '../../features/admin/presentation/cubit/admin_branches_cubit.dart';
@@ -102,9 +103,21 @@ class AppRouter {
         );
 
       case AppRoutes.adminRequestDetails:
+        final request = settings.arguments;
+        if (request is! AccountRequestModel) {
+          return _fadeRoute(
+            settings: settings,
+            child: const Scaffold(
+              body: Center(child: Text('Invalid request details')),
+            ),
+          );
+        }
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminRequestDetails),
-          child: const AdminRequestDetailsScreen(),
+          child: BlocProvider<AdminAccountRequestsCubit>(
+            create: (_) => sl<AdminAccountRequestsCubit>(),
+            child: AdminRequestDetailsScreen(request: request),
+          ),
         );
 
       case AppRoutes.adminCreateEmployee:

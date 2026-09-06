@@ -317,6 +317,7 @@
   "admin.requests.sortOldest": "الأقدم أولاً",
   "admin.requests.viewDetails": "عرض التفاصيل",
   "admin.requests.rejected": "تم رفض الطلب",
+  "admin.requests.copiedMobileId": "تم نسخ معرف الجوال",
   "admin.requests.detailsTitle": "تفاصيل طلب إنشاء الحساب",
   "admin.requests.employeeName": "أحمد محمد",
   "admin.requests.pendingLabel": "قيد المراجعة",
