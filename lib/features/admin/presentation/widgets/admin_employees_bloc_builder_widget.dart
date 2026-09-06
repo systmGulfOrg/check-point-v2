@@ -1,69 +1,52 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import '../../data/models/edit_employee_request_body.dart';
+import '../../data/models/employee_model.dart';
 import '../cubit/admin_employees_cubit.dart';
 import '../cubit/admin_employees_state.dart';
+import 'admin_delete_confirmation_dialog_widget.dart';
+import 'admin_edit_employee_sheet_widget.dart';
 import 'admin_employee_card_widget.dart';
 import 'admin_requests_empty_state_widget.dart';
 
 class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
   const AdminEmployeesBlocBuilderWidget({super.key});
 
-  void _showEditDialog(
-    BuildContext context,
-    String id,
-    String currentName,
-    String currentPosition,
-    int? departmentId,
-    int? branchId,
-    String? role,
-  ) {
-    final nameController = TextEditingController(text: currentName);
-    final positionController = TextEditingController(text: currentPosition);
-    showDialog(
+  void _showEditSheet(BuildContext context, EmployeeModel employee) {
+    showModalBottomSheet<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Edit Employee'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'Full Name'),
-            ),
-            TextField(
-              controller: positionController,
-              decoration: const InputDecoration(labelText: 'Position'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (nameController.text.trim().isNotEmpty) {
-                context.read<AdminEmployeesCubit>().editEmployee(
-                      id,
-                      EditEmployeeRequestBody(
-                        name: nameController.text.trim(),
-                        position: positionController.text.trim(),
-                        departmentId: departmentId ?? 1,
-                        branchId: branchId ?? 1,
-                        role: role ?? 'Employee',
-                      ),
-                    );
-                Navigator.pop(dialogContext);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
+      isScrollControlled: true,
+      backgroundColor: AppColors.cardBackground,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (_) => AdminEditEmployeeSheetWidget(
+        employee: employee,
+        onSave: (body) {
+          if (employee.id != null) {
+            context.read<AdminEmployeesCubit>().editEmployee(
+                  employee.id!,
+                  body,
+                );
+          }
+        },
+      ),
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, String employeeId) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AdminDeleteConfirmationDialogWidget(
+        title: 'admin.employees.deleteEmployeeTitle'.tr(context: context),
+        message: 'admin.employees.deleteEmployeeMessage'.tr(context: context),
+        onConfirm: () {
+          Navigator.pop(dialogContext);
+          context.read<AdminEmployeesCubit>().deleteEmployee(employeeId);
+        },
       ),
     );
   }
@@ -104,24 +87,10 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
                           empCode: employee.id ?? '-',
                           department: employee.departmentName,
                           isOnline: employee.canAddAttendance ?? false,
-                          onEdit: () {
-                            if (employee.id != null) {
-                              _showEditDialog(
-                                context,
-                                employee.id!,
-                                employee.name ?? '',
-                                employee.position ?? '',
-                                employee.departmentId,
-                                employee.branchId,
-                                employee.role,
-                              );
-                            }
-                          },
+                          onEdit: () => _showEditSheet(context, employee),
                           onDelete: () {
                             if (employee.id != null) {
-                              context.read<AdminEmployeesCubit>().deleteEmployee(
-                                    employee.id!,
-                                  );
+                              _showDeleteDialog(context, employee.id!);
                             }
                           },
                         ),

@@ -7,9 +7,24 @@ import '../../data/models/branch_request_model.dart';
 import '../cubit/admin_branches_cubit.dart';
 import '../cubit/admin_branches_state.dart';
 import 'admin_branch_card_widget.dart';
+import 'admin_delete_confirmation_dialog_widget.dart';
 
 class AdminBranchesBlocBuilderWidget extends StatelessWidget {
   const AdminBranchesBlocBuilderWidget({super.key});
+
+  void _showDeleteDialog(BuildContext context, int branchId) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AdminDeleteConfirmationDialogWidget(
+        title: 'admin.locations.delete'.tr(context: context),
+        message: 'admin.employees.deleteEmployeeMessage'.tr(context: context),
+        onConfirm: () {
+          Navigator.pop(dialogContext);
+          context.read<AdminBranchesCubit>().delete(branchId);
+        },
+      ),
+    );
+  }
 
   void _showEditDialog(
     BuildContext context,
@@ -98,9 +113,11 @@ class AdminBranchesBlocBuilderWidget extends StatelessWidget {
                               );
                             }
                           },
-                          onDelete: () => context
-                              .read<AdminBranchesCubit>()
-                              .delete(branch.id ?? 0),
+                          onDelete: () {
+                            if (branch.id != null) {
+                              _showDeleteDialog(context, branch.id!);
+                            }
+                          },
                         ),
                         hSpace(10),
                       ],

@@ -6,11 +6,26 @@ import '../../../../core/core.dart';
 import '../../data/models/department_request_model.dart';
 import '../cubit/admin_departments_cubit.dart';
 import '../cubit/admin_departments_state.dart';
+import 'admin_delete_confirmation_dialog_widget.dart';
 import 'admin_location_card_widget.dart';
 import 'admin_location_data.dart';
 
 class AdminDepartmentsBlocBuilderWidget extends StatelessWidget {
   const AdminDepartmentsBlocBuilderWidget({super.key});
+
+  void _showDeleteDialog(BuildContext context, int departmentId) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AdminDeleteConfirmationDialogWidget(
+        title: 'admin.locations.delete'.tr(context: context),
+        message: 'admin.employees.deleteEmployeeMessage'.tr(context: context),
+        onConfirm: () {
+          Navigator.pop(dialogContext);
+          context.read<AdminDepartmentsCubit>().deleteDepartment(departmentId);
+        },
+      ),
+    );
+  }
 
   void _showEditDialog(BuildContext context, int id, String currentName) {
     final controller = TextEditingController(text: currentName);
@@ -92,9 +107,7 @@ class AdminDepartmentsBlocBuilderWidget extends StatelessWidget {
                           },
                           onDelete: () {
                             if (dept.id != null) {
-                              context
-                                  .read<AdminDepartmentsCubit>()
-                                  .deleteDepartment(dept.id!);
+                              _showDeleteDialog(context, dept.id!);
                             }
                           },
                         ),

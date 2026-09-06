@@ -6,6 +6,7 @@ import '../../../../core/core.dart';
 import '../../data/models/customer_request_model.dart';
 import '../cubit/admin_customers_cubit.dart';
 import '../cubit/admin_customers_state.dart';
+import 'admin_delete_confirmation_dialog_widget.dart';
 import 'admin_location_card_widget.dart';
 import 'admin_location_data.dart';
 
@@ -13,6 +14,20 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
   const AdminCustomersBlocBuilderWidget({this.type = 'customer', super.key});
 
   final String type;
+
+  void _showDeleteDialog(BuildContext context, String customerId) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AdminDeleteConfirmationDialogWidget(
+        title: 'admin.locations.delete'.tr(context: context),
+        message: 'admin.employees.deleteEmployeeMessage'.tr(context: context),
+        onConfirm: () {
+          Navigator.pop(dialogContext);
+          context.read<AdminCustomersCubit>().delete(customerId);
+        },
+      ),
+    );
+  }
 
   void _showEditDialog(
     BuildContext context,
@@ -116,9 +131,7 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
                           },
                           onDelete: () {
                             if (customer.id != null) {
-                              context
-                                  .read<AdminCustomersCubit>()
-                                  .delete(customer.id!);
+                              _showDeleteDialog(context, customer.id!);
                             }
                           },
                         ),
