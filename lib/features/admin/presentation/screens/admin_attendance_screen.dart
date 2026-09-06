@@ -6,8 +6,10 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import '../../../../core/core.dart';
 import '../cubit/admin_attendance_cubit.dart';
 import '../cubit/admin_attendance_state.dart';
+import '../widgets/admin_attendance_filter_bar_widget.dart';
 import '../widgets/admin_attendance_record_card_widget.dart';
 import '../widgets/admin_attendance_record_data.dart';
+import '../widgets/admin_delete_confirmation_dialog_widget.dart';
 import '../widgets/admin_requests_empty_state_widget.dart';
 
 class AdminAttendanceScreen extends StatefulWidget {
@@ -49,8 +51,10 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                 controller: searchController,
                 hintText: 'admin.attendance.searchHint'.tr(context: context),
                 prefixIcon: Icon(Icons.search_rounded, size: 20.r),
-                onChanged: (_) => setState(() {}),
+                onChanged: context.read<AdminAttendanceCubit>().search,
               ),
+              hSpace(14),
+              const AdminAttendanceFilterBarWidget(),
               hSpace(14),
               BlocBuilder<AdminAttendanceCubit, AdminAttendanceState>(
                 builder: (context, state) {
@@ -115,9 +119,23 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                                 record: recordData,
                                 onDelete: () {
                                   if (item.id != null) {
-                                    context
-                                        .read<AdminAttendanceCubit>()
-                                        .deleteAttendance(item.id!);
+                                    showDialog<void>(
+                                      context: context,
+                                      builder: (dialogContext) =>
+                                          AdminDeleteConfirmationDialogWidget(
+                                        title: 'admin.attendance.deleteRecord'
+                                            .tr(context: context),
+                                        message:
+                                            'admin.attendance.deleteRecordMessage'
+                                                .tr(context: context),
+                                        onConfirm: () {
+                                          Navigator.pop(dialogContext);
+                                          context
+                                              .read<AdminAttendanceCubit>()
+                                              .deleteAttendance(item.id!);
+                                        },
+                                      ),
+                                    );
                                   }
                                 },
                               );

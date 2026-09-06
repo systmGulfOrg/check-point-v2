@@ -198,8 +198,8 @@ class AdminRequestDetailsScreen extends StatelessWidget {
             onPressed: () async {
               if (request.id != null) {
                 await context.read<AdminAccountRequestsCubit>().deleteRequest(
-                      id: request.id!,
-                    );
+                  id: request.id!,
+                );
               }
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
