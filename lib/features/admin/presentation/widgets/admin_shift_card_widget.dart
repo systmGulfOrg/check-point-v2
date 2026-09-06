@@ -9,73 +9,131 @@ class AdminShiftCardWidget extends StatelessWidget {
   const AdminShiftCardWidget({
     required this.shift,
     required this.onTap,
+    this.onEdit,
+    this.onDelete,
     super.key,
   });
 
   final AdminShiftData shift;
   final VoidCallback onTap;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(14.r),
-      child: Container(
-        padding: EdgeInsets.all(14.r),
-        decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 19.r,
-              backgroundColor: AppColors.softBlueBackground,
-              child: Icon(
-                Icons.access_time_rounded,
-                color: AppColors.info,
-                size: 20.r,
-              ),
-            ),
-            vSpace(12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: AppColors.border),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          InkWell(
+            onTap: onTap,
+            child: Padding(
+              padding: EdgeInsets.all(14.r),
+              child: Row(
                 children: [
-                  Text(
-                    shift.nameKey.tr(context: context),
-                    style: AppTextStyles.font14SemiBold,
+                  CircleAvatar(
+                    radius: 19.r,
+                    backgroundColor: AppColors.softBlueBackground,
+                    child: Icon(
+                      Icons.access_time_rounded,
+                      color: AppColors.info,
+                      size: 20.r,
+                    ),
                   ),
-                  hSpace(3),
-                  Text(
-                    shift.descriptionKey.tr(context: context),
-                    style: AppTextStyles.font12Regular,
+                  vSpace(12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          shift.nameKey.tr(context: context),
+                          style: AppTextStyles.font14SemiBold,
+                        ),
+                        hSpace(3),
+                        Text(
+                          shift.descriptionKey.tr(context: context),
+                          style: AppTextStyles.font12Regular,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.softGreenBackground,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Text(
+                      'admin.shifts.status.active'.tr(context: context),
+                      style: AppTextStyles.font12Bold.copyWith(
+                        color: AppColors.success,
+                      ),
+                    ),
+                  ),
+                  vSpace(8),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppColors.placeholder,
+                    size: 20.r,
                   ),
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
-              decoration: BoxDecoration(
-                color: AppColors.softGreenBackground,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Text(
-                'admin.shifts.status.active'.tr(context: context),
-                style: AppTextStyles.font12Bold.copyWith(
-                  color: AppColors.success,
-                ),
-              ),
+          ),
+          if (onEdit != null || onDelete != null)
+            Row(
+              children: [
+                if (onEdit != null)
+                  Expanded(
+                    child: InkWell(
+                      onTap: onEdit,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(color: AppColors.border),
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'admin.locations.edit'.tr(context: context),
+                          style: AppTextStyles.font13SemiBold.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                if (onDelete != null)
+                  Expanded(
+                    child: InkWell(
+                      onTap: onDelete,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(color: AppColors.border),
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'admin.locations.delete'.tr(context: context),
+                          style: AppTextStyles.font13SemiBold.copyWith(
+                            color: AppColors.error,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            vSpace(8),
-            Icon(
-              Icons.chevron_right_rounded,
-              color: AppColors.placeholder,
-              size: 20.r,
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

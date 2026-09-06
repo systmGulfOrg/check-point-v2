@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../cubit/admin_attendance_cubit.dart';
+import '../cubit/admin_employees_cubit.dart';
+import '../cubit/admin_leave_requests_cubit.dart';
+import '../cubit/admin_tasks_cubit.dart';
 import '../widgets/admin_greeting_widget.dart';
 import '../widgets/admin_overview_card_widget.dart';
 import '../widgets/admin_stats_grid_widget.dart';
@@ -12,6 +17,37 @@ class AdminHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final employeesState = context.watch<AdminEmployeesCubit>().state;
+    final attendanceState = context.watch<AdminAttendanceCubit>().state;
+    final leaveState = context.watch<AdminLeaveRequestsCubit>().state;
+    final tasksState = context.watch<AdminTasksCubit>().state;
+
+    final totalStaff = employeesState.maybeWhen(
+      success: (employees, filter) => employees.length,
+      orElse: () => 0,
+    );
+
+    final presentToday = attendanceState.maybeWhen(
+      success: (records) => records.length,
+      orElse: () => 0,
+    );
+
+    final pendingLeaves = leaveState.maybeWhen(
+      success: (requests) => requests
+          .where((r) => r.status?.toLowerCase() == 'pending')
+          .length,
+      orElse: () => 0,
+    );
+
+    final openTasks = tasksState.maybeWhen(
+      success: (tasks) => tasks.length,
+      orElse: () => 0,
+    );
+
+    final now = DateTime.now();
+    final dateFormatted =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+
     return SafeArea(
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
@@ -20,25 +56,25 @@ class AdminHomeScreen extends StatelessWidget {
           children: [
             const AdminTopBarWidget(),
             hSpace(12),
-            const AdminGreetingWidget(
+            AdminGreetingWidget(
               userNameKey: 'admin.dashboard.user',
-              dateText: 'Monday, August 31',
+              dateText: dateFormatted,
             ),
             hSpace(12),
-            const AdminStatsGridWidget(
-              totalStaff: 4,
-              presentToday: 2,
-              pendingLeaves: 2,
-              openTasks: 6,
+            AdminStatsGridWidget(
+              totalStaff: totalStaff,
+              presentToday: presentToday,
+              pendingLeaves: pendingLeaves,
+              openTasks: openTasks,
             ),
             hSpace(20),
-            const AdminOverviewCardWidget(
-              employeesOnDuty: 2,
-              totalStaff: 4,
-              lateArrivals: 1,
-              absences: 1,
-              pendingLeaveRequests: 2,
-              dateText: '2026-08-31',
+            AdminOverviewCardWidget(
+              employeesOnDuty: presentToday,
+              totalStaff: totalStaff,
+              lateArrivals: 0,
+              absences: totalStaff > presentToday ? totalStaff - presentToday : 0,
+              pendingLeaveRequests: pendingLeaves,
+              dateText: dateFormatted,
             ),
           ],
         ),

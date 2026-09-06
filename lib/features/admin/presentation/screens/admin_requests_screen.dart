@@ -33,20 +33,23 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'admin.requests.title'.tr(context: context),
-                    style: AppTextStyles.font20Bold,
-                  ),
-                  hSpace(4),
-                  Text(
-                    'admin.requests.subtitle'.tr(context: context),
-                    style: AppTextStyles.font12Regular,
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'admin.requests.title'.tr(context: context),
+                      style: AppTextStyles.font20Bold,
+                    ),
+                    hSpace(4),
+                    Text(
+                      'admin.requests.subtitle'.tr(context: context),
+                      style: AppTextStyles.font12Regular,
+                    ),
+                  ],
+                ),
               ),
+              vSpace(8),
               Image.asset(AppAssets.logo, height: 34.h),
             ],
           ),

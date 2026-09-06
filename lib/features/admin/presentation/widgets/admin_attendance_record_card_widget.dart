@@ -8,14 +8,14 @@ import 'admin_attendance_record_data.dart';
 class AdminAttendanceRecordCardWidget extends StatelessWidget {
   const AdminAttendanceRecordCardWidget({
     required this.record,
-    required this.onEdit,
-    required this.onDelete,
+    this.onEdit,
+    this.onDelete,
     super.key,
   });
 
   final AdminAttendanceRecordData record;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -84,49 +84,51 @@ class AdminAttendanceRecordCardWidget extends StatelessWidget {
           ),
           Column(
             children: [
-              SizedBox(
-                width: 36.w,
-                height: 28.h,
-                child: TextButton(
-                  onPressed: onEdit,
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    backgroundColor: AppColors.softBlueBackground,
-                    foregroundColor: AppColors.info,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
+              if (onEdit != null)
+                SizedBox(
+                  width: 36.w,
+                  height: 28.h,
+                  child: TextButton(
+                    onPressed: onEdit,
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      backgroundColor: AppColors.softBlueBackground,
+                      foregroundColor: AppColors.info,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    'admin.attendance.edit'.tr(context: context),
-                    style: AppTextStyles.font11Medium.copyWith(
-                      color: AppColors.info,
-                    ),
-                  ),
-                ),
-              ),
-              hSpace(4),
-              SizedBox(
-                width: 36.w,
-                height: 28.h,
-                child: TextButton(
-                  onPressed: onDelete,
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    backgroundColor: AppColors.softBrandBackground,
-                    foregroundColor: AppColors.error,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                  ),
-                  child: Text(
-                    'admin.attendance.delete'.tr(context: context),
-                    style: AppTextStyles.font11Medium.copyWith(
-                      color: AppColors.error,
+                    child: Text(
+                      'admin.attendance.edit'.tr(context: context),
+                      style: AppTextStyles.font11Medium.copyWith(
+                        color: AppColors.info,
+                      ),
                     ),
                   ),
                 ),
-              ),
+              if (onEdit != null && onDelete != null) hSpace(4),
+              if (onDelete != null)
+                SizedBox(
+                  width: 36.w,
+                  height: 28.h,
+                  child: TextButton(
+                    onPressed: onDelete,
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      backgroundColor: AppColors.softBrandBackground,
+                      foregroundColor: AppColors.error,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
+                    ),
+                    child: Text(
+                      'admin.attendance.delete'.tr(context: context),
+                      style: AppTextStyles.font11Medium.copyWith(
+                        color: AppColors.error,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ],

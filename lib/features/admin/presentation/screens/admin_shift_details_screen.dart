@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../cubit/admin_shifts_policies_cubit.dart';
+import '../cubit/admin_shifts_policies_state.dart';
 import '../widgets/admin_new_policy_button_widget.dart';
 
 class AdminShiftDetailsScreen extends StatelessWidget {
@@ -12,6 +15,7 @@ class AdminShiftDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shiftId = int.tryParse(shiftKey);
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -19,7 +23,7 @@ class AdminShiftDetailsScreen extends StatelessWidget {
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
         title: Text(
-          shiftKey.tr(context: context),
+          'Shift Details',
           style: AppTextStyles.font18Bold,
         ),
       ),
@@ -41,71 +45,172 @@ class AdminShiftDetailsScreen extends StatelessWidget {
               ],
             ),
             hSpace(10),
-            for (final policy in const [
-              (
-                'admin.shifts.policies.a.name',
-                'admin.shifts.policies.a.time',
-                'admin.shifts.policies.a.days',
-              ),
-              (
-                'admin.shifts.policies.b.name',
-                'admin.shifts.policies.b.time',
-                'admin.shifts.policies.b.days',
-              ),
-            ])
-              Padding(
-                padding: EdgeInsets.only(bottom: 10.h),
-                child: Container(
-                  padding: EdgeInsets.all(14.r),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardBackground,
-                    borderRadius: BorderRadius.circular(14.r),
-                    border: Border.all(color: AppColors.border),
+            BlocBuilder<AdminShiftsPoliciesCubit, AdminShiftsPoliciesState>(
+              builder: (context, state) {
+                return state.when(
+                  initial: () => const SizedBox.shrink(),
+                  loading: () => const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32),
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            policy.$1.tr(context: context),
-                            style: AppTextStyles.font14SemiBold,
+                  error: (messageKey) => Text(messageKey.tr(context: context)),
+                  actionSuccess: (_) => const SizedBox.shrink(),
+                  success: (shifts, policies) {
+                    if (policies.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        child: Center(
+                          child: Text(
+                            'No policies found for this shift.',
+                            style: AppTextStyles.font14Regular,
                           ),
-                          Text(
-                            'admin.shifts.policies.delete'.tr(context: context),
-                            style: AppTextStyles.font12Regular.copyWith(
-                              color: AppColors.error,
-                            ),
+                        ),
+                      );
+                    }
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: policies.length,
+                      separatorBuilder: (_, _) => hSpace(10),
+                      itemBuilder: (context, index) {
+                        final policy = policies[index];
+                        final employees = policy.employees ?? const [];
+                        return Container(
+                          padding: EdgeInsets.all(14.r),
+                          decoration: BoxDecoration(
+                            color: AppColors.cardBackground,
+                            borderRadius: BorderRadius.circular(14.r),
+                            border: Border.all(color: AppColors.border),
                           ),
-                        ],
-                      ),
-                      hSpace(4),
-                      Text(
-                        policy.$2.tr(context: context),
-                        style: AppTextStyles.font12Regular,
-                      ),
-                      hSpace(8),
-                      Text(
-                        policy.$3.tr(context: context),
-                        style: AppTextStyles.font12Regular.copyWith(
-                          color: AppColors.info,
-                        ),
-                      ),
-                      hSpace(10),
-                      Text(
-                        'admin.shifts.policies.assigned'.tr(
-                          context: context,
-                          args: ['4'],
-                        ),
-                        style: AppTextStyles.font12Regular.copyWith(
-                          color: AppColors.placeholder,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    policy.effectiveName,
+                                    style: AppTextStyles.font14SemiBold,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      if (policy.id != null && shiftId != null) {
+                                        context
+                                            .read<AdminShiftsPoliciesCubit>()
+                                            .deletePolicy(policy.id!, shiftId);
+                                      }
+                                    },
+                                    child: Text(
+                                      'admin.shifts.policies.delete'.tr(
+                                        context: context,
+                                      ),
+                                      style:
+                                          AppTextStyles.font12Regular.copyWith(
+                                        color: AppColors.error,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              hSpace(6),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.access_time_rounded,
+                                    size: 16.r,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                  wSpace(6),
+                                  Text(
+                                    '${policy.effectiveClockIn} - ${policy.effectiveClockOut}',
+                                    style: AppTextStyles.font12Medium,
+                                  ),
+                                  if (policy.area != null) ...[
+                                    wSpace(12),
+                                    Icon(
+                                      Icons.location_on_outlined,
+                                      size: 16.r,
+                                      color: AppColors.info,
+                                    ),
+                                    wSpace(4),
+                                    Text(
+                                      policy.area!,
+                                      style: AppTextStyles.font12Regular.copyWith(
+                                        color: AppColors.info,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                              if (policy.workDays != null &&
+                                  policy.workDays!.isNotEmpty) ...[
+                                hSpace(6),
+                                Text(
+                                  'Days: ${policy.workDays!.join(', ')}',
+                                  style: AppTextStyles.font12Regular.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
+                              hSpace(10),
+                              Text(
+                                'admin.shifts.policies.assigned'.tr(
+                                  context: context,
+                                  args: [employees.length.toString()],
+                                ),
+                                style: AppTextStyles.font12Bold.copyWith(
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                              if (employees.isNotEmpty) ...[
+                                hSpace(8),
+                                Wrap(
+                                  spacing: 6.w,
+                                  runSpacing: 6.h,
+                                  children: [
+                                    for (final emp in employees)
+                                      Chip(
+                                        avatar: CircleAvatar(
+                                          backgroundColor:
+                                              AppColors.softBrandBackground,
+                                          child: Text(
+                                            (emp.name ?? emp.userName ?? '?')
+                                                .substring(0, 1)
+                                                .toUpperCase(),
+                                            style: TextStyle(
+                                              fontSize: 10.sp,
+                                              color: AppColors.brandPrimary,
+                                            ),
+                                          ),
+                                        ),
+                                        label: Text(
+                                          emp.name ?? emp.userName ?? '-',
+                                          style: AppTextStyles.font12Regular,
+                                        ),
+                                        backgroundColor: AppColors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8.r),
+                                          side: BorderSide(
+                                            color: AppColors.border,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),
