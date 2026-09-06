@@ -10,14 +10,12 @@ class AdminRegistrationRequestCardWidget extends StatelessWidget {
     required this.deviceId,
     required this.date,
     required this.onView,
-    required this.onApprove,
-    required this.onReject,
+    required this.onDelete,
     super.key,
   });
 
   final VoidCallback onView;
-  final VoidCallback onApprove;
-  final VoidCallback onReject;
+  final VoidCallback onDelete;
   final String name;
   final String deviceId;
   final String date;
@@ -89,34 +87,20 @@ class AdminRegistrationRequestCardWidget extends StatelessWidget {
               ),
             ),
             vSpace(8),
-            PopupMenuButton<String>(
-              color: AppColors.white,
-              surfaceTintColor: AppColors.white,
-              elevation: 8,
-              onSelected: (value) {
-                if (value == 'approve') onApprove();
-                if (value == 'reject') onReject();
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 'approve',
-                  child: Text('admin.requests.approve'.tr(context: context)),
-                ),
-                PopupMenuItem(
-                  value: 'reject',
-                  child: Text('admin.requests.reject'.tr(context: context)),
-                ),
-              ],
+            InkWell(
+              onTap: onDelete,
+              borderRadius: BorderRadius.circular(12.r),
               child: Container(
                 width: 46.r,
                 height: 46.r,
                 decoration: BoxDecoration(
-                  color: AppColors.softBrandBackground,
+                  color: AppColors.softRedBackground,
                   borderRadius: BorderRadius.circular(12.r),
                 ),
-                child: const Icon(
-                  Icons.more_horiz_rounded,
-                  color: AppColors.brandPrimary,
+                child: Icon(
+                  Icons.delete_outline_rounded,
+                  color: AppColors.error,
+                  size: 20.r,
                 ),
               ),
             ),

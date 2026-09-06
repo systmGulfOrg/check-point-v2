@@ -14,7 +14,6 @@ class AdminRequestsScreen extends StatefulWidget {
 
 class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
   final searchController = TextEditingController();
-  String selectedStatus = 'admin.requests.filterPending';
   bool newestFirst = true;
 
   @override
@@ -87,41 +86,9 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
               ),
             ],
           ),
-          hSpace(14),
-          SizedBox(
-            height: 40.h,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                for (final status in [
-                  'admin.requests.filterAll',
-                  'admin.requests.filterPending',
-                  'admin.requests.filterApproved',
-                  'admin.requests.filterRejected',
-                ])
-                  Padding(
-                    padding: EdgeInsetsDirectional.only(end: 8.w),
-                    child: ChoiceChip(
-                      label: Text(status.tr(context: context)),
-                      selected: selectedStatus == status,
-                      onSelected: (_) =>
-                          setState(() => selectedStatus = status),
-                      selectedColor: AppColors.softBrandBackground,
-                      labelStyle: AppTextStyles.font13SemiBold.copyWith(
-                        color: selectedStatus == status
-                            ? AppColors.brandPrimary
-                            : AppColors.textSecondary,
-                      ),
-                      side: const BorderSide(color: AppColors.border),
-                    ),
-                  ),
-              ],
-            ),
-          ),
           hSpace(18),
           AdminAccountRequestsBlocBuilderWidget(
             onView: (_) => context.pushNamed(AppRoutes.adminRequestDetails),
-            onApprove: (_) => context.pushNamed(AppRoutes.adminCreateEmployee),
           ),
         ],
       ),

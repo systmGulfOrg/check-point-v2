@@ -10,12 +10,10 @@ import 'admin_registration_request_card_widget.dart';
 class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
   const AdminAccountRequestsBlocBuilderWidget({
     required this.onView,
-    required this.onApprove,
     super.key,
   });
 
   final void Function(int id) onView;
-  final void Function(int id) onApprove;
 
   @override
   Widget build(BuildContext context) =>
@@ -53,10 +51,9 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
                             deviceId: request.mobileId ?? '-',
                             date: request.createdDate?.toIso8601String() ?? '-',
                             onView: () => onView(request.id ?? 0),
-                            onApprove: () => onApprove(request.id ?? 0),
-                            onReject: () => context
+                            onDelete: () => context
                                 .read<AdminAccountRequestsCubit>()
-                                .rejectRequest(id: request.id ?? 0),
+                                .deleteRequest(id: request.id ?? 0),
                           ),
                         ),
                     ],
