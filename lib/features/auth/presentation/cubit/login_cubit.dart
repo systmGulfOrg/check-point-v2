@@ -48,7 +48,12 @@ class LoginCubit extends Cubit<LoginState> {
           return;
         }
         if (enableBiometricLogin && await biometricAuthService.isAvailable()) {
-          await authSessionStorage.enableBiometricLogin(role: role);
+          await authSessionStorage.enableBiometricLogin(
+            role: role,
+            token: user.token,
+            username: userName,
+            password: password,
+          );
         } else if (!enableBiometricLogin) {
           await authSessionStorage.disableBiometricLogin();
         }
@@ -58,18 +63,29 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  Future<void> loginWithBiometrics({required String localizedReason}) async {
+  Future<bool> loginWithBiometrics({required String localizedReason}) async {
     final session = await authSessionStorage.readBiometricSession();
-    if (session == null) return;
-    if (!await biometricAuthService.authenticate(
+    if (session == null) return false;
+    final authenticated = await biometricAuthService.authenticate(
       localizedReason: localizedReason,
-    )) {
-      return;
-    }
-    emit(
-      LoginState.success(
-        LoginResponseModel(roles: [session.role], token: session.token),
-      ),
     );
+    if (!authenticated) return false;
+    if (session.token.isNotEmpty) {
+      emit(
+        LoginState.success(
+          LoginResponseModel(roles: [session.role], token: session.token),
+        ),
+      );
+      return true;
+    } else if (session.username != null && session.password != null) {
+      await login(
+        userName: session.username!,
+        password: session.password!,
+        role: session.role,
+        enableBiometricLogin: true,
+      );
+      return true;
+    }
+    return false;
   }
 }

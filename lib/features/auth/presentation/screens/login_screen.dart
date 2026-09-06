@@ -10,6 +10,7 @@ import '../cubit/login_cubit.dart';
 import '../widgets/auth_card_widget.dart';
 import '../widgets/auth_labeled_field_widget.dart';
 import '../widgets/auth_shell_widget.dart';
+import '../widgets/biometric_login_button_widget.dart';
 import '../widgets/brand_header_widget.dart';
 import '../widgets/login_bloc_listener_widget.dart';
 import '../widgets/login_submit_button_widget.dart';
@@ -36,18 +37,46 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
   bool _enableBiometricLogin = false;
   bool _biometricLoginAttempted = false;
+  bool _hasSavedBiometric = false;
+  bool _isBiometricSupported = false;
   String _selectedRole = _roles.first;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_biometricLoginAttempted) return;
-    _biometricLoginAttempted = true;
-    unawaited(
-      context.read<LoginCubit>().loginWithBiometrics(
-        localizedReason: 'auth.login.biometricReason'.tr(context: context),
-      ),
-    );
+  void initState() {
+    super.initState();
+    _checkBiometricSupport();
+  }
+
+  Future<void> _checkBiometricSupport() async {
+    final cubit = context.read<LoginCubit>();
+    final session = await cubit.authSessionStorage.readBiometricSession();
+    final isAvailable = await cubit.biometricAuthService.isAvailable();
+    if (!mounted) return;
+
+    setState(() {
+      _isBiometricSupported = isAvailable;
+      _hasSavedBiometric = session != null && isAvailable;
+      if (session != null) {
+        _enableBiometricLogin = true;
+        if (session.username != null && session.username!.isNotEmpty) {
+          _usernameController.text = session.username!;
+        }
+        final match = _roles.firstWhere(
+          (r) => r.toLowerCase().endsWith(session.role.toLowerCase()),
+          orElse: () => _selectedRole,
+        );
+        _selectedRole = match;
+      }
+    });
+
+    if (session != null && isAvailable && !_biometricLoginAttempted) {
+      _biometricLoginAttempted = true;
+      unawaited(
+        cubit.loginWithBiometrics(
+          localizedReason: 'auth.login.biometricReason'.tr(context: context),
+        ),
+      );
+    }
   }
 
   @override
@@ -133,31 +162,35 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    hSpace(14),
-                    CheckboxListTile(
-                      value: _enableBiometricLogin,
-                      onChanged: (value) {
-                        setState(() => _enableBiometricLogin = value ?? false);
-                      },
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                      activeColor: AppColors.brandPrimary,
-                      controlAffinity: ListTileControlAffinity.leading,
-                      title: Row(
-                        children: [
-                          Icon(
-                            Icons.fingerprint_rounded,
-                            size: 21.r,
-                            color: AppColors.brandPrimary,
-                          ),
-                          wSpace(8),
-                          Text(
-                            'auth.login.biometricLogin'.tr(context: context),
-                            style: AppTextStyles.font14Regular,
-                          ),
-                        ],
+                    if (_isBiometricSupported) ...[
+                      hSpace(14),
+                      CheckboxListTile(
+                        value: _enableBiometricLogin,
+                        onChanged: (value) {
+                          setState(
+                            () => _enableBiometricLogin = value ?? false,
+                          );
+                        },
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        activeColor: AppColors.brandPrimary,
+                        controlAffinity: ListTileControlAffinity.leading,
+                        title: Row(
+                          children: [
+                            Icon(
+                              Icons.fingerprint_rounded,
+                              size: 21.r,
+                              color: AppColors.brandPrimary,
+                            ),
+                            wSpace(8),
+                            Text(
+                              'auth.login.biometricLogin'.tr(context: context),
+                              style: AppTextStyles.font14Regular,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                     hSpace(10),
                     LoginSubmitButtonWidget(
                       onSubmit: () {
@@ -176,6 +209,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       },
                     ),
+                    if (_hasSavedBiometric) ...[
+                      hSpace(12),
+                      BiometricLoginButtonWidget(
+                        onPressed: () {
+                          context.read<LoginCubit>().loginWithBiometrics(
+                            localizedReason:
+                                'auth.login.biometricReason'.tr(
+                                  context: context,
+                                ),
+                          );
+                        },
+                      ),
+                    ],
                     hSpace(18),
                     TextButton(
                       onPressed: () =>
