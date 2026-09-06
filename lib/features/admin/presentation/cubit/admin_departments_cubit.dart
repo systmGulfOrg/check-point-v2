@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/network/api_result.dart';
-import '../../data/models/department_response_model.dart';
+import '../../data/models/department_request_model.dart';
 import '../../data/repos/admin_locations_repo.dart';
 import 'admin_departments_state.dart';
 
@@ -13,9 +14,9 @@ class AdminDepartmentsCubit extends Cubit<AdminDepartmentsState> {
     emit(const AdminDepartmentsState.loading());
     final result = await locationsRepo.getDepartments();
     switch (result) {
-      case Success<List<DepartmentModel>>(:final data):
+      case Success(:final data):
         emit(AdminDepartmentsState.success(data));
-      case Failure<List<DepartmentModel>>(:final failure):
+      case Failure(:final failure):
         emit(AdminDepartmentsState.error(failure.messageKey));
     }
   }
@@ -25,9 +26,39 @@ class AdminDepartmentsCubit extends Cubit<AdminDepartmentsState> {
     emit(const AdminDepartmentsState.loading());
     final result = await locationsRepo.searchDepartments(query.trim());
     switch (result) {
-      case Success<List<DepartmentModel>>(:final data):
+      case Success(:final data):
         emit(AdminDepartmentsState.success(data));
-      case Failure<List<DepartmentModel>>(:final failure):
+      case Failure(:final failure):
+        emit(AdminDepartmentsState.error(failure.messageKey));
+    }
+  }
+
+  Future<void> addDepartment(DepartmentRequestModel request) async {
+    final result = await locationsRepo.addDepartment(request);
+    switch (result) {
+      case Success():
+        await load();
+      case Failure(:final failure):
+        emit(AdminDepartmentsState.error(failure.messageKey));
+    }
+  }
+
+  Future<void> editDepartment(int id, DepartmentRequestModel request) async {
+    final result = await locationsRepo.editDepartment(id, request);
+    switch (result) {
+      case Success():
+        await load();
+      case Failure(:final failure):
+        emit(AdminDepartmentsState.error(failure.messageKey));
+    }
+  }
+
+  Future<void> deleteDepartment(int id) async {
+    final result = await locationsRepo.deleteDepartment(id);
+    switch (result) {
+      case Success():
+        await load();
+      case Failure(:final failure):
         emit(AdminDepartmentsState.error(failure.messageKey));
     }
   }

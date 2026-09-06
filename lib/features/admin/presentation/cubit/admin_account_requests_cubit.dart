@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/network/api_result.dart';
-import '../../data/models/account_requests_response_model.dart';
 import '../../data/repos/admin_employee_repo.dart';
 import 'admin_account_requests_state.dart';
 
@@ -15,9 +14,9 @@ class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
     emit(const AdminAccountRequestsState.loading());
     final result = await employeeRepo.getAccountRequests();
     switch (result) {
-      case Success<List<AccountRequestModel>>(:final data):
+      case Success(:final data):
         emit(AdminAccountRequestsState.success(data));
-      case Failure<List<AccountRequestModel>>(:final failure):
+      case Failure(:final failure):
         emit(AdminAccountRequestsState.error(failure.messageKey));
     }
   }
@@ -25,9 +24,9 @@ class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
   Future<void> rejectRequest({required int id}) async {
     final result = await employeeRepo.deleteAccountRequest(id: id);
     switch (result) {
-      case Success<void>():
+      case Success():
         await loadRequests();
-      case Failure<void>(:final failure):
+      case Failure(:final failure):
         emit(AdminAccountRequestsState.error(failure.messageKey));
     }
   }

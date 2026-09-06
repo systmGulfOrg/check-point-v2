@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/network/api_result.dart';
-import '../../data/models/branch_response_model.dart';
 import '../../data/models/branch_request_model.dart';
 import '../../data/repos/admin_locations_repo.dart';
 import 'admin_branches_state.dart';
@@ -14,19 +13,19 @@ class AdminBranchesCubit extends Cubit<AdminBranchesState> {
     emit(const AdminBranchesState.loading());
     final result = await locationsRepo.getBranches();
     switch (result) {
-      case Success<List<BranchModel>>(:final data):
+      case Success(:final data):
         emit(AdminBranchesState.success(data));
-      case Failure<List<BranchModel>>(:final failure):
+      case Failure(:final failure):
         emit(AdminBranchesState.error(failure.messageKey));
     }
   }
 
   Future<void> delete(int id) async {
-    final result = await locationsRepo.deleteBranch(id: id);
+    final result = await locationsRepo.deleteBranch(id);
     switch (result) {
-      case Success<void>():
+      case Success():
         await load();
-      case Failure<void>(:final failure):
+      case Failure(:final failure):
         emit(AdminBranchesState.error(failure.messageKey));
     }
   }
@@ -34,9 +33,9 @@ class AdminBranchesCubit extends Cubit<AdminBranchesState> {
   Future<void> add(BranchRequestModel request) async {
     final result = await locationsRepo.addBranch(request);
     switch (result) {
-      case Success<void>():
+      case Success():
         await load();
-      case Failure<void>(:final failure):
+      case Failure(:final failure):
         emit(AdminBranchesState.error(failure.messageKey));
     }
   }
@@ -45,11 +44,11 @@ class AdminBranchesCubit extends Cubit<AdminBranchesState> {
     required int id,
     required BranchRequestModel request,
   }) async {
-    final result = await locationsRepo.editBranch(id: id, request: request);
+    final result = await locationsRepo.editBranch(id, request);
     switch (result) {
-      case Success<void>():
+      case Success():
         await load();
-      case Failure<void>(:final failure):
+      case Failure(:final failure):
         emit(AdminBranchesState.error(failure.messageKey));
     }
   }
