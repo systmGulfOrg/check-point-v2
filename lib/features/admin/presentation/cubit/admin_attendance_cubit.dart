@@ -44,14 +44,16 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
     }
   }
 
-  void setDateFilter(
+  Future<void> setDateFilter(
     AdminAttendanceDateFilter filter, {
     DateTime? startDate,
     DateTime? endDate,
-  }) {
+  }) async {
     _selectedDateFilter = filter;
     _customStartDate = startDate;
     _customEndDate = endDate;
+    emit(const AdminAttendanceState.loading());
+    await Future<void>.delayed(const Duration(milliseconds: 150));
     _emitFiltered();
   }
 

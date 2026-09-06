@@ -72,8 +72,8 @@ class _AdminAttendanceActionSheetWidgetState
                   'admin.attendance.deleteDescription'.tr(
                     context: context,
                     args: [
-                      widget.record.nameKey.tr(context: context),
-                      widget.record.time.split(' - ').first,
+                      widget.record.name,
+                      widget.record.date,
                     ],
                   ),
                   style: AppTextStyles.font13Regular.copyWith(
