@@ -31,6 +31,7 @@ class AdminRequestDetailsScreen extends StatelessWidget {
       backgroundColor: AppColors.white,
       elevation: 0,
       foregroundColor: AppColors.brandInk,
+
       title: Text(
         'admin.requests.detailsTitle'.tr(context: context),
         style: AppTextStyles.font18Bold,
