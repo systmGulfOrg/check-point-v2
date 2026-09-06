@@ -10,6 +10,7 @@ import '../cubit/admin_shifts_policies_state.dart';
 import '../widgets/admin_new_shift_button_widget.dart';
 import '../widgets/admin_shift_card_widget.dart';
 import '../widgets/admin_shift_data.dart';
+import '../widgets/admin_shifts_skeleton_widget.dart';
 
 class AdminShiftsPoliciesScreen extends StatelessWidget {
   const AdminShiftsPoliciesScreen({super.key});
@@ -75,12 +76,7 @@ class AdminShiftsPoliciesScreen extends StatelessWidget {
                 builder: (context, state) {
                   return state.when(
                     initial: () => const SizedBox.shrink(),
-                    loading: () => const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(32),
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
+                    loading: () => const AdminShiftsSkeletonWidget(),
                     error: (messageKey) => Padding(
                       padding: EdgeInsets.all(24.r),
                       child: Center(

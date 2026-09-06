@@ -10,6 +10,7 @@ import '../cubit/admin_employees_state.dart';
 import 'admin_delete_confirmation_dialog_widget.dart';
 import 'admin_edit_employee_sheet_widget.dart';
 import 'admin_employee_card_widget.dart';
+import 'admin_employees_skeleton_widget.dart';
 import 'admin_requests_empty_state_widget.dart';
 
 class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
@@ -56,9 +57,8 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
       BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
         builder: (context, state) => switch (state) {
           AdminEmployeesStateInitial() => const SizedBox.shrink(),
-          AdminEmployeesStateLoading() => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          AdminEmployeesStateLoading() =>
+            const AdminEmployeesSkeletonWidget(),
           AdminEmployeesStateError(:final messageKey) =>
             AdminRequestsEmptyStateWidget(messageKey: messageKey),
           AdminEmployeesStateSuccess(:final employees) =>

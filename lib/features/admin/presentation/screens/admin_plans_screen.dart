@@ -7,6 +7,7 @@ import '../../../../core/core.dart';
 import '../../../supervisor/presentation/widgets/supervisor_create_plan_sheet_widget.dart';
 import '../cubit/admin_plans_cubit.dart';
 import '../cubit/admin_plans_state.dart';
+import '../widgets/admin_plans_skeleton_widget.dart';
 
 class AdminPlansScreen extends StatelessWidget {
   const AdminPlansScreen({super.key});
@@ -34,12 +35,7 @@ class AdminPlansScreen extends StatelessWidget {
                 builder: (context, state) {
                   return state.when(
                     initial: () => const SizedBox.shrink(),
-                    loading: () => const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(32),
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
+                    loading: () => const AdminPlansSkeletonWidget(),
                     error: (messageKey) => Padding(
                       padding: EdgeInsets.all(24.r),
                       child: Center(

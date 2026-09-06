@@ -8,6 +8,7 @@ import '../cubit/admin_branches_cubit.dart';
 import '../cubit/admin_branches_state.dart';
 import 'admin_branch_card_widget.dart';
 import 'admin_delete_confirmation_dialog_widget.dart';
+import 'admin_locations_skeleton_widget.dart';
 
 class AdminBranchesBlocBuilderWidget extends StatelessWidget {
   const AdminBranchesBlocBuilderWidget({super.key});
@@ -88,9 +89,8 @@ class AdminBranchesBlocBuilderWidget extends StatelessWidget {
       BlocBuilder<AdminBranchesCubit, AdminBranchesState>(
         builder: (context, state) => switch (state) {
           AdminBranchesInitial() => const SizedBox.shrink(),
-          AdminBranchesLoading() => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          AdminBranchesLoading() =>
+            const AdminLocationsSkeletonWidget(),
           AdminBranchesError(:final messageKey) => Text(
             messageKey.tr(context: context),
           ),

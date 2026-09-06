@@ -9,6 +9,7 @@ import '../cubit/admin_tasks_cubit.dart';
 import '../cubit/admin_tasks_state.dart';
 import '../widgets/admin_create_task_sheet_widget.dart';
 import '../widgets/admin_tasks_filter_widget.dart';
+import '../widgets/admin_tasks_skeleton_widget.dart';
 
 class AdminTasksScreen extends StatefulWidget {
   const AdminTasksScreen({super.key});
@@ -98,12 +99,7 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
                 builder: (context, state) {
                   return state.when(
                     initial: () => const SizedBox.shrink(),
-                    loading: () => const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(32),
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
+                    loading: () => const AdminTasksSkeletonWidget(),
                     error: (messageKey) => Padding(
                       padding: EdgeInsets.all(24.r),
                       child: Center(

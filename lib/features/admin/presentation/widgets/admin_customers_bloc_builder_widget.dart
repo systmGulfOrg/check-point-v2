@@ -9,6 +9,7 @@ import '../cubit/admin_customers_state.dart';
 import 'admin_delete_confirmation_dialog_widget.dart';
 import 'admin_location_card_widget.dart';
 import 'admin_location_data.dart';
+import 'admin_locations_skeleton_widget.dart';
 
 class AdminCustomersBlocBuilderWidget extends StatelessWidget {
   const AdminCustomersBlocBuilderWidget({this.type = 'customer', super.key});
@@ -85,9 +86,8 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
       BlocBuilder<AdminCustomersCubit, AdminCustomersState>(
         builder: (context, state) => switch (state) {
           AdminCustomersInitial() => const SizedBox.shrink(),
-          AdminCustomersLoading() => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          AdminCustomersLoading() =>
+            const AdminLocationsSkeletonWidget(),
           AdminCustomersError(:final messageKey) => Padding(
             padding: const EdgeInsets.all(24),
             child: Text(

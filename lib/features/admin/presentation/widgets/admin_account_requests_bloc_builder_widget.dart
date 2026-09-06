@@ -6,6 +6,7 @@ import '../../../../core/core.dart';
 import '../../data/models/account_requests_response_model.dart';
 import '../cubit/admin_account_requests_cubit.dart';
 import '../cubit/admin_account_requests_state.dart';
+import 'admin_account_requests_skeleton_widget.dart';
 import 'admin_registration_request_card_widget.dart';
 
 class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
@@ -21,9 +22,8 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
       BlocBuilder<AdminAccountRequestsCubit, AdminAccountRequestsState>(
         builder: (context, state) => switch (state) {
           AdminAccountRequestsStateInitial() => const SizedBox.shrink(),
-          AdminAccountRequestsStateLoading() => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          AdminAccountRequestsStateLoading() =>
+            const AdminAccountRequestsSkeletonWidget(),
           AdminAccountRequestsStateError(:final messageKey) => Padding(
             padding: const EdgeInsets.symmetric(vertical: 28),
             child: Text(

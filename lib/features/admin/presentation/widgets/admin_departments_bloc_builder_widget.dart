@@ -9,6 +9,7 @@ import '../cubit/admin_departments_state.dart';
 import 'admin_delete_confirmation_dialog_widget.dart';
 import 'admin_location_card_widget.dart';
 import 'admin_location_data.dart';
+import 'admin_locations_skeleton_widget.dart';
 
 class AdminDepartmentsBlocBuilderWidget extends StatelessWidget {
   const AdminDepartmentsBlocBuilderWidget({super.key});
@@ -64,9 +65,8 @@ class AdminDepartmentsBlocBuilderWidget extends StatelessWidget {
       BlocBuilder<AdminDepartmentsCubit, AdminDepartmentsState>(
         builder: (context, state) => switch (state) {
           AdminDepartmentsInitial() => const SizedBox.shrink(),
-          AdminDepartmentsLoading() => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          AdminDepartmentsLoading() =>
+            const AdminLocationsSkeletonWidget(),
           AdminDepartmentsError(:final messageKey) => Padding(
             padding: const EdgeInsets.all(24),
             child: Text(

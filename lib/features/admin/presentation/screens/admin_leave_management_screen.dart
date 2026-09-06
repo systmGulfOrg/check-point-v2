@@ -8,6 +8,7 @@ import '../cubit/admin_leave_requests_cubit.dart';
 import '../cubit/admin_leave_requests_state.dart';
 import '../widgets/admin_leave_request_card_widget.dart';
 import '../widgets/admin_leave_request_data.dart';
+import '../widgets/admin_leave_requests_skeleton_widget.dart';
 
 class AdminLeaveManagementScreen extends StatefulWidget {
   const AdminLeaveManagementScreen({super.key});
@@ -44,12 +45,7 @@ class _AdminLeaveManagementScreenState
                 builder: (context, state) {
                   return state.when(
                     initial: () => const SizedBox.shrink(),
-                    loading: () => const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(32),
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
+                    loading: () => const AdminLeaveRequestsSkeletonWidget(),
                     error: (messageKey) => Padding(
                       padding: EdgeInsets.all(24.r),
                       child: Center(
