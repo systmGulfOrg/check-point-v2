@@ -19,6 +19,9 @@ BranchResponseModel _$BranchResponseModelFromJson(Map<String, dynamic> json) =>
 
 BranchPageModel _$BranchPageModelFromJson(Map<String, dynamic> json) =>
     BranchPageModel(
+      items: (json['items'] as List<dynamic>?)
+          ?.map((e) => BranchModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       data: (json['data'] as List<dynamic>?)
           ?.map((e) => BranchModel.fromJson(e as Map<String, dynamic>))
           .toList(),

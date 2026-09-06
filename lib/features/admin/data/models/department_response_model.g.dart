@@ -18,6 +18,9 @@ DepartmentResponseModel _$DepartmentResponseModelFromJson(
 
 DepartmentPageModel _$DepartmentPageModelFromJson(Map<String, dynamic> json) =>
     DepartmentPageModel(
+      items: (json['items'] as List<dynamic>?)
+          ?.map((e) => DepartmentModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       data: (json['data'] as List<dynamic>?)
           ?.map((e) => DepartmentModel.fromJson(e as Map<String, dynamic>))
           .toList(),

@@ -16,10 +16,17 @@ class AccountRequestsResponseModel {
 
 @JsonSerializable(createToJson: false)
 class AccountRequestsPageModel {
-  const AccountRequestsPageModel({this.data, this.totalCount});
+  const AccountRequestsPageModel({
+    this.items,
+    this.data,
+    this.totalCount,
+  });
 
+  final List<AccountRequestModel>? items;
   final List<AccountRequestModel>? data;
   final int? totalCount;
+
+  List<AccountRequestModel> get list => items ?? data ?? const [];
 
   factory AccountRequestsPageModel.fromJson(Map<String, dynamic> json) =>
       _$AccountRequestsPageModelFromJson(json);

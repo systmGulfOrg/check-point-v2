@@ -21,6 +21,9 @@ AccountRequestsResponseModel _$AccountRequestsResponseModelFromJson(
 AccountRequestsPageModel _$AccountRequestsPageModelFromJson(
   Map<String, dynamic> json,
 ) => AccountRequestsPageModel(
+  items: (json['items'] as List<dynamic>?)
+      ?.map((e) => AccountRequestModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
   data: (json['data'] as List<dynamic>?)
       ?.map((e) => AccountRequestModel.fromJson(e as Map<String, dynamic>))
       .toList(),

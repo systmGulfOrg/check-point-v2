@@ -11,9 +11,14 @@ BranchRequestModel _$BranchRequestModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       location: json['location'] as String,
       description: json['description'] as String,
-      coordinates: (json['coordinates'] as List<dynamic>)
-          .map((e) => BranchCoordinateModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      coordinates:
+          (json['coordinates'] as List<dynamic>?)
+              ?.map(
+                (e) =>
+                    BranchCoordinateModel.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$BranchRequestModelToJson(BranchRequestModel instance) =>

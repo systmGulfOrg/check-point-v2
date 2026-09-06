@@ -18,6 +18,9 @@ EmployeesResponseModel _$EmployeesResponseModelFromJson(
 
 EmployeesPageModel _$EmployeesPageModelFromJson(Map<String, dynamic> json) =>
     EmployeesPageModel(
+      items: (json['items'] as List<dynamic>?)
+          ?.map((e) => EmployeeModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       data: (json['data'] as List<dynamic>?)
           ?.map((e) => EmployeeModel.fromJson(e as Map<String, dynamic>))
           .toList(),

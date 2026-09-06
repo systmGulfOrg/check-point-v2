@@ -8,7 +8,7 @@ class BranchRequestModel {
     required this.name,
     required this.location,
     required this.description,
-    required this.coordinates,
+    this.coordinates = const [],
   });
   final String name;
   final String location;

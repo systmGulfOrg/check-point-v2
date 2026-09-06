@@ -19,6 +19,7 @@ class EmployeesResponseModel {
 @JsonSerializable(createToJson: false)
 class EmployeesPageModel {
   const EmployeesPageModel({
+    this.items,
     this.data,
     this.totalCount,
     this.pageCount,
@@ -26,11 +27,14 @@ class EmployeesPageModel {
     this.hasPreviousPage,
   });
 
+  final List<EmployeeModel>? items;
   final List<EmployeeModel>? data;
   final int? totalCount;
   final int? pageCount;
   final bool? hasNextPage;
   final bool? hasPreviousPage;
+
+  List<EmployeeModel> get list => items ?? data ?? const [];
 
   factory EmployeesPageModel.fromJson(Map<String, dynamic> json) =>
       _$EmployeesPageModelFromJson(json);

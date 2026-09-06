@@ -11,7 +11,9 @@ class EmployeeModel {
     this.role,
     this.position,
     this.departmentName,
+    this.departmentId,
     this.branchName,
+    this.branchId,
     this.imageUrl,
     this.mobileId,
     this.canAddAttendance,
@@ -24,7 +26,9 @@ class EmployeeModel {
   final String? role;
   final String? position;
   final String? departmentName;
+  final int? departmentId;
   final String? branchName;
+  final int? branchId;
   final String? imageUrl;
   final String? mobileId;
   final bool? canAddAttendance;
