@@ -122,6 +122,7 @@
   "admin.locations.delete": "حذف",
   "admin.locations.geofenced": "نطاق جغرافي",
   "admin.locations.tabs.branches": "الفروع",
+  "admin.locations.tabs.departments": "الأقسام",
   "admin.locations.tabs.sites": "المواقع",
   "admin.locations.tabs.customers": "العملاء",
   "admin.locations.status.active": "نشط",

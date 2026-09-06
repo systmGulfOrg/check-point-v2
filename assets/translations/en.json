@@ -122,6 +122,7 @@
   "admin.locations.delete": "Delete",
   "admin.locations.geofenced": "Geofenced",
   "admin.locations.tabs.branches": "Branches",
+  "admin.locations.tabs.departments": "Departments",
   "admin.locations.tabs.sites": "Sites",
   "admin.locations.tabs.customers": "Customers",
   "admin.locations.status.active": "active",

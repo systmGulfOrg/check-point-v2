@@ -1,34 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../features/admin/presentation/screens/admin_main_screen.dart';
-import '../../features/admin/presentation/screens/admin_request_details_screen.dart';
-import '../../features/admin/presentation/screens/admin_create_employee_screen.dart';
-import '../../features/admin/presentation/screens/admin_locations_screen.dart';
-import '../../features/admin/presentation/screens/admin_shifts_policies_screen.dart';
-import '../../features/admin/presentation/screens/admin_permissions_screen.dart';
-import '../../features/admin/presentation/screens/admin_permission_details_screen.dart';
-import '../../features/admin/presentation/screens/admin_leave_management_screen.dart';
-import '../../features/admin/presentation/screens/admin_tasks_screen.dart';
-import '../../features/admin/presentation/screens/admin_plans_screen.dart';
+import '../../features/admin/presentation/cubit/admin_account_requests_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_attendance_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_branches_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_customers_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_departments_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_employees_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_leave_requests_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_plans_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_shifts_policies_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_tasks_cubit.dart';
 import '../../features/admin/presentation/screens/admin_attendance_screen.dart';
+import '../../features/admin/presentation/screens/admin_create_employee_screen.dart';
+import '../../features/admin/presentation/screens/admin_leave_management_screen.dart';
+import '../../features/admin/presentation/screens/admin_locations_screen.dart';
+import '../../features/admin/presentation/screens/admin_main_screen.dart';
+import '../../features/admin/presentation/screens/admin_permission_details_screen.dart';
+import '../../features/admin/presentation/screens/admin_permissions_screen.dart';
+import '../../features/admin/presentation/screens/admin_plans_screen.dart';
+import '../../features/admin/presentation/screens/admin_request_details_screen.dart';
 import '../../features/admin/presentation/screens/admin_shift_details_screen.dart';
+import '../../features/admin/presentation/screens/admin_shifts_policies_screen.dart';
+import '../../features/admin/presentation/screens/admin_tasks_screen.dart';
+import '../../features/auth/presentation/cubit/auth_session_cubit.dart';
+import '../../features/auth/presentation/cubit/login_cubit.dart';
+import '../../features/auth/presentation/cubit/request_account_cubit.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/request_access_screen.dart';
-import '../di/service_locator.dart';
-import '../../features/auth/presentation/cubit/login_cubit.dart';
-import '../../features/auth/presentation/cubit/auth_session_cubit.dart';
-import '../../features/auth/presentation/cubit/request_account_cubit.dart';
-import '../../features/admin/presentation/cubit/admin_employees_cubit.dart';
-import '../../features/admin/presentation/cubit/admin_account_requests_cubit.dart';
-import '../../features/admin/presentation/cubit/admin_branches_cubit.dart';
-import '../../features/admin/presentation/cubit/admin_departments_cubit.dart';
 import '../../features/employee/presentation/screens/employee_main_screen.dart';
 import '../../features/employee/presentation/screens/employee_settings_screen.dart';
-import '../../features/supervisor/presentation/screens/supervisor_main_screen.dart';
 import '../../features/supervisor/presentation/screens/supervisor_leave_management_screen.dart';
-import '../../features/supervisor/presentation/screens/supervisor_plans_screen.dart';
+import '../../features/supervisor/presentation/screens/supervisor_main_screen.dart';
 import '../../features/supervisor/presentation/screens/supervisor_notifications_screen.dart';
+import '../../features/supervisor/presentation/screens/supervisor_plans_screen.dart';
+import '../di/service_locator.dart';
 import 'routes.dart';
 
 class AppRouter {
@@ -104,21 +110,47 @@ class AppRouter {
       case AppRoutes.adminCreateEmployee:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminCreateEmployee),
-          child: const AdminCreateEmployeeScreen(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AdminEmployeesCubit>(
+                create: (_) => sl<AdminEmployeesCubit>(),
+              ),
+              BlocProvider<AdminBranchesCubit>(
+                create: (_) => sl<AdminBranchesCubit>()..load(),
+              ),
+              BlocProvider<AdminDepartmentsCubit>(
+                create: (_) => sl<AdminDepartmentsCubit>()..load(),
+              ),
+            ],
+            child: const AdminCreateEmployeeScreen(),
+          ),
         );
 
       case AppRoutes.admin:
         return _fadeRoute(
           settings: const RouteSettings(name: AppRoutes.admin),
-          child: BlocProvider<AuthSessionCubit>(
-            create: (_) => sl<AuthSessionCubit>(),
-            child: BlocProvider<AdminEmployeesCubit>(
-              create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
-              child: BlocProvider<AdminAccountRequestsCubit>(
-                create: (_) => sl<AdminAccountRequestsCubit>()..loadRequests(),
-                child: const AdminMainScreen(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AuthSessionCubit>(
+                create: (_) => sl<AuthSessionCubit>(),
               ),
-            ),
+              BlocProvider<AdminEmployeesCubit>(
+                create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
+              ),
+              BlocProvider<AdminAccountRequestsCubit>(
+                create: (_) => sl<AdminAccountRequestsCubit>()..loadRequests(),
+              ),
+              BlocProvider<AdminAttendanceCubit>(
+                create: (_) => sl<AdminAttendanceCubit>()..loadAttendance(),
+              ),
+              BlocProvider<AdminLeaveRequestsCubit>(
+                create: (_) => sl<AdminLeaveRequestsCubit>()..loadRequests(),
+              ),
+              BlocProvider<AdminTasksCubit>(
+                create: (_) => sl<AdminTasksCubit>()..loadTasks(),
+              ),
+            ],
+            child: const AdminMainScreen(),
           ),
         );
 
@@ -133,6 +165,10 @@ class AppRouter {
               BlocProvider<AdminDepartmentsCubit>(
                 create: (_) => sl<AdminDepartmentsCubit>()..load(),
               ),
+              BlocProvider<AdminCustomersCubit>(
+                create:
+                    (_) => sl<AdminCustomersCubit>()..load(type: 'Customer'),
+              ),
             ],
             child: const AdminLocationsScreen(),
           ),
@@ -141,13 +177,19 @@ class AppRouter {
       case AppRoutes.adminShiftsPolicies:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminShiftsPolicies),
-          child: const AdminShiftsPoliciesScreen(),
+          child: BlocProvider<AdminShiftsPoliciesCubit>(
+            create: (_) => sl<AdminShiftsPoliciesCubit>()..load(),
+            child: const AdminShiftsPoliciesScreen(),
+          ),
         );
 
       case AppRoutes.adminPermissions:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminPermissions),
-          child: const AdminPermissionsScreen(),
+          child: BlocProvider<AdminEmployeesCubit>(
+            create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
+            child: const AdminPermissionsScreen(),
+          ),
         );
 
       case AppRoutes.adminPermissionDetails:
@@ -162,31 +204,46 @@ class AppRouter {
         }
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminPermissionDetails),
-          child: AdminPermissionDetailsScreen(supervisorKey: supervisorKey),
+          child: BlocProvider<AdminEmployeesCubit>(
+            create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
+            child: AdminPermissionDetailsScreen(supervisorKey: supervisorKey),
+          ),
         );
 
       case AppRoutes.adminLeaveManagement:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminLeaveManagement),
-          child: const AdminLeaveManagementScreen(),
+          child: BlocProvider<AdminLeaveRequestsCubit>(
+            create: (_) => sl<AdminLeaveRequestsCubit>()..loadRequests(),
+            child: const AdminLeaveManagementScreen(),
+          ),
         );
 
       case AppRoutes.adminTasks:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminTasks),
-          child: const AdminTasksScreen(),
+          child: BlocProvider<AdminTasksCubit>(
+            create: (_) => sl<AdminTasksCubit>()..loadTasks(),
+            child: const AdminTasksScreen(),
+          ),
         );
 
       case AppRoutes.adminPlans:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminPlans),
-          child: const AdminPlansScreen(),
+          child: BlocProvider<AdminPlansCubit>(
+            create: (_) => sl<AdminPlansCubit>()..loadPlans(),
+            child: const AdminPlansScreen(),
+          ),
         );
 
       case AppRoutes.adminAttendance:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminAttendance),
-          child: const AdminAttendanceScreen(),
+          child: BlocProvider<AdminAttendanceCubit>(
+            create: (_) => sl<AdminAttendanceCubit>()..loadAttendance(),
+            child: const AdminAttendanceScreen(),
+          ),
         );
 
       case AppRoutes.adminShiftDetails:
@@ -199,7 +256,10 @@ class AppRouter {
         }
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminShiftDetails),
-          child: AdminShiftDetailsScreen(shiftKey: shiftKey),
+          child: BlocProvider<AdminShiftsPoliciesCubit>(
+            create: (_) => sl<AdminShiftsPoliciesCubit>()..load(),
+            child: AdminShiftDetailsScreen(shiftKey: shiftKey),
+          ),
         );
 
       case AppRoutes.supervisor:
