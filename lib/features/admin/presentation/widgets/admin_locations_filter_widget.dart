@@ -16,6 +16,7 @@ class AdminLocationsFilterWidget extends StatelessWidget {
 
   static const _labels = <String>[
     'admin.locations.tabs.branches',
+    'admin.locations.tabs.departments',
     'admin.locations.tabs.sites',
     'admin.locations.tabs.customers',
   ];
@@ -37,7 +38,7 @@ class AdminLocationsFilterWidget extends StatelessWidget {
                 onTap: () => onSelected(i),
                 borderRadius: BorderRadius.circular(8.r),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10.h),
+                  padding: EdgeInsets.symmetric(vertical: 8.h),
                   decoration: BoxDecoration(
                     color: selectedIndex == i
                         ? AppColors.white
@@ -47,7 +48,7 @@ class AdminLocationsFilterWidget extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     _labels[i].tr(context: context),
-                    style: AppTextStyles.font12Medium.copyWith(
+                    style: AppTextStyles.font11Medium.copyWith(
                       color: selectedIndex == i
                           ? AppColors.textPrimary
                           : AppColors.textSecondary,

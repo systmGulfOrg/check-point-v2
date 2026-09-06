@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../cubit/admin_employees_cubit.dart';
 import '../widgets/admin_permission_toggle_widget.dart';
 
 class AdminPermissionDetailsScreen extends StatefulWidget {
@@ -59,7 +61,9 @@ class _AdminPermissionDetailsScreenState
                   radius: 17.r,
                   backgroundColor: AppColors.softBlueBackground,
                   child: Text(
-                    'SJ',
+                    (widget.supervisorKey.isNotEmpty)
+                        ? widget.supervisorKey[0].toUpperCase()
+                        : 'S',
                     style: AppTextStyles.font12Bold.copyWith(
                       color: AppColors.info,
                     ),
@@ -98,11 +102,16 @@ class _AdminPermissionDetailsScreenState
                 child: AdminPermissionToggleWidget(
                   permissionKey: permission,
                   isEnabled: enabledPermissions.contains(permission),
-                  onChanged: (value) => setState(
-                    () => value
-                        ? enabledPermissions.add(permission)
-                        : enabledPermissions.remove(permission),
-                  ),
+                  onChanged: (value) {
+                    setState(
+                      () => value
+                          ? enabledPermissions.add(permission)
+                          : enabledPermissions.remove(permission),
+                    );
+                    context
+                        .read<AdminEmployeesCubit>()
+                        .setAttendancePermission(widget.supervisorKey, value);
+                  },
                 ),
               ),
             hSpace(8),
@@ -120,11 +129,16 @@ class _AdminPermissionDetailsScreenState
                 child: AdminPermissionToggleWidget(
                   permissionKey: permission,
                   isEnabled: enabledPermissions.contains(permission),
-                  onChanged: (value) => setState(
-                    () => value
-                        ? enabledPermissions.add(permission)
-                        : enabledPermissions.remove(permission),
-                  ),
+                  onChanged: (value) {
+                    setState(
+                      () => value
+                          ? enabledPermissions.add(permission)
+                          : enabledPermissions.remove(permission),
+                    );
+                    context
+                        .read<AdminEmployeesCubit>()
+                        .setPlanPermission(widget.supervisorKey, value);
+                  },
                 ),
               ),
             hSpace(8),

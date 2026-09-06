@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
+import '../../data/models/edit_employee_request_body.dart';
 import '../cubit/admin_employees_cubit.dart';
 import '../cubit/admin_employees_state.dart';
 import 'admin_employee_card_widget.dart';
@@ -10,6 +11,62 @@ import 'admin_requests_empty_state_widget.dart';
 
 class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
   const AdminEmployeesBlocBuilderWidget({super.key});
+
+  void _showEditDialog(
+    BuildContext context,
+    String id,
+    String currentName,
+    String currentPosition,
+    int? departmentId,
+    int? branchId,
+    String? role,
+  ) {
+    final nameController = TextEditingController(text: currentName);
+    final positionController = TextEditingController(text: currentPosition);
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Edit Employee'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(labelText: 'Full Name'),
+            ),
+            TextField(
+              controller: positionController,
+              decoration: const InputDecoration(labelText: 'Position'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (nameController.text.trim().isNotEmpty) {
+                context.read<AdminEmployeesCubit>().editEmployee(
+                      id,
+                      EditEmployeeRequestBody(
+                        name: nameController.text.trim(),
+                        position: positionController.text.trim(),
+                        departmentId: departmentId ?? 1,
+                        branchId: branchId ?? 1,
+                        role: role ?? 'Employee',
+                      ),
+                    );
+                Navigator.pop(dialogContext);
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) =>
@@ -47,6 +104,26 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
                           empCode: employee.id ?? '-',
                           department: employee.departmentName,
                           isOnline: employee.canAddAttendance ?? false,
+                          onEdit: () {
+                            if (employee.id != null) {
+                              _showEditDialog(
+                                context,
+                                employee.id!,
+                                employee.name ?? '',
+                                employee.position ?? '',
+                                employee.departmentId,
+                                employee.branchId,
+                                employee.role,
+                              );
+                            }
+                          },
+                          onDelete: () {
+                            if (employee.id != null) {
+                              context.read<AdminEmployeesCubit>().deleteEmployee(
+                                    employee.id!,
+                                  );
+                            }
+                          },
                         ),
                         hSpace(10),
                       ],

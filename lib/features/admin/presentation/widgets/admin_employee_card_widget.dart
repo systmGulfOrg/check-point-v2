@@ -14,6 +14,8 @@ class AdminEmployeeCardWidget extends StatelessWidget {
     super.key,
     this.department,
     this.isOnline = true,
+    this.onEdit,
+    this.onDelete,
   });
 
   final String initials;
@@ -23,6 +25,8 @@ class AdminEmployeeCardWidget extends StatelessWidget {
   final String empCode;
   final String? department;
   final bool isOnline;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   Color _getRoleBackgroundColor() {
     if (roleKey.contains('Admin') || roleKey.contains('admin')) {
@@ -51,7 +55,6 @@ class AdminEmployeeCardWidget extends StatelessWidget {
         : empCode;
 
     return Container(
-      padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
@@ -64,84 +67,138 @@ class AdminEmployeeCardWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
         children: [
-          CircleAvatar(
-            radius: 22.r,
-            backgroundColor: AppColors.softBrandBackground,
-            child: Text(
-              initials,
-              style: AppTextStyles.font14SemiBold.copyWith(
-                color: AppColors.brandPrimary,
-              ),
-            ),
-          ),
-          vSpace(12),
-          Expanded(
-            child: Column(
+          Padding(
+            padding: EdgeInsets.all(14.r),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        name,
-                        style: AppTextStyles.font16Bold.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                CircleAvatar(
+                  radius: 22.r,
+                  backgroundColor: AppColors.softBrandBackground,
+                  child: Text(
+                    initials,
+                    style: AppTextStyles.font14SemiBold.copyWith(
+                      color: AppColors.brandPrimary,
                     ),
-                    vSpace(8),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 2.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _getRoleBackgroundColor(),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Text(
-                        roleKey.tr(context: context),
-                        style: AppTextStyles.font11Medium.copyWith(
-                          color: _getRoleTextColor(),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                hSpace(2),
-                Text(
-                  email,
-                  style: AppTextStyles.font13Regular.copyWith(
-                    color: AppColors.textSecondary,
                   ),
                 ),
-                hSpace(4),
-                Text(
-                  subText,
-                  style: AppTextStyles.font12Regular.copyWith(
-                    color: AppColors.placeholder,
+                vSpace(12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              name,
+                              style: AppTextStyles.font16Bold.copyWith(
+                                color: AppColors.textPrimary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          vSpace(8),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 2.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getRoleBackgroundColor(),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Text(
+                              roleKey.tr(context: context),
+                              style: AppTextStyles.font11Medium.copyWith(
+                                color: _getRoleTextColor(),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      hSpace(2),
+                      Text(
+                        email,
+                        style: AppTextStyles.font13Regular.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      hSpace(4),
+                      Text(
+                        subText,
+                        style: AppTextStyles.font12Regular.copyWith(
+                          color: AppColors.placeholder,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                if (isOnline)
+                  Padding(
+                    padding: EdgeInsets.only(top: 4.h),
+                    child: Container(
+                      width: 8.r,
+                      height: 8.r,
+                      decoration: const BoxDecoration(
+                        color: AppColors.success,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
-          if (isOnline)
-            Padding(
-              padding: EdgeInsets.only(top: 4.h),
-              child: Container(
-                width: 8.r,
-                height: 8.r,
-                decoration: const BoxDecoration(
-                  color: AppColors.success,
-                  shape: BoxShape.circle,
-                ),
-              ),
+          if (onEdit != null || onDelete != null)
+            Row(
+              children: [
+                if (onEdit != null)
+                  Expanded(
+                    child: InkWell(
+                      onTap: onEdit,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(color: AppColors.border),
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'admin.locations.edit'.tr(context: context),
+                          style: AppTextStyles.font13SemiBold.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                if (onDelete != null)
+                  Expanded(
+                    child: InkWell(
+                      onTap: onDelete,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(color: AppColors.border),
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'admin.locations.delete'.tr(context: context),
+                          style: AppTextStyles.font13SemiBold.copyWith(
+                            color: AppColors.error,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
         ],
       ),

@@ -7,9 +7,16 @@ import 'admin_location_action_widget.dart';
 import 'admin_location_data.dart';
 
 class AdminLocationCardWidget extends StatelessWidget {
-  const AdminLocationCardWidget({required this.location, super.key});
+  const AdminLocationCardWidget({
+    required this.location,
+    this.onEdit,
+    this.onDelete,
+    super.key,
+  });
 
   final AdminLocationData location;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -111,12 +118,14 @@ class AdminLocationCardWidget extends StatelessWidget {
                 child: AdminLocationActionWidget(
                   labelKey: 'admin.locations.edit',
                   color: AppColors.textSecondary,
+                  onTap: onEdit,
                 ),
               ),
               Expanded(
                 child: AdminLocationActionWidget(
                   labelKey: 'admin.locations.delete',
                   color: AppColors.error,
+                  onTap: onDelete,
                 ),
               ),
             ],

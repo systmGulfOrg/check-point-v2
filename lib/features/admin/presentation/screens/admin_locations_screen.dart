@@ -4,9 +4,11 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
 import '../widgets/admin_branches_bloc_builder_widget.dart';
+import '../widgets/admin_customers_bloc_builder_widget.dart';
+import '../widgets/admin_departments_bloc_builder_widget.dart';
+import '../widgets/admin_locations_add_button_widget.dart';
 import '../widgets/admin_locations_filter_widget.dart';
 import '../widgets/admin_locations_tab_widget.dart';
-import '../widgets/admin_locations_add_button_widget.dart';
 
 class AdminLocationsScreen extends StatefulWidget {
   const AdminLocationsScreen({super.key});
@@ -47,16 +49,23 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'admin.locations.count'.tr(context: context, args: ['2']),
+                    'admin.locations.title'.tr(context: context),
                     style: AppTextStyles.font12Regular,
                   ),
                   AdminLocationsAddButtonWidget(category: category),
                 ],
               ),
               hSpace(10),
-              category == AdminLocationCategory.branches
-                  ? const AdminBranchesBlocBuilderWidget()
-                  : AdminLocationsTabWidget(category: category),
+              switch (category) {
+                AdminLocationCategory.branches =>
+                  const AdminBranchesBlocBuilderWidget(),
+                AdminLocationCategory.departments =>
+                  const AdminDepartmentsBlocBuilderWidget(),
+                AdminLocationCategory.sites =>
+                  const AdminCustomersBlocBuilderWidget(type: 'site'),
+                AdminLocationCategory.customers =>
+                  const AdminCustomersBlocBuilderWidget(type: 'customer'),
+              },
             ],
           ),
         ),

@@ -1,8 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../../data/models/add_employee_request_body.dart';
+import '../cubit/admin_branches_cubit.dart';
+import '../cubit/admin_branches_state.dart';
+import '../cubit/admin_departments_cubit.dart';
+import '../cubit/admin_departments_state.dart';
+import '../cubit/admin_employees_cubit.dart';
 import '../widgets/admin_wizard_field_widget.dart';
 import '../widgets/admin_wizard_stepper_widget.dart';
 
@@ -18,41 +25,34 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
   final formKey = GlobalKey<FormState>();
   late final TextEditingController nameController;
   late final TextEditingController usernameController;
+  late final TextEditingController passwordController;
   late final TextEditingController mobileController;
-  late final TextEditingController emailController;
-  late final TextEditingController codeController;
+  late final TextEditingController positionController;
   int currentStep = 0;
-  String role = 'auth.role.employee';
-  String status = 'admin.employeeWizard.active';
-  String department = 'admin.employeeWizard.operations';
-  String branch = 'admin.employeeWizard.headOffice';
-  String supervisor = 'admin.employeeWizard.supervisorAhmed';
-  String shift = 'admin.employeeWizard.morningShift';
-  String policy = 'admin.employeeWizard.standardPolicy';
-  bool officeAttendance = true;
-  bool siteAttendance = true;
-  bool customerAttendance = false;
+  String role = 'Employee';
+  int? selectedDepartmentId;
+  int? selectedBranchId;
   bool isSaving = false;
   bool isCreated = false;
-  bool saveFailed = false;
+  String? saveErrorMessage;
 
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: 'Ahmed Mohamed');
+    nameController = TextEditingController();
     usernameController = TextEditingController();
+    passwordController = TextEditingController();
     mobileController = TextEditingController();
-    emailController = TextEditingController();
-    codeController = TextEditingController();
+    positionController = TextEditingController();
   }
 
   @override
   void dispose() {
     nameController.dispose();
     usernameController.dispose();
+    passwordController.dispose();
     mobileController.dispose();
-    emailController.dispose();
-    codeController.dispose();
+    positionController.dispose();
     super.dispose();
   }
 
@@ -60,35 +60,15 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
     String hint, {
     TextEditingController? controller,
     bool readOnly = false,
+    bool obscureText = false,
   }) => CustomTextFormField(
     hintText: hint,
     controller: controller,
     readOnly: readOnly,
+    obscureText: obscureText,
     validator: (value) => value == null || value.trim().isEmpty
         ? 'admin.employeeWizard.requiredField'.tr(context: context)
         : null,
-  );
-
-  Widget dropdownField(
-    String value,
-    List<String> values,
-    ValueChanged<String?> onChanged,
-  ) => DropdownButtonFormField<String>(
-    initialValue: value,
-    isExpanded: true,
-    decoration: InputDecoration(
-      filled: true,
-      fillColor: AppColors.fieldBackground,
-    ),
-    items: values
-        .map(
-          (item) => DropdownMenuItem(
-            value: item,
-            child: Text(item.tr(context: context)),
-          ),
-        )
-        .toList(),
-    onChanged: onChanged,
   );
 
   @override
@@ -201,6 +181,14 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           ),
                         ),
                         AdminWizardFieldWidget(
+                          label: 'Password',
+                          child: textField(
+                            'Enter password',
+                            controller: passwordController,
+                            obscureText: true,
+                          ),
+                        ),
+                        AdminWizardFieldWidget(
                           label: 'admin.employeeWizard.mobile'.tr(
                             context: context,
                           ),
@@ -209,26 +197,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                               context: context,
                             ),
                             controller: mobileController,
-                          ),
-                        ),
-                        AdminWizardFieldWidget(
-                          label: 'admin.employeeWizard.email'.tr(
-                            context: context,
-                          ),
-                          child: textField(
-                            'admin.employeeWizard.emailHint'.tr(
-                              context: context,
-                            ),
-                            controller: emailController,
-                          ),
-                        ),
-                        OutlinedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.add_a_photo_outlined),
-                          label: Text(
-                            'admin.employeeWizard.profilePhoto'.tr(
-                              context: context,
-                            ),
                           ),
                         ),
                       ],
@@ -242,17 +210,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                         ),
                         hSpace(14),
                         AdminWizardFieldWidget(
-                          label: 'admin.employeeWizard.employeeCode'.tr(
-                            context: context,
-                          ),
-                          child: textField(
-                            'admin.employeeWizard.employeeCodeHint'.tr(
-                              context: context,
-                            ),
-                            controller: codeController,
-                          ),
-                        ),
-                        AdminWizardFieldWidget(
                           label: 'admin.employeeWizard.position'.tr(
                             context: context,
                           ),
@@ -260,35 +217,36 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                             'admin.employeeWizard.positionHint'.tr(
                               context: context,
                             ),
+                            controller: positionController,
                           ),
                         ),
                         AdminWizardFieldWidget(
                           label: 'admin.employeeWizard.role'.tr(
                             context: context,
                           ),
-                          child: dropdownField(role, const [
-                            'auth.role.admin',
-                            'auth.role.supervisor',
-                            'auth.role.employee',
-                          ], (value) => setState(() => role = value ?? role)),
-                        ),
-                        AdminWizardFieldWidget(
-                          label: 'admin.employeeWizard.joinDate'.tr(
-                            context: context,
-                          ),
-                          child: textField('02/09/2026', readOnly: true),
-                        ),
-                        AdminWizardFieldWidget(
-                          label: 'admin.employeeWizard.status'.tr(
-                            context: context,
-                          ),
-                          child: dropdownField(
-                            status,
-                            const [
-                              'admin.employeeWizard.active',
-                              'admin.employeeWizard.inactive',
+                          child: DropdownButtonFormField<String>(
+                            initialValue: role,
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: AppColors.fieldBackground,
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'Employee',
+                                child: Text('Employee'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Supervisor',
+                                child: Text('Supervisor'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Admin',
+                                child: Text('Admin'),
+                              ),
                             ],
-                            (value) => setState(() => status = value ?? status),
+                            onChanged: (val) =>
+                                setState(() => role = val ?? 'Employee'),
                           ),
                         ),
                       ],
@@ -303,147 +261,73 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           style: AppTextStyles.font16Bold,
                         ),
                         hSpace(14),
-                        AdminWizardFieldWidget(
-                          label: 'admin.employeeWizard.department'.tr(
-                            context: context,
-                          ),
-                          child: dropdownField(
-                            department,
-                            const [
-                              'admin.employeeWizard.operations',
-                              'admin.employeeWizard.finance',
-                              'admin.employeeWizard.technology',
-                            ],
-                            (value) => setState(
-                              () => department = value ?? department,
-                            ),
-                          ),
-                        ),
-                        AdminWizardFieldWidget(
-                          label: 'admin.employeeWizard.branch'.tr(
-                            context: context,
-                          ),
-                          child: dropdownField(
-                            branch,
-                            const [
-                              'admin.employeeWizard.headOffice',
-                              'admin.employeeWizard.northBranch',
-                            ],
-                            (value) => setState(() => branch = value ?? branch),
-                          ),
-                        ),
-                        AdminWizardFieldWidget(
-                          label: 'admin.employeeWizard.supervisor'.tr(
-                            context: context,
-                          ),
-                          child: dropdownField(
-                            supervisor,
-                            const [
-                              'admin.employeeWizard.supervisorAhmed',
-                              'admin.employeeWizard.supervisorSara',
-                            ],
-                            (value) => setState(
-                              () => supervisor = value ?? supervisor,
-                            ),
-                          ),
-                        ),
-                        AdminWizardFieldWidget(
-                          label: 'admin.employeeWizard.shift'.tr(
-                            context: context,
-                          ),
-                          child: dropdownField(shift, const [
-                            'admin.employeeWizard.morningShift',
-                            'admin.employeeWizard.eveningShift',
-                          ], (value) => setState(() => shift = value ?? shift)),
-                        ),
-                        AdminWizardFieldWidget(
-                          label: 'admin.employeeWizard.policy'.tr(
-                            context: context,
-                          ),
-                          child: dropdownField(
-                            policy,
-                            const [
-                              'admin.employeeWizard.standardPolicy',
-                              'admin.employeeWizard.flexiblePolicy',
-                            ],
-                            (value) => setState(() => policy = value ?? policy),
-                          ),
-                        ),
-                        Text(
-                          'admin.employeeWizard.permissions'.tr(
-                            context: context,
-                          ),
-                          style: AppTextStyles.font14SemiBold,
-                        ),
-                        CheckboxListTile(
-                          value: officeAttendance,
-                          onChanged: (value) =>
-                              setState(() => officeAttendance = value ?? false),
-                          title: Text(
-                            'admin.employeeWizard.officeAttendance'.tr(
-                              context: context,
-                            ),
-                          ),
-                          contentPadding: EdgeInsets.zero,
-                          activeColor: AppColors.brandPrimary,
-                        ),
-                        CheckboxListTile(
-                          value: siteAttendance,
-                          onChanged: (value) =>
-                              setState(() => siteAttendance = value ?? false),
-                          title: Text(
-                            'admin.employeeWizard.siteAttendance'.tr(
-                              context: context,
-                            ),
-                          ),
-                          contentPadding: EdgeInsets.zero,
-                          activeColor: AppColors.brandPrimary,
-                        ),
-                        CheckboxListTile(
-                          value: customerAttendance,
-                          onChanged: (value) => setState(
-                            () => customerAttendance = value ?? false,
-                          ),
-                          title: Text(
-                            'admin.employeeWizard.customerAttendance'.tr(
-                              context: context,
-                            ),
-                          ),
-                          contentPadding: EdgeInsets.zero,
-                          activeColor: AppColors.brandPrimary,
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(14.r),
-                          decoration: BoxDecoration(
-                            color: AppColors.infoBackground,
-                            borderRadius: BorderRadius.circular(14.r),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.phone_android_rounded,
-                                color: AppColors.brandPrimary,
-                                size: 22.r,
+                        BlocBuilder<
+                          AdminDepartmentsCubit,
+                          AdminDepartmentsState
+                        >(
+                          builder: (context, deptState) {
+                            final departments = switch (deptState) {
+                              AdminDepartmentsSuccess(:final departments) =>
+                                departments,
+                              _ => const [],
+                            };
+                            return AdminWizardFieldWidget(
+                              label: 'admin.employeeWizard.department'.tr(
+                                context: context,
                               ),
-                              vSpace(10),
-                              Expanded(
-                                child: Text(
-                                  'admin.employeeWizard.registeredDevice'.tr(
-                                    context: context,
-                                  ),
-                                  style: AppTextStyles.font13SemiBold,
+                              child: DropdownButtonFormField<int>(
+                                initialValue: selectedDepartmentId,
+                                isExpanded: true,
+                                hint: const Text('Select Department'),
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.fieldBackground,
                                 ),
+                                items: departments
+                                    .map(
+                                      (d) => DropdownMenuItem<int>(
+                                        value: d.id,
+                                        child: Text(d.name ?? '-'),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (val) =>
+                                    setState(() => selectedDepartmentId = val),
                               ),
-                              TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  'admin.employeeWizard.resetDevice'.tr(
-                                    context: context,
-                                  ),
+                            );
+                          },
+                        ),
+                        BlocBuilder<AdminBranchesCubit, AdminBranchesState>(
+                          builder: (context, branchState) {
+                            final branches = switch (branchState) {
+                              AdminBranchesSuccess(:final branches) => branches,
+                              _ => const [],
+                            };
+                            return AdminWizardFieldWidget(
+                              label: 'admin.employeeWizard.branch'.tr(
+                                context: context,
+                              ),
+                              child: DropdownButtonFormField<int>(
+                                initialValue: selectedBranchId,
+                                isExpanded: true,
+                                hint: const Text('Select Branch'),
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.fieldBackground,
                                 ),
+                                items: branches
+                                    .map(
+                                      (b) => DropdownMenuItem<int>(
+                                        value: b.id,
+                                        child: Text(b.name ?? '-'),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (val) =>
+                                    setState(() => selectedBranchId = val),
                               ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -464,23 +348,14 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           style: AppTextStyles.font13Regular,
                         ),
                         hSpace(16),
-                        for (final item in const [
-                          ('admin.employeeWizard.reviewName', 'Ahmed Mohamed'),
-                          (
-                            'admin.employeeWizard.reviewUsername',
-                            'ahmed.mohamed',
-                          ),
-                          (
-                            'admin.employeeWizard.reviewDepartment',
-                            'Operations',
-                          ),
-                          ('admin.employeeWizard.reviewBranch', 'Head Office'),
-                          (
-                            'admin.employeeWizard.reviewSupervisor',
-                            'Sara Ahmed',
-                          ),
-                          ('admin.employeeWizard.reviewShift', 'Morning Shift'),
-                          ('admin.employeeWizard.reviewDevice', 'Samsung A54'),
+                        for (final item in [
+                          ('Name', nameController.text),
+                          ('Username', usernameController.text),
+                          ('Position', positionController.text),
+                          ('Mobile ID', mobileController.text),
+                          ('Role', role),
+                          ('Department ID', '${selectedDepartmentId ?? '-'}'),
+                          ('Branch ID', '${selectedBranchId ?? '-'}'),
                         ])
                           Padding(
                             padding: EdgeInsets.only(bottom: 13.h),
@@ -488,7 +363,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  item.$1.tr(context: context),
+                                  item.$1,
                                   style: AppTextStyles.font13Regular,
                                 ),
                                 Text(
@@ -504,7 +379,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                 ),
               ),
               hSpace(16),
-              if (saveFailed)
+              if (saveErrorMessage != null)
                 Container(
                   margin: EdgeInsets.only(bottom: 12.h),
                   padding: EdgeInsets.all(12.r),
@@ -513,8 +388,8 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Text(
-                    'errors.unknown'.tr(context: context),
-                    textAlign: TextAlign.right,
+                    saveErrorMessage!,
+                    textAlign: TextAlign.center,
                     style: AppTextStyles.font13Regular.copyWith(
                       color: AppColors.error,
                     ),
@@ -547,28 +422,43 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           setState(() => currentStep++);
                           return;
                         }
-                        setState(() {
-                          isSaving = true;
-                          saveFailed = false;
-                        });
-                        try {
-                          await Future<void>.delayed(
-                            const Duration(milliseconds: 900),
-                          );
-                        } catch (_) {
-                          if (mounted) {
-                            setState(() {
-                              isSaving = false;
-                              saveFailed = true;
-                            });
-                          }
+                        if (selectedDepartmentId == null ||
+                            selectedBranchId == null) {
+                          setState(() {
+                            saveErrorMessage =
+                                'Please select department and branch.';
+                          });
                           return;
                         }
-                        if (!mounted) return;
                         setState(() {
-                          isSaving = false;
-                          isCreated = true;
+                          isSaving = true;
+                          saveErrorMessage = null;
                         });
+                        final body = AddEmployeeRequestBody(
+                          name: nameController.text.trim(),
+                          username: usernameController.text.trim(),
+                          password: passwordController.text.trim(),
+                          position: positionController.text.trim(),
+                          mobileId: mobileController.text.trim(),
+                          role: role,
+                          departmentId: selectedDepartmentId!,
+                          branchId: selectedBranchId!,
+                        );
+                        final success = await context
+                            .read<AdminEmployeesCubit>()
+                            .addEmployee(body);
+                        if (!mounted) return;
+                        if (success) {
+                          setState(() {
+                            isSaving = false;
+                            isCreated = true;
+                          });
+                        } else {
+                          setState(() {
+                            isSaving = false;
+                            saveErrorMessage = 'Failed to create employee.';
+                          });
+                        }
                       },
                       isLoading: isSaving,
                       backgroundColor: AppColors.brandPrimary,

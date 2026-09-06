@@ -25,6 +25,7 @@ class _AdminCreateLocationSheetWidgetState
 
   String get titleKey => switch (widget.category) {
     AdminLocationCategory.branches => 'admin.locations.create.branchTitle',
+    AdminLocationCategory.departments => 'Department',
     AdminLocationCategory.sites => 'admin.locations.create.siteTitle',
     AdminLocationCategory.customers => 'admin.locations.create.customerTitle',
   };

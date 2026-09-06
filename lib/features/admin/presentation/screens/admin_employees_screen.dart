@@ -36,10 +36,12 @@ class _AdminEmployeesScreenState extends State<AdminEmployeesScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'admin.employees.title'.tr(context: context),
-                  style: AppTextStyles.font20Bold.copyWith(
-                    color: AppColors.textPrimary,
+                Expanded(
+                  child: Text(
+                    'admin.employees.title'.tr(context: context),
+                    style: AppTextStyles.font20Bold.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                 ),
                 Image.asset(AppAssets.logo, height: 32.h, fit: BoxFit.contain),

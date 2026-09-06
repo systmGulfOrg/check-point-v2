@@ -4,7 +4,7 @@ import '../../../../core/core.dart';
 import 'admin_location_card_widget.dart';
 import 'admin_location_data.dart';
 
-enum AdminLocationCategory { branches, sites, customers }
+enum AdminLocationCategory { branches, departments, sites, customers }
 
 class AdminLocationsTabWidget extends StatelessWidget {
   const AdminLocationsTabWidget({required this.category, super.key});
@@ -17,16 +17,6 @@ class AdminLocationsTabWidget extends StatelessWidget {
       descriptionKey: 'admin.locations.branches.headquarters.description',
       addressKey: 'admin.locations.branches.headquarters.address',
       statusKey: 'admin.locations.status.inactive',
-      icon: Icons.home_work_outlined,
-      iconColor: AppColors.info,
-      iconBackgroundColor: AppColors.softBlueBackground,
-      isGeofenced: true,
-    ),
-    AdminLocationData(
-      nameKey: 'admin.locations.branches.north.name',
-      descriptionKey: 'admin.locations.branches.north.description',
-      addressKey: 'admin.locations.branches.north.address',
-      statusKey: 'admin.locations.status.active',
       icon: Icons.home_work_outlined,
       iconColor: AppColors.info,
       iconBackgroundColor: AppColors.softBlueBackground,
@@ -45,15 +35,6 @@ class AdminLocationsTabWidget extends StatelessWidget {
       iconBackgroundColor: AppColors.softBlueBackground,
       isGeofenced: true,
     ),
-    AdminLocationData(
-      nameKey: 'admin.locations.sites.marina.name',
-      descriptionKey: 'admin.locations.sites.marina.description',
-      addressKey: 'admin.locations.sites.marina.address',
-      statusKey: 'admin.locations.status.active',
-      icon: Icons.map_outlined,
-      iconColor: AppColors.info,
-      iconBackgroundColor: AppColors.softBlueBackground,
-    ),
   ];
 
   static const _customers = <AdminLocationData>[
@@ -67,21 +48,13 @@ class AdminLocationsTabWidget extends StatelessWidget {
       iconBackgroundColor: AppColors.softBlueBackground,
       isGeofenced: true,
     ),
-    AdminLocationData(
-      nameKey: 'admin.locations.customers.emaar.name',
-      descriptionKey: 'admin.locations.customers.emaar.description',
-      addressKey: 'admin.locations.customers.emaar.address',
-      statusKey: 'admin.locations.status.active',
-      icon: Icons.people_outline_rounded,
-      iconColor: AppColors.info,
-      iconBackgroundColor: AppColors.softBlueBackground,
-    ),
   ];
 
   @override
   Widget build(BuildContext context) {
     final locations = switch (category) {
       AdminLocationCategory.branches => _branches,
+      AdminLocationCategory.departments => _branches,
       AdminLocationCategory.sites => _sites,
       AdminLocationCategory.customers => _customers,
     };
