@@ -4,10 +4,7 @@ import '../../../../core/core.dart';
 import 'admin_location_skeleton_card_widget.dart';
 
 class AdminLocationsSkeletonWidget extends StatefulWidget {
-  const AdminLocationsSkeletonWidget({
-    this.itemCount = 4,
-    super.key,
-  });
+  const AdminLocationsSkeletonWidget({this.itemCount = 4, super.key});
 
   final int itemCount;
 
@@ -29,9 +26,10 @@ class _AdminLocationsSkeletonWidgetState
       vsync: this,
       duration: const Duration(milliseconds: 900),
     )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.35, end: 0.85).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.35,
+      end: 0.85,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

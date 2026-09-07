@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'customer_request_model.dart';
+
 part 'customer_response_model.g.dart';
 
 @JsonSerializable(createToJson: false)
@@ -16,11 +18,7 @@ class CustomerResponseModel {
 
 @JsonSerializable(createToJson: false)
 class CustomerPageModel {
-  const CustomerPageModel({
-    this.items,
-    this.data,
-    this.totalCount,
-  });
+  const CustomerPageModel({this.items, this.data, this.totalCount});
 
   final List<CustomerModel>? items;
   final List<CustomerModel>? data;
@@ -40,6 +38,7 @@ class CustomerModel {
     this.workesAs,
     this.location,
     this.customerType,
+    this.coordinates,
   });
 
   final String? id;
@@ -47,6 +46,7 @@ class CustomerModel {
   final String? workesAs;
   final String? location;
   final String? customerType;
+  final List<CustomerCoordinateModel>? coordinates;
 
   factory CustomerModel.fromJson(Map<String, dynamic> json) =>
       _$CustomerModelFromJson(json);

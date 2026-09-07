@@ -3,15 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import 'supervisor_plan_data.dart';
+import '../../../admin/data/models/admin_plan_model.dart';
 
 class SupervisorPlanCardWidget extends StatelessWidget {
-  const SupervisorPlanCardWidget({required this.plan, super.key});
+  const SupervisorPlanCardWidget({
+    required this.plan,
+    super.key,
+    this.onDelete,
+  });
 
-  final SupervisorPlanData plan;
+  final AdminPlanModel plan;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
+    final title = plan.title ?? 'Plan';
+    final description = plan.description ?? '';
+    final assignee = plan.assignedEmployeeName ?? 'Unassigned';
+    final start = AppDateFormatter.formatDateString(plan.startDate);
+    final end = AppDateFormatter.formatDateString(plan.endDate);
+    final dateRange = (start != '-' && end != '-')
+        ? '$start – $end'
+        : (start != '-' ? start : '');
+
     return Container(
       padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
@@ -24,10 +38,14 @@ class SupervisorPlanCardWidget extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 19.r,
-            backgroundColor: plan.iconBackgroundColor,
-            child: Icon(Icons.map_outlined, color: plan.iconColor, size: 20.r),
+            backgroundColor: AppColors.softBlueBackground,
+            child: Icon(
+              Icons.map_outlined,
+              color: AppColors.brandPrimary,
+              size: 20.r,
+            ),
           ),
-          vSpace(12),
+          wSpace(12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,79 +53,48 @@ class SupervisorPlanCardWidget extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        plan.titleKey.tr(context: context),
-                        style: AppTextStyles.font14SemiBold,
-                      ),
+                      child: Text(title, style: AppTextStyles.font14SemiBold),
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 3.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: plan.iconBackgroundColor,
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Text(
-                        plan.typeKey.tr(context: context),
-                        style: AppTextStyles.font11Medium.copyWith(
-                          color: plan.iconColor,
+                    if (onDelete != null)
+                      IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: Icon(
+                          Icons.delete_outline_rounded,
+                          size: 18.r,
+                          color: AppColors.error,
                         ),
+                        onPressed: onDelete,
                       ),
-                    ),
                   ],
                 ),
-                hSpace(6),
+                if (dateRange.trim().isNotEmpty) ...[
+                  hSpace(4),
+                  Text(
+                    dateRange,
+                    style: AppTextStyles.font12Regular.copyWith(
+                      color: AppColors.placeholder,
+                    ),
+                  ),
+                ],
+                if (description.isNotEmpty) ...[
+                  hSpace(4),
+                  Text(
+                    description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.font12Regular,
+                  ),
+                ],
+                hSpace(8),
                 Text(
-                  plan.dateTime,
-                  style: AppTextStyles.font12Regular.copyWith(
+                  'supervisor.tasks.assignedTo'.tr(
+                    context: context,
+                    args: [assignee],
+                  ),
+                  style: AppTextStyles.font11Medium.copyWith(
                     color: AppColors.placeholder,
                   ),
-                ),
-                hSpace(4),
-                Text(
-                  plan.descriptionKey.tr(context: context),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.font12Regular,
-                ),
-                hSpace(8),
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 9.w,
-                        vertical: 4.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.softGreenBackground,
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Text(
-                        'supervisor.plans.status.planned'.tr(context: context),
-                        style: AppTextStyles.font12Bold.copyWith(
-                          color: AppColors.success,
-                        ),
-                      ),
-                    ),
-                    vSpace(8),
-                    for (final initials in plan.assigneeInitials)
-                      Padding(
-                        padding: EdgeInsetsDirectional.only(start: 2.w),
-                        child: CircleAvatar(
-                          radius: 10.r,
-                          backgroundColor: AppColors.softGreenBackground,
-                          child: Text(
-                            initials,
-                            style: AppTextStyles.font11Medium.copyWith(
-                              color: AppColors.success,
-                              fontSize: 8.sp,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
                 ),
               ],
             ),

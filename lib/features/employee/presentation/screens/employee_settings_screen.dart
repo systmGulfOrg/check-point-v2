@@ -16,7 +16,7 @@ class EmployeeSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentLanguageLabel = switch ((
       context.locale.languageCode,
-      context.locale.countryCode
+      context.locale.countryCode,
     )) {
       ('en', _) => 'English',
       ('ar', 'EG') => 'العامية المصرية',

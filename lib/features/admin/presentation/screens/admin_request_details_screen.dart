@@ -177,9 +177,9 @@ class AdminRequestDetailsScreen extends StatelessWidget {
                       Flexible(
                         child: Text(
                           request.createdDate != null
-                              ? DateFormat(
-                                  'dd/MM/yyyy',
-                                ).format(request.createdDate!)
+                              ? AppDateFormatter.formatDayMonthYear(
+                                  request.createdDate!,
+                                )
                               : '-',
                           style: AppTextStyles.font13SemiBold,
                         ),

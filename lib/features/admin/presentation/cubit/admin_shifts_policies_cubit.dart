@@ -24,7 +24,10 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
           await loadPoliciesForShift(shifts.first.id!);
         } else {
           emit(
-            AdminShiftsPoliciesState.success(shifts: shifts, policies: const []),
+            AdminShiftsPoliciesState.success(
+              shifts: shifts,
+              policies: const [],
+            ),
           );
         }
       case Failure(:final failure):
@@ -33,11 +36,15 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
   }
 
   Future<void> loadPoliciesForShift(int shiftId) async {
-    final result = await shiftsPoliciesRepo.getPoliciesByShift(shiftId: shiftId);
+    final result = await shiftsPoliciesRepo.getPoliciesByShift(
+      shiftId: shiftId,
+    );
     switch (result) {
       case Success(:final data):
         policies = data;
-        emit(AdminShiftsPoliciesState.success(shifts: shifts, policies: policies));
+        emit(
+          AdminShiftsPoliciesState.success(shifts: shifts, policies: policies),
+        );
       case Failure(:final failure):
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
     }
@@ -49,7 +56,11 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     switch (result) {
       case Success():
         await load();
-        emit(const AdminShiftsPoliciesState.actionSuccess('Shift added successfully'));
+        emit(
+          const AdminShiftsPoliciesState.actionSuccess(
+            'Shift added successfully',
+          ),
+        );
         return true;
       case Failure(:final failure):
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
@@ -65,7 +76,11 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     switch (result) {
       case Success():
         await load();
-        emit(const AdminShiftsPoliciesState.actionSuccess('Shift updated successfully'));
+        emit(
+          const AdminShiftsPoliciesState.actionSuccess(
+            'Shift updated successfully',
+          ),
+        );
         return true;
       case Failure(:final failure):
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
@@ -81,7 +96,11 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     switch (result) {
       case Success():
         await load();
-        emit(const AdminShiftsPoliciesState.actionSuccess('Shift deleted successfully'));
+        emit(
+          const AdminShiftsPoliciesState.actionSuccess(
+            'Shift deleted successfully',
+          ),
+        );
         return true;
       case Failure(:final failure):
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
@@ -97,7 +116,11 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     switch (result) {
       case Success():
         await loadPoliciesForShift(body.shiftId);
-        emit(const AdminShiftsPoliciesState.actionSuccess('Policy added successfully'));
+        emit(
+          const AdminShiftsPoliciesState.actionSuccess(
+            'Policy added successfully',
+          ),
+        );
         return true;
       case Failure(:final failure):
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
@@ -113,7 +136,11 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     switch (result) {
       case Success():
         await loadPoliciesForShift(shiftId);
-        emit(const AdminShiftsPoliciesState.actionSuccess('Policy deleted successfully'));
+        emit(
+          const AdminShiftsPoliciesState.actionSuccess(
+            'Policy deleted successfully',
+          ),
+        );
         return true;
       case Failure(:final failure):
         emit(AdminShiftsPoliciesState.error(failure.messageKey));

@@ -73,9 +73,7 @@ class AdminTaskSkeletonCardWidget extends StatelessWidget {
           Container(
             height: 34.h,
             decoration: const BoxDecoration(
-              border: Border(
-                top: BorderSide(color: AppColors.border),
-              ),
+              border: Border(top: BorderSide(color: AppColors.border)),
             ),
             child: Row(
               children: [
@@ -91,10 +89,7 @@ class AdminTaskSkeletonCardWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  width: 1.w,
-                  color: AppColors.border,
-                ),
+                Container(width: 1.w, color: AppColors.border),
                 Expanded(
                   child: Center(
                     child: Container(

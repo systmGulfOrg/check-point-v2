@@ -108,9 +108,10 @@ class _AdminPermissionDetailsScreenState
                           ? enabledPermissions.add(permission)
                           : enabledPermissions.remove(permission),
                     );
-                    context
-                        .read<AdminEmployeesCubit>()
-                        .setAttendancePermission(widget.supervisorKey, value);
+                    context.read<AdminEmployeesCubit>().setAttendancePermission(
+                      widget.supervisorKey,
+                      value,
+                    );
                   },
                 ),
               ),
@@ -135,9 +136,10 @@ class _AdminPermissionDetailsScreenState
                           ? enabledPermissions.add(permission)
                           : enabledPermissions.remove(permission),
                     );
-                    context
-                        .read<AdminEmployeesCubit>()
-                        .setPlanPermission(widget.supervisorKey, value);
+                    context.read<AdminEmployeesCubit>().setPlanPermission(
+                      widget.supervisorKey,
+                      value,
+                    );
                   },
                 ),
               ),

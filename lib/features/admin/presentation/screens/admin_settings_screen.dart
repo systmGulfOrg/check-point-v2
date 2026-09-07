@@ -16,7 +16,7 @@ class AdminSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentLanguageLabel = switch ((
       context.locale.languageCode,
-      context.locale.countryCode
+      context.locale.countryCode,
     )) {
       ('en', _) => 'English',
       ('ar', 'EG') => 'العامية المصرية',
@@ -38,11 +38,7 @@ class AdminSettingsScreen extends StatelessWidget {
                     color: AppColors.textPrimary,
                   ),
                 ),
-                Image.asset(
-                  AppAssets.logo,
-                  height: 32.h,
-                  fit: BoxFit.contain,
-                ),
+                Image.asset(AppAssets.logo, height: 32.h, fit: BoxFit.contain),
               ],
             ),
             hSpace(20),

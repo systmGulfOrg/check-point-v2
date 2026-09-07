@@ -6,10 +6,7 @@ import '../../../../core/styles/app_colors.dart';
 import '../../../../core/styles/app_text_styles.dart';
 
 class BiometricLoginButtonWidget extends StatelessWidget {
-  const BiometricLoginButtonWidget({
-    super.key,
-    required this.onPressed,
-  });
+  const BiometricLoginButtonWidget({super.key, required this.onPressed});
 
   final VoidCallback onPressed;
 

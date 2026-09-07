@@ -62,8 +62,9 @@ class AdminRequestsSegmentedFilterWidget extends StatelessWidget {
                       color: isSelected
                           ? AppColors.brandPrimary
                           : AppColors.textSecondary,
-                      fontWeight:
-                          isSelected ? FontWeight.w700 : FontWeight.w500,
+                      fontWeight: isSelected
+                          ? FontWeight.w700
+                          : FontWeight.w500,
                     ),
                   ),
                 ),

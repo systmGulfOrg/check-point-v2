@@ -41,7 +41,8 @@ class PoliceModel {
   final int? allowedDelayTime;
   final int? allowedEarlyLeaveTime;
 
-  String get effectiveName => policyName ?? shift?.name ?? 'Policy #${id ?? ''}';
+  String get effectiveName =>
+      policyName ?? shift?.name ?? 'Policy #${id ?? ''}';
   String get effectiveClockIn => clockInTime ?? startTime ?? '-';
   String get effectiveClockOut => clockOutTime ?? endTime ?? '-';
 
@@ -53,11 +54,7 @@ class PoliceModel {
 
 @JsonSerializable()
 class PoliceResponseModel {
-  const PoliceResponseModel({
-    this.value,
-    this.isSuccess,
-    this.successMessage,
-  });
+  const PoliceResponseModel({this.value, this.isSuccess, this.successMessage});
 
   final PolicePageModel? value;
   final bool? isSuccess;
@@ -71,11 +68,7 @@ class PoliceResponseModel {
 
 @JsonSerializable()
 class PolicePageModel {
-  const PolicePageModel({
-    this.items,
-    this.data,
-    this.totalCount,
-  });
+  const PolicePageModel({this.items, this.data, this.totalCount});
 
   final List<PoliceModel>? items;
   final List<PoliceModel>? data;
@@ -133,15 +126,12 @@ class AssignPoliceRequestBody {
 
 @JsonSerializable()
 class RemoveAssignPolicyRequestBody {
-  const RemoveAssignPolicyRequestBody({
-    required this.employeeId,
-  });
+  const RemoveAssignPolicyRequestBody({required this.employeeId});
 
   final String employeeId;
 
-  factory RemoveAssignPolicyRequestBody.fromJson(
-    Map<String, dynamic> json,
-  ) => _$RemoveAssignPolicyRequestBodyFromJson(json);
+  factory RemoveAssignPolicyRequestBody.fromJson(Map<String, dynamic> json) =>
+      _$RemoveAssignPolicyRequestBodyFromJson(json);
 
   Map<String, dynamic> toJson() => _$RemoveAssignPolicyRequestBodyToJson(this);
 }

@@ -22,6 +22,30 @@ class AdminHomeScreen extends StatelessWidget {
     final leaveState = context.watch<AdminLeaveRequestsCubit>().state;
     final tasksState = context.watch<AdminTasksCubit>().state;
 
+    final isStaffLoading = employeesState.maybeWhen(
+      loading: () => true,
+      initial: () => true,
+      orElse: () => false,
+    );
+
+    final isAttendanceLoading = attendanceState.maybeWhen(
+      loading: () => true,
+      initial: () => true,
+      orElse: () => false,
+    );
+
+    final isLeaveLoading = leaveState.maybeWhen(
+      loading: () => true,
+      initial: () => true,
+      orElse: () => false,
+    );
+
+    final isTasksLoading = tasksState.maybeWhen(
+      loading: () => true,
+      initial: () => true,
+      orElse: () => false,
+    );
+
     final totalStaff = employeesState.maybeWhen(
       success: (employees, filter) => employees.length,
       orElse: () => 0,
@@ -33,9 +57,8 @@ class AdminHomeScreen extends StatelessWidget {
     );
 
     final pendingLeaves = leaveState.maybeWhen(
-      success: (requests) => requests
-          .where((r) => r.status?.toLowerCase() == 'pending')
-          .length,
+      success: (requests) =>
+          requests.where((r) => r.status?.toLowerCase() == 'pending').length,
       orElse: () => 0,
     );
 
@@ -66,15 +89,23 @@ class AdminHomeScreen extends StatelessWidget {
               presentToday: presentToday,
               pendingLeaves: pendingLeaves,
               openTasks: openTasks,
+              isStaffLoading: isStaffLoading,
+              isAttendanceLoading: isAttendanceLoading,
+              isLeaveLoading: isLeaveLoading,
+              isTasksLoading: isTasksLoading,
             ),
             hSpace(20),
             AdminOverviewCardWidget(
               employeesOnDuty: presentToday,
               totalStaff: totalStaff,
               lateArrivals: 0,
-              absences: totalStaff > presentToday ? totalStaff - presentToday : 0,
+              absences: totalStaff > presentToday
+                  ? totalStaff - presentToday
+                  : 0,
               pendingLeaveRequests: pendingLeaves,
               dateText: dateFormatted,
+              isLoading:
+                  isStaffLoading || isAttendanceLoading || isLeaveLoading,
             ),
           ],
         ),

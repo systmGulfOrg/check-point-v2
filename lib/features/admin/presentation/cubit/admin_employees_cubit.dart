@@ -78,7 +78,11 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     switch (result) {
       case Success():
         await loadEmployees();
-        emit(const AdminEmployeesState.actionSuccess('Employee added successfully'));
+        emit(
+          const AdminEmployeesState.actionSuccess(
+            'Employee added successfully',
+          ),
+        );
         return true;
       case Failure(:final failure):
         emit(AdminEmployeesState.error(failure.messageKey));
@@ -94,7 +98,11 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     switch (result) {
       case Success():
         await loadEmployees();
-        emit(const AdminEmployeesState.actionSuccess('Employee updated successfully'));
+        emit(
+          const AdminEmployeesState.actionSuccess(
+            'Employee updated successfully',
+          ),
+        );
         return true;
       case Failure(:final failure):
         emit(AdminEmployeesState.error(failure.messageKey));
@@ -110,7 +118,11 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     switch (result) {
       case Success():
         await loadEmployees();
-        emit(const AdminEmployeesState.actionSuccess('Employee deleted successfully'));
+        emit(
+          const AdminEmployeesState.actionSuccess(
+            'Employee deleted successfully',
+          ),
+        );
         return true;
       case Failure(:final failure):
         emit(AdminEmployeesState.error(failure.messageKey));
@@ -120,7 +132,10 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     }
   }
 
-  Future<bool> setAttendancePermission(String supervisorId, bool permission) async {
+  Future<bool> setAttendancePermission(
+    String supervisorId,
+    bool permission,
+  ) async {
     emit(const AdminEmployeesState.loading());
     final result = await employeeRepo.setAttendancePermission(
       supervisorId: supervisorId,
@@ -129,7 +144,11 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     switch (result) {
       case Success():
         await loadEmployees();
-        emit(const AdminEmployeesState.actionSuccess('Permission updated successfully'));
+        emit(
+          const AdminEmployeesState.actionSuccess(
+            'Permission updated successfully',
+          ),
+        );
         return true;
       case Failure(:final failure):
         emit(AdminEmployeesState.error(failure.messageKey));
@@ -148,7 +167,11 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     switch (result) {
       case Success():
         await loadEmployees();
-        emit(const AdminEmployeesState.actionSuccess('Permission updated successfully'));
+        emit(
+          const AdminEmployeesState.actionSuccess(
+            'Permission updated successfully',
+          ),
+        );
         return true;
       case Failure(:final failure):
         emit(AdminEmployeesState.error(failure.messageKey));

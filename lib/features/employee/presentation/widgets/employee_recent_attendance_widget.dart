@@ -7,10 +7,7 @@ import 'employee_attendance_record_card_widget.dart';
 import 'employee_attendance_record_data.dart';
 
 class EmployeeRecentAttendanceWidget extends StatelessWidget {
-  const EmployeeRecentAttendanceWidget({
-    required this.records,
-    super.key,
-  });
+  const EmployeeRecentAttendanceWidget({required this.records, super.key});
 
   final List<EmployeeAttendanceRecordData> records;
 

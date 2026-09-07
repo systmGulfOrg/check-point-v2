@@ -1,45 +1,52 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import '../../../../core/widgets/animated_list_item_widget.dart';
+import '../../../admin/data/models/admin_plan_model.dart';
 import 'supervisor_plan_card_widget.dart';
-import 'supervisor_plan_data.dart';
 
 class SupervisorPlansListWidget extends StatelessWidget {
-  const SupervisorPlansListWidget({super.key});
+  const SupervisorPlansListWidget({
+    required this.plans,
+    super.key,
+    this.onDelete,
+  });
 
-  static const _plans = <SupervisorPlanData>[
-    SupervisorPlanData(
-      titleKey: 'supervisor.plans.items.emergency.title',
-      typeKey: 'supervisor.plans.type.mission',
-      dateTime: '2026-09-15 09:00',
-      descriptionKey: 'supervisor.plans.items.emergency.description',
-      assigneeInitials: ['JM', 'PN', 'FA'],
-      iconColor: AppColors.info,
-      iconBackgroundColor: AppColors.softBlueBackground,
-    ),
-    SupervisorPlanData(
-      titleKey: 'supervisor.plans.items.site.title',
-      typeKey: 'supervisor.plans.type.customerVisit',
-      dateTime: '2026-09-10 10:00',
-      descriptionKey: 'supervisor.plans.items.site.description',
-      assigneeInitials: ['JM', 'SJ'],
-      iconColor: AppColors.success,
-      iconBackgroundColor: AppColors.softGreenBackground,
-    ),
-  ];
+  final List<AdminPlanModel> plans;
+  final ValueChanged<AdminPlanModel>? onDelete;
 
   @override
   Widget build(BuildContext context) {
+    if (plans.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 36.h),
+          child: Text(
+            'supervisor.plans.empty'.tr(context: context),
+            style: AppTextStyles.font14Regular.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ),
+      );
+    }
+
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: _plans.length,
+      itemCount: plans.length,
       separatorBuilder: (_, _) => hSpace(10),
-      itemBuilder: (_, index) => AnimatedListItemWidget(
-        index: index,
-        child: SupervisorPlanCardWidget(plan: _plans[index]),
-      ),
+      itemBuilder: (_, index) {
+        final plan = plans[index];
+        return AnimatedListItemWidget(
+          index: index,
+          child: SupervisorPlanCardWidget(
+            plan: plan,
+            onDelete: onDelete != null ? () => onDelete!(plan) : null,
+          ),
+        );
+      },
     );
   }
 }

@@ -15,7 +15,10 @@ abstract class AdminLocationsRepo {
   Future<ApiResult<List<DepartmentModel>>> getDepartments();
   Future<ApiResult<List<DepartmentModel>>> searchDepartments(String searchKey);
   Future<ApiResult<void>> addDepartment(DepartmentRequestModel request);
-  Future<ApiResult<void>> editDepartment(int id, DepartmentRequestModel request);
+  Future<ApiResult<void>> editDepartment(
+    int id,
+    DepartmentRequestModel request,
+  );
   Future<ApiResult<void>> deleteDepartment(int id);
 
   Future<ApiResult<List<CustomerModel>>> getCustomersByType(String type);

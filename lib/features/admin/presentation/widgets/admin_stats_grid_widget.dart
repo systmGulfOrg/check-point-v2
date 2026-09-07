@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/core.dart';
-import '../../../../core/widgets/animated_list_item_widget.dart';
 import 'admin_stat_card_widget.dart';
 
 class AdminStatsGridWidget extends StatelessWidget {
@@ -11,6 +11,10 @@ class AdminStatsGridWidget extends StatelessWidget {
     required this.presentToday,
     required this.pendingLeaves,
     required this.openTasks,
+    this.isStaffLoading = false,
+    this.isAttendanceLoading = false,
+    this.isLeaveLoading = false,
+    this.isTasksLoading = false,
     super.key,
   });
 
@@ -18,6 +22,10 @@ class AdminStatsGridWidget extends StatelessWidget {
   final int presentToday;
   final int pendingLeaves;
   final int openTasks;
+  final bool isStaffLoading;
+  final bool isAttendanceLoading;
+  final bool isLeaveLoading;
+  final bool isTasksLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -29,44 +37,56 @@ class AdminStatsGridWidget extends StatelessWidget {
       mainAxisSpacing: 12.h,
       childAspectRatio: 1.5,
       children: [
-      AnimatedListItemWidget(
+        AnimatedListItemWidget(
           index: 0,
-          child: AdminStatCardWidget(
-            icon: Icons.group_outlined,
-            iconColor: AppColors.brandPrimary,
-            iconBackgroundColor: AppColors.softBrandBackground,
-            value: '$totalStaff',
-            labelKey: 'admin.dashboard.totalStaff',
+          child: Skeletonizer(
+            enabled: isStaffLoading,
+            child: AdminStatCardWidget(
+              icon: Icons.group_outlined,
+              iconColor: AppColors.brandPrimary,
+              iconBackgroundColor: AppColors.softBrandBackground,
+              value: '$totalStaff',
+              labelKey: 'admin.dashboard.totalStaff',
+            ),
           ),
         ),
         AnimatedListItemWidget(
           index: 1,
-          child: AdminStatCardWidget(
-            icon: Icons.access_time_rounded,
-            iconColor: AppColors.success,
-            iconBackgroundColor: AppColors.softGreenBackground,
-            value: '$presentToday',
-            labelKey: 'admin.dashboard.presentToday',
+          child: Skeletonizer(
+            enabled: isAttendanceLoading,
+            child: AdminStatCardWidget(
+              icon: Icons.access_time_rounded,
+              iconColor: AppColors.success,
+              iconBackgroundColor: AppColors.softGreenBackground,
+              value: '$presentToday',
+              labelKey: 'admin.dashboard.presentToday',
+            ),
           ),
         ),
         AnimatedListItemWidget(
           index: 2,
-          child: AdminStatCardWidget(
-            icon: Icons.calendar_today_rounded,
-            iconColor: AppColors.warningOrange,
-            iconBackgroundColor: AppColors.softYellowBackground,
-            value: '$pendingLeaves',
-            labelKey: 'admin.dashboard.pendingLeaves',
+          child: Skeletonizer(
+            enabled: isLeaveLoading,
+            child: AdminStatCardWidget(
+              icon: Icons.calendar_today_rounded,
+              iconColor: AppColors.warningOrange,
+              iconBackgroundColor: AppColors.softYellowBackground,
+              value: '$pendingLeaves',
+              labelKey: 'admin.dashboard.pendingLeaves',
+            ),
           ),
         ),
         AnimatedListItemWidget(
           index: 3,
-          child: AdminStatCardWidget(
-            icon: Icons.assignment_outlined,
-            iconColor: AppColors.info,
-            iconBackgroundColor: AppColors.softBlueBackground,
-            value: '$openTasks',
-            labelKey: 'admin.dashboard.openTasks',
+          child: Skeletonizer(
+            enabled: isTasksLoading,
+            child: AdminStatCardWidget(
+              icon: Icons.assignment_outlined,
+              iconColor: AppColors.info,
+              iconBackgroundColor: AppColors.softBlueBackground,
+              value: '$openTasks',
+              labelKey: 'admin.dashboard.openTasks',
+            ),
           ),
         ),
       ],

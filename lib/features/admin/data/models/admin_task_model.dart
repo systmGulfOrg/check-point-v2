@@ -28,11 +28,7 @@ class AdminTaskModel {
 
 @JsonSerializable()
 class TasksResponseModel {
-  const TasksResponseModel({
-    this.value,
-    this.isSuccess,
-    this.successMessage,
-  });
+  const TasksResponseModel({this.value, this.isSuccess, this.successMessage});
 
   final TasksPageModel? value;
   final bool? isSuccess;
@@ -46,11 +42,7 @@ class TasksResponseModel {
 
 @JsonSerializable()
 class TasksPageModel {
-  const TasksPageModel({
-    this.items,
-    this.data,
-    this.totalCount,
-  });
+  const TasksPageModel({this.items, this.data, this.totalCount});
 
   final List<AdminTaskModel>? items;
   final List<AdminTaskModel>? data;
@@ -70,11 +62,19 @@ class AddTaskRequestBody {
     required this.title,
     required this.description,
     this.assignedEmployeeId,
+    this.dueDate,
+    this.priorityStatus,
+    this.status,
+    this.departmentId,
   });
 
   final String title;
   final String description;
   final String? assignedEmployeeId;
+  final String? dueDate;
+  final String? priorityStatus;
+  final String? status;
+  final int? departmentId;
 
   factory AddTaskRequestBody.fromJson(Map<String, dynamic> json) =>
       _$AddTaskRequestBodyFromJson(json);
@@ -84,10 +84,7 @@ class AddTaskRequestBody {
 
 @JsonSerializable()
 class AssignTaskRequestBody {
-  const AssignTaskRequestBody({
-    required this.taskId,
-    required this.employeeId,
-  });
+  const AssignTaskRequestBody({required this.taskId, required this.employeeId});
 
   final int taskId;
   final String employeeId;

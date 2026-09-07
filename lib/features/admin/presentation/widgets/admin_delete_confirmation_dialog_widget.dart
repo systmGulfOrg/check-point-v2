@@ -64,7 +64,8 @@ class AdminDeleteConfirmationDialogWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: CustomButton(
-                  text: cancelLabel ??
+                  text:
+                      cancelLabel ??
                       'admin.locations.create.cancel'.tr(context: context),
                   onTap: () => Navigator.pop(context),
                   backgroundColor: AppColors.pageBackground,
@@ -72,10 +73,11 @@ class AdminDeleteConfirmationDialogWidget extends StatelessWidget {
                   height: 44,
                 ),
               ),
-              vSpace(12),
+              wSpace(12),
               Expanded(
                 child: CustomButton(
-                  text: confirmLabel ??
+                  text:
+                      confirmLabel ??
                       'admin.locations.delete'.tr(context: context),
                   onTap: onConfirm,
                   backgroundColor: AppColors.error,

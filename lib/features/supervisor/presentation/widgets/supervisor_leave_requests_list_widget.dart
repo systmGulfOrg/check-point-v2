@@ -1,54 +1,55 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../../../admin/data/models/admin_leave_request_model.dart';
 import 'supervisor_leave_request_card_widget.dart';
-import 'supervisor_leave_request_data.dart';
 
 class SupervisorLeaveRequestsListWidget extends StatelessWidget {
-  const SupervisorLeaveRequestsListWidget({super.key});
+  const SupervisorLeaveRequestsListWidget({
+    required this.requests,
+    super.key,
+    this.onApprove,
+    this.onReject,
+  });
 
-  static const _requests = <SupervisorLeaveRequestData>[
-    SupervisorLeaveRequestData(
-      initials: 'FA',
-      nameKey: 'supervisor.attendance.members.fatima',
-      typeKey: 'supervisor.leave.annualLeave',
-      dateRange: '2026-09-15 – 2026-09-17',
-      reasonKey: 'supervisor.leave.plannedTravel',
-      statusKey: 'supervisor.leave.rejected',
-      statusColor: AppColors.error,
-      statusBackgroundColor: AppColors.softBrandBackground,
-    ),
-    SupervisorLeaveRequestData(
-      initials: 'JM',
-      nameKey: 'supervisor.attendance.members.james',
-      typeKey: 'supervisor.leave.annualLeave',
-      dateRange: '2026-09-10 – 2026-09-12',
-      reasonKey: 'supervisor.leave.familyVacation',
-      statusKey: 'supervisor.leave.pending',
-      statusColor: AppColors.warningOrange,
-      statusBackgroundColor: AppColors.softYellowBackground,
-    ),
-    SupervisorLeaveRequestData(
-      initials: 'PN',
-      nameKey: 'supervisor.attendance.members.priya',
-      typeKey: 'supervisor.leave.sickLeave',
-      dateRange: '2026-09-05 – 2026-09-05',
-      reasonKey: 'supervisor.leave.medicalAppointment',
-      statusKey: 'supervisor.leave.approved',
-      statusColor: AppColors.success,
-      statusBackgroundColor: AppColors.softGreenBackground,
-    ),
-  ];
+  final List<AdminLeaveRequestModel> requests;
+  final ValueChanged<AdminLeaveRequestModel>? onApprove;
+  final ValueChanged<AdminLeaveRequestModel>? onReject;
 
   @override
   Widget build(BuildContext context) {
+    if (requests.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 36.h),
+          child: Text(
+            'supervisor.leave.empty'.tr(context: context),
+            style: AppTextStyles.font14Regular.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ),
+      );
+    }
+
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: _requests.length,
+      itemCount: requests.length,
       separatorBuilder: (_, _) => hSpace(10),
-      itemBuilder: (_, index) =>
-          SupervisorLeaveRequestCardWidget(request: _requests[index]),
+      itemBuilder: (context, index) {
+        final request = requests[index];
+        return AnimatedListItemWidget(
+          index: index,
+          child: SupervisorLeaveRequestCardWidget(
+            request: request,
+            onApprove: onApprove != null ? () => onApprove!(request) : null,
+            onReject: onReject != null ? () => onReject!(request) : null,
+          ),
+        );
+      },
     );
   }
 }

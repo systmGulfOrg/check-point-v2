@@ -12,7 +12,7 @@ class SupervisorProfileOptionsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentLanguageLabel = switch ((
       context.locale.languageCode,
-      context.locale.countryCode
+      context.locale.countryCode,
     )) {
       ('en', _) => 'English',
       ('ar', 'EG') => 'العامية المصرية',
@@ -24,19 +24,14 @@ class SupervisorProfileOptionsWidget extends StatelessWidget {
         Icons.person_outline_rounded,
         'supervisor.profile.profileInformation',
         null,
-        null
-      ),
-      (
-        Icons.key_outlined,
-        'supervisor.profile.changePassword',
         null,
-        null
       ),
+      (Icons.key_outlined, 'supervisor.profile.changePassword', null, null),
       (
         Icons.notifications_none_rounded,
         'supervisor.profile.notifications',
         null,
-        null
+        null,
       ),
       (
         Icons.language_rounded,
@@ -49,7 +44,7 @@ class SupervisorProfileOptionsWidget extends StatelessWidget {
             backgroundColor: AppColors.transparent,
             builder: (_) => const LanguageSelectionSheetWidget(),
           );
-        }
+        },
       ),
     ];
 

@@ -3,52 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-
-class SupervisorTaskRowData {
-  const SupervisorTaskRowData({
-    required this.title,
-    required this.assigneeAndDue,
-    required this.statusKey,
-    required this.statusColor,
-    required this.statusBgColor,
-  });
-
-  final String title;
-  final String assigneeAndDue;
-  final String statusKey;
-  final Color statusColor;
-  final Color statusBgColor;
-}
+import '../../../admin/data/models/admin_task_model.dart';
+import 'supervisor_active_task_row_widget.dart';
 
 class SupervisorActiveTasksWidget extends StatelessWidget {
-  const SupervisorActiveTasksWidget({super.key});
+  const SupervisorActiveTasksWidget({
+    required this.tasks,
+    super.key,
+    this.onViewAll,
+  });
 
-  static const _tasks = <SupervisorTaskRowData>[
-    SupervisorTaskRowData(
-      title: 'Onboard New Contractors',
-      assigneeAndDue: 'James Martinez · Due 2026-08-30',
-      statusKey: 'supervisor.taskStatus.overdue',
-      statusColor: AppColors.error,
-      statusBgColor: AppColors.softBrandBackground,
-    ),
-    SupervisorTaskRowData(
-      title: 'Update Security Protocols',
-      assigneeAndDue: 'Priya Nair · Due 2026-09-08',
-      statusKey: 'supervisor.taskStatus.toDo',
-      statusColor: AppColors.textSecondary,
-      statusBgColor: AppColors.pageBackground,
-    ),
-    SupervisorTaskRowData(
-      title: 'Complete Q3 Report',
-      assigneeAndDue: 'James Martinez · Due 2026-09-05',
-      statusKey: 'supervisor.taskStatus.inProgress',
-      statusColor: AppColors.info,
-      statusBgColor: AppColors.softBlueBackground,
-    ),
-  ];
+  final List<AdminTaskModel> tasks;
+  final VoidCallback? onViewAll;
 
   @override
   Widget build(BuildContext context) {
+    final displayTasks = tasks.take(3).toList();
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
@@ -75,83 +46,36 @@ class SupervisorActiveTasksWidget extends StatelessWidget {
                     color: AppColors.textPrimary,
                   ),
                 ),
-                InkWell(
-                  onTap: () {},
-                  child: Text(
-                    'supervisor.dashboard.viewAll'.tr(context: context),
-                    style: AppTextStyles.font13SemiBold.copyWith(
-                      color: AppColors.brandPrimary,
+                if (onViewAll != null)
+                  InkWell(
+                    onTap: onViewAll,
+                    child: Text(
+                      'supervisor.dashboard.viewAll'.tr(context: context),
+                      style: AppTextStyles.font13SemiBold.copyWith(
+                        color: AppColors.brandPrimary,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
-          for (int i = 0; i < _tasks.length; i++) ...[
-            const Divider(color: AppColors.border, height: 1),
+          if (displayTasks.isEmpty)
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _tasks[i].title,
-                          style: AppTextStyles.font14SemiBold.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                        hSpace(4),
-                        Text(
-                          _tasks[i].assigneeAndDue,
-                          style: AppTextStyles.font12Regular.copyWith(
-                            color: AppColors.placeholder,
-                          ),
-                        ),
-                      ],
-                    ),
+              padding: EdgeInsets.symmetric(vertical: 24.h),
+              child: Center(
+                child: Text(
+                  'supervisor.tasks.empty'.tr(context: context),
+                  style: AppTextStyles.font13Regular.copyWith(
+                    color: AppColors.textSecondary,
                   ),
-                  vSpace(8),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 4.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _tasks[i].statusBgColor,
-                      borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(
-                        color: AppColors.border,
-                        width: 0.5,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 6.r,
-                          height: 6.r,
-                          decoration: BoxDecoration(
-                            color: _tasks[i].statusColor,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        vSpace(6),
-                        Text(
-                          _tasks[i].statusKey.tr(context: context),
-                          style: AppTextStyles.font12Bold.copyWith(
-                            color: _tasks[i].statusColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+            )
+          else
+            for (int i = 0; i < displayTasks.length; i++) ...[
+              const Divider(color: AppColors.border, height: 1),
+              SupervisorActiveTaskRowWidget(task: displayTasks[i]),
+            ],
         ],
       ),
     );

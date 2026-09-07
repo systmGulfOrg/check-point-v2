@@ -34,4 +34,9 @@ CustomerModel _$CustomerModelFromJson(Map<String, dynamic> json) =>
       workesAs: json['workesAs'] as String?,
       location: json['location'] as String?,
       customerType: json['customerType'] as String?,
+      coordinates: (json['coordinates'] as List<dynamic>?)
+          ?.map(
+            (e) => CustomerCoordinateModel.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
     );

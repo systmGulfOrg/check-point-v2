@@ -26,11 +26,7 @@ class AdminSettingsTileWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         child: Row(
           children: [
-            Icon(
-              icon,
-              color: AppColors.textSecondary,
-              size: 20.r,
-            ),
+            Icon(icon, color: AppColors.textSecondary, size: 20.r),
             vSpace(12),
             Expanded(
               child: Text(

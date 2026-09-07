@@ -24,6 +24,7 @@ import '../../features/admin/presentation/cubit/admin_account_requests_cubit.dar
 import '../../features/admin/presentation/cubit/admin_attendance_cubit.dart';
 import '../../features/admin/presentation/cubit/admin_branches_cubit.dart';
 import '../../features/admin/presentation/cubit/admin_customers_cubit.dart';
+import '../../features/admin/presentation/cubit/admin_department_employees_cubit.dart';
 import '../../features/admin/presentation/cubit/admin_departments_cubit.dart';
 import '../../features/admin/presentation/cubit/admin_employees_cubit.dart';
 import '../../features/admin/presentation/cubit/admin_leave_requests_cubit.dart';
@@ -36,11 +37,29 @@ import '../../features/auth/data/repos/auth_repo_impl.dart';
 import '../../features/auth/presentation/cubit/auth_session_cubit.dart';
 import '../../features/auth/presentation/cubit/login_cubit.dart';
 import '../../features/auth/presentation/cubit/request_account_cubit.dart';
+import '../../features/supervisor/data/apis/supervisor_api_service.dart';
+import '../../features/supervisor/data/repos/supervisor_attendance_repo.dart';
+import '../../features/supervisor/data/repos/supervisor_attendance_repo_impl.dart';
+import '../../features/supervisor/data/repos/supervisor_leave_requests_repo.dart';
+import '../../features/supervisor/data/repos/supervisor_leave_requests_repo_impl.dart';
+import '../../features/supervisor/data/repos/supervisor_plans_repo.dart';
+import '../../features/supervisor/data/repos/supervisor_plans_repo_impl.dart';
+import '../../features/supervisor/data/repos/supervisor_tasks_repo.dart';
+import '../../features/supervisor/data/repos/supervisor_tasks_repo_impl.dart';
+import '../../features/supervisor/data/repos/supervisor_team_repo.dart';
+import '../../features/supervisor/data/repos/supervisor_team_repo_impl.dart';
+import '../../features/supervisor/presentation/cubit/supervisor_attendance_cubit.dart';
+import '../../features/supervisor/presentation/cubit/supervisor_leave_requests_cubit.dart';
+import '../../features/supervisor/presentation/cubit/supervisor_plans_cubit.dart';
+import '../../features/supervisor/presentation/cubit/supervisor_tasks_cubit.dart';
+import '../../features/supervisor/presentation/cubit/supervisor_team_cubit.dart';
 import '../app/app_config.dart';
 import '../auth/auth_session_storage.dart';
 import '../auth/biometric_auth_service.dart';
 import '../network/auth_token_interceptor.dart';
 import '../network/device_identity_provider.dart';
+import '../services/google_places_service.dart';
+import '../services/location_service.dart';
 
 final sl = GetIt.instance;
 
@@ -74,9 +93,18 @@ Future<void> setupServiceLocator() async {
   );
   await sl<DeviceIdentityProvider>().initialize();
 
+  // Services
+  sl.registerLazySingleton<LocationService>(LocationService.new);
+  sl.registerLazySingleton<GooglePlacesService>(
+    () => GooglePlacesService(dio: sl<Dio>()),
+  );
+
   // API Services
   sl.registerLazySingleton<AuthApiService>(() => AuthApiService(sl<Dio>()));
   sl.registerLazySingleton<AdminApiService>(() => AdminApiService(sl<Dio>()));
+  sl.registerLazySingleton<SupervisorApiService>(
+    () => SupervisorApiService(sl<Dio>()),
+  );
 
   // Repositories
   sl.registerLazySingleton<AuthRepo>(
@@ -105,6 +133,36 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<AdminPlansRepo>(
     () => AdminPlansRepoImpl(api: sl<AdminApiService>()),
+  );
+  sl.registerLazySingleton<SupervisorAttendanceRepo>(
+    () => SupervisorAttendanceRepoImpl(
+      api: sl<SupervisorApiService>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+    ),
+  );
+  sl.registerLazySingleton<SupervisorLeaveRequestsRepo>(
+    () => SupervisorLeaveRequestsRepoImpl(
+      api: sl<SupervisorApiService>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+    ),
+  );
+  sl.registerLazySingleton<SupervisorTasksRepo>(
+    () => SupervisorTasksRepoImpl(
+      api: sl<SupervisorApiService>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+    ),
+  );
+  sl.registerLazySingleton<SupervisorPlansRepo>(
+    () => SupervisorPlansRepoImpl(
+      api: sl<SupervisorApiService>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+    ),
+  );
+  sl.registerLazySingleton<SupervisorTeamRepo>(
+    () => SupervisorTeamRepoImpl(
+      api: sl<SupervisorApiService>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+    ),
   );
 
   // Cubits
@@ -137,6 +195,9 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<AdminDepartmentsCubit>(
     () => AdminDepartmentsCubit(locationsRepo: sl<AdminLocationsRepo>()),
   );
+  sl.registerFactory<AdminDepartmentEmployeesCubit>(
+    () => AdminDepartmentEmployeesCubit(employeeRepo: sl<AdminEmployeeRepo>()),
+  );
   sl.registerFactory<AdminCustomersCubit>(
     () => AdminCustomersCubit(locationsRepo: sl<AdminLocationsRepo>()),
   );
@@ -158,5 +219,24 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<AdminPlansCubit>(
     () => AdminPlansCubit(plansRepo: sl<AdminPlansRepo>()),
+  );
+  sl.registerFactory<SupervisorAttendanceCubit>(
+    () => SupervisorAttendanceCubit(
+      attendanceRepo: sl<SupervisorAttendanceRepo>(),
+    ),
+  );
+  sl.registerFactory<SupervisorLeaveRequestsCubit>(
+    () => SupervisorLeaveRequestsCubit(
+      leaveRequestsRepo: sl<SupervisorLeaveRequestsRepo>(),
+    ),
+  );
+  sl.registerFactory<SupervisorTasksCubit>(
+    () => SupervisorTasksCubit(tasksRepo: sl<SupervisorTasksRepo>()),
+  );
+  sl.registerFactory<SupervisorPlansCubit>(
+    () => SupervisorPlansCubit(plansRepo: sl<SupervisorPlansRepo>()),
+  );
+  sl.registerFactory<SupervisorTeamCubit>(
+    () => SupervisorTeamCubit(teamRepo: sl<SupervisorTeamRepo>()),
   );
 }

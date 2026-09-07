@@ -7,10 +7,7 @@ import 'employee_status_badge_widget.dart';
 import 'employee_task_data.dart';
 
 class EmployeeTaskDetailCardWidget extends StatelessWidget {
-  const EmployeeTaskDetailCardWidget({
-    required this.task,
-    super.key,
-  });
+  const EmployeeTaskDetailCardWidget({required this.task, super.key});
 
   final EmployeeTaskData task;
 
@@ -43,10 +40,7 @@ class EmployeeTaskDetailCardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Text(
-                  task.title,
-                  style: AppTextStyles.font16Bold,
-                ),
+                child: Text(task.title, style: AppTextStyles.font16Bold),
               ),
               wSpace(12),
               EmployeeStatusBadgeWidget(status: task.status),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import '../../../../core/widgets/animated_list_item_widget.dart';
 import '../widgets/employee_task_data.dart';
 import '../widgets/employee_task_detail_card_widget.dart';
 
@@ -44,12 +43,14 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
   @override
   Widget build(BuildContext context) {
     final filteredTasks = switch (_selectedFilterIndex) {
-      0 => _allTasks
-          .where((t) => t.status != 'Done' && t.status != 'Completed')
-          .toList(),
-      1 => _allTasks
-          .where((t) => t.status == 'Done' || t.status == 'Completed')
-          .toList(),
+      0 =>
+        _allTasks
+            .where((t) => t.status != 'Done' && t.status != 'Completed')
+            .toList(),
+      1 =>
+        _allTasks
+            .where((t) => t.status == 'Done' || t.status == 'Completed')
+            .toList(),
       _ => _allTasks,
     };
 
@@ -78,8 +79,7 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                     for (int i = 0; i < _filters.length; i++)
                       Expanded(
                         child: GestureDetector(
-                          onTap: () =>
-                              setState(() => _selectedFilterIndex = i),
+                          onTap: () => setState(() => _selectedFilterIndex = i),
                           child: Container(
                             padding: EdgeInsets.symmetric(vertical: 8.h),
                             decoration: BoxDecoration(

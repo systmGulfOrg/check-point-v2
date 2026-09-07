@@ -58,9 +58,7 @@ class EmployeePlansScreen extends StatelessWidget {
                   itemCount: _plans.length,
                   separatorBuilder: (_, _) => hSpace(12),
                   itemBuilder: (context, index) {
-                    return EmployeePlanDetailCardWidget(
-                      plan: _plans[index],
-                    );
+                    return EmployeePlanDetailCardWidget(plan: _plans[index]);
                   },
                 ),
               ),

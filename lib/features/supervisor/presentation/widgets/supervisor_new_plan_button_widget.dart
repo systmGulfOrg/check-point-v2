@@ -1,7 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
+import '../cubit/supervisor_plans_cubit.dart';
+import '../cubit/supervisor_team_cubit.dart';
 import 'supervisor_create_plan_sheet_widget.dart';
 
 class SupervisorNewPlanButtonWidget extends StatelessWidget {
@@ -17,7 +20,13 @@ class SupervisorNewPlanButtonWidget extends StatelessWidget {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
-        builder: (_) => const SupervisorCreatePlanSheetWidget(),
+        builder: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: context.read<SupervisorPlansCubit>()),
+            BlocProvider.value(value: context.read<SupervisorTeamCubit>()),
+          ],
+          child: const SupervisorCreatePlanSheetWidget(),
+        ),
       ),
       child: Text(
         'supervisor.plans.newPlan'.tr(context: context),

@@ -5,25 +5,22 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import '../../../../core/core.dart';
 
 class ApplyForLeaveSheetWidget extends StatefulWidget {
-  const ApplyForLeaveSheetWidget({
-    required this.onSubmit,
-    super.key,
-  });
+  const ApplyForLeaveSheetWidget({required this.onSubmit, super.key});
 
   final void Function({
     required String leaveType,
     required String startDate,
     required String endDate,
     String? reason,
-  }) onSubmit;
+  })
+  onSubmit;
 
   @override
   State<ApplyForLeaveSheetWidget> createState() =>
       _ApplyForLeaveSheetWidgetState();
 }
 
-class _ApplyForLeaveSheetWidgetState
-    extends State<ApplyForLeaveSheetWidget> {
+class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
   final _startDateController = TextEditingController();
   final _endDateController = TextEditingController();
   final _reasonController = TextEditingController();

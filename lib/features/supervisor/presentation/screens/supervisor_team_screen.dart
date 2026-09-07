@@ -3,34 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import '../widgets/supervisor_team_member_card_widget.dart';
+import '../widgets/supervisor_team_bloc_builder_widget.dart';
 
-class SupervisorTeamScreen extends StatelessWidget {
+class SupervisorTeamScreen extends StatefulWidget {
   const SupervisorTeamScreen({super.key});
 
-  static const _members = [
-    (
-      initials: 'JM',
-      name: 'James Martinez',
-      email: 'james.martinez@checkpoint.app',
-      employeeCode: 'EMP-2024-0087',
-      departmentKey: 'supervisor.team.department.operations',
-    ),
-    (
-      initials: 'PN',
-      name: 'Priya Nair',
-      email: 'priya.nair@checkpoint.app',
-      employeeCode: 'EMP-2024-0091',
-      departmentKey: 'supervisor.team.department.informationTechnology',
-    ),
-    (
-      initials: 'DC',
-      name: 'David Chen',
-      email: 'david.chen@checkpoint.app',
-      employeeCode: 'EMP-2024-0104',
-      departmentKey: 'supervisor.team.department.finance',
-    ),
-  ];
+  @override
+  State<SupervisorTeamScreen> createState() => _SupervisorTeamScreenState();
+}
+
+class _SupervisorTeamScreenState extends State<SupervisorTeamScreen> {
+  late final TextEditingController _searchController;
+  String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,33 +45,20 @@ class SupervisorTeamScreen extends StatelessWidget {
                   color: AppColors.textPrimary,
                 ),
               ),
-              hSpace(16),
-              Text(
-                'supervisor.team.count'.tr(
-                  context: context,
-                  args: ['${_members.length}'],
-                ),
-                style: AppTextStyles.font13Regular.copyWith(
+              hSpace(12),
+              CustomTextFormField(
+                controller: _searchController,
+                hintText: 'supervisor.team.searchHint'.tr(context: context),
+                prefixIcon: const Icon(
+                  Icons.search_rounded,
                   color: AppColors.textSecondary,
                 ),
+                onChanged: (val) => setState(() => _searchQuery = val.trim()),
               ),
-              hSpace(16),
+              hSpace(14),
               Expanded(
-                child: ListView.separated(
-                  padding: EdgeInsets.only(bottom: 24.h),
-                  itemCount: _members.length,
-                  separatorBuilder: (_, _) => hSpace(10),
-                  itemBuilder: (context, index) {
-                    final member = _members[index];
-                    return SupervisorTeamMemberCardWidget(
-                      initials: member.initials,
-                      name: member.name,
-                      roleKey: 'auth.role.employee',
-                      email: member.email,
-                      employeeCode: member.employeeCode,
-                      departmentKey: member.departmentKey,
-                    );
-                  },
+                child: SupervisorTeamBlocBuilderWidget(
+                  searchQuery: _searchQuery,
                 ),
               ),
             ],

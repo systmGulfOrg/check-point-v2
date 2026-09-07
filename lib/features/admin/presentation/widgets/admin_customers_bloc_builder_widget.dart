@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../data/models/customer_request_model.dart';
 import '../cubit/admin_customers_cubit.dart';
 import '../cubit/admin_customers_state.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'admin_create_location_sheet_widget.dart';
 import 'admin_delete_confirmation_dialog_widget.dart';
 import 'admin_location_card_widget.dart';
 import 'admin_location_data.dart';
 import 'admin_locations_skeleton_widget.dart';
+import 'admin_locations_tab_widget.dart';
 
 class AdminCustomersBlocBuilderWidget extends StatelessWidget {
   const AdminCustomersBlocBuilderWidget({this.type = 'customer', super.key});
@@ -30,53 +33,35 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
     );
   }
 
-  void _showEditDialog(
+  void _showEditSheet(
     BuildContext context,
     String id,
     String currentName,
     String currentLocation,
+    String? currentWorkesAs,
+    List<LatLng> initialPoints,
   ) {
-    final nameController = TextEditingController(text: currentName);
-    final locationController = TextEditingController(text: currentLocation);
-    showDialog(
+    final category = type == 'site'
+        ? AdminLocationCategory.sites
+        : AdminLocationCategory.customers;
+
+    showModalBottomSheet<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(type == 'site' ? 'Edit Site' : 'Edit Customer'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
-            ),
-            TextField(
-              controller: locationController,
-              decoration: const InputDecoration(labelText: 'Location'),
-            ),
-          ],
+      isScrollControlled: true,
+      backgroundColor: AppColors.cardBackground,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => BlocProvider.value(
+        value: context.read<AdminCustomersCubit>(),
+        child: AdminCreateLocationSheetWidget(
+          category: category,
+          editCustomerId: id,
+          initialName: currentName,
+          initialAddress: currentLocation,
+          initialDescription: currentWorkesAs,
+          initialPoints: initialPoints,
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (nameController.text.trim().isNotEmpty) {
-                context.read<AdminCustomersCubit>().edit(
-                      id,
-                      CustomerRequestModel(
-                        name: nameController.text.trim(),
-                        location: locationController.text.trim(),
-                        customerType: type,
-                      ),
-                    );
-                Navigator.pop(dialogContext);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
       ),
     );
   }
@@ -86,8 +71,7 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
       BlocBuilder<AdminCustomersCubit, AdminCustomersState>(
         builder: (context, state) => switch (state) {
           AdminCustomersInitial() => const SizedBox.shrink(),
-          AdminCustomersLoading() =>
-            const AdminLocationsSkeletonWidget(),
+          AdminCustomersLoading() => const AdminLocationsSkeletonWidget(),
           AdminCustomersError(:final messageKey) => Padding(
             padding: const EdgeInsets.all(24),
             child: Text(
@@ -121,11 +105,16 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
                           ),
                           onEdit: () {
                             if (customer.id != null) {
-                              _showEditDialog(
+                              final points = (customer.coordinates ?? [])
+                                  .map((c) => LatLng(c.latitude, c.longitude))
+                                  .toList();
+                              _showEditSheet(
                                 context,
                                 customer.id!,
                                 customer.name ?? '',
                                 customer.location ?? '',
+                                customer.workesAs,
+                                points,
                               );
                             }
                           },

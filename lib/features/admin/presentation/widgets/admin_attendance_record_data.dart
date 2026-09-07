@@ -25,4 +25,3 @@ class AdminAttendanceRecordData {
   final Color statusColor;
   final Color statusBackgroundColor;
 }
-

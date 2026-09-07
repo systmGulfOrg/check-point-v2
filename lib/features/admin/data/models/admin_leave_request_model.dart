@@ -50,11 +50,7 @@ class LeaveRequestsResponseModel {
 
 @JsonSerializable()
 class LeaveRequestsPageModel {
-  const LeaveRequestsPageModel({
-    this.items,
-    this.data,
-    this.totalCount,
-  });
+  const LeaveRequestsPageModel({this.items, this.data, this.totalCount});
 
   final List<AdminLeaveRequestModel>? items;
   final List<AdminLeaveRequestModel>? data;

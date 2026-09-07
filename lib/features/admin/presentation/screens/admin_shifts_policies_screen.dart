@@ -38,17 +38,29 @@ class AdminShiftsPoliciesScreen extends StatelessWidget {
             onPressed: () {
               if (nameController.text.trim().isNotEmpty) {
                 context.read<AdminShiftsPoliciesCubit>().editShift(
-                      shiftId,
-                      AddShiftRequestBody(
-                        name: nameController.text.trim(),
-                      ),
-                    );
+                  shiftId,
+                  AddShiftRequestBody(name: nameController.text.trim()),
+                );
                 Navigator.pop(dialogContext);
               }
             },
             child: const Text('Save'),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showDeleteShiftDialog(BuildContext context, int shiftId) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AppDeleteConfirmationDialogWidget(
+        title: 'admin.locations.delete'.tr(context: context),
+        message: 'admin.shifts.deleteMessage'.tr(context: context),
+        onConfirm: () {
+          Navigator.pop(dialogContext);
+          context.read<AdminShiftsPoliciesCubit>().deleteShift(shiftId);
+        },
       ),
     );
   }
@@ -147,9 +159,7 @@ class AdminShiftsPoliciesScreen extends StatelessWidget {
                                 },
                                 onDelete: () {
                                   if (shift.id != null) {
-                                    context
-                                        .read<AdminShiftsPoliciesCubit>()
-                                        .deleteShift(shift.id!);
+                                    _showDeleteShiftDialog(context, shift.id!);
                                   }
                                 },
                               );

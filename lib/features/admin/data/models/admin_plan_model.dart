@@ -30,11 +30,7 @@ class AdminPlanModel {
 
 @JsonSerializable()
 class PlansResponseModel {
-  const PlansResponseModel({
-    this.value,
-    this.isSuccess,
-    this.successMessage,
-  });
+  const PlansResponseModel({this.value, this.isSuccess, this.successMessage});
 
   final PlansPageModel? value;
   final bool? isSuccess;
@@ -48,11 +44,7 @@ class PlansResponseModel {
 
 @JsonSerializable()
 class PlansPageModel {
-  const PlansPageModel({
-    this.items,
-    this.data,
-    this.totalCount,
-  });
+  const PlansPageModel({this.items, this.data, this.totalCount});
 
   final List<AdminPlanModel>? items;
   final List<AdminPlanModel>? data;
@@ -74,6 +66,7 @@ class CreatePlanRequestBody {
     required this.startDate,
     required this.endDate,
     required this.assignedEmployeeId,
+    this.departmentId,
   });
 
   final String title;
@@ -81,6 +74,7 @@ class CreatePlanRequestBody {
   final String startDate;
   final String endDate;
   final String assignedEmployeeId;
+  final int? departmentId;
 
   factory CreatePlanRequestBody.fromJson(Map<String, dynamic> json) =>
       _$CreatePlanRequestBodyFromJson(json);

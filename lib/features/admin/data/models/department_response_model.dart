@@ -16,11 +16,7 @@ class DepartmentResponseModel {
 
 @JsonSerializable(createToJson: false)
 class DepartmentPageModel {
-  const DepartmentPageModel({
-    this.items,
-    this.data,
-    this.totalCount,
-  });
+  const DepartmentPageModel({this.items, this.data, this.totalCount});
 
   final List<DepartmentModel>? items;
   final List<DepartmentModel>? data;

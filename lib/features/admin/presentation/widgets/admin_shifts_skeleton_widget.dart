@@ -4,10 +4,7 @@ import '../../../../core/core.dart';
 import 'admin_shift_skeleton_card_widget.dart';
 
 class AdminShiftsSkeletonWidget extends StatefulWidget {
-  const AdminShiftsSkeletonWidget({
-    this.itemCount = 4,
-    super.key,
-  });
+  const AdminShiftsSkeletonWidget({this.itemCount = 4, super.key});
 
   final int itemCount;
 
@@ -28,9 +25,10 @@ class _AdminShiftsSkeletonWidgetState extends State<AdminShiftsSkeletonWidget>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.35, end: 0.85).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.35,
+      end: 0.85,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

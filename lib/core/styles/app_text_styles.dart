@@ -107,4 +107,16 @@ class AppTextStyles {
     fontSize: 11.sp,
     fontWeight: FontWeight.w500,
   );
+
+  static TextStyle get font10Bold => TextStyle(
+    color: AppColors.textPrimary,
+    fontSize: 10.sp,
+    fontWeight: FontWeight.w700,
+  );
+
+  static TextStyle get font10Medium => TextStyle(
+    color: AppColors.textSecondary,
+    fontSize: 10.sp,
+    fontWeight: FontWeight.w500,
+  );
 }

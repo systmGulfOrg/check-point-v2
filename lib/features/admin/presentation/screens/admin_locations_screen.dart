@@ -5,7 +5,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import '../../../../core/core.dart';
 import '../widgets/admin_branches_bloc_builder_widget.dart';
 import '../widgets/admin_customers_bloc_builder_widget.dart';
-import '../widgets/admin_departments_bloc_builder_widget.dart';
 import '../widgets/admin_locations_add_button_widget.dart';
 import '../widgets/admin_locations_filter_widget.dart';
 import '../widgets/admin_locations_tab_widget.dart';
@@ -59,8 +58,6 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
               switch (category) {
                 AdminLocationCategory.branches =>
                   const AdminBranchesBlocBuilderWidget(),
-                AdminLocationCategory.departments =>
-                  const AdminDepartmentsBlocBuilderWidget(),
                 AdminLocationCategory.sites =>
                   const AdminCustomersBlocBuilderWidget(type: 'site'),
                 AdminLocationCategory.customers =>

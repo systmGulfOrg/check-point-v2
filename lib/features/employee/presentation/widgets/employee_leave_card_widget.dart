@@ -5,10 +5,7 @@ import '../../../../core/core.dart';
 import 'employee_leave_data.dart';
 
 class EmployeeLeaveCardWidget extends StatelessWidget {
-  const EmployeeLeaveCardWidget({
-    required this.leave,
-    super.key,
-  });
+  const EmployeeLeaveCardWidget({required this.leave, super.key});
 
   final EmployeeLeaveData leave;
 
@@ -40,10 +37,7 @@ class EmployeeLeaveCardWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                leave.leaveType,
-                style: AppTextStyles.font16Bold,
-              ),
+              Text(leave.leaveType, style: AppTextStyles.font16Bold),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                 decoration: BoxDecoration(

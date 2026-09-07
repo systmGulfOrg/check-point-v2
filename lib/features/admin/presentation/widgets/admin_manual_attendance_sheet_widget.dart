@@ -91,7 +91,9 @@ class _AdminManualAttendanceSheetWidgetState
                     initialDate: DateTime.now(),
                   );
                   if (date != null && context.mounted) {
-                    dateController.text = DateFormat('dd/MM/yyyy').format(date);
+                    dateController.text = AppDateFormatter.formatDayMonthYear(
+                      date,
+                    );
                   }
                 },
                 suffixIcon: Icon(Icons.calendar_today_outlined, size: 18.r),

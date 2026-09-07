@@ -11,8 +11,12 @@ class AdminAttendanceFilterBarWidget extends StatelessWidget {
 
   Future<void> _pickCustomDateRange(BuildContext context) async {
     final cubit = context.read<AdminAttendanceCubit>();
-    final initialRange = (cubit.customStartDate != null && cubit.customEndDate != null)
-        ? DateTimeRange(start: cubit.customStartDate!, end: cubit.customEndDate!)
+    final initialRange =
+        (cubit.customStartDate != null && cubit.customEndDate != null)
+        ? DateTimeRange(
+            start: cubit.customStartDate!,
+            end: cubit.customEndDate!,
+          )
         : DateTimeRange(
             start: DateTime.now().subtract(const Duration(days: 7)),
             end: DateTime.now(),
@@ -70,7 +74,7 @@ class AdminAttendanceFilterBarWidget extends StatelessWidget {
       (
         AdminAttendanceDateFilter.custom,
         cubit.customStartDate != null && cubit.customEndDate != null
-            ? '${DateFormat('MM/dd').format(cubit.customStartDate!)} - ${DateFormat('MM/dd').format(cubit.customEndDate!)}'
+            ? '${AppDateFormatter.formatDate(cubit.customStartDate!, pattern: 'MM/dd')} - ${AppDateFormatter.formatDate(cubit.customEndDate!, pattern: 'MM/dd')}'
             : 'admin.attendance.filter.custom'.tr(context: context),
       ),
       (
@@ -84,7 +88,7 @@ class AdminAttendanceFilterBarWidget extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: filters.length,
-        separatorBuilder: (_, _) => vSpace(8),
+        separatorBuilder: (_, _) => wSpace(8),
         itemBuilder: (context, index) {
           final item = filters[index];
           final isSelected = selectedFilter == item.$1;

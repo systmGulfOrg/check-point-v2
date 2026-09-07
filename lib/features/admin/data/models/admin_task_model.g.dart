@@ -65,6 +65,10 @@ AddTaskRequestBody _$AddTaskRequestBodyFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       description: json['description'] as String,
       assignedEmployeeId: json['assignedEmployeeId'] as String?,
+      dueDate: json['dueDate'] as String?,
+      priorityStatus: json['priorityStatus'] as String?,
+      status: json['status'] as String?,
+      departmentId: (json['departmentId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$AddTaskRequestBodyToJson(AddTaskRequestBody instance) =>
@@ -72,6 +76,10 @@ Map<String, dynamic> _$AddTaskRequestBodyToJson(AddTaskRequestBody instance) =>
       'title': instance.title,
       'description': instance.description,
       'assignedEmployeeId': instance.assignedEmployeeId,
+      'dueDate': instance.dueDate,
+      'priorityStatus': instance.priorityStatus,
+      'status': instance.status,
+      'departmentId': instance.departmentId,
     };
 
 AssignTaskRequestBody _$AssignTaskRequestBodyFromJson(

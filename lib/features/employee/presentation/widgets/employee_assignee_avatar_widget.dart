@@ -4,10 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import '../../../../core/core.dart';
 
 class EmployeeAssigneeAvatarWidget extends StatelessWidget {
-  const EmployeeAssigneeAvatarWidget({
-    required this.assignees,
-    super.key,
-  });
+  const EmployeeAssigneeAvatarWidget({required this.assignees, super.key});
 
   final List<String> assignees;
 

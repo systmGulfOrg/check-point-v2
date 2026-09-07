@@ -14,6 +14,7 @@ import '../../features/admin/presentation/cubit/admin_shifts_policies_cubit.dart
 import '../../features/admin/presentation/cubit/admin_tasks_cubit.dart';
 import '../../features/admin/presentation/screens/admin_attendance_screen.dart';
 import '../../features/admin/presentation/screens/admin_create_employee_screen.dart';
+import '../../features/admin/presentation/screens/admin_departments_screen.dart';
 import '../../features/admin/presentation/screens/admin_leave_management_screen.dart';
 import '../../features/admin/presentation/screens/admin_locations_screen.dart';
 import '../../features/admin/presentation/screens/admin_main_screen.dart';
@@ -31,6 +32,11 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/request_access_screen.dart';
 import '../../features/employee/presentation/screens/employee_main_screen.dart';
 import '../../features/employee/presentation/screens/employee_settings_screen.dart';
+import '../../features/supervisor/presentation/cubit/supervisor_attendance_cubit.dart';
+import '../../features/supervisor/presentation/cubit/supervisor_leave_requests_cubit.dart';
+import '../../features/supervisor/presentation/cubit/supervisor_plans_cubit.dart';
+import '../../features/supervisor/presentation/cubit/supervisor_tasks_cubit.dart';
+import '../../features/supervisor/presentation/cubit/supervisor_team_cubit.dart';
 import '../../features/supervisor/presentation/screens/supervisor_leave_management_screen.dart';
 import '../../features/supervisor/presentation/screens/supervisor_main_screen.dart';
 import '../../features/supervisor/presentation/screens/supervisor_notifications_screen.dart';
@@ -167,6 +173,15 @@ class AppRouter {
           ),
         );
 
+      case AppRoutes.adminDepartments:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.adminDepartments),
+          child: BlocProvider<AdminDepartmentsCubit>(
+            create: (_) => sl<AdminDepartmentsCubit>()..load(),
+            child: const AdminDepartmentsScreen(),
+          ),
+        );
+
       case AppRoutes.adminLocations:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminLocations),
@@ -179,8 +194,8 @@ class AppRouter {
                 create: (_) => sl<AdminDepartmentsCubit>()..load(),
               ),
               BlocProvider<AdminCustomersCubit>(
-                create:
-                    (_) => sl<AdminCustomersCubit>()..load(type: 'Customer'),
+                create: (_) =>
+                    sl<AdminCustomersCubit>()..load(type: 'Customer'),
               ),
             ],
             child: const AdminLocationsScreen(),
@@ -278,8 +293,29 @@ class AppRouter {
       case AppRoutes.supervisor:
         return _fadeRoute(
           settings: const RouteSettings(name: AppRoutes.supervisor),
-          child: BlocProvider<AuthSessionCubit>(
-            create: (_) => sl<AuthSessionCubit>(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AuthSessionCubit>(
+                create: (_) => sl<AuthSessionCubit>(),
+              ),
+              BlocProvider<SupervisorAttendanceCubit>(
+                create: (_) =>
+                    sl<SupervisorAttendanceCubit>()..loadAttendance(),
+              ),
+              BlocProvider<SupervisorLeaveRequestsCubit>(
+                create: (_) =>
+                    sl<SupervisorLeaveRequestsCubit>()..loadLeaveRequests(),
+              ),
+              BlocProvider<SupervisorTasksCubit>(
+                create: (_) => sl<SupervisorTasksCubit>()..loadTasks(),
+              ),
+              BlocProvider<SupervisorPlansCubit>(
+                create: (_) => sl<SupervisorPlansCubit>()..loadPlans(),
+              ),
+              BlocProvider<SupervisorTeamCubit>(
+                create: (_) => sl<SupervisorTeamCubit>()..loadTeam(),
+              ),
+            ],
             child: const SupervisorMainScreen(),
           ),
         );
@@ -289,13 +325,27 @@ class AppRouter {
           settings: const RouteSettings(
             name: AppRoutes.supervisorLeaveManagement,
           ),
-          child: const SupervisorLeaveManagementScreen(),
+          child: BlocProvider<SupervisorLeaveRequestsCubit>(
+            create: (_) =>
+                sl<SupervisorLeaveRequestsCubit>()..loadLeaveRequests(),
+            child: const SupervisorLeaveManagementScreen(),
+          ),
         );
 
       case AppRoutes.supervisorPlans:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.supervisorPlans),
-          child: const SupervisorPlansScreen(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<SupervisorPlansCubit>(
+                create: (_) => sl<SupervisorPlansCubit>()..loadPlans(),
+              ),
+              BlocProvider<SupervisorTeamCubit>(
+                create: (_) => sl<SupervisorTeamCubit>()..loadTeam(),
+              ),
+            ],
+            child: const SupervisorPlansScreen(),
+          ),
         );
 
       case AppRoutes.supervisorNotifications:

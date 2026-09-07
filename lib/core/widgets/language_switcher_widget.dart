@@ -28,10 +28,7 @@ class LanguageSwitcherWidget extends StatelessWidget {
         );
       },
       style: OutlinedButton.styleFrom(
-        padding: EdgeInsets.symmetric(
-          horizontal: 14.w,
-          vertical: 8.h,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
         side: const BorderSide(color: AppColors.border),
         foregroundColor: AppColors.textPrimary,
         backgroundColor: AppColors.white,

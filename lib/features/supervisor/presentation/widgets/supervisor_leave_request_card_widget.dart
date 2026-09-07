@@ -3,17 +3,57 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../../../admin/data/models/admin_leave_request_model.dart';
 import 'supervisor_leave_request_action_widget.dart';
-import 'supervisor_leave_request_data.dart';
 
 class SupervisorLeaveRequestCardWidget extends StatelessWidget {
-  const SupervisorLeaveRequestCardWidget({required this.request, super.key});
+  const SupervisorLeaveRequestCardWidget({
+    required this.request,
+    super.key,
+    this.onApprove,
+    this.onReject,
+  });
 
-  final SupervisorLeaveRequestData request;
+  final AdminLeaveRequestModel request;
+  final VoidCallback? onApprove;
+  final VoidCallback? onReject;
 
   @override
   Widget build(BuildContext context) {
-    final isPending = request.statusKey == 'supervisor.leave.pending';
+    final name = request.employeeName ?? 'Employee';
+    final initials = name.isNotEmpty
+        ? name
+              .split(' ')
+              .take(2)
+              .map((e) => e.isNotEmpty ? e[0].toUpperCase() : '')
+              .join()
+        : 'EM';
+    final status = request.status?.toLowerCase() ?? 'pending';
+    final isPending = status == 'pending';
+    final isApproved = status == 'approved';
+
+    final (statusKey, statusColor, statusBgColor) = isPending
+        ? (
+            'supervisor.leave.pending',
+            AppColors.warningOrange,
+            AppColors.softYellowBackground,
+          )
+        : isApproved
+        ? (
+            'supervisor.leave.approved',
+            AppColors.success,
+            AppColors.softGreenBackground,
+          )
+        : (
+            'supervisor.leave.rejected',
+            AppColors.error,
+            AppColors.softBrandBackground,
+          );
+
+    final start = AppDateFormatter.formatDateString(request.startDate);
+    final end = AppDateFormatter.formatDateString(request.endDate);
+    final dateRange = '$start – $end';
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
@@ -31,43 +71,40 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
                   radius: 19.r,
                   backgroundColor: AppColors.softBrandBackground,
                   child: Text(
-                    request.initials,
+                    initials,
                     style: AppTextStyles.font12Bold.copyWith(
                       color: AppColors.brandPrimary,
                     ),
                   ),
                 ),
-                vSpace(12),
+                wSpace(12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        request.nameKey.tr(context: context),
-                        style: AppTextStyles.font14SemiBold,
-                      ),
+                      Text(name, style: AppTextStyles.font14SemiBold),
                       hSpace(2),
                       Text(
-                        request.typeKey.tr(
-                          context: context,
-                          args: [request.dateRange],
-                        ),
+                        '${request.leaveType ?? 'Leave'} ($dateRange)',
                         style: AppTextStyles.font12Regular,
                       ),
-                      hSpace(2),
-                      Text(
-                        request.reasonKey.tr(context: context),
-                        style: AppTextStyles.font12Regular.copyWith(
-                          color: AppColors.placeholder,
+                      if (request.reason != null &&
+                          request.reason!.isNotEmpty) ...[
+                        hSpace(2),
+                        Text(
+                          request.reason!,
+                          style: AppTextStyles.font12Regular.copyWith(
+                            color: AppColors.placeholder,
+                          ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
                   decoration: BoxDecoration(
-                    color: request.statusBackgroundColor,
+                    color: statusBgColor,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Row(
@@ -77,15 +114,15 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
                         width: 6.r,
                         height: 6.r,
                         decoration: BoxDecoration(
-                          color: request.statusColor,
+                          color: statusColor,
                           shape: BoxShape.circle,
                         ),
                       ),
-                      vSpace(5),
+                      wSpace(5),
                       Text(
-                        request.statusKey.tr(context: context),
+                        statusKey.tr(context: context),
                         style: AppTextStyles.font12Bold.copyWith(
-                          color: request.statusColor,
+                          color: statusColor,
                         ),
                       ),
                     ],
@@ -101,12 +138,14 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
                   child: SupervisorLeaveRequestActionWidget(
                     labelKey: 'supervisor.leave.reject',
                     color: AppColors.error,
+                    onTap: onReject,
                   ),
                 ),
                 Expanded(
                   child: SupervisorLeaveRequestActionWidget(
                     labelKey: 'supervisor.leave.approve',
                     color: AppColors.success,
+                    onTap: onApprove,
                   ),
                 ),
               ],

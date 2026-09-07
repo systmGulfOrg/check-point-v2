@@ -102,14 +102,13 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                                   _resolveStatus(item);
                               final initials =
                                   (item.employeeName?.trim().isNotEmpty ??
-                                          false)
-                                      ? item.employeeName!.trim()[0]
-                                          .toUpperCase()
-                                      : 'E';
+                                      false)
+                                  ? item.employeeName!.trim()[0].toUpperCase()
+                                  : 'E';
                               final recordData = AdminAttendanceRecordData(
                                 initials: initials,
-                                name: item.employeeName?.trim().isNotEmpty ==
-                                        true
+                                name:
+                                    item.employeeName?.trim().isNotEmpty == true
                                     ? item.employeeName!
                                     : 'Employee',
                                 date: _formatDate(item.attendanceDate),
@@ -136,18 +135,19 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                                       context: context,
                                       builder: (dialogContext) =>
                                           AdminDeleteConfirmationDialogWidget(
-                                        title: 'admin.attendance.deleteRecord'
-                                            .tr(context: context),
-                                        message:
-                                            'admin.attendance.deleteRecordMessage'
-                                                .tr(context: context),
-                                        onConfirm: () {
-                                          Navigator.pop(dialogContext);
-                                          context
-                                              .read<AdminAttendanceCubit>()
-                                              .deleteAttendance(item.id!);
-                                        },
-                                      ),
+                                            title:
+                                                'admin.attendance.deleteRecord'
+                                                    .tr(context: context),
+                                            message:
+                                                'admin.attendance.deleteRecordMessage'
+                                                    .tr(context: context),
+                                            onConfirm: () {
+                                              Navigator.pop(dialogContext);
+                                              context
+                                                  .read<AdminAttendanceCubit>()
+                                                  .deleteAttendance(item.id!);
+                                            },
+                                          ),
                                     );
                                   }
                                 },
@@ -233,9 +233,11 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
         final inParts = clockInTime.split(':');
         final outParts = clockOutTime.split(':');
         if (inParts.length >= 2 && outParts.length >= 2) {
-          final inMinutes = (int.tryParse(inParts[0]) ?? 0) * 60 +
+          final inMinutes =
+              (int.tryParse(inParts[0]) ?? 0) * 60 +
               (int.tryParse(inParts[1]) ?? 0);
-          final outMinutes = (int.tryParse(outParts[0]) ?? 0) * 60 +
+          final outMinutes =
+              (int.tryParse(outParts[0]) ?? 0) * 60 +
               (int.tryParse(outParts[1]) ?? 0);
           final diff = outMinutes - inMinutes;
           if (diff > 0) {
@@ -278,4 +280,3 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
     );
   }
 }
-

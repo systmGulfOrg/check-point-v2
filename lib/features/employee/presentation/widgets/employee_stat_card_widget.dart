@@ -44,17 +44,10 @@ class EmployeeStatCardWidget extends StatelessWidget {
               color: iconBgColor,
               borderRadius: BorderRadius.circular(10.r),
             ),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: 20.r,
-            ),
+            child: Icon(icon, color: iconColor, size: 20.r),
           ),
           hSpace(12),
-          Text(
-            '$count',
-            style: AppTextStyles.font20Bold,
-          ),
+          Text('$count', style: AppTextStyles.font20Bold),
           hSpace(4),
           Text(
             label,

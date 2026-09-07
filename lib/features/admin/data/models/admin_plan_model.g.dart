@@ -70,6 +70,7 @@ CreatePlanRequestBody _$CreatePlanRequestBodyFromJson(
   startDate: json['startDate'] as String,
   endDate: json['endDate'] as String,
   assignedEmployeeId: json['assignedEmployeeId'] as String,
+  departmentId: (json['departmentId'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$CreatePlanRequestBodyToJson(
@@ -80,4 +81,5 @@ Map<String, dynamic> _$CreatePlanRequestBodyToJson(
   'startDate': instance.startDate,
   'endDate': instance.endDate,
   'assignedEmployeeId': instance.assignedEmployeeId,
+  'departmentId': instance.departmentId,
 };

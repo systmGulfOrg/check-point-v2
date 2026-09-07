@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../core/widgets/animated_list_item_widget.dart';
 import 'admin_leave_request_card_widget.dart';
 import 'admin_leave_request_data.dart';
 

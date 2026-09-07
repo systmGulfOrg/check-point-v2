@@ -27,7 +27,7 @@ class SupervisorAttendanceFilterWidget extends StatelessWidget {
         children: [
           Expanded(
             child: SupervisorSegmentOptionWidget(
-              labelKey: 'supervisor.attendance.attendanceTab',
+              labelKey: 'supervisor.attendance.filter.all',
               labelArgs: const [],
               isSelected: selectedIndex == 0,
               onTap: () => onTabSelected(0),
@@ -35,10 +35,26 @@ class SupervisorAttendanceFilterWidget extends StatelessWidget {
           ),
           Expanded(
             child: SupervisorSegmentOptionWidget(
-              labelKey: 'supervisor.attendance.leavesTab',
-              labelArgs: const ['1'],
+              labelKey: 'supervisor.attendance.filter.late',
+              labelArgs: const [],
               isSelected: selectedIndex == 1,
               onTap: () => onTabSelected(1),
+            ),
+          ),
+          Expanded(
+            child: SupervisorSegmentOptionWidget(
+              labelKey: 'supervisor.attendance.filter.early',
+              labelArgs: const [],
+              isSelected: selectedIndex == 2,
+              onTap: () => onTabSelected(2),
+            ),
+          ),
+          Expanded(
+            child: SupervisorSegmentOptionWidget(
+              labelKey: 'supervisor.attendance.leavesTab',
+              labelArgs: const [],
+              isSelected: selectedIndex == 3,
+              onTap: () => onTabSelected(3),
             ),
           ),
         ],

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import '../../../../core/widgets/animated_list_item_widget.dart';
 import '../widgets/apply_for_leave_sheet_widget.dart';
 import '../widgets/employee_leave_card_widget.dart';
 import '../widgets/employee_leave_data.dart';
@@ -36,26 +35,29 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
       isScrollControlled: true,
       backgroundColor: AppColors.transparent,
       builder: (_) => ApplyForLeaveSheetWidget(
-        onSubmit: ({
-          required leaveType,
-          required startDate,
-          required endDate,
-          reason,
-        }) {
-          setState(() {
-            _leaves.insert(
-              0,
-              EmployeeLeaveData(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                leaveType: leaveType,
-                status: 'Pending',
-                dateRange: '$startDate – $endDate',
-                reason: reason != null && reason.isNotEmpty ? '"$reason"' : null,
-                appliedDate: 'Applied 2026-09-01',
-              ),
-            );
-          });
-        },
+        onSubmit:
+            ({
+              required leaveType,
+              required startDate,
+              required endDate,
+              reason,
+            }) {
+              setState(() {
+                _leaves.insert(
+                  0,
+                  EmployeeLeaveData(
+                    id: DateTime.now().millisecondsSinceEpoch.toString(),
+                    leaveType: leaveType,
+                    status: 'Pending',
+                    dateRange: '$startDate – $endDate',
+                    reason: reason != null && reason.isNotEmpty
+                        ? '"$reason"'
+                        : null,
+                    appliedDate: 'Applied 2026-09-01',
+                  ),
+                );
+              });
+            },
       ),
     );
   }
@@ -96,8 +98,7 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                     for (int i = 0; i < _filters.length; i++)
                       Expanded(
                         child: GestureDetector(
-                          onTap: () =>
-                              setState(() => _selectedFilterIndex = i),
+                          onTap: () => setState(() => _selectedFilterIndex = i),
                           child: Container(
                             padding: EdgeInsets.symmetric(vertical: 8.h),
                             decoration: BoxDecoration(
@@ -143,10 +144,10 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                                         '$pendingCount',
                                         style: AppTextStyles.font11Medium
                                             .copyWith(
-                                          color: AppColors.white,
-                                          fontSize: 9.sp,
-                                          fontWeight: FontWeight.w700,
-                                        ),
+                                              color: AppColors.white,
+                                              fontSize: 9.sp,
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                       ),
                                     ),
                                   ),

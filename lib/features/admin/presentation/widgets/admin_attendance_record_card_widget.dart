@@ -78,10 +78,7 @@ class AdminAttendanceRecordCardWidget extends StatelessWidget {
               ),
               wSpace(8),
               Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 8.w,
-                  vertical: 4.h,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
                   color: record.statusBackgroundColor,
                   borderRadius: BorderRadius.circular(6.r),
@@ -233,9 +230,9 @@ class AdminAttendanceRecordCardWidget extends StatelessWidget {
                                         .copyWith(
                                           color:
                                               (record.totalHours.isNotEmpty &&
-                                                      record.totalHours != '--')
-                                                  ? AppColors.brandPrimary
-                                                  : AppColors.placeholder,
+                                                  record.totalHours != '--')
+                                              ? AppColors.brandPrimary
+                                              : AppColors.placeholder,
                                         ),
                                   ),
                                 ),
@@ -248,10 +245,7 @@ class AdminAttendanceRecordCardWidget extends StatelessWidget {
                   ],
                 ),
                 hSpace(8),
-                Container(
-                  height: 1.h,
-                  color: AppColors.border,
-                ),
+                Container(height: 1.h, color: AppColors.border),
                 hSpace(8),
                 Row(
                   children: [

@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/core.dart';
-import '../../data/models/branch_request_model.dart';
 import '../cubit/admin_branches_cubit.dart';
 import '../cubit/admin_branches_state.dart';
 import 'admin_branch_card_widget.dart';
 import 'admin_delete_confirmation_dialog_widget.dart';
 import 'admin_locations_skeleton_widget.dart';
+
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'admin_create_location_sheet_widget.dart';
+import 'admin_locations_tab_widget.dart';
 
 class AdminBranchesBlocBuilderWidget extends StatelessWidget {
   const AdminBranchesBlocBuilderWidget({super.key});
@@ -27,59 +31,31 @@ class AdminBranchesBlocBuilderWidget extends StatelessWidget {
     );
   }
 
-  void _showEditDialog(
+  void _showEditSheet(
     BuildContext context,
     int id,
     String currentName,
     String currentLocation,
     String currentDesc,
+    List<LatLng> initialPoints,
   ) {
-    final nameController = TextEditingController(text: currentName);
-    final locationController = TextEditingController(text: currentLocation);
-    final descController = TextEditingController(text: currentDesc);
-    showDialog(
+    showModalBottomSheet<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Edit Branch'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'Branch Name'),
-            ),
-            TextField(
-              controller: locationController,
-              decoration: const InputDecoration(labelText: 'Location'),
-            ),
-            TextField(
-              controller: descController,
-              decoration: const InputDecoration(labelText: 'Description'),
-            ),
-          ],
+      isScrollControlled: true,
+      backgroundColor: AppColors.cardBackground,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => BlocProvider.value(
+        value: context.read<AdminBranchesCubit>(),
+        child: AdminCreateLocationSheetWidget(
+          category: AdminLocationCategory.branches,
+          editBranchId: id,
+          initialName: currentName,
+          initialAddress: currentLocation,
+          initialDescription: currentDesc,
+          initialPoints: initialPoints,
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (nameController.text.trim().isNotEmpty) {
-                context.read<AdminBranchesCubit>().edit(
-                      id: id,
-                      request: BranchRequestModel(
-                        name: nameController.text.trim(),
-                        location: locationController.text.trim(),
-                        description: descController.text.trim(),
-                      ),
-                    );
-                Navigator.pop(dialogContext);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
       ),
     );
   }
@@ -89,8 +65,7 @@ class AdminBranchesBlocBuilderWidget extends StatelessWidget {
       BlocBuilder<AdminBranchesCubit, AdminBranchesState>(
         builder: (context, state) => switch (state) {
           AdminBranchesInitial() => const SizedBox.shrink(),
-          AdminBranchesLoading() =>
-            const AdminLocationsSkeletonWidget(),
+          AdminBranchesLoading() => const AdminLocationsSkeletonWidget(),
           AdminBranchesError(:final messageKey) => Text(
             messageKey.tr(context: context),
           ),
@@ -104,12 +79,16 @@ class AdminBranchesBlocBuilderWidget extends StatelessWidget {
                           branch: branch,
                           onEdit: () {
                             if (branch.id != null) {
-                              _showEditDialog(
+                              final points = (branch.coordinates ?? [])
+                                  .map((c) => LatLng(c.latitude, c.longitude))
+                                  .toList();
+                              _showEditSheet(
                                 context,
                                 branch.id!,
                                 branch.name ?? '',
                                 branch.location ?? '',
                                 branch.description ?? '',
+                                points,
                               );
                             }
                           },

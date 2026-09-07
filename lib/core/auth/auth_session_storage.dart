@@ -4,12 +4,58 @@ class AuthSessionStorage {
   AuthSessionStorage({required this.secureStorage});
 
   static const tokenKey = 'auth_token';
+  static const userIdKey = 'user_id';
+  static const departmentIdKey = 'department_id';
+  static const userNameKey = 'user_name';
+  static const userRoleKey = 'user_role';
   static const biometricEnabledKey = 'biometric_login_enabled';
   static const biometricRoleKey = 'biometric_login_role';
   static const biometricUsernameKey = 'biometric_username';
   static const biometricPasswordKey = 'biometric_password';
 
   final FlutterSecureStorage secureStorage;
+
+  Future<void> saveUserSession({
+    required String token,
+    String? userId,
+    int? departmentId,
+    String? userName,
+    String? role,
+  }) async {
+    await secureStorage.write(key: tokenKey, value: token);
+    if (userId != null && userId.isNotEmpty) {
+      await secureStorage.write(key: userIdKey, value: userId);
+    }
+    if (departmentId != null) {
+      await secureStorage.write(
+        key: departmentIdKey,
+        value: departmentId.toString(),
+      );
+    }
+    if (userName != null && userName.isNotEmpty) {
+      await secureStorage.write(key: userNameKey, value: userName);
+    }
+    if (role != null && role.isNotEmpty) {
+      await secureStorage.write(key: userRoleKey, value: role);
+    }
+  }
+
+  Future<String?> readToken() => secureStorage.read(key: tokenKey);
+
+  Future<String?> readUserId() => secureStorage.read(key: userIdKey);
+
+  Future<int?> readDepartmentId() async {
+    final raw = await secureStorage.read(key: departmentIdKey);
+    if (raw == null || raw.isEmpty) return null;
+    return int.tryParse(raw);
+  }
+
+  Future<void> saveDepartmentId(int id) =>
+      secureStorage.write(key: departmentIdKey, value: id.toString());
+
+  Future<String?> readUserName() => secureStorage.read(key: userNameKey);
+
+  Future<String?> readUserRole() => secureStorage.read(key: userRoleKey);
 
   Future<void> enableBiometricLogin({
     required String role,
@@ -66,6 +112,10 @@ class AuthSessionStorage {
 
   Future<void> clear() async {
     await secureStorage.delete(key: tokenKey);
+    await secureStorage.delete(key: userIdKey);
+    await secureStorage.delete(key: departmentIdKey);
+    await secureStorage.delete(key: userNameKey);
+    await secureStorage.delete(key: userRoleKey);
     await disableBiometricLogin();
   }
 }

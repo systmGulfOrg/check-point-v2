@@ -3,57 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-
-class SupervisorTeamMemberRowData {
-  const SupervisorTeamMemberRowData({
-    required this.initials,
-    required this.name,
-    required this.department,
-    required this.statusKey,
-    required this.statusColor,
-    required this.statusBgColor,
-  });
-
-  final String initials;
-  final String name;
-  final String department;
-  final String statusKey;
-  final Color statusColor;
-  final Color statusBgColor;
-}
+import '../../../admin/data/models/admin_attendance_model.dart';
+import 'supervisor_team_today_row_widget.dart';
 
 class SupervisorTeamTodayWidget extends StatelessWidget {
-  const SupervisorTeamTodayWidget({super.key});
+  const SupervisorTeamTodayWidget({
+    required this.attendance,
+    super.key,
+    this.onViewAll,
+  });
 
-  static const _members = <SupervisorTeamMemberRowData>[
-    SupervisorTeamMemberRowData(
-      initials: 'JM',
-      name: 'James Martinez',
-      department: 'Operations',
-      statusKey: 'supervisor.status.present',
-      statusColor: AppColors.success,
-      statusBgColor: AppColors.softGreenBackground,
-    ),
-    SupervisorTeamMemberRowData(
-      initials: 'PN',
-      name: 'Priya Nair',
-      department: 'Information Technology',
-      statusKey: 'supervisor.status.late',
-      statusColor: AppColors.warningOrange,
-      statusBgColor: AppColors.softYellowBackground,
-    ),
-    SupervisorTeamMemberRowData(
-      initials: 'DC',
-      name: 'David Chen',
-      department: 'Finance',
-      statusKey: 'supervisor.status.absent',
-      statusColor: AppColors.error,
-      statusBgColor: AppColors.softBrandBackground,
-    ),
-  ];
+  final List<AdminAttendanceModel> attendance;
+  final VoidCallback? onViewAll;
 
   @override
   Widget build(BuildContext context) {
+    final displayList = attendance.take(4).toList();
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
@@ -80,89 +46,36 @@ class SupervisorTeamTodayWidget extends StatelessWidget {
                     color: AppColors.textPrimary,
                   ),
                 ),
-                InkWell(
-                  onTap: () {},
-                  child: Text(
-                    'supervisor.dashboard.viewAll'.tr(context: context),
-                    style: AppTextStyles.font13SemiBold.copyWith(
-                      color: AppColors.brandPrimary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          for (int i = 0; i < _members.length; i++) ...[
-            const Divider(color: AppColors.border, height: 1),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20.r,
-                    backgroundColor: AppColors.softBrandBackground,
+                if (onViewAll != null)
+                  InkWell(
+                    onTap: onViewAll,
                     child: Text(
-                      _members[i].initials,
-                      style: AppTextStyles.font14SemiBold.copyWith(
+                      'supervisor.dashboard.viewAll'.tr(context: context),
+                      style: AppTextStyles.font13SemiBold.copyWith(
                         color: AppColors.brandPrimary,
                       ),
                     ),
                   ),
-                  vSpace(12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _members[i].name,
-                          style: AppTextStyles.font14SemiBold.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                        hSpace(2),
-                        Text(
-                          _members[i].department,
-                          style: AppTextStyles.font12Regular.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 4.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _members[i].statusBgColor,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 6.r,
-                          height: 6.r,
-                          decoration: BoxDecoration(
-                            color: _members[i].statusColor,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        vSpace(6),
-                        Text(
-                          _members[i].statusKey.tr(context: context),
-                          style: AppTextStyles.font12Bold.copyWith(
-                            color: _members[i].statusColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              ],
             ),
-          ],
+          ),
+          if (displayList.isEmpty)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 24.h),
+              child: Center(
+                child: Text(
+                  'supervisor.attendance.empty'.tr(context: context),
+                  style: AppTextStyles.font13Regular.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ),
+            )
+          else
+            for (int i = 0; i < displayList.length; i++) ...[
+              const Divider(color: AppColors.border, height: 1),
+              SupervisorTeamTodayRowWidget(record: displayList[i]),
+            ],
         ],
       ),
     );

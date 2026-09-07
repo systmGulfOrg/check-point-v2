@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import '../widgets/supervisor_tasks_filter_widget.dart';
-import '../widgets/supervisor_tasks_list_widget.dart';
 import '../widgets/supervisor_new_task_button_widget.dart';
+import '../widgets/supervisor_tasks_bloc_builder_widget.dart';
+import '../widgets/supervisor_tasks_filter_widget.dart';
 
 class SupervisorTasksScreen extends StatefulWidget {
   const SupervisorTasksScreen({super.key});
@@ -35,19 +35,21 @@ class _SupervisorTasksScreenState extends State<SupervisorTasksScreen> {
               onFilterSelected: (index) =>
                   setState(() => selectedFilter = index),
             ),
-            hSpace(12),
+            hSpace(14),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'supervisor.tasks.count'.tr(context: context, args: ['3']),
-                  style: AppTextStyles.font12Regular,
+                  'supervisor.tasks.allTasks'.tr(context: context),
+                  style: AppTextStyles.font14SemiBold,
                 ),
                 const SupervisorNewTaskButtonWidget(),
               ],
             ),
             hSpace(12),
-            const SupervisorTasksListWidget(),
+            SupervisorTasksBlocBuilderWidget(
+              selectedFilterIndex: selectedFilter,
+            ),
           ],
         ),
       ),

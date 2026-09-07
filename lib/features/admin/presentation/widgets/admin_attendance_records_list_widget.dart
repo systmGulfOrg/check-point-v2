@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../core/widgets/animated_list_item_widget.dart';
 import 'admin_attendance_record_card_widget.dart';
 import 'admin_attendance_record_data.dart';
 

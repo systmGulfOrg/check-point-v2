@@ -4,10 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import '../../../../core/core.dart';
 
 class EmployeeStatusBadgeWidget extends StatelessWidget {
-  const EmployeeStatusBadgeWidget({
-    required this.status,
-    super.key,
-  });
+  const EmployeeStatusBadgeWidget({required this.status, super.key});
 
   final String status;
 
@@ -15,25 +12,21 @@ class EmployeeStatusBadgeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final (bgColor, textColor, dotColor) = switch (status) {
       'On Time' => (
-          AppColors.softGreenBackground,
-          AppColors.success,
-          AppColors.success,
-        ),
-      'Overdue' => (
-          const Color(0xFFFEE2E2),
-          AppColors.error,
-          AppColors.error,
-        ),
+        AppColors.softGreenBackground,
+        AppColors.success,
+        AppColors.success,
+      ),
+      'Overdue' => (const Color(0xFFFEE2E2), AppColors.error, AppColors.error),
       'In Progress' => (
-          AppColors.softBlueBackground,
-          AppColors.info,
-          AppColors.info,
-        ),
+        AppColors.softBlueBackground,
+        AppColors.info,
+        AppColors.info,
+      ),
       _ => (
-          AppColors.infoBackground,
-          AppColors.textSecondary,
-          AppColors.placeholder,
-        ),
+        AppColors.infoBackground,
+        AppColors.textSecondary,
+        AppColors.placeholder,
+      ),
     };
 
     return Container(
@@ -48,10 +41,7 @@ class EmployeeStatusBadgeWidget extends StatelessWidget {
           Container(
             width: 6.r,
             height: 6.r,
-            decoration: BoxDecoration(
-              color: dotColor,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle),
           ),
           wSpace(6),
           Text(

@@ -141,10 +141,7 @@ class AdminAttendanceSkeletonCardWidget extends StatelessWidget {
                   ],
                 ),
                 hSpace(8),
-                Container(
-                  height: 1.h,
-                  color: AppColors.border,
-                ),
+                Container(height: 1.h, color: AppColors.border),
                 hSpace(8),
                 Row(
                   children: [

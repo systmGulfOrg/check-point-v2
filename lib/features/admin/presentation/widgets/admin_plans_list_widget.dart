@@ -2,38 +2,29 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
 import '../../../supervisor/presentation/widgets/supervisor_plan_card_widget.dart';
-import '../../../supervisor/presentation/widgets/supervisor_plan_data.dart';
+import '../../data/models/admin_plan_model.dart';
 
 class AdminPlansListWidget extends StatelessWidget {
   const AdminPlansListWidget({super.key});
 
-  static const plans = <SupervisorPlanData>[
-    SupervisorPlanData(
-      titleKey: 'supervisor.plans.items.emergency.title',
-      typeKey: 'supervisor.plans.type.mission',
-      dateTime: '2026-09-15 09:00',
-      descriptionKey: 'supervisor.plans.items.emergency.description',
-      assigneeInitials: ['JM', 'PN', 'FA'],
-      iconColor: AppColors.info,
-      iconBackgroundColor: AppColors.softBlueBackground,
+  static const plans = <AdminPlanModel>[
+    AdminPlanModel(
+      title: 'supervisor.plans.items.emergency.title',
+      startDate: '2026-09-15 09:00',
+      description: 'supervisor.plans.items.emergency.description',
+      assignedEmployeeName: 'JM, PN, FA',
     ),
-    SupervisorPlanData(
-      titleKey: 'supervisor.plans.items.site.title',
-      typeKey: 'supervisor.plans.type.customerVisit',
-      dateTime: '2026-09-10 10:00  -  Al Futtaim Group',
-      descriptionKey: 'supervisor.plans.items.site.description',
-      assigneeInitials: ['JM', 'SJ'],
-      iconColor: AppColors.success,
-      iconBackgroundColor: AppColors.softGreenBackground,
+    AdminPlanModel(
+      title: 'supervisor.plans.items.site.title',
+      startDate: '2026-09-10 10:00  -  Al Futtaim Group',
+      description: 'supervisor.plans.items.site.description',
+      assignedEmployeeName: 'JM, SJ',
     ),
-    SupervisorPlanData(
-      titleKey: 'admin.plans.items.audit.title',
-      typeKey: 'admin.plans.type.siteVisit',
-      dateTime: '2026-09-08 08:00  -  Emaar Properties',
-      descriptionKey: 'admin.plans.items.audit.description',
-      assigneeInitials: ['DC'],
-      iconColor: AppColors.warningOrange,
-      iconBackgroundColor: AppColors.softYellowBackground,
+    AdminPlanModel(
+      title: 'admin.plans.items.audit.title',
+      startDate: '2026-09-08 08:00  -  Emaar Properties',
+      description: 'admin.plans.items.audit.description',
+      assignedEmployeeName: 'DC',
     ),
   ];
 

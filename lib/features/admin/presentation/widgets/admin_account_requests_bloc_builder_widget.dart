@@ -17,6 +17,22 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
 
   final void Function(AccountRequestModel request) onView;
 
+  void _showDeleteDialog(BuildContext context, int requestId) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AppDeleteConfirmationDialogWidget(
+        title: 'admin.locations.delete'.tr(context: context),
+        message: 'admin.requests.deleteMessage'.tr(context: context),
+        onConfirm: () {
+          Navigator.pop(dialogContext);
+          context.read<AdminAccountRequestsCubit>().deleteRequest(
+            id: requestId,
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<AdminAccountRequestsCubit, AdminAccountRequestsState>(
@@ -51,12 +67,16 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
                             name: request.name ?? '-',
                             deviceId: request.mobileId ?? '-',
                             date: request.createdDate != null
-                                ? DateFormat('dd/MM/yyyy').format(request.createdDate!)
+                                ? AppDateFormatter.formatDayMonthYear(
+                                    request.createdDate!,
+                                  )
                                 : '-',
                             onView: () => onView(request),
-                            onDelete: () => context
-                                .read<AdminAccountRequestsCubit>()
-                                .deleteRequest(id: request.id ?? 0),
+                            onDelete: () {
+                              if (request.id != null) {
+                                _showDeleteDialog(context, request.id!);
+                              }
+                            },
                           ),
                         ),
                     ],

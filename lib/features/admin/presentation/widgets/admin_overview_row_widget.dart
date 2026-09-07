@@ -31,9 +31,7 @@ class AdminOverviewRowWidget extends StatelessWidget {
           ),
           Text(
             value,
-            style: AppTextStyles.font14SemiBold.copyWith(
-              color: valueColor,
-            ),
+            style: AppTextStyles.font14SemiBold.copyWith(color: valueColor),
           ),
         ],
       ),

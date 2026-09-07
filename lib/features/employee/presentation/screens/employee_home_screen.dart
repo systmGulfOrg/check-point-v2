@@ -103,10 +103,10 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const EmployeeHeaderWidget(
+              EmployeeHeaderWidget(
                 titleKey: 'employee.home.title',
                 userName: 'James',
-                dateText: 'Tuesday, September 1',
+                dateText: AppDateFormatter.formatFullDate(DateTime.now()),
                 notificationCount: 1,
               ),
               hSpace(20),

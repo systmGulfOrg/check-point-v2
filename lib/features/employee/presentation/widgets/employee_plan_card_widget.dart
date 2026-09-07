@@ -5,10 +5,7 @@ import '../../../../core/core.dart';
 import 'employee_plan_data.dart';
 
 class EmployeePlanCardWidget extends StatelessWidget {
-  const EmployeePlanCardWidget({
-    required this.plan,
-    super.key,
-  });
+  const EmployeePlanCardWidget({required this.plan, super.key});
 
   final EmployeePlanData plan;
 
@@ -35,15 +32,9 @@ class EmployeePlanCardWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  plan.title,
-                  style: AppTextStyles.font14SemiBold,
-                ),
+                Text(plan.title, style: AppTextStyles.font14SemiBold),
                 hSpace(4),
-                Text(
-                  plan.dateTime,
-                  style: AppTextStyles.font12Regular,
-                ),
+                Text(plan.dateTime, style: AppTextStyles.font12Regular),
               ],
             ),
           ),

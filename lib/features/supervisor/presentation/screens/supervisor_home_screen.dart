@@ -3,17 +3,19 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
 import '../../../admin/presentation/widgets/admin_greeting_widget.dart';
-import '../../../admin/presentation/widgets/admin_stats_grid_widget.dart';
 import '../../../admin/presentation/widgets/admin_top_bar_widget.dart';
-import '../widgets/supervisor_active_tasks_widget.dart';
-import '../widgets/supervisor_alert_banner_widget.dart';
-import '../widgets/supervisor_team_today_widget.dart';
+import '../widgets/supervisor_active_tasks_bloc_builder_widget.dart';
+import '../widgets/supervisor_alert_banner_bloc_builder_widget.dart';
+import '../widgets/supervisor_stats_grid_bloc_builder_widget.dart';
+import '../widgets/supervisor_team_today_bloc_builder_widget.dart';
 
 class SupervisorHomeScreen extends StatelessWidget {
   const SupervisorHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final formattedDate = AppDateFormatter.formatFullDate(DateTime.now());
+
     return SafeArea(
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
@@ -22,26 +24,19 @@ class SupervisorHomeScreen extends StatelessWidget {
           children: [
             const AdminTopBarWidget(),
             hSpace(20),
-            const AdminGreetingWidget(
+            AdminGreetingWidget(
               greetingKey: 'supervisor.dashboard.greeting',
               userNameKey: 'supervisor.dashboard.user',
-              dateText: 'Monday, August 31',
+              dateText: formattedDate,
             ),
             hSpace(20),
-            const SupervisorAlertBannerWidget(
-              messageKey: 'supervisor.dashboard.alertPending',
-            ),
+            const SupervisorAlertBannerBlocBuilderWidget(),
             hSpace(20),
-            const AdminStatsGridWidget(
-              totalStaff: 3,
-              presentToday: 1,
-              pendingLeaves: 1,
-              openTasks: 6,
-            ),
+            const SupervisorStatsGridBlocBuilderWidget(),
             hSpace(20),
-            const SupervisorTeamTodayWidget(),
+            const SupervisorTeamTodayBlocBuilderWidget(),
             hSpace(20),
-            const SupervisorActiveTasksWidget(),
+            const SupervisorActiveTasksBlocBuilderWidget(),
           ],
         ),
       ),

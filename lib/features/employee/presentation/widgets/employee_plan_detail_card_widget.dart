@@ -6,10 +6,7 @@ import 'employee_assignee_avatar_widget.dart';
 import 'employee_plan_data.dart';
 
 class EmployeePlanDetailCardWidget extends StatelessWidget {
-  const EmployeePlanDetailCardWidget({
-    required this.plan,
-    super.key,
-  });
+  const EmployeePlanDetailCardWidget({required this.plan, super.key});
 
   final EmployeePlanData plan;
 

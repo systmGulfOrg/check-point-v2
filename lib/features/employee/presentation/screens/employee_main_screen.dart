@@ -39,10 +39,8 @@ class _EmployeeMainScreenState extends State<EmployeeMainScreen> {
         duration: const Duration(milliseconds: 220),
         switchInCurve: Curves.easeOut,
         switchOutCurve: Curves.easeIn,
-        transitionBuilder: (child, animation) => FadeTransition(
-          opacity: animation,
-          child: child,
-        ),
+        transitionBuilder: (child, animation) =>
+            FadeTransition(opacity: animation, child: child),
         child: IndexedStack(
           key: ValueKey<int>(_selectedIndex),
           index: _selectedIndex,

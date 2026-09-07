@@ -62,11 +62,7 @@ class AttendanceResponseModel {
 
 @JsonSerializable()
 class AttendancePageModel {
-  const AttendancePageModel({
-    this.items,
-    this.data,
-    this.totalCount,
-  });
+  const AttendancePageModel({this.items, this.data, this.totalCount});
 
   final List<AdminAttendanceModel>? items;
   final List<AdminAttendanceModel>? data;

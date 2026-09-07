@@ -29,9 +29,9 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
         onSave: (body) {
           if (employee.id != null) {
             context.read<AdminEmployeesCubit>().editEmployee(
-                  employee.id!,
-                  body,
-                );
+              employee.id!,
+              body,
+            );
           }
         },
       ),
@@ -57,8 +57,7 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
       BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
         builder: (context, state) => switch (state) {
           AdminEmployeesStateInitial() => const SizedBox.shrink(),
-          AdminEmployeesStateLoading() =>
-            const AdminEmployeesSkeletonWidget(),
+          AdminEmployeesStateLoading() => const AdminEmployeesSkeletonWidget(),
           AdminEmployeesStateError(:final messageKey) =>
             AdminRequestsEmptyStateWidget(messageKey: messageKey),
           AdminEmployeesStateSuccess(:final employees) =>

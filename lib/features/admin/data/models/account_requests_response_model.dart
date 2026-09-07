@@ -16,11 +16,7 @@ class AccountRequestsResponseModel {
 
 @JsonSerializable(createToJson: false)
 class AccountRequestsPageModel {
-  const AccountRequestsPageModel({
-    this.items,
-    this.data,
-    this.totalCount,
-  });
+  const AccountRequestsPageModel({this.items, this.data, this.totalCount});
 
   final List<AccountRequestModel>? items;
   final List<AccountRequestModel>? data;

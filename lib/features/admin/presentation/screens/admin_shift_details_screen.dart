@@ -23,10 +23,7 @@ class AdminShiftDetailsScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
-        title: Text(
-          'Shift Details',
-          style: AppTextStyles.font18Bold,
-        ),
+        title: Text('Shift Details', style: AppTextStyles.font18Bold),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
@@ -93,7 +90,8 @@ class AdminShiftDetailsScreen extends StatelessWidget {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      if (policy.id != null && shiftId != null) {
+                                      if (policy.id != null &&
+                                          shiftId != null) {
                                         context
                                             .read<AdminShiftsPoliciesCubit>()
                                             .deletePolicy(policy.id!, shiftId);
@@ -103,10 +101,8 @@ class AdminShiftDetailsScreen extends StatelessWidget {
                                       'admin.shifts.policies.delete'.tr(
                                         context: context,
                                       ),
-                                      style:
-                                          AppTextStyles.font12Regular.copyWith(
-                                        color: AppColors.error,
-                                      ),
+                                      style: AppTextStyles.font12Regular
+                                          .copyWith(color: AppColors.error),
                                     ),
                                   ),
                                 ],
@@ -134,9 +130,8 @@ class AdminShiftDetailsScreen extends StatelessWidget {
                                     wSpace(4),
                                     Text(
                                       policy.area!,
-                                      style: AppTextStyles.font12Regular.copyWith(
-                                        color: AppColors.info,
-                                      ),
+                                      style: AppTextStyles.font12Regular
+                                          .copyWith(color: AppColors.info),
                                     ),
                                   ],
                                 ],
@@ -188,8 +183,9 @@ class AdminShiftDetailsScreen extends StatelessWidget {
                                         ),
                                         backgroundColor: AppColors.white,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8.r),
+                                          borderRadius: BorderRadius.circular(
+                                            8.r,
+                                          ),
                                           side: BorderSide(
                                             color: AppColors.border,
                                           ),

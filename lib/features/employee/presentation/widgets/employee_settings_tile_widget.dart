@@ -26,11 +26,7 @@ class EmployeeSettingsTileWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         child: Row(
           children: [
-            Icon(
-              icon,
-              size: 20.r,
-              color: AppColors.textSecondary,
-            ),
+            Icon(icon, size: 20.r, color: AppColors.textSecondary),
             wSpace(12),
             Expanded(
               child: Text(

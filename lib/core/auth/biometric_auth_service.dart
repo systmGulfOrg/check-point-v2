@@ -9,8 +9,8 @@ class BiometricAuthService {
     try {
       final canCheckBiometrics = await localAuthentication.canCheckBiometrics;
       final isDeviceSupported = await localAuthentication.isDeviceSupported();
-      final enrolledBiometrics =
-          await localAuthentication.getAvailableBiometrics();
+      final enrolledBiometrics = await localAuthentication
+          .getAvailableBiometrics();
       return (canCheckBiometrics || isDeviceSupported) &&
           enrolledBiometrics.isNotEmpty;
     } catch (_) {

@@ -3,29 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../../../admin/data/models/employee_model.dart';
 
 class SupervisorTeamMemberCardWidget extends StatelessWidget {
-  const SupervisorTeamMemberCardWidget({
-    required this.initials,
-    required this.name,
-    required this.roleKey,
-    required this.email,
-    required this.employeeCode,
-    required this.departmentKey,
-    super.key,
-    this.isOnline = true,
-  });
+  const SupervisorTeamMemberCardWidget({required this.employee, super.key});
 
-  final String initials;
-  final String name;
-  final String roleKey;
-  final String email;
-  final String employeeCode;
-  final String departmentKey;
-  final bool isOnline;
+  final EmployeeModel employee;
 
   @override
   Widget build(BuildContext context) {
+    final name = employee.name ?? employee.userName ?? 'Employee';
+    final initials = name.isNotEmpty
+        ? name
+              .split(' ')
+              .take(2)
+              .map((e) => e.isNotEmpty ? e[0].toUpperCase() : '')
+              .join()
+        : 'EM';
+    final role = employee.role ?? 'auth.role.employee';
+    final dept = employee.departmentName ?? employee.branchName ?? '';
+    final code = employee.userName ?? employee.id ?? '';
+
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
@@ -74,7 +72,7 @@ class SupervisorTeamMemberCardWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(999.r),
                       ),
                       child: Text(
-                        roleKey.tr(context: context),
+                        role.tr(context: context),
                         style: AppTextStyles.font11Medium.copyWith(
                           color: AppColors.brandPrimary,
                           fontWeight: FontWeight.w700,
@@ -83,32 +81,27 @@ class SupervisorTeamMemberCardWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                hSpace(4),
-                Text(
-                  email,
-                  style: AppTextStyles.font13Regular.copyWith(
-                    color: AppColors.textSecondary,
+                if (code.isNotEmpty) ...[
+                  hSpace(4),
+                  Text(
+                    code,
+                    style: AppTextStyles.font13Regular.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
-                ),
-                hSpace(2),
-                Text(
-                  '$employeeCode  ·  ${departmentKey.tr(context: context)}',
-                  style: AppTextStyles.font12Regular.copyWith(
-                    color: AppColors.placeholder,
+                ],
+                if (dept.isNotEmpty) ...[
+                  hSpace(2),
+                  Text(
+                    dept,
+                    style: AppTextStyles.font12Regular.copyWith(
+                      color: AppColors.placeholder,
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),
-          if (isOnline)
-            Container(
-              width: 8.r,
-              height: 8.r,
-              decoration: const BoxDecoration(
-                color: AppColors.success,
-                shape: BoxShape.circle,
-              ),
-            ),
         ],
       ),
     );

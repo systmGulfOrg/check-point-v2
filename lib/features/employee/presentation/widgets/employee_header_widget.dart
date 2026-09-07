@@ -94,15 +94,9 @@ class EmployeeHeaderWidget extends StatelessWidget {
           style: AppTextStyles.font14Regular,
         ),
         hSpace(4),
-        Text(
-          userName,
-          style: AppTextStyles.font20Bold,
-        ),
+        Text(userName, style: AppTextStyles.font20Bold),
         hSpace(4),
-        Text(
-          dateText,
-          style: AppTextStyles.font13Regular,
-        ),
+        Text(dateText, style: AppTextStyles.font13Regular),
       ],
     );
   }

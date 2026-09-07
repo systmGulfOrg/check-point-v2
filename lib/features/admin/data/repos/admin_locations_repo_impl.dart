@@ -19,7 +19,10 @@ class AdminLocationsRepoImpl implements AdminLocationsRepo {
     int pageSize = 50,
   }) async {
     try {
-      final response = await api.getDepartments(itemCount: pageSize, index: page);
+      final response = await api.getDepartments(
+        itemCount: pageSize,
+        index: page,
+      );
       return ApiResult.success(response.value?.list ?? []);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));

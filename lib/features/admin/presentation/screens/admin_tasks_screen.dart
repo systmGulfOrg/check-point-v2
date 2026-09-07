@@ -55,18 +55,32 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
             onPressed: () {
               if (titleController.text.trim().isNotEmpty) {
                 context.read<AdminTasksCubit>().editTask(
-                      taskId,
-                      AddTaskRequestBody(
-                        title: titleController.text.trim(),
-                        description: descController.text.trim(),
-                      ),
-                    );
+                  taskId,
+                  AddTaskRequestBody(
+                    title: titleController.text.trim(),
+                    description: descController.text.trim(),
+                  ),
+                );
                 Navigator.pop(dialogContext);
               }
             },
             child: const Text('Save'),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showDeleteTaskDialog(BuildContext context, int taskId) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AppDeleteConfirmationDialogWidget(
+        title: 'admin.locations.delete'.tr(context: context),
+        message: 'admin.tasks.deleteMessage'.tr(context: context),
+        onConfirm: () {
+          Navigator.pop(dialogContext);
+          context.read<AdminTasksCubit>().deleteTask(taskId);
+        },
       ),
     );
   }
@@ -137,7 +151,7 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
                                 ),
                                 builder: (_) =>
                                     const AdminCreateTaskSheetWidget(),
-                               ),
+                              ),
                               child: Text(
                                 'admin.tasks.newTask'.tr(context: context),
                                 style: AppTextStyles.font13SemiBold.copyWith(
@@ -201,8 +215,9 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
                                                 task.status ?? 'Pending',
                                                 style: AppTextStyles.font12Bold
                                                     .copyWith(
-                                                  color: AppColors.brandPrimary,
-                                                ),
+                                                      color: AppColors
+                                                          .brandPrimary,
+                                                    ),
                                               ),
                                             ],
                                           ),
@@ -242,8 +257,9 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
                                                 style: AppTextStyles
                                                     .font13SemiBold
                                                     .copyWith(
-                                                  color: AppColors.textSecondary,
-                                                ),
+                                                      color: AppColors
+                                                          .textSecondary,
+                                                    ),
                                               ),
                                             ),
                                           ),
@@ -252,9 +268,10 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
                                           child: InkWell(
                                             onTap: () {
                                               if (task.id != null) {
-                                                context
-                                                    .read<AdminTasksCubit>()
-                                                    .deleteTask(task.id!);
+                                                _showDeleteTaskDialog(
+                                                  context,
+                                                  task.id!,
+                                                );
                                               }
                                             },
                                             child: Container(
@@ -276,8 +293,8 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
                                                 style: AppTextStyles
                                                     .font13SemiBold
                                                     .copyWith(
-                                                  color: AppColors.error,
-                                                ),
+                                                      color: AppColors.error,
+                                                    ),
                                               ),
                                             ),
                                           ),

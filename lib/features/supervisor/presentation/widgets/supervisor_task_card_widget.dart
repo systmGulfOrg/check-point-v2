@@ -3,15 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import 'supervisor_task_data.dart';
+import '../../../admin/data/models/admin_task_model.dart';
 
 class SupervisorTaskCardWidget extends StatelessWidget {
-  const SupervisorTaskCardWidget({required this.task, super.key});
+  const SupervisorTaskCardWidget({
+    required this.task,
+    super.key,
+    this.onStatusToggle,
+    this.onDelete,
+  });
 
-  final SupervisorTaskData task;
+  final AdminTaskModel task;
+  final VoidCallback? onStatusToggle;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
+    final title = task.title ?? 'Task';
+    final description = task.description ?? '';
+    final assignee = task.assignedEmployeeName ?? 'Unassigned';
+    final status = task.status ?? 'To Do';
+    final isDone =
+        status.toLowerCase() == 'completed' || status.toLowerCase() == 'done';
+
     return Container(
       padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
@@ -26,125 +40,77 @@ class SupervisorTaskCardWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  task.titleKey.tr(context: context),
-                  style: AppTextStyles.font14SemiBold,
+                  title,
+                  style: AppTextStyles.font14SemiBold.copyWith(
+                    decoration: isDone ? TextDecoration.lineThrough : null,
+                  ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: task.statusBackgroundColor,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6.r,
-                      height: 6.r,
-                      decoration: BoxDecoration(
-                        color: task.statusColor,
-                        shape: BoxShape.circle,
+              InkWell(
+                onTap: onStatusToggle,
+                borderRadius: BorderRadius.circular(12.r),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: isDone
+                        ? AppColors.softGreenBackground
+                        : AppColors.softBlueBackground,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 6.r,
+                        height: 6.r,
+                        decoration: BoxDecoration(
+                          color: isDone ? AppColors.success : AppColors.info,
+                          shape: BoxShape.circle,
+                        ),
                       ),
-                    ),
-                    vSpace(5),
-                    Text(
-                      task.statusKey.tr(context: context),
-                      style: AppTextStyles.font12Bold.copyWith(
-                        color: task.statusColor,
+                      wSpace(5),
+                      Text(
+                        status.tr(context: context),
+                        style: AppTextStyles.font12Bold.copyWith(
+                          color: isDone ? AppColors.success : AppColors.info,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          hSpace(6),
-          Text(
-            task.descriptionKey.tr(context: context),
-            style: AppTextStyles.font12Regular,
-          ),
-          hSpace(8),
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: task.priorityBackgroundColor,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                child: Text(
-                  task.priorityKey.tr(context: context),
-                  style: AppTextStyles.font12Bold.copyWith(
-                    color: task.priorityColor,
+                    ],
                   ),
                 ),
               ),
-              vSpace(8),
-              Expanded(
-                child: Text(
-                  'supervisor.tasks.assignedTo'.tr(
-                    context: context,
-                    args: [task.assigneeKey.tr(context: context)],
+              if (onDelete != null)
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  icon: Icon(
+                    Icons.delete_outline_rounded,
+                    size: 18.r,
+                    color: AppColors.error,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.font11Medium.copyWith(
-                    color: AppColors.placeholder,
-                  ),
-                ),
-              ),
-              for (final initials in task.assigneeInitials)
-                Padding(
-                  padding: EdgeInsetsDirectional.only(start: 2.w),
-                  child: CircleAvatar(
-                    radius: 10.r,
-                    backgroundColor: AppColors.softGreenBackground,
-                    child: Text(
-                      initials,
-                      style: AppTextStyles.font11Medium.copyWith(
-                        color: AppColors.success,
-                        fontSize: 8.sp,
-                      ),
-                    ),
-                  ),
+                  onPressed: onDelete,
                 ),
             ],
           ),
-          vSpace(8),
-          if (task.progress > 0) ...[
-            hSpace(10),
-            Row(
-              children: [
-                Text(
-                  'supervisor.tasks.due'.tr(
-                    context: context,
-                    args: [task.dueDate],
-                  ),
-                  style: AppTextStyles.font11Medium.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                vSpace(10),
-                Expanded(
-                  child: LinearProgressIndicator(
-                    value: task.progress,
-                    minHeight: 3.h,
-                    backgroundColor: AppColors.pageBackground,
-                    color: AppColors.brandPrimary,
-                    borderRadius: BorderRadius.circular(3.r),
-                  ),
-                ),
-                vSpace(8),
-                Text(
-                  '${(task.progress * 100).round()}%',
-                  style: AppTextStyles.font11Medium.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
+          if (description.isNotEmpty) ...[
+            hSpace(6),
+            Text(
+              description,
+              style: AppTextStyles.font12Regular.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
           ],
+          hSpace(8),
+          Text(
+            'supervisor.tasks.assignedTo'.tr(
+              context: context,
+              args: [assignee],
+            ),
+            style: AppTextStyles.font11Medium.copyWith(
+              color: AppColors.placeholder,
+            ),
+          ),
         ],
       ),
     );

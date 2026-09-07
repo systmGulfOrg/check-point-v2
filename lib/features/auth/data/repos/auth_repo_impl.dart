@@ -35,6 +35,15 @@ class AuthRepoImpl implements AuthRepo {
         );
       }
       await secureStorage.write(key: 'auth_token', value: token);
+      if (user.id != null && user.id!.isNotEmpty) {
+        await secureStorage.write(key: 'user_id', value: user.id!);
+      }
+      if (user.userName != null && user.userName!.isNotEmpty) {
+        await secureStorage.write(key: 'user_name', value: user.userName!);
+      }
+      if (user.roles != null && user.roles!.isNotEmpty) {
+        await secureStorage.write(key: 'user_role', value: user.roles!.first);
+      }
       return ApiResult.success(user);
     } catch (error) {
       return ApiResult.failure(ApiFailureMapper.map(error));

@@ -16,7 +16,6 @@ class AdminLocationsFilterWidget extends StatelessWidget {
 
   static const _labels = <String>[
     'admin.locations.tabs.branches',
-    'admin.locations.tabs.departments',
     'admin.locations.tabs.sites',
     'admin.locations.tabs.customers',
   ];

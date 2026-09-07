@@ -63,8 +63,10 @@ class AdminShiftCardWidget extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 9.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.softGreenBackground,
                       borderRadius: BorderRadius.circular(12.r),

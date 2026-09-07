@@ -53,11 +53,7 @@ class AdminManageCardWidget extends StatelessWidget {
                   color: iconBackgroundColor,
                   borderRadius: BorderRadius.circular(12.r),
                 ),
-                child: Icon(
-                  icon,
-                  color: iconColor,
-                  size: 22.r,
-                ),
+                child: Icon(icon, color: iconColor, size: 22.r),
               ),
               vSpace(14),
               Expanded(

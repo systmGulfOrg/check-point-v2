@@ -4,11 +4,7 @@ part 'shift_model.g.dart';
 
 @JsonSerializable()
 class ShiftModel {
-  const ShiftModel({
-    this.id,
-    this.name,
-    this.branchesCount,
-  });
+  const ShiftModel({this.id, this.name, this.branchesCount});
 
   final int? id;
   final String? name;
@@ -22,11 +18,7 @@ class ShiftModel {
 
 @JsonSerializable()
 class ShiftResponseModel {
-  const ShiftResponseModel({
-    this.value,
-    this.isSuccess,
-    this.successMessage,
-  });
+  const ShiftResponseModel({this.value, this.isSuccess, this.successMessage});
 
   final ShiftPageModel? value;
   final bool? isSuccess;
@@ -40,11 +32,7 @@ class ShiftResponseModel {
 
 @JsonSerializable()
 class ShiftPageModel {
-  const ShiftPageModel({
-    this.items,
-    this.data,
-    this.totalCount,
-  });
+  const ShiftPageModel({this.items, this.data, this.totalCount});
 
   final List<ShiftModel>? items;
   final List<ShiftModel>? data;
@@ -60,9 +48,7 @@ class ShiftPageModel {
 
 @JsonSerializable()
 class AddShiftRequestBody {
-  const AddShiftRequestBody({
-    required this.name,
-  });
+  const AddShiftRequestBody({required this.name});
 
   final String name;
 

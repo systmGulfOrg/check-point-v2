@@ -90,8 +90,8 @@ class _AdminLeaveManagementScreenState
                               final requestData = AdminLeaveRequestData(
                                 initials:
                                     (item.employeeName?.isNotEmpty ?? false)
-                                        ? item.employeeName![0]
-                                        : 'E',
+                                    ? item.employeeName![0]
+                                    : 'E',
                                 nameKey: item.employeeName ?? 'Employee',
                                 leaveTypeKey: item.leaveType ?? 'Leave',
                                 dateRange:
@@ -101,11 +101,10 @@ class _AdminLeaveManagementScreenState
                                 statusKey: item.status ?? 'Pending',
                                 statusColor:
                                     item.status?.toLowerCase() == 'approved'
-                                        ? AppColors.success
-                                        : item.status?.toLowerCase() ==
-                                                'rejected'
-                                            ? AppColors.error
-                                            : AppColors.warningOrange,
+                                    ? AppColors.success
+                                    : item.status?.toLowerCase() == 'rejected'
+                                    ? AppColors.error
+                                    : AppColors.warningOrange,
                                 statusBackgroundColor:
                                     AppColors.softYellowBackground,
                               );

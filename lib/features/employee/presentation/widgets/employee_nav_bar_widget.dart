@@ -13,10 +13,7 @@ class EmployeeNavBarWidget extends StatelessWidget {
   final ValueChanged<int> onTabSelected;
 
   static const _items = <NavBarItemData>[
-    NavBarItemData(
-      icon: Icons.home_outlined,
-      labelKey: 'employee.nav.home',
-    ),
+    NavBarItemData(icon: Icons.home_outlined, labelKey: 'employee.nav.home'),
     NavBarItemData(
       icon: Icons.access_time_rounded,
       labelKey: 'employee.nav.clock',
@@ -25,10 +22,7 @@ class EmployeeNavBarWidget extends StatelessWidget {
       icon: Icons.assignment_outlined,
       labelKey: 'employee.nav.tasks',
     ),
-    NavBarItemData(
-      icon: Icons.map_outlined,
-      labelKey: 'employee.nav.plans',
-    ),
+    NavBarItemData(icon: Icons.map_outlined, labelKey: 'employee.nav.plans'),
     NavBarItemData(
       icon: Icons.calendar_today_outlined,
       labelKey: 'employee.nav.leaves',

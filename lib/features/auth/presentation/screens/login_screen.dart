@@ -214,10 +214,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       BiometricLoginButtonWidget(
                         onPressed: () {
                           context.read<LoginCubit>().loginWithBiometrics(
-                            localizedReason:
-                                'auth.login.biometricReason'.tr(
-                                  context: context,
-                                ),
+                            localizedReason: 'auth.login.biometricReason'.tr(
+                              context: context,
+                            ),
                           );
                         },
                       ),

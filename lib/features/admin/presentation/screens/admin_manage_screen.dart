@@ -22,6 +22,16 @@ class AdminManageScreen extends StatelessWidget {
             ),
             hSpace(20),
             AdminManageCardWidget(
+              icon: Icons.corporate_fare_outlined,
+              iconColor: AppColors.brandPrimary,
+              iconBackgroundColor: AppColors.softBrandBackground,
+              titleKey: 'admin.manage.departments',
+              subtitleKey: 'admin.manage.departmentsSub',
+              onTap: () =>
+                  Navigator.pushNamed(context, AppRoutes.adminDepartments),
+            ),
+            hSpace(10),
+            AdminManageCardWidget(
               icon: Icons.home_work_outlined,
               iconColor: AppColors.info,
               iconBackgroundColor: AppColors.softBlueBackground,

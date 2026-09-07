@@ -1,25 +1,72 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
-import '../../data/models/department_request_model.dart';
+import '../../../../core/di/service_locator.dart';
+import '../cubit/admin_department_employees_cubit.dart';
 import '../cubit/admin_departments_cubit.dart';
 import '../cubit/admin_departments_state.dart';
+import 'admin_create_department_sheet_widget.dart';
 import 'admin_delete_confirmation_dialog_widget.dart';
-import 'admin_location_card_widget.dart';
-import 'admin_location_data.dart';
+import 'admin_department_card_widget.dart';
+import 'admin_department_employees_sheet_widget.dart';
 import 'admin_locations_skeleton_widget.dart';
 
 class AdminDepartmentsBlocBuilderWidget extends StatelessWidget {
   const AdminDepartmentsBlocBuilderWidget({super.key});
 
+  void _showEmployeesSheet(
+    BuildContext context,
+    int departmentId,
+    String departmentName,
+  ) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (_) => BlocProvider<AdminDepartmentEmployeesCubit>(
+        create: (_) => sl<AdminDepartmentEmployeesCubit>()..load(departmentId),
+        child: AdminDepartmentEmployeesSheetWidget(
+          departmentId: departmentId,
+          departmentName: departmentName,
+        ),
+      ),
+    );
+  }
+
+  void _showEditSheet(
+    BuildContext context,
+    int departmentId,
+    String departmentName,
+  ) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (_) => BlocProvider.value(
+        value: context.read<AdminDepartmentsCubit>(),
+        child: AdminCreateDepartmentSheetWidget(
+          departmentId: departmentId,
+          initialName: departmentName,
+        ),
+      ),
+    );
+  }
+
   void _showDeleteDialog(BuildContext context, int departmentId) {
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AdminDeleteConfirmationDialogWidget(
-        title: 'admin.locations.delete'.tr(context: context),
-        message: 'admin.employees.deleteEmployeeMessage'.tr(context: context),
+        title: 'admin.departments.delete'.tr(context: context),
+        message: 'admin.departments.deleteMessage'.tr(context: context),
         onConfirm: () {
           Navigator.pop(dialogContext);
           context.read<AdminDepartmentsCubit>().deleteDepartment(departmentId);
@@ -28,77 +75,52 @@ class AdminDepartmentsBlocBuilderWidget extends StatelessWidget {
     );
   }
 
-  void _showEditDialog(BuildContext context, int id, String currentName) {
-    final controller = TextEditingController(text: currentName);
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Edit Department'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(labelText: 'Department Name'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (controller.text.trim().isNotEmpty) {
-                context.read<AdminDepartmentsCubit>().editDepartment(
-                      id,
-                      DepartmentRequestModel(departmentName: controller.text.trim()),
-                    );
-                Navigator.pop(dialogContext);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<AdminDepartmentsCubit, AdminDepartmentsState>(
         builder: (context, state) => switch (state) {
-          AdminDepartmentsInitial() => const SizedBox.shrink(),
-          AdminDepartmentsLoading() =>
-            const AdminLocationsSkeletonWidget(),
+          AdminDepartmentsInitial() ||
+          AdminDepartmentsLoading() => const AdminLocationsSkeletonWidget(),
           AdminDepartmentsError(:final messageKey) => Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(24.r),
             child: Text(
               messageKey.tr(context: context),
-              style: AppTextStyles.font14Regular,
+              style: AppTextStyles.font14Regular.copyWith(
+                color: AppColors.error,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
           AdminDepartmentsSuccess(:final departments) =>
             departments.isEmpty
                 ? Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Text(
-                      'admin.locations.empty'.tr(context: context),
-                      style: AppTextStyles.font14Regular,
+                    padding: EdgeInsets.all(24.r),
+                    child: Center(
+                      child: Text(
+                        'admin.departments.empty'.tr(context: context),
+                        style: AppTextStyles.font14Regular.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
                     ),
                   )
                 : Column(
                     children: [
                       for (final dept in departments) ...[
-                        AdminLocationCardWidget(
-                          location: AdminLocationData(
-                            nameKey: dept.departmentName ?? '-',
-                            descriptionKey: 'Department ID: ${dept.id ?? '-'}',
-                            addressKey: 'Active Department',
-                            statusKey: 'admin.locations.status.active',
-                            icon: Icons.domain_outlined,
-                            iconColor: AppColors.info,
-                            iconBackgroundColor: AppColors.softBlueBackground,
-                          ),
+                        AdminDepartmentCardWidget(
+                          department: dept,
+                          onViewEmployees: () {
+                            if (dept.id != null) {
+                              _showEmployeesSheet(
+                                context,
+                                dept.id!,
+                                dept.departmentName ?? '',
+                              );
+                            }
+                          },
                           onEdit: () {
                             if (dept.id != null) {
-                              _showEditDialog(
+                              _showEditSheet(
                                 context,
                                 dept.id!,
                                 dept.departmentName ?? '',

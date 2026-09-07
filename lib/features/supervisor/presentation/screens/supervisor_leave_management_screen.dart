@@ -4,7 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
 import '../widgets/supervisor_leave_management_filter_widget.dart';
-import '../widgets/supervisor_leave_requests_list_widget.dart';
+import '../widgets/supervisor_leave_requests_bloc_builder_widget.dart';
 
 class SupervisorLeaveManagementScreen extends StatefulWidget {
   const SupervisorLeaveManagementScreen({super.key});
@@ -42,16 +42,10 @@ class _SupervisorLeaveManagementScreenState
                 onFilterSelected: (index) =>
                     setState(() => selectedFilter = index),
               ),
-              hSpace(14),
-              Text(
-                'supervisor.leaveManagement.count'.tr(
-                  context: context,
-                  args: ['3'],
-                ),
-                style: AppTextStyles.font12Regular,
+              hSpace(16),
+              SupervisorLeaveRequestsBlocBuilderWidget(
+                selectedFilterIndex: selectedFilter,
               ),
-              hSpace(10),
-              const SupervisorLeaveRequestsListWidget(),
             ],
           ),
         ),

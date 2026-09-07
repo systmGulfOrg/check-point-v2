@@ -4,10 +4,7 @@ import '../../../../core/core.dart';
 import 'admin_shift_policy_skeleton_card_widget.dart';
 
 class AdminShiftPoliciesSkeletonWidget extends StatefulWidget {
-  const AdminShiftPoliciesSkeletonWidget({
-    this.itemCount = 3,
-    super.key,
-  });
+  const AdminShiftPoliciesSkeletonWidget({this.itemCount = 3, super.key});
 
   final int itemCount;
 
@@ -29,9 +26,10 @@ class _AdminShiftPoliciesSkeletonWidgetState
       vsync: this,
       duration: const Duration(milliseconds: 900),
     )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.35, end: 0.85).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.35,
+      end: 0.85,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -52,8 +50,7 @@ class _AdminShiftPoliciesSkeletonWidgetState
             physics: const NeverScrollableScrollPhysics(),
             itemCount: widget.itemCount,
             separatorBuilder: (_, _) => hSpace(10),
-            itemBuilder: (_, _) =>
-                const AdminShiftPolicySkeletonCardWidget(),
+            itemBuilder: (_, _) => const AdminShiftPolicySkeletonCardWidget(),
           ),
         );
       },

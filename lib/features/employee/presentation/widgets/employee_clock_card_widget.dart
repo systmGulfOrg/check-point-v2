@@ -71,7 +71,10 @@ class EmployeeClockCardWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 12.h,
+                    horizontal: 12.w,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.softGreenBackground,
                     borderRadius: BorderRadius.circular(12.r),
@@ -102,7 +105,10 @@ class EmployeeClockCardWidget extends StatelessWidget {
               wSpace(12),
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 12.h,
+                    horizontal: 12.w,
+                  ),
                   decoration: BoxDecoration(
                     color: hasCheckedOut
                         ? AppColors.softBlueBackground

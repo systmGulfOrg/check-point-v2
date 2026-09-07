@@ -4,10 +4,7 @@ import '../../../../core/core.dart';
 import 'admin_leave_request_skeleton_card_widget.dart';
 
 class AdminLeaveRequestsSkeletonWidget extends StatefulWidget {
-  const AdminLeaveRequestsSkeletonWidget({
-    this.itemCount = 4,
-    super.key,
-  });
+  const AdminLeaveRequestsSkeletonWidget({this.itemCount = 4, super.key});
 
   final int itemCount;
 
@@ -29,9 +26,10 @@ class _AdminLeaveRequestsSkeletonWidgetState
       vsync: this,
       duration: const Duration(milliseconds: 900),
     )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.35, end: 0.85).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.35,
+      end: 0.85,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -52,8 +50,7 @@ class _AdminLeaveRequestsSkeletonWidgetState
             physics: const NeverScrollableScrollPhysics(),
             itemCount: widget.itemCount,
             separatorBuilder: (_, _) => hSpace(10),
-            itemBuilder: (_, _) =>
-                const AdminLeaveRequestSkeletonCardWidget(),
+            itemBuilder: (_, _) => const AdminLeaveRequestSkeletonCardWidget(),
           ),
         );
       },

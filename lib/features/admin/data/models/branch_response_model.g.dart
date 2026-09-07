@@ -33,4 +33,7 @@ BranchModel _$BranchModelFromJson(Map<String, dynamic> json) => BranchModel(
   name: json['name'] as String?,
   location: json['location'] as String?,
   description: json['description'] as String?,
+  coordinates: (json['coordinates'] as List<dynamic>?)
+      ?.map((e) => BranchCoordinateModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );

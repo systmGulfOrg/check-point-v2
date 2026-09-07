@@ -4,7 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
 import '../widgets/supervisor_new_plan_button_widget.dart';
-import '../widgets/supervisor_plans_list_widget.dart';
+import '../widgets/supervisor_plans_bloc_builder_widget.dart';
 
 class SupervisorPlansScreen extends StatelessWidget {
   const SupervisorPlansScreen({super.key});
@@ -32,14 +32,14 @@ class SupervisorPlansScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'supervisor.plans.count'.tr(context: context, args: ['2']),
-                    style: AppTextStyles.font12Regular,
+                    'supervisor.plans.allPlans'.tr(context: context),
+                    style: AppTextStyles.font14SemiBold,
                   ),
                   const SupervisorNewPlanButtonWidget(),
                 ],
               ),
-              hSpace(12),
-              const SupervisorPlansListWidget(),
+              hSpace(14),
+              const SupervisorPlansBlocBuilderWidget(),
             ],
           ),
         ),

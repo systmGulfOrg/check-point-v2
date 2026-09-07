@@ -4,7 +4,7 @@ import '../../../../core/core.dart';
 import 'admin_location_card_widget.dart';
 import 'admin_location_data.dart';
 
-enum AdminLocationCategory { branches, departments, sites, customers }
+enum AdminLocationCategory { branches, sites, customers }
 
 class AdminLocationsTabWidget extends StatelessWidget {
   const AdminLocationsTabWidget({required this.category, super.key});
@@ -54,7 +54,6 @@ class AdminLocationsTabWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final locations = switch (category) {
       AdminLocationCategory.branches => _branches,
-      AdminLocationCategory.departments => _branches,
       AdminLocationCategory.sites => _sites,
       AdminLocationCategory.customers => _customers,
     };

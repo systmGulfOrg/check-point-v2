@@ -22,8 +22,10 @@ class AdminRequestsCardWidget extends StatelessWidget {
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
 
-  bool get isPending => statusKey.contains('Pending') || statusKey.contains('pending');
-  bool get isApproved => statusKey.contains('Approved') || statusKey.contains('approved');
+  bool get isPending =>
+      statusKey.contains('Pending') || statusKey.contains('pending');
+  bool get isApproved =>
+      statusKey.contains('Approved') || statusKey.contains('approved');
 
   Color _getStatusBackgroundColor() {
     if (isPending) return AppColors.softYellowBackground;
@@ -66,10 +68,7 @@ class AdminRequestsCardWidget extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 10.w,
-                  vertical: 3.h,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
                 decoration: BoxDecoration(
                   color: _getStatusBackgroundColor(),
                   borderRadius: BorderRadius.circular(10.r),
