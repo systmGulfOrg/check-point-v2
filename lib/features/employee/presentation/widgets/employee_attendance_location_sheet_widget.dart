@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/services.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_state.dart';
+import 'attendance_target_details_widget.dart';
 
 class EmployeeAttendanceLocationSheetWidget extends StatefulWidget {
   const EmployeeAttendanceLocationSheetWidget({
@@ -36,6 +38,9 @@ class _EmployeeAttendanceLocationSheetWidgetState
   Timer? timer;
   List<BranchModel> availableBranches = const [];
   List<CustomerModel> availableCustomers = const [];
+  String? targetAddress;
+  bool isAddressLoading = false;
+  int addressRequestId = 0;
 
   @override
   void initState() {
@@ -118,6 +123,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
       type = value;
       branch = null;
       customer = null;
+      targetAddress = null;
       if (value != 'Branch') {
         availableCustomers = const [];
       }
@@ -125,6 +131,59 @@ class _EmployeeAttendanceLocationSheetWidgetState
     if (value != 'Branch') {
       context.read<EmployeeAttendanceCubit>().loadCustomersByType(value);
     }
+  }
+
+  Future<void> _loadTargetAddress() async {
+    final points = targetPoints;
+    if (points.isEmpty) {
+      if (mounted) {
+        setState(() {
+          targetAddress = null;
+          isAddressLoading = false;
+        });
+      }
+      return;
+    }
+
+    final requestId = ++addressRequestId;
+    setState(() => isAddressLoading = true);
+    final address = await context
+        .read<EmployeeAttendanceCubit>()
+        .attendanceVerificationService
+        .locationService
+        .getAddressFromCoordinates(
+          points.first.latitude,
+          points.first.longitude,
+        );
+    if (!mounted || requestId != addressRequestId) return;
+    setState(() {
+      targetAddress = address ?? (branch?.location ?? customer?.location);
+      isAddressLoading = false;
+    });
+  }
+
+  void _copyTargetAddress() {
+    final address = targetAddress ?? branch?.location ?? customer?.location;
+    if (address == null) return;
+    Clipboard.setData(ClipboardData(text: address));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('attendance.addressCopied'.tr())));
+  }
+
+  void _copyTargetCoordinates() {
+    final points = targetPoints;
+    if (points.isEmpty) return;
+    Clipboard.setData(
+      ClipboardData(
+        text:
+            '${points.first.latitude}, '
+            '${points.first.longitude}',
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('attendance.coordinatesCopied'.tr())),
+    );
   }
 
   Future<void> _submit() async {
@@ -187,17 +246,19 @@ class _EmployeeAttendanceLocationSheetWidgetState
                   branch == null &&
                   branchOptions.isNotEmpty) {
                 branch = branchOptions.first;
-                WidgetsBinding.instance.addPostFrameCallback(
-                  (_) => _focusTarget(),
-                );
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _focusTarget();
+                  _loadTargetAddress();
+                });
               }
               if (type != 'Branch' &&
                   customer == null &&
                   customerOptions.isNotEmpty) {
                 customer = customerOptions.first;
-                WidgetsBinding.instance.addPostFrameCallback(
-                  (_) => _focusTarget(),
-                );
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _focusTarget();
+                  _loadTargetAddress();
+                });
               }
               final points = targetPoints;
               final mapCenter =
@@ -326,9 +387,10 @@ class _EmployeeAttendanceLocationSheetWidgetState
                           (item) => item.id == value,
                         );
                       }
-                      WidgetsBinding.instance.addPostFrameCallback(
-                        (_) => _focusTarget(),
-                      );
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        _focusTarget();
+                        _loadTargetAddress();
+                      });
                     }),
                   ),
                   if (points.isEmpty) ...[
@@ -449,6 +511,20 @@ class _EmployeeAttendanceLocationSheetWidgetState
                           ],
                         ),
                       ),
+                    ),
+                    hSpace(10),
+                    AttendanceTargetDetailsWidget(
+                      name: branch?.name ?? customer?.name ?? type,
+                      address:
+                          targetAddress ??
+                          branch?.location ??
+                          customer?.location,
+                      coordinates:
+                          '${points.first.latitude.toStringAsFixed(6)}, '
+                          '${points.first.longitude.toStringAsFixed(6)}',
+                      isAddressLoading: isAddressLoading,
+                      onCopyAddress: _copyTargetAddress,
+                      onCopyCoordinates: _copyTargetCoordinates,
                     ),
                     hSpace(10),
                     Container(

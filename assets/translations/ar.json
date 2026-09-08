@@ -706,4 +706,11 @@
   ,"attendance.moveToLocationNote": "يرجى التوجه إلى الموقع المحدد حتى يسمح لك التطبيق بتسجيل الحضور."
   ,"attendance.readyNote": "موقعك مناسب الآن. يمكنك المتابعة وتسجيل الحضور."
   ,"attendance.securityNote": "سيتم التحقق من بصمتك قبل التسجيل، وتُحفظ بيانات الحضور بطريقة آمنة."
+  ,"attendance.address": "العنوان"
+  ,"attendance.addressUnavailable": "العنوان غير متاح"
+  ,"attendance.coordinates": "الإحداثيات"
+  ,"attendance.copyAddress": "نسخ العنوان"
+  ,"attendance.copyCoordinates": "نسخ الإحداثيات"
+  ,"attendance.addressCopied": "تم نسخ العنوان"
+  ,"attendance.coordinatesCopied": "تم نسخ الإحداثيات"
 }

@@ -706,4 +706,11 @@
   ,"attendance.moveToLocationNote": "Please move to the selected location. Check-in will be enabled when you arrive."
   ,"attendance.readyNote": "Your location is valid. You can continue with attendance."
   ,"attendance.securityNote": "Your biometric verification is required, and attendance data is handled securely."
+  ,"attendance.address": "Address"
+  ,"attendance.addressUnavailable": "Address is unavailable"
+  ,"attendance.coordinates": "Coordinates"
+  ,"attendance.copyAddress": "Copy address"
+  ,"attendance.copyCoordinates": "Copy coordinates"
+  ,"attendance.addressCopied": "Address copied"
+  ,"attendance.coordinatesCopied": "Coordinates copied"
 }
