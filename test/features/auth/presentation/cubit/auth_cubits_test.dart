@@ -57,6 +57,16 @@ class _FakeAuthSessionStorage extends AuthSessionStorage {
 
   @override
   Future<void> disableBiometricLogin() async {}
+
+  @override
+  Future<void> saveUserSession({
+    required String token,
+    String? userId,
+    int? departmentId,
+    int? branchId,
+    String? userName,
+    String? role,
+  }) async {}
 }
 
 class _FakeBiometricAuthService extends BiometricAuthService {

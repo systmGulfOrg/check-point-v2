@@ -48,6 +48,14 @@ class LoginUseCase {
           );
         }
 
+        await authSessionStorage.saveUserSession(
+          token: data.token ?? '',
+          userId: data.id,
+          userName: data.userName ?? data.name,
+          role: role,
+          branchId: data.branchId,
+        );
+
         if (enableBiometricLogin && await biometricAuthService.isAvailable()) {
           await authSessionStorage.enableBiometricLogin(
             role: role,
@@ -57,13 +65,6 @@ class LoginUseCase {
           );
         } else if (!enableBiometricLogin) {
           await authSessionStorage.disableBiometricLogin();
-        }
-
-        if (data.branchId != null) {
-          await authSessionStorage.saveUserSession(
-            token: data.token ?? '',
-            branchId: data.branchId,
-          );
         }
 
         return ApiResult.success(data);

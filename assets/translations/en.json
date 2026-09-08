@@ -695,4 +695,7 @@
   "attendance.insideArea": "You are inside the permitted area",
   "attendance.outsideArea": "Move inside the permitted area to continue"
   ,"attendance.myLocation": "My location"
+  ,"attendance.branch": "Branch"
+  ,"attendance.customer": "Customer"
+  ,"attendance.site": "Site"
 }

@@ -87,6 +87,14 @@ class _EmployeeAttendanceLocationSheetWidgetState
         polygon: targetCenter == null ? targetPoints : const [],
       );
 
+  void _focusTarget() {
+    final target =
+        targetCenter ?? (targetPoints.isEmpty ? null : targetPoints.first);
+    if (target != null) {
+      mapController?.animateCamera(CameraUpdate.newLatLngZoom(target, 16));
+    }
+  }
+
   void _changeType(String value) {
     setState(() {
       type = value;
@@ -139,9 +147,21 @@ class _EmployeeAttendanceLocationSheetWidgetState
               EmployeeAttendanceStateTargetsLoaded(:final targets) => targets,
               _ => const <CustomerModel>[],
             };
+            if (type == 'Branch' && branch == null && branches.isNotEmpty) {
+              branch = branches.first;
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) => _focusTarget(),
+              );
+            }
+            if (type != 'Branch' && customer == null && customers.isNotEmpty) {
+              customer = customers.first;
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) => _focusTarget(),
+              );
+            }
             final points = targetPoints;
             final mapCenter =
-                userLocation ?? targetCenter ?? const LatLng(30.0444, 31.2357);
+                targetCenter ?? userLocation ?? const LatLng(30.0444, 31.2357);
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,20 +173,28 @@ class _EmployeeAttendanceLocationSheetWidgetState
                   style: AppTextStyles.font20Bold,
                 ),
                 hSpace(12),
-                DropdownButtonFormField<String>(
-                  initialValue: type,
-                  decoration: InputDecoration(
-                    labelText: 'attendance.locationType'.tr(),
-                  ),
-                  items: ['Branch', 'Customer', 'Site']
-                      .map(
-                        (item) =>
-                            DropdownMenuItem(value: item, child: Text(item)),
-                      )
-                      .toList(),
-                  onChanged: (value) {
-                    if (value != null) _changeType(value);
-                  },
+                Text(
+                  'attendance.locationType'.tr(),
+                  style: AppTextStyles.font14SemiBold,
+                ),
+                hSpace(6),
+                SegmentedButton<String>(
+                  segments: [
+                    ButtonSegment(
+                      value: 'Branch',
+                      label: Text('attendance.branch'.tr()),
+                    ),
+                    ButtonSegment(
+                      value: 'Customer',
+                      label: Text('attendance.customer'.tr()),
+                    ),
+                    ButtonSegment(
+                      value: 'Site',
+                      label: Text('attendance.site'.tr()),
+                    ),
+                  ],
+                  selected: {type},
+                  onSelectionChanged: (values) => _changeType(values.first),
                 ),
                 hSpace(8),
                 DropdownButtonFormField<String>(
@@ -205,6 +233,9 @@ class _EmployeeAttendanceLocationSheetWidgetState
                         (item) => item.id == value,
                       );
                     }
+                    WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => _focusTarget(),
+                    );
                   }),
                 ),
                 hSpace(12),
