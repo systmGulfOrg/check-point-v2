@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/widgets/app_multi_select_dropdown_widget.dart';
 import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
@@ -26,7 +27,7 @@ class _AdminEditTaskSheetWidgetState extends State<AdminEditTaskSheetWidget> {
   late final TextEditingController dueDateController;
   late String selectedPriority;
   late String selectedStatus;
-  String? selectedEmployeeId;
+  Set<String> selectedEmployeeIds = {};
   bool isSubmitting = false;
 
   @override
@@ -38,7 +39,13 @@ class _AdminEditTaskSheetWidgetState extends State<AdminEditTaskSheetWidget> {
     dueDateController = TextEditingController();
     selectedPriority = 'medium';
     selectedStatus = widget.task.status ?? 'Pending';
-    selectedEmployeeId = widget.task.assignedEmployeeId;
+    if (widget.task.assignedEmployeeId != null &&
+        widget.task.assignedEmployeeId!.isNotEmpty) {
+      selectedEmployeeIds = widget.task.assignedEmployeeId!
+          .split(',')
+          .map((e) => e.trim())
+          .toSet();
+    }
   }
 
   @override
@@ -71,7 +78,9 @@ class _AdminEditTaskSheetWidgetState extends State<AdminEditTaskSheetWidget> {
       AddTaskRequestBody(
         title: title,
         description: descriptionController.text.trim(),
-        assignedEmployeeId: selectedEmployeeId,
+        assignedEmployeeId: selectedEmployeeIds.isNotEmpty
+            ? selectedEmployeeIds.join(',')
+            : null,
         dueDate: dueDateController.text.trim().isNotEmpty
             ? dueDateController.text.trim()
             : null,
@@ -220,24 +229,24 @@ class _AdminEditTaskSheetWidgetState extends State<AdminEditTaskSheetWidget> {
                     AdminEmployeesStateSuccess(:final employees) => employees,
                     _ => const [],
                   };
-                  return DropdownButtonFormField<String>(
-                    initialValue: selectedEmployeeId,
-                    decoration: InputDecoration(
-                      labelText: 'supervisor.tasks.create.assignToLabel'.tr(
-                        context: context,
-                      ),
+                  final items = employees
+                      .where((e) => e.id != null)
+                      .map(
+                        (e) => AppMultiSelectItem<String>(
+                          id: e.id!,
+                          label: e.name ?? e.userName ?? 'Employee',
+                        ),
+                      )
+                      .toList();
+                  return AppMultiSelectDropdownWidget<String>(
+                    label: 'supervisor.tasks.create.assignToLabel'.tr(
+                      context: context,
                     ),
-                    items: employees
-                        .where((e) => e.id != null)
-                        .map(
-                          (e) => DropdownMenuItem<String>(
-                            value: e.id!,
-                            child: Text(e.name ?? e.userName ?? 'Employee'),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (val) =>
-                        setState(() => selectedEmployeeId = val),
+                    hint: 'Select Employees',
+                    items: items,
+                    selectedIds: selectedEmployeeIds,
+                    onSelectionChanged: (newSelected) =>
+                        setState(() => selectedEmployeeIds = newSelected),
                   );
                 },
               ),
