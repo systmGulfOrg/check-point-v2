@@ -379,12 +379,79 @@ class _EmployeeAttendanceLocationSheetWidgetState
                       ),
                     ),
                     hSpace(10),
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(12.r),
+                      decoration: BoxDecoration(
+                        color: userLocation == null
+                            ? AppColors.pageBackground
+                            : isInside
+                            ? AppColors.softGreenBackground
+                            : AppColors.softRedBackground,
+                        borderRadius: BorderRadius.circular(14.r),
+                        border: Border.all(
+                          color: userLocation == null
+                              ? AppColors.border
+                              : isInside
+                              ? AppColors.success.withValues(alpha: .35)
+                              : AppColors.error.withValues(alpha: .35),
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            userLocation == null
+                                ? Icons.gps_fixed_rounded
+                                : isInside
+                                ? Icons.check_circle_rounded
+                                : Icons.location_off_rounded,
+                            color: userLocation == null
+                                ? AppColors.textSecondary
+                                : isInside
+                                ? AppColors.success
+                                : AppColors.error,
+                            size: 22.r,
+                          ),
+                          wSpace(10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  userLocation == null
+                                      ? 'attendance.locationLoading'.tr()
+                                      : isInside
+                                      ? 'attendance.insideArea'.tr()
+                                      : 'attendance.outsideArea'.tr(),
+                                  style: AppTextStyles.font14SemiBold.copyWith(
+                                    color: userLocation == null
+                                        ? AppColors.textPrimary
+                                        : isInside
+                                        ? AppColors.success
+                                        : AppColors.error,
+                                  ),
+                                ),
+                                hSpace(4),
+                                Text(
+                                  isInside
+                                      ? 'attendance.readyNote'.tr()
+                                      : 'attendance.moveToLocationNote'.tr(),
+                                  style: AppTextStyles.font12Regular.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    hSpace(8),
                     Text(
-                      isInside
-                          ? 'attendance.insideArea'.tr()
-                          : 'attendance.outsideArea'.tr(),
-                      style: AppTextStyles.font14SemiBold.copyWith(
-                        color: isInside ? AppColors.success : AppColors.error,
+                      'attendance.securityNote'.tr(),
+                      style: AppTextStyles.font12Regular.copyWith(
+                        color: AppColors.textSecondary,
                       ),
                     ),
                     hSpace(10),
