@@ -19,7 +19,8 @@ class SafeNetworkLogInterceptor extends Interceptor {
   ) {
     AppLogger.debug(
       '← ${response.statusCode} ${response.requestOptions.method} '
-      '${response.requestOptions.uri} (${_duration(response.requestOptions)}ms)',
+      '${response.requestOptions.uri} (${_duration(response.requestOptions)}ms) '
+      'body=${_summarize(response.data)}',
     );
     handler.next(response);
   }
@@ -38,5 +39,18 @@ class SafeNetworkLogInterceptor extends Interceptor {
     final startedAt = options.extra[_startedAtKey];
     if (startedAt is! DateTime) return 0;
     return DateTime.now().difference(startedAt).inMilliseconds;
+  }
+
+  String _summarize(Object? value) {
+    if (value == null) return 'null';
+    if (value is Map) {
+      final entries = value.entries.map(
+        (entry) => '${entry.key}:${_summarize(entry.value)}',
+      );
+      return '{${entries.join(', ')}}';
+    }
+    if (value is List) return 'list(${value.length})';
+    if (value is String) return 'string(${value.length})';
+    return value.runtimeType.toString();
   }
 }
