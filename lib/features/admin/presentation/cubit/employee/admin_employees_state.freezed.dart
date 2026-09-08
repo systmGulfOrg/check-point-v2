@@ -23,7 +23,12 @@ mixin _$AdminEmployeesState {
     required TResult Function() loading,
     required TResult Function(List<EmployeeModel> employees, String? roleFilter)
     success,
-    required TResult Function(String message) actionSuccess,
+    required TResult Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )
+    actionSuccess,
     required TResult Function(String messageKey) error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -32,7 +37,12 @@ mixin _$AdminEmployeesState {
     TResult? Function()? loading,
     TResult? Function(List<EmployeeModel> employees, String? roleFilter)?
     success,
-    TResult? Function(String message)? actionSuccess,
+    TResult? Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )?
+    actionSuccess,
     TResult? Function(String messageKey)? error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -41,7 +51,12 @@ mixin _$AdminEmployeesState {
     TResult Function()? loading,
     TResult Function(List<EmployeeModel> employees, String? roleFilter)?
     success,
-    TResult Function(String message)? actionSuccess,
+    TResult Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )?
+    actionSuccess,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
@@ -147,7 +162,12 @@ class _$AdminEmployeesStateInitialImpl implements AdminEmployeesStateInitial {
     required TResult Function() loading,
     required TResult Function(List<EmployeeModel> employees, String? roleFilter)
     success,
-    required TResult Function(String message) actionSuccess,
+    required TResult Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )
+    actionSuccess,
     required TResult Function(String messageKey) error,
   }) {
     return initial();
@@ -160,7 +180,12 @@ class _$AdminEmployeesStateInitialImpl implements AdminEmployeesStateInitial {
     TResult? Function()? loading,
     TResult? Function(List<EmployeeModel> employees, String? roleFilter)?
     success,
-    TResult? Function(String message)? actionSuccess,
+    TResult? Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )?
+    actionSuccess,
     TResult? Function(String messageKey)? error,
   }) {
     return initial?.call();
@@ -173,7 +198,12 @@ class _$AdminEmployeesStateInitialImpl implements AdminEmployeesStateInitial {
     TResult Function()? loading,
     TResult Function(List<EmployeeModel> employees, String? roleFilter)?
     success,
-    TResult Function(String message)? actionSuccess,
+    TResult Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )?
+    actionSuccess,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
@@ -281,7 +311,12 @@ class _$AdminEmployeesStateLoadingImpl implements AdminEmployeesStateLoading {
     required TResult Function() loading,
     required TResult Function(List<EmployeeModel> employees, String? roleFilter)
     success,
-    required TResult Function(String message) actionSuccess,
+    required TResult Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )
+    actionSuccess,
     required TResult Function(String messageKey) error,
   }) {
     return loading();
@@ -294,7 +329,12 @@ class _$AdminEmployeesStateLoadingImpl implements AdminEmployeesStateLoading {
     TResult? Function()? loading,
     TResult? Function(List<EmployeeModel> employees, String? roleFilter)?
     success,
-    TResult? Function(String message)? actionSuccess,
+    TResult? Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )?
+    actionSuccess,
     TResult? Function(String messageKey)? error,
   }) {
     return loading?.call();
@@ -307,7 +347,12 @@ class _$AdminEmployeesStateLoadingImpl implements AdminEmployeesStateLoading {
     TResult Function()? loading,
     TResult Function(List<EmployeeModel> employees, String? roleFilter)?
     success,
-    TResult Function(String message)? actionSuccess,
+    TResult Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )?
+    actionSuccess,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
@@ -468,7 +513,12 @@ class _$AdminEmployeesStateSuccessImpl implements AdminEmployeesStateSuccess {
     required TResult Function() loading,
     required TResult Function(List<EmployeeModel> employees, String? roleFilter)
     success,
-    required TResult Function(String message) actionSuccess,
+    required TResult Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )
+    actionSuccess,
     required TResult Function(String messageKey) error,
   }) {
     return success(employees, roleFilter);
@@ -481,7 +531,12 @@ class _$AdminEmployeesStateSuccessImpl implements AdminEmployeesStateSuccess {
     TResult? Function()? loading,
     TResult? Function(List<EmployeeModel> employees, String? roleFilter)?
     success,
-    TResult? Function(String message)? actionSuccess,
+    TResult? Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )?
+    actionSuccess,
     TResult? Function(String messageKey)? error,
   }) {
     return success?.call(employees, roleFilter);
@@ -494,7 +549,12 @@ class _$AdminEmployeesStateSuccessImpl implements AdminEmployeesStateSuccess {
     TResult Function()? loading,
     TResult Function(List<EmployeeModel> employees, String? roleFilter)?
     success,
-    TResult Function(String message)? actionSuccess,
+    TResult Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )?
+    actionSuccess,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
@@ -569,7 +629,11 @@ abstract class _$$AdminEmployeesStateActionSuccessImplCopyWith<$Res> {
     $Res Function(_$AdminEmployeesStateActionSuccessImpl) then,
   ) = __$$AdminEmployeesStateActionSuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String message});
+  $Res call({
+    String message,
+    List<EmployeeModel> employees,
+    String? roleFilter,
+  });
 }
 
 /// @nodoc
@@ -589,13 +653,25 @@ class __$$AdminEmployeesStateActionSuccessImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? message = null}) {
+  $Res call({
+    Object? message = null,
+    Object? employees = null,
+    Object? roleFilter = freezed,
+  }) {
     return _then(
       _$AdminEmployeesStateActionSuccessImpl(
-        null == message
+        message: null == message
             ? _value.message
             : message // ignore: cast_nullable_to_non_nullable
                   as String,
+        employees: null == employees
+            ? _value._employees
+            : employees // ignore: cast_nullable_to_non_nullable
+                  as List<EmployeeModel>,
+        roleFilter: freezed == roleFilter
+            ? _value.roleFilter
+            : roleFilter // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -605,14 +681,28 @@ class __$$AdminEmployeesStateActionSuccessImplCopyWithImpl<$Res>
 
 class _$AdminEmployeesStateActionSuccessImpl
     implements AdminEmployeesStateActionSuccess {
-  const _$AdminEmployeesStateActionSuccessImpl(this.message);
+  const _$AdminEmployeesStateActionSuccessImpl({
+    required this.message,
+    required final List<EmployeeModel> employees,
+    required this.roleFilter,
+  }) : _employees = employees;
 
   @override
   final String message;
+  final List<EmployeeModel> _employees;
+  @override
+  List<EmployeeModel> get employees {
+    if (_employees is EqualUnmodifiableListView) return _employees;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_employees);
+  }
+
+  @override
+  final String? roleFilter;
 
   @override
   String toString() {
-    return 'AdminEmployeesState.actionSuccess(message: $message)';
+    return 'AdminEmployeesState.actionSuccess(message: $message, employees: $employees, roleFilter: $roleFilter)';
   }
 
   @override
@@ -620,11 +710,22 @@ class _$AdminEmployeesStateActionSuccessImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AdminEmployeesStateActionSuccessImpl &&
-            (identical(other.message, message) || other.message == message));
+            (identical(other.message, message) || other.message == message) &&
+            const DeepCollectionEquality().equals(
+              other._employees,
+              _employees,
+            ) &&
+            (identical(other.roleFilter, roleFilter) ||
+                other.roleFilter == roleFilter));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, message);
+  int get hashCode => Object.hash(
+    runtimeType,
+    message,
+    const DeepCollectionEquality().hash(_employees),
+    roleFilter,
+  );
 
   /// Create a copy of AdminEmployeesState
   /// with the given fields replaced by the non-null parameter values.
@@ -646,10 +747,15 @@ class _$AdminEmployeesStateActionSuccessImpl
     required TResult Function() loading,
     required TResult Function(List<EmployeeModel> employees, String? roleFilter)
     success,
-    required TResult Function(String message) actionSuccess,
+    required TResult Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )
+    actionSuccess,
     required TResult Function(String messageKey) error,
   }) {
-    return actionSuccess(message);
+    return actionSuccess(message, employees, roleFilter);
   }
 
   @override
@@ -659,10 +765,15 @@ class _$AdminEmployeesStateActionSuccessImpl
     TResult? Function()? loading,
     TResult? Function(List<EmployeeModel> employees, String? roleFilter)?
     success,
-    TResult? Function(String message)? actionSuccess,
+    TResult? Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )?
+    actionSuccess,
     TResult? Function(String messageKey)? error,
   }) {
-    return actionSuccess?.call(message);
+    return actionSuccess?.call(message, employees, roleFilter);
   }
 
   @override
@@ -672,12 +783,17 @@ class _$AdminEmployeesStateActionSuccessImpl
     TResult Function()? loading,
     TResult Function(List<EmployeeModel> employees, String? roleFilter)?
     success,
-    TResult Function(String message)? actionSuccess,
+    TResult Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )?
+    actionSuccess,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
     if (actionSuccess != null) {
-      return actionSuccess(message);
+      return actionSuccess(message, employees, roleFilter);
     }
     return orElse();
   }
@@ -725,10 +841,15 @@ class _$AdminEmployeesStateActionSuccessImpl
 }
 
 abstract class AdminEmployeesStateActionSuccess implements AdminEmployeesState {
-  const factory AdminEmployeesStateActionSuccess(final String message) =
-      _$AdminEmployeesStateActionSuccessImpl;
+  const factory AdminEmployeesStateActionSuccess({
+    required final String message,
+    required final List<EmployeeModel> employees,
+    required final String? roleFilter,
+  }) = _$AdminEmployeesStateActionSuccessImpl;
 
   String get message;
+  List<EmployeeModel> get employees;
+  String? get roleFilter;
 
   /// Create a copy of AdminEmployeesState
   /// with the given fields replaced by the non-null parameter values.
@@ -818,7 +939,12 @@ class _$AdminEmployeesStateErrorImpl implements AdminEmployeesStateError {
     required TResult Function() loading,
     required TResult Function(List<EmployeeModel> employees, String? roleFilter)
     success,
-    required TResult Function(String message) actionSuccess,
+    required TResult Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )
+    actionSuccess,
     required TResult Function(String messageKey) error,
   }) {
     return error(messageKey);
@@ -831,7 +957,12 @@ class _$AdminEmployeesStateErrorImpl implements AdminEmployeesStateError {
     TResult? Function()? loading,
     TResult? Function(List<EmployeeModel> employees, String? roleFilter)?
     success,
-    TResult? Function(String message)? actionSuccess,
+    TResult? Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )?
+    actionSuccess,
     TResult? Function(String messageKey)? error,
   }) {
     return error?.call(messageKey);
@@ -844,7 +975,12 @@ class _$AdminEmployeesStateErrorImpl implements AdminEmployeesStateError {
     TResult Function()? loading,
     TResult Function(List<EmployeeModel> employees, String? roleFilter)?
     success,
-    TResult Function(String message)? actionSuccess,
+    TResult Function(
+      String message,
+      List<EmployeeModel> employees,
+      String? roleFilter,
+    )?
+    actionSuccess,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {

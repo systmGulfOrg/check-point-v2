@@ -12,8 +12,11 @@ abstract class AdminEmployeesState with _$AdminEmployeesState {
     required List<EmployeeModel> employees,
     required String? roleFilter,
   }) = AdminEmployeesStateSuccess;
-  const factory AdminEmployeesState.actionSuccess(String message) =
-      AdminEmployeesStateActionSuccess;
+  const factory AdminEmployeesState.actionSuccess({
+    required String message,
+    required List<EmployeeModel> employees,
+    required String? roleFilter,
+  }) = AdminEmployeesStateActionSuccess;
   const factory AdminEmployeesState.error(String messageKey) =
       AdminEmployeesStateError;
 }

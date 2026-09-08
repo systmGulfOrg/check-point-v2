@@ -79,8 +79,10 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
       success: (_) async {
         await loadEmployees();
         emit(
-          const AdminEmployeesState.actionSuccess(
-            'Employee added successfully',
+          AdminEmployeesState.actionSuccess(
+            message: 'Employee added successfully',
+            employees: _filteredEmployees,
+            roleFilter: roleFilter,
           ),
         );
         return true;
@@ -99,8 +101,10 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
       success: (_) async {
         await loadEmployees();
         emit(
-          const AdminEmployeesState.actionSuccess(
-            'Employee updated successfully',
+          AdminEmployeesState.actionSuccess(
+            message: 'Employee updated successfully',
+            employees: _filteredEmployees,
+            roleFilter: roleFilter,
           ),
         );
         return true;
@@ -119,8 +123,10 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
       success: (_) async {
         await loadEmployees();
         emit(
-          const AdminEmployeesState.actionSuccess(
-            'Employee deleted successfully',
+          AdminEmployeesState.actionSuccess(
+            message: 'Employee deleted successfully',
+            employees: _filteredEmployees,
+            roleFilter: roleFilter,
           ),
         );
         return true;
@@ -145,8 +151,10 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
       success: (_) async {
         await loadEmployees();
         emit(
-          const AdminEmployeesState.actionSuccess(
-            'Permission updated successfully',
+          AdminEmployeesState.actionSuccess(
+            message: 'Permission updated successfully',
+            employees: _filteredEmployees,
+            roleFilter: roleFilter,
           ),
         );
         return true;
@@ -168,8 +176,10 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
       success: (_) async {
         await loadEmployees();
         emit(
-          const AdminEmployeesState.actionSuccess(
-            'Permission updated successfully',
+          AdminEmployeesState.actionSuccess(
+            message: 'Permission updated successfully',
+            employees: _filteredEmployees,
+            roleFilter: roleFilter,
           ),
         );
         return true;

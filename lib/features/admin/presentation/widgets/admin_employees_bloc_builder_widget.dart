@@ -60,7 +60,8 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
           AdminEmployeesStateLoading() => const AdminEmployeesSkeletonWidget(),
           AdminEmployeesStateError(:final messageKey) =>
             AdminRequestsEmptyStateWidget(messageKey: messageKey),
-          AdminEmployeesStateSuccess(:final employees) =>
+          AdminEmployeesStateSuccess(:final employees) ||
+          AdminEmployeesStateActionSuccess(:final employees) =>
             employees.isEmpty
                 ? AdminRequestsEmptyStateWidget(
                     messageKey: 'admin.employees.empty',

@@ -424,7 +424,7 @@ class __$$EmployeeOdooDashboardStateSuccessImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? status = null,
-    Object? attendanceData = freezed,
+    Object? attendanceData = null,
     Object? leaveRequests = null,
   }) {
     return _then(
@@ -433,7 +433,7 @@ class __$$EmployeeOdooDashboardStateSuccessImplCopyWithImpl<$Res>
             ? _value._status
             : status // ignore: cast_nullable_to_non_nullable
                   as Map<String, dynamic>,
-        attendanceData: freezed == attendanceData
+        attendanceData: null == attendanceData
             ? _value.attendanceData
             : attendanceData // ignore: cast_nullable_to_non_nullable
                   as OdooMyAttendanceData,
@@ -486,10 +486,8 @@ class _$EmployeeOdooDashboardStateSuccessImpl
         (other.runtimeType == runtimeType &&
             other is _$EmployeeOdooDashboardStateSuccessImpl &&
             const DeepCollectionEquality().equals(other._status, _status) &&
-            const DeepCollectionEquality().equals(
-              other.attendanceData,
-              attendanceData,
-            ) &&
+            (identical(other.attendanceData, attendanceData) ||
+                other.attendanceData == attendanceData) &&
             const DeepCollectionEquality().equals(
               other._leaveRequests,
               _leaveRequests,
@@ -500,7 +498,7 @@ class _$EmployeeOdooDashboardStateSuccessImpl
   int get hashCode => Object.hash(
     runtimeType,
     const DeepCollectionEquality().hash(_status),
-    const DeepCollectionEquality().hash(attendanceData),
+    attendanceData,
     const DeepCollectionEquality().hash(_leaveRequests),
   );
 

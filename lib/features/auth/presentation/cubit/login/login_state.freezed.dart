@@ -346,10 +346,10 @@ class __$$LoginSuccessImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? user = freezed}) {
+  $Res call({Object? user = null}) {
     return _then(
       _$LoginSuccessImpl(
-        freezed == user
+        null == user
             ? _value.user
             : user // ignore: cast_nullable_to_non_nullable
                   as LoginResponseModel,
@@ -376,12 +376,11 @@ class _$LoginSuccessImpl implements LoginSuccess {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoginSuccessImpl &&
-            const DeepCollectionEquality().equals(other.user, user));
+            (identical(other.user, user) || other.user == user));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(user));
+  int get hashCode => Object.hash(runtimeType, user);
 
   /// Create a copy of LoginState
   /// with the given fields replaced by the non-null parameter values.
