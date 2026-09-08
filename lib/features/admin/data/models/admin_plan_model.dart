@@ -12,6 +12,10 @@ class AdminPlanModel {
     this.endDate,
     this.assignedEmployeeId,
     this.assignedEmployeeName,
+    this.notes,
+    this.planDate,
+    this.planType,
+    this.status,
   });
 
   final int? id;
@@ -21,6 +25,10 @@ class AdminPlanModel {
   final String? endDate;
   final String? assignedEmployeeId;
   final String? assignedEmployeeName;
+  final String? notes;
+  final String? planDate;
+  final String? planType;
+  final String? status;
 
   factory AdminPlanModel.fromJson(Map<String, dynamic> json) =>
       _$AdminPlanModelFromJson(json);
@@ -40,6 +48,20 @@ class PlansResponseModel {
       _$PlansResponseModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$PlansResponseModelToJson(this);
+}
+
+@JsonSerializable()
+class SinglePlanResponseModel {
+  const SinglePlanResponseModel({this.value, this.isSuccess, this.successMessage});
+
+  final AdminPlanModel? value;
+  final bool? isSuccess;
+  final String? successMessage;
+
+  factory SinglePlanResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$SinglePlanResponseModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SinglePlanResponseModelToJson(this);
 }
 
 @JsonSerializable()

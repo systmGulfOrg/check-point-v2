@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../cubit/admin_customers_cubit.dart';
 import '../widgets/admin_branches_bloc_builder_widget.dart';
 import '../widgets/admin_customers_bloc_builder_widget.dart';
 import '../widgets/admin_locations_add_button_widget.dart';
@@ -41,7 +43,14 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
             children: [
               AdminLocationsFilterWidget(
                 selectedIndex: selectedIndex,
-                onSelected: (index) => setState(() => selectedIndex = index),
+                onSelected: (index) {
+                  setState(() => selectedIndex = index);
+                  if (index == 1 || index == 2) {
+                    context.read<AdminCustomersCubit>().load(
+                      type: index == 1 ? 'Site' : 'Customer',
+                    );
+                  }
+                },
               ),
               hSpace(14),
               Row(

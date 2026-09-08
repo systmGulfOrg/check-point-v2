@@ -11,6 +11,7 @@ import '../widgets/admin_greeting_widget.dart';
 import '../widgets/admin_overview_card_widget.dart';
 import '../widgets/admin_stats_grid_widget.dart';
 import '../widgets/admin_top_bar_widget.dart';
+import '../widgets/admin_weekly_attendance_chart_widget.dart';
 
 class AdminHomeScreen extends StatelessWidget {
   const AdminHomeScreen({super.key});
@@ -94,6 +95,8 @@ class AdminHomeScreen extends StatelessWidget {
               isLeaveLoading: isLeaveLoading,
               isTasksLoading: isTasksLoading,
             ),
+            hSpace(16),
+            const AdminWeeklyAttendanceChartWidget(),
             hSpace(20),
             AdminOverviewCardWidget(
               employeesOnDuty: presentToday,

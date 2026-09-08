@@ -7,6 +7,7 @@ import '../../../../core/core.dart';
 import '../cubit/admin_shifts_policies_cubit.dart';
 import '../cubit/admin_shifts_policies_state.dart';
 import '../widgets/admin_new_policy_button_widget.dart';
+import '../widgets/admin_shift_employees_widget.dart';
 import '../widgets/admin_shift_policies_skeleton_widget.dart';
 
 class AdminShiftDetailsScreen extends StatelessWidget {
@@ -158,41 +159,7 @@ class AdminShiftDetailsScreen extends StatelessWidget {
                               ),
                               if (employees.isNotEmpty) ...[
                                 hSpace(8),
-                                Wrap(
-                                  spacing: 6.w,
-                                  runSpacing: 6.h,
-                                  children: [
-                                    for (final emp in employees)
-                                      Chip(
-                                        avatar: CircleAvatar(
-                                          backgroundColor:
-                                              AppColors.softBrandBackground,
-                                          child: Text(
-                                            (emp.name ?? emp.userName ?? '?')
-                                                .substring(0, 1)
-                                                .toUpperCase(),
-                                            style: TextStyle(
-                                              fontSize: 10.sp,
-                                              color: AppColors.brandPrimary,
-                                            ),
-                                          ),
-                                        ),
-                                        label: Text(
-                                          emp.name ?? emp.userName ?? '-',
-                                          style: AppTextStyles.font12Regular,
-                                        ),
-                                        backgroundColor: AppColors.white,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            8.r,
-                                          ),
-                                          side: BorderSide(
-                                            color: AppColors.border,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
+                                AdminShiftEmployeesWidget(employees: employees),
                               ],
                             ],
                           ),

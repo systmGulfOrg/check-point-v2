@@ -15,6 +15,10 @@ AdminPlanModel _$AdminPlanModelFromJson(Map<String, dynamic> json) =>
       endDate: json['endDate'] as String?,
       assignedEmployeeId: json['assignedEmployeeId'] as String?,
       assignedEmployeeName: json['assignedEmployeeName'] as String?,
+      notes: json['notes'] as String?,
+      planDate: json['planDate'] as String?,
+      planType: json['planType'] as String?,
+      status: json['status'] as String?,
     );
 
 Map<String, dynamic> _$AdminPlanModelToJson(AdminPlanModel instance) =>
@@ -26,6 +30,10 @@ Map<String, dynamic> _$AdminPlanModelToJson(AdminPlanModel instance) =>
       'endDate': instance.endDate,
       'assignedEmployeeId': instance.assignedEmployeeId,
       'assignedEmployeeName': instance.assignedEmployeeName,
+      'notes': instance.notes,
+      'planDate': instance.planDate,
+      'planType': instance.planType,
+      'status': instance.status,
     };
 
 PlansResponseModel _$PlansResponseModelFromJson(Map<String, dynamic> json) =>
@@ -43,6 +51,24 @@ Map<String, dynamic> _$PlansResponseModelToJson(PlansResponseModel instance) =>
       'isSuccess': instance.isSuccess,
       'successMessage': instance.successMessage,
     };
+
+SinglePlanResponseModel _$SinglePlanResponseModelFromJson(
+  Map<String, dynamic> json,
+) => SinglePlanResponseModel(
+  value: json['value'] == null
+      ? null
+      : AdminPlanModel.fromJson(json['value'] as Map<String, dynamic>),
+  isSuccess: json['isSuccess'] as bool?,
+  successMessage: json['successMessage'] as String?,
+);
+
+Map<String, dynamic> _$SinglePlanResponseModelToJson(
+  SinglePlanResponseModel instance,
+) => <String, dynamic>{
+  'value': instance.value,
+  'isSuccess': instance.isSuccess,
+  'successMessage': instance.successMessage,
+};
 
 PlansPageModel _$PlansPageModelFromJson(Map<String, dynamic> json) =>
     PlansPageModel(
