@@ -145,28 +145,27 @@ class EmployeeClockCardWidget extends StatelessWidget {
             ],
           ),
           hSpace(20),
-          if (hasCheckedOut && !isCheckedIn)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const EmployeeStatusBadgeWidget(status: 'On Time'),
-                if (workedHours != null) wSpace(12),
-                if (workedHours != null)
-                  Text(
-                    workedHours!,
-                    style: AppTextStyles.font13Regular.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const EmployeeStatusBadgeWidget(status: 'On Time'),
+              if (workedHours != null) wSpace(12),
+              if (workedHours != null)
+                Text(
+                  workedHours!,
+                  style: AppTextStyles.font13Regular.copyWith(
+                    color: AppColors.textSecondary,
                   ),
-              ],
-            )
-          else
-            CustomButton(
-              text: isCheckedIn
-                  ? 'employee.home.checkOutAction'.tr(context: context)
-                  : 'employee.home.checkInAction'.tr(context: context),
-              onTap: onToggleCheckInOut,
-            ),
+                ),
+            ],
+          ),
+          hSpace(16),
+          CustomButton(
+            text: isCheckedIn
+                ? 'employee.home.checkOutAction'.tr(context: context)
+                : 'employee.home.checkInAction'.tr(context: context),
+            onTap: onToggleCheckInOut,
+          ),
         ],
       ),
     );
