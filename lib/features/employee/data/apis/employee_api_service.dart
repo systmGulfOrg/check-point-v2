@@ -36,7 +36,9 @@ abstract class EmployeeApiService {
   );
 
   @POST(ApiConstants.employeeCheckOut)
-  Future<AdminAttendanceModel> checkOut(@Body() EmployeeCheckOutRequestBody body);
+  Future<AdminAttendanceModel> checkOut(
+    @Body() EmployeeCheckOutRequestBody body,
+  );
 
   @POST(ApiConstants.employeeCheckOutWithoutPlan)
   Future<AdminAttendanceModel> checkOutWithoutPlan(
@@ -55,6 +57,9 @@ abstract class EmployeeApiService {
 
   @GET('${ApiConstants.branches}/{id}')
   Future<BranchResponseModel> getBranchById(@Path('id') int id);
+
+  @GET(ApiConstants.branches)
+  Future<BranchResponseModel> getBranches();
 
   @GET('${ApiConstants.customers}/customerType/{type}')
   Future<CustomerResponseModel> getCustomersByType(@Path('type') String type);
@@ -93,15 +98,11 @@ abstract class EmployeeApiService {
   );
 
   @POST(ApiConstants.removeTaskFromEmployee)
-  Future<ResultModel> removeTask(
-    @Body() EmployeeRemoveTaskRequestBody body,
-  );
+  Future<ResultModel> removeTask(@Body() EmployeeRemoveTaskRequestBody body);
 
   // Leave Requests
   @POST(ApiConstants.leaveRequests)
-  Future<ResultModel> createLeaveRequest(
-    @Body() EmployeeLeaveRequestBody body,
-  );
+  Future<ResultModel> createLeaveRequest(@Body() EmployeeLeaveRequestBody body);
 
   @DELETE('${ApiConstants.leaveRequests}/{id}')
   Future<ResultModel> deleteLeaveRequest(@Path('id') int id);
@@ -111,9 +112,7 @@ abstract class EmployeeApiService {
     @Path('employeeId') String employeeId,
   );
 
-  @GET(
-    '${ApiConstants.leaveRequests}/employeeId/{employeeId}/leaveType/{type}',
-  )
+  @GET('${ApiConstants.leaveRequests}/employeeId/{employeeId}/leaveType/{type}')
   Future<LeaveRequestsResponseModel> getLeaveRequestsByType(
     @Path('employeeId') String employeeId,
     @Path('type') String type,

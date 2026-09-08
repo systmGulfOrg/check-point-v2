@@ -10,6 +10,7 @@ import 'package:check_point_v2/features/employee/presentation/widgets/employee_a
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_record_card_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_record_data.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_clock_card_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_location_sheet_widget.dart';
 
 class EmployeeClockScreen extends StatefulWidget {
   const EmployeeClockScreen({super.key});
@@ -32,12 +33,15 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
   }
 
   void _toggleCheckInOut() {
-    final cubit = context.read<EmployeeAttendanceCubit>();
-    if (_isCheckedIn) {
-      cubit.checkOut();
-    } else {
-      cubit.checkIn(area: 'Office');
-    }
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.cardBackground,
+      builder: (_) => BlocProvider.value(
+        value: context.read<EmployeeAttendanceCubit>(),
+        child: EmployeeAttendanceLocationSheetWidget(isCheckOut: _isCheckedIn),
+      ),
+    );
   }
 
   @override
@@ -58,29 +62,41 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
               BlocConsumer<EmployeeAttendanceCubit, EmployeeAttendanceState>(
                 listener: (context, state) {
                   switch (state) {
-                    case EmployeeAttendanceStateCheckInSuccess(:final attendance):
+                    case EmployeeAttendanceStateCheckInSuccess(
+                      :final attendance,
+                    ):
                       setState(() {
                         _isCheckedIn = true;
                         _hasCheckedOut = false;
-                        _checkInTime = attendance.clockInTime ?? DateFormat('HH:mm').format(DateTime.now());
+                        _checkInTime =
+                            attendance.clockInTime ??
+                            DateFormat('HH:mm').format(DateTime.now());
                         _checkOutTime = '—';
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Checked in successfully')),
+                        const SnackBar(
+                          content: Text('Checked in successfully'),
+                        ),
                       );
-                    case EmployeeAttendanceStateCheckOutSuccess(:final attendance):
+                    case EmployeeAttendanceStateCheckOutSuccess(
+                      :final attendance,
+                    ):
                       setState(() {
                         _isCheckedIn = false;
                         _hasCheckedOut = true;
-                        _checkOutTime = attendance.clockOutTime ?? DateFormat('HH:mm').format(DateTime.now());
+                        _checkOutTime =
+                            attendance.clockOutTime ??
+                            DateFormat('HH:mm').format(DateTime.now());
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Checked out successfully')),
+                        const SnackBar(
+                          content: Text('Checked out successfully'),
+                        ),
                       );
                     case EmployeeAttendanceStateError(:final messageKey):
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(messageKey)),
-                      );
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(messageKey)));
                     default:
                       break;
                   }
@@ -122,8 +138,10 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                   BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
                     builder: (context, state) {
                       final historyRecords = switch (state) {
-                        EmployeeAttendanceStateHistoryLoaded(:final history) => history
-                            .map((item) => EmployeeAttendanceRecordData(
+                        EmployeeAttendanceStateHistoryLoaded(:final history) =>
+                          history
+                              .map(
+                                (item) => EmployeeAttendanceRecordData(
                                   date: AppDateFormatter.formatDateString(
                                     item.attendanceDate,
                                   ),
@@ -139,12 +157,13 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                                   status: item.isLate == true
                                       ? 'Late'
                                       : (item.isEarly == true
-                                          ? 'Early Leave'
-                                          : 'On Time'),
+                                            ? 'Early Leave'
+                                            : 'On Time'),
                                   isLate: item.isLate == true,
                                   isEarly: item.isEarly == true,
-                                ))
-                            .toList(),
+                                ),
+                              )
+                              .toList(),
                         _ => const <EmployeeAttendanceRecordData>[],
                       };
 

@@ -24,6 +24,7 @@ mixin _$EmployeeAttendanceState {
     required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
     required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
     required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
     required TResult Function() areaValidationSuccess,
     required TResult Function(String messageKey) areaValidationError,
     required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
@@ -38,6 +39,7 @@ mixin _$EmployeeAttendanceState {
     TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
     TResult? Function()? areaValidationSuccess,
     TResult? Function(String messageKey)? areaValidationError,
     TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -52,6 +54,7 @@ mixin _$EmployeeAttendanceState {
     TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
     TResult Function()? areaValidationSuccess,
     TResult Function(String messageKey)? areaValidationError,
     TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -70,6 +73,8 @@ mixin _$EmployeeAttendanceState {
     checkOutSuccess,
     required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
     targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
     required TResult Function(
       EmployeeAttendanceStateAreaValidationSuccess value,
     )
@@ -96,6 +101,8 @@ mixin _$EmployeeAttendanceState {
     checkOutSuccess,
     TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
     targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -117,6 +124,8 @@ mixin _$EmployeeAttendanceState {
     TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
     checkOutSuccess,
     TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -209,6 +218,7 @@ class _$EmployeeAttendanceStateInitialImpl
     required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
     required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
     required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
     required TResult Function() areaValidationSuccess,
     required TResult Function(String messageKey) areaValidationError,
     required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
@@ -227,6 +237,7 @@ class _$EmployeeAttendanceStateInitialImpl
     TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
     TResult? Function()? areaValidationSuccess,
     TResult? Function(String messageKey)? areaValidationError,
     TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -245,6 +256,7 @@ class _$EmployeeAttendanceStateInitialImpl
     TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
     TResult Function()? areaValidationSuccess,
     TResult Function(String messageKey)? areaValidationError,
     TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -270,6 +282,8 @@ class _$EmployeeAttendanceStateInitialImpl
     checkOutSuccess,
     required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
     targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
     required TResult Function(
       EmployeeAttendanceStateAreaValidationSuccess value,
     )
@@ -300,6 +314,8 @@ class _$EmployeeAttendanceStateInitialImpl
     checkOutSuccess,
     TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
     targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -325,6 +341,8 @@ class _$EmployeeAttendanceStateInitialImpl
     TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
     checkOutSuccess,
     TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -403,6 +421,7 @@ class _$EmployeeAttendanceStateLoadingImpl
     required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
     required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
     required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
     required TResult Function() areaValidationSuccess,
     required TResult Function(String messageKey) areaValidationError,
     required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
@@ -421,6 +440,7 @@ class _$EmployeeAttendanceStateLoadingImpl
     TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
     TResult? Function()? areaValidationSuccess,
     TResult? Function(String messageKey)? areaValidationError,
     TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -439,6 +459,7 @@ class _$EmployeeAttendanceStateLoadingImpl
     TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
     TResult Function()? areaValidationSuccess,
     TResult Function(String messageKey)? areaValidationError,
     TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -464,6 +485,8 @@ class _$EmployeeAttendanceStateLoadingImpl
     checkOutSuccess,
     required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
     targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
     required TResult Function(
       EmployeeAttendanceStateAreaValidationSuccess value,
     )
@@ -494,6 +517,8 @@ class _$EmployeeAttendanceStateLoadingImpl
     checkOutSuccess,
     TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
     targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -519,6 +544,8 @@ class _$EmployeeAttendanceStateLoadingImpl
     TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
     checkOutSuccess,
     TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -629,6 +656,7 @@ class _$EmployeeAttendanceStateCheckInSuccessImpl
     required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
     required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
     required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
     required TResult Function() areaValidationSuccess,
     required TResult Function(String messageKey) areaValidationError,
     required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
@@ -647,6 +675,7 @@ class _$EmployeeAttendanceStateCheckInSuccessImpl
     TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
     TResult? Function()? areaValidationSuccess,
     TResult? Function(String messageKey)? areaValidationError,
     TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -665,6 +694,7 @@ class _$EmployeeAttendanceStateCheckInSuccessImpl
     TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
     TResult Function()? areaValidationSuccess,
     TResult Function(String messageKey)? areaValidationError,
     TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -690,6 +720,8 @@ class _$EmployeeAttendanceStateCheckInSuccessImpl
     checkOutSuccess,
     required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
     targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
     required TResult Function(
       EmployeeAttendanceStateAreaValidationSuccess value,
     )
@@ -720,6 +752,8 @@ class _$EmployeeAttendanceStateCheckInSuccessImpl
     checkOutSuccess,
     TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
     targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -745,6 +779,8 @@ class _$EmployeeAttendanceStateCheckInSuccessImpl
     TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
     checkOutSuccess,
     TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -866,6 +902,7 @@ class _$EmployeeAttendanceStateCheckOutSuccessImpl
     required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
     required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
     required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
     required TResult Function() areaValidationSuccess,
     required TResult Function(String messageKey) areaValidationError,
     required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
@@ -884,6 +921,7 @@ class _$EmployeeAttendanceStateCheckOutSuccessImpl
     TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
     TResult? Function()? areaValidationSuccess,
     TResult? Function(String messageKey)? areaValidationError,
     TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -902,6 +940,7 @@ class _$EmployeeAttendanceStateCheckOutSuccessImpl
     TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
     TResult Function()? areaValidationSuccess,
     TResult Function(String messageKey)? areaValidationError,
     TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -927,6 +966,8 @@ class _$EmployeeAttendanceStateCheckOutSuccessImpl
     checkOutSuccess,
     required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
     targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
     required TResult Function(
       EmployeeAttendanceStateAreaValidationSuccess value,
     )
@@ -957,6 +998,8 @@ class _$EmployeeAttendanceStateCheckOutSuccessImpl
     checkOutSuccess,
     TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
     targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -982,6 +1025,8 @@ class _$EmployeeAttendanceStateCheckOutSuccessImpl
     TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
     checkOutSuccess,
     TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -1110,6 +1155,7 @@ class _$EmployeeAttendanceStateTargetsLoadedImpl
     required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
     required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
     required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
     required TResult Function() areaValidationSuccess,
     required TResult Function(String messageKey) areaValidationError,
     required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
@@ -1128,6 +1174,7 @@ class _$EmployeeAttendanceStateTargetsLoadedImpl
     TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
     TResult? Function()? areaValidationSuccess,
     TResult? Function(String messageKey)? areaValidationError,
     TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -1146,6 +1193,7 @@ class _$EmployeeAttendanceStateTargetsLoadedImpl
     TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
     TResult Function()? areaValidationSuccess,
     TResult Function(String messageKey)? areaValidationError,
     TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -1171,6 +1219,8 @@ class _$EmployeeAttendanceStateTargetsLoadedImpl
     checkOutSuccess,
     required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
     targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
     required TResult Function(
       EmployeeAttendanceStateAreaValidationSuccess value,
     )
@@ -1201,6 +1251,8 @@ class _$EmployeeAttendanceStateTargetsLoadedImpl
     checkOutSuccess,
     TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
     targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -1226,6 +1278,8 @@ class _$EmployeeAttendanceStateTargetsLoadedImpl
     TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
     checkOutSuccess,
     TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -1257,6 +1311,259 @@ abstract class EmployeeAttendanceStateTargetsLoaded
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EmployeeAttendanceStateTargetsLoadedImplCopyWith<
     _$EmployeeAttendanceStateTargetsLoadedImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$EmployeeAttendanceStateBranchesLoadedImplCopyWith<$Res> {
+  factory _$$EmployeeAttendanceStateBranchesLoadedImplCopyWith(
+    _$EmployeeAttendanceStateBranchesLoadedImpl value,
+    $Res Function(_$EmployeeAttendanceStateBranchesLoadedImpl) then,
+  ) = __$$EmployeeAttendanceStateBranchesLoadedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<BranchModel> branches});
+}
+
+/// @nodoc
+class __$$EmployeeAttendanceStateBranchesLoadedImplCopyWithImpl<$Res>
+    extends
+        _$EmployeeAttendanceStateCopyWithImpl<
+          $Res,
+          _$EmployeeAttendanceStateBranchesLoadedImpl
+        >
+    implements _$$EmployeeAttendanceStateBranchesLoadedImplCopyWith<$Res> {
+  __$$EmployeeAttendanceStateBranchesLoadedImplCopyWithImpl(
+    _$EmployeeAttendanceStateBranchesLoadedImpl _value,
+    $Res Function(_$EmployeeAttendanceStateBranchesLoadedImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of EmployeeAttendanceState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? branches = null}) {
+    return _then(
+      _$EmployeeAttendanceStateBranchesLoadedImpl(
+        null == branches
+            ? _value._branches
+            : branches // ignore: cast_nullable_to_non_nullable
+                  as List<BranchModel>,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$EmployeeAttendanceStateBranchesLoadedImpl
+    implements EmployeeAttendanceStateBranchesLoaded {
+  const _$EmployeeAttendanceStateBranchesLoadedImpl(
+    final List<BranchModel> branches,
+  ) : _branches = branches;
+
+  final List<BranchModel> _branches;
+  @override
+  List<BranchModel> get branches {
+    if (_branches is EqualUnmodifiableListView) return _branches;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_branches);
+  }
+
+  @override
+  String toString() {
+    return 'EmployeeAttendanceState.branchesLoaded(branches: $branches)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$EmployeeAttendanceStateBranchesLoadedImpl &&
+            const DeepCollectionEquality().equals(other._branches, _branches));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_branches));
+
+  /// Create a copy of EmployeeAttendanceState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$EmployeeAttendanceStateBranchesLoadedImplCopyWith<
+    _$EmployeeAttendanceStateBranchesLoadedImpl
+  >
+  get copyWith =>
+      __$$EmployeeAttendanceStateBranchesLoadedImplCopyWithImpl<
+        _$EmployeeAttendanceStateBranchesLoadedImpl
+      >(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
+    required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
+    required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
+    required TResult Function() areaValidationSuccess,
+    required TResult Function(String messageKey) areaValidationError,
+    required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
+    required TResult Function(bool isEnabled) trackingStatusChanged,
+    required TResult Function(String message) actionSuccess,
+    required TResult Function(String messageKey) error,
+  }) {
+    return branchesLoaded(branches);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
+    TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
+    TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
+    TResult? Function()? areaValidationSuccess,
+    TResult? Function(String messageKey)? areaValidationError,
+    TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
+    TResult? Function(bool isEnabled)? trackingStatusChanged,
+    TResult? Function(String message)? actionSuccess,
+    TResult? Function(String messageKey)? error,
+  }) {
+    return branchesLoaded?.call(branches);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
+    TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
+    TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
+    TResult Function()? areaValidationSuccess,
+    TResult Function(String messageKey)? areaValidationError,
+    TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
+    TResult Function(bool isEnabled)? trackingStatusChanged,
+    TResult Function(String message)? actionSuccess,
+    TResult Function(String messageKey)? error,
+    required TResult orElse(),
+  }) {
+    if (branchesLoaded != null) {
+      return branchesLoaded(branches);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(EmployeeAttendanceStateInitial value) initial,
+    required TResult Function(EmployeeAttendanceStateLoading value) loading,
+    required TResult Function(EmployeeAttendanceStateCheckInSuccess value)
+    checkInSuccess,
+    required TResult Function(EmployeeAttendanceStateCheckOutSuccess value)
+    checkOutSuccess,
+    required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
+    targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
+    required TResult Function(
+      EmployeeAttendanceStateAreaValidationSuccess value,
+    )
+    areaValidationSuccess,
+    required TResult Function(EmployeeAttendanceStateAreaValidationError value)
+    areaValidationError,
+    required TResult Function(EmployeeAttendanceStateHistoryLoaded value)
+    historyLoaded,
+    required TResult Function(
+      EmployeeAttendanceStateTrackingStatusChanged value,
+    )
+    trackingStatusChanged,
+    required TResult Function(EmployeeAttendanceStateActionSuccess value)
+    actionSuccess,
+    required TResult Function(EmployeeAttendanceStateError value) error,
+  }) {
+    return branchesLoaded(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(EmployeeAttendanceStateInitial value)? initial,
+    TResult? Function(EmployeeAttendanceStateLoading value)? loading,
+    TResult? Function(EmployeeAttendanceStateCheckInSuccess value)?
+    checkInSuccess,
+    TResult? Function(EmployeeAttendanceStateCheckOutSuccess value)?
+    checkOutSuccess,
+    TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
+    targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
+    TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
+    areaValidationSuccess,
+    TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
+    areaValidationError,
+    TResult? Function(EmployeeAttendanceStateHistoryLoaded value)?
+    historyLoaded,
+    TResult? Function(EmployeeAttendanceStateTrackingStatusChanged value)?
+    trackingStatusChanged,
+    TResult? Function(EmployeeAttendanceStateActionSuccess value)?
+    actionSuccess,
+    TResult? Function(EmployeeAttendanceStateError value)? error,
+  }) {
+    return branchesLoaded?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(EmployeeAttendanceStateInitial value)? initial,
+    TResult Function(EmployeeAttendanceStateLoading value)? loading,
+    TResult Function(EmployeeAttendanceStateCheckInSuccess value)?
+    checkInSuccess,
+    TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
+    checkOutSuccess,
+    TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
+    TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
+    areaValidationSuccess,
+    TResult Function(EmployeeAttendanceStateAreaValidationError value)?
+    areaValidationError,
+    TResult Function(EmployeeAttendanceStateHistoryLoaded value)? historyLoaded,
+    TResult Function(EmployeeAttendanceStateTrackingStatusChanged value)?
+    trackingStatusChanged,
+    TResult Function(EmployeeAttendanceStateActionSuccess value)? actionSuccess,
+    TResult Function(EmployeeAttendanceStateError value)? error,
+    required TResult orElse(),
+  }) {
+    if (branchesLoaded != null) {
+      return branchesLoaded(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class EmployeeAttendanceStateBranchesLoaded
+    implements EmployeeAttendanceState {
+  const factory EmployeeAttendanceStateBranchesLoaded(
+    final List<BranchModel> branches,
+  ) = _$EmployeeAttendanceStateBranchesLoadedImpl;
+
+  List<BranchModel> get branches;
+
+  /// Create a copy of EmployeeAttendanceState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$EmployeeAttendanceStateBranchesLoadedImplCopyWith<
+    _$EmployeeAttendanceStateBranchesLoadedImpl
   >
   get copyWith => throw _privateConstructorUsedError;
 }
@@ -1318,6 +1625,7 @@ class _$EmployeeAttendanceStateAreaValidationSuccessImpl
     required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
     required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
     required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
     required TResult Function() areaValidationSuccess,
     required TResult Function(String messageKey) areaValidationError,
     required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
@@ -1336,6 +1644,7 @@ class _$EmployeeAttendanceStateAreaValidationSuccessImpl
     TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
     TResult? Function()? areaValidationSuccess,
     TResult? Function(String messageKey)? areaValidationError,
     TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -1354,6 +1663,7 @@ class _$EmployeeAttendanceStateAreaValidationSuccessImpl
     TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
     TResult Function()? areaValidationSuccess,
     TResult Function(String messageKey)? areaValidationError,
     TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -1379,6 +1689,8 @@ class _$EmployeeAttendanceStateAreaValidationSuccessImpl
     checkOutSuccess,
     required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
     targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
     required TResult Function(
       EmployeeAttendanceStateAreaValidationSuccess value,
     )
@@ -1409,6 +1721,8 @@ class _$EmployeeAttendanceStateAreaValidationSuccessImpl
     checkOutSuccess,
     TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
     targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -1434,6 +1748,8 @@ class _$EmployeeAttendanceStateAreaValidationSuccessImpl
     TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
     checkOutSuccess,
     TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -1544,6 +1860,7 @@ class _$EmployeeAttendanceStateAreaValidationErrorImpl
     required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
     required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
     required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
     required TResult Function() areaValidationSuccess,
     required TResult Function(String messageKey) areaValidationError,
     required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
@@ -1562,6 +1879,7 @@ class _$EmployeeAttendanceStateAreaValidationErrorImpl
     TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
     TResult? Function()? areaValidationSuccess,
     TResult? Function(String messageKey)? areaValidationError,
     TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -1580,6 +1898,7 @@ class _$EmployeeAttendanceStateAreaValidationErrorImpl
     TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
     TResult Function()? areaValidationSuccess,
     TResult Function(String messageKey)? areaValidationError,
     TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -1605,6 +1924,8 @@ class _$EmployeeAttendanceStateAreaValidationErrorImpl
     checkOutSuccess,
     required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
     targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
     required TResult Function(
       EmployeeAttendanceStateAreaValidationSuccess value,
     )
@@ -1635,6 +1956,8 @@ class _$EmployeeAttendanceStateAreaValidationErrorImpl
     checkOutSuccess,
     TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
     targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -1660,6 +1983,8 @@ class _$EmployeeAttendanceStateAreaValidationErrorImpl
     TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
     checkOutSuccess,
     TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -1788,6 +2113,7 @@ class _$EmployeeAttendanceStateHistoryLoadedImpl
     required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
     required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
     required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
     required TResult Function() areaValidationSuccess,
     required TResult Function(String messageKey) areaValidationError,
     required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
@@ -1806,6 +2132,7 @@ class _$EmployeeAttendanceStateHistoryLoadedImpl
     TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
     TResult? Function()? areaValidationSuccess,
     TResult? Function(String messageKey)? areaValidationError,
     TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -1824,6 +2151,7 @@ class _$EmployeeAttendanceStateHistoryLoadedImpl
     TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
     TResult Function()? areaValidationSuccess,
     TResult Function(String messageKey)? areaValidationError,
     TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -1849,6 +2177,8 @@ class _$EmployeeAttendanceStateHistoryLoadedImpl
     checkOutSuccess,
     required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
     targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
     required TResult Function(
       EmployeeAttendanceStateAreaValidationSuccess value,
     )
@@ -1879,6 +2209,8 @@ class _$EmployeeAttendanceStateHistoryLoadedImpl
     checkOutSuccess,
     TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
     targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -1904,6 +2236,8 @@ class _$EmployeeAttendanceStateHistoryLoadedImpl
     TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
     checkOutSuccess,
     TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -2028,6 +2362,7 @@ class _$EmployeeAttendanceStateTrackingStatusChangedImpl
     required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
     required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
     required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
     required TResult Function() areaValidationSuccess,
     required TResult Function(String messageKey) areaValidationError,
     required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
@@ -2046,6 +2381,7 @@ class _$EmployeeAttendanceStateTrackingStatusChangedImpl
     TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
     TResult? Function()? areaValidationSuccess,
     TResult? Function(String messageKey)? areaValidationError,
     TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -2064,6 +2400,7 @@ class _$EmployeeAttendanceStateTrackingStatusChangedImpl
     TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
     TResult Function()? areaValidationSuccess,
     TResult Function(String messageKey)? areaValidationError,
     TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -2089,6 +2426,8 @@ class _$EmployeeAttendanceStateTrackingStatusChangedImpl
     checkOutSuccess,
     required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
     targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
     required TResult Function(
       EmployeeAttendanceStateAreaValidationSuccess value,
     )
@@ -2119,6 +2458,8 @@ class _$EmployeeAttendanceStateTrackingStatusChangedImpl
     checkOutSuccess,
     TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
     targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -2144,6 +2485,8 @@ class _$EmployeeAttendanceStateTrackingStatusChangedImpl
     TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
     checkOutSuccess,
     TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -2264,6 +2607,7 @@ class _$EmployeeAttendanceStateActionSuccessImpl
     required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
     required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
     required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
     required TResult Function() areaValidationSuccess,
     required TResult Function(String messageKey) areaValidationError,
     required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
@@ -2282,6 +2626,7 @@ class _$EmployeeAttendanceStateActionSuccessImpl
     TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
     TResult? Function()? areaValidationSuccess,
     TResult? Function(String messageKey)? areaValidationError,
     TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -2300,6 +2645,7 @@ class _$EmployeeAttendanceStateActionSuccessImpl
     TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
     TResult Function()? areaValidationSuccess,
     TResult Function(String messageKey)? areaValidationError,
     TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -2325,6 +2671,8 @@ class _$EmployeeAttendanceStateActionSuccessImpl
     checkOutSuccess,
     required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
     targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
     required TResult Function(
       EmployeeAttendanceStateAreaValidationSuccess value,
     )
@@ -2355,6 +2703,8 @@ class _$EmployeeAttendanceStateActionSuccessImpl
     checkOutSuccess,
     TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
     targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -2380,6 +2730,8 @@ class _$EmployeeAttendanceStateActionSuccessImpl
     TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
     checkOutSuccess,
     TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -2500,6 +2852,7 @@ class _$EmployeeAttendanceStateErrorImpl
     required TResult Function(AdminAttendanceModel attendance) checkInSuccess,
     required TResult Function(AdminAttendanceModel attendance) checkOutSuccess,
     required TResult Function(List<CustomerModel> targets) targetsLoaded,
+    required TResult Function(List<BranchModel> branches) branchesLoaded,
     required TResult Function() areaValidationSuccess,
     required TResult Function(String messageKey) areaValidationError,
     required TResult Function(List<AdminAttendanceModel> history) historyLoaded,
@@ -2518,6 +2871,7 @@ class _$EmployeeAttendanceStateErrorImpl
     TResult? Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult? Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult? Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult? Function(List<BranchModel> branches)? branchesLoaded,
     TResult? Function()? areaValidationSuccess,
     TResult? Function(String messageKey)? areaValidationError,
     TResult? Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -2536,6 +2890,7 @@ class _$EmployeeAttendanceStateErrorImpl
     TResult Function(AdminAttendanceModel attendance)? checkInSuccess,
     TResult Function(AdminAttendanceModel attendance)? checkOutSuccess,
     TResult Function(List<CustomerModel> targets)? targetsLoaded,
+    TResult Function(List<BranchModel> branches)? branchesLoaded,
     TResult Function()? areaValidationSuccess,
     TResult Function(String messageKey)? areaValidationError,
     TResult Function(List<AdminAttendanceModel> history)? historyLoaded,
@@ -2561,6 +2916,8 @@ class _$EmployeeAttendanceStateErrorImpl
     checkOutSuccess,
     required TResult Function(EmployeeAttendanceStateTargetsLoaded value)
     targetsLoaded,
+    required TResult Function(EmployeeAttendanceStateBranchesLoaded value)
+    branchesLoaded,
     required TResult Function(
       EmployeeAttendanceStateAreaValidationSuccess value,
     )
@@ -2591,6 +2948,8 @@ class _$EmployeeAttendanceStateErrorImpl
     checkOutSuccess,
     TResult? Function(EmployeeAttendanceStateTargetsLoaded value)?
     targetsLoaded,
+    TResult? Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult? Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult? Function(EmployeeAttendanceStateAreaValidationError value)?
@@ -2616,6 +2975,8 @@ class _$EmployeeAttendanceStateErrorImpl
     TResult Function(EmployeeAttendanceStateCheckOutSuccess value)?
     checkOutSuccess,
     TResult Function(EmployeeAttendanceStateTargetsLoaded value)? targetsLoaded,
+    TResult Function(EmployeeAttendanceStateBranchesLoaded value)?
+    branchesLoaded,
     TResult Function(EmployeeAttendanceStateAreaValidationSuccess value)?
     areaValidationSuccess,
     TResult Function(EmployeeAttendanceStateAreaValidationError value)?

@@ -6,6 +6,7 @@ import 'package:check_point_v2/core/services/attendance_verification_service.dar
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_check_in_use_case.dart';
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_check_out_use_case.dart';
@@ -28,15 +29,31 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
 
   String? selectedImageBase64;
   CustomerModel? selectedTarget;
+  BranchModel? selectedBranch;
   LatLng? currentLocation;
+
+  Future<void> loadBranches() async {
+    emit(const EmployeeAttendanceState.loading());
+    final result = await attendanceRepo.getBranches();
+    switch (result) {
+      case Success(:final data):
+        emit(EmployeeAttendanceState.branchesLoaded(data));
+      case Failure(:final failure):
+        emit(EmployeeAttendanceState.error(failure.messageKey));
+    }
+  }
 
   Future<void> checkIn({
     required String area,
     String? customerId,
     String? locationLabel,
+    LatLng? targetCenter,
+    List<LatLng> targetPolygon = const [],
   }) async {
     final verification = await attendanceVerificationService.verify(
       biometricReason: 'Verify your identity to check in',
+      center: targetCenter,
+      polygon: targetPolygon,
     );
     if (!verification.isAllowed) {
       emit(EmployeeAttendanceState.error(verification.messageKey!));
@@ -60,9 +77,30 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     }
   }
 
-  Future<void> checkOut() async {
+  Future<LatLng?> refreshCurrentLocation() async {
+    currentLocation = await attendanceVerificationService.locationService
+        .getCurrentPosition();
+    return currentLocation;
+  }
+
+  bool isWithinAttendanceArea({
+    required LatLng point,
+    LatLng? center,
+    List<LatLng> polygon = const [],
+  }) => attendanceVerificationService.isWithinArea(
+    point: point,
+    center: center,
+    polygon: polygon,
+  );
+
+  Future<void> checkOut({
+    LatLng? targetCenter,
+    List<LatLng> targetPolygon = const [],
+  }) async {
     final verification = await attendanceVerificationService.verify(
       biometricReason: 'Verify your identity to check out',
+      center: targetCenter,
+      polygon: targetPolygon,
     );
     if (!verification.isAllowed) {
       emit(EmployeeAttendanceState.error(verification.messageKey!));

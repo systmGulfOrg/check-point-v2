@@ -35,7 +35,19 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       if (branch != null) {
         return ApiResult.success(branch);
       }
-      return const ApiResult.failure(ApiFailure(messageKey: 'Branch not found'));
+      return const ApiResult.failure(
+        ApiFailure(messageKey: 'Branch not found'),
+      );
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<List<BranchModel>>> getBranches() async {
+    try {
+      final response = await api.getBranches();
+      return ApiResult.success(response.value?.list ?? []);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
@@ -54,9 +66,7 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
   }
 
   @override
-  Future<ApiResult<List<CustomerModel>>> getCustomersByType(
-    String type,
-  ) async {
+  Future<ApiResult<List<CustomerModel>>> getCustomersByType(String type) async {
     try {
       final response = await api.getCustomersByType(type);
       return ApiResult.success(response.value?.list ?? []);
@@ -102,9 +112,7 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
     EmployeeCheckOutRequestBody body,
   ) async {
     try {
-      await odooAttendanceService.syncCheckOut(
-        employeeIdStr: body.employeeId,
-      );
+      await odooAttendanceService.syncCheckOut(employeeIdStr: body.employeeId);
       final model = await api.checkOut(body);
       return ApiResult.success(model);
     } catch (e) {
@@ -117,9 +125,7 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
     EmployeeCheckOutRequestBody body,
   ) async {
     try {
-      await odooAttendanceService.syncCheckOut(
-        employeeIdStr: body.employeeId,
-      );
+      await odooAttendanceService.syncCheckOut(employeeIdStr: body.employeeId);
       final model = await api.checkOutWithoutPlan(body);
       return ApiResult.success(model);
     } catch (e) {
@@ -215,7 +221,8 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
     final double dLat = lat2 - lat1;
     final double dLon = lon2 - lon1;
 
-    final double a = sin(dLat / 2) * sin(dLat / 2) +
+    final double a =
+        sin(dLat / 2) * sin(dLat / 2) +
         cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
     final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
@@ -230,7 +237,8 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       final j = (i + 1) % polygon.length;
       if ((polygon[i].longitude > point.longitude) !=
           (polygon[j].longitude > point.longitude)) {
-        final double latComp = (polygon[j].latitude - polygon[i].latitude) *
+        final double latComp =
+            (polygon[j].latitude - polygon[i].latitude) *
                 (point.longitude - polygon[i].longitude) /
                 (polygon[j].longitude - polygon[i].longitude) +
             polygon[i].latitude;

@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 
 part 'employee_attendance_state.freezed.dart';
 
@@ -19,6 +20,9 @@ class EmployeeAttendanceState with _$EmployeeAttendanceState {
   const factory EmployeeAttendanceState.targetsLoaded(
     List<CustomerModel> targets,
   ) = EmployeeAttendanceStateTargetsLoaded;
+  const factory EmployeeAttendanceState.branchesLoaded(
+    List<BranchModel> branches,
+  ) = EmployeeAttendanceStateBranchesLoaded;
   const factory EmployeeAttendanceState.areaValidationSuccess() =
       EmployeeAttendanceStateAreaValidationSuccess;
   const factory EmployeeAttendanceState.areaValidationError(String messageKey) =

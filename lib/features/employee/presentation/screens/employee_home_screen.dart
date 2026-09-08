@@ -17,6 +17,7 @@ import 'package:check_point_v2/features/employee/presentation/widgets/employee_s
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_task_data.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_tasks_section_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_today_card_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_location_sheet_widget.dart';
 
 class EmployeeHomeScreen extends StatefulWidget {
   const EmployeeHomeScreen({
@@ -48,12 +49,15 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
   }
 
   void _toggleCheckInOut() {
-    final cubit = context.read<EmployeeAttendanceCubit>();
-    if (_isCheckedIn) {
-      cubit.checkOut();
-    } else {
-      cubit.checkIn(area: 'Office');
-    }
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.cardBackground,
+      builder: (_) => BlocProvider.value(
+        value: context.read<EmployeeAttendanceCubit>(),
+        child: EmployeeAttendanceLocationSheetWidget(isCheckOut: _isCheckedIn),
+      ),
+    );
   }
 
   @override
@@ -76,30 +80,42 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
               BlocConsumer<EmployeeAttendanceCubit, EmployeeAttendanceState>(
                 listener: (context, state) {
                   switch (state) {
-                    case EmployeeAttendanceStateCheckInSuccess(:final attendance):
+                    case EmployeeAttendanceStateCheckInSuccess(
+                      :final attendance,
+                    ):
                       setState(() {
                         _isCheckedIn = true;
                         _hasCheckedOut = false;
-                        _checkInTime = attendance.clockInTime ?? DateFormat('HH:mm').format(DateTime.now());
+                        _checkInTime =
+                            attendance.clockInTime ??
+                            DateFormat('HH:mm').format(DateTime.now());
                         _checkOutTime = '—';
                         _workedHours = null;
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Checked in successfully')),
+                        const SnackBar(
+                          content: Text('Checked in successfully'),
+                        ),
                       );
-                    case EmployeeAttendanceStateCheckOutSuccess(:final attendance):
+                    case EmployeeAttendanceStateCheckOutSuccess(
+                      :final attendance,
+                    ):
                       setState(() {
                         _isCheckedIn = false;
                         _hasCheckedOut = true;
-                        _checkOutTime = attendance.clockOutTime ?? DateFormat('HH:mm').format(DateTime.now());
+                        _checkOutTime =
+                            attendance.clockOutTime ??
+                            DateFormat('HH:mm').format(DateTime.now());
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Checked out successfully')),
+                        const SnackBar(
+                          content: Text('Checked out successfully'),
+                        ),
                       );
                     case EmployeeAttendanceStateError(:final messageKey):
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(messageKey)),
-                      );
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(messageKey)));
                     default:
                       break;
                   }
@@ -122,7 +138,12 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                 builder: (context, tasksState) {
                   final activeCount = switch (tasksState) {
                     EmployeeTasksStateSuccess(:final tasks) =>
-                      tasks.where((t) => t.status != 'Completed' && t.status != 'Done').length,
+                      tasks
+                          .where(
+                            (t) =>
+                                t.status != 'Completed' && t.status != 'Done',
+                          )
+                          .length,
                     _ => 0,
                   };
                   return BlocBuilder<EmployeePlansCubit, EmployeePlansState>(
@@ -144,9 +165,11 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
               BlocBuilder<EmployeeTasksCubit, EmployeeTasksState>(
                 builder: (context, state) {
                   final tasksList = switch (state) {
-                    EmployeeTasksStateSuccess(:final tasks) => tasks
-                        .take(3)
-                        .map((t) => EmployeeTaskData(
+                    EmployeeTasksStateSuccess(:final tasks) =>
+                      tasks
+                          .take(3)
+                          .map(
+                            (t) => EmployeeTaskData(
                               id: '${t.id ?? 0}',
                               title: t.title ?? '',
                               dueDate: 'Task #${t.id ?? 0}',
@@ -155,8 +178,9 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                               description: t.description ?? '',
                               progressPercentage: 50,
                               assignees: const ['EM'],
-                            ))
-                        .toList(),
+                            ),
+                          )
+                          .toList(),
                     _ => const <EmployeeTaskData>[],
                   };
                   return EmployeeTasksSectionWidget(
@@ -169,9 +193,11 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
               BlocBuilder<EmployeePlansCubit, EmployeePlansState>(
                 builder: (context, state) {
                   final plansList = switch (state) {
-                    EmployeePlansStateSuccess(:final plans) => plans
-                        .take(3)
-                        .map((p) => EmployeePlanData(
+                    EmployeePlansStateSuccess(:final plans) =>
+                      plans
+                          .take(3)
+                          .map(
+                            (p) => EmployeePlanData(
                               id: '${p.id ?? 0}',
                               title: p.title ?? 'Plan #${p.id ?? 0}',
                               dateTime: p.planDate ?? DateTime.now().toString(),
@@ -179,8 +205,9 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                               description: p.notes ?? '',
                               status: p.status ?? 'planned',
                               assignees: const ['EM'],
-                            ))
-                        .toList(),
+                            ),
+                          )
+                          .toList(),
                     _ => const <EmployeePlanData>[],
                   };
                   return EmployeePlansSectionWidget(

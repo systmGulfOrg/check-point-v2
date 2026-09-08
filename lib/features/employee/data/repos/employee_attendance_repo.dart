@@ -13,6 +13,7 @@ import 'package:check_point_v2/features/employee/data/models/attendance/track_us
 
 abstract class EmployeeAttendanceRepo {
   Future<ApiResult<BranchModel>> getBranchById(int branchId);
+  Future<ApiResult<List<BranchModel>>> getBranches();
   Future<ApiResult<List<AdminPlanModel>>> getCustomerPlansForEmployee(
     String employeeId,
   );
@@ -35,9 +36,7 @@ abstract class EmployeeAttendanceRepo {
     int itemCount = 10,
   });
   Future<ApiResult<AdminPlanModel>> getPlanById(int id);
-  Future<ApiResult<void>> addPlanFeedback(
-    EmployeePlanFeedbackRequestBody body,
-  );
+  Future<ApiResult<void>> addPlanFeedback(EmployeePlanFeedbackRequestBody body);
   Future<ApiResult<void>> trackEmployeeLocation(TrackUserRequestBody body);
   Future<ApiResult<void>> removeAssignCustomerPlan(
     EmployeeRemovePlanRequestBody body,
