@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
+import 'package:check_point_v2/core/services/attendance_verification_service.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
@@ -16,12 +17,14 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     required this.sessionStorage,
     required this.checkInUseCase,
     required this.checkOutUseCase,
+    required this.attendanceVerificationService,
   }) : super(const EmployeeAttendanceState.initial());
 
   final EmployeeAttendanceRepo attendanceRepo;
   final AuthSessionStorage sessionStorage;
   final EmployeeCheckInUseCase checkInUseCase;
   final EmployeeCheckOutUseCase checkOutUseCase;
+  final AttendanceVerificationService attendanceVerificationService;
 
   String? selectedImageBase64;
   CustomerModel? selectedTarget;
@@ -32,6 +35,14 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     String? customerId,
     String? locationLabel,
   }) async {
+    final verification = await attendanceVerificationService.verify(
+      biometricReason: 'Verify your identity to check in',
+    );
+    if (!verification.isAllowed) {
+      emit(EmployeeAttendanceState.error(verification.messageKey!));
+      return;
+    }
+    currentLocation = verification.location;
     emit(const EmployeeAttendanceState.loading());
     final result = await checkInUseCase(
       area: area,
@@ -50,6 +61,14 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
   }
 
   Future<void> checkOut() async {
+    final verification = await attendanceVerificationService.verify(
+      biometricReason: 'Verify your identity to check out',
+    );
+    if (!verification.isAllowed) {
+      emit(EmployeeAttendanceState.error(verification.messageKey!));
+      return;
+    }
+    currentLocation = verification.location;
     emit(const EmployeeAttendanceState.loading());
     final result = await checkOutUseCase(
       selectedImageBase64: selectedImageBase64,
@@ -134,10 +153,14 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
             if (!recordDay.isAtSameMomentAs(today)) return false;
           case 'last7':
             final start = today.subtract(const Duration(days: 7));
-            if (recordDay.isBefore(start) || recordDay.isAfter(today)) return false;
+            if (recordDay.isBefore(start) || recordDay.isAfter(today)) {
+              return false;
+            }
           case 'last30':
             final start = today.subtract(const Duration(days: 30));
-            if (recordDay.isBefore(start) || recordDay.isAfter(today)) return false;
+            if (recordDay.isBefore(start) || recordDay.isAfter(today)) {
+              return false;
+            }
           case 'all':
           default:
             break;
@@ -152,7 +175,9 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
       final isAttended = !isLate && !isEarly;
 
       bool matches = false;
-      if (selectedStatusFilters.contains('attended') && isAttended) matches = true;
+      if (selectedStatusFilters.contains('attended') && isAttended) {
+        matches = true;
+      }
       if (selectedStatusFilters.contains('late') && isLate) matches = true;
       if (selectedStatusFilters.contains('early') && isEarly) matches = true;
 
@@ -183,7 +208,11 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
 
   void validateCircleLocation(LatLng targetCenter, double radiusMeters) {
     if (currentLocation == null) {
-      emit(const EmployeeAttendanceState.areaValidationError('Location unavailable'));
+      emit(
+        const EmployeeAttendanceState.areaValidationError(
+          'Location unavailable',
+        ),
+      );
       return;
     }
     final distance = attendanceRepo.checkAccessibleAreaForCircle(
@@ -193,15 +222,21 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     if (distance <= radiusMeters) {
       emit(const EmployeeAttendanceState.areaValidationSuccess());
     } else {
-      emit(const EmployeeAttendanceState.areaValidationError(
-        'You are outside the required area boundary',
-      ));
+      emit(
+        const EmployeeAttendanceState.areaValidationError(
+          'You are outside the required area boundary',
+        ),
+      );
     }
   }
 
   void validatePolygonLocation(List<LatLng> polygon) {
     if (currentLocation == null) {
-      emit(const EmployeeAttendanceState.areaValidationError('Location unavailable'));
+      emit(
+        const EmployeeAttendanceState.areaValidationError(
+          'Location unavailable',
+        ),
+      );
       return;
     }
     final isInPolygon = attendanceRepo.checkAccessibleAreaForPolygon(
@@ -211,9 +246,11 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     if (isInPolygon) {
       emit(const EmployeeAttendanceState.areaValidationSuccess());
     } else {
-      emit(const EmployeeAttendanceState.areaValidationError(
-        'You are outside the required area boundary',
-      ));
+      emit(
+        const EmployeeAttendanceState.areaValidationError(
+          'You are outside the required area boundary',
+        ),
+      );
     }
   }
 }

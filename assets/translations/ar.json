@@ -685,5 +685,8 @@
   "employee.settings.sectionSystem": "النظام",
   "employee.settings.appVersion": "إصدار التطبيق",
   "employee.settings.signOut": "تسجيل الخروج",
-  "employee.settings.footer": "CHECK-POINT v1.0.0 — الموظف"
+  "employee.settings.footer": "CHECK-POINT v1.0.0 — الموظف",
+  "errors.locationUnavailable": "الموقع غير متاح. فعّل نظام تحديد الموقع وحاول مرة أخرى.",
+  "errors.outsideAttendanceArea": "أنت خارج منطقة الحضور المسموح بها.",
+  "errors.biometricRequired": "يلزم التحقق البيومتري للمتابعة."
 }

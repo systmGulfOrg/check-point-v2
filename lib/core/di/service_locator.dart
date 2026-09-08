@@ -3,6 +3,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:local_auth/local_auth.dart';
 
+import 'package:check_point_v2/core/services/attendance_verification_service.dart';
+
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo_impl.dart';
@@ -111,6 +113,12 @@ Future<void> setupServiceLocator() async {
     instanceName: 'external',
   );
   sl.registerLazySingleton<LocationService>(LocationService.new);
+  sl.registerLazySingleton<AttendanceVerificationService>(
+    () => AttendanceVerificationService(
+      locationService: sl<LocationService>(),
+      biometricAuthService: sl<BiometricAuthService>(),
+    ),
+  );
   sl.registerLazySingleton<GooglePlacesService>(
     () => GooglePlacesService(dio: sl<Dio>(instanceName: 'external')),
   );
@@ -285,6 +293,7 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<SupervisorAttendanceCubit>(
     () => SupervisorAttendanceCubit(
       attendanceRepo: sl<SupervisorAttendanceRepo>(),
+      attendanceVerificationService: sl<AttendanceVerificationService>(),
     ),
   );
   sl.registerFactory<SupervisorLeaveRequestsCubit>(
@@ -307,6 +316,7 @@ Future<void> setupServiceLocator() async {
       sessionStorage: sl<AuthSessionStorage>(),
       checkInUseCase: sl<EmployeeCheckInUseCase>(),
       checkOutUseCase: sl<EmployeeCheckOutUseCase>(),
+      attendanceVerificationService: sl<AttendanceVerificationService>(),
     ),
   );
   sl.registerFactory<EmployeeTasksCubit>(

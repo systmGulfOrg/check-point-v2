@@ -1,3 +1,8 @@
+import 'package:local_auth/local_auth.dart';
+
+import 'package:check_point_v2/core/auth/biometric_auth_service.dart';
+import 'package:check_point_v2/core/services/attendance_verification_service.dart';
+import 'package:check_point_v2/core/services/location_service.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
@@ -175,7 +180,15 @@ void main() {
 
     test('SupervisorAttendanceCubit loads attendance successfully', () async {
       final repo = _FakeSupervisorAttendanceRepo();
-      final cubit = SupervisorAttendanceCubit(attendanceRepo: repo);
+      final cubit = SupervisorAttendanceCubit(
+        attendanceRepo: repo,
+        attendanceVerificationService: AttendanceVerificationService(
+          locationService: LocationService(),
+          biometricAuthService: BiometricAuthService(
+            localAuthentication: LocalAuthentication(),
+          ),
+        ),
+      );
 
       await cubit.loadAttendance();
       expect(cubit.state, isA<SupervisorAttendanceSuccess>());
