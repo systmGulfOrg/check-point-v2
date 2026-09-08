@@ -32,6 +32,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
   CustomerModel? customer;
   LatLng? userLocation;
   GoogleMapController? mapController;
+  bool isMapExpanded = false;
   Timer? timer;
 
   @override
@@ -264,80 +265,108 @@ class _EmployeeAttendanceLocationSheetWidgetState
                   }),
                 ),
                 hSpace(12),
-                SizedBox(
-                  height: 260.h,
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 220),
+                  height: isMapExpanded ? 500.h : 260.h,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.r),
-                    child: GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        target: mapCenter,
-                        zoom: 15,
-                      ),
-                      onMapCreated: (controller) => mapController = controller,
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: true,
-                      markers: {
-                        if (userLocation != null)
-                          Marker(
-                            markerId: const MarkerId('user'),
-                            position: userLocation!,
-                            icon: BitmapDescriptor.defaultMarkerWithHue(
-                              BitmapDescriptor.hueAzure,
-                            ),
-                            infoWindow: InfoWindow(
-                              title: 'attendance.myLocation'.tr(),
+                    child: Stack(
+                      children: [
+                        GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                            target: mapCenter,
+                            zoom: 15,
+                          ),
+                          onMapCreated: (controller) =>
+                              mapController = controller,
+                          myLocationEnabled: true,
+                          myLocationButtonEnabled: true,
+                          markers: {
+                            if (userLocation != null)
+                              Marker(
+                                markerId: const MarkerId('user'),
+                                position: userLocation!,
+                                icon: BitmapDescriptor.defaultMarkerWithHue(
+                                  BitmapDescriptor.hueAzure,
+                                ),
+                                infoWindow: InfoWindow(
+                                  title: 'attendance.myLocation'.tr(),
+                                ),
+                              ),
+                            if (points.isNotEmpty)
+                              Marker(
+                                markerId: const MarkerId('target'),
+                                position: points.first,
+                                icon: BitmapDescriptor.defaultMarkerWithHue(
+                                  BitmapDescriptor.hueOrange,
+                                ),
+                                infoWindow: InfoWindow(
+                                  title: type,
+                                  snippet: branch?.name ?? customer?.name,
+                                ),
+                              ),
+                          },
+                          polylines: userLocation != null && points.isNotEmpty
+                              ? {
+                                  Polyline(
+                                    polylineId: const PolylineId(
+                                      'user-to-target',
+                                    ),
+                                    points: [userLocation!, points.first],
+                                    color: AppColors.info,
+                                    width: 4,
+                                  ),
+                                }
+                              : const {},
+                          polygons: points.length > 2
+                              ? {
+                                  Polygon(
+                                    polygonId: const PolygonId('target'),
+                                    points: points,
+                                    fillColor: AppColors.brandPrimary
+                                        .withValues(alpha: .18),
+                                    strokeColor: AppColors.brandPrimary,
+                                    strokeWidth: 3,
+                                  ),
+                                }
+                              : const {},
+                          circles: targetCenter == null
+                              ? const {}
+                              : {
+                                  Circle(
+                                    circleId: const CircleId('target'),
+                                    center: targetCenter!,
+                                    radius: 150,
+                                    fillColor: AppColors.brandPrimary
+                                        .withValues(alpha: .18),
+                                    strokeColor: AppColors.brandPrimary,
+                                    strokeWidth: 3,
+                                  ),
+                                },
+                        ),
+                        PositionedDirectional(
+                          top: 10.h,
+                          end: 10.w,
+                          child: Material(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(10.r),
+                            child: IconButton(
+                              tooltip: isMapExpanded
+                                  ? 'attendance.collapseMap'.tr()
+                                  : 'attendance.expandMap'.tr(),
+                              icon: Icon(
+                                isMapExpanded
+                                    ? Icons.fullscreen_exit
+                                    : Icons.fullscreen,
+                                color: AppColors.textPrimary,
+                              ),
+                              onPressed: () => setState(
+                                () => isMapExpanded = !isMapExpanded,
+                              ),
                             ),
                           ),
-                        if (points.isNotEmpty)
-                          Marker(
-                            markerId: const MarkerId('target'),
-                            position: points.first,
-                            icon: BitmapDescriptor.defaultMarkerWithHue(
-                              BitmapDescriptor.hueOrange,
-                            ),
-                            infoWindow: InfoWindow(
-                              title: type,
-                              snippet: branch?.name ?? customer?.name,
-                            ),
-                          ),
-                      },
-                      polylines: userLocation != null && points.isNotEmpty
-                          ? {
-                              Polyline(
-                                polylineId: const PolylineId('user-to-target'),
-                                points: [userLocation!, points.first],
-                                color: AppColors.info,
-                                width: 4,
-                              ),
-                            }
-                          : const {},
-                      polygons: points.length > 2
-                          ? {
-                              Polygon(
-                                polygonId: const PolygonId('target'),
-                                points: points,
-                                fillColor: AppColors.brandPrimary.withValues(
-                                  alpha: .18,
-                                ),
-                                strokeColor: AppColors.brandPrimary,
-                                strokeWidth: 3,
-                              ),
-                            }
-                          : const {},
-                      circles: targetCenter == null
-                          ? const {}
-                          : {
-                              Circle(
-                                circleId: const CircleId('target'),
-                                center: targetCenter!,
-                                radius: 150,
-                                fillColor: AppColors.brandPrimary.withValues(
-                                  alpha: .18,
-                                ),
-                                strokeColor: AppColors.brandPrimary,
-                                strokeWidth: 3,
-                              ),
-                            },
+                        ),
+                      ],
                     ),
                   ),
                 ),

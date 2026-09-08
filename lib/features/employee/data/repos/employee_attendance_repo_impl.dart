@@ -9,6 +9,7 @@ import 'package:check_point_v2/features/admin/data/models/attendance/admin_atten
 import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/employee/data/apis/employee_api_service.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_in_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_out_request_body.dart';
@@ -48,6 +49,22 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
     try {
       final response = await api.getBranches();
       return ApiResult.success(response.value?.list ?? []);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<EmployeeModel>> getEmployeeById(String employeeId) async {
+    try {
+      final response = await api.getEmployeeById(employeeId);
+      final employee = response.value;
+      if (employee == null) {
+        return const ApiResult.failure(
+          ApiFailure(messageKey: 'errors.employeeUnavailable'),
+        );
+      }
+      return ApiResult.success(employee);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

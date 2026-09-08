@@ -63,6 +63,9 @@ class AuthSessionStorage {
     return raw == null ? null : int.tryParse(raw);
   }
 
+  Future<void> saveBranchId(int id) =>
+      secureStorage.write(key: branchIdKey, value: id.toString());
+
   Future<void> saveDepartmentId(int id) =>
       secureStorage.write(key: departmentIdKey, value: id.toString());
 

@@ -35,7 +35,17 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
 
   Future<void> loadBranches() async {
     emit(const EmployeeAttendanceState.loading());
-    final branchId = await sessionStorage.readBranchId();
+    final employeeId = await sessionStorage.readUserId();
+    var branchId = await sessionStorage.readBranchId();
+    if (branchId == null && employeeId != null && employeeId.isNotEmpty) {
+      final employeeResult = await attendanceRepo.getEmployeeById(employeeId);
+      if (employeeResult case Success(:final data)) {
+        branchId = data.branchId;
+        if (branchId != null) {
+          await sessionStorage.saveBranchId(branchId);
+        }
+      }
+    }
     final result = branchId == null
         ? const ApiResult<List<BranchModel>>.failure(
             ApiFailure(messageKey: 'errors.branchUnavailable'),

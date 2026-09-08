@@ -5,6 +5,7 @@ import 'package:check_point_v2/features/admin/data/models/attendance/admin_atten
 import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_in_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_out_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/plans/employee_plan_feedback_request_body.dart';
@@ -14,6 +15,7 @@ import 'package:check_point_v2/features/employee/data/models/attendance/track_us
 abstract class EmployeeAttendanceRepo {
   Future<ApiResult<BranchModel>> getBranchById(int branchId);
   Future<ApiResult<List<BranchModel>>> getBranches();
+  Future<ApiResult<EmployeeModel>> getEmployeeById(String employeeId);
   Future<ApiResult<List<AdminPlanModel>>> getCustomerPlansForEmployee(
     String employeeId,
   );

@@ -690,6 +690,7 @@
   "errors.outsideAttendanceArea": "أنت خارج منطقة الحضور المسموح بها.",
   "errors.biometricRequired": "يلزم التحقق البيومتري للمتابعة.",
   "errors.branchUnavailable": "تعذر تحميل الفرع المخصص لك.",
+  "errors.employeeUnavailable": "تعذر تحميل ملف الموظف الخاص بك.",
   "attendance.locationType": "نوع موقع الحضور",
   "attendance.location": "اختر الموقع",
   "attendance.insideArea": "أنت داخل منطقة الحضور المسموح بها",
@@ -699,4 +700,6 @@
   ,"attendance.customer": "العميل"
   ,"attendance.site": "الموقع"
   ,"attendance.noLocationData": "لم يتم العثور على بيانات موقع الحضور."
+  ,"attendance.expandMap": "توسيع الخريطة"
+  ,"attendance.collapseMap": "تصغير الخريطة"
 }

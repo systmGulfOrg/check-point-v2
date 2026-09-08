@@ -690,6 +690,7 @@
   "errors.outsideAttendanceArea": "You are outside the permitted attendance area.",
   "errors.biometricRequired": "Biometric verification was required to continue.",
   "errors.branchUnavailable": "Your assigned branch could not be loaded.",
+  "errors.employeeUnavailable": "Your employee profile could not be loaded.",
   "attendance.locationType": "Attendance location type",
   "attendance.location": "Choose location",
   "attendance.insideArea": "You are inside the permitted area",
@@ -699,4 +700,6 @@
   ,"attendance.customer": "Customer"
   ,"attendance.site": "Site"
   ,"attendance.noLocationData": "No attendance location data found."
+  ,"attendance.expandMap": "Expand map"
+  ,"attendance.collapseMap": "Collapse map"
 }

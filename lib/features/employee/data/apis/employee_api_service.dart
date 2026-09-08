@@ -8,6 +8,7 @@ import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model
 import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/single_employee_response_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/result_model.dart';
 import 'package:check_point_v2/features/employee/data/models/password/employee_change_password_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_in_request_body.dart';
@@ -60,6 +61,9 @@ abstract class EmployeeApiService {
 
   @GET(ApiConstants.branches)
   Future<BranchResponseModel> getBranches();
+
+  @GET('${ApiConstants.employees}/{id}')
+  Future<SingleEmployeeResponseModel> getEmployeeById(@Path('id') String id);
 
   @GET('${ApiConstants.customers}/customerType/{type}')
   Future<CustomerResponseModel> getCustomersByType(@Path('type') String type);
