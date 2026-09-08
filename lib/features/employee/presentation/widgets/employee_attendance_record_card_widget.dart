@@ -13,21 +13,96 @@ class EmployeeAttendanceRecordCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-      child: Row(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.calendar_today_rounded,
+                    size: 16.r,
+                    color: AppColors.textSecondary,
+                  ),
+                  wSpace(6),
+                  Text(
+                    record.date,
+                    style: AppTextStyles.font14SemiBold.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+              EmployeeStatusBadgeWidget(status: record.status),
+            ],
+          ),
+          hSpace(8),
+          Row(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.login_rounded,
+                      size: 16.r,
+                      color: AppColors.success,
+                    ),
+                    wSpace(4),
+                    Text(
+                      'In ${record.checkIn}',
+                      style: AppTextStyles.font13SemiBold.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.logout_rounded,
+                      size: 16.r,
+                      color: record.checkOut != null && record.checkOut != '--:--'
+                          ? AppColors.brandPrimary
+                          : AppColors.placeholder,
+                    ),
+                    wSpace(4),
+                    Text(
+                      'Out ${record.checkOut ?? '--:--'}',
+                      style: AppTextStyles.font13SemiBold.copyWith(
+                        color: record.checkOut != null && record.checkOut != '--:--'
+                            ? AppColors.textPrimary
+                            : AppColors.placeholder,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (record.area != null && record.area!.isNotEmpty && record.area != '-') ...[
+            hSpace(6),
+            Row(
               children: [
-                Text(record.date, style: AppTextStyles.font14SemiBold),
-                hSpace(4),
-                Text(record.checkIn, style: AppTextStyles.font12Regular),
+                Icon(
+                  Icons.location_on_outlined,
+                  size: 14.r,
+                  color: AppColors.placeholder,
+                ),
+                wSpace(4),
+                Text(
+                  record.area!,
+                  style: AppTextStyles.font12Regular.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
               ],
             ),
-          ),
-          wSpace(12),
-          EmployeeStatusBadgeWidget(status: record.status),
+          ],
         ],
       ),
     );

@@ -91,17 +91,33 @@ class AppDateFormatter {
     return toEnglishDigits(DateFormat('HH:mm', 'en').format(date));
   }
 
-  /// Cleans raw time strings into standard English digits (e.g. "09:30:00" -> "09:30").
-  static String formatTimeString(String? rawTime) {
+  /// Cleans raw time strings (e.g. "15:24:16.7019526" -> "03:24 PM" or "15:24").
+  static String formatTimeString(String? rawTime, {bool use12Hour = true}) {
     if (rawTime == null ||
         rawTime.trim().isEmpty ||
         rawTime.startsWith('00:00:00') ||
-        rawTime == '00:00') {
+        rawTime == '00:00' ||
+        rawTime == '00:00:00.0000000') {
       return '--:--';
     }
     final cleaned = toEnglishDigits(rawTime.trim().split('.').first);
-    if (cleaned.length >= 5) {
-      return cleaned.substring(0, 5);
+    final parts = cleaned.split(':');
+    if (parts.length >= 2) {
+      final hour = int.tryParse(parts[0]);
+      final minute = int.tryParse(parts[1]);
+      if (hour != null && minute != null) {
+        if (use12Hour) {
+          final period = hour >= 12 ? 'PM' : 'AM';
+          final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+          final mStr = minute.toString().padLeft(2, '0');
+          final hStr = h12.toString().padLeft(2, '0');
+          return '$hStr:$mStr $period';
+        } else {
+          final hStr = hour.toString().padLeft(2, '0');
+          final mStr = minute.toString().padLeft(2, '0');
+          return '$hStr:$mStr';
+        }
+      }
     }
     return cleaned;
   }

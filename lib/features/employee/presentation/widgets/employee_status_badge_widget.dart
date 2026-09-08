@@ -10,14 +10,28 @@ class EmployeeStatusBadgeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (bgColor, textColor, dotColor) = switch (status) {
-      'On Time' => (
+    final (bgColor, textColor, dotColor) = switch (status.toLowerCase()) {
+      'on time' || 'attended' => (
         AppColors.softGreenBackground,
         AppColors.success,
         AppColors.success,
       ),
-      'Overdue' => (const Color(0xFFFEE2E2), AppColors.error, AppColors.error),
-      'In Progress' => (
+      'late' => (
+        AppColors.softYellowBackground,
+        AppColors.warningOrange,
+        AppColors.warningOrange,
+      ),
+      'early' || 'early leave' || 'early checkout' => (
+        AppColors.softBlueBackground,
+        AppColors.info,
+        AppColors.info,
+      ),
+      'overdue' => (
+        const Color(0xFFFEE2E2),
+        AppColors.error,
+        AppColors.error,
+      ),
+      'in progress' => (
         AppColors.softBlueBackground,
         AppColors.info,
         AppColors.info,

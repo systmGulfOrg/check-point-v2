@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_check_in_use_case.dart';
@@ -62,6 +63,10 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     }
   }
 
+  List<AdminAttendanceModel> _allHistoryRecords = [];
+  Set<String> selectedStatusFilters = {};
+  String selectedDaysFilter = 'all';
+
   Future<void> loadCustomersByType(String type) async {
     emit(const EmployeeAttendanceState.loading());
     final result = await attendanceRepo.getCustomersByType(type);
@@ -84,9 +89,95 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     );
     switch (result) {
       case Success(:final data):
-        emit(EmployeeAttendanceState.historyLoaded(data));
+        _allHistoryRecords = data;
+        _applyFilters();
       case Failure(:final failure):
         emit(EmployeeAttendanceState.error(failure.messageKey));
+    }
+  }
+
+  void toggleStatusFilter(String status) {
+    if (selectedStatusFilters.contains(status)) {
+      selectedStatusFilters.remove(status);
+    } else {
+      selectedStatusFilters.add(status);
+    }
+    _applyFilters();
+  }
+
+  void setDaysFilter(String daysFilter) {
+    selectedDaysFilter = daysFilter;
+    _applyFilters();
+  }
+
+  void resetFilters() {
+    selectedStatusFilters.clear();
+    selectedDaysFilter = 'all';
+    _applyFilters();
+  }
+
+  void _applyFilters() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    final filtered = _allHistoryRecords.where((record) {
+      // 1. Days Filter
+      final recordDate = _parseDate(record.attendanceDate);
+      if (recordDate != null) {
+        final recordDay = DateTime(
+          recordDate.year,
+          recordDate.month,
+          recordDate.day,
+        );
+        switch (selectedDaysFilter) {
+          case 'today':
+            if (!recordDay.isAtSameMomentAs(today)) return false;
+          case 'last7':
+            final start = today.subtract(const Duration(days: 7));
+            if (recordDay.isBefore(start) || recordDay.isAfter(today)) return false;
+          case 'last30':
+            final start = today.subtract(const Duration(days: 30));
+            if (recordDay.isBefore(start) || recordDay.isAfter(today)) return false;
+          case 'all':
+          default:
+            break;
+        }
+      }
+
+      // 2. Multi-Select Status Filter
+      if (selectedStatusFilters.isEmpty) return true;
+
+      final isLate = record.isLate == true;
+      final isEarly = record.isEarly == true;
+      final isAttended = !isLate && !isEarly;
+
+      bool matches = false;
+      if (selectedStatusFilters.contains('attended') && isAttended) matches = true;
+      if (selectedStatusFilters.contains('late') && isLate) matches = true;
+      if (selectedStatusFilters.contains('early') && isEarly) matches = true;
+
+      return matches;
+    }).toList();
+
+    emit(EmployeeAttendanceState.historyLoaded(filtered));
+  }
+
+  DateTime? _parseDate(String? raw) {
+    if (raw == null || raw.trim().isEmpty) return null;
+    try {
+      return DateTime.parse(raw);
+    } catch (_) {
+      try {
+        final parts = raw.split('-');
+        if (parts.length >= 3) {
+          final year = int.parse(parts[0]);
+          final month = int.parse(parts[1]);
+          final dayStr = parts[2].split('T').first.split(' ').first;
+          final day = int.parse(dayStr);
+          return DateTime(year, month, day);
+        }
+      } catch (_) {}
+      return null;
     }
   }
 

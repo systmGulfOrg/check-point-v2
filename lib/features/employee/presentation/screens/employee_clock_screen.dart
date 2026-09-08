@@ -6,6 +6,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_state.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_filter_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_record_card_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_record_data.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_clock_card_widget.dart';
@@ -107,12 +108,41 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                   hSpace(12),
                   BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
                     builder: (context, state) {
+                      final cubit = context.read<EmployeeAttendanceCubit>();
+                      return EmployeeAttendanceFilterWidget(
+                        selectedDaysFilter: cubit.selectedDaysFilter,
+                        selectedStatusFilters: cubit.selectedStatusFilters,
+                        onDaysFilterChanged: cubit.setDaysFilter,
+                        onStatusFilterToggled: cubit.toggleStatusFilter,
+                        onResetFilters: cubit.resetFilters,
+                      );
+                    },
+                  ),
+                  hSpace(12),
+                  BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
+                    builder: (context, state) {
                       final historyRecords = switch (state) {
                         EmployeeAttendanceStateHistoryLoaded(:final history) => history
                             .map((item) => EmployeeAttendanceRecordData(
-                                  date: item.attendanceDate ?? 'Today',
-                                  checkIn: 'In ${item.clockInTime ?? '--:--'} · Out ${item.clockOutTime ?? '--:--'}',
-                                  status: item.isLate == true ? 'Late' : 'On Time',
+                                  date: AppDateFormatter.formatDateString(
+                                    item.attendanceDate,
+                                  ),
+                                  checkIn: AppDateFormatter.formatTimeString(
+                                    item.clockInTime,
+                                    use12Hour: true,
+                                  ),
+                                  checkOut: AppDateFormatter.formatTimeString(
+                                    item.clockOutTime,
+                                    use12Hour: true,
+                                  ),
+                                  area: item.area,
+                                  status: item.isLate == true
+                                      ? 'Late'
+                                      : (item.isEarly == true
+                                          ? 'Early Leave'
+                                          : 'On Time'),
+                                  isLate: item.isLate == true,
+                                  isEarly: item.isEarly == true,
                                 ))
                             .toList(),
                         _ => const <EmployeeAttendanceRecordData>[],
