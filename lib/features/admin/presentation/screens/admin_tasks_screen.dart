@@ -5,13 +5,14 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
-import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_state.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_create_task_sheet_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_edit_task_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_tasks_filter_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_tasks_skeleton_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_task_card_widget.dart';
 
 class AdminTasksScreen extends StatefulWidget {
   const AdminTasksScreen({super.key});
@@ -22,56 +23,6 @@ class AdminTasksScreen extends StatefulWidget {
 
 class _AdminTasksScreenState extends State<AdminTasksScreen> {
   int selectedFilter = 0;
-
-  void _showEditTaskDialog(
-    BuildContext context,
-    int taskId,
-    String currentTitle,
-    String currentDesc,
-  ) {
-    final titleController = TextEditingController(text: currentTitle);
-    final descController = TextEditingController(text: currentDesc);
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Edit Task'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
-            ),
-            TextField(
-              controller: descController,
-              decoration: const InputDecoration(labelText: 'Description'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (titleController.text.trim().isNotEmpty) {
-                context.read<AdminTasksCubit>().editTask(
-                  taskId,
-                  AddTaskRequestBody(
-                    title: titleController.text.trim(),
-                    description: descController.text.trim(),
-                  ),
-                );
-                Navigator.pop(dialogContext);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
 
   void _showDeleteTaskDialog(BuildContext context, int taskId) {
     showDialog<void>(
@@ -210,132 +161,43 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
                               separatorBuilder: (_, _) => hSpace(10),
                               itemBuilder: (context, index) {
                                 final task = filteredTasks[index];
-                              return Container(
-                                decoration: AppDecorations.card,
-                                clipBehavior: Clip.antiAlias,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(14.r),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            task.title ?? 'Task',
-                                            style: AppTextStyles.font16Bold,
+                                return SupervisorTaskCardWidget(
+                                  task: task,
+                                  onEdit: () {
+                                    showModalBottomSheet<void>(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      backgroundColor: AppColors.cardBackground,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20),
+                                        ),
+                                      ),
+                                      builder: (_) => MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider.value(
+                                            value: context.read<AdminTasksCubit>(),
                                           ),
-                                          hSpace(4),
-                                          Text(
-                                            task.description ?? '',
-                                            style: AppTextStyles.font13Regular,
-                                          ),
-                                          hSpace(8),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Assigned: ${task.assignedEmployeeName ?? '-'}',
-                                                style:
-                                                    AppTextStyles.font12Regular,
-                                              ),
-                                              Text(
-                                                task.status ?? 'Pending',
-                                                style: AppTextStyles.font12Bold
-                                                    .copyWith(
-                                                      color: AppColors
-                                                          .brandPrimary,
-                                                    ),
-                                              ),
-                                            ],
+                                          BlocProvider<AdminEmployeesCubit>(
+                                            create: (_) =>
+                                                sl<AdminEmployeesCubit>()..loadEmployees(),
                                           ),
                                         ],
+                                        child: AdminEditTaskSheetWidget(task: task),
                                       ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: InkWell(
-                                            onTap: () {
-                                              if (task.id != null) {
-                                                _showEditTaskDialog(
-                                                  context,
-                                                  task.id!,
-                                                  task.title ?? '',
-                                                  task.description ?? '',
-                                                );
-                                              }
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 8.h,
-                                              ),
-                                              decoration: const BoxDecoration(
-                                                border: Border(
-                                                  top: BorderSide(
-                                                    color: AppColors.border,
-                                                  ),
-                                                ),
-                                              ),
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                'admin.locations.edit'.tr(
-                                                  context: context,
-                                                ),
-                                                style: AppTextStyles
-                                                    .font13SemiBold
-                                                    .copyWith(
-                                                      color: AppColors
-                                                          .textSecondary,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: InkWell(
-                                            onTap: () {
-                                              if (task.id != null) {
-                                                _showDeleteTaskDialog(
-                                                  context,
-                                                  task.id!,
-                                                );
-                                              }
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 8.h,
-                                              ),
-                                              decoration: const BoxDecoration(
-                                                border: Border(
-                                                  top: BorderSide(
-                                                    color: AppColors.border,
-                                                  ),
-                                                ),
-                                              ),
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                'admin.locations.delete'.tr(
-                                                  context: context,
-                                                ),
-                                                style: AppTextStyles
-                                                    .font13SemiBold
-                                                    .copyWith(
-                                                      color: AppColors.error,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
+                                    );
+                                  },
+                                  onDelete: () {
+                                    if (task.id != null) {
+                                      _showDeleteTaskDialog(
+                                        context,
+                                        task.id!,
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            ),
                       ],
                     );
                   },

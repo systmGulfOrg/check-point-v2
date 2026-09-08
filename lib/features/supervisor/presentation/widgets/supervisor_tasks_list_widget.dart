@@ -10,11 +10,13 @@ class SupervisorTasksListWidget extends StatelessWidget {
   const SupervisorTasksListWidget({
     required this.tasks,
     super.key,
+    this.onEdit,
     this.onStatusToggle,
     this.onDelete,
   });
 
   final List<AdminTaskModel> tasks;
+  final ValueChanged<AdminTaskModel>? onEdit;
   final ValueChanged<AdminTaskModel>? onStatusToggle;
   final ValueChanged<AdminTaskModel>? onDelete;
 
@@ -45,6 +47,7 @@ class SupervisorTasksListWidget extends StatelessWidget {
           index: index,
           child: SupervisorTaskCardWidget(
             task: task,
+            onEdit: onEdit != null ? () => onEdit!(task) : null,
             onStatusToggle: onStatusToggle != null
                 ? () => onStatusToggle!(task)
                 : null,

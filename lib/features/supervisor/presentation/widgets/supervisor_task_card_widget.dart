@@ -9,106 +9,145 @@ class SupervisorTaskCardWidget extends StatelessWidget {
   const SupervisorTaskCardWidget({
     required this.task,
     super.key,
-    this.onStatusToggle,
+    this.onEdit,
     this.onDelete,
+    this.onStatusToggle,
   });
 
   final AdminTaskModel task;
-  final VoidCallback? onStatusToggle;
+  final VoidCallback? onEdit;
   final VoidCallback? onDelete;
+  final VoidCallback? onStatusToggle;
 
   @override
   Widget build(BuildContext context) {
     final title = task.title ?? 'Task';
     final description = task.description ?? '';
-    final assignee = task.assignedEmployeeName ?? 'Unassigned';
-    final status = task.status ?? 'To Do';
+    final assignee = task.assignedEmployeeName ?? '-';
+    final status = task.status ?? 'Pending';
     final isDone =
         status.toLowerCase() == 'completed' || status.toLowerCase() == 'done';
 
     return Container(
-      padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: AppColors.border),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
+          Padding(
+            padding: EdgeInsets.all(14.r),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
                   title,
-                  style: AppTextStyles.font14SemiBold.copyWith(
+                  style: AppTextStyles.font16Bold.copyWith(
                     decoration: isDone ? TextDecoration.lineThrough : null,
                   ),
                 ),
-              ),
-              InkWell(
-                onTap: onStatusToggle,
-                borderRadius: BorderRadius.circular(12.r),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: isDone
-                        ? AppColors.softGreenBackground
-                        : AppColors.softBlueBackground,
-                    borderRadius: BorderRadius.circular(12.r),
+                if (description.isNotEmpty) ...[
+                  hSpace(4),
+                  Text(
+                    description,
+                    style: AppTextStyles.font13Regular.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 6.r,
-                        height: 6.r,
+                ],
+                hSpace(10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Assigned: $assignee',
+                      style: AppTextStyles.font12Regular.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: onStatusToggle,
+                      borderRadius: BorderRadius.circular(12.r),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.h,
+                        ),
                         decoration: BoxDecoration(
-                          color: isDone ? AppColors.success : AppColors.info,
-                          shape: BoxShape.circle,
+                          color: isDone
+                              ? AppColors.softGreenBackground
+                              : AppColors.selectedBackground,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Text(
+                          status,
+                          style: AppTextStyles.font12Bold.copyWith(
+                            color: isDone
+                                ? AppColors.success
+                                : AppColors.brandPrimary,
+                          ),
                         ),
                       ),
-                      wSpace(5),
-                      Text(
-                        status.tr(context: context),
-                        style: AppTextStyles.font12Bold.copyWith(
-                          color: isDone ? AppColors.success : AppColors.info,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ),
-              if (onDelete != null)
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  icon: Icon(
-                    Icons.delete_outline_rounded,
-                    size: 18.r,
-                    color: AppColors.error,
-                  ),
-                  onPressed: onDelete,
-                ),
-            ],
+              ],
+            ),
           ),
-          if (description.isNotEmpty) ...[
-            hSpace(6),
-            Text(
-              description,
-              style: AppTextStyles.font12Regular.copyWith(
-                color: AppColors.textSecondary,
+          Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                top: BorderSide(color: AppColors.border),
               ),
             ),
-          ],
-          hSpace(8),
-          Text(
-            'supervisor.tasks.assignedTo'.tr(
-              context: context,
-              args: [assignee],
-            ),
-            style: AppTextStyles.font11Medium.copyWith(
-              color: AppColors.placeholder,
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: onEdit,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      alignment: Alignment.center,
+                      child: Text(
+                        'admin.locations.edit'.tr(context: context),
+                        style: AppTextStyles.font13SemiBold.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 1.w,
+                  height: 24.h,
+                  color: AppColors.border,
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: onDelete,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      alignment: Alignment.center,
+                      child: Text(
+                        'admin.locations.delete'.tr(context: context),
+                        style: AppTextStyles.font13SemiBold.copyWith(
+                          color: AppColors.error,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

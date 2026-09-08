@@ -8,6 +8,9 @@ import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model
 import 'package:check_point_v2/features/supervisor/data/models/tasks/supervisor_update_task_status_request_body.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_state.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
+import 'supervisor_edit_task_sheet_widget.dart';
 import 'supervisor_tasks_list_widget.dart';
 
 class SupervisorTasksBlocBuilderWidget extends StatelessWidget {
@@ -79,6 +82,25 @@ class SupervisorTasksBlocBuilderWidget extends StatelessWidget {
                   )
                   .toList(),
               _ => tasks,
+            },
+            onEdit: (task) {
+              showModalBottomSheet<void>(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: AppColors.cardBackground,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                builder: (_) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(value: cubit),
+                    BlocProvider<SupervisorTeamCubit>(
+                      create: (_) => sl<SupervisorTeamCubit>()..loadTeam(),
+                    ),
+                  ],
+                  child: SupervisorEditTaskSheetWidget(task: task),
+                ),
+              );
             },
             onStatusToggle: (task) {
               if (task.id != null) {
