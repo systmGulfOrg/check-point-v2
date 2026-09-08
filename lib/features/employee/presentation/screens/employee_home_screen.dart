@@ -1,7 +1,15 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../cubit/employee_attendance_cubit.dart';
+import '../cubit/employee_attendance_state.dart';
+import '../cubit/employee_plans_cubit.dart';
+import '../cubit/employee_plans_state.dart';
+import '../cubit/employee_tasks_cubit.dart';
+import '../cubit/employee_tasks_state.dart';
 import '../widgets/employee_header_widget.dart';
 import '../widgets/employee_plan_data.dart';
 import '../widgets/employee_plans_section_widget.dart';
@@ -27,70 +35,25 @@ class EmployeeHomeScreen extends StatefulWidget {
 class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
   bool _isCheckedIn = false;
   bool _hasCheckedOut = true;
-  String _checkInTime = '08:02';
-  String _checkOutTime = '16:06';
-  String? _workedHours = '8.07h worked';
+  String _checkInTime = '--:--';
+  String _checkOutTime = '--:--';
+  String? _workedHours;
 
-  static const _tasks = <EmployeeTaskData>[
-    EmployeeTaskData(
-      id: '1',
-      title: 'Onboard New Contractors',
-      dueDate: 'Due 2026-08-30',
-      status: 'Overdue',
-      priority: 'Urgent',
-      description: 'Process onboarding documents for 3 new contractors.',
-      progressPercentage: 20,
-      assignees: ['JM', 'FA'],
-    ),
-    EmployeeTaskData(
-      id: '2',
-      title: 'Complete Q3 Attendance Report',
-      dueDate: 'Due 2026-09-05',
-      status: 'In Progress',
-      priority: 'High',
-      description: 'Compile attendance and performance metrics for Q3 2026.',
-      progressPercentage: 45,
-      assignees: ['JM'],
-    ),
-  ];
-
-  static const _plans = <EmployeePlanData>[
-    EmployeePlanData(
-      id: '1',
-      title: 'Emergency Response Drill',
-      dateTime: '2026-09-15 09:00',
-      planType: 'Mission',
-      description: 'Annual emergency response training exercise.',
-      status: 'planned',
-      assignees: ['JM', 'PN', 'FA'],
-    ),
-    EmployeePlanData(
-      id: '2',
-      title: 'Al Futtaim Site Inspection',
-      dateTime: '2026-09-10 10:00',
-      planType: 'Customer Visit',
-      locationName: 'Al Futtaim Group',
-      description: 'Monthly review meeting with Al Futtaim...',
-      status: 'planned',
-      assignees: ['JM', 'SJ'],
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    context.read<EmployeeAttendanceCubit>().loadAttendanceHistory();
+    context.read<EmployeeTasksCubit>().loadMyTasks();
+    context.read<EmployeePlansCubit>().loadMyPlans();
+  }
 
   void _toggleCheckInOut() {
-    setState(() {
-      if (_isCheckedIn) {
-        _isCheckedIn = false;
-        _hasCheckedOut = true;
-        _checkOutTime = '16:06';
-        _workedHours = '8.07h worked';
-      } else {
-        _isCheckedIn = true;
-        _hasCheckedOut = false;
-        _checkInTime = '08:02';
-        _checkOutTime = '—';
-        _workedHours = null;
-      }
-    });
+    final cubit = context.read<EmployeeAttendanceCubit>();
+    if (_isCheckedIn) {
+      cubit.checkOut();
+    } else {
+      cubit.checkIn(area: 'Office');
+    }
   }
 
   @override
@@ -105,36 +68,126 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
             children: [
               EmployeeHeaderWidget(
                 titleKey: 'employee.home.title',
-                userName: 'James',
+                userName: 'Employee',
                 dateText: AppDateFormatter.formatFullDate(DateTime.now()),
-                notificationCount: 1,
+                notificationCount: 0,
               ),
               hSpace(20),
-              EmployeeTodayCardWidget(
-                policyText: 'Policy B — 08:00–16:00 · 08:00 – 16:00',
-                isOnTime: true,
-                checkInTime: _checkInTime,
-                checkOutTime: _checkOutTime,
-                isCheckedIn: _isCheckedIn,
-                hasCheckedOut: _hasCheckedOut,
-                workedHours: _workedHours,
-                onToggleCheckInOut: _toggleCheckInOut,
+              BlocConsumer<EmployeeAttendanceCubit, EmployeeAttendanceState>(
+                listener: (context, state) {
+                  switch (state) {
+                    case EmployeeAttendanceStateCheckInSuccess(:final attendance):
+                      setState(() {
+                        _isCheckedIn = true;
+                        _hasCheckedOut = false;
+                        _checkInTime = attendance.clockInTime ?? DateFormat('HH:mm').format(DateTime.now());
+                        _checkOutTime = '—';
+                        _workedHours = null;
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Checked in successfully')),
+                      );
+                    case EmployeeAttendanceStateCheckOutSuccess(:final attendance):
+                      setState(() {
+                        _isCheckedIn = false;
+                        _hasCheckedOut = true;
+                        _checkOutTime = attendance.clockOutTime ?? DateFormat('HH:mm').format(DateTime.now());
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Checked out successfully')),
+                      );
+                    case EmployeeAttendanceStateError(:final messageKey):
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(messageKey)),
+                      );
+                    default:
+                      break;
+                  }
+                },
+                builder: (context, state) {
+                  return EmployeeTodayCardWidget(
+                    policyText: 'Standard Policy — 08:00–16:00',
+                    isOnTime: true,
+                    checkInTime: _checkInTime,
+                    checkOutTime: _checkOutTime,
+                    isCheckedIn: _isCheckedIn,
+                    hasCheckedOut: _hasCheckedOut,
+                    workedHours: _workedHours,
+                    onToggleCheckInOut: _toggleCheckInOut,
+                  );
+                },
               ),
               hSpace(20),
-              const EmployeeStatsRowWidget(
-                activeTasksCount: 2,
-                upcomingPlansCount: 2,
-                pendingLeavesCount: 1,
+              BlocBuilder<EmployeeTasksCubit, EmployeeTasksState>(
+                builder: (context, tasksState) {
+                  final activeCount = switch (tasksState) {
+                    EmployeeTasksStateSuccess(:final tasks) =>
+                      tasks.where((t) => t.status != 'Completed' && t.status != 'Done').length,
+                    _ => 0,
+                  };
+                  return BlocBuilder<EmployeePlansCubit, EmployeePlansState>(
+                    builder: (context, plansState) {
+                      final upcomingPlans = switch (plansState) {
+                        EmployeePlansStateSuccess(:final plans) => plans.length,
+                        _ => 0,
+                      };
+                      return EmployeeStatsRowWidget(
+                        activeTasksCount: activeCount,
+                        upcomingPlansCount: upcomingPlans,
+                        pendingLeavesCount: 0,
+                      );
+                    },
+                  );
+                },
               ),
               hSpace(20),
-              EmployeeTasksSectionWidget(
-                tasks: _tasks,
-                onViewAllTap: widget.onViewAllTasks ?? () {},
+              BlocBuilder<EmployeeTasksCubit, EmployeeTasksState>(
+                builder: (context, state) {
+                  final tasksList = switch (state) {
+                    EmployeeTasksStateSuccess(:final tasks) => tasks
+                        .take(3)
+                        .map((t) => EmployeeTaskData(
+                              id: '${t.id ?? 0}',
+                              title: t.title ?? '',
+                              dueDate: 'Task #${t.id ?? 0}',
+                              status: t.status ?? 'Pending',
+                              priority: 'Normal',
+                              description: t.description ?? '',
+                              progressPercentage: 50,
+                              assignees: const ['EM'],
+                            ))
+                        .toList(),
+                    _ => const <EmployeeTaskData>[],
+                  };
+                  return EmployeeTasksSectionWidget(
+                    tasks: tasksList,
+                    onViewAllTap: widget.onViewAllTasks ?? () {},
+                  );
+                },
               ),
               hSpace(20),
-              EmployeePlansSectionWidget(
-                plans: _plans,
-                onViewAllTap: widget.onViewAllPlans ?? () {},
+              BlocBuilder<EmployeePlansCubit, EmployeePlansState>(
+                builder: (context, state) {
+                  final plansList = switch (state) {
+                    EmployeePlansStateSuccess(:final plans) => plans
+                        .take(3)
+                        .map((p) => EmployeePlanData(
+                              id: '${p.id ?? 0}',
+                              title: p.title ?? 'Plan #${p.id ?? 0}',
+                              dateTime: p.planDate ?? DateTime.now().toString(),
+                              planType: p.planType ?? 'Mission',
+                              description: p.notes ?? '',
+                              status: p.status ?? 'planned',
+                              assignees: const ['EM'],
+                            ))
+                        .toList(),
+                    _ => const <EmployeePlanData>[],
+                  };
+                  return EmployeePlansSectionWidget(
+                    plans: plansList,
+                    onViewAllTap: widget.onViewAllPlans ?? () {},
+                  );
+                },
               ),
             ],
           ),

@@ -37,6 +37,20 @@ import '../../features/auth/data/repos/auth_repo_impl.dart';
 import '../../features/auth/presentation/cubit/auth_session_cubit.dart';
 import '../../features/auth/presentation/cubit/login_cubit.dart';
 import '../../features/auth/presentation/cubit/request_account_cubit.dart';
+import '../../features/employee/data/apis/employee_api_service.dart';
+import '../../features/employee/data/repos/employee_action_repo.dart';
+import '../../features/employee/data/repos/employee_action_repo_impl.dart';
+import '../../features/employee/data/repos/employee_attendance_repo.dart';
+import '../../features/employee/data/repos/employee_attendance_repo_impl.dart';
+import '../../features/employee/data/services/odoo_attendance_service.dart';
+import '../../features/employee/data/services/odoo_timeoff_service.dart';
+import '../../features/employee/presentation/cubit/employee_attendance_cubit.dart';
+import '../../features/employee/presentation/cubit/employee_change_password_cubit.dart';
+import '../../features/employee/presentation/cubit/employee_leave_requests_cubit.dart';
+import '../../features/employee/presentation/cubit/employee_odoo_dashboard_cubit.dart';
+import '../../features/employee/presentation/cubit/employee_plans_cubit.dart';
+import '../../features/employee/presentation/cubit/employee_tasks_cubit.dart';
+
 import '../../features/supervisor/data/apis/supervisor_api_service.dart';
 import '../../features/supervisor/data/repos/supervisor_attendance_repo.dart';
 import '../../features/supervisor/data/repos/supervisor_attendance_repo_impl.dart';
@@ -73,7 +87,7 @@ Future<void> setupServiceLocator() async {
       ..interceptors.add(
         PrettyDioLogger(
           requestHeader: false,
-          requestBody: false,
+          requestBody: true,
           responseHeader: false,
           responseBody: true,
           error: true,
@@ -98,12 +112,17 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<GooglePlacesService>(
     () => GooglePlacesService(dio: sl<Dio>()),
   );
+  sl.registerLazySingleton<OdooAttendanceService>(OdooAttendanceService.new);
+  sl.registerLazySingleton<OdooTimeOffService>(OdooTimeOffService.new);
 
   // API Services
   sl.registerLazySingleton<AuthApiService>(() => AuthApiService(sl<Dio>()));
   sl.registerLazySingleton<AdminApiService>(() => AdminApiService(sl<Dio>()));
   sl.registerLazySingleton<SupervisorApiService>(
     () => SupervisorApiService(sl<Dio>()),
+  );
+  sl.registerLazySingleton<EmployeeApiService>(
+    () => EmployeeApiService(sl<Dio>()),
   );
 
   // Repositories
@@ -163,6 +182,15 @@ Future<void> setupServiceLocator() async {
       api: sl<SupervisorApiService>(),
       sessionStorage: sl<AuthSessionStorage>(),
     ),
+  );
+  sl.registerLazySingleton<EmployeeAttendanceRepo>(
+    () => EmployeeAttendanceRepoImpl(
+      api: sl<EmployeeApiService>(),
+      odooAttendanceService: sl<OdooAttendanceService>(),
+    ),
+  );
+  sl.registerLazySingleton<EmployeeActionRepo>(
+    () => EmployeeActionRepoImpl(api: sl<EmployeeApiService>()),
   );
 
   // Cubits
@@ -238,5 +266,42 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<SupervisorTeamCubit>(
     () => SupervisorTeamCubit(teamRepo: sl<SupervisorTeamRepo>()),
+  );
+  sl.registerFactory<EmployeeAttendanceCubit>(
+    () => EmployeeAttendanceCubit(
+      attendanceRepo: sl<EmployeeAttendanceRepo>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+    ),
+  );
+  sl.registerFactory<EmployeeTasksCubit>(
+    () => EmployeeTasksCubit(
+      actionRepo: sl<EmployeeActionRepo>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+    ),
+  );
+  sl.registerFactory<EmployeePlansCubit>(
+    () => EmployeePlansCubit(
+      attendanceRepo: sl<EmployeeAttendanceRepo>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+    ),
+  );
+  sl.registerFactory<EmployeeLeaveRequestsCubit>(
+    () => EmployeeLeaveRequestsCubit(
+      actionRepo: sl<EmployeeActionRepo>(),
+      odooTimeOffService: sl<OdooTimeOffService>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+    ),
+  );
+  sl.registerFactory<EmployeeChangePasswordCubit>(
+    () => EmployeeChangePasswordCubit(
+      actionRepo: sl<EmployeeActionRepo>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+    ),
+  );
+  sl.registerFactory<EmployeeOdooDashboardCubit>(
+    () => EmployeeOdooDashboardCubit(
+      odooTimeOffService: sl<OdooTimeOffService>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+    ),
   );
 }

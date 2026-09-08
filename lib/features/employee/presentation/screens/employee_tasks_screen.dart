@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../cubit/employee_tasks_cubit.dart';
+import '../cubit/employee_tasks_state.dart';
 import '../widgets/employee_task_data.dart';
 import '../widgets/employee_task_detail_card_widget.dart';
 
@@ -17,43 +20,14 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
   int _selectedFilterIndex = 0;
   final _filters = ['Active', 'Done', 'All'];
 
-  static const _allTasks = <EmployeeTaskData>[
-    EmployeeTaskData(
-      id: '1',
-      title: 'Onboard New Contractors',
-      dueDate: 'Due 2026-08-30',
-      status: 'Overdue',
-      priority: 'Urgent',
-      description: 'Process onboarding documents for 3 new contractors.',
-      progressPercentage: 20,
-      assignees: ['JM', 'FA'],
-    ),
-    EmployeeTaskData(
-      id: '2',
-      title: 'Complete Q3 Attendance Report',
-      dueDate: 'Due 2026-09-05',
-      status: 'In Progress',
-      priority: 'High',
-      description: 'Compile attendance and performance metrics for Q3 2026.',
-      progressPercentage: 45,
-      assignees: ['JM'],
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    context.read<EmployeeTasksCubit>().loadMyTasks();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final filteredTasks = switch (_selectedFilterIndex) {
-      0 =>
-        _allTasks
-            .where((t) => t.status != 'Done' && t.status != 'Completed')
-            .toList(),
-      1 =>
-        _allTasks
-            .where((t) => t.status == 'Done' || t.status == 'Completed')
-            .toList(),
-      _ => _allTasks,
-    };
-
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -114,24 +88,86 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                 ),
               ),
               hSpace(14),
-              Text(
-                '${filteredTasks.length} tasks',
-                style: AppTextStyles.font13Regular.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              hSpace(12),
-              Expanded(
-                child: ListView.separated(
-                  itemCount: filteredTasks.length,
-                  separatorBuilder: (_, _) => hSpace(12),
-                  itemBuilder: (context, index) => AnimatedListItemWidget(
-                    index: index,
-                    child: EmployeeTaskDetailCardWidget(
-                      task: filteredTasks[index],
+              BlocConsumer<EmployeeTasksCubit, EmployeeTasksState>(
+                listener: (context, state) {
+                  switch (state) {
+                    case EmployeeTasksStateActionSuccess(:final message):
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(message)),
+                      );
+                    case EmployeeTasksStateError(:final messageKey):
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(messageKey)),
+                      );
+                    default:
+                      break;
+                  }
+                },
+                builder: (context, state) {
+                  final allTasks = switch (state) {
+                    EmployeeTasksStateSuccess(:final tasks) => tasks
+                        .map((t) => EmployeeTaskData(
+                              id: '${t.id ?? 0}',
+                              title: t.title ?? '',
+                              dueDate: 'Task #${t.id ?? 0}',
+                              status: t.status ?? 'Active',
+                              priority: 'Normal',
+                              description: t.description ?? '',
+                              progressPercentage: 50,
+                              assignees: const ['EM'],
+                            ))
+                        .toList(),
+                    _ => const <EmployeeTaskData>[],
+                  };
+
+                  final filteredTasks = switch (_selectedFilterIndex) {
+                    0 => allTasks
+                        .where(
+                            (t) => t.status != 'Done' && t.status != 'Completed')
+                        .toList(),
+                    1 => allTasks
+                        .where(
+                            (t) => t.status == 'Done' || t.status == 'Completed')
+                        .toList(),
+                    _ => allTasks,
+                  };
+
+                  if (state is EmployeeTasksStateLoading) {
+                    return const Expanded(
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  return Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${filteredTasks.length} tasks',
+                          style: AppTextStyles.font13Regular.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                        hSpace(12),
+                        Expanded(
+                          child: filteredTasks.isEmpty
+                              ? const Center(child: Text('No tasks available'))
+                              : ListView.separated(
+                                  itemCount: filteredTasks.length,
+                                  separatorBuilder: (_, _) => hSpace(12),
+                                  itemBuilder: (context, index) =>
+                                      AnimatedListItemWidget(
+                                    index: index,
+                                    child: EmployeeTaskDetailCardWidget(
+                                      task: filteredTasks[index],
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ],
           ),

@@ -1,35 +1,27 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/core.dart';
+import '../cubit/employee_plans_cubit.dart';
+import '../cubit/employee_plans_state.dart';
 import '../widgets/employee_plan_data.dart';
 import '../widgets/employee_plan_detail_card_widget.dart';
 
-class EmployeePlansScreen extends StatelessWidget {
+class EmployeePlansScreen extends StatefulWidget {
   const EmployeePlansScreen({super.key});
 
-  static const _plans = <EmployeePlanData>[
-    EmployeePlanData(
-      id: '1',
-      title: 'Emergency Response Drill',
-      dateTime: '2026-09-15 09:00',
-      planType: 'Mission',
-      description: 'Annual emergency response training exercise.',
-      status: 'planned',
-      assignees: ['JM', 'PN', 'FA'],
-    ),
-    EmployeePlanData(
-      id: '2',
-      title: 'Al Futtaim Site Inspection',
-      dateTime: '2026-09-10 10:00',
-      planType: 'Customer Visit',
-      locationName: 'Al Futtaim Group',
-      description: 'Monthly review meeting with Al Futtaim...',
-      status: 'planned',
-      assignees: ['JM', 'SJ'],
-    ),
-  ];
+  @override
+  State<EmployeePlansScreen> createState() => _EmployeePlansScreenState();
+}
+
+class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<EmployeePlansCubit>().loadMyPlans();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,21 +38,71 @@ class EmployeePlansScreen extends StatelessWidget {
                 style: AppTextStyles.font24Bold,
               ),
               hSpace(14),
-              Text(
-                '${_plans.length} plans',
-                style: AppTextStyles.font13Regular.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              hSpace(12),
-              Expanded(
-                child: ListView.separated(
-                  itemCount: _plans.length,
-                  separatorBuilder: (_, _) => hSpace(12),
-                  itemBuilder: (context, index) {
-                    return EmployeePlanDetailCardWidget(plan: _plans[index]);
-                  },
-                ),
+              BlocConsumer<EmployeePlansCubit, EmployeePlansState>(
+                listener: (context, state) {
+                  switch (state) {
+                    case EmployeePlansStateActionSuccess(:final message):
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(message)),
+                      );
+                    case EmployeePlansStateError(:final messageKey):
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(messageKey)),
+                      );
+                    default:
+                      break;
+                  }
+                },
+                builder: (context, state) {
+                  final plans = switch (state) {
+                    EmployeePlansStateSuccess(:final plans) => plans
+                        .map((p) => EmployeePlanData(
+                              id: '${p.id ?? 0}',
+                              title: p.title ?? 'Plan #${p.id ?? 0}',
+                              dateTime: p.planDate ?? DateTime.now().toString(),
+                              planType: p.planType ?? 'Mission',
+                              description: p.notes ?? '',
+                              status: p.status ?? 'planned',
+                              assignees: const ['EM'],
+                            ))
+                        .toList(),
+                    _ => const <EmployeePlanData>[],
+                  };
+
+                  if (state is EmployeePlansStateLoading) {
+                    return const Expanded(
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  return Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${plans.length} plans',
+                          style: AppTextStyles.font13Regular.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                        hSpace(12),
+                        Expanded(
+                          child: plans.isEmpty
+                              ? const Center(child: Text('No plans available'))
+                              : ListView.separated(
+                                  itemCount: plans.length,
+                                  separatorBuilder: (_, _) => hSpace(12),
+                                  itemBuilder: (context, index) {
+                                    return EmployeePlanDetailCardWidget(
+                                      plan: plans[index],
+                                    );
+                                  },
+                                ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
           ),

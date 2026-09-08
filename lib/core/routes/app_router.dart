@@ -30,8 +30,15 @@ import '../../features/auth/presentation/cubit/login_cubit.dart';
 import '../../features/auth/presentation/cubit/request_account_cubit.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/request_access_screen.dart';
+import '../../features/employee/presentation/cubit/employee_attendance_cubit.dart';
+import '../../features/employee/presentation/cubit/employee_change_password_cubit.dart';
+import '../../features/employee/presentation/cubit/employee_leave_requests_cubit.dart';
+import '../../features/employee/presentation/cubit/employee_odoo_dashboard_cubit.dart';
+import '../../features/employee/presentation/cubit/employee_plans_cubit.dart';
+import '../../features/employee/presentation/cubit/employee_tasks_cubit.dart';
 import '../../features/employee/presentation/screens/employee_main_screen.dart';
 import '../../features/employee/presentation/screens/employee_settings_screen.dart';
+
 import '../../features/supervisor/presentation/cubit/supervisor_attendance_cubit.dart';
 import '../../features/supervisor/presentation/cubit/supervisor_leave_requests_cubit.dart';
 import '../../features/supervisor/presentation/cubit/supervisor_plans_cubit.dart';
@@ -359,11 +366,34 @@ class AppRouter {
       case AppRoutes.employee:
         return _fadeRoute(
           settings: const RouteSettings(name: AppRoutes.employee),
-          child: BlocProvider<AuthSessionCubit>(
-            create: (_) => sl<AuthSessionCubit>(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AuthSessionCubit>(
+                create: (_) => sl<AuthSessionCubit>(),
+              ),
+              BlocProvider<EmployeeAttendanceCubit>(
+                create: (_) => sl<EmployeeAttendanceCubit>()..loadAttendanceHistory(),
+              ),
+              BlocProvider<EmployeeTasksCubit>(
+                create: (_) => sl<EmployeeTasksCubit>()..loadMyTasks(),
+              ),
+              BlocProvider<EmployeePlansCubit>(
+                create: (_) => sl<EmployeePlansCubit>()..loadMyPlans(),
+              ),
+              BlocProvider<EmployeeLeaveRequestsCubit>(
+                create: (_) => sl<EmployeeLeaveRequestsCubit>()..loadLeaveRequests(),
+              ),
+              BlocProvider<EmployeeChangePasswordCubit>(
+                create: (_) => sl<EmployeeChangePasswordCubit>(),
+              ),
+              BlocProvider<EmployeeOdooDashboardCubit>(
+                create: (_) => sl<EmployeeOdooDashboardCubit>()..fetchDashboardData(),
+              ),
+            ],
             child: const EmployeeMainScreen(),
           ),
         );
+
 
       case AppRoutes.employeeSettings:
         return _slideRoute(

@@ -1,0 +1,24 @@
+import '../../../../core/network/api_result.dart';
+import '../../../admin/data/models/admin_leave_request_model.dart';
+import '../../../admin/data/models/admin_task_model.dart';
+import '../models/employee_change_password_request_body.dart';
+import '../models/employee_leave_request_body.dart';
+import '../models/employee_remove_task_request_body.dart';
+
+abstract class EmployeeActionRepo {
+  Future<ApiResult<void>> createLeaveRequest(EmployeeLeaveRequestBody body);
+  Future<ApiResult<List<AdminLeaveRequestModel>>> getAllLeaveRequests(
+    String employeeId,
+  );
+  Future<ApiResult<List<AdminLeaveRequestModel>>> getLeaveRequestsByType(
+    String employeeId,
+    String type,
+  );
+  Future<ApiResult<void>> deleteLeaveRequest(int id);
+  Future<ApiResult<List<AdminTaskModel>>> getEmployeeTasks(String employeeId);
+  Future<ApiResult<void>> updateTaskStatus(int taskId, String status);
+  Future<ApiResult<void>> removeTask(EmployeeRemoveTaskRequestBody body);
+  Future<ApiResult<void>> changePassword(
+    EmployeeChangePasswordRequestBody body,
+  );
+}
