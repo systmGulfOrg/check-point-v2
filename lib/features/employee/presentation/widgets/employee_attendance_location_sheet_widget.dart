@@ -162,6 +162,31 @@ class _EmployeeAttendanceLocationSheetWidgetState
             final points = targetPoints;
             final mapCenter =
                 targetCenter ?? userLocation ?? const LatLng(30.0444, 31.2357);
+            final isLoadingTargets = state is EmployeeAttendanceStateLoading;
+            if (points.isEmpty) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.isCheckOut
+                        ? 'employee.home.checkOutAction'.tr()
+                        : 'employee.home.checkInAction'.tr(),
+                    style: AppTextStyles.font20Bold,
+                  ),
+                  hSpace(20),
+                  Center(
+                    child: isLoadingTargets
+                        ? const CircularProgressIndicator()
+                        : Text(
+                            'attendance.noLocationData'.tr(),
+                            style: AppTextStyles.font14SemiBold,
+                            textAlign: TextAlign.center,
+                          ),
+                  ),
+                ],
+              );
+            }
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

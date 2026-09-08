@@ -698,4 +698,5 @@
   ,"attendance.branch": "Branch"
   ,"attendance.customer": "Customer"
   ,"attendance.site": "Site"
+  ,"attendance.noLocationData": "No attendance location data found."
 }
