@@ -50,6 +50,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
   @override
   void dispose() {
     timer?.cancel();
+    mapController = null;
     super.dispose();
   }
 
@@ -59,8 +60,15 @@ class _EmployeeAttendanceLocationSheetWidgetState
         .refreshCurrentLocation();
     if (mounted) {
       setState(() => userLocation = location);
-      if (location != null) {
-        await mapController?.animateCamera(CameraUpdate.newLatLng(location));
+      if (location != null && mounted) {
+        final controller = mapController;
+        if (controller != null) {
+          try {
+            await controller.animateCamera(CameraUpdate.newLatLng(location));
+          } catch (_) {
+            // The map can be disposed while a location request is in flight.
+          }
+        }
       }
     }
   }
@@ -91,8 +99,15 @@ class _EmployeeAttendanceLocationSheetWidgetState
   void _focusTarget() {
     final target =
         targetCenter ?? (targetPoints.isEmpty ? null : targetPoints.first);
-    if (target != null) {
-      mapController?.animateCamera(CameraUpdate.newLatLngZoom(target, 16));
+    if (target != null && mounted) {
+      final controller = mapController;
+      if (controller != null) {
+        try {
+          controller.animateCamera(CameraUpdate.newLatLngZoom(target, 16));
+        } catch (_) {
+          // The map controller is no longer valid after sheet disposal.
+        }
+      }
     }
   }
 
@@ -168,31 +183,6 @@ class _EmployeeAttendanceLocationSheetWidgetState
                   targetCenter ??
                   userLocation ??
                   const LatLng(30.0444, 31.2357);
-              final isLoadingTargets = state is EmployeeAttendanceStateLoading;
-              if (points.isEmpty) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.isCheckOut
-                          ? 'employee.home.checkOutAction'.tr()
-                          : 'employee.home.checkInAction'.tr(),
-                      style: AppTextStyles.font20Bold,
-                    ),
-                    hSpace(20),
-                    Center(
-                      child: isLoadingTargets
-                          ? const CircularProgressIndicator()
-                          : Text(
-                              'attendance.noLocationData'.tr(),
-                              style: AppTextStyles.font14SemiBold,
-                              textAlign: TextAlign.center,
-                            ),
-                    ),
-                  ],
-                );
-              }
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,130 +259,144 @@ class _EmployeeAttendanceLocationSheetWidgetState
                       );
                     }),
                   ),
-                  hSpace(12),
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 220),
-                    height: isMapExpanded ? 500.h : 260.h,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16.r),
-                      child: Stack(
-                        children: [
-                          GoogleMap(
-                            initialCameraPosition: CameraPosition(
-                              target: mapCenter,
-                              zoom: 15,
+                  if (points.isEmpty) ...[
+                    hSpace(20),
+                    Center(
+                      child: state is EmployeeAttendanceStateLoading
+                          ? const CircularProgressIndicator()
+                          : Text(
+                              'attendance.noLocationData'.tr(),
+                              style: AppTextStyles.font14SemiBold,
+                              textAlign: TextAlign.center,
                             ),
-                            onMapCreated: (controller) =>
-                                mapController = controller,
-                            myLocationEnabled: true,
-                            myLocationButtonEnabled: true,
-                            markers: {
-                              if (userLocation != null)
-                                Marker(
-                                  markerId: const MarkerId('user'),
-                                  position: userLocation!,
-                                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                                    BitmapDescriptor.hueAzure,
+                    ),
+                  ] else ...[
+                    hSpace(12),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 220),
+                      height: isMapExpanded ? 500.h : 260.h,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16.r),
+                        child: Stack(
+                          children: [
+                            GoogleMap(
+                              initialCameraPosition: CameraPosition(
+                                target: mapCenter,
+                                zoom: 15,
+                              ),
+                              onMapCreated: (controller) =>
+                                  mapController = controller,
+                              myLocationEnabled: true,
+                              myLocationButtonEnabled: true,
+                              markers: {
+                                if (userLocation != null)
+                                  Marker(
+                                    markerId: const MarkerId('user'),
+                                    position: userLocation!,
+                                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                                      BitmapDescriptor.hueAzure,
+                                    ),
+                                    infoWindow: InfoWindow(
+                                      title: 'attendance.myLocation'.tr(),
+                                    ),
                                   ),
-                                  infoWindow: InfoWindow(
-                                    title: 'attendance.myLocation'.tr(),
+                                if (points.isNotEmpty)
+                                  Marker(
+                                    markerId: const MarkerId('target'),
+                                    position: points.first,
+                                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                                      BitmapDescriptor.hueOrange,
+                                    ),
+                                    infoWindow: InfoWindow(
+                                      title: type,
+                                      snippet: branch?.name ?? customer?.name,
+                                    ),
                                   ),
-                                ),
-                              if (points.isNotEmpty)
-                                Marker(
-                                  markerId: const MarkerId('target'),
-                                  position: points.first,
-                                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                                    BitmapDescriptor.hueOrange,
-                                  ),
-                                  infoWindow: InfoWindow(
-                                    title: type,
-                                    snippet: branch?.name ?? customer?.name,
-                                  ),
-                                ),
-                            },
-                            polylines: userLocation != null && points.isNotEmpty
-                                ? {
-                                    Polyline(
-                                      polylineId: const PolylineId(
-                                        'user-to-target',
+                              },
+                              polylines:
+                                  userLocation != null && points.isNotEmpty
+                                  ? {
+                                      Polyline(
+                                        polylineId: const PolylineId(
+                                          'user-to-target',
+                                        ),
+                                        points: [userLocation!, points.first],
+                                        color: AppColors.info,
+                                        width: 4,
                                       ),
-                                      points: [userLocation!, points.first],
-                                      color: AppColors.info,
-                                      width: 4,
-                                    ),
-                                  }
-                                : const {},
-                            polygons: points.length > 2
-                                ? {
-                                    Polygon(
-                                      polygonId: const PolygonId('target'),
-                                      points: points,
-                                      fillColor: AppColors.brandPrimary
-                                          .withValues(alpha: .18),
-                                      strokeColor: AppColors.brandPrimary,
-                                      strokeWidth: 3,
-                                    ),
-                                  }
-                                : const {},
-                            circles: targetCenter == null
-                                ? const {}
-                                : {
-                                    Circle(
-                                      circleId: const CircleId('target'),
-                                      center: targetCenter!,
-                                      radius: 150,
-                                      fillColor: AppColors.brandPrimary
-                                          .withValues(alpha: .18),
-                                      strokeColor: AppColors.brandPrimary,
-                                      strokeWidth: 3,
-                                    ),
-                                  },
-                          ),
-                          PositionedDirectional(
-                            top: 10.h,
-                            end: 10.w,
-                            child: Material(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(10.r),
-                              child: IconButton(
-                                tooltip: isMapExpanded
-                                    ? 'attendance.collapseMap'.tr()
-                                    : 'attendance.expandMap'.tr(),
-                                icon: Icon(
-                                  isMapExpanded
-                                      ? Icons.fullscreen_exit
-                                      : Icons.fullscreen,
-                                  color: AppColors.textPrimary,
-                                ),
-                                onPressed: () => setState(
-                                  () => isMapExpanded = !isMapExpanded,
+                                    }
+                                  : const {},
+                              polygons: points.length > 2
+                                  ? {
+                                      Polygon(
+                                        polygonId: const PolygonId('target'),
+                                        points: points,
+                                        fillColor: AppColors.brandPrimary
+                                            .withValues(alpha: .18),
+                                        strokeColor: AppColors.brandPrimary,
+                                        strokeWidth: 3,
+                                      ),
+                                    }
+                                  : const {},
+                              circles: targetCenter == null
+                                  ? const {}
+                                  : {
+                                      Circle(
+                                        circleId: const CircleId('target'),
+                                        center: targetCenter!,
+                                        radius: 150,
+                                        fillColor: AppColors.brandPrimary
+                                            .withValues(alpha: .18),
+                                        strokeColor: AppColors.brandPrimary,
+                                        strokeWidth: 3,
+                                      ),
+                                    },
+                            ),
+                            PositionedDirectional(
+                              top: 10.h,
+                              end: 10.w,
+                              child: Material(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(10.r),
+                                child: IconButton(
+                                  tooltip: isMapExpanded
+                                      ? 'attendance.collapseMap'.tr()
+                                      : 'attendance.expandMap'.tr(),
+                                  icon: Icon(
+                                    isMapExpanded
+                                        ? Icons.fullscreen_exit
+                                        : Icons.fullscreen,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                  onPressed: () => setState(
+                                    () => isMapExpanded = !isMapExpanded,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  hSpace(10),
-                  Text(
-                    isInside
-                        ? 'attendance.insideArea'.tr()
-                        : 'attendance.outsideArea'.tr(),
-                    style: AppTextStyles.font14SemiBold.copyWith(
-                      color: isInside ? AppColors.success : AppColors.error,
+                    hSpace(10),
+                    Text(
+                      isInside
+                          ? 'attendance.insideArea'.tr()
+                          : 'attendance.outsideArea'.tr(),
+                      style: AppTextStyles.font14SemiBold.copyWith(
+                        color: isInside ? AppColors.success : AppColors.error,
+                      ),
                     ),
-                  ),
-                  hSpace(10),
-                  CustomButton(
-                    text: widget.isCheckOut
-                        ? 'employee.home.checkOutAction'.tr()
-                        : 'employee.home.checkInAction'.tr(),
-                    isLoading: state is EmployeeAttendanceStateLoading,
-                    enabled: isInside,
-                    onTap: isInside ? _submit : () {},
-                  ),
+                    hSpace(10),
+                    CustomButton(
+                      text: widget.isCheckOut
+                          ? 'employee.home.checkOutAction'.tr()
+                          : 'employee.home.checkInAction'.tr(),
+                      isLoading: state is EmployeeAttendanceStateLoading,
+                      enabled: isInside,
+                      onTap: isInside ? _submit : () {},
+                    ),
+                  ],
                 ],
               );
             },
