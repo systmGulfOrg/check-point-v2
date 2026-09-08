@@ -36,6 +36,10 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
+      constraints: BoxConstraints.tightFor(
+        height: MediaQuery.sizeOf(context).height,
+      ),
       backgroundColor: AppColors.cardBackground,
       builder: (_) => BlocProvider.value(
         value: context.read<EmployeeAttendanceCubit>(),

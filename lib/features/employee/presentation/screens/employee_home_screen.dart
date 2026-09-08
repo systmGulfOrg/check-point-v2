@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
@@ -52,6 +53,10 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
+      constraints: BoxConstraints.tightFor(
+        height: MediaQuery.sizeOf(context).height,
+      ),
       backgroundColor: AppColors.cardBackground,
       builder: (_) => BlocProvider.value(
         value: context.read<EmployeeAttendanceCubit>(),
@@ -121,15 +126,18 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                   }
                 },
                 builder: (context, state) {
-                  return EmployeeTodayCardWidget(
-                    policyText: 'Standard Policy — 08:00–16:00',
-                    isOnTime: true,
-                    checkInTime: _checkInTime,
-                    checkOutTime: _checkOutTime,
-                    isCheckedIn: _isCheckedIn,
-                    hasCheckedOut: _hasCheckedOut,
-                    workedHours: _workedHours,
-                    onToggleCheckInOut: _toggleCheckInOut,
+                  return Skeletonizer(
+                    enabled: state is EmployeeAttendanceStateLoading,
+                    child: EmployeeTodayCardWidget(
+                      policyText: 'Standard Policy — 08:00–16:00',
+                      isOnTime: true,
+                      checkInTime: _checkInTime,
+                      checkOutTime: _checkOutTime,
+                      isCheckedIn: _isCheckedIn,
+                      hasCheckedOut: _hasCheckedOut,
+                      workedHours: _workedHours,
+                      onToggleCheckInOut: _toggleCheckInOut,
+                    ),
                   );
                 },
               ),
@@ -152,10 +160,15 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                         EmployeePlansStateSuccess(:final plans) => plans.length,
                         _ => 0,
                       };
-                      return EmployeeStatsRowWidget(
-                        activeTasksCount: activeCount,
-                        upcomingPlansCount: upcomingPlans,
-                        pendingLeavesCount: 0,
+                      return Skeletonizer(
+                        enabled:
+                            tasksState is EmployeeTasksStateLoading ||
+                            plansState is EmployeePlansStateLoading,
+                        child: EmployeeStatsRowWidget(
+                          activeTasksCount: activeCount,
+                          upcomingPlansCount: upcomingPlans,
+                          pendingLeavesCount: 0,
+                        ),
                       );
                     },
                   );
@@ -183,9 +196,12 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                           .toList(),
                     _ => const <EmployeeTaskData>[],
                   };
-                  return EmployeeTasksSectionWidget(
-                    tasks: tasksList,
-                    onViewAllTap: widget.onViewAllTasks ?? () {},
+                  return Skeletonizer(
+                    enabled: state is EmployeeTasksStateLoading,
+                    child: EmployeeTasksSectionWidget(
+                      tasks: tasksList,
+                      onViewAllTap: widget.onViewAllTasks ?? () {},
+                    ),
                   );
                 },
               ),
@@ -210,9 +226,12 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                           .toList(),
                     _ => const <EmployeePlanData>[],
                   };
-                  return EmployeePlansSectionWidget(
-                    plans: plansList,
-                    onViewAllTap: widget.onViewAllPlans ?? () {},
+                  return Skeletonizer(
+                    enabled: state is EmployeePlansStateLoading,
+                    child: EmployeePlansSectionWidget(
+                      plans: plansList,
+                      onViewAllTap: widget.onViewAllPlans ?? () {},
+                    ),
                   );
                 },
               ),
