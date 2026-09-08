@@ -1,9 +1,11 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'package:check_point_v2/core/app/app_config.dart';
+
 class AuthSessionStorage {
   AuthSessionStorage({required this.secureStorage});
 
-  static const tokenKey = 'auth_token';
+  static String get tokenKey => AppConfig.authTokenKey;
   static const userIdKey = 'user_id';
   static const departmentIdKey = 'department_id';
   static const userNameKey = 'user_name';

@@ -1,13 +1,14 @@
+import 'package:check_point_v2/core/env/env.dart';
+
 class AppConfig {
   const AppConfig._();
 
-  static const String baseUrl = String.fromEnvironment(
-    'BASE_URL',
-    defaultValue: 'http://emsdemo.runasp.net',
-  );
-  static const String env = String.fromEnvironment('ENV', defaultValue: 'dev');
-  static const String deviceToken = String.fromEnvironment(
-    'DEVICE_TOKEN',
-    defaultValue: 'desktop-device-token',
-  );
+  static String get baseUrl => Env.baseUrl;
+  static String get odooBaseUrl =>
+      Env.odooBaseUrl.isNotEmpty ? Env.odooBaseUrl : Env.baseUrl;
+  static String get odooApiKey => Env.odooApiKey;
+  static String get googlePlacesApiKey => Env.googlePlacesApiKey;
+  static String get authTokenKey => Env.authTokenKey;
+  static String get deviceTokenKey => Env.deviceTokenKey;
+  static String get deviceToken => Env.deviceTokenKey;
 }
