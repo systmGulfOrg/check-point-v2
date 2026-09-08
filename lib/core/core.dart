@@ -13,6 +13,8 @@ export 'network/api_constants.dart';
 export 'network/api_failure_mapper.dart';
 export 'network/api_result.dart';
 export 'network/device_identity_provider.dart';
+export 'network/safe_network_log_interceptor.dart';
+export 'utils/app_logger.dart';
 export 'auth/auth_session_storage.dart';
 export 'auth/biometric_auth_service.dart';
 export 'services/attendance_verification_service.dart';
