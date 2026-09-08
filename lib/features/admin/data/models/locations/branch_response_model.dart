@@ -26,8 +26,15 @@ class BranchPageModel {
 
   List<BranchModel> get list => items ?? data ?? const [];
 
-  factory BranchPageModel.fromJson(Map<String, dynamic> json) =>
-      _$BranchPageModelFromJson(json);
+  factory BranchPageModel.fromJson(Map<String, dynamic> json) {
+    if (json['id'] != null) {
+      return BranchPageModel(
+        items: [BranchModel.fromJson(json)],
+        totalCount: 1,
+      );
+    }
+    return _$BranchPageModelFromJson(json);
+  }
 }
 
 @JsonSerializable(createToJson: false)
