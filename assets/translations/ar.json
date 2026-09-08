@@ -688,5 +688,9 @@
   "employee.settings.footer": "CHECK-POINT v1.0.0 — الموظف",
   "errors.locationUnavailable": "الموقع غير متاح. فعّل نظام تحديد الموقع وحاول مرة أخرى.",
   "errors.outsideAttendanceArea": "أنت خارج منطقة الحضور المسموح بها.",
-  "errors.biometricRequired": "يلزم التحقق البيومتري للمتابعة."
+  "errors.biometricRequired": "يلزم التحقق البيومتري للمتابعة.",
+  "attendance.locationType": "نوع موقع الحضور",
+  "attendance.location": "اختر الموقع",
+  "attendance.insideArea": "أنت داخل منطقة الحضور المسموح بها",
+  "attendance.outsideArea": "انتقل إلى داخل المنطقة المسموح بها للمتابعة"
 }

@@ -688,5 +688,9 @@
   "employee.settings.footer": "CHECK-POINT v1.0.0 — Employee",
   "errors.locationUnavailable": "Location is unavailable. Enable GPS and try again.",
   "errors.outsideAttendanceArea": "You are outside the permitted attendance area.",
-  "errors.biometricRequired": "Biometric verification was required to continue."
+  "errors.biometricRequired": "Biometric verification was required to continue.",
+  "attendance.locationType": "Attendance location type",
+  "attendance.location": "Choose location",
+  "attendance.insideArea": "You are inside the permitted area",
+  "attendance.outsideArea": "Move inside the permitted area to continue"
 }

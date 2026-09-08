@@ -40,11 +40,12 @@ class AttendanceVerificationService {
       );
     }
 
-    final insideCircle =
-        center == null || _distanceMeters(center, location) <= radiusMeters;
-    final insidePolygon =
-        polygon.isEmpty || _isInsidePolygon(location, polygon);
-    if (!insideCircle || !insidePolygon) {
+    if (!isWithinArea(
+      point: location,
+      center: center,
+      radiusMeters: radiusMeters,
+      polygon: polygon,
+    )) {
       return const AttendanceVerificationResult(
         isAllowed: false,
         location: null,
@@ -63,6 +64,18 @@ class AttendanceVerificationService {
     }
 
     return AttendanceVerificationResult(isAllowed: true, location: location);
+  }
+
+  bool isWithinArea({
+    required LatLng point,
+    LatLng? center,
+    double radiusMeters = 150,
+    List<LatLng> polygon = const [],
+  }) {
+    final insideCircle = center == null ||
+        _distanceMeters(center, point) <= radiusMeters;
+    final insidePolygon = polygon.isEmpty || _isInsidePolygon(point, polygon);
+    return insideCircle && insidePolygon;
   }
 
   double _distanceMeters(LatLng first, LatLng second) {
