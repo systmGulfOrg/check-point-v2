@@ -143,6 +143,7 @@ class _EmployeeApiService implements EmployeeApiService {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
+      r'employeeId': employeeId,
       r'itemCount': itemCount,
       r'index': index,
     };
@@ -152,7 +153,7 @@ class _EmployeeApiService implements EmployeeApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/Attendance/getEmployeeAttendanceHistory/${employeeId}',
+            '/api/Attendance/getEmployeeAttendanceHistory',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -539,14 +540,14 @@ class _EmployeeApiService implements EmployeeApiService {
     String employeeId,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'employeeId': employeeId};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<LeaveRequestsResponseModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/LeaveRequest/getAllLeaveRequestsForEmployee/${employeeId}',
+            '/api/LeaveRequest/getAllLeaveRequestsForEmployee',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -569,14 +570,17 @@ class _EmployeeApiService implements EmployeeApiService {
     String type,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'employeeId': employeeId,
+      r'leaveType': type,
+    };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<LeaveRequestsResponseModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/LeaveRequest/getAllLeaveRequestsForEmployee/${employeeId}/leaveType/${type}',
+            '/api/LeaveRequest/getAllLeaveRequestsForEmployee',
             queryParameters: queryParameters,
             data: _data,
           )

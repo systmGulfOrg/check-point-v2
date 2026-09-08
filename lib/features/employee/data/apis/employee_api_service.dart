@@ -43,9 +43,9 @@ abstract class EmployeeApiService {
     @Body() EmployeeCheckOutRequestBody body,
   );
 
-  @GET('${ApiConstants.getEmployeeAttendanceHistory}/{employeeId}')
+  @GET(ApiConstants.getEmployeeAttendanceHistory)
   Future<AttendanceResponseModel> getAttendanceHistory(
-    @Path('employeeId') String employeeId, {
+    @Query('employeeId') String employeeId, {
     @Query('itemCount') int itemCount = 10,
     @Query('index') int index = 0,
   });
@@ -106,17 +106,15 @@ abstract class EmployeeApiService {
   @DELETE('${ApiConstants.leaveRequests}/{id}')
   Future<ResultModel> deleteLeaveRequest(@Path('id') int id);
 
-  @GET('${ApiConstants.leaveRequests}/getAllLeaveRequestsForEmployee/{employeeId}')
+  @GET('${ApiConstants.leaveRequests}/getAllLeaveRequestsForEmployee')
   Future<LeaveRequestsResponseModel> getLeaveRequestsForEmployee(
-    @Path('employeeId') String employeeId,
+    @Query('employeeId') String employeeId,
   );
 
-  @GET(
-    '${ApiConstants.leaveRequests}/getAllLeaveRequestsForEmployee/{employeeId}/leaveType/{type}',
-  )
+  @GET('${ApiConstants.leaveRequests}/getAllLeaveRequestsForEmployee')
   Future<LeaveRequestsResponseModel> getLeaveRequestsByType(
-    @Path('employeeId') String employeeId,
-    @Path('type') String type,
+    @Query('employeeId') String employeeId,
+    @Query('leaveType') String type,
   );
 
   // Auth / Password
