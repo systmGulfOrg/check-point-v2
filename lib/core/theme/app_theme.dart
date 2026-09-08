@@ -20,6 +20,20 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.white,
       canvasColor: AppColors.white,
       cardColor: AppColors.cardBackground,
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: AppColors.textPrimary,
+        contentTextStyle: AppTextStyles.font14Medium.copyWith(
+          color: AppColors.white,
+        ),
+        elevation: 8,
+        insetPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14.r),
+        ),
+        closeIconColor: AppColors.white,
+        showCloseIcon: true,
+      ),
       popupMenuTheme: PopupMenuThemeData(
         color: AppColors.white,
         surfaceTintColor: AppColors.white,
