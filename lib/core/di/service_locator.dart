@@ -87,7 +87,7 @@ Future<void> setupServiceLocator() async {
       ..interceptors.add(
         PrettyDioLogger(
           requestHeader: false,
-          requestBody: true,
+          requestBody: false,
           responseHeader: false,
           responseBody: true,
           error: true,
