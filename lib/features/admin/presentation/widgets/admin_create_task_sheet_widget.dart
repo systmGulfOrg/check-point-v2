@@ -1,9 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_assignee_option_widget.dart';
+import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_create_task_field_widget.dart';
 
 class AdminCreateTaskSheetWidget extends StatefulWidget {
@@ -16,11 +20,20 @@ class AdminCreateTaskSheetWidget extends StatefulWidget {
 
 class _AdminCreateTaskSheetWidgetState
     extends State<AdminCreateTaskSheetWidget> {
-  final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final dueDateController = TextEditingController();
+  late final TextEditingController titleController;
+  late final TextEditingController descriptionController;
+  late final TextEditingController dueDateController;
   String selectedPriority = 'medium';
-  final selectedAssignees = <String>{};
+  String? selectedEmployeeId;
+  bool isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController();
+    descriptionController = TextEditingController();
+    dueDateController = TextEditingController();
+  }
 
   @override
   void dispose() {
@@ -28,6 +41,47 @@ class _AdminCreateTaskSheetWidgetState
     descriptionController.dispose();
     dueDateController.dispose();
     super.dispose();
+  }
+
+  Future<void> _submit() async {
+    final title = titleController.text.trim();
+    if (title.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('supervisor.tasks.create.titleRequired'.tr()),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
+
+    setState(() => isSubmitting = true);
+    final tasksCubit = context.read<AdminTasksCubit>();
+
+    final success = await tasksCubit.addTask(
+      AddTaskRequestBody(
+        title: title,
+        description: descriptionController.text.trim(),
+        assignedEmployeeId: selectedEmployeeId,
+        dueDate: dueDateController.text.trim().isNotEmpty
+            ? dueDateController.text.trim()
+            : null,
+        priorityStatus: selectedPriority,
+      ),
+    );
+
+    if (!mounted) return;
+    setState(() => isSubmitting = false);
+
+    if (success) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('supervisor.tasks.create.success'.tr()),
+          backgroundColor: AppColors.success,
+        ),
+      );
+    }
   }
 
   @override
@@ -138,33 +192,34 @@ class _AdminCreateTaskSheetWidgetState
                 ],
               ),
               hSpace(16),
-              Text(
-                'supervisor.tasks.create.assignToLabel'.tr(context: context),
-                style: AppTextStyles.font12Medium,
+              BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
+                builder: (context, state) {
+                  final employees = switch (state) {
+                    AdminEmployeesStateSuccess(:final employees) => employees,
+                    _ => const [],
+                  };
+                  return DropdownButtonFormField<String>(
+                    initialValue: selectedEmployeeId,
+                    decoration: InputDecoration(
+                      labelText: 'supervisor.tasks.create.assignToLabel'.tr(
+                        context: context,
+                      ),
+                    ),
+                    items: employees
+                        .where((e) => e.id != null)
+                        .map(
+                          (e) => DropdownMenuItem<String>(
+                            value: e.id!,
+                            child: Text(e.name ?? e.userName ?? 'Employee'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (val) =>
+                        setState(() => selectedEmployeeId = val),
+                  );
+                },
               ),
-              hSpace(8),
-              for (final assignee in const [
-                ('sarah', 'SJ', 'admin.permissions.supervisors.sarah.name'),
-                ('ali', 'AH', 'admin.permissions.supervisors.ali.name'),
-                ('james', 'JM', 'supervisor.attendance.members.james'),
-                ('priya', 'PN', 'supervisor.attendance.members.priya'),
-              ])
-                Padding(
-                  padding: EdgeInsets.only(bottom: 6.h),
-                  child: SupervisorAssigneeOptionWidget(
-                    initials: assignee.$2,
-                    nameKey: assignee.$3,
-                    isSelected: selectedAssignees.contains(assignee.$1),
-                    onTap: () => setState(() {
-                      if (selectedAssignees.contains(assignee.$1)) {
-                        selectedAssignees.remove(assignee.$1);
-                      } else {
-                        selectedAssignees.add(assignee.$1);
-                      }
-                    }),
-                  ),
-                ),
-              hSpace(10),
+              hSpace(20),
               Row(
                 children: [
                   Expanded(
@@ -183,7 +238,8 @@ class _AdminCreateTaskSheetWidgetState
                       text: 'supervisor.tasks.create.submit'.tr(
                         context: context,
                       ),
-                      onTap: () => Navigator.pop(context),
+                      isLoading: isSubmitting,
+                      onTap: _submit,
                     ),
                   ),
                 ],

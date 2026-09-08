@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'supervisor_create_task_sheet_widget.dart';
@@ -24,7 +25,9 @@ class SupervisorNewTaskButtonWidget extends StatelessWidget {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider.value(value: context.read<SupervisorTasksCubit>()),
-              BlocProvider.value(value: context.read<SupervisorTeamCubit>()),
+              BlocProvider<SupervisorTeamCubit>(
+                create: (_) => sl<SupervisorTeamCubit>()..loadTeam(),
+              ),
             ],
             child: const SupervisorCreateTaskSheetWidget(),
           ),
