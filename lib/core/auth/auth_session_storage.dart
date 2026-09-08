@@ -10,6 +10,7 @@ class AuthSessionStorage {
   static const userRoleKey = 'user_role';
   static const biometricEnabledKey = 'biometric_login_enabled';
   static const biometricRoleKey = 'biometric_login_role';
+  static const biometricTokenKey = 'biometric_login_token';
   static const biometricUsernameKey = 'biometric_username';
   static const biometricPasswordKey = 'biometric_password';
 
@@ -66,7 +67,7 @@ class AuthSessionStorage {
     await secureStorage.write(key: biometricRoleKey, value: role);
     await secureStorage.write(key: biometricEnabledKey, value: 'true');
     if (token != null && token.isNotEmpty) {
-      await secureStorage.write(key: tokenKey, value: token);
+      await secureStorage.write(key: biometricTokenKey, value: token);
     }
     if (username != null && username.isNotEmpty) {
       await secureStorage.write(key: biometricUsernameKey, value: username);
@@ -86,7 +87,7 @@ class AuthSessionStorage {
     final values = await secureStorage.readAll();
     if (values[biometricEnabledKey] != 'true') return null;
 
-    final token = values[tokenKey];
+    final token = values[biometricTokenKey] ?? values[tokenKey];
     final role = values[biometricRoleKey];
     final username = values[biometricUsernameKey];
     final password = values[biometricPasswordKey];
@@ -106,6 +107,7 @@ class AuthSessionStorage {
   Future<void> disableBiometricLogin() async {
     await secureStorage.delete(key: biometricEnabledKey);
     await secureStorage.delete(key: biometricRoleKey);
+    await secureStorage.delete(key: biometricTokenKey);
     await secureStorage.delete(key: biometricUsernameKey);
     await secureStorage.delete(key: biometricPasswordKey);
   }
@@ -116,6 +118,5 @@ class AuthSessionStorage {
     await secureStorage.delete(key: departmentIdKey);
     await secureStorage.delete(key: userNameKey);
     await secureStorage.delete(key: userRoleKey);
-    await disableBiometricLogin();
   }
 }

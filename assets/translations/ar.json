@@ -46,6 +46,8 @@
   "errors.unknown": "حدث خطأ ما. حاول مرة أخرى.",
   "errors.network": "فشل الاتصال بالشبكة. حاول مرة أخرى.",
   "errors.invalidCredentials": "بيانات الدخول غير صحيحة. حاول مرة أخرى.",
+  "errors.biometricNotConfigured": "تسجيل الدخول بالبصمة غير مُعد.",
+  "errors.biometricFailed": "فشل التحقق بالبصمة. حاول مرة أخرى.",
   "errors.deviceLoginAccess": "هذا الجهاز ليس لديه صلاحية لتسجيل الدخول.",
   "errors.roleMismatch": "هذا الحساب لا يملك صلاحية الدور المحدد.",
   "errors.accountRequestFailed": "تعذر إرسال طلب إنشاء الحساب. حاول مرة أخرى.",

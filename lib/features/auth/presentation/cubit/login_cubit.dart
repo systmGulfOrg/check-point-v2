@@ -65,11 +65,17 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<bool> loginWithBiometrics({required String localizedReason}) async {
     final session = await authSessionStorage.readBiometricSession();
-    if (session == null) return false;
+    if (session == null) {
+      emit(const LoginState.error('errors.biometricNotConfigured'));
+      return false;
+    }
     final authenticated = await biometricAuthService.authenticate(
       localizedReason: localizedReason,
     );
-    if (!authenticated) return false;
+    if (!authenticated) {
+      emit(const LoginState.error('errors.biometricFailed'));
+      return false;
+    }
     if (session.token.isNotEmpty) {
       emit(
         LoginState.success(
