@@ -1,9 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo.dart';
@@ -87,17 +85,6 @@ Future<void> setupServiceLocator() async {
     () => Dio(BaseOptions(baseUrl: AppConfig.baseUrl))
       ..interceptors.add(
         AuthTokenInterceptor(secureStorage: sl<FlutterSecureStorage>()),
-      )
-      ..interceptors.add(
-        PrettyDioLogger(
-          requestHeader: false,
-          requestBody: false,
-          responseHeader: false,
-          responseBody: true,
-          error: true,
-          compact: true,
-          enabled: kDebugMode,
-        ),
       ),
   );
   sl.registerLazySingleton<AuthSessionStorage>(
@@ -112,15 +99,26 @@ Future<void> setupServiceLocator() async {
   await sl<DeviceIdentityProvider>().initialize();
 
   // Services
+  // External services must never receive the app's bearer token or log keys.
+  sl.registerLazySingleton<Dio>(
+    () => Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 30),
+        sendTimeout: const Duration(seconds: 30),
+      ),
+    ),
+    instanceName: 'external',
+  );
   sl.registerLazySingleton<LocationService>(LocationService.new);
   sl.registerLazySingleton<GooglePlacesService>(
-    () => GooglePlacesService(dio: sl<Dio>()),
+    () => GooglePlacesService(dio: sl<Dio>(instanceName: 'external')),
   );
   sl.registerLazySingleton<OdooAttendanceService>(
-    () => OdooAttendanceService(dio: sl<Dio>()),
+    () => OdooAttendanceService(dio: sl<Dio>(instanceName: 'external')),
   );
   sl.registerLazySingleton<OdooTimeOffService>(
-    () => OdooTimeOffService(dio: sl<Dio>()),
+    () => OdooTimeOffService(dio: sl<Dio>(instanceName: 'external')),
   );
 
   // API Services
