@@ -44,9 +44,7 @@ class LoginUseCase {
 
         if (!hasSelectedRole) {
           return const ApiResult.failure(
-            ApiFailure(
-              messageKey: 'errors.roleMismatch',
-            ),
+            ApiFailure(messageKey: 'errors.roleMismatch'),
           );
         }
 
@@ -59,6 +57,13 @@ class LoginUseCase {
           );
         } else if (!enableBiometricLogin) {
           await authSessionStorage.disableBiometricLogin();
+        }
+
+        if (data.branchId != null) {
+          await authSessionStorage.saveUserSession(
+            token: data.token ?? '',
+            branchId: data.branchId,
+          );
         }
 
         return ApiResult.success(data);

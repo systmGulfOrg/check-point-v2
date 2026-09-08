@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/services/attendance_verification_service.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/network/api_failure.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
@@ -34,7 +35,15 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
 
   Future<void> loadBranches() async {
     emit(const EmployeeAttendanceState.loading());
-    final result = await attendanceRepo.getBranches();
+    final branchId = await sessionStorage.readBranchId();
+    final result = branchId == null
+        ? const ApiResult<List<BranchModel>>.failure(
+            ApiFailure(messageKey: 'errors.branchUnavailable'),
+          )
+        : (await attendanceRepo.getBranchById(branchId)).when(
+            success: (branch) => ApiResult.success([branch]),
+            failure: ApiResult.failure,
+          );
     switch (result) {
       case Success(:final data):
         emit(EmployeeAttendanceState.branchesLoaded(data));

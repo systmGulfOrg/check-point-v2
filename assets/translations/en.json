@@ -689,8 +689,10 @@
   "errors.locationUnavailable": "Location is unavailable. Enable GPS and try again.",
   "errors.outsideAttendanceArea": "You are outside the permitted attendance area.",
   "errors.biometricRequired": "Biometric verification was required to continue.",
+  "errors.branchUnavailable": "Your assigned branch could not be loaded.",
   "attendance.locationType": "Attendance location type",
   "attendance.location": "Choose location",
   "attendance.insideArea": "You are inside the permitted area",
   "attendance.outsideArea": "Move inside the permitted area to continue"
+  ,"attendance.myLocation": "My location"
 }

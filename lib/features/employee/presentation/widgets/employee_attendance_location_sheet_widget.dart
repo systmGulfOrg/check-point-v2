@@ -31,6 +31,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
   BranchModel? branch;
   CustomerModel? customer;
   LatLng? userLocation;
+  GoogleMapController? mapController;
   Timer? timer;
 
   @override
@@ -55,7 +56,12 @@ class _EmployeeAttendanceLocationSheetWidgetState
     final location = await context
         .read<EmployeeAttendanceCubit>()
         .refreshCurrentLocation();
-    if (mounted) setState(() => userLocation = location);
+    if (mounted) {
+      setState(() => userLocation = location);
+      if (location != null) {
+        await mapController?.animateCamera(CameraUpdate.newLatLng(location));
+      }
+    }
   }
 
   List<LatLng> get targetPoints {
@@ -211,6 +217,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
                         target: mapCenter,
                         zoom: 15,
                       ),
+                      onMapCreated: (controller) => mapController = controller,
                       myLocationEnabled: true,
                       myLocationButtonEnabled: true,
                       markers: {
@@ -218,8 +225,36 @@ class _EmployeeAttendanceLocationSheetWidgetState
                           Marker(
                             markerId: const MarkerId('user'),
                             position: userLocation!,
+                            icon: BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueAzure,
+                            ),
+                            infoWindow: InfoWindow(
+                              title: 'attendance.myLocation'.tr(),
+                            ),
+                          ),
+                        if (points.isNotEmpty)
+                          Marker(
+                            markerId: const MarkerId('target'),
+                            position: points.first,
+                            icon: BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueOrange,
+                            ),
+                            infoWindow: InfoWindow(
+                              title: type,
+                              snippet: branch?.name ?? customer?.name,
+                            ),
                           ),
                       },
+                      polylines: userLocation != null && points.isNotEmpty
+                          ? {
+                              Polyline(
+                                polylineId: const PolylineId('user-to-target'),
+                                points: [userLocation!, points.first],
+                                color: AppColors.info,
+                                width: 4,
+                              ),
+                            }
+                          : const {},
                       polygons: points.length > 2
                           ? {
                               Polygon(

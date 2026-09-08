@@ -10,6 +10,8 @@ class LoginResponseModel {
     this.name,
     this.roles,
     this.token,
+    this.branchId,
+    this.branchName,
   });
 
   final String? id;
@@ -17,6 +19,8 @@ class LoginResponseModel {
   final String? name;
   final List<String>? roles;
   final String? token;
+  final int? branchId;
+  final String? branchName;
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
       _$LoginResponseModelFromJson(json);

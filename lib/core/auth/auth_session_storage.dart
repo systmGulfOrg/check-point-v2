@@ -8,6 +8,7 @@ class AuthSessionStorage {
   static String get tokenKey => AppConfig.authTokenKey;
   static const userIdKey = 'user_id';
   static const departmentIdKey = 'department_id';
+  static const branchIdKey = 'branch_id';
   static const userNameKey = 'user_name';
   static const userRoleKey = 'user_role';
   static const biometricEnabledKey = 'biometric_login_enabled';
@@ -22,6 +23,7 @@ class AuthSessionStorage {
     required String token,
     String? userId,
     int? departmentId,
+    int? branchId,
     String? userName,
     String? role,
   }) async {
@@ -34,6 +36,9 @@ class AuthSessionStorage {
         key: departmentIdKey,
         value: departmentId.toString(),
       );
+    }
+    if (branchId != null) {
+      await secureStorage.write(key: branchIdKey, value: branchId.toString());
     }
     if (userName != null && userName.isNotEmpty) {
       await secureStorage.write(key: userNameKey, value: userName);
@@ -51,6 +56,11 @@ class AuthSessionStorage {
     final raw = await secureStorage.read(key: departmentIdKey);
     if (raw == null || raw.isEmpty) return null;
     return int.tryParse(raw);
+  }
+
+  Future<int?> readBranchId() async {
+    final raw = await secureStorage.read(key: branchIdKey);
+    return raw == null ? null : int.tryParse(raw);
   }
 
   Future<void> saveDepartmentId(int id) =>
@@ -118,6 +128,7 @@ class AuthSessionStorage {
     await secureStorage.delete(key: tokenKey);
     await secureStorage.delete(key: userIdKey);
     await secureStorage.delete(key: departmentIdKey);
+    await secureStorage.delete(key: branchIdKey);
     await secureStorage.delete(key: userNameKey);
     await secureStorage.delete(key: userRoleKey);
   }
