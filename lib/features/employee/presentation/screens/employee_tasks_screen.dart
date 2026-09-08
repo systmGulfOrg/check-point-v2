@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_cubit.dart';
@@ -92,21 +93,23 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                 listener: (context, state) {
                   switch (state) {
                     case EmployeeTasksStateActionSuccess(:final message):
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(message)),
-                      );
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(message)));
                     case EmployeeTasksStateError(:final messageKey):
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(messageKey)),
-                      );
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(messageKey)));
                     default:
                       break;
                   }
                 },
                 builder: (context, state) {
                   final allTasks = switch (state) {
-                    EmployeeTasksStateSuccess(:final tasks) => tasks
-                        .map((t) => EmployeeTaskData(
+                    EmployeeTasksStateSuccess(:final tasks) =>
+                      tasks
+                          .map(
+                            (t) => EmployeeTaskData(
                               id: '${t.id ?? 0}',
                               title: t.title ?? '',
                               dueDate: 'Task #${t.id ?? 0}',
@@ -115,26 +118,50 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                               description: t.description ?? '',
                               progressPercentage: 50,
                               assignees: const ['EM'],
-                            ))
-                        .toList(),
+                            ),
+                          )
+                          .toList(),
                     _ => const <EmployeeTaskData>[],
                   };
 
                   final filteredTasks = switch (_selectedFilterIndex) {
-                    0 => allTasks
-                        .where(
-                            (t) => t.status != 'Done' && t.status != 'Completed')
-                        .toList(),
-                    1 => allTasks
-                        .where(
-                            (t) => t.status == 'Done' || t.status == 'Completed')
-                        .toList(),
+                    0 =>
+                      allTasks
+                          .where(
+                            (t) =>
+                                t.status != 'Done' && t.status != 'Completed',
+                          )
+                          .toList(),
+                    1 =>
+                      allTasks
+                          .where(
+                            (t) =>
+                                t.status == 'Done' || t.status == 'Completed',
+                          )
+                          .toList(),
                     _ => allTasks,
                   };
 
                   if (state is EmployeeTasksStateLoading) {
-                    return const Expanded(
-                      child: Center(child: CircularProgressIndicator()),
+                    return Expanded(
+                      child: Skeletonizer(
+                        child: ListView.separated(
+                          itemCount: 3,
+                          separatorBuilder: (_, _) => hSpace(12),
+                          itemBuilder: (_, _) => EmployeeTaskDetailCardWidget(
+                            task: const EmployeeTaskData(
+                              id: '000',
+                              title: 'Loading task title',
+                              dueDate: 'Loading date',
+                              status: 'Active',
+                              priority: 'Normal',
+                              description: 'Loading task description',
+                              progressPercentage: 50,
+                              assignees: ['EM'],
+                            ),
+                          ),
+                        ),
+                      ),
                     );
                   }
 
@@ -157,11 +184,11 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                                   separatorBuilder: (_, _) => hSpace(12),
                                   itemBuilder: (context, index) =>
                                       AnimatedListItemWidget(
-                                    index: index,
-                                    child: EmployeeTaskDetailCardWidget(
-                                      task: filteredTasks[index],
-                                    ),
-                                  ),
+                                        index: index,
+                                        child: EmployeeTaskDetailCardWidget(
+                                          task: filteredTasks[index],
+                                        ),
+                                      ),
                                 ),
                         ),
                       ],
