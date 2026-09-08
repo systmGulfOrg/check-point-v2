@@ -1,17 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../../../../core/network/api_constants.dart';
-import '../../../admin/data/models/admin_attendance_model.dart';
-import '../../../admin/data/models/admin_leave_request_model.dart';
-import '../../../admin/data/models/admin_plan_model.dart';
-import '../../../admin/data/models/admin_task_model.dart';
-import '../../../admin/data/models/employees_response_model.dart';
-import '../../../admin/data/models/single_employee_response_model.dart';
-import '../../../auth/data/models/result_model.dart';
-import '../models/supervisor_attendance_check_in_request_body.dart';
-import '../models/supervisor_attendance_check_out_request_body.dart';
-import '../models/supervisor_update_task_status_request_body.dart';
+import 'package:check_point_v2/core/network/api_constants.dart';
+import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model.dart';
+import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employees_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/single_employee_response_model.dart';
+import 'package:check_point_v2/features/auth/data/models/login/result_model.dart';
+import 'package:check_point_v2/features/supervisor/data/models/attendance/supervisor_attendance_check_in_request_body.dart';
+import 'package:check_point_v2/features/supervisor/data/models/attendance/supervisor_attendance_check_out_request_body.dart';
+import 'package:check_point_v2/features/supervisor/data/models/tasks/supervisor_update_task_status_request_body.dart';
 
 part 'supervisor_api_service.g.dart';
 

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../admin/presentation/widgets/admin_stats_grid_widget.dart';
-import '../cubit/supervisor_attendance_cubit.dart';
-import '../cubit/supervisor_attendance_state.dart';
-import '../cubit/supervisor_leave_requests_cubit.dart';
-import '../cubit/supervisor_leave_requests_state.dart';
-import '../cubit/supervisor_tasks_cubit.dart';
-import '../cubit/supervisor_tasks_state.dart';
-import '../cubit/supervisor_team_cubit.dart';
-import '../cubit/supervisor_team_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_stats_grid_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_state.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_state.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_state.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_state.dart';
 
 class SupervisorStatsGridBlocBuilderWidget extends StatelessWidget {
   const SupervisorStatsGridBlocBuilderWidget({super.key});

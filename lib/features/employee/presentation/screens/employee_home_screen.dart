@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/employee_attendance_cubit.dart';
-import '../cubit/employee_attendance_state.dart';
-import '../cubit/employee_plans_cubit.dart';
-import '../cubit/employee_plans_state.dart';
-import '../cubit/employee_tasks_cubit.dart';
-import '../cubit/employee_tasks_state.dart';
-import '../widgets/employee_header_widget.dart';
-import '../widgets/employee_plan_data.dart';
-import '../widgets/employee_plans_section_widget.dart';
-import '../widgets/employee_stats_row_widget.dart';
-import '../widgets/employee_task_data.dart';
-import '../widgets/employee_tasks_section_widget.dart';
-import '../widgets/employee_today_card_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_state.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/plans/employee_plans_cubit.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/plans/employee_plans_state.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_cubit.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_state.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_header_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_plan_data.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_plans_section_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_stats_row_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_task_data.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_tasks_section_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_today_card_widget.dart';
 
 class EmployeeHomeScreen extends StatefulWidget {
   const EmployeeHomeScreen({

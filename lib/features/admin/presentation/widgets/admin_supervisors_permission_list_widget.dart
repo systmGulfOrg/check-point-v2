@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/core.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'admin_supervisor_permission_card_widget.dart';
 import 'admin_supervisor_permission_data.dart';
 

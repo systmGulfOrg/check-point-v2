@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/core.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'supervisor_attendance_screen.dart';
 import 'supervisor_home_screen.dart';
 import 'supervisor_profile_screen.dart';
 import 'supervisor_tasks_screen.dart';
 import 'supervisor_team_screen.dart';
-import '../widgets/supervisor_more_options_sheet_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_more_options_sheet_widget.dart';
 
 class SupervisorMainScreen extends StatefulWidget {
   const SupervisorMainScreen({super.key});

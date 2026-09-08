@@ -4,12 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../../../core/core.dart';
-import '../../../../core/services/location_link_parser.dart';
-import '../../data/models/branch_request_model.dart';
-import '../../data/models/customer_request_model.dart';
-import '../cubit/admin_branches_cubit.dart';
-import '../cubit/admin_customers_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/services/location_link_parser.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_request_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
 import 'admin_location_form_fields_widget.dart';
 import 'admin_location_map_picker_widget.dart';
 import 'admin_location_sheet_actions_widget.dart';

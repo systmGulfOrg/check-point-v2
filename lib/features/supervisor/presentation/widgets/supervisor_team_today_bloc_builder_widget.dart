@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../admin/data/models/admin_attendance_model.dart';
-import '../cubit/supervisor_attendance_cubit.dart';
-import '../cubit/supervisor_attendance_state.dart';
+import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_state.dart';
 import 'supervisor_team_today_widget.dart';
 
 class SupervisorTeamTodayBlocBuilderWidget extends StatelessWidget {

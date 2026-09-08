@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/core.dart';
-import '../widgets/admin_nav_bar_widget.dart';
-import '../widgets/admin_desktop_sidebar_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_nav_bar_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_desktop_sidebar_widget.dart';
 import 'admin_employees_screen.dart';
 import 'admin_home_screen.dart';
 import 'admin_manage_screen.dart';

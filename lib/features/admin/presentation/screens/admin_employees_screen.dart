@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/admin_employees_cubit.dart';
-import '../widgets/admin_employees_bloc_builder_widget.dart';
-import '../widgets/admin_employee_filter_row_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_employees_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_employee_filter_row_widget.dart';
 
 class AdminEmployeesScreen extends StatefulWidget {
   const AdminEmployeesScreen({super.key});

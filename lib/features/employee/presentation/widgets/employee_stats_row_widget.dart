@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/core.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'employee_stat_card_widget.dart';
 
 class EmployeeStatsRowWidget extends StatelessWidget {

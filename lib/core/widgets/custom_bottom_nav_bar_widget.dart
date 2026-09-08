@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../styles/app_colors.dart';
+import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'custom_bottom_nav_item_widget.dart';
 import 'nav_bar_item_data.dart';
 

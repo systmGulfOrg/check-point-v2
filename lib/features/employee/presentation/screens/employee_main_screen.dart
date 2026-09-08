@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/core.dart';
-import '../widgets/employee_nav_bar_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_nav_bar_widget.dart';
 import 'employee_clock_screen.dart';
 import 'employee_home_screen.dart';
 import 'employee_leaves_screen.dart';

@@ -2,14 +2,15 @@ import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/core/network/device_identity_provider.dart';
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/auth/biometric_auth_service.dart';
-import 'package:check_point_v2/features/auth/data/models/account_request_model.dart';
-import 'package:check_point_v2/features/auth/data/models/login_request_model.dart';
-import 'package:check_point_v2/features/auth/data/models/login_response_model.dart';
+import 'package:check_point_v2/features/auth/data/models/account_request/account_request_model.dart';
+import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
+import 'package:check_point_v2/features/auth/data/models/login/login_response_model.dart';
 import 'package:check_point_v2/features/auth/data/repos/auth_repo.dart';
-import 'package:check_point_v2/features/auth/presentation/cubit/login_cubit.dart';
-import 'package:check_point_v2/features/auth/presentation/cubit/login_state.dart';
-import 'package:check_point_v2/features/auth/presentation/cubit/request_account_cubit.dart';
-import 'package:check_point_v2/features/auth/presentation/cubit/request_account_state.dart';
+import 'package:check_point_v2/features/auth/domain/use_cases/login_use_case.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/login/login_state.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
@@ -77,14 +78,24 @@ void main() {
         token: 'token-123',
       );
       final repo = _FakeAuthRepo(loginResponse: loginResponse);
-      final cubit = LoginCubit(
+      final deviceIdentityProvider = _FakeDeviceIdentityProvider(
+        fakeMobileId: 'mobile-123',
+        fakeDeviceToken: 'token-abc',
+      );
+      final sessionStorage = _FakeAuthSessionStorage();
+      final biometricAuthService = _FakeBiometricAuthService();
+
+      final loginUseCase = LoginUseCase(
         authRepo: repo,
-        deviceIdentityProvider: _FakeDeviceIdentityProvider(
-          fakeMobileId: 'mobile-123',
-          fakeDeviceToken: 'token-abc',
-        ),
-        authSessionStorage: _FakeAuthSessionStorage(),
-        biometricAuthService: _FakeBiometricAuthService(),
+        deviceIdentityProvider: deviceIdentityProvider,
+        authSessionStorage: sessionStorage,
+        biometricAuthService: biometricAuthService,
+      );
+
+      final cubit = LoginCubit(
+        loginUseCase: loginUseCase,
+        authSessionStorage: sessionStorage,
+        biometricAuthService: biometricAuthService,
       );
       addTearDown(cubit.close);
 
@@ -119,14 +130,24 @@ void main() {
           token: 'token-123',
         );
         final repo = _FakeAuthRepo(loginResponse: loginResponse);
-        final cubit = LoginCubit(
+        final deviceIdentityProvider = _FakeDeviceIdentityProvider(
+          fakeMobileId: 'mobile-123',
+          fakeDeviceToken: 'token-abc',
+        );
+        final sessionStorage = _FakeAuthSessionStorage();
+        final biometricAuthService = _FakeBiometricAuthService();
+
+        final loginUseCase = LoginUseCase(
           authRepo: repo,
-          deviceIdentityProvider: _FakeDeviceIdentityProvider(
-            fakeMobileId: 'mobile-123',
-            fakeDeviceToken: 'token-abc',
-          ),
-          authSessionStorage: _FakeAuthSessionStorage(),
-          biometricAuthService: _FakeBiometricAuthService(),
+          deviceIdentityProvider: deviceIdentityProvider,
+          authSessionStorage: sessionStorage,
+          biometricAuthService: biometricAuthService,
+        );
+
+        final cubit = LoginCubit(
+          loginUseCase: loginUseCase,
+          authSessionStorage: sessionStorage,
+          biometricAuthService: biometricAuthService,
         );
         addTearDown(cubit.close);
 

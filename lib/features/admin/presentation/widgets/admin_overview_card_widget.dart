@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../core/core.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'admin_overview_row_widget.dart';
 
 class AdminOverviewCardWidget extends StatelessWidget {

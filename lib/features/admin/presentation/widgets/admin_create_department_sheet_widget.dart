@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../data/models/department_request_model.dart';
-import '../cubit/admin_departments_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/department_request_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
 
 class AdminCreateDepartmentSheetWidget extends StatefulWidget {
   const AdminCreateDepartmentSheetWidget({

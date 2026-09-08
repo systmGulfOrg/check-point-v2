@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../data/models/employee_model.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 
 class AdminShiftEmployeesWidget extends StatefulWidget {
   const AdminShiftEmployeesWidget({required this.employees, super.key});

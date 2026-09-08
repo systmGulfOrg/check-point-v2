@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../widgets/admin_account_requests_bloc_builder_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_account_requests_bloc_builder_widget.dart';
 
 class AdminRequestsScreen extends StatefulWidget {
   const AdminRequestsScreen({super.key});

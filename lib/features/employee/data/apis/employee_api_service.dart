@@ -1,24 +1,24 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../../../../core/network/api_constants.dart';
-import '../../../admin/data/models/admin_attendance_model.dart';
-import '../../../admin/data/models/admin_leave_request_model.dart';
-import '../../../admin/data/models/admin_plan_model.dart';
-import '../../../admin/data/models/admin_task_model.dart';
-import '../../../admin/data/models/branch_response_model.dart';
-import '../../../admin/data/models/customer_response_model.dart';
-import '../../../auth/data/models/result_model.dart';
-import '../models/employee_change_password_request_body.dart';
-import '../models/employee_check_in_request_body.dart';
-import '../models/employee_check_out_request_body.dart';
-import '../models/employee_leave_request_body.dart';
-import '../models/employee_plan_feedback_request_body.dart';
-import '../models/employee_remove_plan_request_body.dart';
-import '../models/employee_remove_task_request_body.dart';
-import '../models/employee_update_task_status_request_body.dart';
-import '../models/feedback_statuses_response_model.dart';
-import '../models/track_user_request_body.dart';
+import 'package:check_point_v2/core/network/api_constants.dart';
+import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model.dart';
+import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/auth/data/models/login/result_model.dart';
+import 'package:check_point_v2/features/employee/data/models/password/employee_change_password_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_in_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_out_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/leave_requests/employee_leave_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/plans/employee_plan_feedback_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/plans/employee_remove_plan_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/tasks/employee_remove_task_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/tasks/employee_update_task_status_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/plans/feedback_statuses_response_model.dart';
+import 'package:check_point_v2/features/employee/data/models/attendance/track_user_request_body.dart';
 
 part 'employee_api_service.g.dart';
 

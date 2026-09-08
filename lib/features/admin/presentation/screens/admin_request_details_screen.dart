@@ -4,9 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../data/models/account_requests_response_model.dart';
-import '../cubit/admin_account_requests_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
 
 class AdminRequestDetailsScreen extends StatelessWidget {
   const AdminRequestDetailsScreen({required this.request, super.key});

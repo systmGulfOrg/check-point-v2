@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../supervisor/presentation/widgets/supervisor_tasks_filter_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_tasks_filter_widget.dart';
 
 class AdminTasksFilterWidget extends StatelessWidget {
   const AdminTasksFilterWidget({

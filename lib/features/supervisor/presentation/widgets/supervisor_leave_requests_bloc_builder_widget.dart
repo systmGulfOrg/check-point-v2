@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../core/core.dart';
-import '../../../admin/data/models/admin_leave_request_model.dart';
-import '../cubit/supervisor_leave_requests_cubit.dart';
-import '../cubit/supervisor_leave_requests_state.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_state.dart';
 import 'supervisor_leave_requests_list_widget.dart';
 
 class SupervisorLeaveRequestsBlocBuilderWidget extends StatelessWidget {

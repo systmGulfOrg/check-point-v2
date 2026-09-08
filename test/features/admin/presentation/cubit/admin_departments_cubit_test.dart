@@ -1,20 +1,20 @@
 import 'package:check_point_v2/core/network/api_result.dart';
-import 'package:check_point_v2/features/admin/data/models/branch_request_model.dart';
-import 'package:check_point_v2/features/admin/data/models/branch_response_model.dart';
-import 'package:check_point_v2/features/admin/data/models/customer_request_model.dart';
-import 'package:check_point_v2/features/admin/data/models/customer_response_model.dart';
-import 'package:check_point_v2/features/admin/data/models/department_request_model.dart';
-import 'package:check_point_v2/features/admin/data/models/department_response_model.dart';
-import 'package:check_point_v2/features/admin/data/models/employee_model.dart';
-import 'package:check_point_v2/features/admin/data/models/account_requests_response_model.dart';
-import 'package:check_point_v2/features/admin/data/models/add_employee_request_body.dart';
-import 'package:check_point_v2/features/admin/data/models/edit_employee_request_body.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/department_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/department_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_locations_repo.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/admin_department_employees_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/admin_department_employees_state.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/admin_departments_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/admin_departments_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_department_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_department_employees_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeLocationsRepo implements AdminLocationsRepo {

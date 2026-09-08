@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/request_account_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
 import 'request_account_submit_button_widget.dart';
 
 class RequestAccessFormWidget extends StatefulWidget {

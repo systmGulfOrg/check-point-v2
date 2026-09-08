@@ -1,12 +1,12 @@
-import '../../../../core/network/api_failure_mapper.dart';
-import '../../../../core/network/api_result.dart';
-import '../../../admin/data/models/admin_leave_request_model.dart';
-import '../../../admin/data/models/admin_task_model.dart';
-import '../apis/employee_api_service.dart';
-import '../models/employee_change_password_request_body.dart';
-import '../models/employee_leave_request_body.dart';
-import '../models/employee_remove_task_request_body.dart';
-import '../models/employee_update_task_status_request_body.dart';
+import 'package:check_point_v2/core/network/api_failure_mapper.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
+import 'package:check_point_v2/features/employee/data/apis/employee_api_service.dart';
+import 'package:check_point_v2/features/employee/data/models/password/employee_change_password_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/leave_requests/employee_leave_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/tasks/employee_remove_task_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/tasks/employee_update_task_status_request_body.dart';
 import 'employee_action_repo.dart';
 
 class EmployeeActionRepoImpl implements EmployeeActionRepo {

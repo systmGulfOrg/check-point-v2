@@ -1,9 +1,9 @@
-import '../../../../core/auth/auth_session_storage.dart';
-import '../../../../core/network/api_failure_mapper.dart';
-import '../../../../core/network/api_result.dart';
-import '../../../admin/data/models/admin_task_model.dart';
-import '../apis/supervisor_api_service.dart';
-import '../models/supervisor_update_task_status_request_body.dart';
+import 'package:check_point_v2/core/auth/auth_session_storage.dart';
+import 'package:check_point_v2/core/network/api_failure_mapper.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
+import 'package:check_point_v2/features/supervisor/data/apis/supervisor_api_service.dart';
+import 'package:check_point_v2/features/supervisor/data/models/tasks/supervisor_update_task_status_request_body.dart';
 import 'supervisor_tasks_repo.dart';
 
 class SupervisorTasksRepoImpl implements SupervisorTasksRepo {

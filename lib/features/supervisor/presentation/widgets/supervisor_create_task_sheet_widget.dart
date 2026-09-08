@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../../admin/data/models/admin_task_model.dart';
-import '../cubit/supervisor_tasks_cubit.dart';
-import '../cubit/supervisor_team_cubit.dart';
-import '../cubit/supervisor_team_state.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_state.dart';
 import 'supervisor_create_task_field_widget.dart';
 
 class SupervisorCreateTaskSheetWidget extends StatefulWidget {

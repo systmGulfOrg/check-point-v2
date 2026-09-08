@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/login_cubit.dart';
-import '../widgets/auth_card_widget.dart';
-import '../widgets/auth_labeled_field_widget.dart';
-import '../widgets/auth_shell_widget.dart';
-import '../widgets/biometric_login_button_widget.dart';
-import '../widgets/brand_header_widget.dart';
-import '../widgets/login_bloc_listener_widget.dart';
-import '../widgets/login_submit_button_widget.dart';
-import '../widgets/role_switcher_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/auth_card_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/auth_labeled_field_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/auth_shell_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/biometric_login_button_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/brand_header_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/login_bloc_listener_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/login_submit_button_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/role_switcher_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/employee_attendance_cubit.dart';
-import '../cubit/employee_attendance_state.dart';
-import '../widgets/employee_attendance_record_card_widget.dart';
-import '../widgets/employee_attendance_record_data.dart';
-import '../widgets/employee_clock_card_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_state.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_record_card_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_record_data.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_clock_card_widget.dart';
 
 class EmployeeClockScreen extends StatefulWidget {
   const EmployeeClockScreen({super.key});

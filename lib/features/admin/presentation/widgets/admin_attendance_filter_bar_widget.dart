@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/admin_attendance_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
 
 class AdminAttendanceFilterBarWidget extends StatelessWidget {
   const AdminAttendanceFilterBarWidget({super.key});

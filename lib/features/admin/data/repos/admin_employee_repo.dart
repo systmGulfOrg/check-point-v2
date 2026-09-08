@@ -1,8 +1,8 @@
-import '../../../../core/network/api_result.dart';
-import '../models/account_requests_response_model.dart';
-import '../models/add_employee_request_body.dart';
-import '../models/edit_employee_request_body.dart';
-import '../models/employee_model.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 
 abstract class AdminEmployeeRepo {
   Future<ApiResult<List<EmployeeModel>>> getEmployees({

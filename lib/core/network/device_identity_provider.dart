@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../app/app_config.dart';
+import 'package:check_point_v2/core/app/app_config.dart';
 
 class DeviceIdentityProvider {
   DeviceIdentityProvider({this.secureStorage = const FlutterSecureStorage()});

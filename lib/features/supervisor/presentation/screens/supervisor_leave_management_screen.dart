@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../widgets/supervisor_leave_management_filter_widget.dart';
-import '../widgets/supervisor_leave_requests_bloc_builder_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_leave_management_filter_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_leave_requests_bloc_builder_widget.dart';
 
 class SupervisorLeaveManagementScreen extends StatefulWidget {
   const SupervisorLeaveManagementScreen({super.key});

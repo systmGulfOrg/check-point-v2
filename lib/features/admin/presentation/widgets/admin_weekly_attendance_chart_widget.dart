@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'admin_attendance_legend_item_widget.dart';
 import 'admin_weekly_attendance_chart_painter.dart';
 

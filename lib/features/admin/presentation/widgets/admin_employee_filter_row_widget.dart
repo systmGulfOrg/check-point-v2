@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/core.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'admin_employee_filter_pill_widget.dart';
 
 class AdminEmployeeFilterRowWidget extends StatelessWidget {

@@ -1,7 +1,7 @@
-import '../../../../core/network/api_result.dart';
-import '../../../admin/data/models/admin_attendance_model.dart';
-import '../models/supervisor_attendance_check_in_request_body.dart';
-import '../models/supervisor_attendance_check_out_request_body.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
+import 'package:check_point_v2/features/supervisor/data/models/attendance/supervisor_attendance_check_in_request_body.dart';
+import 'package:check_point_v2/features/supervisor/data/models/attendance/supervisor_attendance_check_out_request_body.dart';
 
 abstract class SupervisorAttendanceRepo {
   Future<ApiResult<List<AdminAttendanceModel>>> getAttendance({

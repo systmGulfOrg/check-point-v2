@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../data/models/branch_response_model.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'admin_location_action_widget.dart';
 
 class AdminBranchCardWidget extends StatelessWidget {

@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../data/models/add_employee_request_body.dart';
-import '../cubit/admin_branches_cubit.dart';
-import '../cubit/admin_branches_state.dart';
-import '../cubit/admin_departments_cubit.dart';
-import '../cubit/admin_departments_state.dart';
-import '../cubit/admin_employees_cubit.dart';
-import '../widgets/admin_wizard_field_widget.dart';
-import '../widgets/admin_wizard_stepper_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_wizard_field_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_wizard_stepper_widget.dart';
 
 class AdminCreateEmployeeScreen extends StatefulWidget {
   const AdminCreateEmployeeScreen({super.key});

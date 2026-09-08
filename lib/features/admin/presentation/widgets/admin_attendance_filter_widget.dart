@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
+import 'package:check_point_v2/core/core.dart';
 
 class AdminAttendanceFilterWidget extends StatelessWidget {
   const AdminAttendanceFilterWidget({

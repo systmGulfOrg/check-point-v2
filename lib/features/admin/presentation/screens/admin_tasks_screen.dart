@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../data/models/admin_task_model.dart';
-import '../cubit/admin_tasks_cubit.dart';
-import '../cubit/admin_tasks_state.dart';
-import '../widgets/admin_create_task_sheet_widget.dart';
-import '../widgets/admin_tasks_filter_widget.dart';
-import '../widgets/admin_tasks_skeleton_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_create_task_sheet_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_tasks_filter_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_tasks_skeleton_widget.dart';
 
 class AdminTasksScreen extends StatefulWidget {
   const AdminTasksScreen({super.key});

@@ -1,12 +1,12 @@
-import '../../../../core/network/api_failure_mapper.dart';
-import '../../../../core/network/api_result.dart';
-import '../apis/admin_api_service.dart';
-import '../models/branch_request_model.dart';
-import '../models/branch_response_model.dart';
-import '../models/customer_request_model.dart';
-import '../models/customer_response_model.dart';
-import '../models/department_request_model.dart';
-import '../models/department_response_model.dart';
+import 'package:check_point_v2/core/network/api_failure_mapper.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/department_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/department_response_model.dart';
 import 'admin_locations_repo.dart';
 
 class AdminLocationsRepoImpl implements AdminLocationsRepo {

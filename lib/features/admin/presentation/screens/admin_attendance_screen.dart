@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../data/models/admin_attendance_model.dart';
-import '../cubit/admin_attendance_cubit.dart';
-import '../cubit/admin_attendance_state.dart';
-import '../widgets/admin_attendance_filter_bar_widget.dart';
-import '../widgets/admin_attendance_record_card_widget.dart';
-import '../widgets/admin_attendance_record_data.dart';
-import '../widgets/admin_attendance_skeleton_widget.dart';
-import '../widgets/admin_delete_confirmation_dialog_widget.dart';
-import '../widgets/admin_requests_empty_state_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_filter_bar_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_record_card_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_record_data.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_skeleton_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_delete_confirmation_dialog_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_requests_empty_state_widget.dart';
 
 class AdminAttendanceScreen extends StatefulWidget {
   const AdminAttendanceScreen({super.key});

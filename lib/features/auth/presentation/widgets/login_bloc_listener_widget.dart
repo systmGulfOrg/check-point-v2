@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/login_cubit.dart';
-import '../cubit/login_state.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/login/login_state.dart';
 
 class LoginBlocListenerWidget extends StatelessWidget {
   const LoginBlocListenerWidget({required this.child, super.key});

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/admin_department_employees_cubit.dart';
-import '../cubit/admin_department_employees_state.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_department_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_department_employees_state.dart';
 import 'admin_department_employee_card_widget.dart';
 import 'admin_employees_skeleton_widget.dart';
 

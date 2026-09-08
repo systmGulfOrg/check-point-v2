@@ -2,12 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../widgets/request_account_bloc_listener_widget.dart';
-import '../widgets/request_access_brand_widget.dart';
-import '../widgets/request_access_form_widget.dart';
-import '../widgets/request_access_success_widget.dart';
-import '../widgets/request_access_welcome_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/request_account_bloc_listener_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/request_access_brand_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/request_access_form_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/request_access_success_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/request_access_welcome_widget.dart';
 
 class RequestAccessScreen extends StatefulWidget {
   const RequestAccessScreen({super.key});

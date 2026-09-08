@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../data/models/shift_model.dart';
-import '../cubit/admin_shifts_policies_cubit.dart';
-import '../cubit/admin_shifts_policies_state.dart';
-import '../widgets/admin_new_shift_button_widget.dart';
-import '../widgets/admin_shift_card_widget.dart';
-import '../widgets/admin_shift_data.dart';
-import '../widgets/admin_shifts_skeleton_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_new_shift_button_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_shift_card_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_shift_data.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_shifts_skeleton_widget.dart';
 
 class AdminShiftsPoliciesScreen extends StatelessWidget {
   const AdminShiftsPoliciesScreen({super.key});

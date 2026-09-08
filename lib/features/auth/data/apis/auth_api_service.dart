@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../../../../core/network/api_constants.dart';
-import '../models/account_request_model.dart';
-import '../models/login_request_model.dart';
-import '../models/login_result_model.dart';
-import '../models/result_model.dart';
+import 'package:check_point_v2/core/network/api_constants.dart';
+import 'package:check_point_v2/features/auth/data/models/account_request/account_request_model.dart';
+import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
+import 'package:check_point_v2/features/auth/data/models/login/login_result_model.dart';
+import 'package:check_point_v2/features/auth/data/models/login/result_model.dart';
 
 part 'auth_api_service.g.dart';
 

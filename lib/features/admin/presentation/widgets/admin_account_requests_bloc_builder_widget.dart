@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/core.dart';
-import '../../data/models/account_requests_response_model.dart';
-import '../cubit/admin_account_requests_cubit.dart';
-import '../cubit/admin_account_requests_state.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_state.dart';
 import 'admin_account_requests_skeleton_widget.dart';
 import 'admin_registration_request_card_widget.dart';
 

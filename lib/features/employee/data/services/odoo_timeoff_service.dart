@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import 'package:check_point_v2/core/app/app_config.dart';
+
 class OdooLeaveType {
   final int id;
   final String name;
@@ -156,26 +158,27 @@ class OdooLeaveRequest {
 }
 
 class OdooTimeOffService {
-  final Dio _dio;
+  OdooTimeOffService({required this.dio});
 
-  OdooTimeOffService()
-    : _dio = Dio(
-        BaseOptions(
-          baseUrl: 'https://masteameg-newenlighten-test-36387693.dev.odoo.com',
-          headers: {
-            'Accept': 'application/json',
-            'API-KEY': 'jkashda_891273yubk_hjsda92',
-          },
-          connectTimeout: const Duration(seconds: 10),
-          receiveTimeout: const Duration(seconds: 10),
-        ),
+  final Dio dio;
+
+  Options get _options => Options(
+        headers: {
+          'Accept': 'application/json',
+          if (AppConfig.odooApiKey.isNotEmpty) 'API-KEY': AppConfig.odooApiKey,
+        },
       );
+
+  String get _baseUrl => AppConfig.odooBaseUrl;
 
   Future<List<OdooLeaveType>> getLeaveTypes() async {
     try {
-      final response = await _dio.get('/api/timeoff/types');
-      if (response.data != null && response.data['success'] == true) {
-        final list = response.data['data']['leave_types'] as List;
+      final response = await dio.get<Map<String, dynamic>>(
+        '$_baseUrl/api/timeoff/types',
+        options: _options,
+      );
+      if (response.data != null && response.data!['success'] == true) {
+        final list = response.data!['data']['leave_types'] as List;
         return list.map((e) => OdooLeaveType.fromJson(e)).toList();
       }
       throw Exception('Failed to get leave types');
@@ -192,12 +195,13 @@ class OdooTimeOffService {
     if (dateFrom != null) queryParams['date_from'] = dateFrom;
     if (dateTo != null) queryParams['date_to'] = dateTo;
     try {
-      final response = await _dio.get(
-        '/api/timeoff/public_holidays',
+      final response = await dio.get<Map<String, dynamic>>(
+        '$_baseUrl/api/timeoff/public_holidays',
         queryParameters: queryParams,
+        options: _options,
       );
-      if (response.data != null && response.data['success'] == true) {
-        final list = response.data['data']['public_holidays'] as List;
+      if (response.data != null && response.data!['success'] == true) {
+        final list = response.data!['data']['public_holidays'] as List;
         return list.map((e) => OdooPublicHoliday.fromJson(e)).toList();
       }
       throw Exception('Failed to get public holidays');
@@ -221,12 +225,13 @@ class OdooTimeOffService {
       if (reason != null && reason.isNotEmpty) 'reason': reason,
     };
     try {
-      final response = await _dio.post(
-        '/api/timeoff/request',
+      final response = await dio.post<Map<String, dynamic>>(
+        '$_baseUrl/api/timeoff/request',
         data: requestBody,
+        options: _options,
       );
-      if (response.data != null && response.data['success'] == true) {
-        return OdooLeaveRequest.fromJson(response.data['data']);
+      if (response.data != null && response.data!['success'] == true) {
+        return OdooLeaveRequest.fromJson(response.data!['data']);
       }
       throw Exception('Failed to submit leave request');
     } catch (e) {
@@ -245,12 +250,13 @@ class OdooTimeOffService {
       if (state != null && state.isNotEmpty) 'state': state,
     };
     try {
-      final response = await _dio.get(
-        '/api/timeoff/my_requests',
+      final response = await dio.get<Map<String, dynamic>>(
+        '$_baseUrl/api/timeoff/my_requests',
         queryParameters: queryParams,
+        options: _options,
       );
-      if (response.data != null && response.data['success'] == true) {
-        final list = response.data['data']['requests'] as List;
+      if (response.data != null && response.data!['success'] == true) {
+        final list = response.data!['data']['requests'] as List;
         return list.map((e) => OdooLeaveRequest.fromJson(e)).toList();
       }
       throw Exception('Failed to fetch leave requests');
@@ -264,12 +270,13 @@ class OdooTimeOffService {
   }) async {
     final Map<String, dynamic> queryParams = {'employee_id': employeeId};
     try {
-      final response = await _dio.get(
-        '/api/attendance/status',
+      final response = await dio.get<Map<String, dynamic>>(
+        '$_baseUrl/api/attendance/status',
         queryParameters: queryParams,
+        options: _options,
       );
-      if (response.data != null && response.data['success'] == true) {
-        return response.data['data'] as Map<String, dynamic>;
+      if (response.data != null && response.data!['success'] == true) {
+        return response.data!['data'] as Map<String, dynamic>;
       }
       throw Exception('Failed to get attendance status');
     } catch (e) {
@@ -296,12 +303,13 @@ class OdooTimeOffService {
       'date_to': ?dateTo,
     };
     try {
-      final response = await _dio.get(
-        '/api/attendance/my_attendance',
+      final response = await dio.get<Map<String, dynamic>>(
+        '$_baseUrl/api/attendance/my_attendance',
         queryParameters: queryParams,
+        options: _options,
       );
-      if (response.data != null && response.data['success'] == true) {
-        return OdooMyAttendanceData.fromJson(response.data['data']);
+      if (response.data != null && response.data!['success'] == true) {
+        return OdooMyAttendanceData.fromJson(response.data!['data']);
       }
       throw Exception('Failed to get my attendance');
     } catch (e) {

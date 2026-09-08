@@ -1,6 +1,6 @@
-import '../../../../core/network/api_result.dart';
-import '../models/police_model.dart';
-import '../models/shift_model.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/police_model.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
 
 abstract class AdminShiftsPoliciesRepo {
   Future<ApiResult<List<ShiftModel>>> getShifts();

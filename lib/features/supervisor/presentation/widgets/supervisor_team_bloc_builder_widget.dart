@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../core/core.dart';
-import '../../../admin/data/models/employee_model.dart';
-import '../cubit/supervisor_team_cubit.dart';
-import '../cubit/supervisor_team_state.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_state.dart';
 import 'supervisor_team_list_widget.dart';
 import 'supervisor_team_member_card_widget.dart';
 

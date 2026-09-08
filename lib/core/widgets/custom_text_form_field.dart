@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../styles/app_colors.dart';
-import '../styles/app_text_styles.dart';
+import 'package:check_point_v2/core/styles/app_colors.dart';
+import 'package:check_point_v2/core/styles/app_text_styles.dart';
 
 class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({

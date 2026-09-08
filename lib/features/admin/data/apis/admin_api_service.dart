@@ -1,24 +1,24 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../../../../core/network/api_constants.dart';
-import '../../../auth/data/models/result_model.dart';
-import '../models/account_requests_response_model.dart';
-import '../models/add_employee_request_body.dart';
-import '../models/admin_attendance_model.dart';
-import '../models/admin_leave_request_model.dart';
-import '../models/admin_plan_model.dart';
-import '../models/admin_task_model.dart';
-import '../models/branch_request_model.dart';
-import '../models/branch_response_model.dart';
-import '../models/customer_request_model.dart';
-import '../models/customer_response_model.dart';
-import '../models/department_request_model.dart';
-import '../models/department_response_model.dart';
-import '../models/edit_employee_request_body.dart';
-import '../models/employees_response_model.dart';
-import '../models/police_model.dart';
-import '../models/shift_model.dart';
+import 'package:check_point_v2/core/network/api_constants.dart';
+import 'package:check_point_v2/features/auth/data/models/login/result_model.dart';
+import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
+import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model.dart';
+import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/department_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/department_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employees_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/police_model.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
 
 part 'admin_api_service.g.dart';
 

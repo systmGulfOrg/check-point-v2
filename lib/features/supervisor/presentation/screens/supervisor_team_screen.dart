@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../widgets/supervisor_team_bloc_builder_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_team_bloc_builder_widget.dart';
 
 class SupervisorTeamScreen extends StatefulWidget {
   const SupervisorTeamScreen({super.key});

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../../admin/presentation/widgets/admin_greeting_widget.dart';
-import '../../../admin/presentation/widgets/admin_top_bar_widget.dart';
-import '../widgets/supervisor_active_tasks_bloc_builder_widget.dart';
-import '../widgets/supervisor_alert_banner_bloc_builder_widget.dart';
-import '../widgets/supervisor_stats_grid_bloc_builder_widget.dart';
-import '../widgets/supervisor_team_today_bloc_builder_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_greeting_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_top_bar_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_active_tasks_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_alert_banner_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_stats_grid_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_team_today_bloc_builder_widget.dart';
 
 class SupervisorHomeScreen extends StatelessWidget {
   const SupervisorHomeScreen({super.key});

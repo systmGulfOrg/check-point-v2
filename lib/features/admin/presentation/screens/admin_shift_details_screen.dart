@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/admin_shifts_policies_cubit.dart';
-import '../cubit/admin_shifts_policies_state.dart';
-import '../widgets/admin_new_policy_button_widget.dart';
-import '../widgets/admin_shift_employees_widget.dart';
-import '../widgets/admin_shift_policies_skeleton_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_new_policy_button_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_shift_employees_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_shift_policies_skeleton_widget.dart';
 
 class AdminShiftDetailsScreen extends StatelessWidget {
   const AdminShiftDetailsScreen({required this.shiftKey, super.key});

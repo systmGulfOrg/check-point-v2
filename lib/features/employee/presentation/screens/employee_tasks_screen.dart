@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/employee_tasks_cubit.dart';
-import '../cubit/employee_tasks_state.dart';
-import '../widgets/employee_task_data.dart';
-import '../widgets/employee_task_detail_card_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_cubit.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_state.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_task_data.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_task_detail_card_widget.dart';
 
 class EmployeeTasksScreen extends StatefulWidget {
   const EmployeeTasksScreen({super.key});

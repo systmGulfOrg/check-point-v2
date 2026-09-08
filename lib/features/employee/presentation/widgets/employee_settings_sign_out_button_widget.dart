@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../../auth/presentation/cubit/auth_session_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/session/auth_session_cubit.dart';
 
 class EmployeeSettingsSignOutButtonWidget extends StatelessWidget {
   const EmployeeSettingsSignOutButtonWidget({super.key});

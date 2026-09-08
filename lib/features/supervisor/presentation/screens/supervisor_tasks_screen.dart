@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../widgets/supervisor_new_task_button_widget.dart';
-import '../widgets/supervisor_tasks_bloc_builder_widget.dart';
-import '../widgets/supervisor_tasks_filter_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_new_task_button_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_tasks_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_tasks_filter_widget.dart';
 
 class SupervisorTasksScreen extends StatefulWidget {
   const SupervisorTasksScreen({super.key});

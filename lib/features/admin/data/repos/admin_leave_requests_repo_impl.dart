@@ -1,7 +1,7 @@
-import '../../../../core/network/api_failure_mapper.dart';
-import '../../../../core/network/api_result.dart';
-import '../apis/admin_api_service.dart';
-import '../models/admin_leave_request_model.dart';
+import 'package:check_point_v2/core/network/api_failure_mapper.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
 import 'admin_leave_requests_repo.dart';
 
 class AdminLeaveRequestsRepoImpl implements AdminLeaveRequestsRepo {

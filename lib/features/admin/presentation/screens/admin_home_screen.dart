@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/admin_attendance_cubit.dart';
-import '../cubit/admin_employees_cubit.dart';
-import '../cubit/admin_leave_requests_cubit.dart';
-import '../cubit/admin_tasks_cubit.dart';
-import '../widgets/admin_greeting_widget.dart';
-import '../widgets/admin_overview_card_widget.dart';
-import '../widgets/admin_stats_grid_widget.dart';
-import '../widgets/admin_top_bar_widget.dart';
-import '../widgets/admin_weekly_attendance_chart_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_greeting_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_overview_card_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_stats_grid_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_top_bar_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_weekly_attendance_chart_widget.dart';
 
 class AdminHomeScreen extends StatelessWidget {
   const AdminHomeScreen({super.key});

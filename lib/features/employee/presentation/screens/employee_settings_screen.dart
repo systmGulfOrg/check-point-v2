@@ -2,12 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../../../core/widgets/language_selection_sheet_widget.dart';
-import '../widgets/employee_settings_profile_card_widget.dart';
-import '../widgets/employee_settings_section_card_widget.dart';
-import '../widgets/employee_settings_sign_out_button_widget.dart';
-import '../widgets/employee_settings_tile_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_profile_card_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_section_card_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_sign_out_button_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_tile_widget.dart';
 
 class EmployeeSettingsScreen extends StatelessWidget {
   const EmployeeSettingsScreen({super.key});

@@ -1,10 +1,10 @@
-import '../../../../core/auth/auth_session_storage.dart';
-import '../../../../core/network/api_failure_mapper.dart';
-import '../../../../core/network/api_result.dart';
-import '../../../admin/data/models/admin_attendance_model.dart';
-import '../apis/supervisor_api_service.dart';
-import '../models/supervisor_attendance_check_in_request_body.dart';
-import '../models/supervisor_attendance_check_out_request_body.dart';
+import 'package:check_point_v2/core/auth/auth_session_storage.dart';
+import 'package:check_point_v2/core/network/api_failure_mapper.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
+import 'package:check_point_v2/features/supervisor/data/apis/supervisor_api_service.dart';
+import 'package:check_point_v2/features/supervisor/data/models/attendance/supervisor_attendance_check_in_request_body.dart';
+import 'package:check_point_v2/features/supervisor/data/models/attendance/supervisor_attendance_check_out_request_body.dart';
 import 'supervisor_attendance_repo.dart';
 
 class SupervisorAttendanceRepoImpl implements SupervisorAttendanceRepo {

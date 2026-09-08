@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/supervisor_tasks_cubit.dart';
-import '../cubit/supervisor_team_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'supervisor_create_task_sheet_widget.dart';
 
 class SupervisorNewTaskButtonWidget extends StatelessWidget {

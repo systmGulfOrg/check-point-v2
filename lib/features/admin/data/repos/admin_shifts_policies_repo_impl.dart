@@ -1,8 +1,8 @@
-import '../../../../core/network/api_failure_mapper.dart';
-import '../../../../core/network/api_result.dart';
-import '../apis/admin_api_service.dart';
-import '../models/police_model.dart';
-import '../models/shift_model.dart';
+import 'package:check_point_v2/core/network/api_failure_mapper.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/police_model.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
 import 'admin_shifts_policies_repo.dart';
 
 class AdminShiftsPoliciesRepoImpl implements AdminShiftsPoliciesRepo {

@@ -1,6 +1,6 @@
-import '../../../../core/network/api_result.dart';
-import '../../../admin/data/models/admin_task_model.dart';
-import '../models/supervisor_update_task_status_request_body.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
+import 'package:check_point_v2/features/supervisor/data/models/tasks/supervisor_update_task_status_request_body.dart';
 
 abstract class SupervisorTasksRepo {
   Future<ApiResult<List<AdminTaskModel>>> getTasks({int? departmentId});

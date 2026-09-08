@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'package:check_point_v2/core/app/app_config.dart';
+
 class GooglePlaceSuggestion {
   const GooglePlaceSuggestion({
     required this.placeId,
@@ -22,7 +24,6 @@ class GooglePlacesService {
   GooglePlacesService({required this.dio});
 
   final Dio dio;
-  static const String _apiKey = 'AIzaSyBmhmNVQufGCy8Iruka77zE4C0Uq2YpDDI';
 
   Future<List<GooglePlaceSuggestion>> autocomplete(
     String query, {
@@ -36,7 +37,7 @@ class GooglePlacesService {
         'https://maps.googleapis.com/maps/api/place/autocomplete/json',
         queryParameters: {
           'input': trimmed,
-          'key': _apiKey,
+          'key': AppConfig.googlePlacesApiKey,
           'language': language,
         },
       );
@@ -73,7 +74,7 @@ class GooglePlacesService {
         queryParameters: {
           'place_id': placeId,
           'fields': 'geometry/location,formatted_address,name',
-          'key': _apiKey,
+          'key': AppConfig.googlePlacesApiKey,
           'language': language,
         },
       );

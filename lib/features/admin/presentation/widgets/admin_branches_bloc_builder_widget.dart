@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/admin_branches_cubit.dart';
-import '../cubit/admin_branches_state.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
 import 'admin_branch_card_widget.dart';
 import 'admin_delete_confirmation_dialog_widget.dart';
 import 'admin_locations_skeleton_widget.dart';

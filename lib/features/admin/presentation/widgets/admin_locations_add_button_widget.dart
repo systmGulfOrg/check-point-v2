@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/admin_branches_cubit.dart';
-import '../cubit/admin_customers_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
 import 'admin_create_location_sheet_widget.dart';
 import 'admin_locations_tab_widget.dart';
 

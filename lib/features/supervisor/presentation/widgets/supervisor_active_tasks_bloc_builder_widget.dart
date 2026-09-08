@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../admin/data/models/admin_task_model.dart';
-import '../cubit/supervisor_tasks_cubit.dart';
-import '../cubit/supervisor_tasks_state.dart';
+import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_state.dart';
 import 'supervisor_active_tasks_widget.dart';
 
 class SupervisorActiveTasksBlocBuilderWidget extends StatelessWidget {

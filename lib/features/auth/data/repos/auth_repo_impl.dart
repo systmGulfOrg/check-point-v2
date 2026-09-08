@@ -1,12 +1,12 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../../../../core/network/api_failure.dart';
-import '../../../../core/network/api_failure_mapper.dart';
-import '../../../../core/network/api_result.dart';
-import '../apis/auth_api_service.dart';
-import '../models/account_request_model.dart';
-import '../models/login_request_model.dart';
-import '../models/login_response_model.dart';
+import 'package:check_point_v2/core/network/api_failure.dart';
+import 'package:check_point_v2/core/network/api_failure_mapper.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/auth/data/apis/auth_api_service.dart';
+import 'package:check_point_v2/features/auth/data/models/account_request/account_request_model.dart';
+import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
+import 'package:check_point_v2/features/auth/data/models/login/login_response_model.dart';
 import 'auth_repo.dart';
 
 class AuthRepoImpl implements AuthRepo {

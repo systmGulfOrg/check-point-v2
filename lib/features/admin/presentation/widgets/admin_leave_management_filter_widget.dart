@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../../supervisor/presentation/widgets/supervisor_segment_option_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_segment_option_widget.dart';
 
 class AdminLeaveManagementFilterWidget extends StatelessWidget {
   const AdminLeaveManagementFilterWidget({

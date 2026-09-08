@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/admin_leave_requests_cubit.dart';
-import '../cubit/admin_leave_requests_state.dart';
-import '../widgets/admin_leave_request_card_widget.dart';
-import '../widgets/admin_leave_request_data.dart';
-import '../widgets/admin_leave_requests_skeleton_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_leave_request_card_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_leave_request_data.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_leave_requests_skeleton_widget.dart';
 
 class AdminLeaveManagementScreen extends StatefulWidget {
   const AdminLeaveManagementScreen({super.key});

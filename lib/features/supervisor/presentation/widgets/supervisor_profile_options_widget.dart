@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../../../../core/widgets/language_selection_sheet_widget.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
 
 class SupervisorProfileOptionsWidget extends StatelessWidget {
   const SupervisorProfileOptionsWidget({super.key});

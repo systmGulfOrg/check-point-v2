@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/core.dart';
-import '../../../supervisor/presentation/widgets/supervisor_task_card_widget.dart';
-import '../../data/models/admin_task_model.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_task_card_widget.dart';
+import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
 
 class AdminTasksListWidget extends StatelessWidget {
   const AdminTasksListWidget({super.key});

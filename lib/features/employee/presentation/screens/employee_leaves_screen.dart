@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/employee_leave_requests_cubit.dart';
-import '../cubit/employee_leave_requests_state.dart';
-import '../widgets/apply_for_leave_sheet_widget.dart';
-import '../widgets/employee_leave_card_widget.dart';
-import '../widgets/employee_leave_data.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/leave_requests/employee_leave_requests_cubit.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/leave_requests/employee_leave_requests_state.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_leave_sheet_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_leave_card_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_leave_data.dart';
 
 class EmployeeLeavesScreen extends StatefulWidget {
   const EmployeeLeavesScreen({super.key});

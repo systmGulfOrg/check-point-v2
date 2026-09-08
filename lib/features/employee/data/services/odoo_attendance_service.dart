@@ -1,21 +1,11 @@
 import 'package:dio/dio.dart';
 
-class OdooAttendanceService {
-  final Dio _dio;
+import 'package:check_point_v2/core/app/app_config.dart';
 
-  OdooAttendanceService()
-      : _dio = Dio(
-          BaseOptions(
-            baseUrl:
-                'https://masteameg-newenlighten-test-36387693.dev.odoo.com',
-            headers: {
-              'Accept': 'application/json',
-              'API-KEY': 'jkashda_891273yubk_hjsda92',
-            },
-            connectTimeout: const Duration(seconds: 10),
-            receiveTimeout: const Duration(seconds: 10),
-          ),
-        );
+class OdooAttendanceService {
+  OdooAttendanceService({required this.dio});
+
+  final Dio dio;
 
   String _getOdooLocation(String area) {
     switch (area.trim().toLowerCase()) {
@@ -30,6 +20,16 @@ class OdooAttendanceService {
     }
   }
 
+  Options get _options => Options(
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          if (AppConfig.odooApiKey.isNotEmpty) 'API-KEY': AppConfig.odooApiKey,
+        },
+      );
+
+  String get _baseUrl => AppConfig.odooBaseUrl;
+
   Future<bool> syncCheckIn({
     required String employeeIdStr,
     required String area,
@@ -37,16 +37,13 @@ class OdooAttendanceService {
     if (employeeIdStr.isEmpty) return false;
     final String location = _getOdooLocation(area);
     try {
-      final response = await _dio.post(
-        '/api/attendance/check_in',
+      final response = await dio.post<Map<String, dynamic>>(
+        '$_baseUrl/api/attendance/check_in',
         data: {
           'mobile_employee_id': employeeIdStr,
           'location': location,
         },
-        options: Options(
-          headers: {'Content-Type': 'application/json'},
-          contentType: Headers.jsonContentType,
-        ),
+        options: _options,
       );
       return response.data?['success'] ?? false;
     } catch (_) {
@@ -59,13 +56,10 @@ class OdooAttendanceService {
   }) async {
     if (employeeIdStr.isEmpty) return false;
     try {
-      final response = await _dio.post(
-        '/api/attendance/check_out',
+      final response = await dio.post<Map<String, dynamic>>(
+        '$_baseUrl/api/attendance/check_out',
         data: {'mobile_employee_id': employeeIdStr},
-        options: Options(
-          headers: {'Content-Type': 'application/json'},
-          contentType: Headers.jsonContentType,
-        ),
+        options: _options,
       );
       return response.data?['success'] ?? false;
     } catch (_) {

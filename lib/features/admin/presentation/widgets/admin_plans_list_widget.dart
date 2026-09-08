@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/core.dart';
-import '../../../supervisor/presentation/widgets/supervisor_plan_card_widget.dart';
-import '../../data/models/admin_plan_model.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_plan_card_widget.dart';
+import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model.dart';
 
 class AdminPlansListWidget extends StatelessWidget {
   const AdminPlansListWidget({super.key});

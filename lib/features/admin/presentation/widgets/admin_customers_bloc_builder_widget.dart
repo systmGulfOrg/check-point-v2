@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/core.dart';
-import '../cubit/admin_customers_cubit.dart';
-import '../cubit/admin_customers_state.dart';
+import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_state.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'admin_create_location_sheet_widget.dart';

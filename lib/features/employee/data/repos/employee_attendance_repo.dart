@@ -1,15 +1,15 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../../../core/network/api_result.dart';
-import '../../../admin/data/models/admin_attendance_model.dart';
-import '../../../admin/data/models/admin_plan_model.dart';
-import '../../../admin/data/models/branch_response_model.dart';
-import '../../../admin/data/models/customer_response_model.dart';
-import '../models/employee_check_in_request_body.dart';
-import '../models/employee_check_out_request_body.dart';
-import '../models/employee_plan_feedback_request_body.dart';
-import '../models/employee_remove_plan_request_body.dart';
-import '../models/track_user_request_body.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
+import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_in_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_out_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/plans/employee_plan_feedback_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/plans/employee_remove_plan_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/attendance/track_user_request_body.dart';
 
 abstract class EmployeeAttendanceRepo {
   Future<ApiResult<BranchModel>> getBranchById(int branchId);
