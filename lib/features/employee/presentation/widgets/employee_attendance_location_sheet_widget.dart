@@ -13,6 +13,10 @@ import 'package:check_point_v2/features/admin/data/models/locations/customer_res
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_state.dart';
 import 'attendance_target_details_widget.dart';
+import 'employee_attendance_location_map_widget.dart';
+import 'employee_attendance_location_status_widget.dart';
+import 'employee_attendance_location_type_selector_widget.dart';
+import 'employee_attendance_target_dropdown_widget.dart';
 
 class EmployeeAttendanceLocationSheetWidget extends StatefulWidget {
   const EmployeeAttendanceLocationSheetWidget({
@@ -171,21 +175,6 @@ class _EmployeeAttendanceLocationSheetWidgetState
     ).showSnackBar(SnackBar(content: Text('attendance.addressCopied'.tr())));
   }
 
-  void _copyTargetCoordinates() {
-    final points = targetPoints;
-    if (points.isEmpty) return;
-    Clipboard.setData(
-      ClipboardData(
-        text:
-            '${points.first.latitude}, '
-            '${points.first.longitude}',
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('attendance.coordinatesCopied'.tr())),
-    );
-  }
-
   Future<void> _submit() async {
     if (!isInside) return;
     final cubit = context.read<EmployeeAttendanceCubit>();
@@ -281,117 +270,31 @@ class _EmployeeAttendanceLocationSheetWidgetState
                     style: AppTextStyles.font14SemiBold,
                   ),
                   hSpace(6),
-                  Container(
-                    padding: EdgeInsets.all(4.r),
-                    decoration: BoxDecoration(
-                      color: AppColors.pageBackground,
-                      borderRadius: BorderRadius.circular(20.r),
-                      border: Border.all(color: AppColors.border),
-                    ),
-                    child: Row(
-                      children: [
-                        for (final option in [
-                          ('Branch', 'attendance.branch'),
-                          ('Customer', 'attendance.customer'),
-                          ('Site', 'attendance.site'),
-                        ])
-                          Expanded(
-                            child: Semantics(
-                              button: true,
-                              selected: type == option.$1,
-                              label: option.$2.tr(),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(16.r),
-                                onTap: () => _changeType(option.$1),
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 180),
-                                  padding: EdgeInsets.symmetric(vertical: 10.h),
-                                  decoration: BoxDecoration(
-                                    color: type == option.$1
-                                        ? AppColors.selectedBackground
-                                        : AppColors.transparent,
-                                    borderRadius: BorderRadius.circular(16.r),
-                                    boxShadow: type == option.$1
-                                        ? const [
-                                            BoxShadow(
-                                              color: AppColors.shadow,
-                                              blurRadius: 4,
-                                              offset: Offset(0, 1),
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      if (type == option.$1) ...[
-                                        Icon(
-                                          Icons.check_rounded,
-                                          size: 16.r,
-                                          color: AppColors.brandPrimaryDark,
-                                        ),
-                                        wSpace(4),
-                                      ],
-                                      Text(
-                                        option.$2.tr(),
-                                        style: AppTextStyles.font12SemiBold
-                                            .copyWith(
-                                              color: type == option.$1
-                                                  ? AppColors.textPrimary
-                                                  : AppColors.textSecondary,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
+                  EmployeeAttendanceLocationTypeSelectorWidget(
+                    selectedType: type,
+                    onTypeChanged: _changeType,
                   ),
                   hSpace(8),
-                  DropdownButtonFormField<String>(
-                    initialValue: type == 'Branch'
-                        ? branch?.id?.toString()
-                        : customer?.id,
-                    decoration: InputDecoration(
-                      labelText: 'attendance.location'.tr(),
-                    ),
-                    items: type == 'Branch'
-                        ? branchOptions
-                              .where((item) => item.id != null)
-                              .map(
-                                (item) => DropdownMenuItem(
-                                  value: item.id.toString(),
-                                  child: Text(item.name ?? 'Branch'),
-                                ),
-                              )
-                              .toList()
-                        : customerOptions
-                              .where((item) => item.id != null)
-                              .map(
-                                (item) => DropdownMenuItem(
-                                  value: item.id,
-                                  child: Text(item.name ?? type),
-                                ),
-                              )
-                              .toList(),
-                    onChanged: (value) => setState(() {
-                      if (type == 'Branch') {
-                        branch = branchOptions.firstWhere(
-                          (item) => item.id.toString() == value,
-                        );
-                      } else {
-                        customer = customerOptions.firstWhere(
-                          (item) => item.id == value,
-                        );
-                      }
+                  EmployeeAttendanceTargetDropdownWidget(
+                    type: type,
+                    branches: branchOptions,
+                    customers: customerOptions,
+                    selectedBranch: branch,
+                    selectedCustomer: customer,
+                    onBranchChanged: (selected) {
+                      setState(() => branch = selected);
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         _focusTarget();
                         _loadTargetAddress();
                       });
-                    }),
+                    },
+                    onCustomerChanged: (selected) {
+                      setState(() => customer = selected);
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        _focusTarget();
+                        _loadTargetAddress();
+                      });
+                    },
                   ),
                   if (points.isEmpty) ...[
                     hSpace(20),
@@ -406,111 +309,17 @@ class _EmployeeAttendanceLocationSheetWidgetState
                     ),
                   ] else ...[
                     hSpace(12),
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 220),
-                      height: isMapExpanded ? 500.h : 260.h,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16.r),
-                        child: Stack(
-                          children: [
-                            GoogleMap(
-                              initialCameraPosition: CameraPosition(
-                                target: mapCenter,
-                                zoom: 15,
-                              ),
-                              onMapCreated: (controller) =>
-                                  mapController = controller,
-                              myLocationEnabled: true,
-                              myLocationButtonEnabled: true,
-                              markers: {
-                                if (userLocation != null)
-                                  Marker(
-                                    markerId: const MarkerId('user'),
-                                    position: userLocation!,
-                                    icon: BitmapDescriptor.defaultMarkerWithHue(
-                                      BitmapDescriptor.hueAzure,
-                                    ),
-                                    infoWindow: InfoWindow(
-                                      title: 'attendance.myLocation'.tr(),
-                                    ),
-                                  ),
-                                if (points.isNotEmpty)
-                                  Marker(
-                                    markerId: const MarkerId('target'),
-                                    position: points.first,
-                                    icon: BitmapDescriptor.defaultMarkerWithHue(
-                                      BitmapDescriptor.hueOrange,
-                                    ),
-                                    infoWindow: InfoWindow(
-                                      title: type,
-                                      snippet: branch?.name ?? customer?.name,
-                                    ),
-                                  ),
-                              },
-                              polylines:
-                                  userLocation != null && points.isNotEmpty
-                                  ? {
-                                      Polyline(
-                                        polylineId: const PolylineId(
-                                          'user-to-target',
-                                        ),
-                                        points: [userLocation!, points.first],
-                                        color: AppColors.info,
-                                        width: 4,
-                                      ),
-                                    }
-                                  : const {},
-                              polygons: points.length > 2
-                                  ? {
-                                      Polygon(
-                                        polygonId: const PolygonId('target'),
-                                        points: points,
-                                        fillColor: AppColors.brandPrimary
-                                            .withValues(alpha: .18),
-                                        strokeColor: AppColors.brandPrimary,
-                                        strokeWidth: 3,
-                                      ),
-                                    }
-                                  : const {},
-                              circles: targetCenter == null
-                                  ? const {}
-                                  : {
-                                      Circle(
-                                        circleId: const CircleId('target'),
-                                        center: targetCenter!,
-                                        radius: 150,
-                                        fillColor: AppColors.brandPrimary
-                                            .withValues(alpha: .18),
-                                        strokeColor: AppColors.brandPrimary,
-                                        strokeWidth: 3,
-                                      ),
-                                    },
-                            ),
-                            PositionedDirectional(
-                              top: 10.h,
-                              end: 10.w,
-                              child: Material(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(10.r),
-                                child: IconButton(
-                                  tooltip: isMapExpanded
-                                      ? 'attendance.collapseMap'.tr()
-                                      : 'attendance.expandMap'.tr(),
-                                  icon: Icon(
-                                    isMapExpanded
-                                        ? Icons.fullscreen_exit
-                                        : Icons.fullscreen,
-                                    color: AppColors.textPrimary,
-                                  ),
-                                  onPressed: () => setState(
-                                    () => isMapExpanded = !isMapExpanded,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    EmployeeAttendanceLocationMapWidget(
+                      isExpanded: isMapExpanded,
+                      mapCenter: mapCenter,
+                      userLocation: userLocation,
+                      targetPoints: points,
+                      targetCenter: targetCenter,
+                      targetType: type,
+                      targetName: branch?.name ?? customer?.name,
+                      onMapCreated: (controller) => mapController = controller,
+                      onToggleExpanded: () =>
+                          setState(() => isMapExpanded = !isMapExpanded),
                     ),
                     hSpace(10),
                     AttendanceTargetDetailsWidget(
@@ -519,81 +328,13 @@ class _EmployeeAttendanceLocationSheetWidgetState
                           targetAddress ??
                           branch?.location ??
                           customer?.location,
-                      coordinates:
-                          '${points.first.latitude.toStringAsFixed(6)}, '
-                          '${points.first.longitude.toStringAsFixed(6)}',
                       isAddressLoading: isAddressLoading,
                       onCopyAddress: _copyTargetAddress,
-                      onCopyCoordinates: _copyTargetCoordinates,
                     ),
                     hSpace(10),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(12.r),
-                      decoration: BoxDecoration(
-                        color: userLocation == null
-                            ? AppColors.pageBackground
-                            : isInside
-                            ? AppColors.softGreenBackground
-                            : AppColors.softRedBackground,
-                        borderRadius: BorderRadius.circular(14.r),
-                        border: Border.all(
-                          color: userLocation == null
-                              ? AppColors.border
-                              : isInside
-                              ? AppColors.success.withValues(alpha: .35)
-                              : AppColors.error.withValues(alpha: .35),
-                        ),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(
-                            userLocation == null
-                                ? Icons.gps_fixed_rounded
-                                : isInside
-                                ? Icons.check_circle_rounded
-                                : Icons.location_off_rounded,
-                            color: userLocation == null
-                                ? AppColors.textSecondary
-                                : isInside
-                                ? AppColors.success
-                                : AppColors.error,
-                            size: 22.r,
-                          ),
-                          wSpace(10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  userLocation == null
-                                      ? 'attendance.locationLoading'.tr()
-                                      : isInside
-                                      ? 'attendance.insideArea'.tr()
-                                      : 'attendance.outsideArea'.tr(),
-                                  style: AppTextStyles.font14SemiBold.copyWith(
-                                    color: userLocation == null
-                                        ? AppColors.textPrimary
-                                        : isInside
-                                        ? AppColors.success
-                                        : AppColors.error,
-                                  ),
-                                ),
-                                hSpace(4),
-                                Text(
-                                  isInside
-                                      ? 'attendance.readyNote'.tr()
-                                      : 'attendance.moveToLocationNote'.tr(),
-                                  style: AppTextStyles.font12Regular.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                    EmployeeAttendanceLocationStatusWidget(
+                      userLocation: userLocation,
+                      isInside: isInside,
                     ),
                     hSpace(8),
                     Text(

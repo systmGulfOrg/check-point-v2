@@ -8,19 +8,15 @@ class AttendanceTargetDetailsWidget extends StatelessWidget {
   const AttendanceTargetDetailsWidget({
     required this.name,
     required this.address,
-    required this.coordinates,
     required this.isAddressLoading,
     required this.onCopyAddress,
-    required this.onCopyCoordinates,
     super.key,
   });
 
   final String name;
   final String? address;
-  final String coordinates;
   final bool isAddressLoading;
   final VoidCallback onCopyAddress;
-  final VoidCallback onCopyCoordinates;
 
   @override
   Widget build(BuildContext context) {
@@ -98,28 +94,6 @@ class AttendanceTargetDetailsWidget extends StatelessWidget {
                   color: AppColors.brandPrimary,
                   onPressed: onCopyAddress,
                 ),
-            ],
-          ),
-          hSpace(8),
-          Text(
-            'attendance.coordinates'.tr(),
-            style: AppTextStyles.font12Medium.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-          hSpace(3),
-          Row(
-            children: [
-              Expanded(
-                child: Text(coordinates, style: AppTextStyles.font13Regular),
-              ),
-              IconButton(
-                tooltip: 'attendance.copyCoordinates'.tr(),
-                visualDensity: VisualDensity.compact,
-                icon: Icon(Icons.copy_rounded, size: 18.r),
-                color: AppColors.brandPrimary,
-                onPressed: onCopyCoordinates,
-              ),
             ],
           ),
         ],
