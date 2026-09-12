@@ -37,6 +37,7 @@ import 'package:check_point_v2/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:check_point_v2/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/session/auth_session_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
 import 'package:check_point_v2/features/employee/data/apis/employee_api_service.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_action_repo.dart';
@@ -248,6 +249,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<AuthSessionCubit>(
     () => AuthSessionCubit(authSessionStorage: sl<AuthSessionStorage>()),
+  );
+  sl.registerFactory<AuthProfileCubit>(
+    () => AuthProfileCubit(sessionStorage: sl<AuthSessionStorage>()),
   );
   sl.registerFactory<RequestAccountCubit>(
     () => RequestAccountCubit(

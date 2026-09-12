@@ -4,6 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
 
 class SupervisorProfileOptionsWidget extends StatelessWidget {
   const SupervisorProfileOptionsWidget({super.key});
@@ -26,7 +27,12 @@ class SupervisorProfileOptionsWidget extends StatelessWidget {
         null,
         null,
       ),
-      (Icons.key_outlined, 'supervisor.profile.changePassword', null, null),
+      (
+        Icons.key_outlined,
+        'supervisor.profile.changePassword',
+        null,
+        () => showChangePasswordSheet(context),
+      ),
       (
         Icons.notifications_none_rounded,
         'supervisor.profile.notifications',

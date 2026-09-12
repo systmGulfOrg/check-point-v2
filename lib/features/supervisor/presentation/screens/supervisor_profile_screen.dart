@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/auth_profile_card_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_sign_out_button_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_profile_options_widget.dart';
-import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_profile_summary_widget.dart';
 
 class SupervisorProfileScreen extends StatelessWidget {
   const SupervisorProfileScreen({super.key});
@@ -23,7 +23,7 @@ class SupervisorProfileScreen extends StatelessWidget {
               style: AppTextStyles.font20Bold,
             ),
             hSpace(20),
-            const SupervisorProfileSummaryWidget(),
+            const AuthProfileCardWidget(),
             hSpace(20),
             const SupervisorProfileOptionsWidget(),
             hSpace(20),

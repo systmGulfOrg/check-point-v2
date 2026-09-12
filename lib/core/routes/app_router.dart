@@ -25,8 +25,10 @@ import 'package:check_point_v2/features/admin/presentation/screens/admin_request
 import 'package:check_point_v2/features/admin/presentation/screens/admin_shift_details_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_shifts_policies_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_tasks_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_employee_directory_listener_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/session/auth_session_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/screens/login_screen.dart';
 import 'package:check_point_v2/features/auth/presentation/screens/request_access_screen.dart';
@@ -160,6 +162,12 @@ class AppRouter {
               BlocProvider<AuthSessionCubit>(
                 create: (_) => sl<AuthSessionCubit>(),
               ),
+              BlocProvider<AuthProfileCubit>(
+                create: (_) => sl<AuthProfileCubit>()..loadProfile(),
+              ),
+              BlocProvider<EmployeeChangePasswordCubit>(
+                create: (_) => sl<EmployeeChangePasswordCubit>(),
+              ),
               BlocProvider<AdminEmployeesCubit>(
                 create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
               ),
@@ -275,9 +283,21 @@ class AppRouter {
       case AppRoutes.adminAttendance:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminAttendance),
-          child: BlocProvider<AdminAttendanceCubit>(
-            create: (_) => sl<AdminAttendanceCubit>()..loadAttendance(),
-            child: const AdminAttendanceScreen(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AdminEmployeesCubit>(
+                create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
+              ),
+              BlocProvider<AdminDepartmentsCubit>(
+                create: (_) => sl<AdminDepartmentsCubit>()..load(),
+              ),
+              BlocProvider<AdminAttendanceCubit>(
+                create: (_) => sl<AdminAttendanceCubit>()..loadAttendance(),
+              ),
+            ],
+            child: const AdminAttendanceEmployeeDirectoryListenerWidget(
+              child: AdminAttendanceScreen(),
+            ),
           ),
         );
 
@@ -304,6 +324,12 @@ class AppRouter {
             providers: [
               BlocProvider<AuthSessionCubit>(
                 create: (_) => sl<AuthSessionCubit>(),
+              ),
+              BlocProvider<AuthProfileCubit>(
+                create: (_) => sl<AuthProfileCubit>()..loadProfile(),
+              ),
+              BlocProvider<EmployeeChangePasswordCubit>(
+                create: (_) => sl<EmployeeChangePasswordCubit>(),
               ),
               BlocProvider<SupervisorAttendanceCubit>(
                 create: (_) =>
@@ -371,8 +397,12 @@ class AppRouter {
               BlocProvider<AuthSessionCubit>(
                 create: (_) => sl<AuthSessionCubit>(),
               ),
+              BlocProvider<AuthProfileCubit>(
+                create: (_) => sl<AuthProfileCubit>()..loadProfile(),
+              ),
               BlocProvider<EmployeeAttendanceCubit>(
-                create: (_) => sl<EmployeeAttendanceCubit>()..loadAttendanceHistory(),
+                create: (_) =>
+                    sl<EmployeeAttendanceCubit>()..loadAttendanceHistory(),
               ),
               BlocProvider<EmployeeTasksCubit>(
                 create: (_) => sl<EmployeeTasksCubit>()..loadMyTasks(),
@@ -381,20 +411,20 @@ class AppRouter {
                 create: (_) => sl<EmployeePlansCubit>()..loadMyPlans(),
               ),
               BlocProvider<EmployeeLeaveRequestsCubit>(
-                create: (_) => sl<EmployeeLeaveRequestsCubit>()..loadLeaveRequests(),
+                create: (_) =>
+                    sl<EmployeeLeaveRequestsCubit>()..loadLeaveRequests(),
               ),
               BlocProvider<EmployeeChangePasswordCubit>(
                 create: (_) => sl<EmployeeChangePasswordCubit>(),
               ),
               BlocProvider<EmployeeOdooDashboardCubit>(
-                create: (_) => sl<EmployeeOdooDashboardCubit>()..fetchDashboardData(),
+                create: (_) =>
+                    sl<EmployeeOdooDashboardCubit>()..fetchDashboardData(),
               ),
             ],
             child: const EmployeeMainScreen(),
           ),
         );
-
-
       case AppRoutes.employeeSettings:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.employeeSettings),

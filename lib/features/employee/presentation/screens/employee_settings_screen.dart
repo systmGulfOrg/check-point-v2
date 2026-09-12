@@ -4,7 +4,8 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
-import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_profile_card_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/auth_profile_card_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_section_card_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_sign_out_button_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_tile_widget.dart';
@@ -46,11 +47,11 @@ class EmployeeSettingsScreen extends StatelessWidget {
                 ],
               ),
               hSpace(20),
-              const EmployeeSettingsProfileCardWidget(),
+              const AuthProfileCardWidget(),
               hSpace(20),
               EmployeeSettingsSectionCardWidget(
                 sectionTitleKey: 'employee.settings.sectionAccount',
-                tiles: const [
+                tiles: [
                   EmployeeSettingsTileWidget(
                     icon: Icons.person_outline_rounded,
                     titleKey: 'employee.settings.profileInfo',
@@ -60,6 +61,7 @@ class EmployeeSettingsScreen extends StatelessWidget {
                     icon: Icons.key_outlined,
                     titleKey: 'employee.settings.changePassword',
                     valueKey: '••••••••',
+                    onTap: () => showChangePasswordSheet(context),
                   ),
                   EmployeeSettingsTileWidget(
                     icon: Icons.notifications_none_rounded,
