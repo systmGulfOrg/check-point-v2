@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo.dart';
 import 'admin_attendance_state.dart';
 
@@ -26,11 +27,48 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
   DateTime? _customStartDate;
   DateTime? _customEndDate;
   String _searchQuery = '';
+  String? _selectedEmployeeId;
+  int? _selectedDepartmentId;
+  String _selectedStatus = 'all';
+  Map<String, int?> _employeeDepartmentById = const {};
 
   AdminAttendanceDateFilter get selectedDateFilter => _selectedDateFilter;
   DateTime? get customStartDate => _customStartDate;
   DateTime? get customEndDate => _customEndDate;
   String get searchQuery => _searchQuery;
+  String? get selectedEmployeeId => _selectedEmployeeId;
+  int? get selectedDepartmentId => _selectedDepartmentId;
+  String get selectedStatus => _selectedStatus;
+
+  void setEmployeeDirectory(List<EmployeeModel> employees) {
+    _employeeDepartmentById = {
+      for (final employee in employees)
+        if (employee.id != null) employee.id!: employee.departmentId,
+    };
+    _emitFiltered();
+  }
+
+  void setEmployeeFilter(String? employeeId) {
+    _selectedEmployeeId = employeeId;
+    _emitFiltered();
+  }
+
+  void setDepartmentFilter(int? departmentId) {
+    _selectedDepartmentId = departmentId;
+    _emitFiltered();
+  }
+
+  void setStatusFilter(String status) {
+    _selectedStatus = status;
+    _emitFiltered();
+  }
+
+  void clearAdvancedFilters() {
+    _selectedEmployeeId = null;
+    _selectedDepartmentId = null;
+    _selectedStatus = 'all';
+    _emitFiltered();
+  }
 
   Future<void> loadAttendance() async {
     emit(const AdminAttendanceState.loading());
@@ -78,6 +116,24 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
           return false;
         }
       }
+
+      if (_selectedEmployeeId != null &&
+          record.employeeId != _selectedEmployeeId) {
+        return false;
+      }
+
+      if (_selectedDepartmentId != null &&
+          _employeeDepartmentById[record.employeeId] != _selectedDepartmentId) {
+        return false;
+      }
+
+      final statusMatches = switch (_selectedStatus) {
+        'late' => record.isLate == true,
+        'earlyCheckout' => record.isEarly == true,
+        'onTime' => record.isLate != true && record.isEarly != true,
+        _ => true,
+      };
+      if (!statusMatches) return false;
 
       // 2. Date Filter
       final recordDate = _parseDate(record.attendanceDate);
@@ -149,11 +205,6 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
     switch (result) {
       case Success():
         await loadAttendance();
-        emit(
-          const AdminAttendanceState.actionSuccess(
-            'Attendance record deleted successfully',
-          ),
-        );
         return true;
       case Failure(:final failure):
         emit(AdminAttendanceState.error(failure.messageKey));

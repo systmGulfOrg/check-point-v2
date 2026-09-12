@@ -8,6 +8,7 @@ import 'package:check_point_v2/features/admin/data/models/attendance/admin_atten
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_state.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_filter_bar_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_advanced_filter_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_record_card_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_record_data.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_skeleton_widget.dart';
@@ -49,41 +50,107 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomTextFormField(
-                controller: searchController,
-                hintText: 'admin.attendance.searchHint'.tr(context: context),
-                prefixIcon: Icon(Icons.search_rounded, size: 20.r),
-                onChanged: context.read<AdminAttendanceCubit>().search,
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomTextFormField(
+                      controller: searchController,
+                      hintText: 'admin.attendance.searchHint'.tr(
+                        context: context,
+                      ),
+                      prefixIcon: Icon(Icons.search_rounded, size: 20.r),
+                      onChanged: context.read<AdminAttendanceCubit>().search,
+                    ),
+                  ),
+                ],
               ),
+              hSpace(14),
+              const AdminAttendanceAdvancedFilterWidget(),
               hSpace(14),
               const AdminAttendanceFilterBarWidget(),
               hSpace(14),
               BlocBuilder<AdminAttendanceCubit, AdminAttendanceState>(
                 builder: (context, state) {
                   return state.when(
-                    initial: () => const SizedBox.shrink(),
+                    initial: () => const AdminAttendanceSkeletonWidget(),
                     loading: () => const AdminAttendanceSkeletonWidget(),
-                    error: (messageKey) => Padding(
-                      padding: EdgeInsets.all(24.r),
-                      child: Center(
-                        child: Text(
-                          messageKey.tr(context: context),
-                          style: AppTextStyles.font14Regular.copyWith(
-                            color: AppColors.error,
-                          ),
+                    error: (messageKey) => Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.only(top: 16.h),
+                      padding: EdgeInsets.all(20.r),
+                      decoration: BoxDecoration(
+                        color: AppColors.softRedBackground,
+                        borderRadius: BorderRadius.circular(14.r),
+                        border: Border.all(
+                          color: AppColors.error.withValues(alpha: 0.2),
                         ),
                       ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.cloud_off_rounded,
+                            color: AppColors.error,
+                            size: 30.r,
+                          ),
+                          hSpace(8),
+                          Text(
+                            messageKey.tr(context: context),
+                            textAlign: TextAlign.center,
+                            style: AppTextStyles.font14Regular.copyWith(
+                              color: AppColors.error,
+                            ),
+                          ),
+                          hSpace(10),
+                          OutlinedButton.icon(
+                            onPressed: context
+                                .read<AdminAttendanceCubit>()
+                                .loadAttendance,
+                            icon: Icon(Icons.refresh_rounded, size: 17.r),
+                            label: Text(
+                              'admin.attendance.tryAgain'.tr(context: context),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    actionSuccess: (_) => const SizedBox.shrink(),
+                    actionSuccess: (message) => Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.only(top: 16.h),
+                      padding: EdgeInsets.all(18.r),
+                      decoration: BoxDecoration(
+                        color: AppColors.softGreenBackground,
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle_outline_rounded,
+                            color: AppColors.success,
+                            size: 24.r,
+                          ),
+                          wSpace(10),
+                          Expanded(
+                            child: Text(
+                              message,
+                              style: AppTextStyles.font13SemiBold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     success: (records) => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'admin.attendance.count'.tr(
-                            context: context,
-                            args: ['${records.length}'],
-                          ),
-                          style: AppTextStyles.font12Regular,
+                        Row(
+                          children: [
+                            Text(
+                              'admin.attendance.count'.tr(
+                                context: context,
+                                args: ['${records.length}'],
+                              ),
+                              style: AppTextStyles.font12Regular,
+                            ),
+                          ],
                         ),
                         hSpace(10),
                         if (records.isEmpty)
