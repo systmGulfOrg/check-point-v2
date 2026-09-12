@@ -4,7 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_create_plan_sheet_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/plans/supervisor_plans_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/plans/admin_plans_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/plans/admin_plans_state.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_plans_skeleton_widget.dart';
@@ -71,8 +74,19 @@ class AdminPlansScreen extends StatelessWidget {
                                     top: Radius.circular(20),
                                   ),
                                 ),
-                                builder: (_) =>
-                                    const SupervisorCreatePlanSheetWidget(),
+                                builder: (_) => MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider<SupervisorPlansCubit>(
+                                      create: (_) => sl<SupervisorPlansCubit>(),
+                                    ),
+                                    BlocProvider<SupervisorTeamCubit>(
+                                      create: (_) =>
+                                          sl<SupervisorTeamCubit>()..loadTeam(),
+                                    ),
+                                  ],
+                                  child:
+                                      const SupervisorCreatePlanSheetWidget(),
+                                ),
                               ),
                               child: Text(
                                 'admin.plans.newPlan'.tr(context: context),
