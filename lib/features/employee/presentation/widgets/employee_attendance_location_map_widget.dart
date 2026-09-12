@@ -1,4 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -44,6 +46,18 @@ class EmployeeAttendanceLocationMapWidget extends StatelessWidget {
                 zoom: 15,
               ),
               onMapCreated: onMapCreated,
+              // The map lives inside a SingleChildScrollView. Give it the
+              // gesture arena priority so one-finger pan and map gestures are
+              // not consumed by the sheet's parent scroll view.
+              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                Factory<OneSequenceGestureRecognizer>(
+                  EagerGestureRecognizer.new,
+                ),
+              },
+              scrollGesturesEnabled: true,
+              zoomGesturesEnabled: true,
+              rotateGesturesEnabled: true,
+              tiltGesturesEnabled: true,
               myLocationEnabled: true,
               myLocationButtonEnabled: true,
               markers: {

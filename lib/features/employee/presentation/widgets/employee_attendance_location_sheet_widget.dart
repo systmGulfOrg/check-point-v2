@@ -202,160 +202,180 @@ class _EmployeeAttendanceLocationSheetWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 12.h),
-        child: SingleChildScrollView(
-          child: BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
-            builder: (context, state) {
-              final branches = switch (state) {
-                EmployeeAttendanceStateBranchesLoaded(:final branches) =>
-                  branches,
-                _ => const <BranchModel>[],
-              };
-              final customers = switch (state) {
-                EmployeeAttendanceStateTargetsLoaded(:final targets) => targets,
-                _ => const <CustomerModel>[],
-              };
-              switch (state) {
-                case EmployeeAttendanceStateBranchesLoaded(:final branches):
-                  availableBranches = branches;
-                case EmployeeAttendanceStateTargetsLoaded(:final targets):
-                  availableCustomers = targets;
-                default:
-                  break;
-              }
-              final branchOptions = availableBranches.isNotEmpty
-                  ? availableBranches
-                  : branches;
-              final customerOptions = availableCustomers.isNotEmpty
-                  ? availableCustomers
-                  : customers;
-              if (type == 'Branch' &&
-                  branch == null &&
-                  branchOptions.isNotEmpty) {
-                branch = branchOptions.first;
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _focusTarget();
-                  _loadTargetAddress();
-                });
-              }
-              if (type != 'Branch' &&
-                  customer == null &&
-                  customerOptions.isNotEmpty) {
-                customer = customerOptions.first;
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _focusTarget();
-                  _loadTargetAddress();
-                });
-              }
-              final points = targetPoints;
-              final mapCenter =
-                  targetCenter ??
-                  userLocation ??
-                  const LatLng(30.0444, 31.2357);
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.isCheckOut
-                        ? 'employee.home.checkOutAction'.tr()
-                        : 'employee.home.checkInAction'.tr(),
-                    style: AppTextStyles.font20Bold,
-                  ),
-                  hSpace(12),
-                  Text(
-                    'attendance.locationType'.tr(),
-                    style: AppTextStyles.font14SemiBold,
-                  ),
-                  hSpace(6),
-                  EmployeeAttendanceLocationTypeSelectorWidget(
-                    selectedType: type,
-                    onTypeChanged: _changeType,
-                  ),
-                  hSpace(8),
-                  EmployeeAttendanceTargetDropdownWidget(
-                    type: type,
-                    branches: branchOptions,
-                    customers: customerOptions,
-                    selectedBranch: branch,
-                    selectedCustomer: customer,
-                    onBranchChanged: (selected) {
-                      setState(() => branch = selected);
+    return BlocListener<EmployeeAttendanceCubit, EmployeeAttendanceState>(
+      listener: (context, state) {
+        switch (state) {
+          case EmployeeAttendanceStateError(:final messageKey):
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(messageKey.tr(context: context)),
+                backgroundColor: AppColors.error,
+              ),
+            );
+          default:
+            break;
+        }
+      },
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 12.h),
+          child: SingleChildScrollView(
+            child:
+                BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
+                  builder: (context, state) {
+                    final branches = switch (state) {
+                      EmployeeAttendanceStateBranchesLoaded(:final branches) =>
+                        branches,
+                      _ => const <BranchModel>[],
+                    };
+                    final customers = switch (state) {
+                      EmployeeAttendanceStateTargetsLoaded(:final targets) =>
+                        targets,
+                      _ => const <CustomerModel>[],
+                    };
+                    switch (state) {
+                      case EmployeeAttendanceStateBranchesLoaded(
+                        :final branches,
+                      ):
+                        availableBranches = branches;
+                      case EmployeeAttendanceStateTargetsLoaded(:final targets):
+                        availableCustomers = targets;
+                      default:
+                        break;
+                    }
+                    final branchOptions = availableBranches.isNotEmpty
+                        ? availableBranches
+                        : branches;
+                    final customerOptions = availableCustomers.isNotEmpty
+                        ? availableCustomers
+                        : customers;
+                    if (type == 'Branch' &&
+                        branch == null &&
+                        branchOptions.isNotEmpty) {
+                      branch = branchOptions.first;
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         _focusTarget();
                         _loadTargetAddress();
                       });
-                    },
-                    onCustomerChanged: (selected) {
-                      setState(() => customer = selected);
+                    }
+                    if (type != 'Branch' &&
+                        customer == null &&
+                        customerOptions.isNotEmpty) {
+                      customer = customerOptions.first;
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         _focusTarget();
                         _loadTargetAddress();
                       });
-                    },
-                  ),
-                  if (points.isEmpty) ...[
-                    hSpace(20),
-                    Center(
-                      child: state is EmployeeAttendanceStateLoading
-                          ? const CircularProgressIndicator()
-                          : Text(
-                              'attendance.noLocationData'.tr(),
-                              style: AppTextStyles.font14SemiBold,
-                              textAlign: TextAlign.center,
+                    }
+                    final points = targetPoints;
+                    final mapCenter =
+                        targetCenter ??
+                        userLocation ??
+                        const LatLng(30.0444, 31.2357);
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.isCheckOut
+                              ? 'employee.home.checkOutAction'.tr()
+                              : 'employee.home.checkInAction'.tr(),
+                          style: AppTextStyles.font20Bold,
+                        ),
+                        hSpace(12),
+                        Text(
+                          'attendance.locationType'.tr(),
+                          style: AppTextStyles.font14SemiBold,
+                        ),
+                        hSpace(6),
+                        EmployeeAttendanceLocationTypeSelectorWidget(
+                          selectedType: type,
+                          onTypeChanged: _changeType,
+                        ),
+                        hSpace(8),
+                        EmployeeAttendanceTargetDropdownWidget(
+                          type: type,
+                          branches: branchOptions,
+                          customers: customerOptions,
+                          selectedBranch: branch,
+                          selectedCustomer: customer,
+                          onBranchChanged: (selected) {
+                            setState(() => branch = selected);
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _focusTarget();
+                              _loadTargetAddress();
+                            });
+                          },
+                          onCustomerChanged: (selected) {
+                            setState(() => customer = selected);
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _focusTarget();
+                              _loadTargetAddress();
+                            });
+                          },
+                        ),
+                        if (points.isEmpty) ...[
+                          hSpace(20),
+                          Center(
+                            child: state is EmployeeAttendanceStateLoading
+                                ? const CircularProgressIndicator()
+                                : Text(
+                                    'attendance.noLocationData'.tr(),
+                                    style: AppTextStyles.font14SemiBold,
+                                    textAlign: TextAlign.center,
+                                  ),
+                          ),
+                        ] else ...[
+                          hSpace(12),
+                          EmployeeAttendanceLocationMapWidget(
+                            isExpanded: isMapExpanded,
+                            mapCenter: mapCenter,
+                            userLocation: userLocation,
+                            targetPoints: points,
+                            targetCenter: targetCenter,
+                            targetType: type,
+                            targetName: branch?.name ?? customer?.name,
+                            onMapCreated: (controller) =>
+                                mapController = controller,
+                            onToggleExpanded: () =>
+                                setState(() => isMapExpanded = !isMapExpanded),
+                          ),
+                          hSpace(10),
+                          AttendanceTargetDetailsWidget(
+                            name: branch?.name ?? customer?.name ?? type,
+                            address:
+                                targetAddress ??
+                                branch?.location ??
+                                customer?.location,
+                            isAddressLoading: isAddressLoading,
+                            onCopyAddress: _copyTargetAddress,
+                          ),
+                          hSpace(10),
+                          EmployeeAttendanceLocationStatusWidget(
+                            userLocation: userLocation,
+                            isInside: isInside,
+                          ),
+                          hSpace(8),
+                          Text(
+                            'attendance.securityNote'.tr(),
+                            style: AppTextStyles.font12Regular.copyWith(
+                              color: AppColors.textSecondary,
                             ),
-                    ),
-                  ] else ...[
-                    hSpace(12),
-                    EmployeeAttendanceLocationMapWidget(
-                      isExpanded: isMapExpanded,
-                      mapCenter: mapCenter,
-                      userLocation: userLocation,
-                      targetPoints: points,
-                      targetCenter: targetCenter,
-                      targetType: type,
-                      targetName: branch?.name ?? customer?.name,
-                      onMapCreated: (controller) => mapController = controller,
-                      onToggleExpanded: () =>
-                          setState(() => isMapExpanded = !isMapExpanded),
-                    ),
-                    hSpace(10),
-                    AttendanceTargetDetailsWidget(
-                      name: branch?.name ?? customer?.name ?? type,
-                      address:
-                          targetAddress ??
-                          branch?.location ??
-                          customer?.location,
-                      isAddressLoading: isAddressLoading,
-                      onCopyAddress: _copyTargetAddress,
-                    ),
-                    hSpace(10),
-                    EmployeeAttendanceLocationStatusWidget(
-                      userLocation: userLocation,
-                      isInside: isInside,
-                    ),
-                    hSpace(8),
-                    Text(
-                      'attendance.securityNote'.tr(),
-                      style: AppTextStyles.font12Regular.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    hSpace(10),
-                    CustomButton(
-                      text: widget.isCheckOut
-                          ? 'employee.home.checkOutAction'.tr()
-                          : 'employee.home.checkInAction'.tr(),
-                      isLoading: state is EmployeeAttendanceStateLoading,
-                      enabled: isInside,
-                      onTap: isInside ? _submit : () {},
-                    ),
-                  ],
-                ],
-              );
-            },
+                          ),
+                          hSpace(10),
+                          CustomButton(
+                            text: widget.isCheckOut
+                                ? 'employee.home.checkOutAction'.tr()
+                                : 'employee.home.checkInAction'.tr(),
+                            isLoading: state is EmployeeAttendanceStateLoading,
+                            enabled: isInside,
+                            onTap: isInside ? _submit : () {},
+                          ),
+                        ],
+                      ],
+                    );
+                  },
+                ),
           ),
         ),
       ),

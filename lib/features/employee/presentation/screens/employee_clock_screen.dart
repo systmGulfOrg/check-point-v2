@@ -98,9 +98,11 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                         ),
                       );
                     case EmployeeAttendanceStateError(:final messageKey):
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(messageKey)));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(messageKey.tr(context: context)),
+                        ),
+                      );
                     default:
                       break;
                   }

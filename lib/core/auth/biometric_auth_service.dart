@@ -9,10 +9,10 @@ class BiometricAuthService {
     try {
       final canCheckBiometrics = await localAuthentication.canCheckBiometrics;
       final isDeviceSupported = await localAuthentication.isDeviceSupported();
-      final enrolledBiometrics = await localAuthentication
-          .getAvailableBiometrics();
-      return (canCheckBiometrics || isDeviceSupported) &&
-          enrolledBiometrics.isNotEmpty;
+      // `biometricOnly: false` also permits the device credential (PIN,
+      // pattern, or password). Do not reject supported devices just because
+      // they do not report an enrolled biometric sensor.
+      return canCheckBiometrics || isDeviceSupported;
     } catch (_) {
       return false;
     }
