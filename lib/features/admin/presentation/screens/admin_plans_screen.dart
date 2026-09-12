@@ -109,19 +109,42 @@ class AdminPlansScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      plan.title ?? 'Plan',
+                                      'admin.plans.plan'.tr(
+                                        context: context,
+                                        args: ['${plan.id ?? ''}'],
+                                      ),
                                       style: AppTextStyles.font16Bold,
                                     ),
-                                    hSpace(4),
-                                    Text(
-                                      plan.description ?? '',
-                                      style: AppTextStyles.font13Regular,
-                                    ),
+                                    if (plan.notes?.isNotEmpty ?? false) ...[
+                                      hSpace(4),
+                                      Text(
+                                        plan.notes!,
+                                        style: AppTextStyles.font13Regular,
+                                      ),
+                                    ],
                                     hSpace(8),
                                     Text(
-                                      'Duration: ${plan.startDate ?? '-'} to ${plan.endDate ?? '-'}',
+                                      'admin.plans.date'.tr(
+                                        context: context,
+                                        args: [
+                                          AppDateFormatter.formatDateString(
+                                            plan.planDate,
+                                          ),
+                                        ],
+                                      ),
                                       style: AppTextStyles.font12Regular,
                                     ),
+                                    if (plan.departmentName?.isNotEmpty ??
+                                        false) ...[
+                                      hSpace(4),
+                                      Text(
+                                        'admin.plans.department'.tr(
+                                          context: context,
+                                          args: [plan.departmentName!],
+                                        ),
+                                        style: AppTextStyles.font12Regular,
+                                      ),
+                                    ],
                                   ],
                                 ),
                               );

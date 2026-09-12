@@ -15,10 +15,12 @@ AdminPlanModel _$AdminPlanModelFromJson(Map<String, dynamic> json) =>
       endDate: json['endDate'] as String?,
       assignedEmployeeId: json['assignedEmployeeId'] as String?,
       assignedEmployeeName: json['assignedEmployeeName'] as String?,
-      notes: json['notes'] as String?,
+      notes: json['note'] as String?,
       planDate: json['planDate'] as String?,
       planType: json['planType'] as String?,
       status: json['status'] as String?,
+      departmentId: (json['departmentId'] as num?)?.toInt(),
+      departmentName: json['departmentName'] as String?,
     );
 
 Map<String, dynamic> _$AdminPlanModelToJson(AdminPlanModel instance) =>
@@ -30,10 +32,12 @@ Map<String, dynamic> _$AdminPlanModelToJson(AdminPlanModel instance) =>
       'endDate': instance.endDate,
       'assignedEmployeeId': instance.assignedEmployeeId,
       'assignedEmployeeName': instance.assignedEmployeeName,
-      'notes': instance.notes,
+      'note': instance.notes,
       'planDate': instance.planDate,
       'planType': instance.planType,
       'status': instance.status,
+      'departmentId': instance.departmentId,
+      'departmentName': instance.departmentName,
     };
 
 PlansResponseModel _$PlansResponseModelFromJson(Map<String, dynamic> json) =>

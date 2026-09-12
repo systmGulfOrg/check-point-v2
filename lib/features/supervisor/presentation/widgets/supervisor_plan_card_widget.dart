@@ -17,14 +17,17 @@ class SupervisorPlanCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = plan.title ?? 'Plan';
-    final description = plan.description ?? '';
-    final assignee = plan.assignedEmployeeName ?? 'Unassigned';
-    final start = AppDateFormatter.formatDateString(plan.startDate);
-    final end = AppDateFormatter.formatDateString(plan.endDate);
-    final dateRange = (start != '-' && end != '-')
-        ? '$start – $end'
-        : (start != '-' ? start : '');
+    final title =
+        plan.title ??
+        'supervisor.plans.plan'.tr(
+          context: context,
+          args: ['${plan.id ?? ''}'],
+        );
+    final description = plan.description ?? plan.notes ?? '';
+    final assignee = plan.assignedEmployeeName ?? plan.departmentName ?? '-';
+    final date = AppDateFormatter.formatDateString(
+      plan.planDate ?? plan.startDate,
+    );
 
     return Container(
       padding: EdgeInsets.all(14.r),
@@ -68,10 +71,10 @@ class SupervisorPlanCardWidget extends StatelessWidget {
                       ),
                   ],
                 ),
-                if (dateRange.trim().isNotEmpty) ...[
+                if (date != '-') ...[
                   hSpace(4),
                   Text(
-                    dateRange,
+                    'supervisor.plans.date'.tr(context: context, args: [date]),
                     style: AppTextStyles.font12Regular.copyWith(
                       color: AppColors.placeholder,
                     ),

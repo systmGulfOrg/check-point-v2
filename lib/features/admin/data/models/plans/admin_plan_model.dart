@@ -16,6 +16,8 @@ class AdminPlanModel {
     this.planDate,
     this.planType,
     this.status,
+    this.departmentId,
+    this.departmentName,
   });
 
   final int? id;
@@ -25,10 +27,13 @@ class AdminPlanModel {
   final String? endDate;
   final String? assignedEmployeeId;
   final String? assignedEmployeeName;
+  @JsonKey(name: 'note')
   final String? notes;
   final String? planDate;
   final String? planType;
   final String? status;
+  final int? departmentId;
+  final String? departmentName;
 
   factory AdminPlanModel.fromJson(Map<String, dynamic> json) =>
       _$AdminPlanModelFromJson(json);
@@ -52,7 +57,11 @@ class PlansResponseModel {
 
 @JsonSerializable()
 class SinglePlanResponseModel {
-  const SinglePlanResponseModel({this.value, this.isSuccess, this.successMessage});
+  const SinglePlanResponseModel({
+    this.value,
+    this.isSuccess,
+    this.successMessage,
+  });
 
   final AdminPlanModel? value;
   final bool? isSuccess;
