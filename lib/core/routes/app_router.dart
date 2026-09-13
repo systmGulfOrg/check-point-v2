@@ -159,12 +159,16 @@ class AppRouter {
         );
 
       case AppRoutes.adminCreateEmployee:
+        final request = settings.arguments;
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminCreateEmployee),
           child: MultiBlocProvider(
             providers: [
               BlocProvider<AdminEmployeesCubit>(
                 create: (_) => sl<AdminEmployeesCubit>(),
+              ),
+              BlocProvider<AdminAccountRequestsCubit>(
+                create: (_) => sl<AdminAccountRequestsCubit>(),
               ),
               BlocProvider<AdminBranchesCubit>(
                 create: (_) => sl<AdminBranchesCubit>()..load(),
@@ -173,7 +177,9 @@ class AppRouter {
                 create: (_) => sl<AdminDepartmentsCubit>()..load(),
               ),
             ],
-            child: const AdminCreateEmployeeScreen(),
+            child: AdminCreateEmployeeScreen(
+              accountRequest: request is AccountRequestModel ? request : null,
+            ),
           ),
         );
 
@@ -323,7 +329,8 @@ class AppRouter {
 
       case AppRoutes.adminShiftDetails:
         final shiftKey = settings.arguments;
-        if (shiftKey is! String) {
+        final shiftId = shiftKey is String ? int.tryParse(shiftKey) : null;
+        if (shiftId == null) {
           return _fadeRoute(
             settings: settings,
             child: const Scaffold(body: Center(child: Text('Invalid shift'))),
@@ -332,8 +339,9 @@ class AppRouter {
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminShiftDetails),
           child: BlocProvider<AdminShiftsPoliciesCubit>(
-            create: (_) => sl<AdminShiftsPoliciesCubit>()..load(),
-            child: AdminShiftDetailsScreen(shiftKey: shiftKey),
+            create: (_) =>
+                sl<AdminShiftsPoliciesCubit>()..load(shiftId: shiftId),
+            child: AdminShiftDetailsScreen(shiftKey: shiftKey as String),
           ),
         );
 
@@ -351,6 +359,9 @@ class AppRouter {
               BlocProvider<SupervisorAttendanceCubit>(
                 create: (_) =>
                     sl<SupervisorAttendanceCubit>()..loadAttendance(),
+              ),
+              BlocProvider<EmployeeAttendanceCubit>(
+                create: (_) => sl<EmployeeAttendanceCubit>(),
               ),
               BlocProvider<SupervisorLeaveRequestsCubit>(
                 create: (_) =>

@@ -139,31 +139,39 @@ class AdminShiftsPoliciesScreen extends StatelessWidget {
                             itemBuilder: (context, index) {
                               final shift = shifts[index];
                               final shiftData = AdminShiftData(
-                                nameKey: shift.name ?? 'Shift',
-                                descriptionKey: 'Active Shift',
+                                nameKey:
+                                    shift.name ?? 'admin.shifts.fallbackName',
+                                descriptionKey:
+                                    'admin.shifts.description.active',
                                 policiesCount: shift.branchesCount ?? 0,
                               );
-                              return AdminShiftCardWidget(
-                                shift: shiftData,
-                                onTap: () => Navigator.pushNamed(
-                                  context,
-                                  AppRoutes.adminShiftDetails,
-                                  arguments: '${shift.id ?? index}',
+                              return AnimatedListItemWidget(
+                                index: index,
+                                child: AdminShiftCardWidget(
+                                  shift: shiftData,
+                                  onTap: () => Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.adminShiftDetails,
+                                    arguments: '${shift.id ?? index}',
+                                  ),
+                                  onEdit: () {
+                                    if (shift.id != null) {
+                                      _showEditShiftDialog(
+                                        context,
+                                        shift.id!,
+                                        shift.name ?? '',
+                                      );
+                                    }
+                                  },
+                                  onDelete: () {
+                                    if (shift.id != null) {
+                                      _showDeleteShiftDialog(
+                                        context,
+                                        shift.id!,
+                                      );
+                                    }
+                                  },
                                 ),
-                                onEdit: () {
-                                  if (shift.id != null) {
-                                    _showEditShiftDialog(
-                                      context,
-                                      shift.id!,
-                                      shift.name ?? '',
-                                    );
-                                  }
-                                },
-                                onDelete: () {
-                                  if (shift.id != null) {
-                                    _showDeleteShiftDialog(context, shift.id!);
-                                  }
-                                },
                               );
                             },
                           ),

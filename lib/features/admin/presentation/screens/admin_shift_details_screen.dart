@@ -7,6 +7,7 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_state.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_new_policy_button_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_policy_time_range_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_shift_employees_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_shift_policies_skeleton_widget.dart';
 
@@ -24,7 +25,10 @@ class AdminShiftDetailsScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
-        title: Text('Shift Details', style: AppTextStyles.font18Bold),
+        title: Text(
+          'admin.shifts.details.title'.tr(context: context),
+          style: AppTextStyles.font18Bold,
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
@@ -57,7 +61,7 @@ class AdminShiftDetailsScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 24),
                         child: Center(
                           child: Text(
-                            'No policies found for this shift.',
+                            'admin.shifts.policies.empty'.tr(context: context),
                             style: AppTextStyles.font14Regular,
                           ),
                         ),
@@ -71,97 +75,102 @@ class AdminShiftDetailsScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final policy = policies[index];
                         final employees = policy.employees ?? const [];
-                        return Container(
-                          padding: EdgeInsets.all(14.r),
-                          decoration: BoxDecoration(
-                            color: AppColors.cardBackground,
-                            borderRadius: BorderRadius.circular(14.r),
-                            border: Border.all(color: AppColors.border),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    policy.effectiveName,
-                                    style: AppTextStyles.font14SemiBold,
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      if (policy.id != null &&
-                                          shiftId != null) {
-                                        context
-                                            .read<AdminShiftsPoliciesCubit>()
-                                            .deletePolicy(policy.id!, shiftId);
-                                      }
-                                    },
-                                    child: Text(
-                                      'admin.shifts.policies.delete'.tr(
-                                        context: context,
-                                      ),
-                                      style: AppTextStyles.font12Regular
-                                          .copyWith(color: AppColors.error),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              hSpace(6),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.access_time_rounded,
-                                    size: 16.r,
-                                    color: AppColors.textSecondary,
-                                  ),
-                                  wSpace(6),
-                                  Text(
-                                    '${policy.effectiveClockIn} - ${policy.effectiveClockOut}',
-                                    style: AppTextStyles.font12Medium,
-                                  ),
-                                  if (policy.area != null) ...[
-                                    wSpace(12),
-                                    Icon(
-                                      Icons.location_on_outlined,
-                                      size: 16.r,
-                                      color: AppColors.info,
-                                    ),
-                                    wSpace(4),
+                        return AnimatedListItemWidget(
+                          index: index,
+                          child: Container(
+                            padding: EdgeInsets.all(14.r),
+                            decoration: BoxDecoration(
+                              color: AppColors.cardBackground,
+                              borderRadius: BorderRadius.circular(14.r),
+                              border: Border.all(color: AppColors.border),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
                                     Text(
-                                      policy.area!,
-                                      style: AppTextStyles.font12Regular
-                                          .copyWith(color: AppColors.info),
+                                      policy.effectiveName,
+                                      style: AppTextStyles.font14SemiBold,
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        if (policy.id != null &&
+                                            shiftId != null) {
+                                          context
+                                              .read<AdminShiftsPoliciesCubit>()
+                                              .deletePolicy(
+                                                policy.id!,
+                                                shiftId,
+                                              );
+                                        }
+                                      },
+                                      child: Text(
+                                        'admin.shifts.policies.delete'.tr(
+                                          context: context,
+                                        ),
+                                        style: AppTextStyles.font12Regular
+                                            .copyWith(color: AppColors.error),
+                                      ),
                                     ),
                                   ],
-                                ],
-                              ),
-                              if (policy.workDays != null &&
-                                  policy.workDays!.isNotEmpty) ...[
+                                ),
                                 hSpace(6),
+                                AdminPolicyTimeRangeWidget(
+                                  clockIn: policy.effectiveClockIn,
+                                  clockOut: policy.effectiveClockOut,
+                                ),
+                                if (policy.area != null) ...[
+                                  hSpace(8),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.location_on_outlined,
+                                        size: 16.r,
+                                        color: AppColors.info,
+                                      ),
+                                      wSpace(4),
+                                      Expanded(
+                                        child: Text(
+                                          policy.area!,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: AppTextStyles.font12Regular
+                                              .copyWith(color: AppColors.info),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                                if (policy.workDays != null &&
+                                    policy.workDays!.isNotEmpty) ...[
+                                  hSpace(6),
+                                  Text(
+                                    '${'admin.shifts.policies.workingDays'.tr(context: context)}: ${policy.workDays!.join(', ')}',
+                                    style: AppTextStyles.font12Regular.copyWith(
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                ],
+                                hSpace(10),
                                 Text(
-                                  'Days: ${policy.workDays!.join(', ')}',
-                                  style: AppTextStyles.font12Regular.copyWith(
-                                    color: AppColors.textSecondary,
+                                  'admin.shifts.policies.assigned'.tr(
+                                    context: context,
+                                    args: [employees.length.toString()],
+                                  ),
+                                  style: AppTextStyles.font12Bold.copyWith(
+                                    color: AppColors.textPrimary,
                                   ),
                                 ),
+                                if (employees.isNotEmpty) ...[
+                                  hSpace(8),
+                                  AdminShiftEmployeesWidget(
+                                    employees: employees,
+                                  ),
+                                ],
                               ],
-                              hSpace(10),
-                              Text(
-                                'admin.shifts.policies.assigned'.tr(
-                                  context: context,
-                                  args: [employees.length.toString()],
-                                ),
-                                style: AppTextStyles.font12Bold.copyWith(
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                              if (employees.isNotEmpty) ...[
-                                hSpace(8),
-                                AdminShiftEmployeesWidget(employees: employees),
-                              ],
-                            ],
+                            ),
                           ),
                         );
                       },

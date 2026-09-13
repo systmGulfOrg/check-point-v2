@@ -231,7 +231,16 @@ class AdminRequestDetailsScreen extends StatelessWidget {
           hSpace(10),
           CustomButton(
             text: 'admin.requests.createEmployee'.tr(context: context),
-            onTap: () => context.pushNamed(AppRoutes.adminCreateEmployee),
+            onTap: () async {
+              final created = await context.pushNamed(
+                AppRoutes.adminCreateEmployee,
+                arguments: request,
+              );
+              if (created == true && context.mounted) {
+                await context.read<AdminAccountRequestsCubit>().loadRequests();
+                if (context.mounted) context.pop();
+              }
+            },
             backgroundColor: AppColors.brandPrimary,
             height: 48,
           ),

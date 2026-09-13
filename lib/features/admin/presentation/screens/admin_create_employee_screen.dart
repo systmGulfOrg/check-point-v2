@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
@@ -14,7 +16,9 @@ import 'package:check_point_v2/features/admin/presentation/widgets/admin_wizard_
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_wizard_stepper_widget.dart';
 
 class AdminCreateEmployeeScreen extends StatefulWidget {
-  const AdminCreateEmployeeScreen({super.key});
+  const AdminCreateEmployeeScreen({this.accountRequest, super.key});
+
+  final AccountRequestModel? accountRequest;
 
   @override
   State<AdminCreateEmployeeScreen> createState() =>
@@ -39,10 +43,12 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController();
+    nameController = TextEditingController(text: widget.accountRequest?.name);
     usernameController = TextEditingController();
     passwordController = TextEditingController();
-    mobileController = TextEditingController();
+    mobileController = TextEditingController(
+      text: widget.accountRequest?.mobileId,
+    );
     positionController = TextEditingController();
   }
 
@@ -106,7 +112,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                   text: 'admin.employeeWizard.backToRequests'.tr(
                     context: context,
                   ),
-                  onTap: context.pop,
+                  onTap: () => context.pop(true),
                   backgroundColor: AppColors.brandPrimary,
                   height: 48,
                 ),
@@ -181,9 +187,13 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           ),
                         ),
                         AdminWizardFieldWidget(
-                          label: 'Password',
+                          label: 'admin.employeeWizard.password'.tr(
+                            context: context,
+                          ),
                           child: textField(
-                            'Enter password',
+                            'admin.employeeWizard.passwordHint'.tr(
+                              context: context,
+                            ),
                             controller: passwordController,
                             obscureText: true,
                           ),
@@ -388,7 +398,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Text(
-                    saveErrorMessage!,
+                    saveErrorMessage!.tr(context: context),
                     textAlign: TextAlign.center,
                     style: AppTextStyles.font13Regular.copyWith(
                       color: AppColors.error,
@@ -426,7 +436,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                             selectedBranchId == null) {
                           setState(() {
                             saveErrorMessage =
-                                'Please select department and branch.';
+                                'admin.employeeWizard.departmentBranchRequired';
                           });
                           return;
                         }
@@ -443,12 +453,36 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           role: role,
                           departmentId: selectedDepartmentId!,
                           branchId: selectedBranchId!,
+                          deviceToken:
+                              widget.accountRequest?.deviceToken
+                                      ?.trim()
+                                      .isNotEmpty ==
+                                  true
+                              ? [widget.accountRequest!.deviceToken!.trim()]
+                              : null,
                         );
-                        final success = await context
-                            .read<AdminEmployeesCubit>()
-                            .addEmployee(body);
+                        final employeesCubit = context
+                            .read<AdminEmployeesCubit>();
+                        final accountRequestsCubit = context
+                            .read<AdminAccountRequestsCubit>();
+                        final success = await employeesCubit.addEmployee(body);
                         if (!mounted) return;
                         if (success) {
+                          final requestId = widget.accountRequest?.id;
+                          final requestDeleted = requestId == null
+                              ? true
+                              : await accountRequestsCubit.deleteRequest(
+                                  id: requestId,
+                                );
+                          if (!mounted) return;
+                          if (!requestDeleted) {
+                            setState(() {
+                              isSaving = false;
+                              saveErrorMessage =
+                                  'admin.employeeWizard.requestDeleteFailed';
+                            });
+                            return;
+                          }
                           setState(() {
                             isSaving = false;
                             isCreated = true;
@@ -456,7 +490,8 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                         } else {
                           setState(() {
                             isSaving = false;
-                            saveErrorMessage = 'Failed to create employee.';
+                            saveErrorMessage =
+                                'admin.employeeWizard.createFailed';
                           });
                         }
                       },

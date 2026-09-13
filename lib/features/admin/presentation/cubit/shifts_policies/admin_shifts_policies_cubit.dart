@@ -14,14 +14,16 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
   List<ShiftModel> shifts = const [];
   List<PoliceModel> policies = const [];
 
-  Future<void> load() async {
+  Future<void> load({int? shiftId}) async {
     emit(const AdminShiftsPoliciesState.loading());
     final result = await shiftsPoliciesRepo.getShifts();
     switch (result) {
       case Success(:final data):
         shifts = data;
-        if (shifts.isNotEmpty && shifts.first.id != null) {
-          await loadPoliciesForShift(shifts.first.id!);
+        final selectedShiftId =
+            shiftId ?? (shifts.isNotEmpty ? shifts.first.id : null);
+        if (selectedShiftId != null) {
+          await loadPoliciesForShift(selectedShiftId);
         } else {
           emit(
             AdminShiftsPoliciesState.success(

@@ -45,188 +45,197 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomTextFormField(
-                      controller: searchController,
-                      hintText: 'admin.attendance.searchHint'.tr(
-                        context: context,
-                      ),
-                      prefixIcon: Icon(Icons.search_rounded, size: 20.r),
-                      onChanged: context.read<AdminAttendanceCubit>().search,
-                    ),
-                  ),
-                ],
-              ),
-              hSpace(14),
-              const AdminAttendanceAdvancedFilterWidget(),
-              hSpace(14),
-              const AdminAttendanceFilterBarWidget(),
-              hSpace(14),
-              BlocBuilder<AdminAttendanceCubit, AdminAttendanceState>(
-                builder: (context, state) {
-                  return state.when(
-                    initial: () => const AdminAttendanceSkeletonWidget(),
-                    loading: () => const AdminAttendanceSkeletonWidget(),
-                    error: (messageKey) => Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.only(top: 16.h),
-                      padding: EdgeInsets.all(20.r),
-                      decoration: BoxDecoration(
-                        color: AppColors.softRedBackground,
-                        borderRadius: BorderRadius.circular(14.r),
-                        border: Border.all(
-                          color: AppColors.error.withValues(alpha: 0.2),
+        child: RefreshIndicator(
+          onRefresh: context.read<AdminAttendanceCubit>().loadAttendance,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextFormField(
+                        controller: searchController,
+                        hintText: 'admin.attendance.searchHint'.tr(
+                          context: context,
                         ),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.cloud_off_rounded,
-                            color: AppColors.error,
-                            size: 30.r,
-                          ),
-                          hSpace(8),
-                          Text(
-                            messageKey.tr(context: context),
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.font14Regular.copyWith(
-                              color: AppColors.error,
-                            ),
-                          ),
-                          hSpace(10),
-                          OutlinedButton.icon(
-                            onPressed: context
-                                .read<AdminAttendanceCubit>()
-                                .loadAttendance,
-                            icon: Icon(Icons.refresh_rounded, size: 17.r),
-                            label: Text(
-                              'admin.attendance.tryAgain'.tr(context: context),
-                            ),
-                          ),
-                        ],
+                        prefixIcon: Icon(Icons.search_rounded, size: 20.r),
+                        onChanged: context.read<AdminAttendanceCubit>().search,
                       ),
                     ),
-                    actionSuccess: (message) => Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.only(top: 16.h),
-                      padding: EdgeInsets.all(18.r),
-                      decoration: BoxDecoration(
-                        color: AppColors.softGreenBackground,
-                        borderRadius: BorderRadius.circular(14.r),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.check_circle_outline_rounded,
-                            color: AppColors.success,
-                            size: 24.r,
+                  ],
+                ),
+                hSpace(14),
+                const AdminAttendanceAdvancedFilterWidget(),
+                hSpace(14),
+                const AdminAttendanceFilterBarWidget(),
+                hSpace(14),
+                BlocBuilder<AdminAttendanceCubit, AdminAttendanceState>(
+                  builder: (context, state) {
+                    return state.when(
+                      initial: () => const AdminAttendanceSkeletonWidget(),
+                      loading: () => const AdminAttendanceSkeletonWidget(),
+                      error: (messageKey) => Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.only(top: 16.h),
+                        padding: EdgeInsets.all(20.r),
+                        decoration: BoxDecoration(
+                          color: AppColors.softRedBackground,
+                          borderRadius: BorderRadius.circular(14.r),
+                          border: Border.all(
+                            color: AppColors.error.withValues(alpha: 0.2),
                           ),
-                          wSpace(10),
-                          Expanded(
-                            child: Text(
-                              message,
-                              style: AppTextStyles.font13SemiBold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    success: (records) => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                        ),
+                        child: Column(
                           children: [
+                            Icon(
+                              Icons.cloud_off_rounded,
+                              color: AppColors.error,
+                              size: 30.r,
+                            ),
+                            hSpace(8),
                             Text(
-                              'admin.attendance.count'.tr(
-                                context: context,
-                                args: ['${records.length}'],
+                              messageKey.tr(context: context),
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.font14Regular.copyWith(
+                                color: AppColors.error,
                               ),
-                              style: AppTextStyles.font12Regular,
+                            ),
+                            hSpace(10),
+                            OutlinedButton.icon(
+                              onPressed: context
+                                  .read<AdminAttendanceCubit>()
+                                  .loadAttendance,
+                              icon: Icon(Icons.refresh_rounded, size: 17.r),
+                              label: Text(
+                                'admin.attendance.tryAgain'.tr(
+                                  context: context,
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                        hSpace(10),
-                        if (records.isEmpty)
-                          const AdminRequestsEmptyStateWidget(
-                            messageKey: 'admin.attendance.empty',
-                          )
-                        else
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: records.length,
-                            separatorBuilder: (_, _) => hSpace(12),
-                            itemBuilder: (context, index) {
-                              final item = records[index];
-                              final (statusKey, statusColor, statusBg) =
-                                  _resolveStatus(item);
-                              final initials =
-                                  (item.employeeName?.trim().isNotEmpty ??
-                                      false)
-                                  ? item.employeeName!.trim()[0].toUpperCase()
-                                  : 'E';
-                              final recordData = AdminAttendanceRecordData(
-                                initials: initials,
-                                name:
-                                    item.employeeName?.trim().isNotEmpty == true
-                                    ? item.employeeName!
-                                    : 'Employee',
-                                date: _formatDate(item.attendanceDate),
-                                checkIn: _formatTime(item.clockInTime),
-                                checkOut: _formatTime(item.clockOutTime),
-                                area: item.area?.trim().isNotEmpty == true
-                                    ? item.area!
-                                    : '-',
-                                totalHours: _formatTotalHours(
-                                  dayHours: item.dayHours,
-                                  totalHours: item.totalHours,
-                                  clockInTime: item.clockInTime,
-                                  clockOutTime: item.clockOutTime,
+                      ),
+                      actionSuccess: (message) => Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.only(top: 16.h),
+                        padding: EdgeInsets.all(18.r),
+                        decoration: BoxDecoration(
+                          color: AppColors.softGreenBackground,
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.check_circle_outline_rounded,
+                              color: AppColors.success,
+                              size: 24.r,
+                            ),
+                            wSpace(10),
+                            Expanded(
+                              child: Text(
+                                message,
+                                style: AppTextStyles.font13SemiBold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      success: (records) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'admin.attendance.count'.tr(
+                                  context: context,
+                                  args: ['${records.length}'],
                                 ),
-                                statusKey: statusKey,
-                                statusColor: statusColor,
-                                statusBackgroundColor: statusBg,
-                              );
-                              return AdminAttendanceRecordCardWidget(
-                                record: recordData,
-                                onDelete: () {
-                                  if (item.id != null) {
-                                    showDialog<void>(
-                                      context: context,
-                                      builder: (dialogContext) =>
-                                          AdminDeleteConfirmationDialogWidget(
-                                            title:
-                                                'admin.attendance.deleteRecord'
-                                                    .tr(context: context),
-                                            message:
-                                                'admin.attendance.deleteRecordMessage'
-                                                    .tr(context: context),
-                                            onConfirm: () {
-                                              Navigator.pop(dialogContext);
-                                              context
-                                                  .read<AdminAttendanceCubit>()
-                                                  .deleteAttendance(item.id!);
-                                            },
-                                          ),
-                                    );
-                                  }
-                                },
-                              );
-                            },
+                                style: AppTextStyles.font12Regular,
+                              ),
+                            ],
                           ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ],
+                          hSpace(10),
+                          if (records.isEmpty)
+                            const AdminRequestsEmptyStateWidget(
+                              messageKey: 'admin.attendance.empty',
+                            )
+                          else
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: records.length,
+                              separatorBuilder: (_, _) => hSpace(12),
+                              itemBuilder: (context, index) {
+                                final item = records[index];
+                                final (statusKey, statusColor, statusBg) =
+                                    _resolveStatus(item);
+                                final initials =
+                                    (item.employeeName?.trim().isNotEmpty ??
+                                        false)
+                                    ? item.employeeName!.trim()[0].toUpperCase()
+                                    : 'E';
+                                final recordData = AdminAttendanceRecordData(
+                                  initials: initials,
+                                  name:
+                                      item.employeeName?.trim().isNotEmpty ==
+                                          true
+                                      ? item.employeeName!
+                                      : 'Employee',
+                                  date: _formatDate(item.attendanceDate),
+                                  checkIn: _formatTime(item.clockInTime),
+                                  checkOut: _formatTime(item.clockOutTime),
+                                  area: item.area?.trim().isNotEmpty == true
+                                      ? item.area!
+                                      : '-',
+                                  totalHours: _formatTotalHours(
+                                    dayHours: item.dayHours,
+                                    totalHours: item.totalHours,
+                                    clockInTime: item.clockInTime,
+                                    clockOutTime: item.clockOutTime,
+                                  ),
+                                  statusKey: statusKey,
+                                  statusColor: statusColor,
+                                  statusBackgroundColor: statusBg,
+                                );
+                                return AdminAttendanceRecordCardWidget(
+                                  record: recordData,
+                                  onDelete: () {
+                                    if (item.id != null) {
+                                      showDialog<void>(
+                                        context: context,
+                                        builder: (dialogContext) =>
+                                            AdminDeleteConfirmationDialogWidget(
+                                              title:
+                                                  'admin.attendance.deleteRecord'
+                                                      .tr(context: context),
+                                              message:
+                                                  'admin.attendance.deleteRecordMessage'
+                                                      .tr(context: context),
+                                              onConfirm: () {
+                                                Navigator.pop(dialogContext);
+                                                context
+                                                    .read<
+                                                      AdminAttendanceCubit
+                                                    >()
+                                                    .deleteAttendance(item.id!);
+                                              },
+                                            ),
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

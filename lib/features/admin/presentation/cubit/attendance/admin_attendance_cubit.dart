@@ -31,6 +31,7 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
   int? _selectedDepartmentId;
   String _selectedStatus = 'all';
   Map<String, int?> _employeeDepartmentById = const {};
+  bool _isLoadingAttendance = false;
 
   AdminAttendanceDateFilter get selectedDateFilter => _selectedDateFilter;
   DateTime? get customStartDate => _customStartDate;
@@ -45,7 +46,7 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
       for (final employee in employees)
         if (employee.id != null) employee.id!: employee.departmentId,
     };
-    _emitFiltered();
+    if (!_isLoadingAttendance) _emitFiltered();
   }
 
   void setEmployeeFilter(String? employeeId) {
@@ -71,13 +72,16 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
   }
 
   Future<void> loadAttendance() async {
+    _isLoadingAttendance = true;
     emit(const AdminAttendanceState.loading());
     final result = await attendanceRepo.getAdminAttendance();
     switch (result) {
       case Success(:final data):
         _allRecords = data;
+        _isLoadingAttendance = false;
         _emitFiltered();
       case Failure(:final failure):
+        _isLoadingAttendance = false;
         emit(AdminAttendanceState.error(failure.messageKey));
     }
   }

@@ -21,15 +21,18 @@ class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
     }
   }
 
-  Future<void> deleteRequest({required int id}) async {
+  Future<bool> deleteRequest({required int id}) async {
     final result = await employeeRepo.deleteAccountRequest(id: id);
     switch (result) {
       case Success():
         await loadRequests();
+        return true;
       case Failure(:final failure):
         emit(AdminAccountRequestsState.error(failure.messageKey));
+        return false;
     }
+    return false;
   }
 
-  Future<void> rejectRequest({required int id}) => deleteRequest(id: id);
+  Future<bool> rejectRequest({required int id}) => deleteRequest(id: id);
 }
