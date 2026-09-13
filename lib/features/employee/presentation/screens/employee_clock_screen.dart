@@ -20,12 +20,6 @@ class EmployeeClockScreen extends StatefulWidget {
 }
 
 class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
-  bool _isCheckedIn = false;
-  bool _hasCheckedOut = true;
-  String _checkInTime = '--:--';
-  String _checkOutTime = '--:--';
-  String? _workedHours;
-
   @override
   void initState() {
     super.initState();
@@ -43,7 +37,19 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
       backgroundColor: AppColors.cardBackground,
       builder: (_) => BlocProvider.value(
         value: context.read<EmployeeAttendanceCubit>(),
-        child: EmployeeAttendanceLocationSheetWidget(isCheckOut: _isCheckedIn),
+        child: EmployeeAttendanceLocationSheetWidget(
+          isCheckOut:
+              context
+                      .read<EmployeeAttendanceCubit>()
+                      .todayAttendance
+                      ?.clockOutTime ==
+                  null &&
+              context
+                      .read<EmployeeAttendanceCubit>()
+                      .todayAttendance
+                      ?.clockInTime !=
+                  null,
+        ),
       ),
     );
   }
@@ -66,17 +72,7 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
               BlocConsumer<EmployeeAttendanceCubit, EmployeeAttendanceState>(
                 listener: (context, state) {
                   switch (state) {
-                    case EmployeeAttendanceStateCheckInSuccess(
-                      :final attendance,
-                    ):
-                      setState(() {
-                        _isCheckedIn = true;
-                        _hasCheckedOut = false;
-                        _checkInTime =
-                            attendance.clockInTime ??
-                            DateFormat('HH:mm').format(DateTime.now());
-                        _checkOutTime = '—';
-                      });
+                    case EmployeeAttendanceStateCheckInSuccess():
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -86,16 +82,7 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                           ),
                         ),
                       );
-                    case EmployeeAttendanceStateCheckOutSuccess(
-                      :final attendance,
-                    ):
-                      setState(() {
-                        _isCheckedIn = false;
-                        _hasCheckedOut = true;
-                        _checkOutTime =
-                            attendance.clockOutTime ??
-                            DateFormat('HH:mm').format(DateTime.now());
-                      });
+                    case EmployeeAttendanceStateCheckOutSuccess():
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -116,13 +103,22 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                   }
                 },
                 builder: (context, state) {
+                  final cubit = context.read<EmployeeAttendanceCubit>();
+                  final attendance = cubit.todayAttendance;
+                  final profile = cubit.employeeProfile;
+                  final isCheckedIn =
+                      attendance?.clockInTime != null &&
+                      attendance?.clockOutTime == null;
+                  final hasCheckedOut = attendance?.clockOutTime != null;
                   return EmployeeClockCardWidget(
-                    policyText: 'Standard Policy — 08:00–16:00',
-                    checkInTime: _checkInTime,
-                    checkOutTime: _checkOutTime,
-                    isCheckedIn: _isCheckedIn,
-                    hasCheckedOut: _hasCheckedOut,
-                    workedHours: _workedHours,
+                    policyText:
+                        '${profile?.shiftName ?? 'employee.home.defaultPolicy'.tr(context: context)} — '
+                        '${profile?.clockInTime ?? '--:--'}–${profile?.clockOutTime ?? '--:--'}',
+                    checkInTime: attendance?.clockInTime ?? '--:--',
+                    checkOutTime: attendance?.clockOutTime ?? '--:--',
+                    isCheckedIn: isCheckedIn,
+                    hasCheckedOut: hasCheckedOut,
+                    workedHours: attendance?.dayHours,
                     onToggleCheckInOut: _toggleCheckInOut,
                   );
                 },
