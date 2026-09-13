@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/styles/app_motion.dart';
 import 'supervisor_attendance_screen.dart';
 import 'supervisor_home_screen.dart';
 import 'supervisor_profile_screen.dart';
@@ -49,11 +50,19 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 220),
-        switchInCurve: Curves.easeOut,
-        switchOutCurve: Curves.easeIn,
-        transitionBuilder: (child, animation) =>
-            FadeTransition(opacity: animation, child: child),
+        duration: AppMotion.tabSwitch,
+        switchInCurve: AppMotion.enterCurve,
+        switchOutCurve: AppMotion.exitCurve,
+        transitionBuilder: (child, animation) => FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(
+              begin: AppMotion.routeScaleBegin,
+              end: 1,
+            ).animate(animation),
+            child: child,
+          ),
+        ),
         child: IndexedStack(
           key: ValueKey<int>(_selectedIndex),
           index: _selectedIndex,

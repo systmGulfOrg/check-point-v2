@@ -50,6 +50,7 @@ import 'package:check_point_v2/features/supervisor/presentation/screens/supervis
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_notifications_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_plans_screen.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/core/styles/app_motion.dart';
 import 'routes.dart';
 
 class AppRouter {
@@ -60,14 +61,26 @@ class AppRouter {
     required RouteSettings settings,
   }) => PageRouteBuilder<void>(
     settings: settings,
-    transitionDuration: const Duration(milliseconds: 300),
-    reverseTransitionDuration: const Duration(milliseconds: 220),
+    transitionDuration: AppMotion.routeEnter,
+    reverseTransitionDuration: AppMotion.routeExit,
     pageBuilder: (context, animation, secondaryAnimation) => child,
-    transitionsBuilder: (context, animation, secondaryAnimation, pageChild) =>
-        FadeTransition(
-          opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
+    transitionsBuilder: (context, animation, secondaryAnimation, pageChild) {
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: AppMotion.enterCurve,
+        reverseCurve: AppMotion.exitCurve,
+      );
+      return FadeTransition(
+        opacity: curved,
+        child: ScaleTransition(
+          scale: Tween<double>(
+            begin: AppMotion.routeScaleBegin,
+            end: 1,
+          ).animate(curved),
           child: pageChild,
         ),
+      );
+    },
   );
 
   static Route<void> _slideRoute({
@@ -75,22 +88,33 @@ class AppRouter {
     required RouteSettings settings,
   }) => PageRouteBuilder<void>(
     settings: settings,
-    transitionDuration: const Duration(milliseconds: 320),
-    reverseTransitionDuration: const Duration(milliseconds: 250),
+    transitionDuration: AppMotion.routeEnter,
+    reverseTransitionDuration: AppMotion.routeExit,
     pageBuilder: (context, animation, secondaryAnimation) => child,
     transitionsBuilder: (context, animation, secondaryAnimation, pageChild) {
       final curved = CurvedAnimation(
         parent: animation,
-        curve: Curves.easeOutCubic,
+        curve: AppMotion.enterCurve,
+        reverseCurve: AppMotion.exitCurve,
       );
+      final isRtl = Directionality.of(context) == TextDirection.rtl;
       return FadeTransition(
         opacity: curved,
         child: SlideTransition(
           position: Tween<Offset>(
-            begin: const Offset(0.05, 0),
+            begin: Offset(
+              isRtl ? -AppMotion.routeSlideBegin : AppMotion.routeSlideBegin,
+              0,
+            ),
             end: Offset.zero,
           ).animate(curved),
-          child: pageChild,
+          child: ScaleTransition(
+            scale: Tween<double>(
+              begin: AppMotion.routeScaleBegin,
+              end: 1,
+            ).animate(curved),
+            child: pageChild,
+          ),
         ),
       );
     },

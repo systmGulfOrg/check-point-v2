@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/styles/app_motion.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_nav_bar_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_desktop_sidebar_widget.dart';
 import 'admin_employees_screen.dart';
@@ -34,11 +35,19 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final content = AnimatedSwitcher(
-            duration: const Duration(milliseconds: 220),
-            switchInCurve: Curves.easeOut,
-            switchOutCurve: Curves.easeIn,
-            transitionBuilder: (child, animation) =>
-                FadeTransition(opacity: animation, child: child),
+            duration: AppMotion.tabSwitch,
+            switchInCurve: AppMotion.enterCurve,
+            switchOutCurve: AppMotion.exitCurve,
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: ScaleTransition(
+                scale: Tween<double>(
+                  begin: AppMotion.routeScaleBegin,
+                  end: 1,
+                ).animate(animation),
+                child: child,
+              ),
+            ),
             child: IndexedStack(
               key: ValueKey<int>(_selectedIndex),
               index: _selectedIndex,
