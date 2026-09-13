@@ -39,15 +39,18 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
         child: ApplyForLeaveSheetWidget(
           onSubmit:
               ({
-                required leaveType,
                 required startDate,
                 required endDate,
-                reason,
+                required reason,
+                required remark,
+                required leaveRequestType,
               }) {
-                cubit.submitOdooLeaveRequest(
-                  dateFrom: startDate,
-                  dateTo: endDate,
+                cubit.submitLeaveRequest(
+                  startDate: startDate,
+                  endDate: endDate,
                   reason: reason,
+                  remark: remark,
+                  leaveRequestType: leaveRequestType,
                 );
               },
         ),
@@ -79,13 +82,15 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                     case EmployeeLeaveRequestsStateActionSuccess(
                       :final message,
                     ):
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(message)));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(message.tr(context: context))),
+                      );
                     case EmployeeLeaveRequestsStateError(:final messageKey):
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(messageKey)));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(messageKey.tr(context: context)),
+                        ),
+                      );
                     default:
                       break;
                   }

@@ -42,7 +42,11 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
       }
       emit(EmployeeLeaveRequestsState.leaveTypesLoaded(types));
     } catch (e) {
-      emit(EmployeeLeaveRequestsState.error(e.toString().replaceAll('Exception: ', '')));
+      emit(
+        EmployeeLeaveRequestsState.error(
+          e.toString().replaceAll('Exception: ', ''),
+        ),
+      );
     }
   }
 
@@ -56,7 +60,11 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
       publicHolidays = holidays;
       emit(EmployeeLeaveRequestsState.publicHolidaysLoaded(holidays));
     } catch (e) {
-      emit(EmployeeLeaveRequestsState.error(e.toString().replaceAll('Exception: ', '')));
+      emit(
+        EmployeeLeaveRequestsState.error(
+          e.toString().replaceAll('Exception: ', ''),
+        ),
+      );
     }
   }
 
@@ -67,7 +75,9 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
   }) async {
     emit(const EmployeeLeaveRequestsState.loading());
     if (selectedLeaveType == null) {
-      emit(const EmployeeLeaveRequestsState.error('please select a leave type'));
+      emit(
+        const EmployeeLeaveRequestsState.error('please select a leave type'),
+      );
       return;
     }
     try {
@@ -77,12 +87,46 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
         dateTo: dateTo,
         reason: reason,
       );
-      emit(const EmployeeLeaveRequestsState.actionSuccess(
-        'Leave request submitted successfully',
-      ));
+      emit(
+        const EmployeeLeaveRequestsState.actionSuccess(
+          'Leave request submitted successfully',
+        ),
+      );
       await loadOdooLeaveRequests();
     } catch (e) {
-      emit(EmployeeLeaveRequestsState.error(e.toString().replaceAll('Exception: ', '')));
+      emit(
+        EmployeeLeaveRequestsState.error(
+          e.toString().replaceAll('Exception: ', ''),
+        ),
+      );
+    }
+  }
+
+  Future<void> submitLeaveRequest({
+    required String startDate,
+    required String endDate,
+    required String reason,
+    required String remark,
+    required String leaveRequestType,
+  }) async {
+    emit(const EmployeeLeaveRequestsState.loading());
+    final result = await leaveRequestsUseCase.submitLeaveRequest(
+      startDate: startDate,
+      endDate: endDate,
+      reason: reason,
+      remark: remark,
+      leaveRequestType: leaveRequestType,
+    );
+    switch (result) {
+      case Success():
+        emit(
+          const EmployeeLeaveRequestsState.actionSuccess(
+            'employee.leaves.submitSuccess',
+          ),
+        );
+        await loadLeaveRequests();
+      case Failure(:final failure):
+        emit(EmployeeLeaveRequestsState.error(failure.messageKey));
     }
   }
 
@@ -94,7 +138,11 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
       );
       emit(EmployeeLeaveRequestsState.odooSuccess(reqs));
     } catch (e) {
-      emit(EmployeeLeaveRequestsState.error(e.toString().replaceAll('Exception: ', '')));
+      emit(
+        EmployeeLeaveRequestsState.error(
+          e.toString().replaceAll('Exception: ', ''),
+        ),
+      );
     }
   }
 
@@ -104,9 +152,11 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
     switch (result) {
       case Success():
         await loadLeaveRequests();
-        emit(const EmployeeLeaveRequestsState.actionSuccess(
-          'Leave request deleted successfully',
-        ));
+        emit(
+          const EmployeeLeaveRequestsState.actionSuccess(
+            'Leave request deleted successfully',
+          ),
+        );
       case Failure(:final failure):
         emit(EmployeeLeaveRequestsState.error(failure.messageKey));
     }

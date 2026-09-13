@@ -18,6 +18,7 @@ class AdminLeaveRequestModel {
   final int? id;
   final String? employeeId;
   final String? employeeName;
+  @JsonKey(name: 'leaveRequestType')
   final String? leaveType;
   final String? startDate;
   final String? endDate;

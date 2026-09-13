@@ -6,17 +6,19 @@ part 'employee_leave_request_body.g.dart';
 class EmployeeLeaveRequestBody {
   const EmployeeLeaveRequestBody({
     required this.employeeId,
-    required this.leaveType,
-    required this.fromDate,
-    required this.toDate,
-    this.reason,
+    required this.startDate,
+    required this.endDate,
+    required this.reason,
+    required this.remark,
+    required this.leaveRequestType,
   });
 
   final String employeeId;
-  final String leaveType;
-  final String fromDate;
-  final String toDate;
-  final String? reason;
+  final String startDate;
+  final String endDate;
+  final String reason;
+  final String remark;
+  final String leaveRequestType;
 
   factory EmployeeLeaveRequestBody.fromJson(Map<String, dynamic> json) =>
       _$EmployeeLeaveRequestBodyFromJson(json);
