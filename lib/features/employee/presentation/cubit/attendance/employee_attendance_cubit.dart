@@ -6,6 +6,7 @@ import 'package:check_point_v2/core/services/attendance_verification_service.dar
 import 'package:check_point_v2/core/services/local_notification_service.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/core/network/api_failure.dart';
+import 'package:check_point_v2/core/utils/app_date_formatter.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
@@ -36,6 +37,15 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
   AdminAttendanceModel? todayAttendance;
   EmployeeModel? employeeProfile;
 
+  bool hasClockIn(AdminAttendanceModel? attendance) =>
+      _hasAttendanceTime(attendance?.clockInTime);
+
+  bool hasClockOut(AdminAttendanceModel? attendance) =>
+      _hasAttendanceTime(attendance?.clockOutTime);
+
+  bool _hasAttendanceTime(String? rawTime) =>
+      AppDateFormatter.formatTimeString(rawTime) != '--:--';
+
   String? selectedImageBase64;
   CustomerModel? selectedTarget;
   BranchModel? selectedBranch;
@@ -64,7 +74,6 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
           );
     switch (result) {
       case Success(:final data):
-        employeeProfile = data;
         emit(EmployeeAttendanceState.branchesLoaded(data));
       case Failure(:final failure):
         emit(EmployeeAttendanceState.error(failure.messageKey));

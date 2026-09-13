@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +29,7 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
   }
 
   void _toggleCheckInOut() {
+    final attendanceCubit = context.read<EmployeeAttendanceCubit>();
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -36,19 +39,11 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
       ),
       backgroundColor: AppColors.cardBackground,
       builder: (_) => BlocProvider.value(
-        value: context.read<EmployeeAttendanceCubit>(),
+        value: attendanceCubit,
         child: EmployeeAttendanceLocationSheetWidget(
           isCheckOut:
-              context
-                      .read<EmployeeAttendanceCubit>()
-                      .todayAttendance
-                      ?.clockOutTime ==
-                  null &&
-              context
-                      .read<EmployeeAttendanceCubit>()
-                      .todayAttendance
-                      ?.clockInTime !=
-                  null,
+              attendanceCubit.hasClockIn(attendanceCubit.todayAttendance) &&
+              !attendanceCubit.hasClockOut(attendanceCubit.todayAttendance),
         ),
       ),
     );
@@ -59,172 +54,198 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'employee.clock.title'.tr(context: context),
-                style: AppTextStyles.font24Bold,
-              ),
-              hSpace(20),
-              BlocConsumer<EmployeeAttendanceCubit, EmployeeAttendanceState>(
-                listener: (context, state) {
-                  switch (state) {
-                    case EmployeeAttendanceStateCheckInSuccess():
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'employee.clock.checkedInSuccess'.tr(
-                              context: context,
+        child: RefreshIndicator(
+          onRefresh: context
+              .read<EmployeeAttendanceCubit>()
+              .loadAttendanceHistory,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'employee.clock.title'.tr(context: context),
+                  style: AppTextStyles.font24Bold,
+                ),
+                hSpace(20),
+                BlocConsumer<EmployeeAttendanceCubit, EmployeeAttendanceState>(
+                  listener: (context, state) {
+                    switch (state) {
+                      case EmployeeAttendanceStateCheckInSuccess():
+                        final cubit = context.read<EmployeeAttendanceCubit>();
+                        unawaited(cubit.loadAttendanceHistory());
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'employee.clock.checkedInSuccess'.tr(
+                                context: context,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    case EmployeeAttendanceStateCheckOutSuccess():
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'employee.clock.checkedOutSuccess'.tr(
-                              context: context,
+                        );
+                      case EmployeeAttendanceStateCheckOutSuccess():
+                        final cubit = context.read<EmployeeAttendanceCubit>();
+                        unawaited(cubit.loadAttendanceHistory());
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'employee.clock.checkedOutSuccess'.tr(
+                                context: context,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    case EmployeeAttendanceStateError(:final messageKey):
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(messageKey.tr(context: context)),
-                        ),
-                      );
-                    default:
-                      break;
-                  }
-                },
-                builder: (context, state) {
-                  final cubit = context.read<EmployeeAttendanceCubit>();
-                  final attendance = cubit.todayAttendance;
-                  final profile = cubit.employeeProfile;
-                  final isCheckedIn =
-                      attendance?.clockInTime != null &&
-                      attendance?.clockOutTime == null;
-                  final hasCheckedOut = attendance?.clockOutTime != null;
-                  return EmployeeClockCardWidget(
-                    policyText:
-                        '${profile?.shiftName ?? 'employee.home.defaultPolicy'.tr(context: context)} — '
-                        '${profile?.clockInTime ?? '--:--'}–${profile?.clockOutTime ?? '--:--'}',
-                    checkInTime: attendance?.clockInTime ?? '--:--',
-                    checkOutTime: attendance?.clockOutTime ?? '--:--',
-                    isCheckedIn: isCheckedIn,
-                    hasCheckedOut: hasCheckedOut,
-                    workedHours: attendance?.dayHours,
-                    onToggleCheckInOut: _toggleCheckInOut,
-                  );
-                },
-              ),
-              hSpace(20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'employee.clock.recentAttendance'.tr(context: context),
-                    style: AppTextStyles.font18Bold,
-                  ),
-                  hSpace(12),
-                  BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
-                    builder: (context, state) {
-                      final cubit = context.read<EmployeeAttendanceCubit>();
-                      return EmployeeAttendanceFilterWidget(
-                        selectedDaysFilter: cubit.selectedDaysFilter,
-                        selectedStatusFilters: cubit.selectedStatusFilters,
-                        onDaysFilterChanged: cubit.setDaysFilter,
-                        onStatusFilterToggled: cubit.toggleStatusFilter,
-                        onResetFilters: cubit.resetFilters,
-                      );
-                    },
-                  ),
-                  hSpace(12),
-                  BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
-                    builder: (context, state) {
-                      final historyRecords = switch (state) {
-                        EmployeeAttendanceStateHistoryLoaded(:final history) =>
-                          history
-                              .map(
-                                (item) => EmployeeAttendanceRecordData(
-                                  date: AppDateFormatter.formatDateString(
-                                    item.attendanceDate,
+                        );
+                      case EmployeeAttendanceStateError(:final messageKey):
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(messageKey.tr(context: context)),
+                          ),
+                        );
+                      default:
+                        break;
+                    }
+                  },
+                  builder: (context, state) {
+                    final cubit = context.read<EmployeeAttendanceCubit>();
+                    final attendance = cubit.todayAttendance;
+                    final profile = cubit.employeeProfile;
+                    final isCheckedIn =
+                        cubit.hasClockIn(attendance) &&
+                        !cubit.hasClockOut(attendance);
+                    final hasCheckedOut = cubit.hasClockOut(attendance);
+                    return EmployeeClockCardWidget(
+                      policyText:
+                          '${profile?.shiftName ?? 'employee.home.defaultPolicy'.tr(context: context)} — '
+                          '${AppDateFormatter.formatTimeString(profile?.clockInTime)}–${AppDateFormatter.formatTimeString(profile?.clockOutTime)}',
+                      checkInTime: AppDateFormatter.formatTimeString(
+                        attendance?.clockInTime,
+                      ),
+                      checkOutTime: AppDateFormatter.formatTimeString(
+                        attendance?.clockOutTime,
+                      ),
+                      isCheckedIn: isCheckedIn,
+                      hasCheckedOut: hasCheckedOut,
+                      workedHours: attendance?.dayHours,
+                      onToggleCheckInOut: _toggleCheckInOut,
+                    );
+                  },
+                ),
+                hSpace(20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'employee.clock.recentAttendance'.tr(context: context),
+                      style: AppTextStyles.font18Bold,
+                    ),
+                    hSpace(12),
+                    BlocBuilder<
+                      EmployeeAttendanceCubit,
+                      EmployeeAttendanceState
+                    >(
+                      builder: (context, state) {
+                        final cubit = context.read<EmployeeAttendanceCubit>();
+                        return EmployeeAttendanceFilterWidget(
+                          selectedDaysFilter: cubit.selectedDaysFilter,
+                          selectedStatusFilters: cubit.selectedStatusFilters,
+                          onDaysFilterChanged: cubit.setDaysFilter,
+                          onStatusFilterToggled: cubit.toggleStatusFilter,
+                          onResetFilters: cubit.resetFilters,
+                        );
+                      },
+                    ),
+                    hSpace(12),
+                    BlocBuilder<
+                      EmployeeAttendanceCubit,
+                      EmployeeAttendanceState
+                    >(
+                      builder: (context, state) {
+                        final historyRecords = switch (state) {
+                          EmployeeAttendanceStateHistoryLoaded(
+                            :final history,
+                          ) =>
+                            history
+                                .map(
+                                  (item) => EmployeeAttendanceRecordData(
+                                    date: AppDateFormatter.formatDateString(
+                                      item.attendanceDate,
+                                    ),
+                                    checkIn: AppDateFormatter.formatTimeString(
+                                      item.clockInTime,
+                                      use12Hour: true,
+                                    ),
+                                    checkOut: AppDateFormatter.formatTimeString(
+                                      item.clockOutTime,
+                                      use12Hour: true,
+                                    ),
+                                    area: item.area,
+                                    status: item.isLate == true
+                                        ? 'Late'
+                                        : (item.isEarly == true
+                                              ? 'Early Leave'
+                                              : 'On Time'),
+                                    isLate: item.isLate == true,
+                                    isEarly: item.isEarly == true,
                                   ),
-                                  checkIn: AppDateFormatter.formatTimeString(
-                                    item.clockInTime,
-                                    use12Hour: true,
-                                  ),
-                                  checkOut: AppDateFormatter.formatTimeString(
-                                    item.clockOutTime,
-                                    use12Hour: true,
-                                  ),
-                                  area: item.area,
-                                  status: item.isLate == true
-                                      ? 'Late'
-                                      : (item.isEarly == true
-                                            ? 'Early Leave'
-                                            : 'On Time'),
-                                  isLate: item.isLate == true,
-                                  isEarly: item.isEarly == true,
-                                ),
-                              )
-                              .toList(),
-                        _ => const <EmployeeAttendanceRecordData>[],
-                      };
+                                )
+                                .toList(),
+                          _ => const <EmployeeAttendanceRecordData>[],
+                        };
 
-                      if (historyRecords.isEmpty) {
+                        if (historyRecords.isEmpty) {
+                          return Container(
+                            padding: EdgeInsets.all(16.r),
+                            decoration: BoxDecoration(
+                              color: AppColors.cardBackground,
+                              borderRadius: BorderRadius.circular(16.r),
+                              border: Border.all(color: AppColors.border),
+                            ),
+                            child: const Center(
+                              child: Text('No attendance history found'),
+                            ),
+                          );
+                        }
+
                         return Container(
-                          padding: EdgeInsets.all(16.r),
                           decoration: BoxDecoration(
                             color: AppColors.cardBackground,
                             borderRadius: BorderRadius.circular(16.r),
                             border: Border.all(color: AppColors.border),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: AppColors.shadow,
+                                blurRadius: 8,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
                           ),
-                          child: const Center(
-                            child: Text('No attendance history found'),
+                          child: Column(
+                            children: [
+                              for (
+                                int i = 0;
+                                i < historyRecords.length;
+                                i++
+                              ) ...[
+                                EmployeeAttendanceRecordCardWidget(
+                                  record: historyRecords[i],
+                                ),
+                                if (i < historyRecords.length - 1)
+                                  const Divider(
+                                    height: 1,
+                                    thickness: 1,
+                                    color: AppColors.border,
+                                  ),
+                              ],
+                            ],
                           ),
                         );
-                      }
-
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.cardBackground,
-                          borderRadius: BorderRadius.circular(16.r),
-                          border: Border.all(color: AppColors.border),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: AppColors.shadow,
-                              blurRadius: 8,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            for (int i = 0; i < historyRecords.length; i++) ...[
-                              EmployeeAttendanceRecordCardWidget(
-                                record: historyRecords[i],
-                              ),
-                              if (i < historyRecords.length - 1)
-                                const Divider(
-                                  height: 1,
-                                  thickness: 1,
-                                  color: AppColors.border,
-                                ),
-                            ],
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

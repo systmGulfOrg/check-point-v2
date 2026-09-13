@@ -4,6 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'employee_clock_gauge_widget.dart';
+import 'employee_live_clock_widget.dart';
 import 'employee_status_badge_widget.dart';
 
 class EmployeeClockCardWidget extends StatelessWidget {
@@ -46,18 +47,7 @@ class EmployeeClockCardWidget extends StatelessWidget {
         children: [
           const EmployeeClockGaugeWidget(),
           hSpace(16),
-          Text(
-            'employee.clock.currentTime'.tr(context: context),
-            style: AppTextStyles.font24Bold.copyWith(
-              fontSize: 28.sp,
-              letterSpacing: 1.2,
-            ),
-          ),
-          hSpace(6),
-          Text(
-            'employee.clock.currentDate'.tr(context: context),
-            style: AppTextStyles.font13Regular,
-          ),
+          const EmployeeLiveClockWidget(),
           hSpace(6),
           Text(
             policyText,
@@ -159,12 +149,28 @@ class EmployeeClockCardWidget extends StatelessWidget {
                 ),
             ],
           ),
-          hSpace(16),
-          CustomButton(
-            text: isCheckedIn
-                ? 'employee.home.checkOutAction'.tr(context: context)
-                : 'employee.home.checkInAction'.tr(context: context),
-            onTap: onToggleCheckInOut,
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: SizeTransition(
+                sizeFactor: animation,
+                axisAlignment: -1,
+                child: child,
+              ),
+            ),
+            child: hasCheckedOut && !isCheckedIn
+                ? const SizedBox.shrink(key: ValueKey<String>('completed'))
+                : CustomButton(
+                    key: ValueKey<bool>(isCheckedIn),
+                    text: isCheckedIn
+                        ? 'employee.home.checkOutAction'.tr(context: context)
+                        : 'employee.home.checkInAction'.tr(context: context),
+                    backgroundColor: isCheckedIn
+                        ? AppColors.error
+                        : AppColors.brandPrimary,
+                    onTap: onToggleCheckInOut,
+                  ),
           ),
         ],
       ),
