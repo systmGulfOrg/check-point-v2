@@ -78,8 +78,12 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                         _checkOutTime = '—';
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Checked in successfully'),
+                        SnackBar(
+                          content: Text(
+                            'employee.clock.checkedInSuccess'.tr(
+                              context: context,
+                            ),
+                          ),
                         ),
                       );
                     case EmployeeAttendanceStateCheckOutSuccess(
@@ -93,8 +97,12 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                             DateFormat('HH:mm').format(DateTime.now());
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Checked out successfully'),
+                        SnackBar(
+                          content: Text(
+                            'employee.clock.checkedOutSuccess'.tr(
+                              context: context,
+                            ),
+                          ),
                         ),
                       );
                     case EmployeeAttendanceStateError(:final messageKey):

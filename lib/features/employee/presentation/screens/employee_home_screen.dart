@@ -98,8 +98,12 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                         _workedHours = null;
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Checked in successfully'),
+                        SnackBar(
+                          content: Text(
+                            'employee.clock.checkedInSuccess'.tr(
+                              context: context,
+                            ),
+                          ),
                         ),
                       );
                     case EmployeeAttendanceStateCheckOutSuccess(
@@ -113,8 +117,12 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                             DateFormat('HH:mm').format(DateTime.now());
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Checked out successfully'),
+                        SnackBar(
+                          content: Text(
+                            'employee.clock.checkedOutSuccess'.tr(
+                              context: context,
+                            ),
+                          ),
                         ),
                       );
                     case EmployeeAttendanceStateError(:final messageKey):

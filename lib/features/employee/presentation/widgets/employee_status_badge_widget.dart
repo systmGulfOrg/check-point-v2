@@ -27,7 +27,7 @@ class EmployeeStatusBadgeWidget extends StatelessWidget {
         AppColors.info,
       ),
       'overdue' => (
-        const Color(0xFFFEE2E2),
+        AppColors.softRedBackground,
         AppColors.error,
         AppColors.error,
       ),

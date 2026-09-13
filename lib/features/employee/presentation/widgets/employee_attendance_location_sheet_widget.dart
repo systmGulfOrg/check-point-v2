@@ -176,7 +176,20 @@ class _EmployeeAttendanceLocationSheetWidgetState
   }
 
   Future<void> _submit() async {
-    if (!isInside) return;
+    if (!isInside) {
+      final messageKey = userLocation == null
+          ? 'errors.locationUnavailable'
+          : targetPoints.isEmpty
+          ? 'attendance.noLocationData'
+          : 'errors.outsideAttendanceArea';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(messageKey.tr(context: context)),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
     final cubit = context.read<EmployeeAttendanceCubit>();
     if (widget.isCheckOut) {
       await cubit.checkOut(
@@ -368,8 +381,8 @@ class _EmployeeAttendanceLocationSheetWidgetState
                                 ? 'employee.home.checkOutAction'.tr()
                                 : 'employee.home.checkInAction'.tr(),
                             isLoading: state is EmployeeAttendanceStateLoading,
-                            enabled: isInside,
-                            onTap: isInside ? _submit : () {},
+                            enabled: true,
+                            onTap: _submit,
                           ),
                         ],
                       ],

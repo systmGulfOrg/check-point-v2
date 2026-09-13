@@ -69,6 +69,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     LatLng? targetCenter,
     List<LatLng> targetPolygon = const [],
   }) async {
+    emit(const EmployeeAttendanceState.loading());
     final verification = await attendanceVerificationService.verify(
       biometricReason: 'Verify your identity to check in',
       center: targetCenter,
@@ -79,7 +80,6 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
       return;
     }
     currentLocation = verification.location;
-    emit(const EmployeeAttendanceState.loading());
     final result = await checkInUseCase(
       area: area,
       customerId: customerId ?? selectedTarget?.id?.toString(),
@@ -116,6 +116,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     LatLng? targetCenter,
     List<LatLng> targetPolygon = const [],
   }) async {
+    emit(const EmployeeAttendanceState.loading());
     final verification = await attendanceVerificationService.verify(
       biometricReason: 'Verify your identity to check out',
       center: targetCenter,
@@ -126,7 +127,6 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
       return;
     }
     currentLocation = verification.location;
-    emit(const EmployeeAttendanceState.loading());
     final result = await checkOutUseCase(
       selectedImageBase64: selectedImageBase64,
     );

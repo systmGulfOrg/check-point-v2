@@ -13,7 +13,7 @@ class EmployeeLeaveCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final (statusBg, statusText) = switch (leave.status) {
       'Approved' => (AppColors.softGreenBackground, AppColors.success),
-      'Rejected' => (const Color(0xFFFEE2E2), AppColors.error),
+      'Rejected' => (AppColors.softRedBackground, AppColors.error),
       _ => (AppColors.softYellowBackground, AppColors.warningOrange),
     };
 
