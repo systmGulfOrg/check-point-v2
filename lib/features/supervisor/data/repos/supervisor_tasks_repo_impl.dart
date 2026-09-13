@@ -30,8 +30,15 @@ class SupervisorTasksRepoImpl implements SupervisorTasksRepo {
   }
 
   @override
-  Future<ApiResult<List<AdminTaskModel>>> getTasks({int? departmentId}) async {
+  Future<ApiResult<List<AdminTaskModel>>> getTasks({
+    int? departmentId,
+    String? employeeId,
+  }) async {
     try {
+      if (employeeId != null && employeeId.isNotEmpty) {
+        final response = await api.getTasksByEmployee(employeeId);
+        return ApiResult.success(response.value ?? const []);
+      }
       final deptId = await _resolveDepartmentId(departmentId);
       final response = deptId != null
           ? await api.getTasksByDepartment(deptId)

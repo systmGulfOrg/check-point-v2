@@ -1130,9 +1130,15 @@ class _AdminApiService implements AdminApiService {
   }
 
   @override
-  Future<TasksResponseModel> getTasks() async {
+  Future<TasksResponseModel> getTasks({
+    int itemCount = 100,
+    int index = 0,
+  }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'itemCount': itemCount,
+      r'index': index,
+    };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<TasksResponseModel>(
@@ -1149,6 +1155,60 @@ class _AdminApiService implements AdminApiService {
     late TasksResponseModel _value;
     try {
       _value = TasksResponseModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<TasksResponseModel> getTasksByDepartment(int departmentId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<TasksResponseModel>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/Task/department/${departmentId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late TasksResponseModel _value;
+    try {
+      _value = TasksResponseModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<TasksListResponseModel> getTasksByEmployee(String employeeId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'employeeId': employeeId};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<TasksListResponseModel>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/Task/specificEmployee',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late TasksListResponseModel _value;
+    try {
+      _value = TasksListResponseModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -1215,14 +1275,14 @@ class _AdminApiService implements AdminApiService {
   @override
   Future<ResultModel> deleteTask(int id) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'id': id};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<ResultModel>(
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/Task/${id}',
+            '/api/Task',
             queryParameters: queryParameters,
             data: _data,
           )

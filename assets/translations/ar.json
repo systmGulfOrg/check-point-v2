@@ -608,6 +608,10 @@
   "supervisor.tasks.filter.active": "نشطة",
   "supervisor.tasks.filter.done": "مكتملة",
   "supervisor.tasks.filter.all": "الكل",
+  "admin.tasks.filter.department": "القسم",
+  "admin.tasks.filter.employee": "الموظف",
+  "admin.tasks.filter.allDepartments": "كل الأقسام",
+  "admin.tasks.filter.allEmployees": "كل الموظفين",
   "supervisor.tasks.newTask": "+ مهمة جديدة",
   "supervisor.tasks.create.title": "إنشاء مهمة",
   "supervisor.tasks.create.titleLabel": "العنوان",
@@ -786,4 +790,18 @@
   ,"employee.notifications.attendanceBody": "متبقي ساعة على موعد انصرافك."
   ,"employee.notifications.tasksTitle": "مهام معلّقة"
   ,"employee.notifications.tasksBody": "لديك {count} مهام معلّقة أو قيد التنفيذ."
+  ,"employee.details.attendedDays": "أيام الحضور"
+  ,"employee.details.absentDays": "أيام الغياب"
+  ,"employee.details.lateDays": "أيام التأخير"
+  ,"employee.details.earlyDays": "الانصراف المبكر"
+  ,"employee.details.totalHours": "إجمالي الساعات"
+  ,"employee.details.attendanceHistory": "سجل الحضور"
+  ,"employee.details.noAttendance": "لا توجد سجلات حضور."
+  ,"employee.details.monthlyOverview": "ملخص الشهر"
+  ,"admin.shifts.policies.assignEmployee": "إضافة موظف"
+  ,"admin.shifts.policies.assignEmployeeTitle": "إضافة موظف إلى السياسة"
+  ,"admin.shifts.policies.searchEmployee": "ابحث بالاسم أو الكود..."
+  ,"admin.shifts.policies.alreadyAssigned": "مضاف بالفعل"
+  ,"admin.shifts.policies.assignedToOtherShift": "مضاف إلى شفت آخر"
+  ,"admin.shifts.policies.transfer": "نقل"
 }

@@ -202,7 +202,20 @@ abstract class AdminApiService {
 
   // Tasks
   @GET(ApiConstants.tasks)
-  Future<TasksResponseModel> getTasks();
+  Future<TasksResponseModel> getTasks({
+    @Query('itemCount') int itemCount = 100,
+    @Query('index') int index = 0,
+  });
+
+  @GET('${ApiConstants.tasks}/department/{departmentId}')
+  Future<TasksResponseModel> getTasksByDepartment(
+    @Path('departmentId') int departmentId,
+  );
+
+  @GET('${ApiConstants.tasks}/specificEmployee')
+  Future<TasksListResponseModel> getTasksByEmployee(
+    @Query('employeeId') String employeeId,
+  );
 
   @POST(ApiConstants.tasks)
   Future<ResultModel> addTask(@Body() AddTaskRequestBody body);
@@ -213,8 +226,8 @@ abstract class AdminApiService {
     @Body() AddTaskRequestBody body,
   );
 
-  @DELETE('${ApiConstants.tasks}/{id}')
-  Future<ResultModel> deleteTask(@Path('id') int id);
+  @DELETE(ApiConstants.tasks)
+  Future<ResultModel> deleteTask(@Query('id') int id);
 
   @POST('${ApiConstants.tasks}/assignTask')
   Future<ResultModel> assignTask(@Body() AssignTaskRequestBody body);

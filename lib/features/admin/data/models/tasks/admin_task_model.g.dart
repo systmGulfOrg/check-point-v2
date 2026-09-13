@@ -42,6 +42,24 @@ Map<String, dynamic> _$TasksResponseModelToJson(TasksResponseModel instance) =>
       'successMessage': instance.successMessage,
     };
 
+TasksListResponseModel _$TasksListResponseModelFromJson(
+  Map<String, dynamic> json,
+) => TasksListResponseModel(
+  value: (json['value'] as List<dynamic>?)
+      ?.map((e) => AdminTaskModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  isSuccess: json['isSuccess'] as bool?,
+  successMessage: json['successMessage'] as String?,
+);
+
+Map<String, dynamic> _$TasksListResponseModelToJson(
+  TasksListResponseModel instance,
+) => <String, dynamic>{
+  'value': instance.value,
+  'isSuccess': instance.isSuccess,
+  'successMessage': instance.successMessage,
+};
+
 TasksPageModel _$TasksPageModelFromJson(Map<String, dynamic> json) =>
     TasksPageModel(
       items: (json['items'] as List<dynamic>?)

@@ -9,10 +9,19 @@ class AdminTasksRepoImpl implements AdminTasksRepo {
   final AdminApiService api;
 
   @override
-  Future<ApiResult<List<AdminTaskModel>>> getTasks() async {
+  Future<ApiResult<List<AdminTaskModel>>> getTasks({
+    int? departmentId,
+    String? employeeId,
+  }) async {
     try {
-      final response = await api.getTasks();
-      return ApiResult.success(response.value?.list ?? []);
+      if (employeeId != null && employeeId.isNotEmpty) {
+        final response = await api.getTasksByEmployee(employeeId);
+        return ApiResult.success(response.value ?? []);
+      }
+      final response = departmentId == null
+          ? await api.getTasks()
+          : await api.getTasksByDepartment(departmentId);
+      return ApiResult.success(response.value?.list ?? const []);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

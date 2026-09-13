@@ -111,8 +111,10 @@ class _FakeSupervisorTasksRepo implements SupervisorTasksRepo {
   ];
 
   @override
-  Future<ApiResult<List<AdminTaskModel>>> getTasks({int? departmentId}) async =>
-      ApiResult.success(tasks);
+  Future<ApiResult<List<AdminTaskModel>>> getTasks({
+    int? departmentId,
+    String? employeeId,
+  }) async => ApiResult.success(tasks);
 
   @override
   Future<ApiResult<void>> addTask(AddTaskRequestBody body) async {

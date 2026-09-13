@@ -13,9 +13,12 @@ class SupervisorTasksCubit extends Cubit<SupervisorTasksState> {
   List<AdminTaskModel> allTasks = const [];
   String? statusFilter;
 
-  Future<void> loadTasks({int? departmentId}) async {
+  Future<void> loadTasks({int? departmentId, String? employeeId}) async {
     emit(const SupervisorTasksState.loading());
-    final result = await tasksRepo.getTasks(departmentId: departmentId);
+    final result = await tasksRepo.getTasks(
+      departmentId: departmentId,
+      employeeId: employeeId,
+    );
     result.when(
       success: (data) {
         allTasks = data;

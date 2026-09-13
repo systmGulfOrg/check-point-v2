@@ -41,6 +41,24 @@ class TasksResponseModel {
 }
 
 @JsonSerializable()
+class TasksListResponseModel {
+  const TasksListResponseModel({
+    this.value,
+    this.isSuccess,
+    this.successMessage,
+  });
+
+  final List<AdminTaskModel>? value;
+  final bool? isSuccess;
+  final String? successMessage;
+
+  factory TasksListResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$TasksListResponseModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TasksListResponseModelToJson(this);
+}
+
+@JsonSerializable()
 class TasksPageModel {
   const TasksPageModel({this.items, this.data, this.totalCount});
 

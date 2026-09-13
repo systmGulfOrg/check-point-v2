@@ -608,6 +608,10 @@
   "supervisor.tasks.filter.active": "Active",
   "supervisor.tasks.filter.done": "Done",
   "supervisor.tasks.filter.all": "All",
+  "admin.tasks.filter.department": "Department",
+  "admin.tasks.filter.employee": "Employee",
+  "admin.tasks.filter.allDepartments": "All departments",
+  "admin.tasks.filter.allEmployees": "All employees",
   "supervisor.tasks.newTask": "+ New Task",
   "supervisor.tasks.create.title": "Create Task",
   "supervisor.tasks.create.titleLabel": "Title",
@@ -786,4 +790,18 @@
   ,"employee.notifications.attendanceBody": "Your checkout time is in one hour."
   ,"employee.notifications.tasksTitle": "Pending tasks"
   ,"employee.notifications.tasksBody": "You have {count} pending or in-progress tasks."
+  ,"employee.details.attendedDays": "Attendance days"
+  ,"employee.details.absentDays": "Absent days"
+  ,"employee.details.lateDays": "Late days"
+  ,"employee.details.earlyDays": "Early leave"
+  ,"employee.details.totalHours": "Total hours"
+  ,"employee.details.attendanceHistory": "Attendance history"
+  ,"employee.details.noAttendance": "No attendance records found."
+  ,"employee.details.monthlyOverview": "Monthly overview"
+  ,"admin.shifts.policies.assignEmployee": "Add employee"
+  ,"admin.shifts.policies.assignEmployeeTitle": "Add employee to policy"
+  ,"admin.shifts.policies.searchEmployee": "Search by name or code..."
+  ,"admin.shifts.policies.alreadyAssigned": "Added"
+  ,"admin.shifts.policies.assignedToOtherShift": "Another shift"
+  ,"admin.shifts.policies.transfer": "Transfer"
 }

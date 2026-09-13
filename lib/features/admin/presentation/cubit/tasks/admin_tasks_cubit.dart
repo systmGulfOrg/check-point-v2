@@ -11,9 +11,12 @@ class AdminTasksCubit extends Cubit<AdminTasksState> {
 
   final AdminTasksRepo tasksRepo;
 
-  Future<void> loadTasks() async {
+  Future<void> loadTasks({int? departmentId, String? employeeId}) async {
     emit(const AdminTasksState.loading());
-    final result = await tasksRepo.getTasks();
+    final result = await tasksRepo.getTasks(
+      departmentId: departmentId,
+      employeeId: employeeId,
+    );
     switch (result) {
       case Success(:final data):
         emit(AdminTasksState.success(data));
