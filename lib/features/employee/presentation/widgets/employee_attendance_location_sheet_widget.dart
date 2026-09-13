@@ -139,10 +139,21 @@ class _EmployeeAttendanceLocationSheetWidgetState
 
   Future<void> _loadTargetAddress() async {
     final points = targetPoints;
+    final savedAddress = branch?.location ?? customer?.location;
     if (points.isEmpty) {
       if (mounted) {
         setState(() {
           targetAddress = null;
+          isAddressLoading = false;
+        });
+      }
+      return;
+    }
+
+    if (savedAddress != null && savedAddress.trim().isNotEmpty) {
+      if (mounted) {
+        setState(() {
+          targetAddress = savedAddress;
           isAddressLoading = false;
         });
       }
