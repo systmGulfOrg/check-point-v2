@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'branch_request_model.dart';
+import 'package:check_point_v2/core/utils/legacy_api_response_helpers.dart';
 
 part 'branch_response_model.g.dart';
 
@@ -13,7 +14,10 @@ class BranchResponseModel {
   final List<String>? errors;
 
   factory BranchResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$BranchResponseModelFromJson(json);
+      _$BranchResponseModelFromJson({
+        ...json,
+        'value': legacyPageValue(json['value']),
+      });
 }
 
 @JsonSerializable(createToJson: false)

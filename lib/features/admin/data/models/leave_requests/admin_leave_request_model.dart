@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:check_point_v2/core/utils/legacy_api_response_helpers.dart';
+
 part 'admin_leave_request_model.g.dart';
 
 @JsonSerializable()
@@ -44,7 +46,10 @@ class LeaveRequestsResponseModel {
   final String? successMessage;
 
   factory LeaveRequestsResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$LeaveRequestsResponseModelFromJson(json);
+      _$LeaveRequestsResponseModelFromJson({
+        ...json,
+        'value': legacyPageValue(json['value']),
+      });
 
   Map<String, dynamic> toJson() => _$LeaveRequestsResponseModelToJson(this);
 }

@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:check_point_v2/core/utils/legacy_api_response_helpers.dart';
+
 part 'shift_model.g.dart';
 
 @JsonSerializable()
@@ -25,7 +27,10 @@ class ShiftResponseModel {
   final String? successMessage;
 
   factory ShiftResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$ShiftResponseModelFromJson(json);
+      _$ShiftResponseModelFromJson({
+        ...json,
+        'value': legacyPageValue(json['value']),
+      });
 
   Map<String, dynamic> toJson() => _$ShiftResponseModelToJson(this);
 }

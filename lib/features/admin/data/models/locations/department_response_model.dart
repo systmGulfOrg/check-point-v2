@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:check_point_v2/core/utils/legacy_api_response_helpers.dart';
+
 part 'department_response_model.g.dart';
 
 @JsonSerializable(createToJson: false)
@@ -11,7 +13,10 @@ class DepartmentResponseModel {
   final List<String>? errors;
 
   factory DepartmentResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$DepartmentResponseModelFromJson(json);
+      _$DepartmentResponseModelFromJson({
+        ...json,
+        'value': legacyPageValue(json['value']),
+      });
 }
 
 @JsonSerializable(createToJson: false)

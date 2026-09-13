@@ -1,5 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:check_point_v2/core/utils/legacy_api_json_converters.dart';
+import 'package:check_point_v2/core/utils/legacy_api_response_helpers.dart';
+
 part 'admin_attendance_model.g.dart';
 
 @JsonSerializable()
@@ -24,10 +27,14 @@ class AdminAttendanceModel {
   final int? id;
   final String? employeeId;
   final String? employeeName;
+  @JsonKey(fromJson: legacyApiValueToString)
   final String? clockInTime;
+  @JsonKey(fromJson: legacyApiValueToString)
   final String? clockOutTime;
+  @JsonKey(fromJson: legacyApiValueToString)
   final String? dayHours;
   final dynamic totalHours;
+  @JsonKey(fromJson: legacyApiValueToString)
   final String? attendanceDate;
   final String? area;
   final String? customerId;
@@ -55,7 +62,10 @@ class AttendanceResponseModel {
   final String? successMessage;
 
   factory AttendanceResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$AttendanceResponseModelFromJson(json);
+      _$AttendanceResponseModelFromJson({
+        ...json,
+        'value': legacyPageValue(json['value']),
+      });
 
   Map<String, dynamic> toJson() => _$AttendanceResponseModelToJson(this);
 }

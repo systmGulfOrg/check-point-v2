@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:check_point_v2/core/utils/legacy_api_response_helpers.dart';
+
 part 'admin_plan_model.g.dart';
 
 @JsonSerializable()
@@ -50,7 +52,10 @@ class PlansResponseModel {
   final String? successMessage;
 
   factory PlansResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$PlansResponseModelFromJson(json);
+      _$PlansResponseModelFromJson({
+        ...json,
+        'value': legacyPageValue(json['value']),
+      });
 
   Map<String, dynamic> toJson() => _$PlansResponseModelToJson(this);
 }

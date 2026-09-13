@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'customer_request_model.dart';
+import 'package:check_point_v2/core/utils/legacy_api_response_helpers.dart';
 
 part 'customer_response_model.g.dart';
 
@@ -13,7 +14,10 @@ class CustomerResponseModel {
   final List<String>? errors;
 
   factory CustomerResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$CustomerResponseModelFromJson(json);
+      _$CustomerResponseModelFromJson({
+        ...json,
+        'value': legacyPageValue(json['value']),
+      });
 }
 
 @JsonSerializable(createToJson: false)

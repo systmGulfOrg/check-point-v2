@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:check_point_v2/core/utils/legacy_api_json_converters.dart';
+import 'package:check_point_v2/core/utils/legacy_api_response_helpers.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'shift_model.dart';
 
@@ -31,7 +33,9 @@ class PoliceModel {
   final List<String>? workDays;
   final String? startTime;
   final String? endTime;
+  @JsonKey(fromJson: legacyApiValueToString)
   final String? clockInTime;
+  @JsonKey(fromJson: legacyApiValueToString)
   final String? clockOutTime;
   final String? area;
   final int? month;
@@ -61,7 +65,10 @@ class PoliceResponseModel {
   final String? successMessage;
 
   factory PoliceResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$PoliceResponseModelFromJson(json);
+      _$PoliceResponseModelFromJson({
+        ...json,
+        'value': legacyPageValue(json['value']),
+      });
 
   Map<String, dynamic> toJson() => _$PoliceResponseModelToJson(this);
 }

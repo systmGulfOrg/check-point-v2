@@ -22,8 +22,8 @@ EmployeeModel _$EmployeeModelFromJson(Map<String, dynamic> json) =>
       canAddAttendance: json['canAddAttendance'] as bool?,
       canAddPlan: json['canAddPlan'] as bool?,
       shiftName: json['shiftName'] as String?,
-      clockInTime: json['clockInTime'] as String?,
-      clockOutTime: json['clockOutTime'] as String?,
+      clockInTime: legacyApiValueToString(json['clockInTime']),
+      clockOutTime: legacyApiValueToString(json['clockOutTime']),
       area: json['area'] as String?,
     );
 

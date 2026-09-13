@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:check_point_v2/core/utils/legacy_api_json_converters.dart';
+
 part 'employee_model.g.dart';
 
 @JsonSerializable()
@@ -38,7 +40,9 @@ class EmployeeModel {
   final bool? canAddAttendance;
   final bool? canAddPlan;
   final String? shiftName;
+  @JsonKey(fromJson: legacyApiValueToString)
   final String? clockInTime;
+  @JsonKey(fromJson: legacyApiValueToString)
   final String? clockOutTime;
   final String? area;
 
