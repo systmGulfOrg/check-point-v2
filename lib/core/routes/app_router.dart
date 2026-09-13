@@ -33,7 +33,6 @@ import 'package:check_point_v2/features/auth/presentation/cubit/request_account/
 import 'package:check_point_v2/features/auth/presentation/screens/login_screen.dart';
 import 'package:check_point_v2/features/auth/presentation/screens/request_access_screen.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
-import 'package:check_point_v2/features/employee/presentation/cubit/password/employee_change_password_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/leave_requests/employee_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/odoo_dashboard/employee_odoo_dashboard_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/plans/employee_plans_cubit.dart';
@@ -164,9 +163,6 @@ class AppRouter {
               ),
               BlocProvider<AuthProfileCubit>(
                 create: (_) => sl<AuthProfileCubit>()..loadProfile(),
-              ),
-              BlocProvider<EmployeeChangePasswordCubit>(
-                create: (_) => sl<EmployeeChangePasswordCubit>(),
               ),
               BlocProvider<AdminEmployeesCubit>(
                 create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
@@ -328,9 +324,6 @@ class AppRouter {
               BlocProvider<AuthProfileCubit>(
                 create: (_) => sl<AuthProfileCubit>()..loadProfile(),
               ),
-              BlocProvider<EmployeeChangePasswordCubit>(
-                create: (_) => sl<EmployeeChangePasswordCubit>(),
-              ),
               BlocProvider<SupervisorAttendanceCubit>(
                 create: (_) =>
                     sl<SupervisorAttendanceCubit>()..loadAttendance(),
@@ -413,9 +406,6 @@ class AppRouter {
               BlocProvider<EmployeeLeaveRequestsCubit>(
                 create: (_) =>
                     sl<EmployeeLeaveRequestsCubit>()..loadLeaveRequests(),
-              ),
-              BlocProvider<EmployeeChangePasswordCubit>(
-                create: (_) => sl<EmployeeChangePasswordCubit>(),
               ),
               BlocProvider<EmployeeOdooDashboardCubit>(
                 create: (_) =>

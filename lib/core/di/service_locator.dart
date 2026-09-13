@@ -144,10 +144,7 @@ Future<void> setupServiceLocator() async {
 
   // Repositories
   sl.registerLazySingleton<AuthRepo>(
-    () => AuthRepoImpl(
-      api: sl<AuthApiService>(),
-      secureStorage: sl<FlutterSecureStorage>(),
-    ),
+    () => AuthRepoImpl(api: sl<AuthApiService>()),
   );
   sl.registerLazySingleton<AdminEmployeeRepo>(
     () => AdminEmployeeRepoImpl(api: sl<AdminApiService>()),

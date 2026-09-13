@@ -1,5 +1,3 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 import 'package:check_point_v2/core/network/api_failure.dart';
 import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
@@ -10,10 +8,9 @@ import 'package:check_point_v2/features/auth/data/models/login/login_response_mo
 import 'auth_repo.dart';
 
 class AuthRepoImpl implements AuthRepo {
-  AuthRepoImpl({required this.api, required this.secureStorage});
+  AuthRepoImpl({required this.api});
 
   final AuthApiService api;
-  final FlutterSecureStorage secureStorage;
 
   @override
   Future<ApiResult<LoginResponseModel>> login(LoginRequestModel request) async {
@@ -33,16 +30,6 @@ class AuthRepoImpl implements AuthRepo {
         return ApiResult.failure(
           const ApiFailure(messageKey: 'errors.invalidCredentials'),
         );
-      }
-      await secureStorage.write(key: 'auth_token', value: token);
-      if (user.id != null && user.id!.isNotEmpty) {
-        await secureStorage.write(key: 'user_id', value: user.id!);
-      }
-      if (user.userName != null && user.userName!.isNotEmpty) {
-        await secureStorage.write(key: 'user_name', value: user.userName!);
-      }
-      if (user.roles != null && user.roles!.isNotEmpty) {
-        await secureStorage.write(key: 'user_role', value: user.roles!.first);
       }
       return ApiResult.success(user);
     } catch (error) {

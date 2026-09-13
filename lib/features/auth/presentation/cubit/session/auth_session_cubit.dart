@@ -9,9 +9,12 @@ class AuthSessionCubit extends Cubit<AuthSessionState> {
 
   final AuthSessionStorage authSessionStorage;
 
+  Future<bool> isBiometricEnabled() => authSessionStorage.isBiometricEnabled();
+
   Future<bool> logout() async {
     emit(const AuthSessionState.loading());
     try {
+      await authSessionStorage.disableBiometricLogin();
       await authSessionStorage.clear();
       emit(const AuthSessionState.success());
       return true;

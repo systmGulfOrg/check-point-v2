@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/password/employee_change_password_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/password/employee_change_password_state.dart';
 
@@ -15,7 +16,10 @@ void showChangePasswordSheet(BuildContext context) {
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
-    builder: (_) => const ChangePasswordSheetWidget(),
+    builder: (_) => BlocProvider<EmployeeChangePasswordCubit>(
+      create: (_) => sl<EmployeeChangePasswordCubit>(),
+      child: const ChangePasswordSheetWidget(),
+    ),
   );
 }
 

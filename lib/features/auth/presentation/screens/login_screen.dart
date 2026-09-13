@@ -183,9 +183,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: AppColors.brandPrimary,
                             ),
                             wSpace(8),
-                            Text(
-                              'auth.login.biometricLogin'.tr(context: context),
-                              style: AppTextStyles.font14Regular,
+                            Expanded(
+                              child: Text(
+                                'auth.login.biometricLogin'.tr(
+                                  context: context,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyles.font14Regular,
+                              ),
                             ),
                           ],
                         ),

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/session/auth_session_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/biometric_logout_warning_dialog_widget.dart';
 
 class EmployeeSettingsSignOutButtonWidget extends StatelessWidget {
   const EmployeeSettingsSignOutButtonWidget({super.key});
@@ -15,7 +16,17 @@ class EmployeeSettingsSignOutButtonWidget extends StatelessWidget {
       width: double.infinity,
       child: OutlinedButton(
         onPressed: () async {
-          final didLogout = await context.read<AuthSessionCubit>().logout();
+          final authSessionCubit = context.read<AuthSessionCubit>();
+          final biometricEnabled = await authSessionCubit.isBiometricEnabled();
+          if (!context.mounted) return;
+          if (biometricEnabled) {
+            final shouldLogout = await showDialog<bool>(
+              context: context,
+              builder: (_) => const BiometricLogoutWarningDialogWidget(),
+            );
+            if (shouldLogout != true || !context.mounted) return;
+          }
+          final didLogout = await authSessionCubit.logout();
           if (!context.mounted) return;
           if (!didLogout) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -34,7 +45,7 @@ class EmployeeSettingsSignOutButtonWidget extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           padding: EdgeInsets.symmetric(vertical: 14.h),
           side: BorderSide(color: AppColors.error.withValues(alpha: 0.3)),
-          backgroundColor: const Color(0xFFFEE2E2),
+          backgroundColor: AppColors.softRedBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.r),
           ),
