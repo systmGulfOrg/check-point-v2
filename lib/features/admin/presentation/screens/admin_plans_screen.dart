@@ -29,147 +29,157 @@ class AdminPlansScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BlocBuilder<AdminPlansCubit, AdminPlansState>(
-                builder: (context, state) {
-                  return state.when(
-                    initial: () => const SizedBox.shrink(),
-                    loading: () => const AdminPlansSkeletonWidget(),
-                    error: (messageKey) => Padding(
-                      padding: EdgeInsets.all(24.r),
-                      child: Center(
-                        child: Text(
-                          messageKey.tr(context: context),
-                          style: AppTextStyles.font14Regular.copyWith(
-                            color: AppColors.error,
+        child: RefreshIndicator(
+          color: AppColors.brandPrimary,
+          onRefresh: context.read<AdminPlansCubit>().loadPlans,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BlocBuilder<AdminPlansCubit, AdminPlansState>(
+                  builder: (context, state) {
+                    return state.when(
+                      initial: () => const SizedBox.shrink(),
+                      loading: () => const AdminPlansSkeletonWidget(),
+                      error: (messageKey) => Padding(
+                        padding: EdgeInsets.all(24.r),
+                        child: Center(
+                          child: Text(
+                            messageKey.tr(context: context),
+                            style: AppTextStyles.font14Regular.copyWith(
+                              color: AppColors.error,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    actionSuccess: (_) => const SizedBox.shrink(),
-                    success: (plans) => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'admin.plans.count'.tr(
-                                context: context,
-                                args: ['${plans.length}'],
+                      actionSuccess: (_) => const SizedBox.shrink(),
+                      success: (plans) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'admin.plans.count'.tr(
+                                  context: context,
+                                  args: ['${plans.length}'],
+                                ),
+                                style: AppTextStyles.font12Regular,
                               ),
-                              style: AppTextStyles.font12Regular,
-                            ),
-                            InkWell(
-                              onTap: () => showModalBottomSheet<void>(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: AppColors.cardBackground,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20),
+                              InkWell(
+                                onTap: () => showModalBottomSheet<void>(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: AppColors.cardBackground,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20),
+                                    ),
                                   ),
-                                ),
-                                builder: (_) => MultiBlocProvider(
-                                  providers: [
-                                    BlocProvider<SupervisorPlansCubit>(
-                                      create: (_) => sl<SupervisorPlansCubit>(),
-                                    ),
-                                    BlocProvider<SupervisorTeamCubit>(
-                                      create: (_) =>
-                                          sl<SupervisorTeamCubit>()..loadTeam(),
-                                    ),
-                                  ],
-                                  child:
-                                      const SupervisorCreatePlanSheetWidget(),
-                                ),
-                              ),
-                              child: Text(
-                                'admin.plans.newPlan'.tr(context: context),
-                                style: AppTextStyles.font13SemiBold.copyWith(
-                                  color: AppColors.brandPrimary,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        hSpace(12),
-                        if (plans.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 32),
-                            child: Center(
-                              child: Text(
-                                'admin.requests.emptyAll'.tr(context: context),
-                                style: AppTextStyles.font14Regular,
-                              ),
-                            ),
-                          )
-                        else
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: plans.length,
-                            separatorBuilder: (_, _) => hSpace(10),
-                            itemBuilder: (context, index) {
-                              final plan = plans[index];
-                              return Container(
-                                padding: EdgeInsets.all(14.r),
-                                decoration: AppDecorations.card,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'admin.plans.plan'.tr(
-                                        context: context,
-                                        args: ['${plan.id ?? ''}'],
+                                  builder: (_) => MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider<SupervisorPlansCubit>(
+                                        create: (_) =>
+                                            sl<SupervisorPlansCubit>(),
                                       ),
-                                      style: AppTextStyles.font16Bold,
-                                    ),
-                                    if (plan.notes?.isNotEmpty ?? false) ...[
-                                      hSpace(4),
-                                      Text(
-                                        plan.notes!,
-                                        style: AppTextStyles.font13Regular,
+                                      BlocProvider<SupervisorTeamCubit>(
+                                        create: (_) =>
+                                            sl<SupervisorTeamCubit>()
+                                              ..loadTeam(),
                                       ),
                                     ],
-                                    hSpace(8),
-                                    Text(
-                                      'admin.plans.date'.tr(
-                                        context: context,
-                                        args: [
-                                          AppDateFormatter.formatDateString(
-                                            plan.planDate,
-                                          ),
-                                        ],
-                                      ),
-                                      style: AppTextStyles.font12Regular,
-                                    ),
-                                    if (plan.departmentName?.isNotEmpty ??
-                                        false) ...[
-                                      hSpace(4),
+                                    child:
+                                        const SupervisorCreatePlanSheetWidget(),
+                                  ),
+                                ),
+                                child: Text(
+                                  'admin.plans.newPlan'.tr(context: context),
+                                  style: AppTextStyles.font13SemiBold.copyWith(
+                                    color: AppColors.brandPrimary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          hSpace(12),
+                          if (plans.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 32),
+                              child: Center(
+                                child: Text(
+                                  'admin.requests.emptyAll'.tr(
+                                    context: context,
+                                  ),
+                                  style: AppTextStyles.font14Regular,
+                                ),
+                              ),
+                            )
+                          else
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: plans.length,
+                              separatorBuilder: (_, _) => hSpace(10),
+                              itemBuilder: (context, index) {
+                                final plan = plans[index];
+                                return Container(
+                                  padding: EdgeInsets.all(14.r),
+                                  decoration: AppDecorations.card,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
                                       Text(
-                                        'admin.plans.department'.tr(
+                                        'admin.plans.plan'.tr(
                                           context: context,
-                                          args: [plan.departmentName!],
+                                          args: ['${plan.id ?? ''}'],
+                                        ),
+                                        style: AppTextStyles.font16Bold,
+                                      ),
+                                      if (plan.notes?.isNotEmpty ?? false) ...[
+                                        hSpace(4),
+                                        Text(
+                                          plan.notes!,
+                                          style: AppTextStyles.font13Regular,
+                                        ),
+                                      ],
+                                      hSpace(8),
+                                      Text(
+                                        'admin.plans.date'.tr(
+                                          context: context,
+                                          args: [
+                                            AppDateFormatter.formatDateString(
+                                              plan.planDate,
+                                            ),
+                                          ],
                                         ),
                                         style: AppTextStyles.font12Regular,
                                       ),
+                                      if (plan.departmentName?.isNotEmpty ??
+                                          false) ...[
+                                        hSpace(4),
+                                        Text(
+                                          'admin.plans.department'.tr(
+                                            context: context,
+                                            args: [plan.departmentName!],
+                                          ),
+                                          style: AppTextStyles.font12Regular,
+                                        ),
+                                      ],
                                     ],
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ],
+                                  ),
+                                );
+                              },
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

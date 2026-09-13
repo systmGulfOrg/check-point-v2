@@ -59,65 +59,70 @@ class _AdminDepartmentsScreenState extends State<AdminDepartmentsScreen> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomTextFormField(
-                controller: _searchController,
-                hintText: 'admin.departments.searchHint'.tr(context: context),
-                prefixIcon: const Icon(
-                  Icons.search,
-                  color: AppColors.textSecondary,
-                ),
-                onChanged: (val) =>
-                    context.read<AdminDepartmentsCubit>().search(val),
-              ),
-              hSpace(14),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'admin.departments.title'.tr(context: context),
-                    style: AppTextStyles.font14SemiBold.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
+        child: RefreshIndicator(
+          color: AppColors.brandPrimary,
+          onRefresh: context.read<AdminDepartmentsCubit>().load,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomTextFormField(
+                  controller: _searchController,
+                  hintText: 'admin.departments.searchHint'.tr(context: context),
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: AppColors.textSecondary,
                   ),
-                  InkWell(
-                    onTap: _showAddSheet,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10.w,
-                        vertical: 6.h,
+                  onChanged: (val) =>
+                      context.read<AdminDepartmentsCubit>().search(val),
+                ),
+                hSpace(14),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'admin.departments.title'.tr(context: context),
+                      style: AppTextStyles.font14SemiBold.copyWith(
+                        color: AppColors.textPrimary,
                       ),
-                      decoration: BoxDecoration(
-                        color: AppColors.softBrandBackground,
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.add,
-                            size: 16.r,
-                            color: AppColors.brandPrimary,
-                          ),
-                          vSpace(4),
-                          Text(
-                            'admin.departments.add'.tr(context: context),
-                            style: AppTextStyles.font12SemiBold.copyWith(
+                    ),
+                    InkWell(
+                      onTap: _showAddSheet,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 6.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.softBrandBackground,
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.add,
+                              size: 16.r,
                               color: AppColors.brandPrimary,
                             ),
-                          ),
-                        ],
+                            vSpace(4),
+                            Text(
+                              'admin.departments.add'.tr(context: context),
+                              style: AppTextStyles.font12SemiBold.copyWith(
+                                color: AppColors.brandPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              hSpace(12),
-              const AdminDepartmentsBlocBuilderWidget(),
-            ],
+                  ],
+                ),
+                hSpace(12),
+                const AdminDepartmentsBlocBuilderWidget(),
+              ],
+            ),
           ),
         ),
       ),

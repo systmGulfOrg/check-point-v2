@@ -36,109 +36,116 @@ class _AdminLeaveManagementScreenState
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BlocBuilder<AdminLeaveRequestsCubit, AdminLeaveRequestsState>(
-                builder: (context, state) {
-                  return state.when(
-                    initial: () => const SizedBox.shrink(),
-                    loading: () => const AdminLeaveRequestsSkeletonWidget(),
-                    error: (messageKey) => Padding(
-                      padding: EdgeInsets.all(24.r),
-                      child: Center(
-                        child: Text(
-                          messageKey.tr(context: context),
-                          style: AppTextStyles.font14Regular.copyWith(
-                            color: AppColors.error,
+        child: RefreshIndicator(
+          color: AppColors.brandPrimary,
+          onRefresh: context.read<AdminLeaveRequestsCubit>().loadRequests,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BlocBuilder<AdminLeaveRequestsCubit, AdminLeaveRequestsState>(
+                  builder: (context, state) {
+                    return state.when(
+                      initial: () => const SizedBox.shrink(),
+                      loading: () => const AdminLeaveRequestsSkeletonWidget(),
+                      error: (messageKey) => Padding(
+                        padding: EdgeInsets.all(24.r),
+                        child: Center(
+                          child: Text(
+                            messageKey.tr(context: context),
+                            style: AppTextStyles.font14Regular.copyWith(
+                              color: AppColors.error,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    actionSuccess: (_) => const SizedBox.shrink(),
-                    success: (requests) => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'admin.leaveManagement.count'.tr(
-                            context: context,
-                            args: ['${requests.length}'],
-                          ),
-                          style: AppTextStyles.font12Regular,
-                        ),
-                        hSpace(10),
-                        if (requests.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 32),
-                            child: Center(
-                              child: Text(
-                                'admin.requests.emptyAll'.tr(context: context),
-                                style: AppTextStyles.font14Regular,
-                              ),
+                      actionSuccess: (_) => const SizedBox.shrink(),
+                      success: (requests) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'admin.leaveManagement.count'.tr(
+                              context: context,
+                              args: ['${requests.length}'],
                             ),
-                          )
-                        else
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: requests.length,
-                            separatorBuilder: (_, _) => hSpace(10),
-                            itemBuilder: (context, index) {
-                              final item = requests[index];
-                              final requestData = AdminLeaveRequestData(
-                                initials:
-                                    (item.employeeName?.isNotEmpty ?? false)
-                                    ? item.employeeName![0]
-                                    : 'E',
-                                nameKey: item.employeeName ?? 'Employee',
-                                leaveTypeKey: item.leaveType ?? 'Leave',
-                                dateRange:
-                                    '${item.startDate ?? '-'} -> ${item.endDate ?? '-'}',
-                                reasonKey: item.reason ?? '-',
-                                appliedDate: item.startDate ?? '-',
-                                statusKey: item.status ?? 'Pending',
-                                statusColor:
-                                    item.status?.toLowerCase() == 'approved'
-                                    ? AppColors.success
-                                    : item.status?.toLowerCase() == 'rejected'
-                                    ? AppColors.error
-                                    : AppColors.warningOrange,
-                                statusBackgroundColor:
-                                    AppColors.softYellowBackground,
-                              );
-                              return AdminLeaveRequestCardWidget(
-                                request: requestData,
-                                onApprove: () {
-                                  if (item.id != null) {
-                                    context
-                                        .read<AdminLeaveRequestsCubit>()
-                                        .updateStatus(
-                                          requestId: item.id!,
-                                          status: 'Approved',
-                                        );
-                                  }
-                                },
-                                onReject: () {
-                                  if (item.id != null) {
-                                    context
-                                        .read<AdminLeaveRequestsCubit>()
-                                        .updateStatus(
-                                          requestId: item.id!,
-                                          status: 'Rejected',
-                                        );
-                                  }
-                                },
-                              );
-                            },
+                            style: AppTextStyles.font12Regular,
                           ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ],
+                          hSpace(10),
+                          if (requests.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 32),
+                              child: Center(
+                                child: Text(
+                                  'admin.requests.emptyAll'.tr(
+                                    context: context,
+                                  ),
+                                  style: AppTextStyles.font14Regular,
+                                ),
+                              ),
+                            )
+                          else
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: requests.length,
+                              separatorBuilder: (_, _) => hSpace(10),
+                              itemBuilder: (context, index) {
+                                final item = requests[index];
+                                final requestData = AdminLeaveRequestData(
+                                  initials:
+                                      (item.employeeName?.isNotEmpty ?? false)
+                                      ? item.employeeName![0]
+                                      : 'E',
+                                  nameKey: item.employeeName ?? 'Employee',
+                                  leaveTypeKey: item.leaveType ?? 'Leave',
+                                  dateRange:
+                                      '${item.startDate ?? '-'} -> ${item.endDate ?? '-'}',
+                                  reasonKey: item.reason ?? '-',
+                                  appliedDate: item.startDate ?? '-',
+                                  statusKey: item.status ?? 'Pending',
+                                  statusColor:
+                                      item.status?.toLowerCase() == 'approved'
+                                      ? AppColors.success
+                                      : item.status?.toLowerCase() == 'rejected'
+                                      ? AppColors.error
+                                      : AppColors.warningOrange,
+                                  statusBackgroundColor:
+                                      AppColors.softYellowBackground,
+                                );
+                                return AdminLeaveRequestCardWidget(
+                                  request: requestData,
+                                  onApprove: () {
+                                    if (item.id != null) {
+                                      context
+                                          .read<AdminLeaveRequestsCubit>()
+                                          .updateStatus(
+                                            requestId: item.id!,
+                                            status: 'Approved',
+                                          );
+                                    }
+                                  },
+                                  onReject: () {
+                                    if (item.id != null) {
+                                      context
+                                          .read<AdminLeaveRequestsCubit>()
+                                          .updateStatus(
+                                            requestId: item.id!,
+                                            status: 'Rejected',
+                                          );
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

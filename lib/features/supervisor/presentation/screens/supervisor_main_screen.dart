@@ -23,6 +23,10 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
 
   static const _items = <NavBarItemData>[
     NavBarItemData(icon: Icons.home_outlined, labelKey: 'supervisor.nav.home'),
+    NavBarItemData(
+      icon: Icons.person_pin_circle_outlined,
+      labelKey: 'supervisor.nav.myAttendance',
+    ),
     NavBarItemData(icon: Icons.group_outlined, labelKey: 'supervisor.nav.team'),
     NavBarItemData(
       icon: Icons.access_time_rounded,
@@ -33,10 +37,6 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
       labelKey: 'supervisor.nav.tasks',
     ),
     NavBarItemData(
-      icon: Icons.person_pin_circle_outlined,
-      labelKey: 'supervisor.nav.myAttendance',
-    ),
-    NavBarItemData(
       icon: Icons.grid_view_rounded,
       labelKey: 'supervisor.nav.more',
     ),
@@ -44,9 +44,9 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
 
   static const _screens = <Widget>[
     SupervisorHomeScreen(),
+    EmployeeClockScreen(),
     SupervisorTeamScreen(),
     SupervisorAttendanceScreen(),
-    EmployeeClockScreen(),
     SupervisorTasksScreen(),
     SupervisorProfileScreen(),
   ];

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_branches_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_customers_bloc_builder_widget.dart';
@@ -36,43 +37,55 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AdminLocationsFilterWidget(
-                selectedIndex: selectedIndex,
-                onSelected: (index) {
-                  setState(() => selectedIndex = index);
-                  if (index == 1 || index == 2) {
-                    context.read<AdminCustomersCubit>().load(
-                      type: index == 1 ? 'Site' : 'Customer',
-                    );
-                  }
+        child: RefreshIndicator(
+          color: AppColors.brandPrimary,
+          onRefresh: () => switch (category) {
+            AdminLocationCategory.branches =>
+              context.read<AdminBranchesCubit>().load(),
+            AdminLocationCategory.sites =>
+              context.read<AdminCustomersCubit>().load(type: 'Site'),
+            AdminLocationCategory.customers =>
+              context.read<AdminCustomersCubit>().load(type: 'Customer'),
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AdminLocationsFilterWidget(
+                  selectedIndex: selectedIndex,
+                  onSelected: (index) {
+                    setState(() => selectedIndex = index);
+                    if (index == 1 || index == 2) {
+                      context.read<AdminCustomersCubit>().load(
+                        type: index == 1 ? 'Site' : 'Customer',
+                      );
+                    }
+                  },
+                ),
+                hSpace(14),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'admin.locations.title'.tr(context: context),
+                      style: AppTextStyles.font12Regular,
+                    ),
+                    AdminLocationsAddButtonWidget(category: category),
+                  ],
+                ),
+                hSpace(10),
+                switch (category) {
+                  AdminLocationCategory.branches =>
+                    const AdminBranchesBlocBuilderWidget(),
+                  AdminLocationCategory.sites =>
+                    const AdminCustomersBlocBuilderWidget(type: 'site'),
+                  AdminLocationCategory.customers =>
+                    const AdminCustomersBlocBuilderWidget(type: 'customer'),
                 },
-              ),
-              hSpace(14),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'admin.locations.title'.tr(context: context),
-                    style: AppTextStyles.font12Regular,
-                  ),
-                  AdminLocationsAddButtonWidget(category: category),
-                ],
-              ),
-              hSpace(10),
-              switch (category) {
-                AdminLocationCategory.branches =>
-                  const AdminBranchesBlocBuilderWidget(),
-                AdminLocationCategory.sites =>
-                  const AdminCustomersBlocBuilderWidget(type: 'site'),
-                AdminLocationCategory.customers =>
-                  const AdminCustomersBlocBuilderWidget(type: 'customer'),
-              },
-            ],
+              ],
+            ),
           ),
         ),
       ),

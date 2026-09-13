@@ -147,17 +147,24 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                   if (state is EmployeeLeaveRequestsStateLoading) {
                     return Expanded(
                       child: Skeletonizer(
-                        child: ListView.separated(
-                          itemCount: 3,
-                          separatorBuilder: (_, _) => hSpace(12),
-                          itemBuilder: (_, _) => EmployeeLeaveCardWidget(
-                            leave: const EmployeeLeaveData(
-                              id: '000',
-                              leaveType: 'Annual leave',
-                              status: 'Pending',
-                              dateRange: '2026-01-01 – 2026-01-02',
-                              reason: 'Loading reason',
-                              appliedDate: 'Loading date',
+                        child: RefreshIndicator(
+                          color: AppColors.brandPrimary,
+                          onRefresh: context
+                              .read<EmployeeLeaveRequestsCubit>()
+                              .loadLeaveRequests,
+                          child: ListView.separated(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: 3,
+                            separatorBuilder: (_, _) => hSpace(12),
+                            itemBuilder: (_, _) => EmployeeLeaveCardWidget(
+                              leave: const EmployeeLeaveData(
+                                id: '000',
+                                leaveType: 'Annual leave',
+                                status: 'Pending',
+                                dateRange: '2026-01-01 – 2026-01-02',
+                                reason: 'Loading reason',
+                                appliedDate: 'Loading date',
+                              ),
                             ),
                           ),
                         ),
@@ -280,16 +287,24 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                               ? const Center(
                                   child: Text('No leave requests found'),
                                 )
-                              : ListView.separated(
-                                  itemCount: filteredLeaves.length,
-                                  separatorBuilder: (_, _) => hSpace(12),
-                                  itemBuilder: (context, index) =>
-                                      AnimatedListItemWidget(
-                                        index: index,
-                                        child: EmployeeLeaveCardWidget(
-                                          leave: filteredLeaves[index],
+                              : RefreshIndicator(
+                                  color: AppColors.brandPrimary,
+                                  onRefresh: context
+                                      .read<EmployeeLeaveRequestsCubit>()
+                                      .loadLeaveRequests,
+                                  child: ListView.separated(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    itemCount: filteredLeaves.length,
+                                    separatorBuilder: (_, _) => hSpace(12),
+                                    itemBuilder: (context, index) =>
+                                        AnimatedListItemWidget(
+                                          index: index,
+                                          child: EmployeeLeaveCardWidget(
+                                            leave: filteredLeaves[index],
+                                          ),
                                         ),
-                                      ),
+                                  ),
                                 ),
                         ),
                       ],

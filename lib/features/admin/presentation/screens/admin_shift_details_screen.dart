@@ -6,6 +6,8 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_assign_policy_employee_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_new_policy_button_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_policy_time_range_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_shift_employees_widget.dart';
@@ -30,156 +32,224 @@ class AdminShiftDetailsScreen extends StatelessWidget {
           style: AppTextStyles.font18Bold,
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'admin.shifts.policies.title'.tr(context: context),
-                  style: AppTextStyles.font12Bold,
-                ),
-                const AdminNewPolicyButtonWidget(
-                  labelKey: 'admin.shifts.policies.add',
-                ),
-              ],
-            ),
-            hSpace(10),
-            BlocBuilder<AdminShiftsPoliciesCubit, AdminShiftsPoliciesState>(
-              builder: (context, state) {
-                return state.when(
-                  initial: () => const SizedBox.shrink(),
-                  loading: () => const AdminShiftPoliciesSkeletonWidget(),
-                  error: (messageKey) => Text(messageKey.tr(context: context)),
-                  actionSuccess: (_) => const SizedBox.shrink(),
-                  success: (shifts, policies) {
-                    if (policies.isEmpty) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 24),
-                        child: Center(
-                          child: Text(
-                            'admin.shifts.policies.empty'.tr(context: context),
-                            style: AppTextStyles.font14Regular,
-                          ),
-                        ),
-                      );
-                    }
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: policies.length,
-                      separatorBuilder: (_, _) => hSpace(10),
-                      itemBuilder: (context, index) {
-                        final policy = policies[index];
-                        final employees = policy.employees ?? const [];
-                        return AnimatedListItemWidget(
-                          index: index,
-                          child: Container(
-                            padding: EdgeInsets.all(14.r),
-                            decoration: BoxDecoration(
-                              color: AppColors.cardBackground,
-                              borderRadius: BorderRadius.circular(14.r),
-                              border: Border.all(color: AppColors.border),
+      body: RefreshIndicator(
+        color: AppColors.brandPrimary,
+        onRefresh: shiftId == null
+            ? () async {}
+            : () => context
+                  .read<AdminShiftsPoliciesCubit>()
+                  .loadPoliciesForShift(shiftId),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'admin.shifts.policies.title'.tr(context: context),
+                    style: AppTextStyles.font12Bold,
+                  ),
+                  const AdminNewPolicyButtonWidget(
+                    labelKey: 'admin.shifts.policies.add',
+                  ),
+                ],
+              ),
+              hSpace(10),
+              BlocBuilder<AdminShiftsPoliciesCubit, AdminShiftsPoliciesState>(
+                builder: (context, state) {
+                  return state.when(
+                    initial: () => const SizedBox.shrink(),
+                    loading: () => const AdminShiftPoliciesSkeletonWidget(),
+                    error: (messageKey) =>
+                        Text(messageKey.tr(context: context)),
+                    actionSuccess: (_) => const SizedBox.shrink(),
+                    success: (shifts, policies) {
+                      if (policies.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 24),
+                          child: Center(
+                            child: Text(
+                              'admin.shifts.policies.empty'.tr(
+                                context: context,
+                              ),
+                              style: AppTextStyles.font14Regular,
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      policy.effectiveName,
-                                      style: AppTextStyles.font14SemiBold,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        if (policy.id != null &&
-                                            shiftId != null) {
-                                          context
-                                              .read<AdminShiftsPoliciesCubit>()
-                                              .deletePolicy(
-                                                policy.id!,
-                                                shiftId,
-                                              );
-                                        }
-                                      },
-                                      child: Text(
-                                        'admin.shifts.policies.delete'.tr(
-                                          context: context,
-                                        ),
-                                        style: AppTextStyles.font12Regular
-                                            .copyWith(color: AppColors.error),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                hSpace(6),
-                                AdminPolicyTimeRangeWidget(
-                                  clockIn: policy.effectiveClockIn,
-                                  clockOut: policy.effectiveClockOut,
-                                ),
-                                if (policy.area != null) ...[
-                                  hSpace(8),
+                          ),
+                        );
+                      }
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: policies.length,
+                        separatorBuilder: (_, _) => hSpace(10),
+                        itemBuilder: (context, index) {
+                          final policy = policies[index];
+                          final employees = policy.employees ?? const [];
+                          return AnimatedListItemWidget(
+                            index: index,
+                            child: Container(
+                              padding: EdgeInsets.all(14.r),
+                              decoration: BoxDecoration(
+                                color: AppColors.cardBackground,
+                                borderRadius: BorderRadius.circular(14.r),
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Icon(
-                                        Icons.location_on_outlined,
-                                        size: 16.r,
-                                        color: AppColors.info,
+                                      Text(
+                                        policy.effectiveName,
+                                        style: AppTextStyles.font14SemiBold,
                                       ),
-                                      wSpace(4),
-                                      Expanded(
+                                      InkWell(
+                                        onTap: () {
+                                          if (policy.id != null &&
+                                              shiftId != null) {
+                                            context
+                                                .read<
+                                                  AdminShiftsPoliciesCubit
+                                                >()
+                                                .deletePolicy(
+                                                  policy.id!,
+                                                  shiftId,
+                                                );
+                                          }
+                                        },
                                         child: Text(
-                                          policy.area!,
-                                          overflow: TextOverflow.ellipsis,
+                                          'admin.shifts.policies.delete'.tr(
+                                            context: context,
+                                          ),
                                           style: AppTextStyles.font12Regular
-                                              .copyWith(color: AppColors.info),
+                                              .copyWith(color: AppColors.error),
                                         ),
                                       ),
                                     ],
                                   ),
-                                ],
-                                if (policy.workDays != null &&
-                                    policy.workDays!.isNotEmpty) ...[
                                   hSpace(6),
+                                  AdminPolicyTimeRangeWidget(
+                                    clockIn: policy.effectiveClockIn,
+                                    clockOut: policy.effectiveClockOut,
+                                  ),
+                                  if (policy.area != null) ...[
+                                    hSpace(8),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.location_on_outlined,
+                                          size: 16.r,
+                                          color: AppColors.info,
+                                        ),
+                                        wSpace(4),
+                                        Expanded(
+                                          child: Text(
+                                            policy.area!,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppTextStyles.font12Regular
+                                                .copyWith(
+                                                  color: AppColors.info,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                  if (policy.workDays != null &&
+                                      policy.workDays!.isNotEmpty) ...[
+                                    hSpace(6),
+                                    Text(
+                                      '${'admin.shifts.policies.workingDays'.tr(context: context)}: ${policy.workDays!.join(', ')}',
+                                      style: AppTextStyles.font12Regular
+                                          .copyWith(
+                                            color: AppColors.textSecondary,
+                                          ),
+                                    ),
+                                  ],
+                                  hSpace(10),
                                   Text(
-                                    '${'admin.shifts.policies.workingDays'.tr(context: context)}: ${policy.workDays!.join(', ')}',
-                                    style: AppTextStyles.font12Regular.copyWith(
-                                      color: AppColors.textSecondary,
+                                    'admin.shifts.policies.assigned'.tr(
+                                      context: context,
+                                      args: [employees.length.toString()],
+                                    ),
+                                    style: AppTextStyles.font12Bold.copyWith(
+                                      color: AppColors.textPrimary,
                                     ),
                                   ),
+                                  Align(
+                                    alignment: AlignmentDirectional.centerEnd,
+                                    child: TextButton.icon(
+                                      onPressed:
+                                          policy.id == null || shiftId == null
+                                          ? null
+                                          : () => showModalBottomSheet<void>(
+                                              context: context,
+                                              isScrollControlled: true,
+                                              constraints: BoxConstraints(
+                                                maxHeight:
+                                                    MediaQuery.sizeOf(
+                                                      context,
+                                                    ).height *
+                                                    0.58,
+                                              ),
+                                              backgroundColor:
+                                                  AppColors.cardBackground,
+                                              builder: (_) => MultiBlocProvider(
+                                                providers: [
+                                                  BlocProvider.value(
+                                                    value: context
+                                                        .read<
+                                                          AdminShiftsPoliciesCubit
+                                                        >(),
+                                                  ),
+                                                  BlocProvider.value(
+                                                    value: context
+                                                        .read<
+                                                          AdminEmployeesCubit
+                                                        >(),
+                                                  ),
+                                                ],
+                                                child:
+                                                    AdminAssignPolicyEmployeeSheetWidget(
+                                                      policy: policy,
+                                                      shiftId: shiftId,
+                                                      policies: policies,
+                                                    ),
+                                              ),
+                                            ),
+                                      icon: Icon(
+                                        Icons.person_add_alt_1_rounded,
+                                        size: 16.r,
+                                      ),
+                                      label: Text(
+                                        'admin.shifts.policies.assignEmployee'
+                                            .tr(context: context),
+                                      ),
+                                    ),
+                                  ),
+                                  if (employees.isNotEmpty) ...[
+                                    hSpace(8),
+                                    AdminShiftEmployeesWidget(
+                                      employees: employees,
+                                    ),
+                                  ],
                                 ],
-                                hSpace(10),
-                                Text(
-                                  'admin.shifts.policies.assigned'.tr(
-                                    context: context,
-                                    args: [employees.length.toString()],
-                                  ),
-                                  style: AppTextStyles.font12Bold.copyWith(
-                                    color: AppColors.textPrimary,
-                                  ),
-                                ),
-                                if (employees.isNotEmpty) ...[
-                                  hSpace(8),
-                                  AdminShiftEmployeesWidget(
-                                    employees: employees,
-                                  ),
-                                ],
-                              ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
-          ],
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

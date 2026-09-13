@@ -70,7 +70,11 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
   Widget build(BuildContext context) =>
       BlocBuilder<AdminCustomersCubit, AdminCustomersState>(
         builder: (context, state) => switch (state) {
-          AdminCustomersInitial() => const SizedBox.shrink(),
+          // The route starts loading immediately, but the first frame can
+          // still be rendered while the cubit is in its initial state. Keep
+          // the layout in a loading state instead of showing a false empty
+          // message before the API response arrives.
+          AdminCustomersInitial() => const AdminLocationsSkeletonWidget(),
           AdminCustomersLoading() => const AdminLocationsSkeletonWidget(),
           AdminCustomersError(:final messageKey) => Padding(
             padding: const EdgeInsets.all(24),

@@ -52,44 +52,56 @@ class _SupervisorAttendanceScreenState
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'supervisor.nav.attendance'.tr(context: context),
-                  style: AppTextStyles.font20Bold.copyWith(
-                    color: AppColors.textPrimary,
+      child: RefreshIndicator(
+        color: AppColors.brandPrimary,
+        onRefresh: () =>
+            context.read<SupervisorAttendanceCubit>().loadAttendance(
+              date: AppDateFormatter.formatYearMonthDay(selectedDate),
+            ),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'supervisor.nav.attendance'.tr(context: context),
+                    style: AppTextStyles.font20Bold.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
                   ),
-                ),
-                Image.asset(AppAssets.logo, height: 32.h, fit: BoxFit.contain),
-              ],
-            ),
-            hSpace(16),
-            SupervisorAttendanceDateBarWidget(
-              selectedDate: selectedDate,
-              onDateChanged: _onDateChanged,
-              onAddPressed: _openClockInSheet,
-            ),
-            hSpace(16),
-            SupervisorAttendanceFilterWidget(
-              selectedIndex: selectedTab,
-              onTabSelected: (index) => setState(() => selectedTab = index),
-            ),
-            hSpace(16),
-            if (selectedTab < 3)
-              SupervisorAttendanceBlocBuilderWidget(
-                selectedFilterIndex: selectedTab,
-              )
-            else
-              const SupervisorLeaveRequestsBlocBuilderWidget(
-                selectedFilterIndex: 0,
+                  Image.asset(
+                    AppAssets.logo,
+                    height: 32.h,
+                    fit: BoxFit.contain,
+                  ),
+                ],
               ),
-          ],
+              hSpace(16),
+              SupervisorAttendanceDateBarWidget(
+                selectedDate: selectedDate,
+                onDateChanged: _onDateChanged,
+                onAddPressed: _openClockInSheet,
+              ),
+              hSpace(16),
+              SupervisorAttendanceFilterWidget(
+                selectedIndex: selectedTab,
+                onTabSelected: (index) => setState(() => selectedTab = index),
+              ),
+              hSpace(16),
+              if (selectedTab < 3)
+                SupervisorAttendanceBlocBuilderWidget(
+                  selectedFilterIndex: selectedTab,
+                )
+              else
+                const SupervisorLeaveRequestsBlocBuilderWidget(
+                  selectedFilterIndex: 0,
+                ),
+            ],
+          ),
         ),
       ),
     );

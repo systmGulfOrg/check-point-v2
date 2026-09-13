@@ -145,19 +145,26 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                   if (state is EmployeeTasksStateLoading) {
                     return Expanded(
                       child: Skeletonizer(
-                        child: ListView.separated(
-                          itemCount: 3,
-                          separatorBuilder: (_, _) => hSpace(12),
-                          itemBuilder: (_, _) => EmployeeTaskDetailCardWidget(
-                            task: const EmployeeTaskData(
-                              id: '000',
-                              title: 'Loading task title',
-                              dueDate: 'Loading date',
-                              status: 'Active',
-                              priority: 'Normal',
-                              description: 'Loading task description',
-                              progressPercentage: 50,
-                              assignees: ['EM'],
+                        child: RefreshIndicator(
+                          color: AppColors.brandPrimary,
+                          onRefresh: context
+                              .read<EmployeeTasksCubit>()
+                              .loadMyTasks,
+                          child: ListView.separated(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: 3,
+                            separatorBuilder: (_, _) => hSpace(12),
+                            itemBuilder: (_, _) => EmployeeTaskDetailCardWidget(
+                              task: const EmployeeTaskData(
+                                id: '000',
+                                title: 'Loading task title',
+                                dueDate: 'Loading date',
+                                status: 'Active',
+                                priority: 'Normal',
+                                description: 'Loading task description',
+                                progressPercentage: 50,
+                                assignees: ['EM'],
+                              ),
                             ),
                           ),
                         ),
@@ -179,16 +186,24 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                         Expanded(
                           child: filteredTasks.isEmpty
                               ? const Center(child: Text('No tasks available'))
-                              : ListView.separated(
-                                  itemCount: filteredTasks.length,
-                                  separatorBuilder: (_, _) => hSpace(12),
-                                  itemBuilder: (context, index) =>
-                                      AnimatedListItemWidget(
-                                        index: index,
-                                        child: EmployeeTaskDetailCardWidget(
-                                          task: filteredTasks[index],
+                              : RefreshIndicator(
+                                  color: AppColors.brandPrimary,
+                                  onRefresh: context
+                                      .read<EmployeeTasksCubit>()
+                                      .loadMyTasks,
+                                  child: ListView.separated(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    itemCount: filteredTasks.length,
+                                    separatorBuilder: (_, _) => hSpace(12),
+                                    itemBuilder: (context, index) =>
+                                        AnimatedListItemWidget(
+                                          index: index,
+                                          child: EmployeeTaskDetailCardWidget(
+                                            task: filteredTasks[index],
+                                          ),
                                         ),
-                                      ),
+                                  ),
                                 ),
                         ),
                       ],

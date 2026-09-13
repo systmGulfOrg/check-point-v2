@@ -76,18 +76,25 @@ class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
                   if (state is EmployeePlansStateLoading) {
                     return Expanded(
                       child: Skeletonizer(
-                        child: ListView.separated(
-                          itemCount: 3,
-                          separatorBuilder: (_, _) => hSpace(12),
-                          itemBuilder: (_, _) => EmployeePlanDetailCardWidget(
-                            plan: const EmployeePlanData(
-                              id: '000',
-                              title: 'Loading plan title',
-                              dateTime: 'Loading date',
-                              planType: 'Mission',
-                              description: 'Loading plan description',
-                              status: 'planned',
-                              assignees: ['EM'],
+                        child: RefreshIndicator(
+                          color: AppColors.brandPrimary,
+                          onRefresh: context
+                              .read<EmployeePlansCubit>()
+                              .loadMyPlans,
+                          child: ListView.separated(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: 3,
+                            separatorBuilder: (_, _) => hSpace(12),
+                            itemBuilder: (_, _) => EmployeePlanDetailCardWidget(
+                              plan: const EmployeePlanData(
+                                id: '000',
+                                title: 'Loading plan title',
+                                dateTime: 'Loading date',
+                                planType: 'Mission',
+                                description: 'Loading plan description',
+                                status: 'planned',
+                                assignees: ['EM'],
+                              ),
                             ),
                           ),
                         ),
@@ -109,14 +116,22 @@ class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
                         Expanded(
                           child: plans.isEmpty
                               ? const Center(child: Text('No plans available'))
-                              : ListView.separated(
-                                  itemCount: plans.length,
-                                  separatorBuilder: (_, _) => hSpace(12),
-                                  itemBuilder: (context, index) {
-                                    return EmployeePlanDetailCardWidget(
-                                      plan: plans[index],
-                                    );
-                                  },
+                              : RefreshIndicator(
+                                  color: AppColors.brandPrimary,
+                                  onRefresh: context
+                                      .read<EmployeePlansCubit>()
+                                      .loadMyPlans,
+                                  child: ListView.separated(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    itemCount: plans.length,
+                                    separatorBuilder: (_, _) => hSpace(12),
+                                    itemBuilder: (context, index) {
+                                      return EmployeePlanDetailCardWidget(
+                                        plan: plans[index],
+                                      );
+                                    },
+                                  ),
                                 ),
                         ),
                       ],

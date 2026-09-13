@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_new_task_button_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_tasks_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_tasks_filter_widget.dart';
@@ -20,37 +22,42 @@ class _SupervisorTasksScreenState extends State<SupervisorTasksScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'supervisor.nav.tasks'.tr(context: context),
-              style: AppTextStyles.font20Bold,
-            ),
-            hSpace(20),
-            SupervisorTasksFilterWidget(
-              selectedIndex: selectedFilter,
-              onFilterSelected: (index) =>
-                  setState(() => selectedFilter = index),
-            ),
-            hSpace(14),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'supervisor.tasks.allTasks'.tr(context: context),
-                  style: AppTextStyles.font14SemiBold,
-                ),
-                const SupervisorNewTaskButtonWidget(),
-              ],
-            ),
-            hSpace(12),
-            SupervisorTasksBlocBuilderWidget(
-              selectedFilterIndex: selectedFilter,
-            ),
-          ],
+      child: RefreshIndicator(
+        color: AppColors.brandPrimary,
+        onRefresh: context.read<SupervisorTasksCubit>().loadTasks,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'supervisor.nav.tasks'.tr(context: context),
+                style: AppTextStyles.font20Bold,
+              ),
+              hSpace(20),
+              SupervisorTasksFilterWidget(
+                selectedIndex: selectedFilter,
+                onFilterSelected: (index) =>
+                    setState(() => selectedFilter = index),
+              ),
+              hSpace(14),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'supervisor.tasks.allTasks'.tr(context: context),
+                    style: AppTextStyles.font14SemiBold,
+                  ),
+                  const SupervisorNewTaskButtonWidget(),
+                ],
+              ),
+              hSpace(12),
+              SupervisorTasksBlocBuilderWidget(
+                selectedFilterIndex: selectedFilter,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -29,56 +29,65 @@ class _AdminEmployeesScreenState extends State<AdminEmployeesScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    'admin.employees.title'.tr(context: context),
-                    style: AppTextStyles.font20Bold.copyWith(
-                      color: AppColors.textPrimary,
+      child: RefreshIndicator(
+        color: AppColors.brandPrimary,
+        onRefresh: context.read<AdminEmployeesCubit>().loadEmployees,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      'admin.employees.title'.tr(context: context),
+                      style: AppTextStyles.font20Bold.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
                     ),
                   ),
-                ),
-                Image.asset(AppAssets.logo, height: 32.h, fit: BoxFit.contain),
-              ],
-            ),
-            hSpace(16),
-            CustomTextFormField(
-              controller: _searchController,
-              hintText: 'admin.employees.searchHint'.tr(context: context),
-              onChanged: context.read<AdminEmployeesCubit>().search,
-              prefixIcon: Icon(
-                Icons.search_rounded,
-                size: 20.r,
-                color: AppColors.placeholder,
+                  Image.asset(
+                    AppAssets.logo,
+                    height: 32.h,
+                    fit: BoxFit.contain,
+                  ),
+                ],
               ),
-            ),
-            hSpace(14),
-            AdminEmployeeFilterRowWidget(
-              selectedFilter: _selectedFilter,
-              onFilterSelected: (filter) {
-                setState(() => _selectedFilter = filter);
-                context.read<AdminEmployeesCubit>().setRoleFilter(
-                  switch (filter) {
-                    'admin.employees.filterEmployee' => 'employee',
-                    'admin.employees.filterSupervisor' => 'supervisor',
-                    'admin.employees.filterAdmin' => 'admin',
-                    _ => null,
-                  },
-                );
-              },
-            ),
-            hSpace(14),
-            const AdminEmployeesBlocListenerWidget(
-              child: AdminEmployeesBlocBuilderWidget(),
-            ),
-          ],
+              hSpace(16),
+              CustomTextFormField(
+                controller: _searchController,
+                hintText: 'admin.employees.searchHint'.tr(context: context),
+                onChanged: context.read<AdminEmployeesCubit>().search,
+                prefixIcon: Icon(
+                  Icons.search_rounded,
+                  size: 20.r,
+                  color: AppColors.placeholder,
+                ),
+              ),
+              hSpace(14),
+              AdminEmployeeFilterRowWidget(
+                selectedFilter: _selectedFilter,
+                onFilterSelected: (filter) {
+                  setState(() => _selectedFilter = filter);
+                  context.read<AdminEmployeesCubit>().setRoleFilter(
+                    switch (filter) {
+                      'admin.employees.filterEmployee' => 'employee',
+                      'admin.employees.filterSupervisor' => 'supervisor',
+                      'admin.employees.filterAdmin' => 'admin',
+                      _ => null,
+                    },
+                  );
+                },
+              ),
+              hSpace(14),
+              const AdminEmployeesBlocListenerWidget(
+                child: AdminEmployeesBlocBuilderWidget(),
+              ),
+            ],
+          ),
         ),
       ),
     );

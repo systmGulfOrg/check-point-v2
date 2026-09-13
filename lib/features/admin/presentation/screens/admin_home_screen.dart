@@ -73,44 +73,54 @@ class AdminHomeScreen extends StatelessWidget {
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
     return SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const AdminTopBarWidget(),
-            hSpace(12),
-            AdminGreetingWidget(
-              userNameKey: 'admin.dashboard.user',
-              dateText: dateFormatted,
-            ),
-            hSpace(12),
-            AdminStatsGridWidget(
-              totalStaff: totalStaff,
-              presentToday: presentToday,
-              pendingLeaves: pendingLeaves,
-              openTasks: openTasks,
-              isStaffLoading: isStaffLoading,
-              isAttendanceLoading: isAttendanceLoading,
-              isLeaveLoading: isLeaveLoading,
-              isTasksLoading: isTasksLoading,
-            ),
-            hSpace(16),
-            const AdminWeeklyAttendanceChartWidget(),
-            hSpace(20),
-            AdminOverviewCardWidget(
-              employeesOnDuty: presentToday,
-              totalStaff: totalStaff,
-              lateArrivals: 0,
-              absences: totalStaff > presentToday
-                  ? totalStaff - presentToday
-                  : 0,
-              pendingLeaveRequests: pendingLeaves,
-              dateText: dateFormatted,
-              isLoading:
-                  isStaffLoading || isAttendanceLoading || isLeaveLoading,
-            ),
-          ],
+      child: RefreshIndicator(
+        color: AppColors.brandPrimary,
+        onRefresh: () => Future.wait([
+          context.read<AdminEmployeesCubit>().loadEmployees(),
+          context.read<AdminAttendanceCubit>().loadAttendance(),
+          context.read<AdminLeaveRequestsCubit>().loadRequests(),
+          context.read<AdminTasksCubit>().loadTasks(),
+        ]),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const AdminTopBarWidget(),
+              hSpace(12),
+              AdminGreetingWidget(
+                userNameKey: 'admin.dashboard.user',
+                dateText: dateFormatted,
+              ),
+              hSpace(12),
+              AdminStatsGridWidget(
+                totalStaff: totalStaff,
+                presentToday: presentToday,
+                pendingLeaves: pendingLeaves,
+                openTasks: openTasks,
+                isStaffLoading: isStaffLoading,
+                isAttendanceLoading: isAttendanceLoading,
+                isLeaveLoading: isLeaveLoading,
+                isTasksLoading: isTasksLoading,
+              ),
+              hSpace(16),
+              const AdminWeeklyAttendanceChartWidget(),
+              hSpace(20),
+              AdminOverviewCardWidget(
+                employeesOnDuty: presentToday,
+                totalStaff: totalStaff,
+                lateArrivals: 0,
+                absences: totalStaff > presentToday
+                    ? totalStaff - presentToday
+                    : 0,
+                pendingLeaveRequests: pendingLeaves,
+                dateText: dateFormatted,
+                isLoading:
+                    isStaffLoading || isAttendanceLoading || isLeaveLoading,
+              ),
+            ],
+          ),
         ),
       ),
     );
