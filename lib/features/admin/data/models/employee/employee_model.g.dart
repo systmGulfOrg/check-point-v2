@@ -21,6 +21,10 @@ EmployeeModel _$EmployeeModelFromJson(Map<String, dynamic> json) =>
       mobileId: json['mobileId'] as String?,
       canAddAttendance: json['canAddAttendance'] as bool?,
       canAddPlan: json['canAddPlan'] as bool?,
+      shiftName: json['shiftName'] as String?,
+      clockInTime: json['clockInTime'] as String?,
+      clockOutTime: json['clockOutTime'] as String?,
+      area: json['area'] as String?,
     );
 
 Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
@@ -38,4 +42,8 @@ Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
       'mobileId': instance.mobileId,
       'canAddAttendance': instance.canAddAttendance,
       'canAddPlan': instance.canAddPlan,
+      'shiftName': instance.shiftName,
+      'clockInTime': instance.clockInTime,
+      'clockOutTime': instance.clockOutTime,
+      'area': instance.area,
     };

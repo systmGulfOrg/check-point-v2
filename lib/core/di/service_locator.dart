@@ -78,6 +78,7 @@ import 'package:check_point_v2/core/network/dio_factory.dart';
 import 'package:check_point_v2/core/network/device_identity_provider.dart';
 import 'package:check_point_v2/core/services/google_places_service.dart';
 import 'package:check_point_v2/core/services/location_service.dart';
+import 'package:check_point_v2/core/services/local_notification_service.dart';
 
 final sl = GetIt.instance;
 
@@ -110,6 +111,9 @@ Future<void> setupServiceLocator() async {
     instanceName: 'external',
   );
   sl.registerLazySingleton<LocationService>(LocationService.new);
+  sl.registerLazySingleton<LocalNotificationService>(
+    LocalNotificationService.new,
+  );
   sl.registerLazySingleton<AttendanceVerificationService>(
     () => AttendanceVerificationService(
       locationService: sl<LocationService>(),
@@ -314,6 +318,7 @@ Future<void> setupServiceLocator() async {
       checkInUseCase: sl<EmployeeCheckInUseCase>(),
       checkOutUseCase: sl<EmployeeCheckOutUseCase>(),
       attendanceVerificationService: sl<AttendanceVerificationService>(),
+      localNotificationService: sl<LocalNotificationService>(),
     ),
   );
   sl.registerFactory<EmployeeTasksCubit>(

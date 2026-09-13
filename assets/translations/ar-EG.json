@@ -632,5 +632,10 @@
   "employee.settings.sectionSystem": "النظام",
   "employee.settings.appVersion": "إصدار البرنامج",
   "employee.settings.signOut": "خروج",
-  "employee.settings.footer": "CHECK-POINT v1.0.0 — الموظف"
+  "employee.settings.footer": "CHECK-POINT v1.0.0 — الموظف",
+  "employee.home.defaultPolicy": "السياسة الأساسية",
+  "employee.notifications.attendanceTitle": "تذكير بموعد الانصراف",
+  "employee.notifications.attendanceBody": "متبقي ساعة على موعد انصرافك.",
+  "employee.notifications.tasksTitle": "مهام معلّقة",
+  "employee.notifications.tasksBody": "لديك {count} مهام معلّقة أو قيد التنفيذ."
 }

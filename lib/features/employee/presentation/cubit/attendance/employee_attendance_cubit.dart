@@ -3,11 +3,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/services/attendance_verification_service.dart';
+import 'package:check_point_v2/core/services/local_notification_service.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/core/network/api_failure.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_check_in_use_case.dart';
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_check_out_use_case.dart';
@@ -20,6 +23,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     required this.checkInUseCase,
     required this.checkOutUseCase,
     required this.attendanceVerificationService,
+    required this.localNotificationService,
   }) : super(const EmployeeAttendanceState.initial());
 
   final EmployeeAttendanceRepo attendanceRepo;
@@ -27,6 +31,10 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
   final EmployeeCheckInUseCase checkInUseCase;
   final EmployeeCheckOutUseCase checkOutUseCase;
   final AttendanceVerificationService attendanceVerificationService;
+  final LocalNotificationService localNotificationService;
+
+  AdminAttendanceModel? todayAttendance;
+  EmployeeModel? employeeProfile;
 
   String? selectedImageBase64;
   CustomerModel? selectedTarget;
@@ -56,6 +64,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
           );
     switch (result) {
       case Success(:final data):
+        employeeProfile = data;
         emit(EmployeeAttendanceState.branchesLoaded(data));
       case Failure(:final failure):
         emit(EmployeeAttendanceState.error(failure.messageKey));
@@ -90,6 +99,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
 
     switch (result) {
       case Success(:final data):
+        todayAttendance = data;
         emit(EmployeeAttendanceState.checkInSuccess(data));
       case Failure(:final failure):
         emit(EmployeeAttendanceState.error(failure.messageKey));
@@ -133,6 +143,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
 
     switch (result) {
       case Success(:final data):
+        todayAttendance = data;
         emit(EmployeeAttendanceState.checkOutSuccess(data));
       case Failure(:final failure):
         emit(EmployeeAttendanceState.error(failure.messageKey));
@@ -160,16 +171,95 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
   Future<void> loadAttendanceHistory() async {
     emit(const EmployeeAttendanceState.loading());
     final employeeId = await sessionStorage.readUserId() ?? '';
+    if (employeeId.isNotEmpty) {
+      final profileResult = await attendanceRepo.getEmployeeById(employeeId);
+      if (profileResult case Success(:final data)) {
+        employeeProfile = data;
+      }
+    }
     final result = await attendanceRepo.getAttendanceHistory(
       employeeId: employeeId,
     );
     switch (result) {
       case Success(:final data):
         _allHistoryRecords = data;
+        todayAttendance = _findTodayRecord(data);
         _applyFilters();
       case Failure(:final failure):
         emit(EmployeeAttendanceState.error(failure.messageKey));
     }
+  }
+
+  Future<void> scheduleReminders({
+    required String attendanceTitle,
+    required String attendanceBody,
+    required String tasksTitle,
+    required String tasksBody,
+    required List<AdminTaskModel> tasks,
+  }) async {
+    final endTime = _parseTime(employeeProfile?.clockOutTime);
+    if (endTime != null) {
+      final now = DateTime.now();
+      final checkout = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        endTime.hour,
+        endTime.minute,
+      ).subtract(const Duration(hours: 1));
+      await localNotificationService.scheduleDaily(
+        id: LocalNotificationService.attendanceReminderId,
+        title: attendanceTitle,
+        body: attendanceBody,
+        time: checkout,
+      );
+    }
+
+    final activeTasks = tasks.where((task) {
+      final status = task.status?.toLowerCase();
+      return status != 'completed' && status != 'done';
+    }).length;
+    if (activeTasks == 0) {
+      await localNotificationService.cancel(
+        LocalNotificationService.tasksReminderId,
+      );
+      return;
+    }
+    await localNotificationService.scheduleDaily(
+      id: LocalNotificationService.tasksReminderId,
+      title: tasksTitle,
+      body: tasksBody.replaceFirst('{count}', '$activeTasks'),
+      time: DateTime(2000, 1, 1, 9),
+    );
+  }
+
+  AdminAttendanceModel? _findTodayRecord(List<AdminAttendanceModel> records) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final matches = records.where((record) {
+      final date = _parseDate(record.attendanceDate);
+      return date != null && DateTime(date.year, date.month, date.day) == today;
+    }).toList();
+    if (matches.isEmpty) return null;
+    matches.sort((a, b) {
+      final aTime = _parseDate(a.clockInTime) ?? DateTime(1900);
+      final bTime = _parseDate(b.clockInTime) ?? DateTime(1900);
+      return bTime.compareTo(aTime);
+    });
+    return matches.first;
+  }
+
+  DateTime? _parseTime(String? raw) {
+    if (raw == null || raw.trim().isEmpty) return null;
+    final match = RegExp(r'^(\d{1,2}):(\d{2})').firstMatch(raw.trim());
+    if (match == null) return null;
+    return DateTime(
+      2000,
+      1,
+      1,
+      int.parse(match.group(1)!),
+      int.parse(match.group(2)!),
+    );
   }
 
   void toggleStatusFilter(String status) {

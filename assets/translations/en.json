@@ -770,4 +770,9 @@
   ,"attendance.copyCoordinates": "Copy coordinates"
   ,"attendance.addressCopied": "Address copied"
   ,"attendance.coordinatesCopied": "Coordinates copied"
+  ,"employee.home.defaultPolicy": "Standard Policy"
+  ,"employee.notifications.attendanceTitle": "Checkout reminder"
+  ,"employee.notifications.attendanceBody": "Your checkout time is in one hour."
+  ,"employee.notifications.tasksTitle": "Pending tasks"
+  ,"employee.notifications.tasksBody": "You have {count} pending or in-progress tasks."
 }

@@ -18,6 +18,10 @@ class EmployeeModel {
     this.mobileId,
     this.canAddAttendance,
     this.canAddPlan,
+    this.shiftName,
+    this.clockInTime,
+    this.clockOutTime,
+    this.area,
   });
 
   final String? id;
@@ -33,6 +37,10 @@ class EmployeeModel {
   final String? mobileId;
   final bool? canAddAttendance;
   final bool? canAddPlan;
+  final String? shiftName;
+  final String? clockInTime;
+  final String? clockOutTime;
+  final String? area;
 
   factory EmployeeModel.fromJson(Map<String, dynamic> json) =>
       _$EmployeeModelFromJson(json);
