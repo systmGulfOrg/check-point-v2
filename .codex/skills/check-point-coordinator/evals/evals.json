@@ -1,0 +1,35 @@
+{
+  "skill_name": "check-point-coordinator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Add a localized employee screen that loads data through a Cubit and repository, following this project's existing conventions.",
+      "expected_output": "A plan or implementation that uses the existing UI, routing, localization, responsive sizing, DI, state, and test conventions without raw TextFormField or hardcoded user-facing strings.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Change login so biometric login handles an invalid stored session safely and add regression coverage.",
+      "expected_output": "Auth-specific handling that preserves secure storage, localized failure keys, existing role/session behavior, and tests for the invalid session path.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Review the Dio token interceptor and network logger for security issues and recommend only scoped fixes.",
+      "expected_output": "A security review that checks bearer-token exposure, sensitive logging, external Dio separation, and clearly distinguishes existing risks from required changes.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "A supervisor list rebuilds too often and becomes slow with pagination. Diagnose and fix it with tests.",
+      "expected_output": "A focused performance change using local Bloc rebuild scope, guarded pagination, builder lists, and deterministic regression coverage.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Add a repository method and Cubit state for a new admin endpoint.",
+      "expected_output": "A feature-first implementation using ApiResult, typed failure mapping, correct DI, Freezed state generation, and success/failure Cubit/repository tests.",
+      "files": []
+    }
+  ]
+}
