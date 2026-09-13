@@ -23,13 +23,21 @@ class EmployeeCheckInUseCase {
     String? selectedImageBase64,
   }) async {
     final employeeId = await sessionStorage.readUserId() ?? '';
+    final apiArea = switch (area) {
+      'Branch' => 'Office',
+      'Customer' => 'Customer',
+      'Site' => 'Site',
+      _ => 'Office',
+    };
     final requestBody = EmployeeCheckInRequestBody(
       employeeIdd: employeeId,
-      area: area,
+      area: apiArea,
       customerId: customerId,
-      location: locationLabel ?? (currentLocation != null
-          ? '${currentLocation.latitude},${currentLocation.longitude}'
-          : area),
+      location:
+          locationLabel ??
+          (currentLocation != null
+              ? '${currentLocation.latitude},${currentLocation.longitude}'
+              : apiArea),
       coordinates: currentLocation != null
           ? [
               AttendanceCoordinate(

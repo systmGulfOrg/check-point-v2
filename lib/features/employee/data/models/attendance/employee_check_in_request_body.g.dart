@@ -9,9 +9,8 @@ part of 'employee_check_in_request_body.dart';
 EmployeeCheckInRequestBody _$EmployeeCheckInRequestBodyFromJson(
   Map<String, dynamic> json,
 ) => EmployeeCheckInRequestBody(
-  employeeIdd: json['employeeIdd'] as String,
+  employeeIdd: json['employeeId'] as String,
   customerId: json['customerId'] as String?,
-  shiftId: (json['shiftId'] as num?)?.toInt(),
   area: json['area'] as String?,
   location: json['location'] as String?,
   coordinates: (json['coordinates'] as List<dynamic>?)
@@ -23,9 +22,8 @@ EmployeeCheckInRequestBody _$EmployeeCheckInRequestBodyFromJson(
 Map<String, dynamic> _$EmployeeCheckInRequestBodyToJson(
   EmployeeCheckInRequestBody instance,
 ) => <String, dynamic>{
-  'employeeIdd': instance.employeeIdd,
+  'employeeId': instance.employeeIdd,
   'customerId': instance.customerId,
-  'shiftId': instance.shiftId,
   'area': instance.area,
   'location': instance.location,
   'coordinates': instance.coordinates,

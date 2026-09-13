@@ -14,8 +14,10 @@ class EmployeeCheckInRequestBody {
     this.employeeImage,
   });
 
+  @JsonKey(name: 'employeeId')
   final String employeeIdd;
   final String? customerId;
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final int? shiftId;
   final String? area;
   final String? location;

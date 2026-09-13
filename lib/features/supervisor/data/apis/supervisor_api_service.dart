@@ -39,12 +39,12 @@ abstract class SupervisorApiService {
   @GET('${ApiConstants.attendance}/earlyLeavers/{day}')
   Future<AttendanceResponseModel> getEarlyLeavers(@Path('day') String day);
 
-  @POST('${ApiConstants.attendance}/employeeCheckIn')
+  @POST(ApiConstants.employeeCheckIn)
   Future<ResultModel> checkIn(
     @Body() SupervisorAttendanceCheckInRequestBody body,
   );
 
-  @POST('${ApiConstants.attendance}/employeeCheckOut')
+  @POST(ApiConstants.employeeCheckOut)
   Future<ResultModel> checkOut(
     @Body() SupervisorAttendanceCheckOutRequestBody body,
   );

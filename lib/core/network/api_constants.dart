@@ -16,10 +16,10 @@ class ApiConstants {
   static const String plans = '/api/Plan';
   static const String notifications = '/api/Notification';
   static const String accountRequests = '/api/AccountRequest';
-  static const String employeeCheckIn = '/api/Attendance/employeeCheckIn';
-  static const String employeeCheckInWithoutPlan = '/api/Attendance/employeeCheckInWithoutPlan';
-  static const String employeeCheckOut = '/api/Attendance/employeeCheckOut';
-  static const String employeeCheckOutWithoutPlan = '/api/Attendance/employeeCheckOutWithoutPlan';
+  static const String employeeCheckIn = '/api/Attendance/in';
+  static const String employeeCheckInWithoutPlan = '/api/Attendance/inWithoutPlan';
+  static const String employeeCheckOut = '/api/Attendance/out';
+  static const String employeeCheckOutWithoutPlan = '/api/Attendance/outWithoutPlan';
   static const String getEmployeeAttendanceHistory = '/api/Attendance/getEmployeeAttendanceHistory';
   static const String employeeChangePassword = '/api/Auth/employeeChangePassword';
   static const String trackEmployeeLocation = '/api/Attendance/trackEmployeeLocation';

@@ -15,11 +15,16 @@ class SupervisorAttendanceCheckInRequestBody {
     this.customerId,
   });
 
+  @JsonKey(name: 'employeeId')
   final String employeeIdd;
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final double latitude;
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final double longitude;
   final String area;
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final String clockInTime;
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final String attendanceDate;
   final String? employeeImage;
   final String? customerId;

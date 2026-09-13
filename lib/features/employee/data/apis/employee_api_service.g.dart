@@ -28,7 +28,7 @@ class _EmployeeApiService implements EmployeeApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/Attendance/employeeCheckIn',
+            '/api/Attendance/in',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -58,7 +58,7 @@ class _EmployeeApiService implements EmployeeApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/Attendance/employeeCheckInWithoutPlan',
+            '/api/Attendance/inWithoutPlan',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -88,7 +88,7 @@ class _EmployeeApiService implements EmployeeApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/Attendance/employeeCheckOut',
+            '/api/Attendance/out',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -118,7 +118,7 @@ class _EmployeeApiService implements EmployeeApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/Attendance/employeeCheckOutWithoutPlan',
+            '/api/Attendance/outWithoutPlan',
             queryParameters: queryParameters,
             data: _data,
           )
