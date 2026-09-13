@@ -287,7 +287,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                                     .map(
                                       (d) => DropdownMenuItem<int>(
                                         value: d.id,
-                                        child: Text(d.name ?? '-'),
+                                        child: Text(d.departmentName ?? '-'),
                                       ),
                                     )
                                     .toList(),

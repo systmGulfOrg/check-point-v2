@@ -41,8 +41,7 @@ class AdminShiftEmployeesWidgetState extends State<AdminShiftEmployeesWidget> {
                     (employee.name ?? employee.userName ?? '?')
                         .substring(0, 1)
                         .toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 10.sp,
+                    style: AppTextStyles.font10Medium.copyWith(
                       color: AppColors.brandPrimary,
                     ),
                   ),

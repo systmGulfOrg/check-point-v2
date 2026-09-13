@@ -21,18 +21,20 @@ class AdminShiftsPoliciesScreen extends StatelessWidget {
     String currentName,
   ) {
     final nameController = TextEditingController(text: currentName);
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Edit Shift'),
+        title: Text('admin.shifts.edit.title'.tr(context: context)),
         content: TextField(
           controller: nameController,
-          decoration: const InputDecoration(labelText: 'Shift Name'),
+          decoration: InputDecoration(
+            labelText: 'admin.shifts.edit.nameLabel'.tr(context: context),
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: Text('admin.shifts.edit.cancel'.tr(context: context)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -44,11 +46,11 @@ class AdminShiftsPoliciesScreen extends StatelessWidget {
                 Navigator.pop(dialogContext);
               }
             },
-            child: const Text('Save'),
+            child: Text('admin.shifts.edit.save'.tr(context: context)),
           ),
         ],
       ),
-    );
+    ).whenComplete(nameController.dispose);
   }
 
   void _showDeleteShiftDialog(BuildContext context, int shiftId) {
@@ -120,7 +122,7 @@ class AdminShiftsPoliciesScreen extends StatelessWidget {
                         hSpace(12),
                         if (shifts.isEmpty)
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 32),
+                            padding: EdgeInsets.symmetric(vertical: 32.h),
                             child: Center(
                               child: Text(
                                 'admin.requests.emptyAll'.tr(context: context),

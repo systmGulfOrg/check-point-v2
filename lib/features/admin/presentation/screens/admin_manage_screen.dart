@@ -37,7 +37,6 @@ class AdminManageScreen extends StatelessWidget {
               iconBackgroundColor: AppColors.softBlueBackground,
               titleKey: 'admin.manage.locations',
               subtitleKey: 'admin.manage.locationsSub',
-              count: 6,
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.adminLocations),
             ),
@@ -48,7 +47,6 @@ class AdminManageScreen extends StatelessWidget {
               iconBackgroundColor: AppColors.softBrandBackground,
               titleKey: 'admin.manage.shiftsPolicies',
               subtitleKey: 'admin.manage.shiftsPoliciesSub',
-              count: 4,
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.adminShiftsPolicies),
             ),
@@ -59,7 +57,6 @@ class AdminManageScreen extends StatelessWidget {
               iconBackgroundColor: AppColors.softBlueBackground,
               titleKey: 'admin.manage.permissions',
               subtitleKey: 'admin.manage.permissionsSub',
-              count: 2,
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.adminPermissions),
             ),
@@ -70,7 +67,6 @@ class AdminManageScreen extends StatelessWidget {
               iconBackgroundColor: AppColors.softGreenBackground,
               titleKey: 'admin.manage.leaveManagement',
               subtitleKey: 'admin.manage.leaveManagementSub',
-              count: 1,
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.adminLeaveManagement),
             ),
@@ -81,7 +77,6 @@ class AdminManageScreen extends StatelessWidget {
               iconBackgroundColor: AppColors.softYellowBackground,
               titleKey: 'admin.manage.tasks',
               subtitleKey: 'admin.manage.tasksSub',
-              count: 3,
               onTap: () => Navigator.pushNamed(context, AppRoutes.adminTasks),
             ),
             hSpace(10),
@@ -91,7 +86,6 @@ class AdminManageScreen extends StatelessWidget {
               iconBackgroundColor: AppColors.softBrandBackground,
               titleKey: 'admin.manage.plansMissions',
               subtitleKey: 'admin.manage.plansMissionsSub',
-              count: 3,
               onTap: () => Navigator.pushNamed(context, AppRoutes.adminPlans),
             ),
             hSpace(10),
