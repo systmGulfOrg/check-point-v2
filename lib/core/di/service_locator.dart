@@ -72,12 +72,10 @@ import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requ
 import 'package:check_point_v2/features/supervisor/presentation/cubit/plans/supervisor_plans_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
-import 'package:check_point_v2/core/app/app_config.dart';
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/auth/biometric_auth_service.dart';
-import 'package:check_point_v2/core/network/auth_token_interceptor.dart';
+import 'package:check_point_v2/core/network/dio_factory.dart';
 import 'package:check_point_v2/core/network/device_identity_provider.dart';
-import 'package:check_point_v2/core/network/safe_network_log_interceptor.dart';
 import 'package:check_point_v2/core/services/google_places_service.dart';
 import 'package:check_point_v2/core/services/location_service.dart';
 
@@ -86,11 +84,7 @@ final sl = GetIt.instance;
 Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<FlutterSecureStorage>(FlutterSecureStorage.new);
   sl.registerLazySingleton<Dio>(
-    () => Dio(BaseOptions(baseUrl: AppConfig.baseUrl))
-      ..interceptors.add(
-        AuthTokenInterceptor(secureStorage: sl<FlutterSecureStorage>()),
-      )
-      ..interceptors.add(SafeNetworkLogInterceptor()),
+    () => DioFactory.create(secureStorage: sl<FlutterSecureStorage>()),
   );
   sl.registerLazySingleton<AuthSessionStorage>(
     () => AuthSessionStorage(secureStorage: sl<FlutterSecureStorage>()),
