@@ -291,8 +291,18 @@ class AppRouter {
       case AppRoutes.adminTasks:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminTasks),
-          child: BlocProvider<AdminTasksCubit>(
-            create: (_) => sl<AdminTasksCubit>()..loadTasks(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AdminTasksCubit>(
+                create: (_) => sl<AdminTasksCubit>()..loadTasks(),
+              ),
+              BlocProvider<AdminEmployeesCubit>(
+                create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
+              ),
+              BlocProvider<AdminDepartmentsCubit>(
+                create: (_) => sl<AdminDepartmentsCubit>()..load(),
+              ),
+            ],
             child: const AdminTasksScreen(),
           ),
         );
@@ -338,9 +348,16 @@ class AppRouter {
         }
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminShiftDetails),
-          child: BlocProvider<AdminShiftsPoliciesCubit>(
-            create: (_) =>
-                sl<AdminShiftsPoliciesCubit>()..load(shiftId: shiftId),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AdminShiftsPoliciesCubit>(
+                create: (_) =>
+                    sl<AdminShiftsPoliciesCubit>()..load(shiftId: shiftId),
+              ),
+              BlocProvider<AdminEmployeesCubit>(
+                create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
+              ),
+            ],
             child: AdminShiftDetailsScreen(shiftKey: shiftKey as String),
           ),
         );

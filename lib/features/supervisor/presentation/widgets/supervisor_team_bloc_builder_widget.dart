@@ -39,6 +39,7 @@ class SupervisorTeamBlocBuilderWidget extends StatelessWidget {
           SupervisorTeamLoading() => Skeletonizer(
             enabled: true,
             child: ListView.separated(
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.only(bottom: 24.h),
               itemCount: _dummyEmployees.length,
               separatorBuilder: (_, _) => hSpace(10),
@@ -52,14 +53,27 @@ class SupervisorTeamBlocBuilderWidget extends StatelessWidget {
             searchQuery: searchQuery,
           ),
           SupervisorTeamError(:final messageKey) => Center(
-            child: Text(
-              messageKey.tr(context: context),
-              style: AppTextStyles.font14Regular.copyWith(
-                color: AppColors.error,
-              ),
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 40.h),
+                  child: Center(
+                    child: Text(
+                      messageKey.tr(context: context),
+                      style: AppTextStyles.font14Regular.copyWith(
+                        color: AppColors.error,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          _ => const SizedBox.shrink(),
+          _ => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: const [SizedBox(height: 1)],
+          ),
         };
       },
     );

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_details_sheet_widget.dart';
 import 'supervisor_team_member_card_widget.dart';
 
 class SupervisorTeamListWidget extends StatelessWidget {
@@ -43,12 +44,17 @@ class SupervisorTeamListWidget extends StatelessWidget {
     }
 
     return ListView.separated(
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.only(bottom: 24.h),
       itemCount: filtered.length,
       separatorBuilder: (_, _) => hSpace(10),
       itemBuilder: (context, index) => AnimatedListItemWidget(
         index: index,
-        child: SupervisorTeamMemberCardWidget(employee: filtered[index]),
+        child: SupervisorTeamMemberCardWidget(
+          employee: filtered[index],
+          onTap: () =>
+              EmployeeDetailsSheetWidget.show(context, filtered[index]),
+        ),
       ),
     );
   }

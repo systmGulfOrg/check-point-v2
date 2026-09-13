@@ -6,6 +6,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_department_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_department_employees_state.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_details_sheet_widget.dart';
 import 'admin_department_employee_card_widget.dart';
 import 'admin_employees_skeleton_widget.dart';
 
@@ -142,6 +143,11 @@ class AdminDepartmentEmployeesSheetWidget extends StatelessWidget {
                               itemBuilder: (context, index) =>
                                   AdminDepartmentEmployeeCardWidget(
                                     employee: employees[index],
+                                    onTap: () =>
+                                        EmployeeDetailsSheetWidget.show(
+                                          context,
+                                          employees[index],
+                                        ),
                                   ),
                             ),
                     _ => const SizedBox.shrink(),

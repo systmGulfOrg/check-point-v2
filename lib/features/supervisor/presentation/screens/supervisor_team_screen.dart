@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_team_bloc_builder_widget.dart';
 
 class SupervisorTeamScreen extends StatefulWidget {
@@ -57,8 +59,12 @@ class _SupervisorTeamScreenState extends State<SupervisorTeamScreen> {
               ),
               hSpace(14),
               Expanded(
-                child: SupervisorTeamBlocBuilderWidget(
-                  searchQuery: _searchQuery,
+                child: RefreshIndicator(
+                  color: AppColors.brandPrimary,
+                  onRefresh: context.read<SupervisorTeamCubit>().loadTeam,
+                  child: SupervisorTeamBlocBuilderWidget(
+                    searchQuery: _searchQuery,
+                  ),
                 ),
               ),
             ],

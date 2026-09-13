@@ -132,6 +132,55 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     }
   }
 
+  Future<bool> assignEmployees({
+    required int policyId,
+    required int shiftId,
+    required List<String> employeeIds,
+  }) async {
+    emit(const AdminShiftsPoliciesState.loading());
+    final result = await shiftsPoliciesRepo.assignPolicy(
+      AssignPoliceRequestBody(policyId: policyId, employeeIds: employeeIds),
+    );
+    switch (result) {
+      case Success():
+        await loadPoliciesForShift(shiftId);
+        return true;
+      case Failure(:final failure):
+        emit(AdminShiftsPoliciesState.error(failure.messageKey));
+        return false;
+      default:
+        return false;
+    }
+  }
+
+  Future<bool> transferEmployee({
+    required int policyId,
+    required int shiftId,
+    required String employeeId,
+  }) async {
+    emit(const AdminShiftsPoliciesState.loading());
+    final removeResult = await shiftsPoliciesRepo.removeAssignPolicy(
+      RemoveAssignPolicyRequestBody(employeeId: employeeId),
+    );
+    if (removeResult case Failure(:final failure)) {
+      emit(AdminShiftsPoliciesState.error(failure.messageKey));
+      return false;
+    }
+    final assignResult = await shiftsPoliciesRepo.assignPolicy(
+      AssignPoliceRequestBody(policyId: policyId, employeeIds: [employeeId]),
+    );
+    switch (assignResult) {
+      case Success():
+        await loadPoliciesForShift(shiftId);
+        return true;
+      case Failure(:final failure):
+        emit(AdminShiftsPoliciesState.error(failure.messageKey));
+        return false;
+      default:
+        return false;
+    }
+  }
+
   Future<bool> deletePolicy(int id, int shiftId) async {
     emit(const AdminShiftsPoliciesState.loading());
     final result = await shiftsPoliciesRepo.deletePolicy(id: id);

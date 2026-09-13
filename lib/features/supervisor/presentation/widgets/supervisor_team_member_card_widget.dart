@@ -6,100 +6,206 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 
 class SupervisorTeamMemberCardWidget extends StatelessWidget {
-  const SupervisorTeamMemberCardWidget({required this.employee, super.key});
+  const SupervisorTeamMemberCardWidget({
+    required this.employee,
+    this.onTap,
+    super.key,
+  });
 
   final EmployeeModel employee;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final name = employee.name ?? employee.userName ?? 'Employee';
-    final initials = name.isNotEmpty
-        ? name
-              .split(' ')
-              .take(2)
-              .map((e) => e.isNotEmpty ? e[0].toUpperCase() : '')
-              .join()
-        : 'EM';
+    final parts = name.trim().split(RegExp(r'\s+'));
+    final initials = parts
+        .where((part) => part.isNotEmpty)
+        .take(2)
+        .map((part) => part[0].toUpperCase())
+        .join();
     final role = employee.role ?? 'auth.role.employee';
-    final dept = employee.departmentName ?? employee.branchName ?? '';
     final code = employee.userName ?? employee.id ?? '';
+    final details = <(IconData, String)>[
+      if ((employee.position ?? '').isNotEmpty)
+        (Icons.work_outline_rounded, employee.position!),
+      if ((employee.departmentName ?? '').isNotEmpty)
+        (Icons.business_outlined, employee.departmentName!),
+      if ((employee.branchName ?? employee.area ?? '').isNotEmpty)
+        (Icons.location_on_outlined, employee.branchName ?? employee.area!),
+      if ((employee.shiftName ?? '').isNotEmpty)
+        (Icons.schedule_rounded, employee.shiftName!),
+    ];
 
-    return Container(
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            radius: 22.r,
-            backgroundColor: AppColors.softBrandBackground,
-            child: Text(
-              initials,
-              style: AppTextStyles.font14SemiBold.copyWith(
-                color: AppColors.brandPrimary,
-              ),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16.r),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        padding: EdgeInsets.all(14.r),
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: AppColors.border),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.shadow,
+              blurRadius: 8,
+              offset: Offset(0, 2),
             ),
-          ),
-          vSpace(12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
+                CircleAvatar(
+                  radius: 24.r,
+                  backgroundColor: AppColors.softBrandBackground,
+                  child: Text(
+                    initials.isEmpty ? 'EM' : initials,
+                    style: AppTextStyles.font14SemiBold.copyWith(
+                      color: AppColors.brandPrimary,
+                    ),
+                  ),
+                ),
+                vSpace(12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
                         name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.font16Bold.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
+                        style: AppTextStyles.font16Bold,
                       ),
+                      if (code.isNotEmpty) ...[
+                        hSpace(3),
+                        Text(
+                          code,
+                          style: AppTextStyles.font12Regular.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 6.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.softBrandBackground,
+                    borderRadius: BorderRadius.circular(999.r),
+                  ),
+                  child: Text(
+                    role.tr(context: context),
+                    style: AppTextStyles.font11Medium.copyWith(
+                      color: AppColors.brandPrimary,
+                      fontWeight: FontWeight.w700,
                     ),
-                    vSpace(8),
+                  ),
+                ),
+              ],
+            ),
+            if (details.isNotEmpty) ...[
+              hSpace(12),
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
+                children: [
+                  for (final detail in details)
                     Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 10.w,
-                        vertical: 3.h,
+                        horizontal: 9.w,
+                        vertical: 6.h,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.softBrandBackground,
-                        borderRadius: BorderRadius.circular(999.r),
+                        color: AppColors.pageBackground,
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
-                      child: Text(
-                        role.tr(context: context),
-                        style: AppTextStyles.font11Medium.copyWith(
-                          color: AppColors.brandPrimary,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            detail.$1,
+                            size: 14.r,
+                            color: AppColors.placeholder,
+                          ),
+                          wSpace(5),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: 140.w),
+                            child: Text(
+                              detail.$2,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.font11Medium.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                    ),
+                ],
+              ),
+            ],
+            if (employee.canAddAttendance == true ||
+                employee.canAddPlan == true) ...[
+              hSpace(12),
+              Row(
+                children: [
+                  if (employee.canAddAttendance == true)
+                    SupervisorPermissionChipWidget(
+                      icon: Icons.how_to_reg_rounded,
+                      label: 'admin.departments.attendancePermission',
+                    ),
+                  if (employee.canAddPlan == true) ...[
+                    wSpace(8),
+                    SupervisorPermissionChipWidget(
+                      icon: Icons.event_note_outlined,
+                      label: 'admin.departments.planPermission',
                     ),
                   ],
-                ),
-                if (code.isNotEmpty) ...[
-                  hSpace(4),
-                  Text(
-                    code,
-                    style: AppTextStyles.font13Regular.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
                 ],
-                if (dept.isNotEmpty) ...[
-                  hSpace(2),
-                  Text(
-                    dept,
-                    style: AppTextStyles.font12Regular.copyWith(
-                      color: AppColors.placeholder,
-                    ),
-                  ),
-                ],
-              ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SupervisorPermissionChipWidget extends StatelessWidget {
+  const SupervisorPermissionChipWidget({
+    required this.icon,
+    required this.label,
+    super.key,
+  });
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Row(
+        children: [
+          Icon(icon, size: 15.r, color: AppColors.success),
+          wSpace(4),
+          Flexible(
+            child: Text(
+              label.tr(context: context),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.font11Medium.copyWith(
+                color: AppColors.success,
+              ),
             ),
           ),
         ],

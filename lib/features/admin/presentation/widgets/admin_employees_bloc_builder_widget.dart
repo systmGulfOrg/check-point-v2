@@ -5,6 +5,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_details_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
 import 'admin_delete_confirmation_dialog_widget.dart';
@@ -53,54 +54,55 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
-        builder: (context, state) => switch (state) {
-          AdminEmployeesStateInitial() => const SizedBox.shrink(),
-          AdminEmployeesStateLoading() => const AdminEmployeesSkeletonWidget(),
-          AdminEmployeesStateError(:final messageKey) =>
-            AdminRequestsEmptyStateWidget(messageKey: messageKey),
-          AdminEmployeesStateSuccess(:final employees) ||
-          AdminEmployeesStateActionSuccess(:final employees) =>
-            employees.isEmpty
-                ? AdminRequestsEmptyStateWidget(
-                    messageKey: 'admin.employees.empty',
-                  )
-                : Column(
-                    children: [
-                      Text(
-                        'admin.employees.countHeader'.tr(
-                          context: context,
-                          args: [employees.length.toString()],
-                        ),
-                        style: AppTextStyles.font13Regular.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                      hSpace(12),
-                      for (final employee in employees) ...[
-                        AdminEmployeeCardWidget(
-                          initials: _initials(employee.name),
-                          name: employee.name ?? employee.userName ?? '-',
-                          roleKey: _roleKey(employee.role),
-                          email: employee.userName ?? '-',
-                          empCode: employee.id ?? '-',
-                          department: employee.departmentName,
-                          isOnline: employee.canAddAttendance ?? false,
-                          onEdit: () => _showEditSheet(context, employee),
-                          onDelete: () {
-                            if (employee.id != null) {
-                              _showDeleteDialog(context, employee.id!);
-                            }
-                          },
-                        ),
-                        hSpace(10),
-                      ],
-                    ],
+  Widget build(
+    BuildContext context,
+  ) => BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
+    builder: (context, state) => switch (state) {
+      AdminEmployeesStateInitial() => const SizedBox.shrink(),
+      AdminEmployeesStateLoading() => const AdminEmployeesSkeletonWidget(),
+      AdminEmployeesStateError(:final messageKey) =>
+        AdminRequestsEmptyStateWidget(messageKey: messageKey),
+      AdminEmployeesStateSuccess(:final employees) ||
+      AdminEmployeesStateActionSuccess(:final employees) =>
+        employees.isEmpty
+            ? AdminRequestsEmptyStateWidget(messageKey: 'admin.employees.empty')
+            : Column(
+                children: [
+                  Text(
+                    'admin.employees.countHeader'.tr(
+                      context: context,
+                      args: [employees.length.toString()],
+                    ),
+                    style: AppTextStyles.font13Regular.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
-          _ => const SizedBox.shrink(),
-        },
-      );
+                  hSpace(12),
+                  for (final employee in employees) ...[
+                    AdminEmployeeCardWidget(
+                      initials: _initials(employee.name),
+                      name: employee.name ?? employee.userName ?? '-',
+                      roleKey: _roleKey(employee.role),
+                      email: employee.userName ?? '-',
+                      empCode: employee.id ?? '-',
+                      department: employee.departmentName,
+                      isOnline: employee.canAddAttendance ?? false,
+                      onEdit: () => _showEditSheet(context, employee),
+                      onDelete: () {
+                        if (employee.id != null) {
+                          _showDeleteDialog(context, employee.id!);
+                        }
+                      },
+                      onTap: () =>
+                          EmployeeDetailsSheetWidget.show(context, employee),
+                    ),
+                    hSpace(10),
+                  ],
+                ],
+              ),
+      _ => const SizedBox.shrink(),
+    },
+  );
 
   static String _initials(String? name) {
     final parts = (name ?? '').trim().split(RegExp(r'\s+'));

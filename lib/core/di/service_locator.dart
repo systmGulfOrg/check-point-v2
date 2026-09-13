@@ -50,6 +50,7 @@ import 'package:check_point_v2/features/employee/domain/use_cases/employee_check
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_check_out_use_case.dart';
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_leave_requests_use_case.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/details/employee_details_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/password/employee_change_password_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/leave_requests/employee_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/odoo_dashboard/employee_odoo_dashboard_cubit.dart';
@@ -320,6 +321,9 @@ Future<void> setupServiceLocator() async {
       attendanceVerificationService: sl<AttendanceVerificationService>(),
       localNotificationService: sl<LocalNotificationService>(),
     ),
+  );
+  sl.registerFactory<EmployeeDetailsCubit>(
+    () => EmployeeDetailsCubit(attendanceRepo: sl<EmployeeAttendanceRepo>()),
   );
   sl.registerFactory<EmployeeTasksCubit>(
     () => EmployeeTasksCubit(
