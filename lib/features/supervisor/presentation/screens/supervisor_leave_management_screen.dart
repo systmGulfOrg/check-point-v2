@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_leave_sheet_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_leave_management_filter_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_leave_requests_bloc_builder_widget.dart';
@@ -21,6 +22,39 @@ class _SupervisorLeaveManagementScreenState
   int selectedFilter = 0;
 
   @override
+  void initState() {
+    super.initState();
+    context.read<SupervisorLeaveRequestsCubit>().loadLeaveTypes();
+  }
+
+  void _showApplyLeaveSheet(BuildContext context) {
+    final cubit = context.read<SupervisorLeaveRequestsCubit>();
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.transparent,
+      builder: (_) => ApplyForLeaveSheetWidget(
+        leaveTypes: cubit.leaveTypes,
+        onSubmit: ({
+          required startDate,
+          required endDate,
+          required reason,
+          required remark,
+          required leaveRequestType,
+        }) {
+          cubit.submitLeaveRequest(
+            startDate: startDate,
+            endDate: endDate,
+            reason: reason,
+            remark: remark,
+            leaveRequestType: leaveRequestType,
+          );
+        },
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -32,6 +66,13 @@ class _SupervisorLeaveManagementScreenState
           'supervisor.leaveManagement.title'.tr(context: context),
           style: AppTextStyles.font18Bold,
         ),
+        actions: [
+          IconButton(
+            onPressed: () => _showApplyLeaveSheet(context),
+            icon: const Icon(Icons.add_circle_outline_rounded),
+            tooltip: 'employee.leaves.applyTitle'.tr(context: context),
+          ),
+        ],
       ),
       body: SafeArea(
         child: RefreshIndicator(

@@ -9,6 +9,8 @@ import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_l
 import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model.dart';
 import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
+import 'package:check_point_v2/features/employee/data/models/leave_requests/employee_leave_request_body.dart';
 import 'package:check_point_v2/features/supervisor/data/models/attendance/supervisor_attendance_check_in_request_body.dart';
 import 'package:check_point_v2/features/supervisor/data/models/attendance/supervisor_attendance_check_out_request_body.dart';
 import 'package:check_point_v2/features/supervisor/data/models/tasks/supervisor_update_task_status_request_body.dart';
@@ -98,6 +100,15 @@ class _FakeSupervisorLeaveRequestsRepo implements SupervisorLeaveRequestsRepo {
     int? departmentId,
     String? type,
   }) async => ApiResult.success(requests);
+
+  @override
+  Future<ApiResult<List<LeaveTypeModel>>> getLeaveTypes() async =>
+      const ApiResult.success([]);
+
+  @override
+  Future<ApiResult<void>> createLeaveRequest(
+    EmployeeLeaveRequestBody body,
+  ) async => const ApiResult.success(null);
 
   @override
   Future<ApiResult<void>> approveOrRejectLeaveRequest(

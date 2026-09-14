@@ -8,21 +8,23 @@ class AdminLeaveManagementFilterWidget extends StatelessWidget {
   const AdminLeaveManagementFilterWidget({
     required this.selectedIndex,
     required this.onSelected,
+    this.pendingCount = 0,
     super.key,
   });
 
   final int selectedIndex;
   final ValueChanged<int> onSelected;
-
-  static const filters = <(String, List<String>)>[
-    ('admin.leaveManagement.all', []),
-    ('admin.leaveManagement.pending', ['2']),
-    ('admin.leaveManagement.approved', []),
-    ('admin.leaveManagement.rejected', []),
-  ];
+  final int pendingCount;
 
   @override
   Widget build(BuildContext context) {
+    final filters = <(String, List<String>)>[
+      ('admin.leaveManagement.all', []),
+      ('admin.leaveManagement.pending', ['$pendingCount']),
+      ('admin.leaveManagement.approved', []),
+      ('admin.leaveManagement.rejected', []),
+    ];
+
     return Container(
       padding: EdgeInsets.all(4.r),
       decoration: BoxDecoration(

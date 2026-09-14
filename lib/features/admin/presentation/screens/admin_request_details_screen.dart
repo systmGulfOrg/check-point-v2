@@ -7,6 +7,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_reject_request_dialog_widget.dart';
 
 class AdminRequestDetailsScreen extends StatelessWidget {
   const AdminRequestDetailsScreen({required this.request, super.key});
@@ -24,6 +25,24 @@ class AdminRequestDetailsScreen extends StatelessWidget {
     return (parts.first[0] + parts.last[0]).toUpperCase();
   }
 
+  Color _getStatusBackgroundColor() {
+    if (request.isApproved) return AppColors.softGreenBackground;
+    if (request.isRejected) return AppColors.softRedBackground;
+    return AppColors.softYellowBackground;
+  }
+
+  Color _getStatusTextColor() {
+    if (request.isApproved) return AppColors.success;
+    if (request.isRejected) return AppColors.error;
+    return AppColors.warningOrange;
+  }
+
+  String _getStatusText(BuildContext context) {
+    if (request.isApproved) return 'admin.requests.filterApproved'.tr(context: context);
+    if (request.isRejected) return 'admin.requests.filterRejected'.tr(context: context);
+    return 'admin.requests.filterPending'.tr(context: context);
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: AppColors.white,
@@ -31,7 +50,6 @@ class AdminRequestDetailsScreen extends StatelessWidget {
       backgroundColor: AppColors.white,
       elevation: 0,
       foregroundColor: AppColors.brandInk,
-
       title: Text(
         'admin.requests.detailsTitle'.tr(context: context),
         style: AppTextStyles.font18Bold,
@@ -58,27 +76,74 @@ class AdminRequestDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 vSpace(14),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      request.name?.trim().isNotEmpty == true
-                          ? request.name!
-                          : '-',
-                      style: AppTextStyles.font18Bold,
-                    ),
-                    hSpace(5),
-                    Text(
-                      'admin.requests.pendingLabel'.tr(context: context),
-                      style: AppTextStyles.font13Regular.copyWith(
-                        color: AppColors.warningOrange,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        request.name?.trim().isNotEmpty == true
+                            ? request.name!
+                            : '-',
+                        style: AppTextStyles.font18Bold,
                       ),
-                    ),
-                  ],
+                      hSpace(5),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _getStatusBackgroundColor(),
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Text(
+                          _getStatusText(context),
+                          style: AppTextStyles.font12Bold.copyWith(
+                            color: _getStatusTextColor(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
+          if (request.rejectReason != null && request.rejectReason!.isNotEmpty) ...[
+            hSpace(14),
+            Container(
+              padding: EdgeInsets.all(16.r),
+              decoration: BoxDecoration(
+                color: AppColors.softRedBackground,
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.info_outline, color: AppColors.error, size: 18.r),
+                      vSpace(6),
+                      Text(
+                        'admin.requests.rejectionReason'.tr(context: context),
+                        style: AppTextStyles.font14Bold.copyWith(
+                          color: AppColors.error,
+                        ),
+                      ),
+                    ],
+                  ),
+                  hSpace(6),
+                  Text(
+                    request.rejectReason!,
+                    style: AppTextStyles.font13Regular.copyWith(
+                      color: AppColors.brandInk,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
           hSpace(16),
           Container(
             padding: EdgeInsets.all(18.r),
@@ -149,6 +214,25 @@ class AdminRequestDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (request.phone != null && request.phone!.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 13.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            request.phone!,
+                            style: AppTextStyles.font13SemiBold,
+                          ),
+                        ),
+                        Text(
+                          'admin.employeeWizard.phone'.tr(context: context),
+                          style: AppTextStyles.font13Regular,
+                        ),
+                      ],
+                    ),
+                  ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 13.h),
                   child: Row(
@@ -160,6 +244,8 @@ class AdminRequestDetailsScreen extends StatelessWidget {
                               ? request.deviceToken!
                               : '-',
                           style: AppTextStyles.font13SemiBold,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Text(
@@ -195,55 +281,62 @@ class AdminRequestDetailsScreen extends StatelessWidget {
             ),
           ),
           hSpace(20),
-          OutlinedButton(
-            onPressed: () async {
-              if (request.id != null) {
-                await context.read<AdminAccountRequestsCubit>().deleteRequest(
-                  id: request.id!,
+          if (request.isPending) ...[
+            OutlinedButton(
+              onPressed: () async {
+                final reason = await AdminRejectRequestDialogWidget.show(
+                  context,
+                  applicantName: request.name ?? '-',
                 );
-              }
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'admin.requests.rejected'.tr(context: context),
-                    ),
-                  ),
-                );
-                context.pop();
-              }
-            },
-            style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.error,
-              side: const BorderSide(color: AppColors.error),
-              padding: EdgeInsets.symmetric(vertical: 15.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14.r),
+                if (reason != null && context.mounted && request.id != null) {
+                  final success = await context
+                      .read<AdminAccountRequestsCubit>()
+                      .rejectRequest(id: request.id!, reason: reason);
+                  if (context.mounted && success) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'admin.requests.rejected'.tr(context: context),
+                        ),
+                        backgroundColor: AppColors.error,
+                      ),
+                    );
+                    context.pop();
+                  }
+                }
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.error,
+                side: const BorderSide(color: AppColors.error),
+                padding: EdgeInsets.symmetric(vertical: 15.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14.r),
+                ),
+              ),
+              child: Text(
+                'admin.requests.rejectRequest'.tr(context: context),
+                style: AppTextStyles.font14SemiBold.copyWith(
+                  color: AppColors.error,
+                ),
               ),
             ),
-            child: Text(
-              'admin.requests.rejectRequest'.tr(context: context),
-              style: AppTextStyles.font14SemiBold.copyWith(
-                color: AppColors.error,
-              ),
+            hSpace(10),
+            CustomButton(
+              text: 'admin.requests.createEmployee'.tr(context: context),
+              onTap: () async {
+                final created = await context.pushNamed(
+                  AppRoutes.adminCreateEmployee,
+                  arguments: request,
+                );
+                if (created == true && context.mounted) {
+                  await context.read<AdminAccountRequestsCubit>().loadRequests();
+                  if (context.mounted) context.pop();
+                }
+              },
+              backgroundColor: AppColors.brandPrimary,
+              height: 48,
             ),
-          ),
-          hSpace(10),
-          CustomButton(
-            text: 'admin.requests.createEmployee'.tr(context: context),
-            onTap: () async {
-              final created = await context.pushNamed(
-                AppRoutes.adminCreateEmployee,
-                arguments: request,
-              );
-              if (created == true && context.mounted) {
-                await context.read<AdminAccountRequestsCubit>().loadRequests();
-                if (context.mounted) context.pop();
-              }
-            },
-            backgroundColor: AppColors.brandPrimary,
-            height: 48,
-          ),
+          ],
         ],
       ),
     ),

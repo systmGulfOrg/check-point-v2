@@ -113,7 +113,7 @@ void main() {
         cubit.stream,
         emitsInOrder([
           const LoginState.loading(),
-          LoginState.success(loginResponse),
+          LoginState.success(loginResponse, selectedRole: 'Admin'),
         ]),
       );
 

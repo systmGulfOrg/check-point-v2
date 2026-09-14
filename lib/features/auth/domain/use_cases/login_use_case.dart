@@ -36,11 +36,10 @@ class LoginUseCase {
 
     return result.when(
       success: (data) async {
-        final hasSelectedRole =
-            data.roles?.any(
-              (userRole) => userRole.toLowerCase() == role.toLowerCase(),
-            ) ??
-            false;
+        final hasSelectedRole = data.allRoles.any(
+          (userRole) =>
+              userRole.trim().toLowerCase() == role.trim().toLowerCase(),
+        );
 
         if (!hasSelectedRole) {
           return const ApiResult.failure(

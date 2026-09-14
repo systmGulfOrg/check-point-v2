@@ -27,10 +27,18 @@ class EmployeeAttendanceTargetDropdownWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isBranch = type == 'Branch';
+    final branchId = selectedBranch?.id?.toString();
+    final customerId = selectedCustomer?.id;
+    final hasBranch = branchId != null &&
+        branches.any((item) => item.id?.toString() == branchId);
+    final hasCustomer = customerId != null &&
+        customers.any((item) => item.id == customerId);
+    final currentValue =
+        isBranch ? (hasBranch ? branchId : null) : (hasCustomer ? customerId : null);
+
     return DropdownButtonFormField<String>(
-      initialValue: isBranch
-          ? selectedBranch?.id?.toString()
-          : selectedCustomer?.id,
+      key: ValueKey('emp_loc_${currentValue ?? 'none'}'),
+      initialValue: currentValue,
       decoration: InputDecoration(labelText: 'attendance.location'.tr()),
       items: isBranch
           ? branches

@@ -1,82 +1,80 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
 import 'admin_leave_request_card_widget.dart';
 import 'admin_leave_request_data.dart';
 
 class AdminLeaveRequestsListWidget extends StatelessWidget {
-  const AdminLeaveRequestsListWidget({
-    required this.onApprove,
-    required this.onReject,
-    super.key,
-  });
+  const AdminLeaveRequestsListWidget({required this.requests, super.key});
 
-  final ValueChanged<AdminLeaveRequestData> onApprove;
-  final ValueChanged<AdminLeaveRequestData> onReject;
-
-  static const requests = <AdminLeaveRequestData>[
-    AdminLeaveRequestData(
-      initials: 'FA',
-      nameKey: 'supervisor.attendance.members.fatima',
-      leaveTypeKey: 'supervisor.leave.annualLeave',
-      dateRange: '2026-09-15 - 2026-09-17 (3d)',
-      reasonKey: 'supervisor.leave.plannedTravel',
-      appliedDate: '2026-09-01',
-      statusKey: 'supervisor.leave.pending',
-      statusColor: AppColors.warningOrange,
-      statusBackgroundColor: AppColors.softYellowBackground,
-    ),
-    AdminLeaveRequestData(
-      initials: 'JM',
-      nameKey: 'supervisor.attendance.members.james',
-      leaveTypeKey: 'supervisor.leave.annualLeave',
-      dateRange: '2026-09-10 - 2026-09-12 (3d)',
-      reasonKey: 'supervisor.leave.familyVacation',
-      appliedDate: '2026-09-01',
-      statusKey: 'supervisor.leave.pending',
-      statusColor: AppColors.warningOrange,
-      statusBackgroundColor: AppColors.softYellowBackground,
-    ),
-    AdminLeaveRequestData(
-      initials: 'PN',
-      nameKey: 'supervisor.attendance.members.priya',
-      leaveTypeKey: 'supervisor.leave.sickLeave',
-      dateRange: '2026-09-05 - 2026-09-05 (1d)',
-      reasonKey: 'supervisor.leave.medicalAppointment',
-      appliedDate: '2026-08-31',
-      statusKey: 'supervisor.leave.approved',
-      statusColor: AppColors.success,
-      statusBackgroundColor: AppColors.softGreenBackground,
-    ),
-    AdminLeaveRequestData(
-      initials: 'DC',
-      nameKey: 'supervisor.attendance.members.david',
-      leaveTypeKey: 'admin.leaveManagement.emergencyLeave',
-      dateRange: '2026-09-03 - 2026-09-04 (2d)',
-      reasonKey: 'admin.leaveManagement.emergencyReason',
-      appliedDate: '2026-08-30',
-      statusKey: 'supervisor.leave.approved',
-      statusColor: AppColors.success,
-      statusBackgroundColor: AppColors.softGreenBackground,
-    ),
-  ];
+  final List<AdminLeaveRequestModel> requests;
 
   @override
   Widget build(BuildContext context) {
+    if (requests.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 32.h),
+        child: Center(
+          child: Text(
+            'admin.requests.emptyAll'.tr(context: context),
+            style: AppTextStyles.font14Regular.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ),
+      );
+    }
+
+    final cubit = context.read<AdminLeaveRequestsCubit>();
+
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: requests.length,
       separatorBuilder: (_, _) => hSpace(10),
-      itemBuilder: (_, index) {
-        final request = requests[index];
-        return AnimatedListItemWidget(
-          index: index,
-          child: AdminLeaveRequestCardWidget(
-            request: request,
-            onApprove: () => onApprove(request),
-            onReject: () => onReject(request),
-          ),
+      itemBuilder: (context, index) {
+        final item = requests[index];
+        final name = item.employeeName ?? 'Employee';
+        final isApproved = item.status?.toLowerCase() == 'approved';
+        final isRejected = item.status?.toLowerCase() == 'rejected';
+
+        final requestData = AdminLeaveRequestData(
+          initials: name.isNotEmpty ? name[0] : 'E',
+          nameKey: name,
+          leaveTypeKey: item.leaveType ?? 'Leave',
+          dateRange: '${item.startDate ?? '-'} -> ${item.endDate ?? '-'}',
+          reasonKey: item.reason ?? '-',
+          appliedDate: item.startDate ?? '-',
+          statusKey: item.status ?? 'Pending',
+          statusColor: isApproved
+              ? AppColors.success
+              : isRejected
+              ? AppColors.error
+              : AppColors.warningOrange,
+          statusBackgroundColor: isApproved
+              ? AppColors.softGreenBackground
+              : isRejected
+              ? AppColors.softRedBackground
+              : AppColors.softYellowBackground,
+        );
+
+        return AdminLeaveRequestCardWidget(
+          request: requestData,
+          onApprove: () {
+            if (item.id != null) {
+              cubit.updateStatus(requestId: item.id!, status: 'Approved');
+            }
+          },
+          onReject: () {
+            if (item.id != null) {
+              cubit.updateStatus(requestId: item.id!, status: 'Rejected');
+            }
+          },
         );
       },
     );

@@ -11,6 +11,7 @@ class ApiConstants {
   static const String shifts = '/api/Shift';
   static const String policies = '/api/Policy';
   static const String leaveRequests = '/api/LeaveRequest';
+  static const String leaveTypes = '/api/LeaveType';
   static const String attendance = '/api/Attendance';
   static const String tasks = '/api/Task';
   static const String plans = '/api/Plan';

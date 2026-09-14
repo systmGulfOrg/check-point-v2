@@ -155,6 +155,16 @@ class _FakeEmployeeRepo implements AdminEmployeeRepo {
     int pageSize = 20,
   }) async => const ApiResult.success([]);
   @override
+  Future<ApiResult<void>> approveAccountRequest({
+    required int id,
+    required dynamic body,
+  }) async => const ApiResult.success(null);
+  @override
+  Future<ApiResult<void>> rejectAccountRequest({
+    required int id,
+    required String reason,
+  }) async => const ApiResult.success(null);
+  @override
   Future<ApiResult<void>> deleteAccountRequest({required int id}) async =>
       const ApiResult.success(null);
 }

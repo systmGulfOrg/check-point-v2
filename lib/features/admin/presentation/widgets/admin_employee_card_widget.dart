@@ -8,10 +8,11 @@ class AdminEmployeeCardWidget extends StatelessWidget {
   const AdminEmployeeCardWidget({
     required this.initials,
     required this.name,
-    required this.roleKey,
     required this.email,
     required this.empCode,
     super.key,
+    this.roles = const [],
+    this.roleKey,
     this.department,
     this.isOnline = true,
     this.onEdit,
@@ -21,7 +22,8 @@ class AdminEmployeeCardWidget extends StatelessWidget {
 
   final String initials;
   final String name;
-  final String roleKey;
+  final List<String> roles;
+  final String? roleKey;
   final String email;
   final String empCode;
   final String? department;
@@ -30,24 +32,41 @@ class AdminEmployeeCardWidget extends StatelessWidget {
   final VoidCallback? onDelete;
   final VoidCallback? onTap;
 
-  Color _getRoleBackgroundColor() {
-    if (roleKey.contains('Admin') || roleKey.contains('admin')) {
+  static Color _getRoleBackgroundColor(String role) {
+    final lower = role.toLowerCase();
+    if (lower.contains('admin')) {
       return AppColors.softBrandBackground;
     }
-    if (roleKey.contains('Supervisor') || roleKey.contains('supervisor')) {
+    if (lower.contains('supervisor')) {
       return AppColors.softYellowBackground;
+    }
+    if (lower.contains('hr')) {
+      return const Color(0xFFF3E8FF);
     }
     return AppColors.softGreenBackground;
   }
 
-  Color _getRoleTextColor() {
-    if (roleKey.contains('Admin') || roleKey.contains('admin')) {
+  static Color _getRoleTextColor(String role) {
+    final lower = role.toLowerCase();
+    if (lower.contains('admin')) {
       return AppColors.brandPrimary;
     }
-    if (roleKey.contains('Supervisor') || roleKey.contains('supervisor')) {
+    if (lower.contains('supervisor')) {
       return AppColors.warningOrange;
     }
+    if (lower.contains('hr')) {
+      return const Color(0xFF7E22CE);
+    }
     return AppColors.success;
+  }
+
+  static String _getRoleLabel(String role) {
+    return switch (role.toLowerCase()) {
+      'admin' => 'admin.roles.admin',
+      'supervisor' => 'admin.roles.supervisor',
+      'hr' => 'admin.roles.hr',
+      _ => 'admin.roles.employee',
+    };
   }
 
   @override
@@ -55,6 +74,10 @@ class AdminEmployeeCardWidget extends StatelessWidget {
     final subText = department != null && department!.isNotEmpty
         ? '$empCode  •  $department'
         : empCode;
+
+    final displayRoles = roles.isNotEmpty
+        ? roles
+        : (roleKey != null && roleKey!.isNotEmpty ? [roleKey!] : const ['Employee']);
 
     return InkWell(
       onTap: onTap,
@@ -95,8 +118,9 @@ class AdminEmployeeCardWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Flexible(
+                            Expanded(
                               child: Text(
                                 name,
                                 style: AppTextStyles.font16Bold.copyWith(
@@ -106,27 +130,33 @@ class AdminEmployeeCardWidget extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            vSpace(8),
-                            Container(
+                          ],
+                        ),
+                        hSpace(4),
+                        Wrap(
+                          spacing: 4.w,
+                          runSpacing: 4.h,
+                          children: displayRoles.map((role) {
+                            return Container(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 8.w,
+                                horizontal: 6.w,
                                 vertical: 2.h,
                               ),
                               decoration: BoxDecoration(
-                                color: _getRoleBackgroundColor(),
-                                borderRadius: BorderRadius.circular(10.r),
+                                color: _getRoleBackgroundColor(role),
+                                borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Text(
-                                roleKey.tr(context: context),
+                                _getRoleLabel(role).tr(context: context),
                                 style: AppTextStyles.font11Medium.copyWith(
-                                  color: _getRoleTextColor(),
+                                  color: _getRoleTextColor(role),
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                            ),
-                          ],
+                            );
+                          }).toList(),
                         ),
-                        hSpace(2),
+                        hSpace(4),
                         Text(
                           email,
                           style: AppTextStyles.font13Regular.copyWith(

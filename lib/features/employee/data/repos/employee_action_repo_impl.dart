@@ -1,6 +1,7 @@
 import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
 import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
 import 'package:check_point_v2/features/employee/data/apis/employee_api_service.dart';
 import 'package:check_point_v2/features/employee/data/models/password/employee_change_password_request_body.dart';
@@ -13,6 +14,16 @@ class EmployeeActionRepoImpl implements EmployeeActionRepo {
   EmployeeActionRepoImpl({required this.api});
 
   final EmployeeApiService api;
+
+  @override
+  Future<ApiResult<List<LeaveTypeModel>>> getLeaveTypes() async {
+    try {
+      final response = await api.getLeaveTypes();
+      return ApiResult.success(response.value?.list ?? []);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
 
   @override
   Future<ApiResult<void>> createLeaveRequest(

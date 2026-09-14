@@ -23,5 +23,10 @@ class AdminLeaveRequestData {
   final Color statusColor;
   final Color statusBackgroundColor;
 
-  bool get isPending => statusKey == 'supervisor.leave.pending';
+  bool get isPending {
+    final s = statusKey.toLowerCase();
+    return s == 'pending' ||
+        s == 'supervisor.leave.pending' ||
+        s == 'admin.leavemanagement.pending';
+  }
 }

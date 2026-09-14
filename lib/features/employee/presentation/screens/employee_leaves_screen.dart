@@ -25,7 +25,9 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<EmployeeLeaveRequestsCubit>().loadLeaveRequests();
+    final cubit = context.read<EmployeeLeaveRequestsCubit>();
+    cubit.loadLeaveRequests();
+    cubit.loadNativeLeaveTypes();
   }
 
   void _showApplyLeaveSheet(BuildContext context) {
@@ -37,6 +39,7 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
       builder: (_) => BlocProvider.value(
         value: cubit,
         child: ApplyForLeaveSheetWidget(
+          leaveTypes: cubit.nativeLeaveTypes,
           onSubmit:
               ({
                 required startDate,

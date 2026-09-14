@@ -21,21 +21,22 @@ mixin _$LoginState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(LoginResponseModel user) success,
+    required TResult Function(LoginResponseModel user, String? selectedRole)
+    success,
     required TResult Function(String messageKey) error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(LoginResponseModel user)? success,
+    TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(LoginResponseModel user)? success,
+    TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
@@ -130,7 +131,8 @@ class _$LoginInitialImpl implements LoginInitial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(LoginResponseModel user) success,
+    required TResult Function(LoginResponseModel user, String? selectedRole)
+    success,
     required TResult Function(String messageKey) error,
   }) {
     return initial();
@@ -141,7 +143,7 @@ class _$LoginInitialImpl implements LoginInitial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(LoginResponseModel user)? success,
+    TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
   }) {
     return initial?.call();
@@ -152,7 +154,7 @@ class _$LoginInitialImpl implements LoginInitial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(LoginResponseModel user)? success,
+    TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
@@ -249,7 +251,8 @@ class _$LoginLoadingImpl implements LoginLoading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(LoginResponseModel user) success,
+    required TResult Function(LoginResponseModel user, String? selectedRole)
+    success,
     required TResult Function(String messageKey) error,
   }) {
     return loading();
@@ -260,7 +263,7 @@ class _$LoginLoadingImpl implements LoginLoading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(LoginResponseModel user)? success,
+    TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
   }) {
     return loading?.call();
@@ -271,7 +274,7 @@ class _$LoginLoadingImpl implements LoginLoading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(LoginResponseModel user)? success,
+    TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
@@ -330,7 +333,7 @@ abstract class _$$LoginSuccessImplCopyWith<$Res> {
     $Res Function(_$LoginSuccessImpl) then,
   ) = __$$LoginSuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({LoginResponseModel user});
+  $Res call({LoginResponseModel user, String? selectedRole});
 }
 
 /// @nodoc
@@ -346,13 +349,17 @@ class __$$LoginSuccessImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? user = null}) {
+  $Res call({Object? user = null, Object? selectedRole = freezed}) {
     return _then(
       _$LoginSuccessImpl(
         null == user
             ? _value.user
             : user // ignore: cast_nullable_to_non_nullable
                   as LoginResponseModel,
+        selectedRole: freezed == selectedRole
+            ? _value.selectedRole
+            : selectedRole // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -361,14 +368,16 @@ class __$$LoginSuccessImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoginSuccessImpl implements LoginSuccess {
-  const _$LoginSuccessImpl(this.user);
+  const _$LoginSuccessImpl(this.user, {this.selectedRole});
 
   @override
   final LoginResponseModel user;
+  @override
+  final String? selectedRole;
 
   @override
   String toString() {
-    return 'LoginState.success(user: $user)';
+    return 'LoginState.success(user: $user, selectedRole: $selectedRole)';
   }
 
   @override
@@ -376,11 +385,13 @@ class _$LoginSuccessImpl implements LoginSuccess {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoginSuccessImpl &&
-            (identical(other.user, user) || other.user == user));
+            (identical(other.user, user) || other.user == user) &&
+            (identical(other.selectedRole, selectedRole) ||
+                other.selectedRole == selectedRole));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, user);
+  int get hashCode => Object.hash(runtimeType, user, selectedRole);
 
   /// Create a copy of LoginState
   /// with the given fields replaced by the non-null parameter values.
@@ -395,10 +406,11 @@ class _$LoginSuccessImpl implements LoginSuccess {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(LoginResponseModel user) success,
+    required TResult Function(LoginResponseModel user, String? selectedRole)
+    success,
     required TResult Function(String messageKey) error,
   }) {
-    return success(user);
+    return success(user, selectedRole);
   }
 
   @override
@@ -406,10 +418,10 @@ class _$LoginSuccessImpl implements LoginSuccess {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(LoginResponseModel user)? success,
+    TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
   }) {
-    return success?.call(user);
+    return success?.call(user, selectedRole);
   }
 
   @override
@@ -417,12 +429,12 @@ class _$LoginSuccessImpl implements LoginSuccess {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(LoginResponseModel user)? success,
+    TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success(user);
+      return success(user, selectedRole);
     }
     return orElse();
   }
@@ -466,10 +478,13 @@ class _$LoginSuccessImpl implements LoginSuccess {
 }
 
 abstract class LoginSuccess implements LoginState {
-  const factory LoginSuccess(final LoginResponseModel user) =
-      _$LoginSuccessImpl;
+  const factory LoginSuccess(
+    final LoginResponseModel user, {
+    final String? selectedRole,
+  }) = _$LoginSuccessImpl;
 
   LoginResponseModel get user;
+  String? get selectedRole;
 
   /// Create a copy of LoginState
   /// with the given fields replaced by the non-null parameter values.
@@ -551,7 +566,8 @@ class _$LoginErrorImpl implements LoginError {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(LoginResponseModel user) success,
+    required TResult Function(LoginResponseModel user, String? selectedRole)
+    success,
     required TResult Function(String messageKey) error,
   }) {
     return error(messageKey);
@@ -562,7 +578,7 @@ class _$LoginErrorImpl implements LoginError {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(LoginResponseModel user)? success,
+    TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
   }) {
     return error?.call(messageKey);
@@ -573,7 +589,7 @@ class _$LoginErrorImpl implements LoginError {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(LoginResponseModel user)? success,
+    TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {

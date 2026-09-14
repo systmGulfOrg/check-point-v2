@@ -21,7 +21,11 @@ mixin _$AdminLeaveRequestsState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<AdminLeaveRequestModel> requests) success,
+    required TResult Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )
+    success,
     required TResult Function(String message) actionSuccess,
     required TResult Function(String messageKey) error,
   }) => throw _privateConstructorUsedError;
@@ -29,7 +33,11 @@ mixin _$AdminLeaveRequestsState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<AdminLeaveRequestModel> requests)? success,
+    TResult? Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )?
+    success,
     TResult? Function(String message)? actionSuccess,
     TResult? Function(String messageKey)? error,
   }) => throw _privateConstructorUsedError;
@@ -37,7 +45,11 @@ mixin _$AdminLeaveRequestsState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<AdminLeaveRequestModel> requests)? success,
+    TResult Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )?
+    success,
     TResult Function(String message)? actionSuccess,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
@@ -139,7 +151,11 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<AdminLeaveRequestModel> requests) success,
+    required TResult Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )
+    success,
     required TResult Function(String message) actionSuccess,
     required TResult Function(String messageKey) error,
   }) {
@@ -151,7 +167,11 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<AdminLeaveRequestModel> requests)? success,
+    TResult? Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )?
+    success,
     TResult? Function(String message)? actionSuccess,
     TResult? Function(String messageKey)? error,
   }) {
@@ -163,7 +183,11 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<AdminLeaveRequestModel> requests)? success,
+    TResult Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )?
+    success,
     TResult Function(String message)? actionSuccess,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
@@ -264,7 +288,11 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<AdminLeaveRequestModel> requests) success,
+    required TResult Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )
+    success,
     required TResult Function(String message) actionSuccess,
     required TResult Function(String messageKey) error,
   }) {
@@ -276,7 +304,11 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<AdminLeaveRequestModel> requests)? success,
+    TResult? Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )?
+    success,
     TResult? Function(String message)? actionSuccess,
     TResult? Function(String messageKey)? error,
   }) {
@@ -288,7 +320,11 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<AdminLeaveRequestModel> requests)? success,
+    TResult Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )?
+    success,
     TResult Function(String message)? actionSuccess,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
@@ -351,7 +387,10 @@ abstract class _$$SuccessImplCopyWith<$Res> {
     $Res Function(_$SuccessImpl) then,
   ) = __$$SuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<AdminLeaveRequestModel> requests});
+  $Res call({
+    List<AdminLeaveRequestModel> requests,
+    List<LeaveTypeModel> leaveTypes,
+  });
 }
 
 /// @nodoc
@@ -367,13 +406,17 @@ class __$$SuccessImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? requests = null}) {
+  $Res call({Object? requests = null, Object? leaveTypes = null}) {
     return _then(
       _$SuccessImpl(
-        null == requests
+        requests: null == requests
             ? _value._requests
             : requests // ignore: cast_nullable_to_non_nullable
                   as List<AdminLeaveRequestModel>,
+        leaveTypes: null == leaveTypes
+            ? _value._leaveTypes
+            : leaveTypes // ignore: cast_nullable_to_non_nullable
+                  as List<LeaveTypeModel>,
       ),
     );
   }
@@ -382,20 +425,33 @@ class __$$SuccessImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$SuccessImpl implements _Success {
-  const _$SuccessImpl(final List<AdminLeaveRequestModel> requests)
-    : _requests = requests;
+  const _$SuccessImpl({
+    final List<AdminLeaveRequestModel> requests = const [],
+    final List<LeaveTypeModel> leaveTypes = const [],
+  }) : _requests = requests,
+       _leaveTypes = leaveTypes;
 
   final List<AdminLeaveRequestModel> _requests;
   @override
+  @JsonKey()
   List<AdminLeaveRequestModel> get requests {
     if (_requests is EqualUnmodifiableListView) return _requests;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_requests);
   }
 
+  final List<LeaveTypeModel> _leaveTypes;
+  @override
+  @JsonKey()
+  List<LeaveTypeModel> get leaveTypes {
+    if (_leaveTypes is EqualUnmodifiableListView) return _leaveTypes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_leaveTypes);
+  }
+
   @override
   String toString() {
-    return 'AdminLeaveRequestsState.success(requests: $requests)';
+    return 'AdminLeaveRequestsState.success(requests: $requests, leaveTypes: $leaveTypes)';
   }
 
   @override
@@ -403,12 +459,19 @@ class _$SuccessImpl implements _Success {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SuccessImpl &&
-            const DeepCollectionEquality().equals(other._requests, _requests));
+            const DeepCollectionEquality().equals(other._requests, _requests) &&
+            const DeepCollectionEquality().equals(
+              other._leaveTypes,
+              _leaveTypes,
+            ));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_requests));
+  int get hashCode => Object.hash(
+    runtimeType,
+    const DeepCollectionEquality().hash(_requests),
+    const DeepCollectionEquality().hash(_leaveTypes),
+  );
 
   /// Create a copy of AdminLeaveRequestsState
   /// with the given fields replaced by the non-null parameter values.
@@ -423,11 +486,15 @@ class _$SuccessImpl implements _Success {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<AdminLeaveRequestModel> requests) success,
+    required TResult Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )
+    success,
     required TResult Function(String message) actionSuccess,
     required TResult Function(String messageKey) error,
   }) {
-    return success(requests);
+    return success(requests, leaveTypes);
   }
 
   @override
@@ -435,11 +502,15 @@ class _$SuccessImpl implements _Success {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<AdminLeaveRequestModel> requests)? success,
+    TResult? Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )?
+    success,
     TResult? Function(String message)? actionSuccess,
     TResult? Function(String messageKey)? error,
   }) {
-    return success?.call(requests);
+    return success?.call(requests, leaveTypes);
   }
 
   @override
@@ -447,13 +518,17 @@ class _$SuccessImpl implements _Success {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<AdminLeaveRequestModel> requests)? success,
+    TResult Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )?
+    success,
     TResult Function(String message)? actionSuccess,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success(requests);
+      return success(requests, leaveTypes);
     }
     return orElse();
   }
@@ -500,10 +575,13 @@ class _$SuccessImpl implements _Success {
 }
 
 abstract class _Success implements AdminLeaveRequestsState {
-  const factory _Success(final List<AdminLeaveRequestModel> requests) =
-      _$SuccessImpl;
+  const factory _Success({
+    final List<AdminLeaveRequestModel> requests,
+    final List<LeaveTypeModel> leaveTypes,
+  }) = _$SuccessImpl;
 
   List<AdminLeaveRequestModel> get requests;
+  List<LeaveTypeModel> get leaveTypes;
 
   /// Create a copy of AdminLeaveRequestsState
   /// with the given fields replaced by the non-null parameter values.
@@ -584,7 +662,11 @@ class _$ActionSuccessImpl implements _ActionSuccess {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<AdminLeaveRequestModel> requests) success,
+    required TResult Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )
+    success,
     required TResult Function(String message) actionSuccess,
     required TResult Function(String messageKey) error,
   }) {
@@ -596,7 +678,11 @@ class _$ActionSuccessImpl implements _ActionSuccess {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<AdminLeaveRequestModel> requests)? success,
+    TResult? Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )?
+    success,
     TResult? Function(String message)? actionSuccess,
     TResult? Function(String messageKey)? error,
   }) {
@@ -608,7 +694,11 @@ class _$ActionSuccessImpl implements _ActionSuccess {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<AdminLeaveRequestModel> requests)? success,
+    TResult Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )?
+    success,
     TResult Function(String message)? actionSuccess,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
@@ -745,7 +835,11 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<AdminLeaveRequestModel> requests) success,
+    required TResult Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )
+    success,
     required TResult Function(String message) actionSuccess,
     required TResult Function(String messageKey) error,
   }) {
@@ -757,7 +851,11 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<AdminLeaveRequestModel> requests)? success,
+    TResult? Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )?
+    success,
     TResult? Function(String message)? actionSuccess,
     TResult? Function(String messageKey)? error,
   }) {
@@ -769,7 +867,11 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<AdminLeaveRequestModel> requests)? success,
+    TResult Function(
+      List<AdminLeaveRequestModel> requests,
+      List<LeaveTypeModel> leaveTypes,
+    )?
+    success,
     TResult Function(String message)? actionSuccess,
     TResult Function(String messageKey)? error,
     required TResult orElse(),

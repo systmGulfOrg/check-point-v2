@@ -137,12 +137,53 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(name, style: AppTextStyles.font18Bold),
-                    hSpace(3),
-                    Text(
-                      employee.position ?? employee.role ?? '-',
-                      style: AppTextStyles.font13Regular.copyWith(
-                        color: AppColors.textSecondary,
+                    if (employee.position != null && employee.position!.isNotEmpty) ...[
+                      hSpace(2),
+                      Text(
+                        employee.position!,
+                        style: AppTextStyles.font13Regular.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
                       ),
+                    ],
+                    hSpace(4),
+                    Wrap(
+                      spacing: 4.w,
+                      runSpacing: 4.h,
+                      children: employee.allRoles.map((role) {
+                        return Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: switch (role.toLowerCase()) {
+                              'admin' => AppColors.softBrandBackground,
+                              'supervisor' => AppColors.softYellowBackground,
+                              'hr' => const Color(0xFFF3E8FF),
+                              _ => AppColors.softGreenBackground,
+                            },
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Text(
+                            switch (role.toLowerCase()) {
+                              'admin' => 'admin.roles.admin',
+                              'supervisor' => 'admin.roles.supervisor',
+                              'hr' => 'admin.roles.hr',
+                              _ => 'admin.roles.employee',
+                            }.tr(context: context),
+                            style: AppTextStyles.font11Medium.copyWith(
+                              color: switch (role.toLowerCase()) {
+                                'admin' => AppColors.brandPrimary,
+                                'supervisor' => AppColors.warningOrange,
+                                'hr' => const Color(0xFF7E22CE),
+                                _ => AppColors.success,
+                              },
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),
@@ -152,6 +193,78 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                 icon: const Icon(Icons.close_rounded),
               ),
             ],
+          ),
+          hSpace(14),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(12.r),
+            decoration: BoxDecoration(
+              color: AppColors.pageBackground,
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: _infoItem(
+                        context,
+                        'admin.employees.code'.tr(context: context),
+                        employee.employeeCode ?? employee.id ?? '-',
+                      ),
+                    ),
+                    Expanded(
+                      child: _infoItem(
+                        context,
+                        'admin.employees.department'.tr(context: context),
+                        employee.departmentName ?? '-',
+                      ),
+                    ),
+                  ],
+                ),
+                hSpace(8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _infoItem(
+                        context,
+                        'admin.employees.branch'.tr(context: context),
+                        employee.branchName ?? '-',
+                      ),
+                    ),
+                    Expanded(
+                      child: _infoItem(
+                        context,
+                        'admin.employees.shift'.tr(context: context),
+                        employee.shiftName ?? '-',
+                      ),
+                    ),
+                  ],
+                ),
+                if (employee.phone != null && employee.phone!.isNotEmpty) ...[
+                  hSpace(8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _infoItem(
+                          context,
+                          'admin.employees.phone'.tr(context: context),
+                          employee.phone!,
+                        ),
+                      ),
+                      Expanded(
+                        child: _infoItem(
+                          context,
+                          'admin.employees.mobileId'.tr(context: context),
+                          employee.mobileId ?? '-',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
           ),
           hSpace(18),
           Container(
@@ -266,6 +379,29 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
               ),
         ],
       ),
+    );
+  }
+
+  Widget _infoItem(BuildContext context, String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: AppTextStyles.font11Medium.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+        hSpace(2),
+        Text(
+          value,
+          style: AppTextStyles.font13SemiBold.copyWith(
+            color: AppColors.textPrimary,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
     );
   }
 }

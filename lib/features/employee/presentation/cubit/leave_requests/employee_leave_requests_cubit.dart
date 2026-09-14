@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_action_repo.dart';
 import 'package:check_point_v2/features/employee/data/services/odoo_timeoff_service.dart';
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_leave_requests_use_case.dart';
@@ -17,6 +18,7 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
   final OdooTimeOffService odooTimeOffService;
   final EmployeeLeaveRequestsUseCase leaveRequestsUseCase;
 
+  List<LeaveTypeModel> nativeLeaveTypes = [];
   List<OdooLeaveType> leaveTypes = [];
   OdooLeaveType? selectedLeaveType;
   List<OdooPublicHoliday> publicHolidays = [];
@@ -30,6 +32,17 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
       case Failure(:final failure):
         emit(EmployeeLeaveRequestsState.error(failure.messageKey));
     }
+  }
+
+  Future<List<LeaveTypeModel>> loadNativeLeaveTypes() async {
+    final result = await leaveRequestsUseCase.getNativeLeaveTypes();
+    return result.when(
+      success: (data) {
+        nativeLeaveTypes = data;
+        return data;
+      },
+      failure: (_) => nativeLeaveTypes,
+    );
   }
 
   Future<void> loadLeaveTypes() async {

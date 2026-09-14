@@ -5,7 +5,6 @@ import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/services/attendance_verification_service.dart';
 import 'package:check_point_v2/core/services/local_notification_service.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
-import 'package:check_point_v2/core/network/api_failure.dart';
 import 'package:check_point_v2/core/utils/app_date_formatter.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
@@ -64,14 +63,16 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
         }
       }
     }
-    final result = branchId == null
-        ? const ApiResult<List<BranchModel>>.failure(
-            ApiFailure(messageKey: 'errors.branchUnavailable'),
-          )
-        : (await attendanceRepo.getBranchById(branchId)).when(
-            success: (branch) => ApiResult.success([branch]),
-            failure: ApiResult.failure,
-          );
+    final ApiResult<List<BranchModel>> result;
+    if (branchId != null) {
+      final branchResult = await attendanceRepo.getBranchById(branchId);
+      result = await branchResult.when(
+        success: (data) async => ApiResult.success([data]),
+        failure: (_) => attendanceRepo.getBranches(),
+      );
+    } else {
+      result = await attendanceRepo.getBranches();
+    }
     switch (result) {
       case Success(:final data):
         emit(EmployeeAttendanceState.branchesLoaded(data));

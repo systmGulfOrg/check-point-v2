@@ -1,5 +1,6 @@
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/account_requests/approve_account_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
@@ -103,6 +104,22 @@ class _FakeAdminEmployeeRepo implements AdminEmployeeRepo {
   }
 
   @override
+  Future<ApiResult<void>> approveAccountRequest({
+    required int id,
+    required ApproveAccountRequestBody body,
+  }) async {
+    return const ApiResult.success(null);
+  }
+
+  @override
+  Future<ApiResult<void>> rejectAccountRequest({
+    required int id,
+    required String reason,
+  }) async {
+    return const ApiResult.success(null);
+  }
+
+  @override
   Future<ApiResult<void>> deleteAccountRequest({required int id}) async {
     return const ApiResult.success(null);
   }
@@ -134,7 +151,7 @@ void main() {
       final cubit = AdminEmployeesCubit(employeeRepo: repo);
       addTearDown(cubit.close);
 
-      final body = const AddEmployeeRequestBody(
+      const body = AddEmployeeRequestBody(
         name: 'Mohamed',
         username: 'mohamed',
         password: 'pass',
@@ -143,6 +160,7 @@ void main() {
         role: 'Employee',
         departmentId: 1,
         branchId: 1,
+        shiftId: 1,
       );
 
       final success = await cubit.addEmployee(body);

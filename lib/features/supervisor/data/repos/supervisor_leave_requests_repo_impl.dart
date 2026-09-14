@@ -2,6 +2,8 @@ import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
+import 'package:check_point_v2/features/employee/data/models/leave_requests/employee_leave_request_body.dart';
 import 'package:check_point_v2/features/supervisor/data/apis/supervisor_api_service.dart';
 import 'supervisor_leave_requests_repo.dart';
 
@@ -44,6 +46,28 @@ class SupervisorLeaveRequestsRepoImpl implements SupervisorLeaveRequestsRepo {
                 : await api.getLeaveRequestsByDepartment(deptId))
           : await api.getLeaveRequests();
       return ApiResult.success(response.value?.list ?? []);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<List<LeaveTypeModel>>> getLeaveTypes() async {
+    try {
+      final response = await api.getLeaveTypes();
+      return ApiResult.success(response.value?.list ?? []);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<void>> createLeaveRequest(
+    EmployeeLeaveRequestBody body,
+  ) async {
+    try {
+      await api.createLeaveRequest(body);
+      return const ApiResult.success(null);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

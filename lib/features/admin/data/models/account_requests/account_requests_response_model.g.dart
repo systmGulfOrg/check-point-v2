@@ -35,8 +35,16 @@ AccountRequestModel _$AccountRequestModelFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
       mobileId: json['mobileId'] as String?,
+      phone: json['phone'] as String?,
       deviceToken: json['deviceToken'] as String?,
+      status: json['status'] as String?,
+      rejectReason: json['rejectReason'] as String?,
+      reviewedBy: json['reviewedBy'] as String?,
+      reviewedAt: json['reviewedAt'] == null
+          ? null
+          : DateTime.parse(json['reviewedAt'] as String),
       createdDate: json['createdDate'] == null
           ? null
           : DateTime.parse(json['createdDate'] as String),
+      createdEmployeeId: json['createdEmployeeId'] as String?,
     );

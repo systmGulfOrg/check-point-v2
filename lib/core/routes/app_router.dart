@@ -176,6 +176,9 @@ class AppRouter {
               BlocProvider<AdminDepartmentsCubit>(
                 create: (_) => sl<AdminDepartmentsCubit>()..load(),
               ),
+              BlocProvider<AdminShiftsPoliciesCubit>(
+                create: (_) => sl<AdminShiftsPoliciesCubit>()..load(),
+              ),
             ],
             child: AdminCreateEmployeeScreen(
               accountRequest: request is AccountRequestModel ? request : null,
@@ -283,7 +286,7 @@ class AppRouter {
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminLeaveManagement),
           child: BlocProvider<AdminLeaveRequestsCubit>(
-            create: (_) => sl<AdminLeaveRequestsCubit>()..loadRequests(),
+            create: (_) => sl<AdminLeaveRequestsCubit>()..loadAll(),
             child: const AdminLeaveManagementScreen(),
           ),
         );

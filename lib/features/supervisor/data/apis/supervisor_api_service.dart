@@ -11,6 +11,8 @@ import 'package:check_point_v2/features/admin/data/models/employee/single_employ
 import 'package:check_point_v2/features/auth/data/models/login/result_model.dart';
 import 'package:check_point_v2/features/supervisor/data/models/attendance/supervisor_attendance_check_in_request_body.dart';
 import 'package:check_point_v2/features/supervisor/data/models/attendance/supervisor_attendance_check_out_request_body.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
+import 'package:check_point_v2/features/employee/data/models/leave_requests/employee_leave_request_body.dart';
 import 'package:check_point_v2/features/supervisor/data/models/tasks/supervisor_update_task_status_request_body.dart';
 
 part 'supervisor_api_service.g.dart';
@@ -70,6 +72,12 @@ abstract class SupervisorApiService {
   Future<ResultModel> approveOrRejectLeaveRequest(
     @Body() ChangeRequestLeaveStatus body,
   );
+
+  @GET(ApiConstants.leaveTypes)
+  Future<LeaveTypesResponseModel> getLeaveTypes();
+
+  @POST(ApiConstants.leaveRequests)
+  Future<ResultModel> createLeaveRequest(@Body() EmployeeLeaveRequestBody body);
 
   // Tasks
   @GET(ApiConstants.tasks)

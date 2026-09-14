@@ -27,7 +27,7 @@ class AdminSettingsTileWidget extends StatelessWidget {
         child: Row(
           children: [
             Icon(icon, color: AppColors.textSecondary, size: 20.r),
-            vSpace(12),
+            wSpace(12),
             Expanded(
               child: Text(
                 titleKey.tr(context: context),
@@ -37,12 +37,16 @@ class AdminSettingsTileWidget extends StatelessWidget {
               ),
             ),
             Text(
-              valueKey.tr(context: context),
+              valueKey.startsWith('admin.') ||
+                      valueKey.startsWith('employee.') ||
+                      valueKey.startsWith('common.')
+                  ? valueKey.tr(context: context)
+                  : valueKey,
               style: AppTextStyles.font13Regular.copyWith(
                 color: AppColors.textSecondary,
               ),
             ),
-            vSpace(6),
+            wSpace(6),
             Icon(
               Icons.chevron_right_rounded,
               color: AppColors.placeholder,

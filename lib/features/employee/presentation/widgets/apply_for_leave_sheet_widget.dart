@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
 
 class ApplyForLeaveSheetWidget extends StatefulWidget {
-  const ApplyForLeaveSheetWidget({required this.onSubmit, super.key});
+  const ApplyForLeaveSheetWidget({
+    required this.onSubmit,
+    this.leaveTypes = const [],
+    super.key,
+  });
 
+  final List<LeaveTypeModel> leaveTypes;
   final void Function({
     required String startDate,
     required String endDate,
@@ -30,8 +36,8 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
 
   DateTime? _startDate;
   DateTime? _endDate;
-  String _selectedLeaveRequestType = 'LeaveRequest';
-  final _leaveRequestTypes = const [
+  late String _selectedLeaveRequestType;
+  final _defaultLeaveRequestTypes = const [
     'LeaveRequest',
     'RequestClaim',
     'LeaveSchedule',
@@ -39,6 +45,19 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
     'Icident',
     'DocumentWorkflow',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.leaveTypes.isNotEmpty) {
+      _selectedLeaveRequestType =
+          widget.leaveTypes.first.id?.toString() ??
+          widget.leaveTypes.first.typeName ??
+          '1';
+    } else {
+      _selectedLeaveRequestType = 'LeaveRequest';
+    }
+  }
 
   @override
   void dispose() {
@@ -59,7 +78,10 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
           : (_endDate ?? _startDate ?? DateTime.now()),
     );
     if (selected == null || !mounted) return;
-    final formatted = DateFormat('dd/MM/yyyy').format(selected);
+    final formatted = AppDateFormatter.formatDate(
+      selected,
+      pattern: 'dd/MM/yyyy',
+    );
     setState(() {
       if (isStartDate) {
         _startDate = selected;
@@ -143,17 +165,31 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                       Icons.keyboard_arrow_down_rounded,
                       color: AppColors.textSecondary,
                     ),
-                    items: _leaveRequestTypes.map((type) {
-                      return DropdownMenuItem<String>(
-                        value: type,
-                        child: Text(
-                          _typeLabel(type),
-                          style: AppTextStyles.font14Regular.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                    items: widget.leaveTypes.isNotEmpty
+                        ? widget.leaveTypes.map((type) {
+                            final val = type.id?.toString() ?? type.typeName ?? '';
+                            final name = type.typeName ?? val;
+                            return DropdownMenuItem<String>(
+                              value: val,
+                              child: Text(
+                                name,
+                                style: AppTextStyles.font14Regular.copyWith(
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            );
+                          }).toList()
+                        : _defaultLeaveRequestTypes.map((type) {
+                            return DropdownMenuItem<String>(
+                              value: type,
+                              child: Text(
+                                _typeLabel(type),
+                                style: AppTextStyles.font14Regular.copyWith(
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            );
+                          }).toList(),
                     onChanged: (val) {
                       if (val != null) {
                         setState(() => _selectedLeaveRequestType = val);
@@ -297,10 +333,12 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                         }
                         widget.onSubmit(
                           leaveRequestType: _selectedLeaveRequestType,
-                          startDate: DateFormat(
-                            'yyyy-MM-dd',
-                          ).format(_startDate!),
-                          endDate: DateFormat('yyyy-MM-dd').format(_endDate!),
+                          startDate: AppDateFormatter.formatYearMonthDay(
+                            _startDate!,
+                          ),
+                          endDate: AppDateFormatter.formatYearMonthDay(
+                            _endDate!,
+                          ),
                           reason: _reasonController.text.trim(),
                           remark: _remarkController.text.trim(),
                         );

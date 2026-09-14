@@ -13,7 +13,14 @@ class AddEmployeeRequestBody {
     required this.role,
     required this.departmentId,
     required this.branchId,
+    required this.shiftId,
+    this.roles,
     this.deviceToken,
+    this.phone,
+    this.email,
+    this.employeeCode,
+    this.canAddAttendance,
+    this.canAddPlan,
   });
 
   final String name;
@@ -22,9 +29,16 @@ class AddEmployeeRequestBody {
   final String position;
   final String mobileId;
   final String role;
+  final List<String>? roles;
   final int departmentId;
   final int branchId;
+  final int shiftId;
   final List<String>? deviceToken;
+  final String? phone;
+  final String? email;
+  final String? employeeCode;
+  final bool? canAddAttendance;
+  final bool? canAddPlan;
 
   factory AddEmployeeRequestBody.fromJson(Map<String, dynamic> json) =>
       _$AddEmployeeRequestBodyFromJson(json);

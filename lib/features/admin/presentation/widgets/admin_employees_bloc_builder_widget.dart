@@ -8,6 +8,10 @@ import 'package:check_point_v2/features/admin/data/models/employee/employee_mode
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_details_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
 import 'admin_delete_confirmation_dialog_widget.dart';
 import 'admin_edit_employee_sheet_widget.dart';
 import 'admin_employee_card_widget.dart';
@@ -25,16 +29,29 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
-      builder: (_) => AdminEditEmployeeSheetWidget(
-        employee: employee,
-        onSave: (body) {
-          if (employee.id != null) {
-            context.read<AdminEmployeesCubit>().editEmployee(
-              employee.id!,
-              body,
-            );
-          }
-        },
+      builder: (_) => MultiBlocProvider(
+        providers: [
+          BlocProvider<AdminDepartmentsCubit>(
+            create: (_) => sl<AdminDepartmentsCubit>()..load(),
+          ),
+          BlocProvider<AdminBranchesCubit>(
+            create: (_) => sl<AdminBranchesCubit>()..load(),
+          ),
+          BlocProvider<AdminShiftsPoliciesCubit>(
+            create: (_) => sl<AdminShiftsPoliciesCubit>()..load(),
+          ),
+        ],
+        child: AdminEditEmployeeSheetWidget(
+          employee: employee,
+          onSave: (body) {
+            if (employee.id != null) {
+              context.read<AdminEmployeesCubit>().editEmployee(
+                employee.id!,
+                body,
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -82,9 +99,11 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
                     AdminEmployeeCardWidget(
                       initials: _initials(employee.name),
                       name: employee.name ?? employee.userName ?? '-',
-                      roleKey: _roleKey(employee.role),
-                      email: employee.userName ?? '-',
-                      empCode: employee.id ?? '-',
+                      roles: employee.allRoles,
+                      email: (employee.email != null && employee.email!.isNotEmpty)
+                          ? employee.email!
+                          : (employee.userName ?? '-'),
+                      empCode: employee.employeeCode ?? employee.id ?? '-',
                       department: employee.departmentName,
                       isOnline: employee.canAddAttendance ?? false,
                       onEdit: () => _showEditSheet(context, employee),
@@ -113,10 +132,4 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
         .join();
     return initials.isEmpty ? '?' : initials;
   }
-
-  static String _roleKey(String? role) => switch (role?.toLowerCase()) {
-    'admin' => 'auth.role.admin',
-    'supervisor' => 'auth.role.supervisor',
-    _ => 'auth.role.employee',
-  };
 }

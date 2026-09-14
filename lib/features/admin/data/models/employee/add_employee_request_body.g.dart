@@ -17,9 +17,16 @@ AddEmployeeRequestBody _$AddEmployeeRequestBodyFromJson(
   role: json['role'] as String,
   departmentId: (json['departmentId'] as num).toInt(),
   branchId: (json['branchId'] as num).toInt(),
+  shiftId: (json['shiftId'] as num).toInt(),
+  roles: (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
   deviceToken: (json['deviceToken'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
+  phone: json['phone'] as String?,
+  email: json['email'] as String?,
+  employeeCode: json['employeeCode'] as String?,
+  canAddAttendance: json['canAddAttendance'] as bool?,
+  canAddPlan: json['canAddPlan'] as bool?,
 );
 
 Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
@@ -31,7 +38,14 @@ Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
   'position': instance.position,
   'mobileId': instance.mobileId,
   'role': instance.role,
+  'roles': instance.roles,
   'departmentId': instance.departmentId,
   'branchId': instance.branchId,
+  'shiftId': instance.shiftId,
   'deviceToken': instance.deviceToken,
+  'phone': instance.phone,
+  'email': instance.email,
+  'employeeCode': instance.employeeCode,
+  'canAddAttendance': instance.canAddAttendance,
+  'canAddPlan': instance.canAddPlan,
 };

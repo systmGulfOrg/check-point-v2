@@ -2,6 +2,7 @@ import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/account_requests/approve_account_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
@@ -118,6 +119,35 @@ class AdminEmployeeRepoImpl implements AdminEmployeeRepo {
         index: page,
       );
       return ApiResult.success(response.value?.list ?? []);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<void>> approveAccountRequest({
+    required int id,
+    required ApproveAccountRequestBody body,
+  }) async {
+    try {
+      await api.updateAccountRequest(id, body.toJson());
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<void>> rejectAccountRequest({
+    required int id,
+    required String reason,
+  }) async {
+    try {
+      await api.updateAccountRequest(id, {
+        'status': 'Rejected',
+        'rejectReason': reason,
+      });
+      return const ApiResult.success(null);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

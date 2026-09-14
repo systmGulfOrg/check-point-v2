@@ -11,6 +11,7 @@ LoginResponseModel _$LoginResponseModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String?,
       userName: json['userName'] as String?,
       name: json['name'] as String?,
+      role: json['role'] as String?,
       roles: (json['roles'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -24,6 +25,7 @@ Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
       'id': instance.id,
       'userName': instance.userName,
       'name': instance.name,
+      'role': instance.role,
       'roles': instance.roles,
       'token': instance.token,
       'branchId': instance.branchId,

@@ -68,7 +68,10 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     final filter = roleFilter?.toLowerCase();
     if (filter == null || filter.isEmpty) return allEmployees;
     return allEmployees
-        .where((employee) => employee.role?.toLowerCase() == filter)
+        .where(
+          (employee) =>
+              employee.allRoles.any((r) => r.toLowerCase() == filter),
+        )
         .toList();
   }
 

@@ -26,6 +26,11 @@ class AdminTaskScopeFilterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasDept = selectedDepartmentId != null &&
+        departments.any((d) => d.id == selectedDepartmentId);
+    final hasEmp = selectedEmployeeId != null &&
+        employees.any((e) => e.id == selectedEmployeeId);
+
     return Container(
       padding: EdgeInsets.all(10.r),
       decoration: BoxDecoration(
@@ -36,7 +41,8 @@ class AdminTaskScopeFilterWidget extends StatelessWidget {
       child: Column(
         children: [
           DropdownButtonFormField<int?>(
-            initialValue: selectedDepartmentId,
+            key: ValueKey('filter_dept_${hasDept ? selectedDepartmentId : 'all'}'),
+            initialValue: hasDept ? selectedDepartmentId : null,
             isExpanded: true,
             decoration: InputDecoration(
               labelText: 'admin.tasks.filter.department'.tr(context: context),
@@ -50,16 +56,18 @@ class AdminTaskScopeFilterWidget extends StatelessWidget {
                 ),
               ),
               for (final department in departments)
-                DropdownMenuItem<int?>(
-                  value: department.id,
-                  child: Text(department.departmentName ?? '-'),
-                ),
+                if (department.id != null)
+                  DropdownMenuItem<int?>(
+                    value: department.id,
+                    child: Text(department.departmentName ?? '-'),
+                  ),
             ],
             onChanged: onDepartmentChanged,
           ),
           Divider(height: 1.h, color: AppColors.border),
           DropdownButtonFormField<String?>(
-            initialValue: selectedEmployeeId,
+            key: ValueKey('filter_emp_${hasEmp ? selectedEmployeeId : 'all'}'),
+            initialValue: hasEmp ? selectedEmployeeId : null,
             isExpanded: true,
             decoration: InputDecoration(
               labelText: 'admin.tasks.filter.employee'.tr(context: context),
@@ -73,10 +81,11 @@ class AdminTaskScopeFilterWidget extends StatelessWidget {
                 ),
               ),
               for (final employee in employees)
-                DropdownMenuItem<String?>(
-                  value: employee.id,
-                  child: Text(employee.name ?? employee.userName ?? '-'),
-                ),
+                if (employee.id != null)
+                  DropdownMenuItem<String?>(
+                    value: employee.id,
+                    child: Text(employee.name ?? employee.userName ?? '-'),
+                  ),
             ],
             onChanged: onEmployeeChanged,
           ),

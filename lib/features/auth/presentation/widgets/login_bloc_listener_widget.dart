@@ -15,10 +15,13 @@ class LoginBlocListenerWidget extends StatelessWidget {
   Widget build(BuildContext context) => BlocListener<LoginCubit, LoginState>(
     listener: (context, state) {
       switch (state) {
-        case LoginSuccess(:final user):
-          final role = user.roles != null && user.roles!.isNotEmpty
-              ? user.roles!.first.toLowerCase()
-              : null;
+        case LoginSuccess(:final user, :final selectedRole):
+          final role = (selectedRole ??
+                  (user.roles != null && user.roles!.isNotEmpty
+                      ? user.roles!.first
+                      : user.role ?? 'employee'))
+              .trim()
+              .toLowerCase();
           if (role == 'admin') {
             context.pushReplacementNamed(AppRoutes.admin);
           } else if (role == 'supervisor') {

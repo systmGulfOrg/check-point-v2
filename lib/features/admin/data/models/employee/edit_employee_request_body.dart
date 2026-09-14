@@ -2,28 +2,44 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'edit_employee_request_body.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class EditEmployeeRequestBody {
   const EditEmployeeRequestBody({
-    required this.name,
-    required this.position,
-    required this.departmentId,
-    required this.branchId,
-    required this.role,
-    this.userName = '',
-    this.password = '',
-    this.mobileId = '',
+    this.name,
+    this.userName,
+    this.password,
+    this.position,
+    this.mobileId,
+    this.role,
+    this.roles,
+    this.departmentId,
+    this.branchId,
+    this.shiftId,
+    this.phone,
+    this.email,
+    this.employeeCode,
+    this.canAddAttendance,
+    this.canAddPlan,
+    this.deviceToken,
   });
 
-  final String name;
+  final String? name;
   @JsonKey(name: 'username')
-  final String userName;
-  final String password;
-  final String position;
-  final String mobileId;
-  final String role;
-  final int departmentId;
-  final int branchId;
+  final String? userName;
+  final String? password;
+  final String? position;
+  final String? mobileId;
+  final String? role;
+  final List<String>? roles;
+  final int? departmentId;
+  final int? branchId;
+  final int? shiftId;
+  final String? phone;
+  final String? email;
+  final String? employeeCode;
+  final bool? canAddAttendance;
+  final bool? canAddPlan;
+  final List<String>? deviceToken;
 
   factory EditEmployeeRequestBody.fromJson(Map<String, dynamic> json) =>
       _$EditEmployeeRequestBodyFromJson(json);

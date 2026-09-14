@@ -4,11 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_state.dart';
-import 'package:check_point_v2/features/admin/presentation/widgets/admin_leave_request_card_widget.dart';
-import 'package:check_point_v2/features/admin/presentation/widgets/admin_leave_request_data.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_leave_management_filter_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_leave_requests_list_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_leave_requests_skeleton_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_leave_types_list_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_new_leave_type_sheet_widget.dart';
 
 class AdminLeaveManagementScreen extends StatefulWidget {
   const AdminLeaveManagementScreen({super.key});
@@ -19,8 +23,55 @@ class AdminLeaveManagementScreen extends StatefulWidget {
 }
 
 class _AdminLeaveManagementScreenState
-    extends State<AdminLeaveManagementScreen> {
-  int selectedFilter = 0;
+    extends State<AdminLeaveManagementScreen>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+  int _selectedFilter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _showAddLeaveTypeSheet() {
+    final cubit = context.read<AdminLeaveRequestsCubit>();
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => BlocProvider.value(
+        value: cubit,
+        child: const AdminNewLeaveTypeSheetWidget(),
+      ),
+    );
+  }
+
+  List<AdminLeaveRequestModel> _filterRequests(
+    List<AdminLeaveRequestModel> list,
+  ) {
+    return switch (_selectedFilter) {
+      1 => list
+          .where((r) => r.status?.toLowerCase() == 'pending')
+          .toList(),
+      2 => list
+          .where((r) => r.status?.toLowerCase() == 'approved')
+          .toList(),
+      3 => list
+          .where((r) => r.status?.toLowerCase() == 'rejected')
+          .toList(),
+      _ => list,
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,120 +85,151 @@ class _AdminLeaveManagementScreenState
           'admin.leaveManagement.title'.tr(context: context),
           style: AppTextStyles.font18Bold,
         ),
+        bottom: TabBar(
+          controller: _tabController,
+          labelColor: AppColors.brandPrimary,
+          unselectedLabelColor: AppColors.textSecondary,
+          indicatorColor: AppColors.brandPrimary,
+          labelStyle: AppTextStyles.font13SemiBold,
+          tabs: [
+            Tab(text: 'admin.leaveManagement.tabRequests'.tr(context: context)),
+            Tab(text: 'admin.leaveManagement.tabTypes'.tr(context: context)),
+          ],
+        ),
       ),
       body: SafeArea(
         child: RefreshIndicator(
           color: AppColors.brandPrimary,
-          onRefresh: context.read<AdminLeaveRequestsCubit>().loadRequests,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                BlocBuilder<AdminLeaveRequestsCubit, AdminLeaveRequestsState>(
-                  builder: (context, state) {
-                    return state.when(
-                      initial: () => const SizedBox.shrink(),
-                      loading: () => const AdminLeaveRequestsSkeletonWidget(),
-                      error: (messageKey) => Padding(
-                        padding: EdgeInsets.all(24.r),
-                        child: Center(
-                          child: Text(
-                            messageKey.tr(context: context),
-                            style: AppTextStyles.font14Regular.copyWith(
-                              color: AppColors.error,
-                            ),
-                          ),
+          onRefresh: context.read<AdminLeaveRequestsCubit>().loadAll,
+          child: BlocBuilder<AdminLeaveRequestsCubit, AdminLeaveRequestsState>(
+            builder: (context, state) {
+              return state.when(
+                initial: () => const SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: AdminLeaveRequestsSkeletonWidget(),
+                  ),
+                ),
+                loading: () => const SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: AdminLeaveRequestsSkeletonWidget(),
+                  ),
+                ),
+                actionSuccess: (_) => const SizedBox.shrink(),
+                error: (messageKey) => SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Padding(
+                    padding: EdgeInsets.all(24.r),
+                    child: Center(
+                      child: Text(
+                        messageKey.tr(context: context),
+                        style: AppTextStyles.font14Regular.copyWith(
+                          color: AppColors.error,
                         ),
                       ),
-                      actionSuccess: (_) => const SizedBox.shrink(),
-                      success: (requests) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'admin.leaveManagement.count'.tr(
-                              context: context,
-                              args: ['${requests.length}'],
-                            ),
-                            style: AppTextStyles.font12Regular,
-                          ),
-                          hSpace(10),
-                          if (requests.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 32),
-                              child: Center(
-                                child: Text(
-                                  'admin.requests.emptyAll'.tr(
-                                    context: context,
-                                  ),
-                                  style: AppTextStyles.font14Regular,
-                                ),
-                              ),
-                            )
-                          else
-                            ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: requests.length,
-                              separatorBuilder: (_, _) => hSpace(10),
-                              itemBuilder: (context, index) {
-                                final item = requests[index];
-                                final requestData = AdminLeaveRequestData(
-                                  initials:
-                                      (item.employeeName?.isNotEmpty ?? false)
-                                      ? item.employeeName![0]
-                                      : 'E',
-                                  nameKey: item.employeeName ?? 'Employee',
-                                  leaveTypeKey: item.leaveType ?? 'Leave',
-                                  dateRange:
-                                      '${item.startDate ?? '-'} -> ${item.endDate ?? '-'}',
-                                  reasonKey: item.reason ?? '-',
-                                  appliedDate: item.startDate ?? '-',
-                                  statusKey: item.status ?? 'Pending',
-                                  statusColor:
-                                      item.status?.toLowerCase() == 'approved'
-                                      ? AppColors.success
-                                      : item.status?.toLowerCase() == 'rejected'
-                                      ? AppColors.error
-                                      : AppColors.warningOrange,
-                                  statusBackgroundColor:
-                                      AppColors.softYellowBackground,
-                                );
-                                return AdminLeaveRequestCardWidget(
-                                  request: requestData,
-                                  onApprove: () {
-                                    if (item.id != null) {
-                                      context
-                                          .read<AdminLeaveRequestsCubit>()
-                                          .updateStatus(
-                                            requestId: item.id!,
-                                            status: 'Approved',
-                                          );
-                                    }
-                                  },
-                                  onReject: () {
-                                    if (item.id != null) {
-                                      context
-                                          .read<AdminLeaveRequestsCubit>()
-                                          .updateStatus(
-                                            requestId: item.id!,
-                                            status: 'Rejected',
-                                          );
-                                    }
-                                  },
-                                );
-                              },
-                            ),
-                        ],
-                      ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
-              ],
-            ),
+                success: (requests, leaveTypes) => TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildRequestsTab(requests),
+                    _buildLeaveTypesTab(leaveTypes),
+                  ],
+                ),
+              );
+            },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildRequestsTab(List<AdminLeaveRequestModel> requests) {
+    final pendingCount = requests
+        .where((r) => r.status?.toLowerCase() == 'pending')
+        .length;
+    final filtered = _filterRequests(requests);
+
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AdminLeaveManagementFilterWidget(
+            selectedIndex: _selectedFilter,
+            pendingCount: pendingCount,
+            onSelected: (idx) => setState(() => _selectedFilter = idx),
+          ),
+          hSpace(14),
+          Text(
+            'admin.leaveManagement.count'.tr(
+              context: context,
+              args: ['${filtered.length}'],
+            ),
+            style: AppTextStyles.font12Regular.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+          hSpace(10),
+          AdminLeaveRequestsListWidget(requests: filtered),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLeaveTypesTab(List<dynamic> leaveTypes) {
+    final typedList = leaveTypes.cast<dynamic>();
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'admin.leaveManagement.count'.tr(
+                  context: context,
+                  args: ['${leaveTypes.length}'],
+                ),
+                style: AppTextStyles.font12Regular.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.brandPrimary,
+                  foregroundColor: AppColors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 14.w,
+                    vertical: 8.h,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                ),
+                icon: const Icon(Icons.add, size: 18),
+                label: Text(
+                  'admin.leaveManagement.addType'.tr(context: context),
+                  style: AppTextStyles.font12Medium.copyWith(
+                    color: AppColors.white,
+                  ),
+                ),
+                onPressed: _showAddLeaveTypeSheet,
+              ),
+            ],
+          ),
+          hSpace(12),
+          AdminLeaveTypesListWidget(
+            leaveTypes: typedList.whereType<LeaveTypeModel>().toList(),
+          ),
+        ],
       ),
     );
   }

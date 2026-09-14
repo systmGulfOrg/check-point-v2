@@ -39,15 +39,31 @@ class AccountRequestModel {
     this.id,
     this.name,
     this.mobileId,
+    this.phone,
     this.deviceToken,
+    this.status,
+    this.rejectReason,
+    this.reviewedBy,
+    this.reviewedAt,
     this.createdDate,
+    this.createdEmployeeId,
   });
 
   final int? id;
   final String? name;
   final String? mobileId;
+  final String? phone;
   final String? deviceToken;
+  final String? status;
+  final String? rejectReason;
+  final String? reviewedBy;
+  final DateTime? reviewedAt;
   final DateTime? createdDate;
+  final String? createdEmployeeId;
+
+  bool get isPending => status == null || status == 'Pending';
+  bool get isApproved => status == 'Approved';
+  bool get isRejected => status == 'Rejected';
 
   factory AccountRequestModel.fromJson(Map<String, dynamic> json) =>
       _$AccountRequestModelFromJson(json);

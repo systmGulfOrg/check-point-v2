@@ -7,6 +7,7 @@ import 'package:check_point_v2/features/admin/data/models/account_requests/accou
 import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
 import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model.dart';
 import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_request_model.dart';
@@ -75,6 +76,12 @@ abstract class AdminApiService {
     @Query('itemCount') int itemCount = 20,
     @Query('index') int index = 0,
   });
+
+  @PUT('${ApiConstants.accountRequests}/{id}')
+  Future<ResultModel> updateAccountRequest(
+    @Path('id') int id,
+    @Body() Map<String, dynamic> body,
+  );
 
   @DELETE(ApiConstants.accountRequests)
   Future<ResultModel> deleteAccountRequest(@Query('id') int id);
@@ -189,6 +196,22 @@ abstract class AdminApiService {
 
   @DELETE('${ApiConstants.leaveRequests}/{id}')
   Future<ResultModel> deleteLeaveRequest(@Path('id') int id);
+
+  // Leave Types
+  @GET(ApiConstants.leaveTypes)
+  Future<LeaveTypesResponseModel> getLeaveTypes();
+
+  @POST(ApiConstants.leaveTypes)
+  Future<ResultModel> addLeaveType(@Body() AddLeaveTypeRequestBody body);
+
+  @PUT('${ApiConstants.leaveTypes}/{id}')
+  Future<ResultModel> editLeaveType(
+    @Path('id') int id,
+    @Body() AddLeaveTypeRequestBody body,
+  );
+
+  @DELETE(ApiConstants.leaveTypes)
+  Future<ResultModel> deleteLeaveType(@Query('id') int id);
 
   // Attendance
   @GET(ApiConstants.attendance)

@@ -19,6 +19,7 @@ import 'package:check_point_v2/features/employee/data/models/plans/employee_remo
 import 'package:check_point_v2/features/employee/data/models/tasks/employee_remove_task_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/tasks/employee_update_task_status_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/plans/feedback_statuses_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/track_user_request_body.dart';
 
 part 'employee_api_service.g.dart';
@@ -121,6 +122,9 @@ abstract class EmployeeApiService {
     @Path('employeeId') String employeeId,
     @Path('type') String type,
   );
+
+  @GET(ApiConstants.leaveTypes)
+  Future<LeaveTypesResponseModel> getLeaveTypes();
 
   // Auth / Password
   @PUT(ApiConstants.employeeChangePassword)

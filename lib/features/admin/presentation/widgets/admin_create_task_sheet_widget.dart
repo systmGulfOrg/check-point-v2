@@ -141,9 +141,8 @@ class _AdminCreateTaskSheetWidgetState
                           initialDate: DateTime.now(),
                         );
                         if (date != null && context.mounted) {
-                          dueDateController.text = DateFormat(
-                            'yyyy-MM-dd',
-                          ).format(date);
+                          dueDateController.text =
+                              AppDateFormatter.formatYearMonthDay(date);
                         }
                       },
                       suffixIcon: Icon(

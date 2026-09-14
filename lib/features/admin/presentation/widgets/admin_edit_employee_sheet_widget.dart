@@ -1,10 +1,21 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/department_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_new_shift_sheet_widget.dart';
 
 class AdminEditEmployeeSheetWidget extends StatefulWidget {
   const AdminEditEmployeeSheetWidget({
@@ -25,11 +36,26 @@ class _AdminEditEmployeeSheetWidgetState
     extends State<AdminEditEmployeeSheetWidget> {
   late final TextEditingController _nameController;
   late final TextEditingController _userNameController;
+  late final TextEditingController _passwordController;
   late final TextEditingController _positionController;
   late final TextEditingController _mobileIdController;
-  late String _selectedRole;
+  late final TextEditingController _phoneController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _employeeCodeController;
 
-  static const List<String> _roles = ['Employee', 'Supervisor', 'Admin'];
+  late final Set<String> _selectedRoles;
+  int? _selectedDepartmentId;
+  int? _selectedBranchId;
+  int? _selectedShiftId;
+  late bool _canAddAttendance;
+  late bool _canAddPlan;
+
+  static const List<String> _availableRoles = [
+    'Employee',
+    'Supervisor',
+    'HR',
+    'Admin',
+  ];
 
   @override
   void initState() {
@@ -38,29 +64,65 @@ class _AdminEditEmployeeSheetWidgetState
     _userNameController = TextEditingController(
       text: widget.employee.userName ?? '',
     );
+    _passwordController = TextEditingController();
     _positionController = TextEditingController(
       text: widget.employee.position ?? '',
     );
     _mobileIdController = TextEditingController(
       text: widget.employee.mobileId ?? '',
     );
-    _selectedRole = _resolveRole(widget.employee.role);
-  }
+    _phoneController = TextEditingController(
+      text: widget.employee.phone ?? '',
+    );
+    _emailController = TextEditingController(
+      text: widget.employee.email ?? '',
+    );
+    _employeeCodeController = TextEditingController(
+      text: widget.employee.employeeCode ?? '',
+    );
 
-  String _resolveRole(String? role) {
-    final lower = (role ?? '').toLowerCase();
-    if (lower == 'supervisor') return 'Supervisor';
-    if (lower == 'admin') return 'Admin';
-    return 'Employee';
+    _selectedRoles = widget.employee.allRoles.toSet();
+    if (_selectedRoles.isEmpty) _selectedRoles.add('Employee');
+
+    _selectedDepartmentId = widget.employee.departmentId;
+    _selectedBranchId = widget.employee.branchId;
+    _selectedShiftId = widget.employee.shiftId;
+    _canAddAttendance = widget.employee.canAddAttendance ?? true;
+    _canAddPlan = widget.employee.canAddPlan ?? true;
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _userNameController.dispose();
+    _passwordController.dispose();
     _positionController.dispose();
     _mobileIdController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _employeeCodeController.dispose();
     super.dispose();
+  }
+
+  void _openAddShiftSheet() async {
+    final shiftsCubit = context.read<AdminShiftsPoliciesCubit>();
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.cardBackground,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      builder: (_) => BlocProvider.value(
+        value: shiftsCubit,
+        child: const AdminNewShiftSheetWidget(),
+      ),
+    );
+    if (mounted && shiftsCubit.shifts.isNotEmpty) {
+      setState(() {
+        _selectedShiftId = shiftsCubit.shifts.last.id;
+      });
+    }
   }
 
   void _handleSave() {
@@ -69,12 +131,34 @@ class _AdminEditEmployeeSheetWidgetState
     widget.onSave(
       EditEmployeeRequestBody(
         name: _nameController.text.trim(),
-        userName: _userNameController.text.trim(),
-        position: _positionController.text.trim(),
-        mobileId: _mobileIdController.text.trim(),
-        role: _selectedRole,
-        departmentId: widget.employee.departmentId ?? 1,
-        branchId: widget.employee.branchId ?? 1,
+        userName: _userNameController.text.trim().isNotEmpty
+            ? _userNameController.text.trim()
+            : null,
+        password: _passwordController.text.trim().isNotEmpty
+            ? _passwordController.text.trim()
+            : null,
+        position: _positionController.text.trim().isNotEmpty
+            ? _positionController.text.trim()
+            : null,
+        mobileId: _mobileIdController.text.trim().isNotEmpty
+            ? _mobileIdController.text.trim()
+            : null,
+        phone: _phoneController.text.trim().isNotEmpty
+            ? _phoneController.text.trim()
+            : null,
+        email: _emailController.text.trim().isNotEmpty
+            ? _emailController.text.trim()
+            : null,
+        employeeCode: _employeeCodeController.text.trim().isNotEmpty
+            ? _employeeCodeController.text.trim()
+            : null,
+        role: _selectedRoles.first,
+        roles: _selectedRoles.toList(),
+        departmentId: _selectedDepartmentId,
+        branchId: _selectedBranchId,
+        shiftId: _selectedShiftId,
+        canAddAttendance: _canAddAttendance,
+        canAddPlan: _canAddPlan,
       ),
     );
     Navigator.pop(context);
@@ -113,76 +197,344 @@ class _AdminEditEmployeeSheetWidgetState
               'admin.employees.fullName'.tr(context: context),
               style: AppTextStyles.font12Medium,
             ),
-            hSpace(8),
+            hSpace(6),
             CustomTextFormField(
               controller: _nameController,
               hintText: 'admin.employees.fullName'.tr(context: context),
             ),
-            hSpace(14),
+            hSpace(12),
             Text(
               'admin.employees.username'.tr(context: context),
               style: AppTextStyles.font12Medium,
             ),
-            hSpace(8),
+            hSpace(6),
             CustomTextFormField(
               controller: _userNameController,
               hintText: 'admin.employees.username'.tr(context: context),
             ),
-            hSpace(14),
+            hSpace(12),
             Text(
-              'admin.employees.position'.tr(context: context),
+              'admin.employees.passwordOptional'.tr(context: context),
               style: AppTextStyles.font12Medium,
             ),
-            hSpace(8),
+            hSpace(6),
             CustomTextFormField(
-              controller: _positionController,
-              hintText: 'admin.employees.position'.tr(context: context),
+              controller: _passwordController,
+              hintText: '••••••••',
+              obscureText: true,
             ),
-            hSpace(14),
+            hSpace(12),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'admin.employees.position'.tr(context: context),
+                        style: AppTextStyles.font12Medium,
+                      ),
+                      hSpace(6),
+                      CustomTextFormField(
+                        controller: _positionController,
+                        hintText: 'admin.employees.position'.tr(context: context),
+                      ),
+                    ],
+                  ),
+                ),
+                vSpace(10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'admin.employees.employeeCode'.tr(context: context),
+                        style: AppTextStyles.font12Medium,
+                      ),
+                      hSpace(6),
+                      CustomTextFormField(
+                        controller: _employeeCodeController,
+                        hintText: 'EMP-001',
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            hSpace(12),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'admin.employees.phone'.tr(context: context),
+                        style: AppTextStyles.font12Medium,
+                      ),
+                      hSpace(6),
+                      CustomTextFormField(
+                        controller: _phoneController,
+                        hintText: '05xxxxxxxx',
+                      ),
+                    ],
+                  ),
+                ),
+                vSpace(10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'admin.employees.email'.tr(context: context),
+                        style: AppTextStyles.font12Medium,
+                      ),
+                      hSpace(6),
+                      CustomTextFormField(
+                        controller: _emailController,
+                        hintText: 'name@company.com',
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            hSpace(12),
             Text(
               'admin.employees.mobileId'.tr(context: context),
               style: AppTextStyles.font12Medium,
             ),
-            hSpace(8),
+            hSpace(6),
             CustomTextFormField(
               controller: _mobileIdController,
               hintText: 'admin.employees.mobileId'.tr(context: context),
             ),
             hSpace(14),
             Text(
-              'admin.employees.role'.tr(context: context),
+              'admin.employees.roles'.tr(context: context),
               style: AppTextStyles.font12Medium,
             ),
             hSpace(8),
-            Row(
-              children: [
-                for (final role in _roles) ...[
-                  Expanded(
-                    child: CustomButton(
-                      text: switch (role) {
-                        'Supervisor' => 'admin.employees.filterSupervisor'.tr(
-                          context: context,
-                        ),
-                        'Admin' => 'admin.employees.filterAdmin'.tr(
-                          context: context,
-                        ),
-                        _ => 'admin.employees.filterEmployee'.tr(
-                          context: context,
-                        ),
-                      },
-                      onTap: () => setState(() => _selectedRole = role),
-                      backgroundColor: _selectedRole == role
-                          ? AppColors.softBrandBackground
-                          : AppColors.pageBackground,
-                      textColor: _selectedRole == role
-                          ? AppColors.brandPrimary
-                          : AppColors.textSecondary,
-                      height: 40,
+            Wrap(
+              spacing: 8.w,
+              runSpacing: 8.h,
+              children: _availableRoles.map((role) {
+                final isSelected = _selectedRoles.contains(role);
+                return FilterChip(
+                  label: Text(
+                    switch (role) {
+                      'Supervisor' => 'admin.roles.supervisor'.tr(context: context),
+                      'Admin' => 'admin.roles.admin'.tr(context: context),
+                      'HR' => 'admin.roles.hr'.tr(context: context),
+                      _ => 'admin.roles.employee'.tr(context: context),
+                    },
+                    style: AppTextStyles.font12Medium.copyWith(
+                      color: isSelected ? AppColors.white : AppColors.brandInk,
                     ),
                   ),
-                  if (role != _roles.last) vSpace(8),
-                ],
-              ],
+                  selected: isSelected,
+                  selectedColor: AppColors.brandPrimary,
+                  backgroundColor: AppColors.pageBackground,
+                  checkmarkColor: AppColors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                    side: BorderSide(
+                      color: isSelected ? AppColors.brandPrimary : AppColors.border,
+                    ),
+                  ),
+                  onSelected: (selected) {
+                    setState(() {
+                      if (selected) {
+                        _selectedRoles.add(role);
+                      } else {
+                        if (_selectedRoles.length > 1) {
+                          _selectedRoles.remove(role);
+                        }
+                      }
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+            hSpace(14),
+            BlocBuilder<AdminDepartmentsCubit, AdminDepartmentsState>(
+              builder: (context, deptState) {
+                final rawDepartments = switch (deptState) {
+                  AdminDepartmentsSuccess(:final departments) => departments,
+                  _ => const <DepartmentModel>[],
+                };
+                final departments = <DepartmentModel>[];
+                final seenIds = <int>{};
+                for (final d in rawDepartments) {
+                  if (d.id != null && seenIds.add(d.id!)) {
+                    departments.add(d);
+                  }
+                }
+                final hasSelected = departments.any((d) => d.id == _selectedDepartmentId);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'admin.employees.department'.tr(context: context),
+                      style: AppTextStyles.font12Medium,
+                    ),
+                    hSpace(6),
+                    DropdownButtonFormField<int>(
+                      key: ValueKey('dept_${hasSelected ? _selectedDepartmentId : 'none'}'),
+                      initialValue: hasSelected ? _selectedDepartmentId : null,
+                      isExpanded: true,
+                      hint: Text('admin.employees.department'.tr(context: context)),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.fieldBackground,
+                      ),
+                      items: departments
+                          .map(
+                            (d) => DropdownMenuItem<int>(
+                              value: d.id,
+                              child: Text(d.departmentName ?? '-'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (val) =>
+                          setState(() => _selectedDepartmentId = val),
+                    ),
+                  ],
+                );
+              },
+            ),
+            hSpace(12),
+            BlocBuilder<AdminBranchesCubit, AdminBranchesState>(
+              builder: (context, branchState) {
+                final rawBranches = switch (branchState) {
+                  AdminBranchesSuccess(:final branches) => branches,
+                  _ => const <BranchModel>[],
+                };
+                final branches = <BranchModel>[];
+                final seenIds = <int>{};
+                for (final b in rawBranches) {
+                  if (b.id != null && seenIds.add(b.id!)) {
+                    branches.add(b);
+                  }
+                }
+                final hasSelected = branches.any((b) => b.id == _selectedBranchId);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'admin.employees.branch'.tr(context: context),
+                      style: AppTextStyles.font12Medium,
+                    ),
+                    hSpace(6),
+                    DropdownButtonFormField<int>(
+                      key: ValueKey('branch_${hasSelected ? _selectedBranchId : 'none'}'),
+                      initialValue: hasSelected ? _selectedBranchId : null,
+                      isExpanded: true,
+                      hint: Text('admin.employees.branch'.tr(context: context)),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.fieldBackground,
+                      ),
+                      items: branches
+                          .map(
+                            (b) => DropdownMenuItem<int>(
+                              value: b.id,
+                              child: Text(b.name ?? '-'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (val) =>
+                          setState(() => _selectedBranchId = val),
+                    ),
+                  ],
+                );
+              },
+            ),
+            hSpace(12),
+            BlocBuilder<AdminShiftsPoliciesCubit, AdminShiftsPoliciesState>(
+              builder: (context, shiftState) {
+                final rawShifts = shiftState.maybeWhen(
+                  success: (shifts, _) => shifts,
+                  orElse: () => context.read<AdminShiftsPoliciesCubit>().shifts,
+                );
+                final shifts = <ShiftModel>[];
+                final seenIds = <int>{};
+                for (final s in rawShifts) {
+                  final id = s.id;
+                  if (id != null && seenIds.add(id)) {
+                    shifts.add(s);
+                  }
+                }
+                final hasSelected = shifts.any((s) => s.id == _selectedShiftId);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'admin.employees.shift'.tr(context: context),
+                          style: AppTextStyles.font12Medium,
+                        ),
+                        TextButton.icon(
+                          onPressed: _openAddShiftSheet,
+                          icon: Icon(Icons.add_rounded, size: 15.r),
+                          label: Text(
+                            'admin.employees.addShift'.tr(context: context),
+                            style: AppTextStyles.font12Bold.copyWith(
+                              color: AppColors.brandPrimary,
+                            ),
+                          ),
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            visualDensity: VisualDensity.compact,
+                          ),
+                        ),
+                      ],
+                    ),
+                    hSpace(4),
+                    DropdownButtonFormField<int>(
+                      key: ValueKey('shift_${hasSelected ? _selectedShiftId : 'none'}'),
+                      initialValue: hasSelected ? _selectedShiftId : null,
+                      isExpanded: true,
+                      hint: Text('admin.employees.selectShift'.tr(context: context)),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.fieldBackground,
+                      ),
+                      items: shifts
+                          .map(
+                            (s) => DropdownMenuItem<int>(
+                              value: s.id,
+                              child: Text(s.name ?? '-'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (val) =>
+                          setState(() => _selectedShiftId = val),
+                    ),
+                  ],
+                );
+              },
+            ),
+            hSpace(14),
+            SwitchListTile.adaptive(
+              value: _canAddAttendance,
+              onChanged: (v) => setState(() => _canAddAttendance = v),
+              title: Text(
+                'admin.employees.canAddAttendance'.tr(context: context),
+                style: AppTextStyles.font14Medium,
+              ),
+              contentPadding: EdgeInsets.zero,
+            ),
+            SwitchListTile.adaptive(
+              value: _canAddPlan,
+              onChanged: (v) => setState(() => _canAddPlan = v),
+              title: Text(
+                'admin.employees.canAddPlan'.tr(context: context),
+                style: AppTextStyles.font14Medium,
+              ),
+              contentPadding: EdgeInsets.zero,
             ),
             hSpace(20),
             Row(

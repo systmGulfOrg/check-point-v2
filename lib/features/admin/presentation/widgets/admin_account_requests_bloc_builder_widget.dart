@@ -6,16 +6,39 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_reject_request_dialog_widget.dart';
 import 'admin_account_requests_skeleton_widget.dart';
 import 'admin_registration_request_card_widget.dart';
 
 class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
   const AdminAccountRequestsBlocBuilderWidget({
     required this.onView,
+    required this.onApprove,
     super.key,
   });
 
   final void Function(AccountRequestModel request) onView;
+  final void Function(AccountRequestModel request) onApprove;
+
+  void _showRejectDialog(BuildContext context, AccountRequestModel request) async {
+    final reason = await AdminRejectRequestDialogWidget.show(
+      context,
+      applicantName: request.name ?? '-',
+    );
+    if (reason != null && context.mounted && request.id != null) {
+      final success = await context
+          .read<AdminAccountRequestsCubit>()
+          .rejectRequest(id: request.id!, reason: reason);
+      if (context.mounted && success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('admin.requests.rejected'.tr(context: context)),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
 
   void _showDeleteDialog(BuildContext context, int requestId) {
     showDialog<void>(
@@ -64,19 +87,13 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: AdminRegistrationRequestCardWidget(
-                            name: request.name ?? '-',
-                            deviceId: request.mobileId ?? '-',
-                            date: request.createdDate != null
-                                ? AppDateFormatter.formatDayMonthYear(
-                                    request.createdDate!,
-                                  )
-                                : '-',
+                            request: request,
                             onView: () => onView(request),
-                            onDelete: () {
-                              if (request.id != null) {
-                                _showDeleteDialog(context, request.id!);
-                              }
-                            },
+                            onApprove: () => onApprove(request),
+                            onReject: () => _showRejectDialog(context, request),
+                            onDelete: request.id != null
+                                ? () => _showDeleteDialog(context, request.id!)
+                                : null,
                           ),
                         ),
                     ],

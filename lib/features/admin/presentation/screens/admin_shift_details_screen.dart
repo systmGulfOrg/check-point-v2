@@ -87,7 +87,14 @@ class AdminShiftDetailsScreen extends StatelessWidget {
                         separatorBuilder: (_, _) => hSpace(10),
                         itemBuilder: (context, index) {
                           final policy = policies[index];
-                          final employees = policy.employees ?? const [];
+                          final rawEmployees = policy.employees ?? const [];
+                          final seenEmployeeIds = <String>{};
+                          final employees = rawEmployees
+                              .where((e) {
+                                final id = e.id ?? e.userName ?? '';
+                                return id.isEmpty || seenEmployeeIds.add(id);
+                              })
+                              .toList();
                           return AnimatedListItemWidget(
                             index: index,
                             child: Container(

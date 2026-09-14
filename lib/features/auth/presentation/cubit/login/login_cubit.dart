@@ -33,7 +33,7 @@ class LoginCubit extends Cubit<LoginState> {
     );
     switch (result) {
       case Success<LoginResponseModel>(:final data):
-        emit(LoginState.success(data));
+        emit(LoginState.success(data, selectedRole: role));
       case Failure<LoginResponseModel>(:final failure):
         emit(LoginState.error(failure.messageKey));
     }
@@ -56,6 +56,7 @@ class LoginCubit extends Cubit<LoginState> {
       emit(
         LoginState.success(
           LoginResponseModel(roles: [session.role], token: session.token),
+          selectedRole: session.role,
         ),
       );
       return true;

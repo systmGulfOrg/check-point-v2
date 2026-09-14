@@ -58,7 +58,7 @@ class AdminHomeScreen extends StatelessWidget {
     );
 
     final pendingLeaves = leaveState.maybeWhen(
-      success: (requests) =>
+      success: (requests, leaveTypes) =>
           requests.where((r) => r.status?.toLowerCase() == 'pending').length,
       orElse: () => 0,
     );
