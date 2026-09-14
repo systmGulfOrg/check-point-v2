@@ -106,7 +106,7 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
                     return state.when(
                       initial: () => const SizedBox.shrink(),
                       loading: () => const AdminTasksSkeletonWidget(),
-                      actionSuccess: (message) => const SizedBox.shrink(),
+                      actionSuccess: (_) => const SizedBox.shrink(),
                       error: (messageKey) => Padding(
                         padding: EdgeInsets.all(24.r),
                         child: Center(
@@ -124,7 +124,8 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
                             tasks
                                 .where(
                                   (t) =>
-                                      t.status?.toLowerCase() != 'completed' &&
+                                      t.status?.toLowerCase() !=
+                                          'completed' &&
                                       t.status?.toLowerCase() != 'done',
                                 )
                                 .toList(),
@@ -132,7 +133,8 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
                             tasks
                                 .where(
                                   (t) =>
-                                      t.status?.toLowerCase() == 'completed' ||
+                                      t.status?.toLowerCase() ==
+                                          'completed' ||
                                       t.status?.toLowerCase() == 'done',
                                 )
                                 .toList(),
@@ -141,78 +143,19 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'admin.tasks.count'.tr(
-                                    context: context,
-                                    args: ['${filteredTasks.length}'],
-                                  ),
-                                  style: AppTextStyles.font12Regular,
-                                ),
-                                InkWell(
-                                  onTap: () => showModalBottomSheet<void>(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    backgroundColor: AppColors.cardBackground,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(20),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'admin.tasks.count'.tr(
+                                        context: context,
+                                        args: ['${filteredTasks.length}'],
                                       ),
+                                      style: AppTextStyles.font12Regular,
                                     ),
-                                    builder: (_) => MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider.value(
-                                          value: context
-                                              .read<AdminTasksCubit>(),
-                                        ),
-                                        BlocProvider<AdminEmployeesCubit>(
-                                          create: (_) =>
-                                              sl<AdminEmployeesCubit>()
-                                                ..loadEmployees(),
-                                        ),
-                                      ],
-                                      child: const AdminCreateTaskSheetWidget(),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'admin.tasks.newTask'.tr(context: context),
-                                    style: AppTextStyles.font13SemiBold
-                                        .copyWith(
-                                          color: AppColors.brandPrimary,
-                                        ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            hSpace(10),
-                            if (filteredTasks.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 32,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'admin.requests.emptyAll'.tr(
-                                      context: context,
-                                    ),
-                                    style: AppTextStyles.font14Regular,
-                                  ),
-                                ),
-                              )
-                            else
-                              ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: filteredTasks.length,
-                                separatorBuilder: (_, _) => hSpace(10),
-                                itemBuilder: (context, index) {
-                                  final task = filteredTasks[index];
-                                  return SupervisorTaskCardWidget(
-                                    task: task,
-                                    onEdit: () {
-                                      showModalBottomSheet<void>(
+                                    InkWell(
+                                      onTap: () => showModalBottomSheet<void>(
                                         context: context,
                                         isScrollControlled: true,
                                         backgroundColor:
@@ -234,30 +177,98 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
                                                     ..loadEmployees(),
                                             ),
                                           ],
-                                          child: AdminEditTaskSheetWidget(
-                                            task: task,
-                                          ),
+                                          child:
+                                              const AdminCreateTaskSheetWidget(),
                                         ),
+                                      ),
+                                      child: Text(
+                                        'admin.tasks.newTask'.tr(
+                                          context: context,
+                                        ),
+                                        style: AppTextStyles.font13SemiBold
+                                            .copyWith(
+                                              color: AppColors.brandPrimary,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                hSpace(10),
+                                if (filteredTasks.isEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 32,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'supervisor.tasks.empty'.tr(
+                                          context: context,
+                                        ),
+                                        style: AppTextStyles.font14Regular,
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  ListView.separated(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: filteredTasks.length,
+                                    separatorBuilder: (_, _) => hSpace(10),
+                                    itemBuilder: (context, index) {
+                                      final task = filteredTasks[index];
+                                      return SupervisorTaskCardWidget(
+                                        task: task,
+                                        onEdit: () {
+                                          showModalBottomSheet<void>(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            backgroundColor:
+                                                AppColors.cardBackground,
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                    top: Radius.circular(20),
+                                                  ),
+                                            ),
+                                            builder: (_) => MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider.value(
+                                                  value: context
+                                                      .read<AdminTasksCubit>(),
+                                                ),
+                                                BlocProvider<
+                                                  AdminEmployeesCubit
+                                                >(
+                                                  create: (_) =>
+                                                      sl<AdminEmployeesCubit>()
+                                                        ..loadEmployees(),
+                                                ),
+                                              ],
+                                              child: AdminEditTaskSheetWidget(
+                                                task: task,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        onDelete: () {
+                                          if (task.id != null) {
+                                            _showDeleteTaskDialog(
+                                              context,
+                                              task.id!,
+                                            );
+                                          }
+                                        },
                                       );
                                     },
-                                    onDelete: () {
-                                      if (task.id != null) {
-                                        _showDeleteTaskDialog(
-                                          context,
-                                          task.id!,
-                                        );
-                                      }
-                                    },
-                                  );
-                                },
-                              ),
-                          ],
+                                  ),
+                              ],
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                ),
-              ],
+                    ),
+                  ],
             ),
           ),
         ),

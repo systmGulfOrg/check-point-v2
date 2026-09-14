@@ -31,7 +31,6 @@ class AdminTasksCubit extends Cubit<AdminTasksState> {
     switch (result) {
       case Success():
         await loadTasks();
-        emit(const AdminTasksState.actionSuccess('Task created successfully'));
         return true;
       case Failure(:final failure):
         emit(AdminTasksState.error(failure.messageKey));
@@ -47,7 +46,6 @@ class AdminTasksCubit extends Cubit<AdminTasksState> {
     switch (result) {
       case Success():
         await loadTasks();
-        emit(const AdminTasksState.actionSuccess('Task updated successfully'));
         return true;
       case Failure(:final failure):
         emit(AdminTasksState.error(failure.messageKey));
@@ -63,7 +61,6 @@ class AdminTasksCubit extends Cubit<AdminTasksState> {
     switch (result) {
       case Success():
         await loadTasks();
-        emit(const AdminTasksState.actionSuccess('Task deleted successfully'));
         return true;
       case Failure(:final failure):
         emit(AdminTasksState.error(failure.messageKey));
@@ -79,7 +76,6 @@ class AdminTasksCubit extends Cubit<AdminTasksState> {
     switch (result) {
       case Success():
         await loadTasks();
-        emit(const AdminTasksState.actionSuccess('Task assigned successfully'));
         return true;
       case Failure(:final failure):
         emit(AdminTasksState.error(failure.messageKey));
