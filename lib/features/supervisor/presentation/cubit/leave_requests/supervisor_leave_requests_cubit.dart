@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
@@ -8,10 +9,13 @@ import 'package:check_point_v2/features/supervisor/data/repos/supervisor_leave_r
 import 'supervisor_leave_requests_state.dart';
 
 class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
-  SupervisorLeaveRequestsCubit({required this.leaveRequestsRepo})
-    : super(const SupervisorLeaveRequestsState.initial());
+  SupervisorLeaveRequestsCubit({
+    required this.leaveRequestsRepo,
+    required this.sessionStorage,
+  }) : super(const SupervisorLeaveRequestsState.initial());
 
   final SupervisorLeaveRequestsRepo leaveRequestsRepo;
+  final AuthSessionStorage sessionStorage;
   List<AdminLeaveRequestModel> allRequests = const [];
   List<LeaveTypeModel> leaveTypes = const [];
   String? statusFilter;
@@ -35,9 +39,10 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
     required String leaveRequestType,
   }) async {
     emit(const SupervisorLeaveRequestsState.loading());
+    final employeeId = await sessionStorage.readUserId() ?? '';
     final result = await leaveRequestsRepo.createLeaveRequest(
       EmployeeLeaveRequestBody(
-        employeeId: '',
+        employeeId: employeeId,
         startDate: startDate,
         endDate: endDate,
         reason: reason,

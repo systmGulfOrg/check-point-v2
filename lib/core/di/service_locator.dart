@@ -301,6 +301,7 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<SupervisorLeaveRequestsCubit>(
     () => SupervisorLeaveRequestsCubit(
       leaveRequestsRepo: sl<SupervisorLeaveRequestsRepo>(),
+      sessionStorage: sl<AuthSessionStorage>(),
     ),
   );
   sl.registerFactory<SupervisorTasksCubit>(

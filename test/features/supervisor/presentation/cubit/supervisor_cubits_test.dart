@@ -29,7 +29,18 @@ import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supe
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_state.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_state.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:check_point_v2/core/auth/auth_session_storage.dart';
+
+class _FakeAuthSessionStorage extends AuthSessionStorage {
+  _FakeAuthSessionStorage()
+    : super(secureStorage: const FlutterSecureStorage());
+
+  @override
+  Future<String?> readUserId() async => '01M2TEST';
+}
 
 class _FakeSupervisorTeamRepo implements SupervisorTeamRepo {
   final members = <EmployeeModel>[
@@ -181,6 +192,8 @@ class _FakeSupervisorPlansRepo implements SupervisorPlansRepo {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('Supervisor Cubits Tests', () {
     test('SupervisorTeamCubit loads team members successfully', () async {
       final repo = _FakeSupervisorTeamRepo();
@@ -211,7 +224,11 @@ void main() {
       'SupervisorLeaveRequestsCubit loads and approves leave request',
       () async {
         final repo = _FakeSupervisorLeaveRequestsRepo();
-        final cubit = SupervisorLeaveRequestsCubit(leaveRequestsRepo: repo);
+        final sessionStorage = _FakeAuthSessionStorage();
+        final cubit = SupervisorLeaveRequestsCubit(
+          leaveRequestsRepo: repo,
+          sessionStorage: sessionStorage,
+        );
 
         await cubit.loadLeaveRequests();
         expect(cubit.state, isA<SupervisorLeaveRequestsSuccess>());
