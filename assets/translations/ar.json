@@ -275,7 +275,6 @@
   "admin.shifts.policies.timeOutLabel": "وقت الخروج",
   "admin.shifts.policies.graceLabel": "فترة السماح (بالدقائق)",
   "admin.shifts.policies.graceHint": "0",
-  "admin.shifts.policies.workingDays": "أيام العمل",
   "admin.shifts.days.sun": "الأحد",
   "admin.shifts.days.mon": "الإثنين",
   "admin.shifts.days.tue": "الثلاثاء",
@@ -535,7 +534,6 @@
   "admin.employeeWizard.supervisor": "المشرف",
   "admin.employeeWizard.supervisorAhmed": "أحمد علي",
   "admin.employeeWizard.supervisorSara": "سارة أحمد",
-  "admin.employeeWizard.shift": "الوردية",
   "admin.employeeWizard.morningShift": "الوردية الصباحية",
   "admin.employeeWizard.eveningShift": "الوردية المسائية",
   "admin.employeeWizard.policy": "سياسة الوردية",
@@ -762,7 +760,7 @@
   "employee.tasks.count": "{} مهام",
   "employee.plans.title": "خططي",
   "employee.plans.count": "{} خطط",
-  "employee.plans.empty": "لا توجد خطط متاحة",
+  "employee.plans.empty": "لا توجد خطط عمل متاحة",
   "employee.leaves.title": "طلبات الإجازة",
   "employee.leaves.all": "الكل",
   "employee.leaves.pending": "معلقة",
@@ -818,43 +816,76 @@
   "errors.employeeNotFound": "لم يتم العثور على ملف الموظف.",
   "attendance.locationType": "نوع موقع الحضور",
   "attendance.location": "اختر الموقع",
-  "attendance.locationLoading": "جاري تحميل الموقع"
-  ,"attendance.myLocation": "موقعي"
-  ,"attendance.branch": "الفرع"
-  ,"attendance.customer": "العميل"
-  ,"attendance.site": "الموقع"
-  ,"attendance.noLocationData": "لم يتم العثور على بيانات موقع الحضور."
-  ,"attendance.expandMap": "توسيع الخريطة"
-  ,"attendance.collapseMap": "تصغير الخريطة"
-  ,"attendance.insideArea": "أنت داخل النطاق، يمكنك تسجيل الحضور"
-  ,"attendance.outsideArea": "أنت خارج النطاق، لا يمكن تسجيل الحضور"
-  ,"attendance.moveToLocationNote": "يرجى التوجه إلى الموقع المحدد حتى يسمح لك التطبيق بتسجيل الحضور."
-  ,"attendance.readyNote": "موقعك مناسب الآن. يمكنك المتابعة وتسجيل الحضور."
-  ,"attendance.securityNote": "سيتم التحقق من بصمتك قبل التسجيل، وتُحفظ بيانات الحضور بطريقة آمنة."
-  ,"attendance.address": "العنوان"
-  ,"attendance.addressUnavailable": "العنوان غير متاح"
-  ,"attendance.coordinates": "الإحداثيات"
-  ,"attendance.copyAddress": "نسخ العنوان"
-  ,"attendance.copyCoordinates": "نسخ الإحداثيات"
-  ,"attendance.addressCopied": "تم نسخ العنوان"
-  ,"attendance.coordinatesCopied": "تم نسخ الإحداثيات"
-  ,"employee.home.defaultPolicy": "السياسة الأساسية"
-  ,"employee.notifications.attendanceTitle": "تذكير بموعد الانصراف"
-  ,"employee.notifications.attendanceBody": "متبقي ساعة على موعد انصرافك."
-  ,"employee.notifications.tasksTitle": "مهام معلّقة"
-  ,"employee.notifications.tasksBody": "لديك {count} مهام معلّقة أو قيد التنفيذ."
-  ,"employee.details.attendedDays": "أيام الحضور"
-  ,"employee.details.absentDays": "أيام الغياب"
-  ,"employee.details.lateDays": "أيام التأخير"
-  ,"employee.details.earlyDays": "الانصراف المبكر"
-  ,"employee.details.totalHours": "إجمالي الساعات"
-  ,"employee.details.attendanceHistory": "سجل الحضور"
-  ,"employee.details.noAttendance": "لا توجد سجلات حضور."
-  ,"employee.details.monthlyOverview": "ملخص الشهر"
-  ,"admin.shifts.policies.assignEmployee": "إضافة موظف"
-  ,"admin.shifts.policies.assignEmployeeTitle": "إضافة موظف إلى السياسة"
-  ,"admin.shifts.policies.searchEmployee": "ابحث بالاسم أو الكود..."
-  ,"admin.shifts.policies.alreadyAssigned": "مضاف بالفعل"
-  ,"admin.shifts.policies.assignedToOtherShift": "مضاف إلى شفت آخر"
-  ,"admin.shifts.policies.transfer": "نقل"
+  "attendance.locationLoading": "جاري تحميل الموقع",
+  "attendance.myLocation": "موقعي",
+  "attendance.branch": "الفرع",
+  "attendance.customer": "العميل",
+  "attendance.site": "الموقع",
+  "attendance.noLocationData": "لم يتم العثور على بيانات موقع الحضور.",
+  "attendance.expandMap": "توسيع الخريطة",
+  "attendance.collapseMap": "تصغير الخريطة",
+  "attendance.insideArea": "أنت داخل النطاق، يمكنك تسجيل الحضور",
+  "attendance.outsideArea": "أنت خارج النطاق، لا يمكن تسجيل الحضور",
+  "attendance.moveToLocationNote": "يرجى التوجه إلى الموقع المحدد حتى يسمح لك التطبيق بتسجيل الحضور.",
+  "attendance.readyNote": "موقعك مناسب الآن. يمكنك المتابعة وتسجيل الحضور.",
+  "attendance.securityNote": "سيتم التحقق من بصمتك قبل التسجيل، وتُحفظ بيانات الحضور بطريقة آمنة.",
+  "attendance.address": "العنوان",
+  "attendance.addressUnavailable": "العنوان غير متاح",
+  "attendance.coordinates": "الإحداثيات",
+  "attendance.copyAddress": "نسخ العنوان",
+  "attendance.copyCoordinates": "نسخ الإحداثيات",
+  "attendance.addressCopied": "تم نسخ العنوان",
+  "attendance.coordinatesCopied": "تم نسخ الإحداثيات",
+  "employee.home.defaultPolicy": "السياسة الأساسية",
+  "employee.notifications.attendanceTitle": "تذكير بموعد الانصراف",
+  "employee.notifications.attendanceBody": "متبقي ساعة على موعد انصرافك.",
+  "employee.notifications.tasksTitle": "مهام معلّقة",
+  "employee.notifications.tasksBody": "لديك {count} مهام معلّقة أو قيد التنفيذ.",
+  "employee.details.attendedDays": "أيام الحضور",
+  "employee.details.absentDays": "أيام الغياب",
+  "employee.details.lateDays": "أيام التأخير",
+  "employee.details.earlyDays": "الانصراف المبكر",
+  "employee.details.totalHours": "إجمالي الساعات",
+  "employee.details.attendanceHistory": "سجل الحضور",
+  "employee.details.noAttendance": "لا توجد سجلات حضور.",
+  "employee.details.monthlyOverview": "ملخص الشهر",
+  "admin.shifts.policies.assignEmployee": "إضافة موظف",
+  "admin.shifts.policies.assignEmployeeTitle": "إضافة موظف إلى السياسة",
+  "admin.shifts.policies.searchEmployee": "ابحث بالاسم أو الكود...",
+  "admin.shifts.policies.alreadyAssigned": "مضاف بالفعل",
+  "admin.shifts.policies.assignedToOtherShift": "مضاف إلى شفت آخر",
+  "admin.shifts.policies.transfer": "نقل",
+  "admin.employees.code": "كود الموظف",
+  "admin.locations.create.saving": "جاري الحفظ...",
+  "admin.shifts.policies.createSuccess": "تم إنشاء اللائحة بنجاح",
+  "admin.shifts.selectShift": "اختر الوردية",
+  "admin.tasks.edit.title": "تعديل المهمة",
+  "admin.tasks.edit.save": "حفظ",
+  "admin.tasks.edit.success": "تم تحديث المهمة بنجاح",
+  "common.delete": "حذف",
+  "common.save": "حفظ",
+  "common.status": "الحالة",
+  "common.edit": "تعديل",
+  "common.cancel": "إلغاء",
+  "common.back": "رجوع",
+  "common.retry": "إعادة المحاولة",
+  "common.noData": "لا توجد بيانات متاحة",
+  "validation.required": "هذا الحقل مطلوب",
+  "supervisor.tasks.edit.title": "تعديل المهمة",
+  "supervisor.tasks.edit.save": "حفظ",
+  "supervisor.tasks.edit.success": "تم تحديث المهمة بنجاح",
+  "supervisor.tasks.status.pending": "معلقة",
+  "supervisor.tasks.status.inProgress": "قيد التنفيذ",
+  "supervisor.tasks.status.completed": "مكتملة",
+  "supervisor.tasks.status.cancelled": "ملغاة",
+  "supervisor.tasks.status.overdue": "متأخرة",
+  "supervisor.tasks.create.selectEmployeesHint": "اختر الموظفين",
+  "supervisor.tasks.create.statusLabel": "الحالة",
+  "employee.attendance.noHistory": "لا يوجد سجل حضور",
+  "employee.leaves.noLeaves": "لا توجد طلبات إجازة",
+  "employee.tasks.empty": "لا توجد مهام متاحة",
+  "app.errors.invalidRequestDetails": "تفاصيل الطلب غير صالحة",
+  "app.errors.invalidSupervisor": "بيانات المشرف غير صالحة",
+  "app.errors.invalidShift": "بيانات الوردية غير صالحة",
+  "app.errors.unknownRoute": "المسار غير معروف"
 }

@@ -287,8 +287,8 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                         hSpace(12),
                         Expanded(
                           child: filteredLeaves.isEmpty
-                              ? const Center(
-                                  child: Text('No leave requests found'),
+                              ? Center(
+                                  child: Text('employee.leaves.noLeaves'.tr()),
                                 )
                               : RefreshIndicator(
                                   color: AppColors.brandPrimary,

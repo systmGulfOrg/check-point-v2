@@ -105,8 +105,8 @@ class _SupervisorEditTaskSheetWidgetState
     if (success) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Task updated successfully'),
+        SnackBar(
+          content: Text('supervisor.tasks.edit.success'.tr()),
           backgroundColor: AppColors.success,
         ),
       );
@@ -125,7 +125,10 @@ class _SupervisorEditTaskSheetWidgetState
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Edit Task', style: AppTextStyles.font18Bold),
+                  Text(
+                    'supervisor.tasks.edit.title'.tr(context: context),
+                    style: AppTextStyles.font18Bold,
+                  ),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: Icon(Icons.close_rounded, size: 20.r),
@@ -153,24 +156,45 @@ class _SupervisorEditTaskSheetWidgetState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Status', style: AppTextStyles.font12Medium),
+                        Text(
+                          'supervisor.tasks.create.statusLabel'.tr(
+                            context: context,
+                          ),
+                          style: AppTextStyles.font12Medium,
+                        ),
                         hSpace(8),
                         DropdownButtonFormField<String>(
                           key: ValueKey(selectedStatus),
                           initialValue: selectedStatus,
-                          decoration: const InputDecoration(hintText: 'Status'),
-                          items: const [
+                          decoration: InputDecoration(
+                            hintText: 'supervisor.tasks.create.statusLabel'.tr(
+                              context: context,
+                            ),
+                          ),
+                          items: [
                             DropdownMenuItem(
                               value: 'Pending',
-                              child: Text('Pending'),
+                              child: Text(
+                                'supervisor.tasks.status.pending'.tr(
+                                  context: context,
+                                ),
+                              ),
                             ),
                             DropdownMenuItem(
                               value: 'InProgress',
-                              child: Text('In Progress'),
+                              child: Text(
+                                'supervisor.tasks.status.inProgress'.tr(
+                                  context: context,
+                                ),
+                              ),
                             ),
                             DropdownMenuItem(
                               value: 'Completed',
-                              child: Text('Completed'),
+                              child: Text(
+                                'supervisor.tasks.status.completed'.tr(
+                                  context: context,
+                                ),
+                              ),
                             ),
                           ],
                           onChanged: (value) => setState(() {
@@ -244,7 +268,9 @@ class _SupervisorEditTaskSheetWidgetState
                     label: 'supervisor.tasks.create.assignToLabel'.tr(
                       context: context,
                     ),
-                    hint: 'Select Employees',
+                    hint: 'supervisor.tasks.create.selectEmployeesHint'.tr(
+                      context: context,
+                    ),
                     items: items,
                     selectedIds: selectedEmployeeIds,
                     onSelectionChanged: (newSelected) =>
@@ -268,7 +294,7 @@ class _SupervisorEditTaskSheetWidgetState
                   vSpace(12),
                   Expanded(
                     child: CustomButton(
-                      text: 'Save',
+                      text: 'supervisor.tasks.edit.save'.tr(context: context),
                       isLoading: isSubmitting,
                       onTap: _submit,
                     ),

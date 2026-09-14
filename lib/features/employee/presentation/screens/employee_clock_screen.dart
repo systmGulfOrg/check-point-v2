@@ -201,8 +201,8 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                               borderRadius: BorderRadius.circular(16.r),
                               border: Border.all(color: AppColors.border),
                             ),
-                            child: const Center(
-                              child: Text('No attendance history found'),
+                            child: Center(
+                              child: Text('employee.attendance.noHistory'.tr()),
                             ),
                           );
                         }

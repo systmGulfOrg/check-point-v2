@@ -185,7 +185,9 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                         hSpace(12),
                         Expanded(
                           child: filteredTasks.isEmpty
-                              ? const Center(child: Text('No tasks available'))
+                              ? Center(
+                                  child: Text('employee.tasks.empty'.tr()),
+                                )
                               : RefreshIndicator(
                                   color: AppColors.brandPrimary,
                                   onRefresh: context
