@@ -14,7 +14,7 @@ EditEmployeeRequestBody _$EditEmployeeRequestBodyFromJson(
   departmentId: (json['departmentId'] as num).toInt(),
   branchId: (json['branchId'] as num).toInt(),
   role: json['role'] as String,
-  userName: json['userName'] as String? ?? '',
+  userName: json['username'] as String? ?? '',
   password: json['password'] as String? ?? '',
   mobileId: json['mobileId'] as String? ?? '',
 );
@@ -23,7 +23,7 @@ Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
   EditEmployeeRequestBody instance,
 ) => <String, dynamic>{
   'name': instance.name,
-  'userName': instance.userName,
+  'username': instance.userName,
   'password': instance.password,
   'position': instance.position,
   'mobileId': instance.mobileId,

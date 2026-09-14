@@ -16,6 +16,7 @@ class EditEmployeeRequestBody {
   });
 
   final String name;
+  @JsonKey(name: 'username')
   final String userName;
   final String password;
   final String position;
