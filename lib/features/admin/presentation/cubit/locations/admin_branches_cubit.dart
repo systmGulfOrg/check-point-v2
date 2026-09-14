@@ -30,17 +30,21 @@ class AdminBranchesCubit extends Cubit<AdminBranchesState> {
     }
   }
 
-  Future<void> add(BranchRequestModel request) async {
+  Future<bool> add(BranchRequestModel request) async {
     final result = await locationsRepo.addBranch(request);
     switch (result) {
       case Success():
         await load();
+        return true;
       case Failure(:final failure):
         emit(AdminBranchesState.error(failure.messageKey));
+        return false;
+      default:
+        return false;
     }
   }
 
-  Future<void> edit({
+  Future<bool> edit({
     required int id,
     required BranchRequestModel request,
   }) async {
@@ -48,8 +52,12 @@ class AdminBranchesCubit extends Cubit<AdminBranchesState> {
     switch (result) {
       case Success():
         await load();
+        return true;
       case Failure(:final failure):
         emit(AdminBranchesState.error(failure.messageKey));
+        return false;
+      default:
+        return false;
     }
   }
 }

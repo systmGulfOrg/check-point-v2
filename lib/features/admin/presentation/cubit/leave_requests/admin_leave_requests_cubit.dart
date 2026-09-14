@@ -33,11 +33,6 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
     switch (result) {
       case Success():
         await loadRequests();
-        emit(
-          AdminLeaveRequestsState.actionSuccess(
-            'Request status updated successfully',
-          ),
-        );
         return true;
       case Failure(:final failure):
         emit(AdminLeaveRequestsState.error(failure.messageKey));
@@ -53,11 +48,6 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
     switch (result) {
       case Success():
         await loadRequests();
-        emit(
-          const AdminLeaveRequestsState.actionSuccess(
-            'Request deleted successfully',
-          ),
-        );
         return true;
       case Failure(:final failure):
         emit(AdminLeaveRequestsState.error(failure.messageKey));

@@ -58,11 +58,6 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     switch (result) {
       case Success():
         await load();
-        emit(
-          const AdminShiftsPoliciesState.actionSuccess(
-            'Shift added successfully',
-          ),
-        );
         return true;
       case Failure(:final failure):
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
@@ -78,11 +73,6 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     switch (result) {
       case Success():
         await load();
-        emit(
-          const AdminShiftsPoliciesState.actionSuccess(
-            'Shift updated successfully',
-          ),
-        );
         return true;
       case Failure(:final failure):
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
@@ -98,11 +88,6 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     switch (result) {
       case Success():
         await load();
-        emit(
-          const AdminShiftsPoliciesState.actionSuccess(
-            'Shift deleted successfully',
-          ),
-        );
         return true;
       case Failure(:final failure):
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
@@ -118,11 +103,6 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     switch (result) {
       case Success():
         await loadPoliciesForShift(body.shiftId);
-        emit(
-          const AdminShiftsPoliciesState.actionSuccess(
-            'Policy added successfully',
-          ),
-        );
         return true;
       case Failure(:final failure):
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
@@ -187,11 +167,6 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     switch (result) {
       case Success():
         await loadPoliciesForShift(shiftId);
-        emit(
-          const AdminShiftsPoliciesState.actionSuccess(
-            'Policy deleted successfully',
-          ),
-        );
         return true;
       case Failure(:final failure):
         emit(AdminShiftsPoliciesState.error(failure.messageKey));

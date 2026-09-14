@@ -96,6 +96,7 @@ class _AdminCreateLocationSheetWidgetState
       final name = _nameController.text.trim();
       final address = _addressController.text.trim();
       final description = _descriptionController.text.trim();
+      late final bool saved;
 
       switch (widget.category) {
         case AdminLocationCategory.branches:
@@ -114,12 +115,12 @@ class _AdminCreateLocationSheetWidgetState
             coordinates: coordinates,
           );
           if (widget.editBranchId != null) {
-            await context.read<AdminBranchesCubit>().edit(
+            saved = await context.read<AdminBranchesCubit>().edit(
               id: widget.editBranchId!,
               request: request,
             );
           } else {
-            await context.read<AdminBranchesCubit>().add(request);
+            saved = await context.read<AdminBranchesCubit>().add(request);
           }
         case AdminLocationCategory.sites:
           final coordinates = _points
@@ -134,16 +135,16 @@ class _AdminCreateLocationSheetWidgetState
             name: name,
             location: address,
             workesAs: description,
-            customerType: 'site',
+            customerType: 'Site',
             coordinates: coordinates,
           );
           if (widget.editCustomerId != null) {
-            await context.read<AdminCustomersCubit>().edit(
+            saved = await context.read<AdminCustomersCubit>().edit(
               widget.editCustomerId!,
               request,
             );
           } else {
-            await context.read<AdminCustomersCubit>().add(request);
+            saved = await context.read<AdminCustomersCubit>().add(request);
           }
         case AdminLocationCategory.customers:
           final coordinates = _points
@@ -158,20 +159,20 @@ class _AdminCreateLocationSheetWidgetState
             name: name,
             location: address,
             workesAs: description,
-            customerType: 'customer',
+            customerType: 'Customer',
             coordinates: coordinates,
           );
           if (widget.editCustomerId != null) {
-            await context.read<AdminCustomersCubit>().edit(
+            saved = await context.read<AdminCustomersCubit>().edit(
               widget.editCustomerId!,
               request,
             );
           } else {
-            await context.read<AdminCustomersCubit>().add(request);
+            saved = await context.read<AdminCustomersCubit>().add(request);
           }
       }
 
-      if (mounted) {
+      if (mounted && saved) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -181,6 +182,8 @@ class _AdminCreateLocationSheetWidgetState
             backgroundColor: AppColors.success,
           ),
         );
+      } else if (mounted) {
+        setState(() => _isLoading = false);
       }
     } catch (_) {
       if (mounted) {

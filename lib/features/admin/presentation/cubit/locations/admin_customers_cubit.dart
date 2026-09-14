@@ -12,9 +12,9 @@ class AdminCustomersCubit extends Cubit<AdminCustomersState> {
   String currentType = 'Customer';
 
   Future<void> load({required String type}) async {
-    currentType = type;
+    currentType = type.toLowerCase() == 'site' ? 'Site' : 'Customer';
     emit(const AdminCustomersState.loading());
-    final result = await locationsRepo.getCustomersByType(type);
+    final result = await locationsRepo.getCustomersByType(currentType);
     switch (result) {
       case Success(:final data):
         emit(AdminCustomersState.success(data));
@@ -23,23 +23,31 @@ class AdminCustomersCubit extends Cubit<AdminCustomersState> {
     }
   }
 
-  Future<void> add(CustomerRequestModel request) async {
+  Future<bool> add(CustomerRequestModel request) async {
     final result = await locationsRepo.addCustomer(request);
     switch (result) {
       case Success():
         await load(type: currentType);
+        return true;
       case Failure(:final failure):
         emit(AdminCustomersState.error(failure.messageKey));
+        return false;
+      default:
+        return false;
     }
   }
 
-  Future<void> edit(String id, CustomerRequestModel request) async {
+  Future<bool> edit(String id, CustomerRequestModel request) async {
     final result = await locationsRepo.editCustomer(id, request);
     switch (result) {
       case Success():
         await load(type: currentType);
+        return true;
       case Failure(:final failure):
         emit(AdminCustomersState.error(failure.messageKey));
+        return false;
+      default:
+        return false;
     }
   }
 

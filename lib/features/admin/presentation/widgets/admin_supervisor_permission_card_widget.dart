@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -42,10 +41,7 @@ class AdminSupervisorPermissionCardWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    supervisor.nameKey.tr(context: context),
-                    style: AppTextStyles.font14SemiBold,
-                  ),
+                  Text(supervisor.name, style: AppTextStyles.font14SemiBold),
                   hSpace(3),
                   Text(
                     supervisor.email,
