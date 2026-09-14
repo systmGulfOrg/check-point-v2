@@ -148,6 +148,7 @@ class AdminShiftsPoliciesScreen extends StatelessWidget {
                                   nameKey:
                                       shift.name ?? 'admin.shifts.fallbackName',
                                   descriptionKey:
+                                      shift.description ??
                                       'admin.shifts.description.active',
                                   policiesCount: shift.branchesCount ?? 0,
                                 );

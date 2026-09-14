@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_create_task_field_widget.dart';
 
 class AdminNewShiftSheetWidget extends StatefulWidget {
@@ -14,14 +17,59 @@ class AdminNewShiftSheetWidget extends StatefulWidget {
 }
 
 class _AdminNewShiftSheetWidgetState extends State<AdminNewShiftSheetWidget> {
-  final nameController = TextEditingController();
-  final descriptionController = TextEditingController();
+  late final TextEditingController nameController;
+  late final TextEditingController descriptionController;
+  bool isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController();
+    descriptionController = TextEditingController();
+  }
 
   @override
   void dispose() {
     nameController.dispose();
     descriptionController.dispose();
     super.dispose();
+  }
+
+  Future<void> submit() async {
+    final name = nameController.text.trim();
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('auth.login.required'.tr(context: context)),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
+
+    setState(() => isSubmitting = true);
+    final saved = await context.read<AdminShiftsPoliciesCubit>().addShift(
+      AddShiftRequestBody(
+        name: name,
+        description: descriptionController.text.trim().isEmpty
+            ? null
+            : descriptionController.text.trim(),
+      ),
+    );
+
+    if (!mounted) return;
+    setState(() => isSubmitting = false);
+    if (saved) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'admin.locations.create.successMessage'.tr(context: context),
+          ),
+          backgroundColor: AppColors.success,
+        ),
+      );
+    }
   }
 
   @override
@@ -75,7 +123,8 @@ class _AdminNewShiftSheetWidgetState extends State<AdminNewShiftSheetWidget> {
                 Expanded(
                   child: CustomButton(
                     text: 'admin.locations.create.save'.tr(context: context),
-                    onTap: () => Navigator.pop(context),
+                    onTap: submit,
+                    isLoading: isSubmitting,
                   ),
                 ),
               ],

@@ -6,10 +6,11 @@ part 'shift_model.g.dart';
 
 @JsonSerializable()
 class ShiftModel {
-  const ShiftModel({this.id, this.name, this.branchesCount});
+  const ShiftModel({this.id, this.name, this.description, this.branchesCount});
 
   final int? id;
   final String? name;
+  final String? description;
   final int? branchesCount;
 
   factory ShiftModel.fromJson(Map<String, dynamic> json) =>
@@ -53,9 +54,10 @@ class ShiftPageModel {
 
 @JsonSerializable()
 class AddShiftRequestBody {
-  const AddShiftRequestBody({required this.name});
+  const AddShiftRequestBody({required this.name, this.description});
 
   final String name;
+  final String? description;
 
   factory AddShiftRequestBody.fromJson(Map<String, dynamic> json) =>
       _$AddShiftRequestBodyFromJson(json);

@@ -9,6 +9,7 @@ part of 'shift_model.dart';
 ShiftModel _$ShiftModelFromJson(Map<String, dynamic> json) => ShiftModel(
   id: (json['id'] as num?)?.toInt(),
   name: json['name'] as String?,
+  description: json['description'] as String?,
   branchesCount: (json['branchesCount'] as num?)?.toInt(),
 );
 
@@ -16,6 +17,7 @@ Map<String, dynamic> _$ShiftModelToJson(ShiftModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'description': instance.description,
       'branchesCount': instance.branchesCount,
     };
 
@@ -54,11 +56,17 @@ Map<String, dynamic> _$ShiftPageModelToJson(ShiftPageModel instance) =>
     };
 
 AddShiftRequestBody _$AddShiftRequestBodyFromJson(Map<String, dynamic> json) =>
-    AddShiftRequestBody(name: json['name'] as String);
+    AddShiftRequestBody(
+      name: json['name'] as String,
+      description: json['description'] as String?,
+    );
 
 Map<String, dynamic> _$AddShiftRequestBodyToJson(
   AddShiftRequestBody instance,
-) => <String, dynamic>{'name': instance.name};
+) => <String, dynamic>{
+  'name': instance.name,
+  'description': instance.description,
+};
 
 AssignShiftsRequestBody _$AssignShiftsRequestBodyFromJson(
   Map<String, dynamic> json,
