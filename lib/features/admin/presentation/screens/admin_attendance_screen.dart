@@ -243,20 +243,11 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
   }
 
   String _formatDate(String? rawDate) {
-    if (rawDate == null || rawDate.trim().isEmpty) return '-';
-    if (rawDate.contains('T')) return rawDate.split('T').first;
-    if (rawDate.contains(' ')) return rawDate.split(' ').first;
-    return rawDate;
+    return AppDateFormatter.formatDateString(rawDate);
   }
 
   String _formatTime(String? rawTime) {
-    if (rawTime == null ||
-        rawTime.trim().isEmpty ||
-        rawTime.startsWith('00:00:00') ||
-        rawTime == '00:00') {
-      return '--:--';
-    }
-    return rawTime.trim().split('.').first;
+    return AppDateFormatter.formatTimeString(rawTime);
   }
 
   String _formatTotalHours({
