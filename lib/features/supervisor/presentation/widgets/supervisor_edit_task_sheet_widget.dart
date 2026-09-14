@@ -35,11 +35,20 @@ class _SupervisorEditTaskSheetWidgetState
   void initState() {
     super.initState();
     titleController = TextEditingController(text: widget.task.title ?? '');
-    descriptionController =
-        TextEditingController(text: widget.task.description ?? '');
+    descriptionController = TextEditingController(
+      text: widget.task.description ?? '',
+    );
     dueDateController = TextEditingController();
-    selectedPriority = 'medium';
-    selectedStatus = widget.task.status ?? 'Pending';
+    selectedPriority = 'Medium';
+    selectedStatus = switch (widget.task.status) {
+      'In Progress' => 'InProgress',
+      'Pending' ||
+      'InProgress' ||
+      'Completed' ||
+      'Cancelled' ||
+      'Overdue' => widget.task.status!,
+      _ => 'Pending',
+    };
     if (widget.task.assignedEmployeeId != null &&
         widget.task.assignedEmployeeId!.isNotEmpty) {
       selectedEmployeeIds = widget.task.assignedEmployeeId!
@@ -80,7 +89,7 @@ class _SupervisorEditTaskSheetWidgetState
         title: title,
         description: descriptionController.text.trim(),
         assignedEmployeeId: selectedEmployeeIds.isNotEmpty
-            ? selectedEmployeeIds.join(',')
+            ? selectedEmployeeIds.first
             : null,
         dueDate: dueDateController.text.trim().isNotEmpty
             ? dueDateController.text.trim()
@@ -116,10 +125,7 @@ class _SupervisorEditTaskSheetWidgetState
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Edit Task',
-                    style: AppTextStyles.font18Bold,
-                  ),
+                  Text('Edit Task', style: AppTextStyles.font18Bold),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: Icon(Icons.close_rounded, size: 20.r),
@@ -147,24 +153,19 @@ class _SupervisorEditTaskSheetWidgetState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Status',
-                          style: AppTextStyles.font12Medium,
-                        ),
+                        Text('Status', style: AppTextStyles.font12Medium),
                         hSpace(8),
                         DropdownButtonFormField<String>(
                           key: ValueKey(selectedStatus),
                           initialValue: selectedStatus,
-                          decoration: const InputDecoration(
-                            hintText: 'Status',
-                          ),
+                          decoration: const InputDecoration(hintText: 'Status'),
                           items: const [
                             DropdownMenuItem(
                               value: 'Pending',
                               child: Text('Pending'),
                             ),
                             DropdownMenuItem(
-                              value: 'In Progress',
+                              value: 'InProgress',
                               child: Text('In Progress'),
                             ),
                             DropdownMenuItem(
@@ -201,16 +202,16 @@ class _SupervisorEditTaskSheetWidgetState
                           ),
                           items: [
                             for (final priority in const [
-                              'low',
-                              'medium',
-                              'high',
+                              'Low',
+                              'Medium',
+                              'High',
+                              'Critical',
                             ])
                               DropdownMenuItem(
                                 value: priority,
                                 child: Text(
-                                  'supervisor.tasks.priority.$priority'.tr(
-                                    context: context,
-                                  ),
+                                  'supervisor.tasks.priority.${priority.toLowerCase()}'
+                                      .tr(context: context),
                                 ),
                               ),
                           ],

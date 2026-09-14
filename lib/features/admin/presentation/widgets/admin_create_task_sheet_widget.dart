@@ -24,7 +24,7 @@ class _AdminCreateTaskSheetWidgetState
   late final TextEditingController titleController;
   late final TextEditingController descriptionController;
   late final TextEditingController dueDateController;
-  String selectedPriority = 'medium';
+  String selectedPriority = 'Medium';
   Set<String> selectedEmployeeIds = {};
   bool isSubmitting = false;
 
@@ -64,12 +64,13 @@ class _AdminCreateTaskSheetWidgetState
         title: title,
         description: descriptionController.text.trim(),
         assignedEmployeeId: selectedEmployeeIds.isNotEmpty
-            ? selectedEmployeeIds.join(',')
+            ? selectedEmployeeIds.first
             : null,
         dueDate: dueDateController.text.trim().isNotEmpty
             ? dueDateController.text.trim()
             : null,
         priorityStatus: selectedPriority,
+        status: 'Pending',
       ),
     );
 
@@ -140,8 +141,9 @@ class _AdminCreateTaskSheetWidgetState
                           initialDate: DateTime.now(),
                         );
                         if (date != null && context.mounted) {
-                          dueDateController.text =
-                              AppDateFormatter.formatDayMonthYear(date);
+                          dueDateController.text = DateFormat(
+                            'yyyy-MM-dd',
+                          ).format(date);
                         }
                       },
                       suffixIcon: Icon(
@@ -172,16 +174,16 @@ class _AdminCreateTaskSheetWidgetState
                           ),
                           items: [
                             for (final priority in const [
-                              'low',
-                              'medium',
-                              'high',
+                              'Low',
+                              'Medium',
+                              'High',
+                              'Critical',
                             ])
                               DropdownMenuItem(
                                 value: priority,
                                 child: Text(
-                                  'supervisor.tasks.priority.$priority'.tr(
-                                    context: context,
-                                  ),
+                                  'supervisor.tasks.priority.${priority.toLowerCase()}'
+                                      .tr(context: context),
                                 ),
                               ),
                           ],

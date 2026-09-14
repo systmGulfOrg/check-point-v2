@@ -60,8 +60,10 @@ class _SupervisorCreateTaskSheetWidgetState
         title: title,
         description: descriptionController.text.trim(),
         assignedEmployeeId: selectedEmployeeIds.isNotEmpty
-            ? selectedEmployeeIds.join(',')
+            ? selectedEmployeeIds.first
             : null,
+        priorityStatus: 'Medium',
+        status: 'Pending',
       ),
     );
 
