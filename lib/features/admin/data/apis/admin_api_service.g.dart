@@ -114,7 +114,7 @@ class _AdminApiService implements AdminApiService {
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/employees/${employeeId}/devices/${deviceId}',
+            '/api/v2/employees/${employeeId}/devices/${deviceId}',
             queryParameters: queryParameters,
             data: _data,
           )

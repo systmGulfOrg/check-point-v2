@@ -42,7 +42,7 @@ abstract class AdminApiService {
     @Body() Map<String, dynamic> body,
   );
 
-  @DELETE('/employees/{employeeId}/devices/{deviceId}')
+  @DELETE('/api/v2/employees/{employeeId}/devices/{deviceId}')
   Future<ResultModel> rejectDevice(
     @Path('employeeId') String employeeId,
     @Path('deviceId') String deviceId,
