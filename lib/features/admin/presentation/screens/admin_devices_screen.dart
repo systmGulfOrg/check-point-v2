@@ -219,7 +219,7 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                                     onPressed: () => _showConfirmDialog(
                                       context,
                                       dev.employeeId,
-                                      dev.deviceId,
+                                      dev.id,
                                       false,
                                     ),
                                     child: const Text('Reject'),
@@ -243,7 +243,7 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                                     onPressed: () => _showConfirmDialog(
                                       context,
                                       dev.employeeId,
-                                      dev.deviceId,
+                                      dev.id,
                                       true,
                                     ),
                                     child: const Text(
