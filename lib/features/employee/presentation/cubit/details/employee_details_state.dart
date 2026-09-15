@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'package:check_point_v2/features/admin/data/models/device/pending_device_model.dart';
 
 part 'employee_details_state.freezed.dart';
 
@@ -18,6 +19,7 @@ abstract class EmployeeDetailsState with _$EmployeeDetailsState {
     required int lateDays,
     required int earlyLeaveDays,
     required String totalHours,
+    @Default([]) List<PendingDeviceModel> devicesHistory,
   }) = EmployeeDetailsSuccess;
   const factory EmployeeDetailsState.error(String messageKey) =
       EmployeeDetailsError;

@@ -28,6 +28,11 @@ part 'admin_api_service.g.dart';
 abstract class AdminApiService {
   factory AdminApiService(Dio dio, {String? baseUrl}) = _AdminApiService;
   
+  @GET('/api/v2/employees/{id}/devices')
+  Future<PendingDevicesResponseModel> getEmployeeDevices(
+    @Path('id') String employeeId,
+  );
+
   @GET('/api/v2/devices/pending')
   Future<PendingDevicesResponseModel> getPendingDevices();
 
@@ -35,6 +40,12 @@ abstract class AdminApiService {
   Future<ResultModel> approveDevice(
     @Path('id') String employeeId,
     @Body() Map<String, dynamic> body,
+  );
+
+  @DELETE('/employees/{employeeId}/devices/{deviceId}')
+  Future<ResultModel> rejectDevice(
+    @Path('employeeId') String employeeId,
+    @Path('deviceId') String deviceId,
   );
 
 

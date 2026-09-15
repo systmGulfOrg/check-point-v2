@@ -5,6 +5,19 @@ import 'admin_pending_devices_state.dart';
 import '../../../../../core/network/api_failure_mapper.dart';
 
 class AdminPendingDevicesCubit extends Cubit<AdminPendingDevicesState> {
+  Future<void> rejectDevice(String employeeId, String deviceId) async {
+    try {
+      final response = await api.rejectDevice(employeeId, deviceId);
+      if (response.isSuccess == true) {
+        loadDevices();
+      } else {
+        emit(AdminPendingDevicesState.error('Reject failed'));
+      }
+    } catch (e) {
+      final failure = ApiFailureMapper.map(e);
+      emit(AdminPendingDevicesState.error(failure.messageKey));
+    }
+  }
   AdminPendingDevicesCubit({required this.api}) : super(const AdminPendingDevicesState.initial());
 
   final AdminApiService api;

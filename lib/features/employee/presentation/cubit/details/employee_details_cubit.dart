@@ -5,6 +5,9 @@ import 'package:check_point_v2/features/admin/data/models/attendance/admin_atten
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
 import 'employee_details_state.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
+import 'package:check_point_v2/features/admin/data/models/device/pending_device_model.dart';
 
 class EmployeeDetailsCubit extends Cubit<EmployeeDetailsState> {
   EmployeeDetailsCubit({required this.attendanceRepo})
@@ -14,6 +17,7 @@ class EmployeeDetailsCubit extends Cubit<EmployeeDetailsState> {
   EmployeeModel? employee;
   List<AdminAttendanceModel> allAttendance = const [];
   DateTime selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
+  List<PendingDeviceModel> devicesHistory = [];
 
   Future<void> load(String employeeId) async {
     emit(const EmployeeDetailsState.loading());
@@ -23,6 +27,12 @@ class EmployeeDetailsCubit extends Cubit<EmployeeDetailsState> {
       return;
     }
     employee = (profileResult as Success).data;
+    try {
+      final devicesResponse = await sl<AdminApiService>().getEmployeeDevices(employeeId);
+      if (devicesResponse.isSuccess) {
+        devicesHistory = devicesResponse.value;
+      }
+    } catch (_) {}
     final attendanceResult = await attendanceRepo.getAttendanceHistory(
       employeeId: employeeId,
       pageIndex: 0,
@@ -80,6 +90,7 @@ class EmployeeDetailsCubit extends Cubit<EmployeeDetailsState> {
             .where((item) => item.isEarly == true)
             .length,
         totalHours: _totalHours(monthlyRecords),
+        devicesHistory: devicesHistory,
       ),
     );
   }

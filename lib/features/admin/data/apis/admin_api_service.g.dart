@@ -18,6 +18,35 @@ class _AdminApiService implements AdminApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
+  Future<PendingDevicesResponseModel> getEmployeeDevices(
+    String employeeId,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<PendingDevicesResponseModel>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/v2/employees/${employeeId}/devices',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late PendingDevicesResponseModel _value;
+    try {
+      _value = PendingDevicesResponseModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<PendingDevicesResponseModel> getPendingDevices() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -59,6 +88,33 @@ class _AdminApiService implements AdminApiService {
           .compose(
             _dio.options,
             '/api/v2/employees/${employeeId}/devices',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ResultModel _value;
+    try {
+      _value = ResultModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ResultModel> rejectDevice(String employeeId, String deviceId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ResultModel>(
+      Options(method: 'DELETE', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/employees/${employeeId}/devices/${deviceId}',
             queryParameters: queryParameters,
             data: _data,
           )

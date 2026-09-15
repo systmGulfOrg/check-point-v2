@@ -30,6 +30,7 @@ mixin _$EmployeeDetailsState {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -47,6 +48,7 @@ mixin _$EmployeeDetailsState {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -64,6 +66,7 @@ mixin _$EmployeeDetailsState {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )?
     success,
     TResult Function(String messageKey)? error,
@@ -174,6 +177,7 @@ class _$EmployeeDetailsInitialImpl implements EmployeeDetailsInitial {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -195,6 +199,7 @@ class _$EmployeeDetailsInitialImpl implements EmployeeDetailsInitial {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -216,6 +221,7 @@ class _$EmployeeDetailsInitialImpl implements EmployeeDetailsInitial {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )?
     success,
     TResult Function(String messageKey)? error,
@@ -325,6 +331,7 @@ class _$EmployeeDetailsLoadingImpl implements EmployeeDetailsLoading {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -346,6 +353,7 @@ class _$EmployeeDetailsLoadingImpl implements EmployeeDetailsLoading {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -367,6 +375,7 @@ class _$EmployeeDetailsLoadingImpl implements EmployeeDetailsLoading {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )?
     success,
     TResult Function(String messageKey)? error,
@@ -436,6 +445,7 @@ abstract class _$$EmployeeDetailsSuccessImplCopyWith<$Res> {
     int lateDays,
     int earlyLeaveDays,
     String totalHours,
+    List<PendingDeviceModel> devicesHistory,
   });
 }
 
@@ -462,6 +472,7 @@ class __$$EmployeeDetailsSuccessImplCopyWithImpl<$Res>
     Object? lateDays = null,
     Object? earlyLeaveDays = null,
     Object? totalHours = null,
+    Object? devicesHistory = null,
   }) {
     return _then(
       _$EmployeeDetailsSuccessImpl(
@@ -497,6 +508,10 @@ class __$$EmployeeDetailsSuccessImplCopyWithImpl<$Res>
             ? _value.totalHours
             : totalHours // ignore: cast_nullable_to_non_nullable
                   as String,
+        devicesHistory: null == devicesHistory
+            ? _value._devicesHistory
+            : devicesHistory // ignore: cast_nullable_to_non_nullable
+                  as List<PendingDeviceModel>,
       ),
     );
   }
@@ -514,7 +529,9 @@ class _$EmployeeDetailsSuccessImpl implements EmployeeDetailsSuccess {
     required this.lateDays,
     required this.earlyLeaveDays,
     required this.totalHours,
-  }) : _attendance = attendance;
+    final List<PendingDeviceModel> devicesHistory = const [],
+  }) : _attendance = attendance,
+       _devicesHistory = devicesHistory;
 
   @override
   final EmployeeModel employee;
@@ -538,10 +555,18 @@ class _$EmployeeDetailsSuccessImpl implements EmployeeDetailsSuccess {
   final int earlyLeaveDays;
   @override
   final String totalHours;
+  final List<PendingDeviceModel> _devicesHistory;
+  @override
+  @JsonKey()
+  List<PendingDeviceModel> get devicesHistory {
+    if (_devicesHistory is EqualUnmodifiableListView) return _devicesHistory;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_devicesHistory);
+  }
 
   @override
   String toString() {
-    return 'EmployeeDetailsState.success(employee: $employee, attendance: $attendance, selectedMonth: $selectedMonth, attendedDays: $attendedDays, absentDays: $absentDays, lateDays: $lateDays, earlyLeaveDays: $earlyLeaveDays, totalHours: $totalHours)';
+    return 'EmployeeDetailsState.success(employee: $employee, attendance: $attendance, selectedMonth: $selectedMonth, attendedDays: $attendedDays, absentDays: $absentDays, lateDays: $lateDays, earlyLeaveDays: $earlyLeaveDays, totalHours: $totalHours, devicesHistory: $devicesHistory)';
   }
 
   @override
@@ -566,7 +591,11 @@ class _$EmployeeDetailsSuccessImpl implements EmployeeDetailsSuccess {
             (identical(other.earlyLeaveDays, earlyLeaveDays) ||
                 other.earlyLeaveDays == earlyLeaveDays) &&
             (identical(other.totalHours, totalHours) ||
-                other.totalHours == totalHours));
+                other.totalHours == totalHours) &&
+            const DeepCollectionEquality().equals(
+              other._devicesHistory,
+              _devicesHistory,
+            ));
   }
 
   @override
@@ -580,6 +609,7 @@ class _$EmployeeDetailsSuccessImpl implements EmployeeDetailsSuccess {
     lateDays,
     earlyLeaveDays,
     totalHours,
+    const DeepCollectionEquality().hash(_devicesHistory),
   );
 
   /// Create a copy of EmployeeDetailsState
@@ -608,6 +638,7 @@ class _$EmployeeDetailsSuccessImpl implements EmployeeDetailsSuccess {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -621,6 +652,7 @@ class _$EmployeeDetailsSuccessImpl implements EmployeeDetailsSuccess {
       lateDays,
       earlyLeaveDays,
       totalHours,
+      devicesHistory,
     );
   }
 
@@ -638,6 +670,7 @@ class _$EmployeeDetailsSuccessImpl implements EmployeeDetailsSuccess {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -651,6 +684,7 @@ class _$EmployeeDetailsSuccessImpl implements EmployeeDetailsSuccess {
       lateDays,
       earlyLeaveDays,
       totalHours,
+      devicesHistory,
     );
   }
 
@@ -668,6 +702,7 @@ class _$EmployeeDetailsSuccessImpl implements EmployeeDetailsSuccess {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )?
     success,
     TResult Function(String messageKey)? error,
@@ -683,6 +718,7 @@ class _$EmployeeDetailsSuccessImpl implements EmployeeDetailsSuccess {
         lateDays,
         earlyLeaveDays,
         totalHours,
+        devicesHistory,
       );
     }
     return orElse();
@@ -736,6 +772,7 @@ abstract class EmployeeDetailsSuccess implements EmployeeDetailsState {
     required final int lateDays,
     required final int earlyLeaveDays,
     required final String totalHours,
+    final List<PendingDeviceModel> devicesHistory,
   }) = _$EmployeeDetailsSuccessImpl;
 
   EmployeeModel get employee;
@@ -746,6 +783,7 @@ abstract class EmployeeDetailsSuccess implements EmployeeDetailsState {
   int get lateDays;
   int get earlyLeaveDays;
   String get totalHours;
+  List<PendingDeviceModel> get devicesHistory;
 
   /// Create a copy of EmployeeDetailsState
   /// with the given fields replaced by the non-null parameter values.
@@ -840,6 +878,7 @@ class _$EmployeeDetailsErrorImpl implements EmployeeDetailsError {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -861,6 +900,7 @@ class _$EmployeeDetailsErrorImpl implements EmployeeDetailsError {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -882,6 +922,7 @@ class _$EmployeeDetailsErrorImpl implements EmployeeDetailsError {
       int lateDays,
       int earlyLeaveDays,
       String totalHours,
+      List<PendingDeviceModel> devicesHistory,
     )?
     success,
     TResult Function(String messageKey)? error,
