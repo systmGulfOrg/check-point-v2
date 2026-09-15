@@ -7,14 +7,18 @@ import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubi
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_state.dart';
 
 class LoginSubmitButtonWidget extends StatelessWidget {
-  const LoginSubmitButtonWidget({required this.onSubmit, super.key});
+  const LoginSubmitButtonWidget({required this.onSubmit, this.rateLimitSeconds = 0, super.key});
 
   final VoidCallback onSubmit;
+  final int rateLimitSeconds;
 
   @override
   Widget build(BuildContext context) => BlocBuilder<LoginCubit, LoginState>(
     builder: (context, state) => CustomButton(
-      text: 'auth.login.submit'.tr(context: context),
+      text: rateLimitSeconds > 0
+          ? 'انتظر $rateLimitSeconds ثانية'
+          : 'auth.login.submit'.tr(context: context),
+      enabled: rateLimitSeconds == 0,
       onTap: onSubmit,
       isLoading: state is LoginLoading,
     ),

@@ -1,3 +1,4 @@
+import 'package:check_point_v2/features/auth/presentation/cubit/login/login_state.dart';
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -37,6 +38,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _obscurePassword = true;
   bool _enableBiometricLogin = false;
+  int _rateLimitSeconds = 0;
+  Timer? _rateLimitTimer;
+
   bool _biometricLoginAttempted = false;
   bool _hasSavedBiometric = false;
   bool _isBiometricSupported = false;
@@ -82,6 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
+    _rateLimitTimer?.cancel();
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -89,7 +94,32 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return LoginBlocListenerWidget(
+
+    return BlocListener<LoginCubit, LoginState>(
+      listener: (context, state) {
+        state.maybeWhen(
+          error: (msg) {
+            if (msg.toLowerCase().contains('rate limit') || msg.toLowerCase().contains('retry in')) {
+              setState(() {
+                _rateLimitSeconds = 60;
+              });
+              _rateLimitTimer?.cancel();
+              _rateLimitTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+                if (_rateLimitSeconds > 0) {
+                  setState(() {
+                    _rateLimitSeconds--;
+                  });
+                } else {
+                  timer.cancel();
+                }
+              });
+            }
+          },
+          orElse: () {},
+        );
+      },
+      child: LoginBlocListenerWidget(
+
       onDeviceTransferRequired: () {
         showDialog(
           context: context,
@@ -217,7 +247,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                     hSpace(10),
                     LoginSubmitButtonWidget(
+                      rateLimitSeconds: _rateLimitSeconds,
                       onSubmit: () {
+                        if (_rateLimitSeconds > 0) return;
                         if (!(formKey.currentState?.validate() ?? false)) {
                           return;
                         }
@@ -266,6 +298,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 }
