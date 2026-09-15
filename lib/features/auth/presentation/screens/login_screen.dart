@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               }
               setState(() {
-                _rateLimitSeconds = seconds;
+                _rateLimitSeconds = seconds > 60 ? 60 : seconds;
               });
               _rateLimitTimer?.cancel();
               _rateLimitTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
