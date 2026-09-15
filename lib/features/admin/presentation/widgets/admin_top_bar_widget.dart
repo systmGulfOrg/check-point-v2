@@ -1,3 +1,6 @@
+import 'package:check_point_v2/features/admin/presentation/cubit/pending_devices/admin_pending_devices_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/pending_devices/admin_pending_devices_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -27,14 +30,30 @@ class AdminTopBarWidget extends StatelessWidget {
               ),
             ],
           ),
-          child: IconButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {},
-            icon: Icon(
-              Icons.notifications_none_rounded,
-              color: AppColors.brandInk,
-              size: 20.r,
-            ),
+          child: BlocBuilder<AdminPendingDevicesCubit, AdminPendingDevicesState>(
+            builder: (context, state) {
+              final pendingCount = state.maybeWhen(
+                success: (devices) => devices.length,
+                orElse: () => 0,
+              );
+              
+              return Badge(
+                isLabelVisible: pendingCount > 0,
+                label: Text(pendingCount.toString()),
+                backgroundColor: AppColors.error,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoutes.adminPendingDevices);
+                  },
+                  icon: Icon(
+                    Icons.notifications_none_rounded,
+                    color: AppColors.brandInk,
+                    size: 20.r,
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ],

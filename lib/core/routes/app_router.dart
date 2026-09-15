@@ -215,6 +215,9 @@ class AppRouter {
               BlocProvider<AdminTasksCubit>(
                 create: (_) => sl<AdminTasksCubit>()..loadTasks(),
               ),
+              BlocProvider<AdminPendingDevicesCubit>(
+                create: (_) => sl<AdminPendingDevicesCubit>()..loadDevices(),
+              ),
             ],
             child: const AdminMainScreen(),
           ),
