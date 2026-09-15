@@ -8,7 +8,7 @@ class AdminPendingDevicesCubit extends Cubit<AdminPendingDevicesState> {
   Future<void> rejectDevice(String employeeId, String deviceId) async {
     try {
       final response = await api.rejectDevice(employeeId, deviceId);
-      if (response.isSuccess == true) {
+      if ((response.isSuccess ?? true) == true) {
         loadDevices();
       } else {
         emit(AdminPendingDevicesState.error('Reject failed'));
@@ -26,12 +26,12 @@ class AdminPendingDevicesCubit extends Cubit<AdminPendingDevicesState> {
     emit(const AdminPendingDevicesState.loading());
     try {
       final response = await api.getPendingDevices();
-      if (response.isSuccess == true) {
+      if ((response.isSuccess ?? true) == true) {
         emit(AdminPendingDevicesState.success(response.value));
       } else {
         emit(AdminPendingDevicesState.error('Failed to load pending devices'));
       }
-    } catch (e, st) {
+    } catch (e) {
       final failure = ApiFailureMapper.map(e);
       emit(AdminPendingDevicesState.error(failure.messageKey));
     }
@@ -43,12 +43,12 @@ class AdminPendingDevicesCubit extends Cubit<AdminPendingDevicesState> {
         'deviceId': deviceId,
         'isActive': true,
       });
-      if (response.isSuccess == true) {
+      if ((response.isSuccess ?? true) == true) {
         loadDevices();
       } else {
         emit(AdminPendingDevicesState.error('Approval failed'));
       }
-    } catch (e, st) {
+    } catch (e) {
       final failure = ApiFailureMapper.map(e);
       emit(AdminPendingDevicesState.error(failure.messageKey));
     }

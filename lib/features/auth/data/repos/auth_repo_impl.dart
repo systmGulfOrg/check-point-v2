@@ -17,7 +17,7 @@ class AuthRepoImpl implements AuthRepo {
     try {
       await api.requestDeviceTransfer(request);
       return const ApiResult.success(true);
-    } catch (e, st) {
+    } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
   }
