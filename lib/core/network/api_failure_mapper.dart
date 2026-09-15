@@ -48,8 +48,10 @@ class ApiFailureMapper {
         _ when status == 401 => const ApiFailure(
           messageKey: 'errors.unauthorized',
         ),
-        _ when status == 403 => const ApiFailure(
-          messageKey: 'errors.forbidden',
+        _ when status == 403 => ApiFailure(
+          messageKey: messages.any((m) => m.toLowerCase().contains('device is not registered'))
+              ? 'errors.deviceLoginAccess'
+              : 'errors.forbidden',
         ),
         _ when status == 404 => const ApiFailure(messageKey: 'errors.notFound'),
         _ when status == 409 => ApiFailure(messageKey: messages.isNotEmpty ? messages.join(' ') : 'errors.conflict'),
