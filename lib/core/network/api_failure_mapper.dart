@@ -52,7 +52,7 @@ class ApiFailureMapper {
           messageKey: 'errors.forbidden',
         ),
         _ when status == 404 => const ApiFailure(messageKey: 'errors.notFound'),
-        _ when status == 409 => const ApiFailure(messageKey: 'errors.conflict'),
+        _ when status == 409 => ApiFailure(messageKey: messages.isNotEmpty ? messages.join(' ') : 'errors.conflict'),
         _ when status == 400 => const ApiFailure(
           messageKey: 'errors.validation',
         ),
