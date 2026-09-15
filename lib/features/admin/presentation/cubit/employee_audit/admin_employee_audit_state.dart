@@ -7,6 +7,7 @@ part 'admin_employee_audit_state.freezed.dart';
 class AdminEmployeeAuditState with _$AdminEmployeeAuditState {
   const factory AdminEmployeeAuditState.initial() = _Initial;
   const factory AdminEmployeeAuditState.loading() = _Loading;
-  const factory AdminEmployeeAuditState.success(List<AuditLogModel> logs) = _Success;
+  const factory AdminEmployeeAuditState.success(List<AuditLogModel> logs) =
+      _Success;
   const factory AdminEmployeeAuditState.error(String message) = _Error;
 }

@@ -360,4 +360,5 @@ Future<void> setupServiceLocator() async {
       sessionStorage: sl<AuthSessionStorage>(),
     ),
   );
+  sl.registerFactory(() => AdminEmployeeAuditCubit(api: sl()));
 }
