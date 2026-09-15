@@ -8,7 +8,7 @@
     <application
         android:label="check_point_v2"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBmhmNVQufGCy8Iruka77zE4C0Uq2YpDDI" />
