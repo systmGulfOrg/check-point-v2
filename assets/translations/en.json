@@ -923,5 +923,7 @@
       "confirmTransfer": "Request Transfer",
       "deviceTransferSuccess": "Device transfer request sent successfully to the Admin. Please wait for approval."
     }
-  }
+  },
+  "admin.manage.devices": "Devices & Transfers",
+  "admin.manage.devicesSub": "Approve pending device transfers"
 }

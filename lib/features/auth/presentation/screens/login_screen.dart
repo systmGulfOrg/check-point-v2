@@ -100,8 +100,20 @@ class _LoginScreenState extends State<LoginScreen> {
         state.maybeWhen(
           error: (msg) {
             if (msg.toLowerCase().contains('rate limit') || msg.toLowerCase().contains('retry in')) {
+              int seconds = 60;
+              final match = RegExp(r'retry in (\d+)').firstMatch(msg.toLowerCase());
+              if (match != null) {
+                final val = int.tryParse(match.group(1) ?? '');
+                if (val != null) {
+                  if (msg.toLowerCase().contains('minute')) {
+                    seconds = val * 60;
+                  } else {
+                    seconds = val;
+                  }
+                }
+              }
               setState(() {
-                _rateLimitSeconds = 60;
+                _rateLimitSeconds = seconds;
               });
               _rateLimitTimer?.cancel();
               _rateLimitTimer = Timer.periodic(const Duration(seconds: 1), (timer) {

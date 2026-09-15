@@ -923,5 +923,7 @@
       "confirmTransfer": "نقل الصلاحيات",
       "deviceTransferSuccess": "تم إرسال طلب نقل الصلاحيات للمسؤول بنجاح. يرجى انتظار الموافقة."
     }
-  }
+  },
+  "admin.manage.devices": "الأجهزة والنقل",
+  "admin.manage.devicesSub": "الموافقة على طلبات نقل الأجهزة المعلقة"
 }

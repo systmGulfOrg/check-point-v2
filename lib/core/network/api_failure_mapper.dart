@@ -56,6 +56,9 @@ class ApiFailureMapper {
         _ when status == 400 => const ApiFailure(
           messageKey: 'errors.validation',
         ),
+        _ when status == 429 => ApiFailure(
+          messageKey: messages.isNotEmpty ? messages.join(' ') : 'errors.rateLimit',
+        ),
         _ when status != null && status >= 500 => const ApiFailure(
           messageKey: 'errors.server',
         ),
