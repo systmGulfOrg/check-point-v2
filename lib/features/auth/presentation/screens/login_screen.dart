@@ -15,6 +15,7 @@ import 'package:check_point_v2/features/auth/presentation/widgets/brand_header_w
 import 'package:check_point_v2/features/auth/presentation/widgets/login_bloc_listener_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/login_submit_button_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/role_switcher_widget.dart';
+import 'package:check_point_v2/core/widgets/custom_dialog_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -89,6 +90,23 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return LoginBlocListenerWidget(
+      onDeviceTransferRequired: () {
+        showDialog(
+          context: context,
+          builder: (dialogContext) => CustomDialogWidget(
+            title: 'auth.login.deviceTransferTitle'.tr(context: context),
+            message: 'auth.login.deviceTransferMessage'.tr(context: context),
+            icon: Icons.phone_android_rounded,
+            onConfirm: () {
+              Navigator.pop(dialogContext);
+              context.read<LoginCubit>().requestDeviceTransfer(
+                    userName: _usernameController.text.trim(),
+                    password: _passwordController.text,
+                  );
+            },
+          ),
+        );
+      },
       child: AuthShellWidget(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

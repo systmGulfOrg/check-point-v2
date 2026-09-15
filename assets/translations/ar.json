@@ -515,6 +515,7 @@
   "admin.employees.roles": "الأدوار والصلاحيات",
   "admin.employees.canAddAttendance": "تسجيل الحضور الذاتي",
   "admin.employees.canAddPlan": "إنشاء خطط العمل",
+  "admin.employees.leaveBalance": "رصيد الإجازة السنوية (أيام)",
   "admin.employees.passwordOptional": "كلمة المرور (اتركها فارغة للإبقاء على الحالية)",
   "admin.roles.employee": "موظف",
   "admin.roles.supervisor": "مشرف",
@@ -887,5 +888,40 @@
   "app.errors.invalidRequestDetails": "تفاصيل الطلب غير صالحة",
   "app.errors.invalidSupervisor": "بيانات المشرف غير صالحة",
   "app.errors.invalidShift": "بيانات الوردية غير صالحة",
-  "app.errors.unknownRoute": "المسار غير معروف"
+  "app.errors.unknownRoute": "المسار غير معروف",
+  "leaves": {
+    "dashboard": {
+      "title": "الإجازات والأذونات",
+      "daysLeft": "أيام متبقية",
+      "total": "الإجمالي",
+      "used": "المستهلك",
+      "remaining": "المتبقي",
+      "warningLowBalance": "تنبيه: رصيد إجازاتك قارب على الانتهاء!",
+      "noLeavesTaken": "لم تقم باستهلاك أي إجازات حتى الآن.",
+      "requestPermission": "طلب إذن",
+      "requestLeave": "طلب إجازة"
+    },
+    "request": {
+      "title": "طلب إجازة",
+      "type": "نوع الإجازة",
+      "reason": "السبب",
+      "submit": "إرسال الطلب",
+      "success": "تم إرسال الطلب بنجاح"
+    }
+  },
+  "permissions": {
+    "request": {
+      "title": "طلب استئذان / إذن",
+      "success": "تم إرسال الإذن بنجاح"
+    }
+  },
+  "auth": {
+    "login": {
+      "deviceTransferTitle": "نقل الحساب؟",
+      "deviceTransferMessage": "أنت تقوم بتسجيل الدخول من جهاز جديد. هل تود إرسال طلب للمسؤول لنقل صلاحيات حسابك إلى هذا الهاتف الجديد؟",
+      "cancel": "إلغاء",
+      "confirmTransfer": "نقل الصلاحيات",
+      "deviceTransferSuccess": "تم إرسال طلب نقل الصلاحيات للمسؤول بنجاح. يرجى انتظار الموافقة."
+    }
+  }
 }

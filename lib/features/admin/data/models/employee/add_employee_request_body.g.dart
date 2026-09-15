@@ -27,6 +27,7 @@ AddEmployeeRequestBody _$AddEmployeeRequestBodyFromJson(
   employeeCode: json['employeeCode'] as String?,
   canAddAttendance: json['canAddAttendance'] as bool?,
   canAddPlan: json['canAddPlan'] as bool?,
+  leaveBalance: (json['leaveBalance'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
@@ -48,4 +49,5 @@ Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
   'employeeCode': instance.employeeCode,
   'canAddAttendance': instance.canAddAttendance,
   'canAddPlan': instance.canAddPlan,
+  'leaveBalance': instance.leaveBalance,
 };

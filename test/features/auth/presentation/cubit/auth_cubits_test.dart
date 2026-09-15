@@ -32,6 +32,8 @@ class _FakeDeviceIdentityProvider extends DeviceIdentityProvider {
 }
 
 class _FakeAuthRepo implements AuthRepo {
+  @override
+  Future<ApiResult<bool>> requestDeviceTransfer(LoginRequestModel request) async => const ApiResult.success(true);
   _FakeAuthRepo({required this.loginResponse});
 
   final LoginResponseModel loginResponse;

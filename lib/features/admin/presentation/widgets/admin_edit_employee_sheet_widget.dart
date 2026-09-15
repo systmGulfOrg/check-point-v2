@@ -42,6 +42,7 @@ class _AdminEditEmployeeSheetWidgetState
   late final TextEditingController _phoneController;
   late final TextEditingController _emailController;
   late final TextEditingController _employeeCodeController;
+  late final TextEditingController _leaveBalanceController;
 
   late final Set<String> _selectedRoles;
   int? _selectedDepartmentId;
@@ -80,6 +81,9 @@ class _AdminEditEmployeeSheetWidgetState
     _employeeCodeController = TextEditingController(
       text: widget.employee.employeeCode ?? '',
     );
+    _leaveBalanceController = TextEditingController(
+      text: '${widget.employee.leaveBalance ?? 21}',
+    );
 
     _selectedRoles = widget.employee.allRoles.toSet();
     if (_selectedRoles.isEmpty) _selectedRoles.add('Employee');
@@ -101,6 +105,7 @@ class _AdminEditEmployeeSheetWidgetState
     _phoneController.dispose();
     _emailController.dispose();
     _employeeCodeController.dispose();
+    _leaveBalanceController.dispose();
     super.dispose();
   }
 
@@ -159,6 +164,7 @@ class _AdminEditEmployeeSheetWidgetState
         shiftId: _selectedShiftId,
         canAddAttendance: _canAddAttendance,
         canAddPlan: _canAddPlan,
+        leaveBalance: int.tryParse(_leaveBalanceController.text.trim()),
       ),
     );
     Navigator.pop(context);
@@ -535,6 +541,17 @@ class _AdminEditEmployeeSheetWidgetState
                 style: AppTextStyles.font14Medium,
               ),
               contentPadding: EdgeInsets.zero,
+            ),
+            hSpace(12),
+            Text(
+              'admin.employees.leaveBalance'.tr(context: context),
+              style: AppTextStyles.font12Medium,
+            ),
+            hSpace(6),
+            CustomTextFormField(
+              controller: _leaveBalanceController,
+              hintText: '21',
+              keyboardType: TextInputType.number,
             ),
             hSpace(20),
             Row(

@@ -21,6 +21,7 @@ class AddEmployeeRequestBody {
     this.employeeCode,
     this.canAddAttendance,
     this.canAddPlan,
+    this.leaveBalance,
   });
 
   final String name;
@@ -39,6 +40,7 @@ class AddEmployeeRequestBody {
   final String? employeeCode;
   final bool? canAddAttendance;
   final bool? canAddPlan;
+  final int? leaveBalance;
 
   factory AddEmployeeRequestBody.fromJson(Map<String, dynamic> json) =>
       _$AddEmployeeRequestBodyFromJson(json);

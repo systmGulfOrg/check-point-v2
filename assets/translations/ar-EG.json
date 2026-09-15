@@ -515,6 +515,7 @@
   "admin.employees.roles": "الأدوار والصلاحيات",
   "admin.employees.canAddAttendance": "تسجيل الحضور الذاتي",
   "admin.employees.canAddPlan": "إنشاء خطط العمل",
+  "admin.employees.leaveBalance": "رصيد الإجازة السنوية (أيام)",
   "admin.employees.passwordOptional": "كلمة المرور (اتركها فارغة للإبقاء على الحالية)",
   "admin.roles.employee": "موظف",
   "admin.roles.supervisor": "مشرف",

@@ -35,7 +35,7 @@ class ApiFailureMapper {
               item['errorMessage'] as String,
       ];
       final message = messages.join(' ').toLowerCase();
-      if (message.contains('device') && message.contains('login')) {
+      if ((message.contains('device') || message.contains('devise'))) {
         return const ApiFailure(messageKey: 'errors.deviceLoginAccess');
       }
       return switch (error.type) {

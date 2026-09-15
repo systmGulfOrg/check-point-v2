@@ -30,6 +30,7 @@ class EmployeeModel {
     this.clockInTime,
     this.clockOutTime,
     this.area,
+    this.leaveBalance,
   });
 
   final String? id;
@@ -57,6 +58,7 @@ class EmployeeModel {
   @JsonKey(fromJson: legacyApiValueToString)
   final String? clockOutTime;
   final String? area;
+  final int? leaveBalance;
 
   List<String> get allRoles {
     final set = <String>{};

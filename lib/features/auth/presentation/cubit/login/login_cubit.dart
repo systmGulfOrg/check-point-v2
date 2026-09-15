@@ -1,3 +1,4 @@
+import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
@@ -35,8 +36,34 @@ class LoginCubit extends Cubit<LoginState> {
       case Success<LoginResponseModel>(:final data):
         emit(LoginState.success(data, selectedRole: role));
       case Failure<LoginResponseModel>(:final failure):
-        emit(LoginState.error(failure.messageKey));
+        if (failure.messageKey == 'errors.deviceLoginAccess') {
+          emit(const LoginState.deviceTransferRequired());
+        } else {
+          emit(LoginState.error(failure.messageKey));
+        }
     }
+  }
+
+  
+  Future<void> requestDeviceTransfer({
+    required String userName,
+    required String password,
+  }) async {
+    emit(const LoginState.loading());
+    final request = LoginRequestModel(
+      userName: userName,
+      password: password,
+      mobileId: loginUseCase.deviceIdentityProvider.mobileId,
+    );
+    final result = await loginUseCase.authRepo.requestDeviceTransfer(request);
+    result.when(
+      success: (_) {
+         emit(const LoginState.error('deviceTransferSuccess')); // we can use error state just to show a snackbar, or create a specific state
+      },
+      failure: (failure) {
+         emit(LoginState.error(failure.messageKey));
+      },
+    );
   }
 
   Future<bool> loginWithBiometrics({required String localizedReason}) async {

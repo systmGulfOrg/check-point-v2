@@ -2,6 +2,9 @@ class AppRoutes {
   const AppRoutes._();
 
   static const String login = '/login';
+  static const String leavesDashboard = '/leaves/dashboard';
+  static const String leavesRequest = '/leaves/request';
+  static const String permissionsRequest = '/permissions/request';
   static const String requestAccess = '/request-access';
   static const String adminRequestDetails = '/admin/requests/details';
   static const String adminCreateEmployee = '/admin/employees/create';

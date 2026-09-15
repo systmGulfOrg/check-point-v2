@@ -35,6 +35,7 @@ EmployeeModel _$EmployeeModelFromJson(Map<String, dynamic> json) =>
       clockInTime: legacyApiValueToString(json['clockInTime']),
       clockOutTime: legacyApiValueToString(json['clockOutTime']),
       area: json['area'] as String?,
+      leaveBalance: (json['leaveBalance'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
@@ -62,4 +63,5 @@ Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
       'clockInTime': instance.clockInTime,
       'clockOutTime': instance.clockOutTime,
       'area': instance.area,
+      'leaveBalance': instance.leaveBalance,
     };

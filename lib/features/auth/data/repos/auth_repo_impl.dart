@@ -13,6 +13,16 @@ class AuthRepoImpl implements AuthRepo {
   final AuthApiService api;
 
   @override
+  Future<ApiResult<bool>> requestDeviceTransfer(LoginRequestModel request) async {
+    try {
+      await api.requestDeviceTransfer(request);
+      return const ApiResult.success(true);
+    } catch (e, st) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
   Future<ApiResult<LoginResponseModel>> login(LoginRequestModel request) async {
     try {
       final response = await api.login(request);

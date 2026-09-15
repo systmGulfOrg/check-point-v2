@@ -27,6 +27,7 @@ EditEmployeeRequestBody _$EditEmployeeRequestBodyFromJson(
   deviceToken: (json['deviceToken'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
+  leaveBalance: (json['leaveBalance'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
@@ -48,4 +49,5 @@ Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
   if (instance.canAddAttendance case final value?) 'canAddAttendance': value,
   if (instance.canAddPlan case final value?) 'canAddPlan': value,
   if (instance.deviceToken case final value?) 'deviceToken': value,
+  if (instance.leaveBalance case final value?) 'leaveBalance': value,
 };

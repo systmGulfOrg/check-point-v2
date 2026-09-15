@@ -24,6 +24,7 @@ mixin _$LoginState {
     required TResult Function(LoginResponseModel user, String? selectedRole)
     success,
     required TResult Function(String messageKey) error,
+    required TResult Function() deviceTransferRequired,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
@@ -31,6 +32,7 @@ mixin _$LoginState {
     TResult? Function()? loading,
     TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
+    TResult? Function()? deviceTransferRequired,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
@@ -38,6 +40,7 @@ mixin _$LoginState {
     TResult Function()? loading,
     TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
+    TResult Function()? deviceTransferRequired,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -46,6 +49,8 @@ mixin _$LoginState {
     required TResult Function(LoginLoading value) loading,
     required TResult Function(LoginSuccess value) success,
     required TResult Function(LoginError value) error,
+    required TResult Function(LoginDeviceTransferRequired value)
+    deviceTransferRequired,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
@@ -53,6 +58,8 @@ mixin _$LoginState {
     TResult? Function(LoginLoading value)? loading,
     TResult? Function(LoginSuccess value)? success,
     TResult? Function(LoginError value)? error,
+    TResult? Function(LoginDeviceTransferRequired value)?
+    deviceTransferRequired,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
@@ -60,6 +67,7 @@ mixin _$LoginState {
     TResult Function(LoginLoading value)? loading,
     TResult Function(LoginSuccess value)? success,
     TResult Function(LoginError value)? error,
+    TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
 }
@@ -134,6 +142,7 @@ class _$LoginInitialImpl implements LoginInitial {
     required TResult Function(LoginResponseModel user, String? selectedRole)
     success,
     required TResult Function(String messageKey) error,
+    required TResult Function() deviceTransferRequired,
   }) {
     return initial();
   }
@@ -145,6 +154,7 @@ class _$LoginInitialImpl implements LoginInitial {
     TResult? Function()? loading,
     TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
+    TResult? Function()? deviceTransferRequired,
   }) {
     return initial?.call();
   }
@@ -156,6 +166,7 @@ class _$LoginInitialImpl implements LoginInitial {
     TResult Function()? loading,
     TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
+    TResult Function()? deviceTransferRequired,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -171,6 +182,8 @@ class _$LoginInitialImpl implements LoginInitial {
     required TResult Function(LoginLoading value) loading,
     required TResult Function(LoginSuccess value) success,
     required TResult Function(LoginError value) error,
+    required TResult Function(LoginDeviceTransferRequired value)
+    deviceTransferRequired,
   }) {
     return initial(this);
   }
@@ -182,6 +195,8 @@ class _$LoginInitialImpl implements LoginInitial {
     TResult? Function(LoginLoading value)? loading,
     TResult? Function(LoginSuccess value)? success,
     TResult? Function(LoginError value)? error,
+    TResult? Function(LoginDeviceTransferRequired value)?
+    deviceTransferRequired,
   }) {
     return initial?.call(this);
   }
@@ -193,6 +208,7 @@ class _$LoginInitialImpl implements LoginInitial {
     TResult Function(LoginLoading value)? loading,
     TResult Function(LoginSuccess value)? success,
     TResult Function(LoginError value)? error,
+    TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -254,6 +270,7 @@ class _$LoginLoadingImpl implements LoginLoading {
     required TResult Function(LoginResponseModel user, String? selectedRole)
     success,
     required TResult Function(String messageKey) error,
+    required TResult Function() deviceTransferRequired,
   }) {
     return loading();
   }
@@ -265,6 +282,7 @@ class _$LoginLoadingImpl implements LoginLoading {
     TResult? Function()? loading,
     TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
+    TResult? Function()? deviceTransferRequired,
   }) {
     return loading?.call();
   }
@@ -276,6 +294,7 @@ class _$LoginLoadingImpl implements LoginLoading {
     TResult Function()? loading,
     TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
+    TResult Function()? deviceTransferRequired,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -291,6 +310,8 @@ class _$LoginLoadingImpl implements LoginLoading {
     required TResult Function(LoginLoading value) loading,
     required TResult Function(LoginSuccess value) success,
     required TResult Function(LoginError value) error,
+    required TResult Function(LoginDeviceTransferRequired value)
+    deviceTransferRequired,
   }) {
     return loading(this);
   }
@@ -302,6 +323,8 @@ class _$LoginLoadingImpl implements LoginLoading {
     TResult? Function(LoginLoading value)? loading,
     TResult? Function(LoginSuccess value)? success,
     TResult? Function(LoginError value)? error,
+    TResult? Function(LoginDeviceTransferRequired value)?
+    deviceTransferRequired,
   }) {
     return loading?.call(this);
   }
@@ -313,6 +336,7 @@ class _$LoginLoadingImpl implements LoginLoading {
     TResult Function(LoginLoading value)? loading,
     TResult Function(LoginSuccess value)? success,
     TResult Function(LoginError value)? error,
+    TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -409,6 +433,7 @@ class _$LoginSuccessImpl implements LoginSuccess {
     required TResult Function(LoginResponseModel user, String? selectedRole)
     success,
     required TResult Function(String messageKey) error,
+    required TResult Function() deviceTransferRequired,
   }) {
     return success(user, selectedRole);
   }
@@ -420,6 +445,7 @@ class _$LoginSuccessImpl implements LoginSuccess {
     TResult? Function()? loading,
     TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
+    TResult? Function()? deviceTransferRequired,
   }) {
     return success?.call(user, selectedRole);
   }
@@ -431,6 +457,7 @@ class _$LoginSuccessImpl implements LoginSuccess {
     TResult Function()? loading,
     TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
+    TResult Function()? deviceTransferRequired,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -446,6 +473,8 @@ class _$LoginSuccessImpl implements LoginSuccess {
     required TResult Function(LoginLoading value) loading,
     required TResult Function(LoginSuccess value) success,
     required TResult Function(LoginError value) error,
+    required TResult Function(LoginDeviceTransferRequired value)
+    deviceTransferRequired,
   }) {
     return success(this);
   }
@@ -457,6 +486,8 @@ class _$LoginSuccessImpl implements LoginSuccess {
     TResult? Function(LoginLoading value)? loading,
     TResult? Function(LoginSuccess value)? success,
     TResult? Function(LoginError value)? error,
+    TResult? Function(LoginDeviceTransferRequired value)?
+    deviceTransferRequired,
   }) {
     return success?.call(this);
   }
@@ -468,6 +499,7 @@ class _$LoginSuccessImpl implements LoginSuccess {
     TResult Function(LoginLoading value)? loading,
     TResult Function(LoginSuccess value)? success,
     TResult Function(LoginError value)? error,
+    TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -569,6 +601,7 @@ class _$LoginErrorImpl implements LoginError {
     required TResult Function(LoginResponseModel user, String? selectedRole)
     success,
     required TResult Function(String messageKey) error,
+    required TResult Function() deviceTransferRequired,
   }) {
     return error(messageKey);
   }
@@ -580,6 +613,7 @@ class _$LoginErrorImpl implements LoginError {
     TResult? Function()? loading,
     TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
+    TResult? Function()? deviceTransferRequired,
   }) {
     return error?.call(messageKey);
   }
@@ -591,6 +625,7 @@ class _$LoginErrorImpl implements LoginError {
     TResult Function()? loading,
     TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
+    TResult Function()? deviceTransferRequired,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -606,6 +641,8 @@ class _$LoginErrorImpl implements LoginError {
     required TResult Function(LoginLoading value) loading,
     required TResult Function(LoginSuccess value) success,
     required TResult Function(LoginError value) error,
+    required TResult Function(LoginDeviceTransferRequired value)
+    deviceTransferRequired,
   }) {
     return error(this);
   }
@@ -617,6 +654,8 @@ class _$LoginErrorImpl implements LoginError {
     TResult? Function(LoginLoading value)? loading,
     TResult? Function(LoginSuccess value)? success,
     TResult? Function(LoginError value)? error,
+    TResult? Function(LoginDeviceTransferRequired value)?
+    deviceTransferRequired,
   }) {
     return error?.call(this);
   }
@@ -628,6 +667,7 @@ class _$LoginErrorImpl implements LoginError {
     TResult Function(LoginLoading value)? loading,
     TResult Function(LoginSuccess value)? success,
     TResult Function(LoginError value)? error,
+    TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -647,4 +687,134 @@ abstract class LoginError implements LoginState {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoginErrorImplCopyWith<_$LoginErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LoginDeviceTransferRequiredImplCopyWith<$Res> {
+  factory _$$LoginDeviceTransferRequiredImplCopyWith(
+    _$LoginDeviceTransferRequiredImpl value,
+    $Res Function(_$LoginDeviceTransferRequiredImpl) then,
+  ) = __$$LoginDeviceTransferRequiredImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$LoginDeviceTransferRequiredImplCopyWithImpl<$Res>
+    extends _$LoginStateCopyWithImpl<$Res, _$LoginDeviceTransferRequiredImpl>
+    implements _$$LoginDeviceTransferRequiredImplCopyWith<$Res> {
+  __$$LoginDeviceTransferRequiredImplCopyWithImpl(
+    _$LoginDeviceTransferRequiredImpl _value,
+    $Res Function(_$LoginDeviceTransferRequiredImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$LoginDeviceTransferRequiredImpl implements LoginDeviceTransferRequired {
+  const _$LoginDeviceTransferRequiredImpl();
+
+  @override
+  String toString() {
+    return 'LoginState.deviceTransferRequired()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LoginDeviceTransferRequiredImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(LoginResponseModel user, String? selectedRole)
+    success,
+    required TResult Function(String messageKey) error,
+    required TResult Function() deviceTransferRequired,
+  }) {
+    return deviceTransferRequired();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(LoginResponseModel user, String? selectedRole)? success,
+    TResult? Function(String messageKey)? error,
+    TResult? Function()? deviceTransferRequired,
+  }) {
+    return deviceTransferRequired?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(LoginResponseModel user, String? selectedRole)? success,
+    TResult Function(String messageKey)? error,
+    TResult Function()? deviceTransferRequired,
+    required TResult orElse(),
+  }) {
+    if (deviceTransferRequired != null) {
+      return deviceTransferRequired();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoginInitial value) initial,
+    required TResult Function(LoginLoading value) loading,
+    required TResult Function(LoginSuccess value) success,
+    required TResult Function(LoginError value) error,
+    required TResult Function(LoginDeviceTransferRequired value)
+    deviceTransferRequired,
+  }) {
+    return deviceTransferRequired(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoginInitial value)? initial,
+    TResult? Function(LoginLoading value)? loading,
+    TResult? Function(LoginSuccess value)? success,
+    TResult? Function(LoginError value)? error,
+    TResult? Function(LoginDeviceTransferRequired value)?
+    deviceTransferRequired,
+  }) {
+    return deviceTransferRequired?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoginInitial value)? initial,
+    TResult Function(LoginLoading value)? loading,
+    TResult Function(LoginSuccess value)? success,
+    TResult Function(LoginError value)? error,
+    TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
+    required TResult orElse(),
+  }) {
+    if (deviceTransferRequired != null) {
+      return deviceTransferRequired(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class LoginDeviceTransferRequired implements LoginState {
+  const factory LoginDeviceTransferRequired() =
+      _$LoginDeviceTransferRequiredImpl;
 }

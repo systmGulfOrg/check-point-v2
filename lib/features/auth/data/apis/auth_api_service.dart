@@ -16,6 +16,9 @@ abstract class AuthApiService {
   @POST(ApiConstants.login)
   Future<LoginResultModel> login(@Body() LoginRequestModel request);
 
+  @POST("/api/v2/auth/device-transfer-request")
+  Future<ResultModel> requestDeviceTransfer(@Body() LoginRequestModel request);
+
   @POST(ApiConstants.accountRequest)
   Future<ResultModel> requestAccount(@Body() AccountRequestModel request);
 }

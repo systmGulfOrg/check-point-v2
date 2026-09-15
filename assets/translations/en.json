@@ -515,6 +515,7 @@
   "admin.employees.roles": "Roles & Permissions",
   "admin.employees.canAddAttendance": "Self Attendance Recording",
   "admin.employees.canAddPlan": "Create Work Plans",
+  "admin.employees.leaveBalance": "Annual Leave Balance (days)",
   "admin.employees.passwordOptional": "Password (leave blank to keep current)",
   "admin.roles.employee": "Employee",
   "admin.roles.supervisor": "Supervisor",
@@ -887,5 +888,40 @@
   "app.errors.invalidRequestDetails": "Invalid request details",
   "app.errors.invalidSupervisor": "Invalid supervisor",
   "app.errors.invalidShift": "Invalid shift",
-  "app.errors.unknownRoute": "Unknown route"
+  "app.errors.unknownRoute": "Unknown route",
+  "leaves": {
+    "dashboard": {
+      "title": "Leaves & Permissions",
+      "daysLeft": "Days Left",
+      "total": "Total",
+      "used": "Used",
+      "remaining": "Remaining",
+      "warningLowBalance": "Warning: Your leave balance is low!",
+      "noLeavesTaken": "You haven't taken any leaves yet.",
+      "requestPermission": "Request Permission",
+      "requestLeave": "Request Leave"
+    },
+    "request": {
+      "title": "Request Leave",
+      "type": "Leave Type",
+      "reason": "Reason",
+      "submit": "Submit Request",
+      "success": "Request submitted successfully"
+    }
+  },
+  "permissions": {
+    "request": {
+      "title": "Request Permission",
+      "success": "Permission submitted successfully"
+    }
+  },
+  "auth": {
+    "login": {
+      "deviceTransferTitle": "Transfer Account?",
+      "deviceTransferMessage": "You are logging in from a new device. Do you want to request transferring your account permissions to this new device?",
+      "cancel": "Cancel",
+      "confirmTransfer": "Request Transfer",
+      "deviceTransferSuccess": "Device transfer request sent successfully to the Admin. Please wait for approval."
+    }
+  }
 }

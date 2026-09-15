@@ -7,9 +7,14 @@ import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubi
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_state.dart';
 
 class LoginBlocListenerWidget extends StatelessWidget {
-  const LoginBlocListenerWidget({required this.child, super.key});
+  const LoginBlocListenerWidget({
+    required this.child,
+    required this.onDeviceTransferRequired,
+    super.key,
+  });
 
   final Widget child;
+  final VoidCallback onDeviceTransferRequired;
 
   @override
   Widget build(BuildContext context) => BlocListener<LoginCubit, LoginState>(
@@ -30,9 +35,17 @@ class LoginBlocListenerWidget extends StatelessWidget {
             context.pushReplacementNamed(AppRoutes.employee);
           }
         case LoginError(:final messageKey):
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(messageKey.tr(context: context))),
-          );
+          if (messageKey == 'deviceTransferSuccess') {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('auth.login.deviceTransferSuccess'.tr(context: context))),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(messageKey.tr(context: context))),
+            );
+          }
+        case LoginDeviceTransferRequired():
+          onDeviceTransferRequired();
         default:
           break;
       }

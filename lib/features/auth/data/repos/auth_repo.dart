@@ -5,6 +5,7 @@ import 'package:check_point_v2/features/auth/data/models/login/login_response_mo
 
 abstract class AuthRepo {
   Future<ApiResult<LoginResponseModel>> login(LoginRequestModel request);
+  Future<ApiResult<bool>> requestDeviceTransfer(LoginRequestModel request);
 
   Future<ApiResult<void>> requestAccount(AccountRequestModel request);
 }
