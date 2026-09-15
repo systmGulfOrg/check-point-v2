@@ -18,6 +18,33 @@ class _AdminApiService implements AdminApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
+  Future<AuditLogsResponseModel> getAuditLogs(String entityId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'entityId': entityId};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<AuditLogsResponseModel>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/v2/audit',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late AuditLogsResponseModel _value;
+    try {
+      _value = AuditLogsResponseModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<PendingDevicesResponseModel> getEmployeeDevices(
     String employeeId,
   ) async {

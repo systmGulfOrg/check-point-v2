@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -70,7 +71,7 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
         backgroundColor: AppColors.white,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
-        title: Text('Pending Devices', style: AppTextStyles.font18Bold),
+        title: Text('admin.devices.pendingTitle'.tr(context: context), style: AppTextStyles.font18Bold),
       ),
       body: SafeArea(
         child: BlocConsumer<AdminPendingDevicesCubit, AdminPendingDevicesState>(
@@ -103,7 +104,7 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                 if (devices.isEmpty) {
                   return Center(
                     child: Text(
-                      'No pending device transfers.',
+                      'admin.devices.noPending'.tr(context: context),
                       style: AppTextStyles.font14Regular,
                     ),
                   );

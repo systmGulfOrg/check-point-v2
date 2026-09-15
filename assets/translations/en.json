@@ -925,5 +925,8 @@
     }
   },
   "admin.manage.devices": "Devices & Transfers",
-  "admin.manage.devicesSub": "Approve pending device transfers"
+  "admin.manage.devicesSub": "Approve pending device transfers",
+  "admin.devices.pendingTitle": "Pending Devices",
+  "admin.devices.noPending": "No pending device transfers.",
+  "admin.employees.activityLog": "Activity Log"
 }

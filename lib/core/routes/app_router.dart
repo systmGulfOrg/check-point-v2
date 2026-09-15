@@ -1,3 +1,5 @@
+import 'package:check_point_v2/features/admin/presentation/screens/admin_employee_audit_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee_audit/admin_employee_audit_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -125,6 +127,15 @@ class AppRouter {
 
   static Route<void> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case AppRoutes.adminEmployeeAudit:
+        final employeeId = settings.arguments as String;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => BlocProvider(
+            create: (_) => sl<AdminEmployeeAuditCubit>()..loadAuditLogs(employeeId),
+            child: const AdminEmployeeAuditScreen(),
+          ),
+        );
       case AppRoutes.login:
         return _fadeRoute(
           settings: const RouteSettings(name: AppRoutes.login),

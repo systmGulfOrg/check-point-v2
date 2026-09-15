@@ -553,7 +553,27 @@ class _AdminEditEmployeeSheetWidgetState
               hintText: '21',
               keyboardType: TextInputType.number,
             ),
-            hSpace(20),
+
+            hSpace(8),
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    AppRoutes.adminEmployeeAudit,
+                    arguments: widget.employee.id,
+                  );
+                },
+                child: Text(
+                  'admin.employees.activityLog'.tr(context: context),
+                  style: AppTextStyles.font14Medium.copyWith(
+                    color: AppColors.brandPrimary,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ),
+            hSpace(12),
             Row(
               children: [
                 Expanded(

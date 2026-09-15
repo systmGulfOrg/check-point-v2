@@ -1,3 +1,4 @@
+import 'package:check_point_v2/features/admin/data/models/audit/audit_log_model.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -26,6 +27,8 @@ part 'admin_api_service.g.dart';
 
 @RestApi()
 abstract class AdminApiService {
+  @GET("/api/v2/audit")
+  Future<AuditLogsResponseModel> getAuditLogs(@Query("entityId") String entityId);
   factory AdminApiService(Dio dio, {String? baseUrl}) = _AdminApiService;
   
   @GET('/api/v2/employees/{id}/devices')

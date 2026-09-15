@@ -8,6 +8,7 @@ class AppRoutes {
   static const String requestAccess = '/request-access';
   static const String adminRequestDetails = '/admin/requests/details';
   static const String adminCreateEmployee = '/admin/employees/create';
+  static const String adminEmployeeAudit = '/admin/employees/audit';
   static const String admin = '/admin';
   static const String supervisor = '/supervisor';
   static const String supervisorLeaveManagement =
