@@ -21,6 +21,7 @@ import 'package:check_point_v2/features/admin/data/repos/admin_shifts_policies_r
 import 'package:check_point_v2/features/admin/data/repos/admin_tasks_repo.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_tasks_repo_impl.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/pending_devices/admin_pending_devices_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
@@ -258,6 +259,7 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<AdminEmployeesCubit>(
     () => AdminEmployeesCubit(employeeRepo: sl<AdminEmployeeRepo>()),
   );
+  sl.registerFactory<AdminPendingDevicesCubit>(() => AdminPendingDevicesCubit(api: sl<AdminApiService>()));
   sl.registerFactory<AdminAccountRequestsCubit>(
     () => AdminAccountRequestsCubit(employeeRepo: sl<AdminEmployeeRepo>()),
   );

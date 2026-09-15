@@ -22,6 +22,15 @@ class AdminManageScreen extends StatelessWidget {
             ),
             hSpace(20),
             AdminManageCardWidget(
+              icon: Icons.devices_other,
+              iconColor: AppColors.info,
+              iconBackgroundColor: AppColors.softBlueBackground,
+              titleKey: 'Devices & Transfers',
+              subtitleKey: 'Approve pending device transfers',
+              onTap: () => Navigator.pushNamed(context, AppRoutes.adminPendingDevices),
+            ),
+            hSpace(10),
+            AdminManageCardWidget(
               icon: Icons.corporate_fare_outlined,
               iconColor: AppColors.brandPrimary,
               iconBackgroundColor: AppColors.softBrandBackground,

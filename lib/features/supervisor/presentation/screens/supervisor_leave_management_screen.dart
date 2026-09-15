@@ -6,6 +6,9 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_leave_sheet_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_state.dart';
+import 'package:check_point_v2/features/leaves/presentation/widgets/leave_balances_list_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_leave_management_filter_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_leave_requests_bloc_builder_widget.dart';
 
@@ -25,6 +28,7 @@ class _SupervisorLeaveManagementScreenState
   void initState() {
     super.initState();
     context.read<SupervisorLeaveRequestsCubit>().loadLeaveTypes();
+    context.read<LeavesCubit>().loadDashboardData();
   }
 
   void _showApplyLeaveSheet(BuildContext context) {
@@ -84,6 +88,21 @@ class _SupervisorLeaveManagementScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                BlocBuilder<LeavesCubit, LeavesState>(
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      success: (balances, types) {
+                        if (balances.isEmpty) return const SizedBox.shrink();
+                        return Container(
+                          height: 200.h,
+                          margin: EdgeInsets.only(bottom: 16.h),
+                          child: LeaveBalancesListWidget(balances: balances),
+                        );
+                      },
+                      orElse: () => const SizedBox.shrink(),
+                    );
+                  },
+                ),
                 SupervisorLeaveManagementFilterWidget(
                   selectedIndex: selectedFilter,
                   onFilterSelected: (index) =>

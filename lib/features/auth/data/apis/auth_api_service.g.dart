@@ -56,7 +56,7 @@ class _AuthApiService implements AuthApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v2/auth/device-transfer-request',
+            '/api/Auth/DeviceTransferRequest',
             queryParameters: queryParameters,
             data: _data,
           )

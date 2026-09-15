@@ -20,12 +20,23 @@ import 'package:check_point_v2/features/admin/data/models/employee/edit_employee
 import 'package:check_point_v2/features/admin/data/models/employee/employees_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/police_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
+import 'package:check_point_v2/features/admin/data/models/device/pending_device_model.dart';
 
 part 'admin_api_service.g.dart';
 
 @RestApi()
 abstract class AdminApiService {
   factory AdminApiService(Dio dio, {String? baseUrl}) = _AdminApiService;
+  
+  @GET('/api/v2/devices/pending')
+  Future<PendingDevicesResponseModel> getPendingDevices();
+
+  @POST('/api/v2/employees/{id}/devices')
+  Future<ResultModel> approveDevice(
+    @Path('id') String employeeId,
+    @Body() Map<String, dynamic> body,
+  );
+
 
   // Employee Management
   @GET(ApiConstants.employees)

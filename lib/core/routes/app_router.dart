@@ -25,6 +25,8 @@ import 'package:check_point_v2/features/admin/presentation/screens/admin_request
 import 'package:check_point_v2/features/admin/presentation/screens/admin_shift_details_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_shifts_policies_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_tasks_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/screens/admin_devices_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/pending_devices/admin_pending_devices_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_employee_directory_listener_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/session/auth_session_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
@@ -36,6 +38,7 @@ import 'package:check_point_v2/features/employee/presentation/cubit/attendance/e
 import 'package:check_point_v2/features/employee/presentation/cubit/leave_requests/employee_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/odoo_dashboard/employee_odoo_dashboard_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/plans/employee_plans_cubit.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/screens/employee_main_screen.dart';
 import 'package:check_point_v2/features/employee/presentation/screens/employee_settings_screen.dart';
@@ -291,6 +294,14 @@ class AppRouter {
           ),
         );
 
+      case AppRoutes.adminPendingDevices:
+        return MaterialPageRoute(
+          settings: const RouteSettings(name: AppRoutes.adminPendingDevices),
+          builder: (_) => BlocProvider<AdminPendingDevicesCubit>(
+            create: (_) => sl<AdminPendingDevicesCubit>(),
+            child: const AdminDevicesScreen(),
+          ),
+        );
       case AppRoutes.adminTasks:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminTasks),
@@ -383,6 +394,9 @@ class AppRouter {
               BlocProvider<EmployeeAttendanceCubit>(
                 create: (_) => sl<EmployeeAttendanceCubit>(),
               ),
+              BlocProvider<LeavesCubit>(
+                create: (_) => sl<LeavesCubit>(),
+              ),
               BlocProvider<SupervisorLeaveRequestsCubit>(
                 create: (_) =>
                     sl<SupervisorLeaveRequestsCubit>()..loadLeaveRequests(),
@@ -457,6 +471,9 @@ class AppRouter {
               ),
               BlocProvider<EmployeePlansCubit>(
                 create: (_) => sl<EmployeePlansCubit>()..loadMyPlans(),
+              ),
+              BlocProvider<LeavesCubit>(
+                create: (_) => sl<LeavesCubit>(),
               ),
               BlocProvider<EmployeeLeaveRequestsCubit>(
                 create: (_) =>
