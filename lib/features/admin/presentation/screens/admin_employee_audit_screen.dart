@@ -18,7 +18,7 @@ class AdminEmployeeAuditScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
-        title: Text('Activity Log', style: AppTextStyles.font18Bold),
+        title: Text('admin.employees.activityLog'.tr(context: context), style: AppTextStyles.font18Bold),
       ),
       body: SafeArea(
         child: BlocConsumer<AdminEmployeeAuditCubit, AdminEmployeeAuditState>(
@@ -39,7 +39,7 @@ class AdminEmployeeAuditScreen extends StatelessWidget {
                 final logs = state.logs;
                 if (logs.isEmpty) {
                   return Center(
-                    child: Text('No activity logs found.', style: AppTextStyles.font14Regular),
+                    child: Text('admin.requests.empty'.tr(context: context), style: AppTextStyles.font14Regular),
                   );
                 }
                 return ListView.builder(
@@ -63,7 +63,7 @@ class AdminEmployeeAuditScreen extends StatelessWidget {
                         children: [
                           Text(log.action, style: AppTextStyles.font16Bold),
                           SizedBox(height: 8.h),
-                          Text('By: ${log.actorName ?? "Unknown"}', style: AppTextStyles.font14Regular),
+                          Text('${"admin.employees.by".tr(context: context)} ${log.actorName ?? "admin.employees.unknown".tr(context: context)}', style: AppTextStyles.font14Regular),
                           SizedBox(height: 4.h),
                           Text(
                             DateFormat('yyyy-MM-dd HH:mm').format(log.createdAt.toLocal()),

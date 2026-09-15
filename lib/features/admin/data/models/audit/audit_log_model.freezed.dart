@@ -26,6 +26,8 @@ mixin _$AuditLogModel {
   String? get actorName => throw _privateConstructorUsedError;
   String get action => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get before => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get after => throw _privateConstructorUsedError;
 
   /// Serializes this AuditLogModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -50,6 +52,8 @@ abstract class $AuditLogModelCopyWith<$Res> {
     String? actorName,
     String action,
     DateTime createdAt,
+    Map<String, dynamic>? before,
+    Map<String, dynamic>? after,
   });
 }
 
@@ -73,6 +77,8 @@ class _$AuditLogModelCopyWithImpl<$Res, $Val extends AuditLogModel>
     Object? actorName = freezed,
     Object? action = null,
     Object? createdAt = null,
+    Object? before = freezed,
+    Object? after = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -96,6 +102,14 @@ class _$AuditLogModelCopyWithImpl<$Res, $Val extends AuditLogModel>
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
                       as DateTime,
+            before: freezed == before
+                ? _value.before
+                : before // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
+            after: freezed == after
+                ? _value.after
+                : after // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
           )
           as $Val,
     );
@@ -117,6 +131,8 @@ abstract class _$$AuditLogModelImplCopyWith<$Res>
     String? actorName,
     String action,
     DateTime createdAt,
+    Map<String, dynamic>? before,
+    Map<String, dynamic>? after,
   });
 }
 
@@ -139,6 +155,8 @@ class __$$AuditLogModelImplCopyWithImpl<$Res>
     Object? actorName = freezed,
     Object? action = null,
     Object? createdAt = null,
+    Object? before = freezed,
+    Object? after = freezed,
   }) {
     return _then(
       _$AuditLogModelImpl(
@@ -162,6 +180,14 @@ class __$$AuditLogModelImplCopyWithImpl<$Res>
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
                   as DateTime,
+        before: freezed == before
+            ? _value._before
+            : before // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
+        after: freezed == after
+            ? _value._after
+            : after // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
       ),
     );
   }
@@ -176,7 +202,10 @@ class _$AuditLogModelImpl implements _AuditLogModel {
     this.actorName,
     required this.action,
     required this.createdAt,
-  });
+    final Map<String, dynamic>? before,
+    final Map<String, dynamic>? after,
+  }) : _before = before,
+       _after = after;
 
   factory _$AuditLogModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$AuditLogModelImplFromJson(json);
@@ -191,10 +220,29 @@ class _$AuditLogModelImpl implements _AuditLogModel {
   final String action;
   @override
   final DateTime createdAt;
+  final Map<String, dynamic>? _before;
+  @override
+  Map<String, dynamic>? get before {
+    final value = _before;
+    if (value == null) return null;
+    if (_before is EqualUnmodifiableMapView) return _before;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
+  final Map<String, dynamic>? _after;
+  @override
+  Map<String, dynamic>? get after {
+    final value = _after;
+    if (value == null) return null;
+    if (_after is EqualUnmodifiableMapView) return _after;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'AuditLogModel(id: $id, actorId: $actorId, actorName: $actorName, action: $action, createdAt: $createdAt)';
+    return 'AuditLogModel(id: $id, actorId: $actorId, actorName: $actorName, action: $action, createdAt: $createdAt, before: $before, after: $after)';
   }
 
   @override
@@ -208,13 +256,23 @@ class _$AuditLogModelImpl implements _AuditLogModel {
                 other.actorName == actorName) &&
             (identical(other.action, action) || other.action == action) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            const DeepCollectionEquality().equals(other._before, _before) &&
+            const DeepCollectionEquality().equals(other._after, _after));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, actorId, actorName, action, createdAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    actorId,
+    actorName,
+    action,
+    createdAt,
+    const DeepCollectionEquality().hash(_before),
+    const DeepCollectionEquality().hash(_after),
+  );
 
   /// Create a copy of AuditLogModel
   /// with the given fields replaced by the non-null parameter values.
@@ -237,6 +295,8 @@ abstract class _AuditLogModel implements AuditLogModel {
     final String? actorName,
     required final String action,
     required final DateTime createdAt,
+    final Map<String, dynamic>? before,
+    final Map<String, dynamic>? after,
   }) = _$AuditLogModelImpl;
 
   factory _AuditLogModel.fromJson(Map<String, dynamic> json) =
@@ -252,6 +312,10 @@ abstract class _AuditLogModel implements AuditLogModel {
   String get action;
   @override
   DateTime get createdAt;
+  @override
+  Map<String, dynamic>? get before;
+  @override
+  Map<String, dynamic>? get after;
 
   /// Create a copy of AuditLogModel
   /// with the given fields replaced by the non-null parameter values.
@@ -491,7 +555,7 @@ AuditLogsResponseValue _$AuditLogsResponseValueFromJson(
 /// @nodoc
 mixin _$AuditLogsResponseValue {
   List<AuditLogModel> get items => throw _privateConstructorUsedError;
-  int get total => throw _privateConstructorUsedError;
+  int? get totalCount => throw _privateConstructorUsedError;
 
   /// Serializes this AuditLogsResponseValue to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -510,7 +574,7 @@ abstract class $AuditLogsResponseValueCopyWith<$Res> {
     $Res Function(AuditLogsResponseValue) then,
   ) = _$AuditLogsResponseValueCopyWithImpl<$Res, AuditLogsResponseValue>;
   @useResult
-  $Res call({List<AuditLogModel> items, int total});
+  $Res call({List<AuditLogModel> items, int? totalCount});
 }
 
 /// @nodoc
@@ -530,17 +594,17 @@ class _$AuditLogsResponseValueCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? items = null, Object? total = null}) {
+  $Res call({Object? items = null, Object? totalCount = freezed}) {
     return _then(
       _value.copyWith(
             items: null == items
                 ? _value.items
                 : items // ignore: cast_nullable_to_non_nullable
                       as List<AuditLogModel>,
-            total: null == total
-                ? _value.total
-                : total // ignore: cast_nullable_to_non_nullable
-                      as int,
+            totalCount: freezed == totalCount
+                ? _value.totalCount
+                : totalCount // ignore: cast_nullable_to_non_nullable
+                      as int?,
           )
           as $Val,
     );
@@ -556,7 +620,7 @@ abstract class _$$AuditLogsResponseValueImplCopyWith<$Res>
   ) = __$$AuditLogsResponseValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<AuditLogModel> items, int total});
+  $Res call({List<AuditLogModel> items, int? totalCount});
 }
 
 /// @nodoc
@@ -573,17 +637,17 @@ class __$$AuditLogsResponseValueImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? items = null, Object? total = null}) {
+  $Res call({Object? items = null, Object? totalCount = freezed}) {
     return _then(
       _$AuditLogsResponseValueImpl(
         items: null == items
             ? _value._items
             : items // ignore: cast_nullable_to_non_nullable
                   as List<AuditLogModel>,
-        total: null == total
-            ? _value.total
-            : total // ignore: cast_nullable_to_non_nullable
-                  as int,
+        totalCount: freezed == totalCount
+            ? _value.totalCount
+            : totalCount // ignore: cast_nullable_to_non_nullable
+                  as int?,
       ),
     );
   }
@@ -594,7 +658,7 @@ class __$$AuditLogsResponseValueImplCopyWithImpl<$Res>
 class _$AuditLogsResponseValueImpl implements _AuditLogsResponseValue {
   const _$AuditLogsResponseValueImpl({
     required final List<AuditLogModel> items,
-    required this.total,
+    this.totalCount,
   }) : _items = items;
 
   factory _$AuditLogsResponseValueImpl.fromJson(Map<String, dynamic> json) =>
@@ -609,11 +673,11 @@ class _$AuditLogsResponseValueImpl implements _AuditLogsResponseValue {
   }
 
   @override
-  final int total;
+  final int? totalCount;
 
   @override
   String toString() {
-    return 'AuditLogsResponseValue(items: $items, total: $total)';
+    return 'AuditLogsResponseValue(items: $items, totalCount: $totalCount)';
   }
 
   @override
@@ -622,7 +686,8 @@ class _$AuditLogsResponseValueImpl implements _AuditLogsResponseValue {
         (other.runtimeType == runtimeType &&
             other is _$AuditLogsResponseValueImpl &&
             const DeepCollectionEquality().equals(other._items, _items) &&
-            (identical(other.total, total) || other.total == total));
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -630,7 +695,7 @@ class _$AuditLogsResponseValueImpl implements _AuditLogsResponseValue {
   int get hashCode => Object.hash(
     runtimeType,
     const DeepCollectionEquality().hash(_items),
-    total,
+    totalCount,
   );
 
   /// Create a copy of AuditLogsResponseValue
@@ -654,7 +719,7 @@ class _$AuditLogsResponseValueImpl implements _AuditLogsResponseValue {
 abstract class _AuditLogsResponseValue implements AuditLogsResponseValue {
   const factory _AuditLogsResponseValue({
     required final List<AuditLogModel> items,
-    required final int total,
+    final int? totalCount,
   }) = _$AuditLogsResponseValueImpl;
 
   factory _AuditLogsResponseValue.fromJson(Map<String, dynamic> json) =
@@ -663,7 +728,7 @@ abstract class _AuditLogsResponseValue implements AuditLogsResponseValue {
   @override
   List<AuditLogModel> get items;
   @override
-  int get total;
+  int? get totalCount;
 
   /// Create a copy of AuditLogsResponseValue
   /// with the given fields replaced by the non-null parameter values.

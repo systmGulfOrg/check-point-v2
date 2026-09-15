@@ -13,6 +13,8 @@ _$AuditLogModelImpl _$$AuditLogModelImplFromJson(Map<String, dynamic> json) =>
       actorName: json['actorName'] as String?,
       action: json['action'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
+      before: json['before'] as Map<String, dynamic>?,
+      after: json['after'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$$AuditLogModelImplToJson(_$AuditLogModelImpl instance) =>
@@ -22,6 +24,8 @@ Map<String, dynamic> _$$AuditLogModelImplToJson(_$AuditLogModelImpl instance) =>
       'actorName': instance.actorName,
       'action': instance.action,
       'createdAt': instance.createdAt.toIso8601String(),
+      'before': instance.before,
+      'after': instance.after,
     };
 
 _$AuditLogsResponseModelImpl _$$AuditLogsResponseModelImplFromJson(
@@ -46,9 +50,12 @@ _$AuditLogsResponseValueImpl _$$AuditLogsResponseValueImplFromJson(
   items: (json['items'] as List<dynamic>)
       .map((e) => AuditLogModel.fromJson(e as Map<String, dynamic>))
       .toList(),
-  total: (json['total'] as num).toInt(),
+  totalCount: (json['totalCount'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$$AuditLogsResponseValueImplToJson(
   _$AuditLogsResponseValueImpl instance,
-) => <String, dynamic>{'items': instance.items, 'total': instance.total};
+) => <String, dynamic>{
+  'items': instance.items,
+  'totalCount': instance.totalCount,
+};

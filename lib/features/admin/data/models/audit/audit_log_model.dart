@@ -11,6 +11,8 @@ class AuditLogModel with _$AuditLogModel {
     String? actorName,
     required String action,
     required DateTime createdAt,
+    Map<String, dynamic>? before,
+    Map<String, dynamic>? after,
   }) = _AuditLogModel;
 
   factory AuditLogModel.fromJson(Map<String, dynamic> json) => _$AuditLogModelFromJson(json);
@@ -31,7 +33,7 @@ class AuditLogsResponseModel with _$AuditLogsResponseModel {
 class AuditLogsResponseValue with _$AuditLogsResponseValue {
   const factory AuditLogsResponseValue({
     required List<AuditLogModel> items,
-    required int total,
+    int? totalCount,
   }) = _AuditLogsResponseValue;
 
   factory AuditLogsResponseValue.fromJson(Map<String, dynamic> json) => _$AuditLogsResponseValueFromJson(json);
