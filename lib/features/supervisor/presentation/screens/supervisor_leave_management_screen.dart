@@ -28,7 +28,7 @@ class _SupervisorLeaveManagementScreenState
   void initState() {
     super.initState();
     context.read<SupervisorLeaveRequestsCubit>().loadLeaveTypes();
-    context.read<LeavesCubit>().loadDashboardData();
+    context.read<LeavesCubit>().loadLeavesData();
   }
 
   void _showApplyLeaveSheet(BuildContext context) {

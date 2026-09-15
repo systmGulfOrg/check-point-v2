@@ -20,6 +20,7 @@ class AppRoutes {
   static const String adminPermissionDetails = '/admin/permissions/details';
   static const String adminLeaveManagement = '/admin/leave-management';
   static const String adminTasks = '/admin/tasks';
+  static const String adminPendingDevices = '/admin/pending-devices';
   static const String adminPlans = '/admin/plans';
   static const String adminAttendance = '/admin/attendance';
   static const String supervisorNotifications = '/supervisor/notifications';

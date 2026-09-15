@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -32,21 +31,32 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
       ),
       body: BlocConsumer<AdminPendingDevicesCubit, AdminPendingDevicesState>(
         listener: (context, state) {
-          state.maybeWhen(
-            error: (msg) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+          state.maybeMap(
+            error: (state) {
+              final msg = state.message;
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(msg)));
             },
             orElse: () {},
           );
         },
         builder: (context, state) {
-          return state.when(
-            initial: () => const Center(child: CircularProgressIndicator()),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (msg) => Center(child: Text(msg, style: const TextStyle(color: AppColors.error))),
-            success: (devices) {
+          return state.map(
+            initial: (_) => const Center(child: CircularProgressIndicator()),
+            loading: (_) => const Center(child: CircularProgressIndicator()),
+            error: (state) => Center(
+              child: Text(
+                state.message,
+                style: const TextStyle(color: AppColors.error),
+              ),
+            ),
+            success: (state) {
+              final devices = state.devices;
               if (devices.isEmpty) {
-                return const Center(child: Text('No pending device transfers.'));
+                return const Center(
+                  child: Text('No pending device transfers.'),
+                );
               }
               return ListView.builder(
                 padding: EdgeInsets.all(16.w),
@@ -64,13 +74,25 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(dev.employeeName ?? 'Unknown Employee', style: AppTextStyles.font16Bold),
+                        Text(
+                          dev.employeeName ?? 'Unknown Employee',
+                          style: AppTextStyles.font16Bold,
+                        ),
                         SizedBox(height: 8.h),
-                        Text('Device ID: ${dev.deviceId}', style: AppTextStyles.font14Regular),
+                        Text(
+                          'Device ID: ${dev.deviceId}',
+                          style: AppTextStyles.font14Regular,
+                        ),
                         if (dev.deviceModel != null)
-                          Text('Model: ${dev.deviceModel}', style: AppTextStyles.font14Regular),
+                          Text(
+                            'Model: ${dev.deviceModel}',
+                            style: AppTextStyles.font14Regular,
+                          ),
                         if (dev.osVersion != null)
-                          Text('OS: ${dev.osVersion}', style: AppTextStyles.font14Regular),
+                          Text(
+                            'OS: ${dev.osVersion}',
+                            style: AppTextStyles.font14Regular,
+                          ),
                         SizedBox(height: 12.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -80,9 +102,17 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                                 backgroundColor: AppColors.brandPrimary,
                               ),
                               onPressed: () {
-                                context.read<AdminPendingDevicesCubit>().approveDevice(dev.employeeId, dev.deviceId);
+                                context
+                                    .read<AdminPendingDevicesCubit>()
+                                    .approveDevice(
+                                      dev.employeeId,
+                                      dev.deviceId,
+                                    );
                               },
-                              child: const Text('Approve Transfer', style: TextStyle(color: AppColors.white)),
+                              child: const Text(
+                                'Approve Transfer',
+                                style: TextStyle(color: AppColors.white),
+                              ),
                             ),
                           ],
                         ),

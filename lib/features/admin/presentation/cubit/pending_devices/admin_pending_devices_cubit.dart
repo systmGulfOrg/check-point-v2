@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/network/api_result.dart';
+import '../../../../../core/network/api_result.dart';
 import '../../../data/apis/admin_api_service.dart';
 import 'admin_pending_devices_state.dart';
-import '../../../../core/network/api_failure_mapper.dart';
+import '../../../../../core/network/api_failure_mapper.dart';
 
 class AdminPendingDevicesCubit extends Cubit<AdminPendingDevicesState> {
   AdminPendingDevicesCubit({required this.api}) : super(const AdminPendingDevicesState.initial());
@@ -13,14 +13,14 @@ class AdminPendingDevicesCubit extends Cubit<AdminPendingDevicesState> {
     emit(const AdminPendingDevicesState.loading());
     try {
       final response = await api.getPendingDevices();
-      if (response.isSuccess) {
+      if (response.isSuccess == true) {
         emit(AdminPendingDevicesState.success(response.value));
       } else {
         emit(AdminPendingDevicesState.error('Failed to load pending devices'));
       }
     } catch (e, st) {
-      final failure = ApiFailureMapper.map(e, st);
-      emit(AdminPendingDevicesState.error(failure.userMessage));
+      final failure = ApiFailureMapper.map(e);
+      emit(AdminPendingDevicesState.error(failure.messageKey));
     }
   }
 
@@ -30,14 +30,14 @@ class AdminPendingDevicesCubit extends Cubit<AdminPendingDevicesState> {
         'deviceId': deviceId,
         'isActive': true,
       });
-      if (response.isSuccess) {
+      if (response.isSuccess == true) {
         loadDevices();
       } else {
-        emit(AdminPendingDevicesState.error(response.message ?? 'Approval failed'));
+        emit(AdminPendingDevicesState.error('Approval failed'));
       }
     } catch (e, st) {
-      final failure = ApiFailureMapper.map(e, st);
-      emit(AdminPendingDevicesState.error(failure.userMessage));
+      final failure = ApiFailureMapper.map(e);
+      emit(AdminPendingDevicesState.error(failure.messageKey));
     }
   }
 }
