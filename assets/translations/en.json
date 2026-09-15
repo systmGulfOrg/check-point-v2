@@ -930,5 +930,9 @@
   "admin.devices.noPending": "No pending device transfers.",
   "admin.employees.activityLog": "Activity Log",
   "admin.employees.by": "By: ",
-  "admin.employees.unknown": "Unknown"
+  "admin.employees.unknown": "Unknown",
+  "admin.employees.before": "Before",
+  "admin.employees.after": "After",
+  "admin.employees.emptyValue": "Empty",
+  "admin.employees.noVisibleChanges": "No visible changes"
 }

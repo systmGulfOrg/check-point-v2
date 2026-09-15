@@ -928,7 +928,11 @@
   "admin.manage.devicesSub": "الموافقة على طلبات نقل الأجهزة المعلقة",
   "admin.devices.pendingTitle": "الأجهزة المعلقة",
   "admin.devices.noPending": "لا توجد طلبات نقل أجهزة معلقة.",
-  "admin.employees.activityLog": "سجل النشاطات (Activity Log)",
+  "admin.employees.activityLog": "سجل النشاطات",
   "admin.employees.by": "بواسطة: ",
-  "admin.employees.unknown": "غير معروف"
+  "admin.employees.unknown": "غير معروف",
+  "admin.employees.before": "كان",
+  "admin.employees.after": "أصبح",
+  "admin.employees.emptyValue": "فارغ",
+  "admin.employees.noVisibleChanges": "لا توجد تغييرات مرئية"
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -9,7 +10,7 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
   final AuditLogModel log;
   const AdminEmployeeAuditItemWidget({super.key, required this.log});
 
-  List<Widget> _buildChangesList() {
+  List<Widget> _buildChangesList(BuildContext context) {
     final before = log.before ?? {};
     final after = log.after ?? {};
     
@@ -25,8 +26,10 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
       final bVal = before[key];
       final aVal = after[key];
       
-      // If values are equal, no change
-      if (bVal == aVal) continue;
+      // Use jsonEncode for deep equality comparison
+      final bStr = jsonEncode(bVal);
+      final aStr = jsonEncode(aVal);
+      if (bStr == aStr) continue;
       
       // We found a change!
       changes.add(
@@ -52,21 +55,21 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('كان (Before)', style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary)),
+                          Text('admin.employees.before'.tr(context: context), style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary)),
                           SizedBox(height: 2.h),
-                          Text(bVal?.toString() ?? 'فارغ', style: AppTextStyles.font14Regular.copyWith(color: AppColors.error)),
+                          Text(bVal?.toString() ?? 'admin.employees.emptyValue'.tr(context: context), style: AppTextStyles.font14Regular.copyWith(color: AppColors.error)),
                         ],
                       ),
                     ),
-                    Icon(Icons.arrow_forward, size: 16.sp, color: AppColors.textSecondary),
+                    Icon(context.locale.languageCode == 'ar' ? Icons.arrow_back : Icons.arrow_forward, size: 16.sp, color: AppColors.textSecondary),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('أصبح (After)', style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary)),
+                          Text('admin.employees.after'.tr(context: context), style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary)),
                           SizedBox(height: 2.h),
-                          Text(aVal?.toString() ?? 'فارغ', style: AppTextStyles.font14Regular.copyWith(color: AppColors.success)),
+                          Text(aVal?.toString() ?? 'admin.employees.emptyValue'.tr(context: context), style: AppTextStyles.font14Regular.copyWith(color: AppColors.success)),
                         ],
                       ),
                     ),
@@ -83,7 +86,7 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
       changes.add(
         Padding(
           padding: EdgeInsets.only(top: 8.h),
-          child: Text('لا توجد تغييرات مرئية', style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary)),
+          child: Text('admin.employees.noVisibleChanges'.tr(context: context), style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary)),
         ),
       );
     }
@@ -121,7 +124,7 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
             '${"admin.employees.by".tr(context: context)} ${log.actorName ?? "admin.employees.unknown".tr(context: context)}',
             style: AppTextStyles.font14Regular,
           ),
-          ..._buildChangesList(),
+          ..._buildChangesList(context),
         ],
       ),
     );
