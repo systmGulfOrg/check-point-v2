@@ -53,8 +53,8 @@ class ApiFailureMapper {
         ),
         _ when status == 404 => const ApiFailure(messageKey: 'errors.notFound'),
         _ when status == 409 => ApiFailure(messageKey: messages.isNotEmpty ? messages.join(' ') : 'errors.conflict'),
-        _ when status == 400 => const ApiFailure(
-          messageKey: 'errors.validation',
+        _ when status == 400 => ApiFailure(
+          messageKey: messages.isNotEmpty ? messages.join(' ') : 'errors.validation',
         ),
         _ when status == 429 => ApiFailure(
           messageKey: messages.isNotEmpty ? messages.join(' ') : 'errors.rateLimit',

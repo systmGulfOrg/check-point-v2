@@ -74,7 +74,7 @@ class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
     emit(AdminAccountRequestsState.success(filtered));
   }
 
-  Future<bool> approveRequest({
+  Future<String?> approveRequest({
     required int id,
     required ApproveAccountRequestBody body,
   }) async {
@@ -83,16 +83,16 @@ class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
     return result.when(
       success: (_) async {
         await loadRequests();
-        return true;
+        return null;
       },
       failure: (failure) {
         emit(AdminAccountRequestsState.error(failure.messageKey));
-        return false;
+        return failure.messageKey;
       },
     );
   }
 
-  Future<bool> rejectRequest({
+  Future<String?> rejectRequest({
     required int id,
     required String reason,
   }) async {
@@ -104,26 +104,26 @@ class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
     return result.when(
       success: (_) async {
         await loadRequests();
-        return true;
+        return null;
       },
       failure: (failure) {
         emit(AdminAccountRequestsState.error(failure.messageKey));
-        return false;
+        return failure.messageKey;
       },
     );
   }
 
-  Future<bool> deleteRequest({required int id}) async {
+  Future<String?> deleteRequest({required int id}) async {
     emit(const AdminAccountRequestsState.loading());
     final result = await employeeRepo.deleteAccountRequest(id: id);
     return result.when(
       success: (_) async {
         await loadRequests();
-        return true;
+        return null;
       },
       failure: (failure) {
         emit(AdminAccountRequestsState.error(failure.messageKey));
-        return false;
+        return failure.messageKey;
       },
     );
   }

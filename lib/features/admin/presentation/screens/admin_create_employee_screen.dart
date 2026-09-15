@@ -728,13 +728,13 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           );
 
                           final accountRequestsCubit = context.read<AdminAccountRequestsCubit>();
-                          final success = await accountRequestsCubit.approveRequest(
-                            id: widget.accountRequest!.id!,
-                            body: approveBody,
-                          );
+                          final errorMessage = await accountRequestsCubit.approveRequest(
+                              id: widget.accountRequest!.id!,
+                              body: approveBody,
+                            );
 
-                          if (!mounted) return;
-                          if (success) {
+                            if (!mounted) return;
+                            if (errorMessage == null) {
                             setState(() {
                               isSaving = false;
                               isCreated = true;
@@ -742,7 +742,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           } else {
                             setState(() {
                               isSaving = false;
-                              saveErrorMessage = 'admin.employeeWizard.createFailed';
+                              saveErrorMessage = errorMessage;
                             });
                           }
                         } else {
@@ -771,9 +771,9 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           );
 
                           final employeesCubit = context.read<AdminEmployeesCubit>();
-                          final success = await employeesCubit.addEmployee(addBody);
+                          final errorMessage = await employeesCubit.addEmployee(addBody);
                           if (!mounted) return;
-                          if (success) {
+                          if (errorMessage == null) {
                             setState(() {
                               isSaving = false;
                               isCreated = true;
@@ -781,7 +781,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           } else {
                             setState(() {
                               isSaving = false;
-                              saveErrorMessage = 'admin.employeeWizard.createFailed';
+                              saveErrorMessage = errorMessage;
                             });
                           }
                         }

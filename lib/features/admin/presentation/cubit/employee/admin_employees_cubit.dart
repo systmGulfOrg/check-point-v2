@@ -75,7 +75,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
         .toList();
   }
 
-  Future<bool> addEmployee(AddEmployeeRequestBody body) async {
+  Future<String?> addEmployee(AddEmployeeRequestBody body) async {
     emit(const AdminEmployeesState.loading());
     final result = await employeeRepo.addEmployee(body);
     return result.when(
@@ -88,16 +88,16 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
             roleFilter: roleFilter,
           ),
         );
-        return true;
+        return null;
       },
       failure: (failure) {
         emit(AdminEmployeesState.error(failure.messageKey));
-        return false;
+        return failure.messageKey;
       },
     );
   }
 
-  Future<bool> editEmployee(String id, EditEmployeeRequestBody body) async {
+  Future<String?> editEmployee(String id, EditEmployeeRequestBody body) async {
     emit(const AdminEmployeesState.loading());
     final result = await employeeRepo.editEmployee(id: id, body: body);
     return result.when(
@@ -110,16 +110,16 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
             roleFilter: roleFilter,
           ),
         );
-        return true;
+        return null;
       },
       failure: (failure) {
         emit(AdminEmployeesState.error(failure.messageKey));
-        return false;
+        return failure.messageKey;
       },
     );
   }
 
-  Future<bool> deleteEmployee(String userId) async {
+  Future<String?> deleteEmployee(String userId) async {
     emit(const AdminEmployeesState.loading());
     final result = await employeeRepo.deleteEmployee(userId: userId);
     return result.when(
@@ -132,16 +132,16 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
             roleFilter: roleFilter,
           ),
         );
-        return true;
+        return null;
       },
       failure: (failure) {
         emit(AdminEmployeesState.error(failure.messageKey));
-        return false;
+        return failure.messageKey;
       },
     );
   }
 
-  Future<bool> setAttendancePermission(
+  Future<String?> setAttendancePermission(
     String supervisorId,
     bool permission,
   ) async {
@@ -160,16 +160,16 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
             roleFilter: roleFilter,
           ),
         );
-        return true;
+        return null;
       },
       failure: (failure) {
         emit(AdminEmployeesState.error(failure.messageKey));
-        return false;
+        return failure.messageKey;
       },
     );
   }
 
-  Future<bool> setPlanPermission(String supervisorId, bool permission) async {
+  Future<String?> setPlanPermission(String supervisorId, bool permission) async {
     emit(const AdminEmployeesState.loading());
     final result = await employeeRepo.setPlanPermission(
       supervisorId: supervisorId,
@@ -185,11 +185,11 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
             roleFilter: roleFilter,
           ),
         );
-        return true;
+        return null;
       },
       failure: (failure) {
         emit(AdminEmployeesState.error(failure.messageKey));
-        return false;
+        return failure.messageKey;
       },
     );
   }

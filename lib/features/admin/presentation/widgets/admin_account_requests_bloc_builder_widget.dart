@@ -29,7 +29,7 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
       final success = await context
           .read<AdminAccountRequestsCubit>()
           .rejectRequest(id: request.id!, reason: reason);
-      if (context.mounted && success) {
+      if (context.mounted && success == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('admin.requests.rejected'.tr(context: context)),
