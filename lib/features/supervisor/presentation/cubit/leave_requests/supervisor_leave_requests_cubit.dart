@@ -69,7 +69,7 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
 
   Future<void> loadRequests({int? departmentId, String? type}) async {
     emit(const SupervisorLeaveRequestsState.loading());
-    if (userRole == 'Employee') {
+    if (userRole == 'Employee' || currentUserId.isEmpty) {
       await initRole();
     }
     final result = await leaveRequestsRepo.getLeaveRequests(
@@ -78,7 +78,8 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
     );
     switch (result) {
       case Success(:final data):
-        allRequests = data;
+        // Hide supervisor's own requests
+        allRequests = data.where((r) => r.employeeId != currentUserId).toList();
         emit(
           SupervisorLeaveRequestsState.success(
             requests: _filteredRequests,
@@ -106,10 +107,9 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
         statusFilter == 'All') {
       return allRequests;
     }
+    final filterLower = statusFilter!.toLowerCase();
     return allRequests
-        .where(
-          (r) => (r.status ?? '').toLowerCase() == statusFilter!.toLowerCase(),
-        )
+        .where((r) => r.status?.toLowerCase() == filterLower)
         .toList();
   }
 
