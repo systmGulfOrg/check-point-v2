@@ -77,7 +77,7 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                         BlocBuilder<LeavesCubit, LeavesState>(
                           builder: (context, state) {
                             return state.maybeWhen(
-                              success: (balances, types) {
+                              success: (balances, types, requests) {
                                 if (balances.isEmpty) return const SizedBox.shrink();
                                 return Container(
                                   height: 200.h,

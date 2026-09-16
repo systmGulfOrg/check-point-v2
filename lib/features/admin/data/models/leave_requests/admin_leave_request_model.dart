@@ -12,6 +12,7 @@ Object? _readLeaveType(Map json, String key) {
 @JsonSerializable()
 class AdminLeaveRequestModel {
   const AdminLeaveRequestModel({
+    this.ulid,
     this.id,
     this.employeeId,
     this.employeeName,
@@ -20,8 +21,17 @@ class AdminLeaveRequestModel {
     this.endDate,
     this.reason,
     this.status,
+    this.managerId,
+    this.managerName,
+    this.managerActionAt,
+    this.managerRejectionReason,
+    this.hrId,
+    this.hrName,
+    this.hrActionAt,
+    this.hrRejectionReason,
   });
 
+  final String? ulid;
   final int? id;
   final String? employeeId;
   final String? employeeName;
@@ -33,6 +43,18 @@ class AdminLeaveRequestModel {
   final String? endDate;
   final String? reason;
   final String? status;
+  // Stage 1
+  final String? managerId;
+  final String? managerName;
+  @JsonKey(fromJson: legacyApiValueToString)
+  final String? managerActionAt;
+  final String? managerRejectionReason;
+  // Stage 2
+  final String? hrId;
+  final String? hrName;
+  @JsonKey(fromJson: legacyApiValueToString)
+  final String? hrActionAt;
+  final String? hrRejectionReason;
 
   factory AdminLeaveRequestModel.fromJson(Map<String, dynamic> json) =>
       _$AdminLeaveRequestModelFromJson(json);

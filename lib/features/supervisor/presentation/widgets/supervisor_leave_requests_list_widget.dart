@@ -10,11 +10,13 @@ class SupervisorLeaveRequestsListWidget extends StatelessWidget {
   const SupervisorLeaveRequestsListWidget({
     required this.requests,
     super.key,
+    this.userRole = 'Employee',
     this.onApprove,
     this.onReject,
   });
 
   final List<AdminLeaveRequestModel> requests;
+  final String userRole;
   final ValueChanged<AdminLeaveRequestModel>? onApprove;
   final ValueChanged<AdminLeaveRequestModel>? onReject;
 
@@ -45,6 +47,7 @@ class SupervisorLeaveRequestsListWidget extends StatelessWidget {
           index: index,
           child: SupervisorLeaveRequestCardWidget(
             request: request,
+            userRole: userRole,
             onApprove: onApprove != null ? () => onApprove!(request) : null,
             onReject: onReject != null ? () => onReject!(request) : null,
           ),

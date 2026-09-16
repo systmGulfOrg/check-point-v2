@@ -9,6 +9,7 @@ class ShortLeaveRequestBody with _$ShortLeaveRequestBody {
     required DateTime date,
     required String startTime,
     required String endTime,
+    required String permitType,
     String? reason,
   }) = _ShortLeaveRequestBody;
 

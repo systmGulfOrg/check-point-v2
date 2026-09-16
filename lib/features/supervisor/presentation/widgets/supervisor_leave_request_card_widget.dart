@@ -10,11 +10,13 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
   const SupervisorLeaveRequestCardWidget({
     required this.request,
     super.key,
+    this.userRole = 'Employee',
     this.onApprove,
     this.onReject,
   });
 
   final AdminLeaveRequestModel request;
+  final String userRole;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
 
@@ -30,25 +32,53 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
         : 'EM';
     final status = request.status?.toLowerCase() ?? 'pending';
     final isPending = status == 'pending';
-    final isApproved = status == 'approved';
+    final isPendingHR = status == 'pendinghr';
+    
 
-    final (statusKey, statusColor, statusBgColor) = isPending
-        ? (
-            'supervisor.leave.pending',
-            AppColors.warningOrange,
-            AppColors.softYellowBackground,
-          )
-        : isApproved
-        ? (
-            'supervisor.leave.approved',
-            AppColors.success,
-            AppColors.softGreenBackground,
-          )
-        : (
-            'supervisor.leave.rejected',
-            AppColors.error,
-            AppColors.softBrandBackground,
-          );
+    final (statusKey, statusColor, statusBgColor) = switch (status) {
+      'pending' => (
+        'leaves.status.pending',
+        AppColors.warningOrange,
+        AppColors.softYellowBackground,
+      ),
+      'pendinghr' => (
+        'leaves.status.pendingHR',
+        AppColors.warningOrange,
+        AppColors.softYellowBackground,
+      ),
+      'approved' => (
+        'leaves.status.approved',
+        AppColors.success,
+        AppColors.softGreenBackground,
+      ),
+      'rejectedbymanager' => (
+        'leaves.status.rejectedByManager',
+        AppColors.error,
+        AppColors.softBrandBackground,
+      ),
+      'rejectedbyhr' => (
+        'leaves.status.rejectedByHR',
+        AppColors.error,
+        AppColors.softBrandBackground,
+      ),
+      'cancelled' => (
+        'leaves.status.cancelled',
+        AppColors.placeholder,
+        AppColors.border,
+      ),
+      _ => (
+        'leaves.status.rejected',
+        AppColors.error,
+        AppColors.softBrandBackground,
+      ),
+    };
+
+    final bool canApprove =
+        (isPending && userRole != 'Admin') ||
+        (isPendingHR && userRole == 'Admin');
+    final String approveLabel = userRole == 'Admin'
+        ? 'leaves.approval.approveAsHR'
+        : 'leaves.approval.approveAsManager';
 
     final start = AppDateFormatter.formatDateString(request.startDate);
     final end = AppDateFormatter.formatDateString(request.endDate);
@@ -131,7 +161,7 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
               ],
             ),
           ),
-          if (isPending)
+          if (canApprove)
             Row(
               children: [
                 Expanded(
@@ -143,7 +173,7 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
                 ),
                 Expanded(
                   child: SupervisorLeaveRequestActionWidget(
-                    labelKey: 'supervisor.leave.approve',
+                    labelKey: approveLabel,
                     color: AppColors.success,
                     onTap: onApprove,
                   ),

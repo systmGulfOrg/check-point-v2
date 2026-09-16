@@ -23,6 +23,7 @@ LeaveRequestModel _$LeaveRequestModelFromJson(Map<String, dynamic> json) {
 mixin _$LeaveRequestModel {
   String get id => throw _privateConstructorUsedError;
   String get leaveTypeId => throw _privateConstructorUsedError;
+  String? get leaveTypeName => throw _privateConstructorUsedError;
   String get employeeId => throw _privateConstructorUsedError;
   DateTime get startDate => throw _privateConstructorUsedError;
   DateTime get endDate => throw _privateConstructorUsedError;
@@ -30,7 +31,17 @@ mixin _$LeaveRequestModel {
   String get status => throw _privateConstructorUsedError;
   String? get reason => throw _privateConstructorUsedError;
   String? get attachmentUrl => throw _privateConstructorUsedError;
-  DateTime? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get createdAt =>
+      throw _privateConstructorUsedError; // Stage 1 - Manager
+  String? get managerId => throw _privateConstructorUsedError;
+  String? get managerName => throw _privateConstructorUsedError;
+  DateTime? get managerActionAt => throw _privateConstructorUsedError;
+  String? get managerRejectionReason =>
+      throw _privateConstructorUsedError; // Stage 2 - HR
+  String? get hrId => throw _privateConstructorUsedError;
+  String? get hrName => throw _privateConstructorUsedError;
+  DateTime? get hrActionAt => throw _privateConstructorUsedError;
+  String? get hrRejectionReason => throw _privateConstructorUsedError;
 
   /// Serializes this LeaveRequestModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -52,6 +63,7 @@ abstract class $LeaveRequestModelCopyWith<$Res> {
   $Res call({
     String id,
     String leaveTypeId,
+    String? leaveTypeName,
     String employeeId,
     DateTime startDate,
     DateTime endDate,
@@ -60,6 +72,14 @@ abstract class $LeaveRequestModelCopyWith<$Res> {
     String? reason,
     String? attachmentUrl,
     DateTime? createdAt,
+    String? managerId,
+    String? managerName,
+    DateTime? managerActionAt,
+    String? managerRejectionReason,
+    String? hrId,
+    String? hrName,
+    DateTime? hrActionAt,
+    String? hrRejectionReason,
   });
 }
 
@@ -80,6 +100,7 @@ class _$LeaveRequestModelCopyWithImpl<$Res, $Val extends LeaveRequestModel>
   $Res call({
     Object? id = null,
     Object? leaveTypeId = null,
+    Object? leaveTypeName = freezed,
     Object? employeeId = null,
     Object? startDate = null,
     Object? endDate = null,
@@ -88,6 +109,14 @@ class _$LeaveRequestModelCopyWithImpl<$Res, $Val extends LeaveRequestModel>
     Object? reason = freezed,
     Object? attachmentUrl = freezed,
     Object? createdAt = freezed,
+    Object? managerId = freezed,
+    Object? managerName = freezed,
+    Object? managerActionAt = freezed,
+    Object? managerRejectionReason = freezed,
+    Object? hrId = freezed,
+    Object? hrName = freezed,
+    Object? hrActionAt = freezed,
+    Object? hrRejectionReason = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -99,6 +128,10 @@ class _$LeaveRequestModelCopyWithImpl<$Res, $Val extends LeaveRequestModel>
                 ? _value.leaveTypeId
                 : leaveTypeId // ignore: cast_nullable_to_non_nullable
                       as String,
+            leaveTypeName: freezed == leaveTypeName
+                ? _value.leaveTypeName
+                : leaveTypeName // ignore: cast_nullable_to_non_nullable
+                      as String?,
             employeeId: null == employeeId
                 ? _value.employeeId
                 : employeeId // ignore: cast_nullable_to_non_nullable
@@ -131,6 +164,38 @@ class _$LeaveRequestModelCopyWithImpl<$Res, $Val extends LeaveRequestModel>
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
                       as DateTime?,
+            managerId: freezed == managerId
+                ? _value.managerId
+                : managerId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            managerName: freezed == managerName
+                ? _value.managerName
+                : managerName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            managerActionAt: freezed == managerActionAt
+                ? _value.managerActionAt
+                : managerActionAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            managerRejectionReason: freezed == managerRejectionReason
+                ? _value.managerRejectionReason
+                : managerRejectionReason // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            hrId: freezed == hrId
+                ? _value.hrId
+                : hrId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            hrName: freezed == hrName
+                ? _value.hrName
+                : hrName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            hrActionAt: freezed == hrActionAt
+                ? _value.hrActionAt
+                : hrActionAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            hrRejectionReason: freezed == hrRejectionReason
+                ? _value.hrRejectionReason
+                : hrRejectionReason // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -149,6 +214,7 @@ abstract class _$$LeaveRequestModelImplCopyWith<$Res>
   $Res call({
     String id,
     String leaveTypeId,
+    String? leaveTypeName,
     String employeeId,
     DateTime startDate,
     DateTime endDate,
@@ -157,6 +223,14 @@ abstract class _$$LeaveRequestModelImplCopyWith<$Res>
     String? reason,
     String? attachmentUrl,
     DateTime? createdAt,
+    String? managerId,
+    String? managerName,
+    DateTime? managerActionAt,
+    String? managerRejectionReason,
+    String? hrId,
+    String? hrName,
+    DateTime? hrActionAt,
+    String? hrRejectionReason,
   });
 }
 
@@ -176,6 +250,7 @@ class __$$LeaveRequestModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? leaveTypeId = null,
+    Object? leaveTypeName = freezed,
     Object? employeeId = null,
     Object? startDate = null,
     Object? endDate = null,
@@ -184,6 +259,14 @@ class __$$LeaveRequestModelImplCopyWithImpl<$Res>
     Object? reason = freezed,
     Object? attachmentUrl = freezed,
     Object? createdAt = freezed,
+    Object? managerId = freezed,
+    Object? managerName = freezed,
+    Object? managerActionAt = freezed,
+    Object? managerRejectionReason = freezed,
+    Object? hrId = freezed,
+    Object? hrName = freezed,
+    Object? hrActionAt = freezed,
+    Object? hrRejectionReason = freezed,
   }) {
     return _then(
       _$LeaveRequestModelImpl(
@@ -195,6 +278,10 @@ class __$$LeaveRequestModelImplCopyWithImpl<$Res>
             ? _value.leaveTypeId
             : leaveTypeId // ignore: cast_nullable_to_non_nullable
                   as String,
+        leaveTypeName: freezed == leaveTypeName
+            ? _value.leaveTypeName
+            : leaveTypeName // ignore: cast_nullable_to_non_nullable
+                  as String?,
         employeeId: null == employeeId
             ? _value.employeeId
             : employeeId // ignore: cast_nullable_to_non_nullable
@@ -227,6 +314,38 @@ class __$$LeaveRequestModelImplCopyWithImpl<$Res>
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
                   as DateTime?,
+        managerId: freezed == managerId
+            ? _value.managerId
+            : managerId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        managerName: freezed == managerName
+            ? _value.managerName
+            : managerName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        managerActionAt: freezed == managerActionAt
+            ? _value.managerActionAt
+            : managerActionAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        managerRejectionReason: freezed == managerRejectionReason
+            ? _value.managerRejectionReason
+            : managerRejectionReason // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        hrId: freezed == hrId
+            ? _value.hrId
+            : hrId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        hrName: freezed == hrName
+            ? _value.hrName
+            : hrName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        hrActionAt: freezed == hrActionAt
+            ? _value.hrActionAt
+            : hrActionAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        hrRejectionReason: freezed == hrRejectionReason
+            ? _value.hrRejectionReason
+            : hrRejectionReason // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -238,6 +357,7 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
   const _$LeaveRequestModelImpl({
     required this.id,
     required this.leaveTypeId,
+    this.leaveTypeName,
     required this.employeeId,
     required this.startDate,
     required this.endDate,
@@ -246,6 +366,14 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
     this.reason,
     this.attachmentUrl,
     this.createdAt,
+    this.managerId,
+    this.managerName,
+    this.managerActionAt,
+    this.managerRejectionReason,
+    this.hrId,
+    this.hrName,
+    this.hrActionAt,
+    this.hrRejectionReason,
   });
 
   factory _$LeaveRequestModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -255,6 +383,8 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
   final String id;
   @override
   final String leaveTypeId;
+  @override
+  final String? leaveTypeName;
   @override
   final String employeeId;
   @override
@@ -271,10 +401,28 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
   final String? attachmentUrl;
   @override
   final DateTime? createdAt;
+  // Stage 1 - Manager
+  @override
+  final String? managerId;
+  @override
+  final String? managerName;
+  @override
+  final DateTime? managerActionAt;
+  @override
+  final String? managerRejectionReason;
+  // Stage 2 - HR
+  @override
+  final String? hrId;
+  @override
+  final String? hrName;
+  @override
+  final DateTime? hrActionAt;
+  @override
+  final String? hrRejectionReason;
 
   @override
   String toString() {
-    return 'LeaveRequestModel(id: $id, leaveTypeId: $leaveTypeId, employeeId: $employeeId, startDate: $startDate, endDate: $endDate, totalDays: $totalDays, status: $status, reason: $reason, attachmentUrl: $attachmentUrl, createdAt: $createdAt)';
+    return 'LeaveRequestModel(id: $id, leaveTypeId: $leaveTypeId, leaveTypeName: $leaveTypeName, employeeId: $employeeId, startDate: $startDate, endDate: $endDate, totalDays: $totalDays, status: $status, reason: $reason, attachmentUrl: $attachmentUrl, createdAt: $createdAt, managerId: $managerId, managerName: $managerName, managerActionAt: $managerActionAt, managerRejectionReason: $managerRejectionReason, hrId: $hrId, hrName: $hrName, hrActionAt: $hrActionAt, hrRejectionReason: $hrRejectionReason)';
   }
 
   @override
@@ -285,6 +433,8 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.leaveTypeId, leaveTypeId) ||
                 other.leaveTypeId == leaveTypeId) &&
+            (identical(other.leaveTypeName, leaveTypeName) ||
+                other.leaveTypeName == leaveTypeName) &&
             (identical(other.employeeId, employeeId) ||
                 other.employeeId == employeeId) &&
             (identical(other.startDate, startDate) ||
@@ -297,15 +447,30 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
             (identical(other.attachmentUrl, attachmentUrl) ||
                 other.attachmentUrl == attachmentUrl) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.managerId, managerId) ||
+                other.managerId == managerId) &&
+            (identical(other.managerName, managerName) ||
+                other.managerName == managerName) &&
+            (identical(other.managerActionAt, managerActionAt) ||
+                other.managerActionAt == managerActionAt) &&
+            (identical(other.managerRejectionReason, managerRejectionReason) ||
+                other.managerRejectionReason == managerRejectionReason) &&
+            (identical(other.hrId, hrId) || other.hrId == hrId) &&
+            (identical(other.hrName, hrName) || other.hrName == hrName) &&
+            (identical(other.hrActionAt, hrActionAt) ||
+                other.hrActionAt == hrActionAt) &&
+            (identical(other.hrRejectionReason, hrRejectionReason) ||
+                other.hrRejectionReason == hrRejectionReason));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     runtimeType,
     id,
     leaveTypeId,
+    leaveTypeName,
     employeeId,
     startDate,
     endDate,
@@ -314,7 +479,15 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
     reason,
     attachmentUrl,
     createdAt,
-  );
+    managerId,
+    managerName,
+    managerActionAt,
+    managerRejectionReason,
+    hrId,
+    hrName,
+    hrActionAt,
+    hrRejectionReason,
+  ]);
 
   /// Create a copy of LeaveRequestModel
   /// with the given fields replaced by the non-null parameter values.
@@ -337,6 +510,7 @@ abstract class _LeaveRequestModel implements LeaveRequestModel {
   const factory _LeaveRequestModel({
     required final String id,
     required final String leaveTypeId,
+    final String? leaveTypeName,
     required final String employeeId,
     required final DateTime startDate,
     required final DateTime endDate,
@@ -345,6 +519,14 @@ abstract class _LeaveRequestModel implements LeaveRequestModel {
     final String? reason,
     final String? attachmentUrl,
     final DateTime? createdAt,
+    final String? managerId,
+    final String? managerName,
+    final DateTime? managerActionAt,
+    final String? managerRejectionReason,
+    final String? hrId,
+    final String? hrName,
+    final DateTime? hrActionAt,
+    final String? hrRejectionReason,
   }) = _$LeaveRequestModelImpl;
 
   factory _LeaveRequestModel.fromJson(Map<String, dynamic> json) =
@@ -354,6 +536,8 @@ abstract class _LeaveRequestModel implements LeaveRequestModel {
   String get id;
   @override
   String get leaveTypeId;
+  @override
+  String? get leaveTypeName;
   @override
   String get employeeId;
   @override
@@ -369,7 +553,23 @@ abstract class _LeaveRequestModel implements LeaveRequestModel {
   @override
   String? get attachmentUrl;
   @override
-  DateTime? get createdAt;
+  DateTime? get createdAt; // Stage 1 - Manager
+  @override
+  String? get managerId;
+  @override
+  String? get managerName;
+  @override
+  DateTime? get managerActionAt;
+  @override
+  String? get managerRejectionReason; // Stage 2 - HR
+  @override
+  String? get hrId;
+  @override
+  String? get hrName;
+  @override
+  DateTime? get hrActionAt;
+  @override
+  String? get hrRejectionReason;
 
   /// Create a copy of LeaveRequestModel
   /// with the given fields replaced by the non-null parameter values.

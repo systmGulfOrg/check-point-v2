@@ -39,21 +39,22 @@ class _SupervisorLeaveManagementScreenState
       backgroundColor: AppColors.transparent,
       builder: (_) => ApplyForLeaveSheetWidget(
         leaveTypes: cubit.leaveTypes,
-        onSubmit: ({
-          required startDate,
-          required endDate,
-          required reason,
-          required remark,
-          required leaveRequestType,
-        }) {
-          cubit.submitLeaveRequest(
-            startDate: startDate,
-            endDate: endDate,
-            reason: reason,
-            remark: remark,
-            leaveRequestType: leaveRequestType,
-          );
-        },
+        onSubmit:
+            ({
+              required startDate,
+              required endDate,
+              required reason,
+              required remark,
+              required leaveRequestType,
+            }) {
+              cubit.submitLeaveRequest(
+                startDate: startDate,
+                endDate: endDate,
+                reason: reason,
+                remark: remark,
+                leaveRequestType: leaveRequestType,
+              );
+            },
       ),
     );
   }
@@ -91,7 +92,7 @@ class _SupervisorLeaveManagementScreenState
                 BlocBuilder<LeavesCubit, LeavesState>(
                   builder: (context, state) {
                     return state.maybeWhen(
-                      success: (balances, types) {
+                      success: (balances, types, requests) {
                         if (balances.isEmpty) return const SizedBox.shrink();
                         return Container(
                           height: 200.h,

@@ -36,5 +36,7 @@ abstract class LeavesApiService {
   Future<List<ShortLeaveModel>> getShortLeaves();
 
   @POST('/api/v1/permissions/request')
-  Future<ShortLeaveModel> submitShortLeaveRequest(@Body() ShortLeaveRequestBody body);
+  Future<ShortLeaveModel> submitShortLeaveRequest(
+    @Body() ShortLeaveRequestBody body,
+  );
 }

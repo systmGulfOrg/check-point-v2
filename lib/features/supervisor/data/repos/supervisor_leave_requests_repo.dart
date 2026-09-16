@@ -13,4 +13,9 @@ abstract class SupervisorLeaveRequestsRepo {
   Future<ApiResult<void>> approveOrRejectLeaveRequest(
     ChangeRequestLeaveStatus body,
   );
+  Future<ApiResult<void>> approveOrRejectLeaveRequestV2(
+    String ulid,
+    String action,
+    String? reason,
+  );
 }

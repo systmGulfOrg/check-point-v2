@@ -907,6 +907,37 @@
       "reason": "السبب",
       "submit": "إرسال الطلب",
       "success": "تم إرسال الطلب بنجاح"
+    },
+    "status": {
+      "pending": "في انتظار الموافقة",
+      "pendingHR": "في انتظار موافقة الموارد البشرية",
+      "approved": "معتمد",
+      "rejectedByManager": "مرفوض من المدير",
+      "rejectedByHR": "مرفوض من الموارد البشرية",
+      "cancelled": "ملغى"
+    },
+    "rejection": {
+      "managerRejected": "رُفض من المدير",
+      "hrRejected": "رُفض من الموارد البشرية",
+      "reason": "سبب الرفض",
+      "reasonHint": "اكتب سبب الرفض (10 أحرف على الأقل)",
+      "reasonRequired": "سبب الرفض إلزامي"
+    },
+    "approval": {
+      "approveAsManager": "اعتماد (كمدير)",
+      "approveAsHR": "اعتماد (كموارد بشرية)",
+      "stage1": "المرحلة 1: موافقة المدير",
+      "stage2": "المرحلة 2: موافقة الموارد البشرية"
+    },
+    "errors": {
+      "48hourRule": "يجب تقديم الطلب قبل 48 ساعة على الأقل من تاريخ الإجازة"
+    }
+  },
+  "permits": {
+    "type": {
+      "lateArrival": "إذن تأخير",
+      "earlyDeparture": "إذن انصراف مبكر",
+      "temporaryExit": "إذن خروج مؤقت"
     }
   },
   "permissions": {

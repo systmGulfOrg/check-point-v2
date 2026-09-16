@@ -9,6 +9,7 @@ part of 'admin_leave_request_model.dart';
 AdminLeaveRequestModel _$AdminLeaveRequestModelFromJson(
   Map<String, dynamic> json,
 ) => AdminLeaveRequestModel(
+  ulid: json['ulid'] as String?,
   id: (json['id'] as num?)?.toInt(),
   employeeId: json['employeeId'] as String?,
   employeeName: json['employeeName'] as String?,
@@ -17,11 +18,20 @@ AdminLeaveRequestModel _$AdminLeaveRequestModelFromJson(
   endDate: legacyApiValueToString(json['endDate']),
   reason: json['reason'] as String?,
   status: json['status'] as String?,
+  managerId: json['managerId'] as String?,
+  managerName: json['managerName'] as String?,
+  managerActionAt: legacyApiValueToString(json['managerActionAt']),
+  managerRejectionReason: json['managerRejectionReason'] as String?,
+  hrId: json['hrId'] as String?,
+  hrName: json['hrName'] as String?,
+  hrActionAt: legacyApiValueToString(json['hrActionAt']),
+  hrRejectionReason: json['hrRejectionReason'] as String?,
 );
 
 Map<String, dynamic> _$AdminLeaveRequestModelToJson(
   AdminLeaveRequestModel instance,
 ) => <String, dynamic>{
+  'ulid': instance.ulid,
   'id': instance.id,
   'employeeId': instance.employeeId,
   'employeeName': instance.employeeName,
@@ -30,6 +40,14 @@ Map<String, dynamic> _$AdminLeaveRequestModelToJson(
   'endDate': instance.endDate,
   'reason': instance.reason,
   'status': instance.status,
+  'managerId': instance.managerId,
+  'managerName': instance.managerName,
+  'managerActionAt': instance.managerActionAt,
+  'managerRejectionReason': instance.managerRejectionReason,
+  'hrId': instance.hrId,
+  'hrName': instance.hrName,
+  'hrActionAt': instance.hrActionAt,
+  'hrRejectionReason': instance.hrRejectionReason,
 };
 
 LeaveRequestsResponseModel _$LeaveRequestsResponseModelFromJson(

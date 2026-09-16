@@ -24,11 +24,13 @@ mixin _$LeavesState {
     required TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )
     success,
     required TResult Function(String message) error,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
+    required TResult Function(String message) actionSuccess,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
@@ -37,11 +39,13 @@ mixin _$LeavesState {
     TResult? Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult? Function(String message)? error,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
+    TResult? Function(String message)? actionSuccess,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
@@ -50,11 +54,13 @@ mixin _$LeavesState {
     TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult Function(String message)? error,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
+    TResult Function(String message)? actionSuccess,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -65,6 +71,7 @@ mixin _$LeavesState {
     required TResult Function(_Error value) error,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
+    required TResult Function(_ActionSuccess value) actionSuccess,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
@@ -74,6 +81,7 @@ mixin _$LeavesState {
     TResult? Function(_Error value)? error,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
+    TResult? Function(_ActionSuccess value)? actionSuccess,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
@@ -83,6 +91,7 @@ mixin _$LeavesState {
     TResult Function(_Error value)? error,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
+    TResult Function(_ActionSuccess value)? actionSuccess,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
 }
@@ -157,11 +166,13 @@ class _$InitialImpl implements _Initial {
     required TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )
     success,
     required TResult Function(String message) error,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
+    required TResult Function(String message) actionSuccess,
   }) {
     return initial();
   }
@@ -174,11 +185,13 @@ class _$InitialImpl implements _Initial {
     TResult? Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult? Function(String message)? error,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
+    TResult? Function(String message)? actionSuccess,
   }) {
     return initial?.call();
   }
@@ -191,11 +204,13 @@ class _$InitialImpl implements _Initial {
     TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult Function(String message)? error,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
+    TResult Function(String message)? actionSuccess,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -213,6 +228,7 @@ class _$InitialImpl implements _Initial {
     required TResult Function(_Error value) error,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
+    required TResult Function(_ActionSuccess value) actionSuccess,
   }) {
     return initial(this);
   }
@@ -226,6 +242,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function(_Error value)? error,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
+    TResult? Function(_ActionSuccess value)? actionSuccess,
   }) {
     return initial?.call(this);
   }
@@ -239,6 +256,7 @@ class _$InitialImpl implements _Initial {
     TResult Function(_Error value)? error,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
+    TResult Function(_ActionSuccess value)? actionSuccess,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -300,11 +318,13 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )
     success,
     required TResult Function(String message) error,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
+    required TResult Function(String message) actionSuccess,
   }) {
     return loading();
   }
@@ -317,11 +337,13 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult? Function(String message)? error,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
+    TResult? Function(String message)? actionSuccess,
   }) {
     return loading?.call();
   }
@@ -334,11 +356,13 @@ class _$LoadingImpl implements _Loading {
     TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult Function(String message)? error,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
+    TResult Function(String message)? actionSuccess,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -356,6 +380,7 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(_Error value) error,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
+    required TResult Function(_ActionSuccess value) actionSuccess,
   }) {
     return loading(this);
   }
@@ -369,6 +394,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(_Error value)? error,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
+    TResult? Function(_ActionSuccess value)? actionSuccess,
   }) {
     return loading?.call(this);
   }
@@ -382,6 +408,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function(_Error value)? error,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
+    TResult Function(_ActionSuccess value)? actionSuccess,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -402,7 +429,11 @@ abstract class _$$SuccessImplCopyWith<$Res> {
     $Res Function(_$SuccessImpl) then,
   ) = __$$SuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<LeaveBalanceModel> balances, List<LeaveTypeModel> types});
+  $Res call({
+    List<LeaveBalanceModel> balances,
+    List<LeaveTypeModel> types,
+    List<LeaveRequestModel> requests,
+  });
 }
 
 /// @nodoc
@@ -418,7 +449,11 @@ class __$$SuccessImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? balances = null, Object? types = null}) {
+  $Res call({
+    Object? balances = null,
+    Object? types = null,
+    Object? requests = null,
+  }) {
     return _then(
       _$SuccessImpl(
         null == balances
@@ -429,6 +464,10 @@ class __$$SuccessImplCopyWithImpl<$Res>
             ? _value._types
             : types // ignore: cast_nullable_to_non_nullable
                   as List<LeaveTypeModel>,
+        null == requests
+            ? _value._requests
+            : requests // ignore: cast_nullable_to_non_nullable
+                  as List<LeaveRequestModel>,
       ),
     );
   }
@@ -440,8 +479,10 @@ class _$SuccessImpl implements _Success {
   const _$SuccessImpl(
     final List<LeaveBalanceModel> balances,
     final List<LeaveTypeModel> types,
+    final List<LeaveRequestModel> requests,
   ) : _balances = balances,
-      _types = types;
+      _types = types,
+      _requests = requests;
 
   final List<LeaveBalanceModel> _balances;
   @override
@@ -459,9 +500,17 @@ class _$SuccessImpl implements _Success {
     return EqualUnmodifiableListView(_types);
   }
 
+  final List<LeaveRequestModel> _requests;
+  @override
+  List<LeaveRequestModel> get requests {
+    if (_requests is EqualUnmodifiableListView) return _requests;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_requests);
+  }
+
   @override
   String toString() {
-    return 'LeavesState.success(balances: $balances, types: $types)';
+    return 'LeavesState.success(balances: $balances, types: $types, requests: $requests)';
   }
 
   @override
@@ -470,7 +519,8 @@ class _$SuccessImpl implements _Success {
         (other.runtimeType == runtimeType &&
             other is _$SuccessImpl &&
             const DeepCollectionEquality().equals(other._balances, _balances) &&
-            const DeepCollectionEquality().equals(other._types, _types));
+            const DeepCollectionEquality().equals(other._types, _types) &&
+            const DeepCollectionEquality().equals(other._requests, _requests));
   }
 
   @override
@@ -478,6 +528,7 @@ class _$SuccessImpl implements _Success {
     runtimeType,
     const DeepCollectionEquality().hash(_balances),
     const DeepCollectionEquality().hash(_types),
+    const DeepCollectionEquality().hash(_requests),
   );
 
   /// Create a copy of LeavesState
@@ -496,13 +547,15 @@ class _$SuccessImpl implements _Success {
     required TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )
     success,
     required TResult Function(String message) error,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
+    required TResult Function(String message) actionSuccess,
   }) {
-    return success(balances, types);
+    return success(balances, types, requests);
   }
 
   @override
@@ -513,13 +566,15 @@ class _$SuccessImpl implements _Success {
     TResult? Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult? Function(String message)? error,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
+    TResult? Function(String message)? actionSuccess,
   }) {
-    return success?.call(balances, types);
+    return success?.call(balances, types, requests);
   }
 
   @override
@@ -530,15 +585,17 @@ class _$SuccessImpl implements _Success {
     TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult Function(String message)? error,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
+    TResult Function(String message)? actionSuccess,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success(balances, types);
+      return success(balances, types, requests);
     }
     return orElse();
   }
@@ -552,6 +609,7 @@ class _$SuccessImpl implements _Success {
     required TResult Function(_Error value) error,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
+    required TResult Function(_ActionSuccess value) actionSuccess,
   }) {
     return success(this);
   }
@@ -565,6 +623,7 @@ class _$SuccessImpl implements _Success {
     TResult? Function(_Error value)? error,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
+    TResult? Function(_ActionSuccess value)? actionSuccess,
   }) {
     return success?.call(this);
   }
@@ -578,6 +637,7 @@ class _$SuccessImpl implements _Success {
     TResult Function(_Error value)? error,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
+    TResult Function(_ActionSuccess value)? actionSuccess,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -591,10 +651,12 @@ abstract class _Success implements LeavesState {
   const factory _Success(
     final List<LeaveBalanceModel> balances,
     final List<LeaveTypeModel> types,
+    final List<LeaveRequestModel> requests,
   ) = _$SuccessImpl;
 
   List<LeaveBalanceModel> get balances;
   List<LeaveTypeModel> get types;
+  List<LeaveRequestModel> get requests;
 
   /// Create a copy of LeavesState
   /// with the given fields replaced by the non-null parameter values.
@@ -678,11 +740,13 @@ class _$ErrorImpl implements _Error {
     required TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )
     success,
     required TResult Function(String message) error,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
+    required TResult Function(String message) actionSuccess,
   }) {
     return error(message);
   }
@@ -695,11 +759,13 @@ class _$ErrorImpl implements _Error {
     TResult? Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult? Function(String message)? error,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
+    TResult? Function(String message)? actionSuccess,
   }) {
     return error?.call(message);
   }
@@ -712,11 +778,13 @@ class _$ErrorImpl implements _Error {
     TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult Function(String message)? error,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
+    TResult Function(String message)? actionSuccess,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -734,6 +802,7 @@ class _$ErrorImpl implements _Error {
     required TResult Function(_Error value) error,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
+    required TResult Function(_ActionSuccess value) actionSuccess,
   }) {
     return error(this);
   }
@@ -747,6 +816,7 @@ class _$ErrorImpl implements _Error {
     TResult? Function(_Error value)? error,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
+    TResult? Function(_ActionSuccess value)? actionSuccess,
   }) {
     return error?.call(this);
   }
@@ -760,6 +830,7 @@ class _$ErrorImpl implements _Error {
     TResult Function(_Error value)? error,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
+    TResult Function(_ActionSuccess value)? actionSuccess,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -829,11 +900,13 @@ class _$SubmittingImpl implements _Submitting {
     required TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )
     success,
     required TResult Function(String message) error,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
+    required TResult Function(String message) actionSuccess,
   }) {
     return submitting();
   }
@@ -846,11 +919,13 @@ class _$SubmittingImpl implements _Submitting {
     TResult? Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult? Function(String message)? error,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
+    TResult? Function(String message)? actionSuccess,
   }) {
     return submitting?.call();
   }
@@ -863,11 +938,13 @@ class _$SubmittingImpl implements _Submitting {
     TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult Function(String message)? error,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
+    TResult Function(String message)? actionSuccess,
     required TResult orElse(),
   }) {
     if (submitting != null) {
@@ -885,6 +962,7 @@ class _$SubmittingImpl implements _Submitting {
     required TResult Function(_Error value) error,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
+    required TResult Function(_ActionSuccess value) actionSuccess,
   }) {
     return submitting(this);
   }
@@ -898,6 +976,7 @@ class _$SubmittingImpl implements _Submitting {
     TResult? Function(_Error value)? error,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
+    TResult? Function(_ActionSuccess value)? actionSuccess,
   }) {
     return submitting?.call(this);
   }
@@ -911,6 +990,7 @@ class _$SubmittingImpl implements _Submitting {
     TResult Function(_Error value)? error,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
+    TResult Function(_ActionSuccess value)? actionSuccess,
     required TResult orElse(),
   }) {
     if (submitting != null) {
@@ -972,11 +1052,13 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
     required TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )
     success,
     required TResult Function(String message) error,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
+    required TResult Function(String message) actionSuccess,
   }) {
     return submitSuccess();
   }
@@ -989,11 +1071,13 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
     TResult? Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult? Function(String message)? error,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
+    TResult? Function(String message)? actionSuccess,
   }) {
     return submitSuccess?.call();
   }
@@ -1006,11 +1090,13 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
     TResult Function(
       List<LeaveBalanceModel> balances,
       List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
     )?
     success,
     TResult Function(String message)? error,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
+    TResult Function(String message)? actionSuccess,
     required TResult orElse(),
   }) {
     if (submitSuccess != null) {
@@ -1028,6 +1114,7 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
     required TResult Function(_Error value) error,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
+    required TResult Function(_ActionSuccess value) actionSuccess,
   }) {
     return submitSuccess(this);
   }
@@ -1041,6 +1128,7 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
     TResult? Function(_Error value)? error,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
+    TResult? Function(_ActionSuccess value)? actionSuccess,
   }) {
     return submitSuccess?.call(this);
   }
@@ -1054,6 +1142,7 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
     TResult Function(_Error value)? error,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
+    TResult Function(_ActionSuccess value)? actionSuccess,
     required TResult orElse(),
   }) {
     if (submitSuccess != null) {
@@ -1065,4 +1154,191 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
 
 abstract class _SubmitSuccess implements LeavesState {
   const factory _SubmitSuccess() = _$SubmitSuccessImpl;
+}
+
+/// @nodoc
+abstract class _$$ActionSuccessImplCopyWith<$Res> {
+  factory _$$ActionSuccessImplCopyWith(
+    _$ActionSuccessImpl value,
+    $Res Function(_$ActionSuccessImpl) then,
+  ) = __$$ActionSuccessImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String message});
+}
+
+/// @nodoc
+class __$$ActionSuccessImplCopyWithImpl<$Res>
+    extends _$LeavesStateCopyWithImpl<$Res, _$ActionSuccessImpl>
+    implements _$$ActionSuccessImplCopyWith<$Res> {
+  __$$ActionSuccessImplCopyWithImpl(
+    _$ActionSuccessImpl _value,
+    $Res Function(_$ActionSuccessImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of LeavesState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? message = null}) {
+    return _then(
+      _$ActionSuccessImpl(
+        null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$ActionSuccessImpl implements _ActionSuccess {
+  const _$ActionSuccessImpl(this.message);
+
+  @override
+  final String message;
+
+  @override
+  String toString() {
+    return 'LeavesState.actionSuccess(message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ActionSuccessImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  /// Create a copy of LeavesState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ActionSuccessImplCopyWith<_$ActionSuccessImpl> get copyWith =>
+      __$$ActionSuccessImplCopyWithImpl<_$ActionSuccessImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(
+      List<LeaveBalanceModel> balances,
+      List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
+    )
+    success,
+    required TResult Function(String message) error,
+    required TResult Function() submitting,
+    required TResult Function() submitSuccess,
+    required TResult Function(String message) actionSuccess,
+  }) {
+    return actionSuccess(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(
+      List<LeaveBalanceModel> balances,
+      List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
+    )?
+    success,
+    TResult? Function(String message)? error,
+    TResult? Function()? submitting,
+    TResult? Function()? submitSuccess,
+    TResult? Function(String message)? actionSuccess,
+  }) {
+    return actionSuccess?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(
+      List<LeaveBalanceModel> balances,
+      List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
+    )?
+    success,
+    TResult Function(String message)? error,
+    TResult Function()? submitting,
+    TResult Function()? submitSuccess,
+    TResult Function(String message)? actionSuccess,
+    required TResult orElse(),
+  }) {
+    if (actionSuccess != null) {
+      return actionSuccess(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Success value) success,
+    required TResult Function(_Error value) error,
+    required TResult Function(_Submitting value) submitting,
+    required TResult Function(_SubmitSuccess value) submitSuccess,
+    required TResult Function(_ActionSuccess value) actionSuccess,
+  }) {
+    return actionSuccess(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Error value)? error,
+    TResult? Function(_Submitting value)? submitting,
+    TResult? Function(_SubmitSuccess value)? submitSuccess,
+    TResult? Function(_ActionSuccess value)? actionSuccess,
+  }) {
+    return actionSuccess?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Success value)? success,
+    TResult Function(_Error value)? error,
+    TResult Function(_Submitting value)? submitting,
+    TResult Function(_SubmitSuccess value)? submitSuccess,
+    TResult Function(_ActionSuccess value)? actionSuccess,
+    required TResult orElse(),
+  }) {
+    if (actionSuccess != null) {
+      return actionSuccess(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ActionSuccess implements LeavesState {
+  const factory _ActionSuccess(final String message) = _$ActionSuccessImpl;
+
+  String get message;
+
+  /// Create a copy of LeavesState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ActionSuccessImplCopyWith<_$ActionSuccessImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

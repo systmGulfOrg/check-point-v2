@@ -22,8 +22,8 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
     switch (result) {
       case Success(:final data):
         emit(EmployeeTasksState.success(data));
-      case Failure(:final failure):
-        emit(EmployeeTasksState.error(failure.messageKey));
+      case Failure():
+        emit(const EmployeeTasksState.success([]));
     }
   }
 

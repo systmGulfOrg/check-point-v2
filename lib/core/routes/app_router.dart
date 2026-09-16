@@ -45,6 +45,8 @@ import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employ
 import 'package:check_point_v2/features/employee/presentation/screens/employee_main_screen.dart';
 import 'package:check_point_v2/features/employee/presentation/screens/employee_settings_screen.dart';
 
+import 'package:check_point_v2/features/leaves/presentation/screens/request_leave_screen.dart';
+import 'package:check_point_v2/features/leaves/presentation/screens/request_permission_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/plans/supervisor_plans_cubit.dart';
@@ -132,7 +134,8 @@ class AppRouter {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => BlocProvider(
-            create: (_) => sl<AdminEmployeeAuditCubit>()..loadAuditLogs(employeeId),
+            create: (_) =>
+                sl<AdminEmployeeAuditCubit>()..loadAuditLogs(employeeId),
             child: const AdminEmployeeAuditScreen(),
           ),
         );
@@ -302,8 +305,13 @@ class AppRouter {
       case AppRoutes.adminLeaveManagement:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminLeaveManagement),
-          child: BlocProvider<AdminLeaveRequestsCubit>(
-            create: (_) => sl<AdminLeaveRequestsCubit>()..loadAll(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AdminLeaveRequestsCubit>(
+                create: (_) => sl<AdminLeaveRequestsCubit>()..loadAll(),
+              ),
+              BlocProvider<LeavesCubit>(create: (_) => sl<LeavesCubit>()),
+            ],
             child: const AdminLeaveManagementScreen(),
           ),
         );
@@ -408,9 +416,7 @@ class AppRouter {
               BlocProvider<EmployeeAttendanceCubit>(
                 create: (_) => sl<EmployeeAttendanceCubit>(),
               ),
-              BlocProvider<LeavesCubit>(
-                create: (_) => sl<LeavesCubit>(),
-              ),
+              BlocProvider<LeavesCubit>(create: (_) => sl<LeavesCubit>()),
               BlocProvider<SupervisorLeaveRequestsCubit>(
                 create: (_) =>
                     sl<SupervisorLeaveRequestsCubit>()..loadLeaveRequests(),
@@ -434,9 +440,14 @@ class AppRouter {
           settings: const RouteSettings(
             name: AppRoutes.supervisorLeaveManagement,
           ),
-          child: BlocProvider<SupervisorLeaveRequestsCubit>(
-            create: (_) =>
-                sl<SupervisorLeaveRequestsCubit>()..loadLeaveRequests(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<SupervisorLeaveRequestsCubit>(
+                create: (_) =>
+                    sl<SupervisorLeaveRequestsCubit>()..loadLeaveRequests(),
+              ),
+              BlocProvider<LeavesCubit>(create: (_) => sl<LeavesCubit>()),
+            ],
             child: const SupervisorLeaveManagementScreen(),
           ),
         );
@@ -487,7 +498,7 @@ class AppRouter {
                 create: (_) => sl<EmployeePlansCubit>()..loadMyPlans(),
               ),
               BlocProvider<LeavesCubit>(
-                create: (_) => sl<LeavesCubit>(),
+                create: (_) => sl<LeavesCubit>()..loadLeavesData(),
               ),
               BlocProvider<EmployeeLeaveRequestsCubit>(
                 create: (_) =>
@@ -507,6 +518,22 @@ class AppRouter {
           child: const EmployeeSettingsScreen(),
         );
 
+      case AppRoutes.permissionsRequest:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.permissionsRequest),
+          child: BlocProvider.value(
+            value: sl<LeavesCubit>(),
+            child: const RequestPermissionScreen(),
+          ),
+        );
+      case AppRoutes.leavesRequest:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.leavesRequest),
+          child: BlocProvider.value(
+            value: sl<LeavesCubit>(),
+            child: const RequestLeaveScreen(),
+          ),
+        );
       default:
         return _fadeRoute(
           settings: settings,

@@ -187,10 +187,13 @@ class _SupervisorCreatePlanSheetWidgetState
                     SupervisorTeamSuccess(:final members) => members,
                     _ => const [],
                   };
-                  final hasEmployee = selectedEmployeeId != null &&
+                  final hasEmployee =
+                      selectedEmployeeId != null &&
                       team.any((e) => e.id == selectedEmployeeId);
                   return DropdownButtonFormField<String>(
-                    key: ValueKey('sup_plan_emp_${hasEmployee ? selectedEmployeeId : 'none'}'),
+                    key: ValueKey(
+                      'sup_plan_emp_${hasEmployee ? selectedEmployeeId : 'none'}',
+                    ),
                     initialValue: hasEmployee ? selectedEmployeeId : null,
                     decoration: InputDecoration(
                       labelText: 'supervisor.tasks.create.assignToLabel'.tr(

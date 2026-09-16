@@ -907,6 +907,37 @@
       "reason": "Reason",
       "submit": "Submit Request",
       "success": "Request submitted successfully"
+    },
+    "status": {
+      "pending": "Pending Approval",
+      "pendingHR": "Pending HR Approval",
+      "approved": "Approved",
+      "rejectedByManager": "Rejected by Manager",
+      "rejectedByHR": "Rejected by HR",
+      "cancelled": "Cancelled"
+    },
+    "rejection": {
+      "managerRejected": "Rejected by Manager",
+      "hrRejected": "Rejected by HR",
+      "reason": "Rejection Reason",
+      "reasonHint": "Enter the reason for rejection (min 10 chars)",
+      "reasonRequired": "Rejection reason is mandatory"
+    },
+    "approval": {
+      "approveAsManager": "Approve (as Manager)",
+      "approveAsHR": "Approve (as HR)",
+      "stage1": "Stage 1: Manager Approval",
+      "stage2": "Stage 2: HR Approval"
+    },
+    "errors": {
+      "48hourRule": "Request must be submitted at least 48 hours in advance"
+    }
+  },
+  "permits": {
+    "type": {
+      "lateArrival": "Late Arrival",
+      "earlyDeparture": "Early Departure",
+      "temporaryExit": "Temporary Exit"
     }
   },
   "permissions": {

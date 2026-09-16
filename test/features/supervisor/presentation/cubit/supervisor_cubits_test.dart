@@ -101,6 +101,7 @@ class _FakeSupervisorLeaveRequestsRepo implements SupervisorLeaveRequestsRepo {
   final requests = <AdminLeaveRequestModel>[
     const AdminLeaveRequestModel(
       id: 1,
+      ulid: 'ulid-1',
       employeeName: 'John',
       status: 'Pending',
     ),
@@ -124,6 +125,13 @@ class _FakeSupervisorLeaveRequestsRepo implements SupervisorLeaveRequestsRepo {
   @override
   Future<ApiResult<void>> approveOrRejectLeaveRequest(
     ChangeRequestLeaveStatus body,
+  ) async => const ApiResult.success(null);
+
+  @override
+  Future<ApiResult<void>> approveOrRejectLeaveRequestV2(
+    String id,
+    String status,
+    String? reason,
   ) async => const ApiResult.success(null);
 }
 
@@ -233,7 +241,7 @@ void main() {
         await cubit.loadLeaveRequests();
         expect(cubit.state, isA<SupervisorLeaveRequestsSuccess>());
 
-        final success = await cubit.approveRequest(1);
+        final success = await cubit.approveRequest('ulid-1', 'Manager');
         expect(success, isTrue);
       },
     );

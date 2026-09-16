@@ -73,6 +73,12 @@ abstract class SupervisorApiService {
     @Body() ChangeRequestLeaveStatus body,
   );
 
+  @PATCH('/api/v2/leave-requests/{ulid}/status')
+  Future<void> updateLeaveStatusV2(
+    @Path('ulid') String ulid,
+    @Body() Map<String, dynamic> body,
+  );
+
   @GET(ApiConstants.leaveTypes)
   Future<LeaveTypesResponseModel> getLeaveTypes();
 

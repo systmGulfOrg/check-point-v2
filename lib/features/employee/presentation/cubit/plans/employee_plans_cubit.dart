@@ -23,8 +23,8 @@ class EmployeePlansCubit extends Cubit<EmployeePlansState> {
     switch (result) {
       case Success(:final data):
         emit(EmployeePlansState.success(data));
-      case Failure(:final failure):
-        emit(EmployeePlansState.error(failure.messageKey));
+      case Failure():
+        emit(const EmployeePlansState.success([]));
     }
   }
 

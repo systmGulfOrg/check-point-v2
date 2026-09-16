@@ -11,6 +11,7 @@ _$LeaveRequestModelImpl _$$LeaveRequestModelImplFromJson(
 ) => _$LeaveRequestModelImpl(
   id: json['id'] as String,
   leaveTypeId: json['leaveTypeId'] as String,
+  leaveTypeName: json['leaveTypeName'] as String?,
   employeeId: json['employeeId'] as String,
   startDate: DateTime.parse(json['startDate'] as String),
   endDate: DateTime.parse(json['endDate'] as String),
@@ -21,6 +22,18 @@ _$LeaveRequestModelImpl _$$LeaveRequestModelImplFromJson(
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
+  managerId: json['managerId'] as String?,
+  managerName: json['managerName'] as String?,
+  managerActionAt: json['managerActionAt'] == null
+      ? null
+      : DateTime.parse(json['managerActionAt'] as String),
+  managerRejectionReason: json['managerRejectionReason'] as String?,
+  hrId: json['hrId'] as String?,
+  hrName: json['hrName'] as String?,
+  hrActionAt: json['hrActionAt'] == null
+      ? null
+      : DateTime.parse(json['hrActionAt'] as String),
+  hrRejectionReason: json['hrRejectionReason'] as String?,
 );
 
 Map<String, dynamic> _$$LeaveRequestModelImplToJson(
@@ -28,6 +41,7 @@ Map<String, dynamic> _$$LeaveRequestModelImplToJson(
 ) => <String, dynamic>{
   'id': instance.id,
   'leaveTypeId': instance.leaveTypeId,
+  'leaveTypeName': instance.leaveTypeName,
   'employeeId': instance.employeeId,
   'startDate': instance.startDate.toIso8601String(),
   'endDate': instance.endDate.toIso8601String(),
@@ -36,4 +50,12 @@ Map<String, dynamic> _$$LeaveRequestModelImplToJson(
   'reason': instance.reason,
   'attachmentUrl': instance.attachmentUrl,
   'createdAt': instance.createdAt?.toIso8601String(),
+  'managerId': instance.managerId,
+  'managerName': instance.managerName,
+  'managerActionAt': instance.managerActionAt?.toIso8601String(),
+  'managerRejectionReason': instance.managerRejectionReason,
+  'hrId': instance.hrId,
+  'hrName': instance.hrName,
+  'hrActionAt': instance.hrActionAt?.toIso8601String(),
+  'hrRejectionReason': instance.hrRejectionReason,
 };

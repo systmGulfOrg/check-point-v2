@@ -5,9 +5,11 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/routes/routes.dart';
 import '../../../../core/styles/app_colors.dart';
+import '../../../../core/styles/app_text_styles.dart';
 import '../cubit/leaves_cubit.dart';
 import '../cubit/leaves_state.dart';
 import '../widgets/leave_balances_list_widget.dart';
+import '../widgets/leave_request_card_widget.dart';
 
 class LeavesDashboardScreen extends StatelessWidget {
   const LeavesDashboardScreen({super.key});
@@ -31,7 +33,42 @@ class LeavesDashboardScreen extends StatelessWidget {
                 style: const TextStyle(color: AppColors.error),
               ),
             ),
-            success: (balances, types) => LeaveBalancesListWidget(balances: balances),
+            success: (balances, types, requests) => CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: LeaveBalancesListWidget(balances: balances),
+                ),
+                if (requests.isNotEmpty) ...[
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 8.h,
+                    ),
+                    sliver: SliverToBoxAdapter(
+                      child: Text(
+                        'employee.leaves.title'.tr(), // "Leave Requests"
+                        style: AppTextStyles.font16Bold,
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) => Padding(
+                          padding: EdgeInsets.only(bottom: 12.h),
+                          child: LeaveRequestCardWidget(
+                            request: requests[index],
+                          ),
+                        ),
+                        childCount: requests.length,
+                      ),
+                    ),
+                  ),
+                ],
+                SliverPadding(padding: EdgeInsets.only(bottom: 80.h)),
+              ],
+            ),
             orElse: () => const SizedBox.shrink(),
           );
         },
@@ -41,7 +78,8 @@ class LeavesDashboardScreen extends StatelessWidget {
         children: [
           FloatingActionButton.extended(
             heroTag: 'permissionBtn',
-            onPressed: () => Navigator.pushNamed(context, AppRoutes.permissionsRequest),
+            onPressed: () =>
+                Navigator.pushNamed(context, AppRoutes.permissionsRequest),
             backgroundColor: AppColors.brandSecondary,
             icon: const Icon(Icons.timer),
             label: Text('leaves.dashboard.requestPermission'.tr()),
@@ -49,7 +87,8 @@ class LeavesDashboardScreen extends StatelessWidget {
           SizedBox(height: 12.h),
           FloatingActionButton.extended(
             heroTag: 'leaveBtn',
-            onPressed: () => Navigator.pushNamed(context, AppRoutes.leavesRequest),
+            onPressed: () =>
+                Navigator.pushNamed(context, AppRoutes.leavesRequest),
             backgroundColor: AppColors.brandPrimary,
             icon: const Icon(Icons.add),
             label: Text('leaves.dashboard.requestLeave'.tr()),

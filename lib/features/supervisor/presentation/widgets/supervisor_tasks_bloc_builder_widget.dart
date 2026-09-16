@@ -67,20 +67,22 @@ class SupervisorTasksBlocBuilderWidget extends StatelessWidget {
           ),
           SupervisorTasksSuccess(:final tasks) => SupervisorTasksListWidget(
             tasks: switch (selectedFilterIndex) {
-              0 => tasks
-                  .where(
-                    (t) =>
-                        t.status?.toLowerCase() != 'completed' &&
-                        t.status?.toLowerCase() != 'done',
-                  )
-                  .toList(),
-              1 => tasks
-                  .where(
-                    (t) =>
-                        t.status?.toLowerCase() == 'completed' ||
-                        t.status?.toLowerCase() == 'done',
-                  )
-                  .toList(),
+              0 =>
+                tasks
+                    .where(
+                      (t) =>
+                          t.status?.toLowerCase() != 'completed' &&
+                          t.status?.toLowerCase() != 'done',
+                    )
+                    .toList(),
+              1 =>
+                tasks
+                    .where(
+                      (t) =>
+                          t.status?.toLowerCase() == 'completed' ||
+                          t.status?.toLowerCase() == 'done',
+                    )
+                    .toList(),
               _ => tasks,
             },
             onEdit: (task) {

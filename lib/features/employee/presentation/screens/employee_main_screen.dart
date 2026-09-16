@@ -5,7 +5,7 @@ import 'package:check_point_v2/core/styles/app_motion.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_nav_bar_widget.dart';
 import 'employee_clock_screen.dart';
 import 'employee_home_screen.dart';
-import 'employee_leaves_screen.dart';
+import 'package:check_point_v2/features/leaves/presentation/screens/leaves_dashboard_screen.dart';
 import 'employee_plans_screen.dart';
 import 'employee_settings_screen.dart';
 import 'employee_tasks_screen.dart';
@@ -30,7 +30,7 @@ class _EmployeeMainScreenState extends State<EmployeeMainScreen> {
       const EmployeeClockScreen(),
       const EmployeeTasksScreen(),
       const EmployeePlansScreen(),
-      const EmployeeLeavesScreen(),
+      const LeavesDashboardScreen(),
       const EmployeeSettingsScreen(),
     ];
 

@@ -11,6 +11,7 @@ class ShortLeaveModel with _$ShortLeaveModel {
     required DateTime date,
     required String startTime,
     required String endTime,
+    required String permitType,
     required double totalHours,
     required String status,
     String? reason,

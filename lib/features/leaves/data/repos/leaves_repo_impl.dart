@@ -1,4 +1,3 @@
-
 import '../../../../core/network/api_failure_mapper.dart';
 import '../../../../core/network/api_result.dart';
 import '../apis/leaves_api_service.dart';
@@ -9,7 +8,7 @@ import '../models/leave_type_model.dart';
 
 class LeavesRepoImpl {
   LeavesRepoImpl({required this.api});
-  
+
   final LeavesApiService api;
 
   Future<ApiResult<List<LeaveBalanceModel>>> getLeaveBalances() async {
@@ -30,9 +29,32 @@ class LeavesRepoImpl {
     }
   }
 
-  Future<ApiResult<LeaveRequestModel>> submitLeaveRequest(LeaveRequestBody body) async {
+  Future<ApiResult<LeaveRequestModel>> submitLeaveRequest(
+    LeaveRequestBody body,
+  ) async {
     try {
       final model = await api.submitLeaveRequest(body);
+      return ApiResult.success(model);
+    } catch (e, _) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  Future<ApiResult<List<LeaveRequestModel>>> getLeaveRequests() async {
+    try {
+      final models = await api.getLeaveRequests();
+      return ApiResult.success(models);
+    } catch (e, _) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  Future<ApiResult<LeaveRequestModel>> updateLeaveStatus(
+    String id,
+    String status,
+  ) async {
+    try {
+      final model = await api.updateLeaveStatus(id, {'status': status});
       return ApiResult.success(model);
     } catch (e, _) {
       return ApiResult.failure(ApiFailureMapper.map(e));

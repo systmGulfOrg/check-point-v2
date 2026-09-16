@@ -58,6 +58,9 @@ import 'package:check_point_v2/features/employee/presentation/cubit/leave_reques
 import 'package:check_point_v2/features/employee/presentation/cubit/odoo_dashboard/employee_odoo_dashboard_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/plans/employee_plans_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_cubit.dart';
+import 'package:check_point_v2/features/leaves/data/apis/leaves_api_service.dart';
+import 'package:check_point_v2/features/leaves/data/repos/leaves_repo_impl.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
 
 import 'package:check_point_v2/features/supervisor/data/apis/supervisor_api_service.dart';
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_attendance_repo.dart';
@@ -142,6 +145,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<EmployeeApiService>(
     () => EmployeeApiService(sl<Dio>()),
   );
+  sl.registerLazySingleton<LeavesApiService>(
+    () => LeavesApiService(sl<Dio>()),
+  );
 
   // Repositories
   sl.registerLazySingleton<AuthRepo>(
@@ -206,6 +212,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<EmployeeActionRepo>(
     () => EmployeeActionRepoImpl(api: sl<EmployeeApiService>()),
+  );
+  sl.registerLazySingleton<LeavesRepoImpl>(
+    () => LeavesRepoImpl(api: sl<LeavesApiService>()),
   );
 
   // UseCases
@@ -359,6 +368,9 @@ Future<void> setupServiceLocator() async {
       odooTimeOffService: sl<OdooTimeOffService>(),
       sessionStorage: sl<AuthSessionStorage>(),
     ),
+  );
+  sl.registerFactory<LeavesCubit>(
+    () => LeavesCubit(leavesRepo: sl<LeavesRepoImpl>()),
   );
   sl.registerFactory(() => AdminEmployeeAuditCubit(api: sl()));
 }

@@ -7,19 +7,16 @@ import '../../../../core/styles/app_text_styles.dart';
 import '../../data/models/leave_balance_model.dart';
 
 class LeaveBalanceCardWidget extends StatelessWidget {
-  const LeaveBalanceCardWidget({
-    super.key,
-    required this.balance,
-  });
+  const LeaveBalanceCardWidget({super.key, required this.balance});
 
   final LeaveBalanceModel balance;
 
   @override
   Widget build(BuildContext context) {
-    final usedRatio = balance.totalAllocated > 0 
-        ? balance.usedBalance / balance.totalAllocated 
+    final usedRatio = balance.totalAllocated > 0
+        ? balance.usedBalance / balance.totalAllocated
         : 0.0;
-        
+
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
@@ -41,10 +38,7 @@ class LeaveBalanceCardWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                balance.leaveTypeName,
-                style: AppTextStyles.font16Bold,
-              ),
+              Text(balance.leaveTypeName, style: AppTextStyles.font16Bold),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                 decoration: BoxDecoration(
@@ -53,7 +47,9 @@ class LeaveBalanceCardWidget extends StatelessWidget {
                 ),
                 child: Text(
                   '${balance.remainingBalance} ${'leaves.dashboard.daysLeft'.tr()}',
-                  style: AppTextStyles.font12Bold.copyWith(color: AppColors.success),
+                  style: AppTextStyles.font12Bold.copyWith(
+                    color: AppColors.success,
+                  ),
                 ),
               ),
             ],
@@ -62,9 +58,20 @@ class LeaveBalanceCardWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStatColumn('leaves.dashboard.total'.tr(), '${balance.totalAllocated}'),
-              _buildStatColumn('leaves.dashboard.used'.tr(), '${balance.usedBalance}', color: AppColors.warning),
-              _buildStatColumn('leaves.dashboard.remaining'.tr(), '${balance.remainingBalance}', color: AppColors.success),
+              _buildStatColumn(
+                'leaves.dashboard.total'.tr(),
+                '${balance.totalAllocated}',
+              ),
+              _buildStatColumn(
+                'leaves.dashboard.used'.tr(),
+                '${balance.usedBalance}',
+                color: AppColors.warning,
+              ),
+              _buildStatColumn(
+                'leaves.dashboard.remaining'.tr(),
+                '${balance.remainingBalance}',
+                color: AppColors.success,
+              ),
             ],
           ),
           SizedBox(height: 16.h),
@@ -83,10 +90,12 @@ class LeaveBalanceCardWidget extends StatelessWidget {
           if (usedRatio > 0.8)
             Text(
               'leaves.dashboard.warningLowBalance'.tr(),
-              style: AppTextStyles.font12Medium.copyWith(color: AppColors.error),
+              style: AppTextStyles.font12Medium.copyWith(
+                color: AppColors.error,
+              ),
             )
           else if (usedRatio == 0.0)
-             Text(
+            Text(
               'leaves.dashboard.noLeavesTaken'.tr(),
               style: AppTextStyles.font12Regular,
             ),
@@ -105,10 +114,7 @@ class LeaveBalanceCardWidget extends StatelessWidget {
           ),
         ),
         SizedBox(height: 4.h),
-        Text(
-          label,
-          style: AppTextStyles.font12Medium,
-        ),
+        Text(label, style: AppTextStyles.font12Medium),
       ],
     );
   }

@@ -196,7 +196,10 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
         todayAttendance = _findTodayRecord(data);
         _applyFilters();
       case Failure(:final failure):
-        emit(EmployeeAttendanceState.error(failure.messageKey));
+        // Fallback to empty list instead of showing errors.unknown
+        _allHistoryRecords = [];
+        todayAttendance = null;
+        _applyFilters();
     }
   }
 

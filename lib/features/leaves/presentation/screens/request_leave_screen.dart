@@ -27,7 +27,9 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
   }
 
   void _submit() {
-    if (_startDate != null && _endDate != null && _selectedLeaveTypeId != null) {
+    if (_startDate != null &&
+        _endDate != null &&
+        _selectedLeaveTypeId != null) {
       context.read<LeavesCubit>().submitLeave(
         LeaveRequestBody(
           leaveTypeId: _selectedLeaveTypeId!,
@@ -53,9 +55,9 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
               Navigator.pop(context);
             },
             error: (msg) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(msg)),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(msg)));
             },
           );
         },
@@ -64,11 +66,8 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
             submitting: () => true,
             orElse: () => false,
           );
-          
-          final types = state.maybeWhen(
-            success: (_, t) => t,
-            orElse: () => [],
-          );
+
+          final types = state.maybeWhen(success: (_, t, __) => t, orElse: () => []);
 
           return Padding(
             padding: EdgeInsets.all(16.w),
@@ -77,26 +76,34 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
               children: [
                 DropdownButtonFormField<String>(
                   value: _selectedLeaveTypeId,
-                  items: types.map<DropdownMenuItem<String>>((t) => DropdownMenuItem<String>(
-                    value: t.id,
-                    child: Text(t.typeName),
-                  )).toList(),
+                  items: types
+                      .map<DropdownMenuItem<String>>(
+                        (t) => DropdownMenuItem<String>(
+                          value: t.id,
+                          child: Text(t.typeName),
+                        ),
+                      )
+                      .toList(),
                   onChanged: (v) => setState(() => _selectedLeaveTypeId = v),
-                  decoration: InputDecoration(labelText: 'leaves.request.type'.tr()),
+                  decoration: InputDecoration(
+                    labelText: 'leaves.request.type'.tr(),
+                  ),
                 ),
                 SizedBox(height: 16.h),
                 TextField(
                   controller: _reasonController,
-                  decoration: InputDecoration(labelText: 'leaves.request.reason'.tr()),
+                  decoration: InputDecoration(
+                    labelText: 'leaves.request.reason'.tr(),
+                  ),
                   maxLines: 3,
                 ),
                 SizedBox(height: 24.h),
                 ElevatedButton(
                   onPressed: isSubmitting ? null : _submit,
-                  child: isSubmitting 
-                    ? const CircularProgressIndicator()
-                    : Text('leaves.request.submit'.tr()),
-                )
+                  child: isSubmitting
+                      ? const CircularProgressIndicator()
+                      : Text('leaves.request.submit'.tr()),
+                ),
               ],
             ),
           );

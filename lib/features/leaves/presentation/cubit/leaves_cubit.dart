@@ -5,19 +5,26 @@ import 'leaves_state.dart';
 
 class LeavesCubit extends Cubit<LeavesState> {
   LeavesCubit({required this.leavesRepo}) : super(const LeavesState.initial());
-  
+
   final LeavesRepoImpl leavesRepo;
 
   Future<void> loadLeavesData() async {
     emit(const LeavesState.loading());
-    
+
     final balancesResult = await leavesRepo.getLeaveBalances();
     final typesResult = await leavesRepo.getLeaveTypes();
+    final requestsResult = await leavesRepo.getLeaveRequests();
 
     balancesResult.when(
       success: (balances) {
         typesResult.when(
-          success: (types) => emit(LeavesState.success(balances, types)),
+          success: (types) {
+            requestsResult.when(
+              success: (requests) =>
+                  emit(LeavesState.success(balances, types, requests)),
+              failure: (f) => emit(LeavesState.error(f.messageKey)),
+            );
+          },
           failure: (f) => emit(LeavesState.error(f.messageKey)),
         );
       },
@@ -31,6 +38,22 @@ class LeavesCubit extends Cubit<LeavesState> {
     result.when(
       success: (_) {
         emit(const LeavesState.submitSuccess());
+        loadLeavesData();
+      },
+      failure: (f) => emit(LeavesState.error(f.messageKey)),
+    );
+  }
+
+  Future<void> cancelLeave(String id) async {
+    emit(const LeavesState.loading());
+    final result = await leavesRepo.updateLeaveStatus(id, 'Cancelled');
+    result.when(
+      success: (_) {
+        emit(
+          const LeavesState.actionSuccess(
+            'Leave request cancelled successfully',
+          ),
+        );
         loadLeavesData();
       },
       failure: (f) => emit(LeavesState.error(f.messageKey)),

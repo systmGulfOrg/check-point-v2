@@ -26,6 +26,7 @@ mixin _$ShortLeaveModel {
   DateTime get date => throw _privateConstructorUsedError;
   String get startTime => throw _privateConstructorUsedError;
   String get endTime => throw _privateConstructorUsedError;
+  String get permitType => throw _privateConstructorUsedError;
   double get totalHours => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   String? get reason => throw _privateConstructorUsedError;
@@ -54,6 +55,7 @@ abstract class $ShortLeaveModelCopyWith<$Res> {
     DateTime date,
     String startTime,
     String endTime,
+    String permitType,
     double totalHours,
     String status,
     String? reason,
@@ -81,6 +83,7 @@ class _$ShortLeaveModelCopyWithImpl<$Res, $Val extends ShortLeaveModel>
     Object? date = null,
     Object? startTime = null,
     Object? endTime = null,
+    Object? permitType = null,
     Object? totalHours = null,
     Object? status = null,
     Object? reason = freezed,
@@ -107,6 +110,10 @@ class _$ShortLeaveModelCopyWithImpl<$Res, $Val extends ShortLeaveModel>
             endTime: null == endTime
                 ? _value.endTime
                 : endTime // ignore: cast_nullable_to_non_nullable
+                      as String,
+            permitType: null == permitType
+                ? _value.permitType
+                : permitType // ignore: cast_nullable_to_non_nullable
                       as String,
             totalHours: null == totalHours
                 ? _value.totalHours
@@ -145,6 +152,7 @@ abstract class _$$ShortLeaveModelImplCopyWith<$Res>
     DateTime date,
     String startTime,
     String endTime,
+    String permitType,
     double totalHours,
     String status,
     String? reason,
@@ -171,6 +179,7 @@ class __$$ShortLeaveModelImplCopyWithImpl<$Res>
     Object? date = null,
     Object? startTime = null,
     Object? endTime = null,
+    Object? permitType = null,
     Object? totalHours = null,
     Object? status = null,
     Object? reason = freezed,
@@ -197,6 +206,10 @@ class __$$ShortLeaveModelImplCopyWithImpl<$Res>
         endTime: null == endTime
             ? _value.endTime
             : endTime // ignore: cast_nullable_to_non_nullable
+                  as String,
+        permitType: null == permitType
+            ? _value.permitType
+            : permitType // ignore: cast_nullable_to_non_nullable
                   as String,
         totalHours: null == totalHours
             ? _value.totalHours
@@ -228,6 +241,7 @@ class _$ShortLeaveModelImpl implements _ShortLeaveModel {
     required this.date,
     required this.startTime,
     required this.endTime,
+    required this.permitType,
     required this.totalHours,
     required this.status,
     this.reason,
@@ -248,6 +262,8 @@ class _$ShortLeaveModelImpl implements _ShortLeaveModel {
   @override
   final String endTime;
   @override
+  final String permitType;
+  @override
   final double totalHours;
   @override
   final String status;
@@ -258,7 +274,7 @@ class _$ShortLeaveModelImpl implements _ShortLeaveModel {
 
   @override
   String toString() {
-    return 'ShortLeaveModel(id: $id, employeeId: $employeeId, date: $date, startTime: $startTime, endTime: $endTime, totalHours: $totalHours, status: $status, reason: $reason, createdAt: $createdAt)';
+    return 'ShortLeaveModel(id: $id, employeeId: $employeeId, date: $date, startTime: $startTime, endTime: $endTime, permitType: $permitType, totalHours: $totalHours, status: $status, reason: $reason, createdAt: $createdAt)';
   }
 
   @override
@@ -273,6 +289,8 @@ class _$ShortLeaveModelImpl implements _ShortLeaveModel {
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
+            (identical(other.permitType, permitType) ||
+                other.permitType == permitType) &&
             (identical(other.totalHours, totalHours) ||
                 other.totalHours == totalHours) &&
             (identical(other.status, status) || other.status == status) &&
@@ -290,6 +308,7 @@ class _$ShortLeaveModelImpl implements _ShortLeaveModel {
     date,
     startTime,
     endTime,
+    permitType,
     totalHours,
     status,
     reason,
@@ -320,6 +339,7 @@ abstract class _ShortLeaveModel implements ShortLeaveModel {
     required final DateTime date,
     required final String startTime,
     required final String endTime,
+    required final String permitType,
     required final double totalHours,
     required final String status,
     final String? reason,
@@ -339,6 +359,8 @@ abstract class _ShortLeaveModel implements ShortLeaveModel {
   String get startTime;
   @override
   String get endTime;
+  @override
+  String get permitType;
   @override
   double get totalHours;
   @override

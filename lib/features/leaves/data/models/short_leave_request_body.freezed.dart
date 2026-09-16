@@ -26,6 +26,7 @@ mixin _$ShortLeaveRequestBody {
   DateTime get date => throw _privateConstructorUsedError;
   String get startTime => throw _privateConstructorUsedError;
   String get endTime => throw _privateConstructorUsedError;
+  String get permitType => throw _privateConstructorUsedError;
   String? get reason => throw _privateConstructorUsedError;
 
   /// Serializes this ShortLeaveRequestBody to a JSON map.
@@ -45,7 +46,13 @@ abstract class $ShortLeaveRequestBodyCopyWith<$Res> {
     $Res Function(ShortLeaveRequestBody) then,
   ) = _$ShortLeaveRequestBodyCopyWithImpl<$Res, ShortLeaveRequestBody>;
   @useResult
-  $Res call({DateTime date, String startTime, String endTime, String? reason});
+  $Res call({
+    DateTime date,
+    String startTime,
+    String endTime,
+    String permitType,
+    String? reason,
+  });
 }
 
 /// @nodoc
@@ -69,6 +76,7 @@ class _$ShortLeaveRequestBodyCopyWithImpl<
     Object? date = null,
     Object? startTime = null,
     Object? endTime = null,
+    Object? permitType = null,
     Object? reason = freezed,
   }) {
     return _then(
@@ -84,6 +92,10 @@ class _$ShortLeaveRequestBodyCopyWithImpl<
             endTime: null == endTime
                 ? _value.endTime
                 : endTime // ignore: cast_nullable_to_non_nullable
+                      as String,
+            permitType: null == permitType
+                ? _value.permitType
+                : permitType // ignore: cast_nullable_to_non_nullable
                       as String,
             reason: freezed == reason
                 ? _value.reason
@@ -104,7 +116,13 @@ abstract class _$$ShortLeaveRequestBodyImplCopyWith<$Res>
   ) = __$$ShortLeaveRequestBodyImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DateTime date, String startTime, String endTime, String? reason});
+  $Res call({
+    DateTime date,
+    String startTime,
+    String endTime,
+    String permitType,
+    String? reason,
+  });
 }
 
 /// @nodoc
@@ -125,6 +143,7 @@ class __$$ShortLeaveRequestBodyImplCopyWithImpl<$Res>
     Object? date = null,
     Object? startTime = null,
     Object? endTime = null,
+    Object? permitType = null,
     Object? reason = freezed,
   }) {
     return _then(
@@ -140,6 +159,10 @@ class __$$ShortLeaveRequestBodyImplCopyWithImpl<$Res>
         endTime: null == endTime
             ? _value.endTime
             : endTime // ignore: cast_nullable_to_non_nullable
+                  as String,
+        permitType: null == permitType
+            ? _value.permitType
+            : permitType // ignore: cast_nullable_to_non_nullable
                   as String,
         reason: freezed == reason
             ? _value.reason
@@ -157,6 +180,7 @@ class _$ShortLeaveRequestBodyImpl implements _ShortLeaveRequestBody {
     required this.date,
     required this.startTime,
     required this.endTime,
+    required this.permitType,
     this.reason,
   });
 
@@ -170,11 +194,13 @@ class _$ShortLeaveRequestBodyImpl implements _ShortLeaveRequestBody {
   @override
   final String endTime;
   @override
+  final String permitType;
+  @override
   final String? reason;
 
   @override
   String toString() {
-    return 'ShortLeaveRequestBody(date: $date, startTime: $startTime, endTime: $endTime, reason: $reason)';
+    return 'ShortLeaveRequestBody(date: $date, startTime: $startTime, endTime: $endTime, permitType: $permitType, reason: $reason)';
   }
 
   @override
@@ -186,13 +212,15 @@ class _$ShortLeaveRequestBodyImpl implements _ShortLeaveRequestBody {
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
+            (identical(other.permitType, permitType) ||
+                other.permitType == permitType) &&
             (identical(other.reason, reason) || other.reason == reason));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, date, startTime, endTime, reason);
+      Object.hash(runtimeType, date, startTime, endTime, permitType, reason);
 
   /// Create a copy of ShortLeaveRequestBody
   /// with the given fields replaced by the non-null parameter values.
@@ -217,6 +245,7 @@ abstract class _ShortLeaveRequestBody implements ShortLeaveRequestBody {
     required final DateTime date,
     required final String startTime,
     required final String endTime,
+    required final String permitType,
     final String? reason,
   }) = _$ShortLeaveRequestBodyImpl;
 
@@ -229,6 +258,8 @@ abstract class _ShortLeaveRequestBody implements ShortLeaveRequestBody {
   String get startTime;
   @override
   String get endTime;
+  @override
+  String get permitType;
   @override
   String? get reason;
 

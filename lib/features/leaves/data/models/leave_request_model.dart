@@ -8,6 +8,7 @@ class LeaveRequestModel with _$LeaveRequestModel {
   const factory LeaveRequestModel({
     required String id,
     required String leaveTypeId,
+    String? leaveTypeName,
     required String employeeId,
     required DateTime startDate,
     required DateTime endDate,
@@ -16,6 +17,16 @@ class LeaveRequestModel with _$LeaveRequestModel {
     String? reason,
     String? attachmentUrl,
     DateTime? createdAt,
+    // Stage 1 - Manager
+    String? managerId,
+    String? managerName,
+    DateTime? managerActionAt,
+    String? managerRejectionReason,
+    // Stage 2 - HR
+    String? hrId,
+    String? hrName,
+    DateTime? hrActionAt,
+    String? hrRejectionReason,
   }) = _LeaveRequestModel;
 
   factory LeaveRequestModel.fromJson(Map<String, dynamic> json) =>

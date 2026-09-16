@@ -106,9 +106,7 @@ class SupervisorTaskCardWidget extends StatelessWidget {
           ),
           Container(
             decoration: const BoxDecoration(
-              border: Border(
-                top: BorderSide(color: AppColors.border),
-              ),
+              border: Border(top: BorderSide(color: AppColors.border)),
             ),
             child: Row(
               children: [
@@ -127,11 +125,7 @@ class SupervisorTaskCardWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  width: 1.w,
-                  height: 24.h,
-                  color: AppColors.border,
-                ),
+                Container(width: 1.w, height: 24.h, color: AppColors.border),
                 Expanded(
                   child: InkWell(
                     onTap: onDelete,
