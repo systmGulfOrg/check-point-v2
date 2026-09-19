@@ -102,6 +102,18 @@ abstract class EmployeeApiService {
     @Body() EmployeeUpdateTaskStatusRequestBody body,
   );
 
+  @POST('/api/v2/tasks/{id}/time-logs')
+  Future<dynamic> logTaskTime(
+    @Path('id') String taskId,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @GET('/api/v2/tasks/productive-hours')
+  Future<dynamic> getProductiveHours({
+    @Query('from') required String from,
+    @Query('to') required String to,
+  });
+
   @POST(ApiConstants.removeTaskFromEmployee)
   Future<ResultModel> removeTask(@Body() EmployeeRemoveTaskRequestBody body);
 

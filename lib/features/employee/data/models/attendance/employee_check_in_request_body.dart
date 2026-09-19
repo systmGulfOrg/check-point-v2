@@ -12,6 +12,7 @@ class EmployeeCheckInRequestBody {
     this.location,
     this.coordinates,
     this.employeeImage,
+    this.mockLocationDetected,
   });
 
   @JsonKey(name: 'employeeId')
@@ -23,6 +24,7 @@ class EmployeeCheckInRequestBody {
   final String? location;
   final List<AttendanceCoordinate>? coordinates;
   final String? employeeImage;
+  final bool? mockLocationDetected;
 
   factory EmployeeCheckInRequestBody.fromJson(Map<String, dynamic> json) =>
       _$EmployeeCheckInRequestBodyFromJson(json);
@@ -32,10 +34,11 @@ class EmployeeCheckInRequestBody {
 
 @JsonSerializable()
 class AttendanceCoordinate {
-  const AttendanceCoordinate({this.latitude, this.longitude});
+  const AttendanceCoordinate({this.latitude, this.longitude, this.accuracyM});
 
   final double? latitude;
   final double? longitude;
+  final double? accuracyM;
 
   factory AttendanceCoordinate.fromJson(Map<String, dynamic> json) =>
       _$AttendanceCoordinateFromJson(json);

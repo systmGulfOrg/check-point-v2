@@ -23,6 +23,17 @@ AdminAttendanceModel _$AdminAttendanceModelFromJson(
   employeeImage: json['employeeImage'] as String?,
   isEarly: json['isEarly'] as bool?,
   isLate: json['isLate'] as bool?,
+  status: json['status'] as String?,
+  nominalHours: (json['nominalHours'] as num?)?.toDouble(),
+  taskCalculatedHours: (json['taskCalculatedHours'] as num?)?.toDouble(),
+  underAllocation: json['underAllocation'] as bool?,
+  permitId: json['permitId'] as String?,
+  checkInAddress: json['checkInAddress'] as String?,
+  checkOutAddress: json['checkOutAddress'] as String?,
+  checkInMockLocation: json['checkInMockLocation'] as bool?,
+  checkOutMockLocation: json['checkOutMockLocation'] as bool?,
+  earlyLeaveMinutes: (json['earlyLeaveMinutes'] as num?)?.toInt(),
+  workedMinutes: (json['workedMinutes'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$AdminAttendanceModelToJson(
@@ -42,6 +53,17 @@ Map<String, dynamic> _$AdminAttendanceModelToJson(
   'employeeImage': instance.employeeImage,
   'isEarly': instance.isEarly,
   'isLate': instance.isLate,
+  'status': instance.status,
+  'nominalHours': instance.nominalHours,
+  'taskCalculatedHours': instance.taskCalculatedHours,
+  'underAllocation': instance.underAllocation,
+  'permitId': instance.permitId,
+  'checkInAddress': instance.checkInAddress,
+  'checkOutAddress': instance.checkOutAddress,
+  'checkInMockLocation': instance.checkInMockLocation,
+  'checkOutMockLocation': instance.checkOutMockLocation,
+  'earlyLeaveMinutes': instance.earlyLeaveMinutes,
+  'workedMinutes': instance.workedMinutes,
 };
 
 AttendanceResponseModel _$AttendanceResponseModelFromJson(

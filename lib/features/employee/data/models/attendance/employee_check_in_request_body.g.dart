@@ -17,6 +17,7 @@ EmployeeCheckInRequestBody _$EmployeeCheckInRequestBodyFromJson(
       ?.map((e) => AttendanceCoordinate.fromJson(e as Map<String, dynamic>))
       .toList(),
   employeeImage: json['employeeImage'] as String?,
+  mockLocationDetected: json['mockLocationDetected'] as bool?,
 );
 
 Map<String, dynamic> _$EmployeeCheckInRequestBodyToJson(
@@ -28,6 +29,7 @@ Map<String, dynamic> _$EmployeeCheckInRequestBodyToJson(
   'location': instance.location,
   'coordinates': instance.coordinates,
   'employeeImage': instance.employeeImage,
+  'mockLocationDetected': instance.mockLocationDetected,
 };
 
 AttendanceCoordinate _$AttendanceCoordinateFromJson(
@@ -35,6 +37,7 @@ AttendanceCoordinate _$AttendanceCoordinateFromJson(
 ) => AttendanceCoordinate(
   latitude: (json['latitude'] as num?)?.toDouble(),
   longitude: (json['longitude'] as num?)?.toDouble(),
+  accuracyM: (json['accuracyM'] as num?)?.toDouble(),
 );
 
 Map<String, dynamic> _$AttendanceCoordinateToJson(
@@ -42,4 +45,5 @@ Map<String, dynamic> _$AttendanceCoordinateToJson(
 ) => <String, dynamic>{
   'latitude': instance.latitude,
   'longitude': instance.longitude,
+  'accuracyM': instance.accuracyM,
 };

@@ -20,6 +20,16 @@ abstract class EmployeeActionRepo {
   Future<ApiResult<List<AdminTaskModel>>> getEmployeeTasks(String employeeId);
   Future<ApiResult<void>> updateTaskStatus(int taskId, String status);
   Future<ApiResult<void>> removeTask(EmployeeRemoveTaskRequestBody body);
+  Future<ApiResult<void>> logTaskTime({
+    required String taskId,
+    required DateTime workDate,
+    required int durationMinutes,
+    String? note,
+  });
+  Future<ApiResult<int>> getProductiveMinutes({
+    required DateTime from,
+    required DateTime to,
+  });
   Future<ApiResult<void>> changePassword(
     EmployeeChangePasswordRequestBody body,
   );

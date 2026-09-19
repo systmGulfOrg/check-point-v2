@@ -149,6 +149,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     currentLocation = verification.location;
     final result = await checkOutUseCase(
       selectedImageBase64: selectedImageBase64,
+      currentLocation: currentLocation,
     );
 
     switch (result) {
@@ -195,7 +196,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
         _allHistoryRecords = data;
         todayAttendance = _findTodayRecord(data);
         _applyFilters();
-      case Failure(:final failure):
+      case Failure():
         // Fallback to empty list instead of showing errors.unknown
         _allHistoryRecords = [];
         todayAttendance = null;

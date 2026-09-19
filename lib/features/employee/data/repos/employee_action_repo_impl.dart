@@ -112,6 +112,43 @@ class EmployeeActionRepoImpl implements EmployeeActionRepo {
   }
 
   @override
+  Future<ApiResult<void>> logTaskTime({
+    required String taskId,
+    required DateTime workDate,
+    required int durationMinutes,
+    String? note,
+  }) async {
+    try {
+      await api.logTaskTime(taskId, {
+        'workDate': workDate.toIso8601String(),
+        'durationMinutes': durationMinutes,
+        'note': note,
+      });
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<int>> getProductiveMinutes({
+    required DateTime from,
+    required DateTime to,
+  }) async {
+    try {
+      final response = await api.getProductiveHours(
+        from: from.toIso8601String(),
+        to: to.toIso8601String(),
+      );
+      final value = response['value'];
+      final total = value is Map<String, dynamic> ? value['totalMinutes'] : 0;
+      return ApiResult.success(total is num ? total.toInt() : 0);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
   Future<ApiResult<void>> changePassword(
     EmployeeChangePasswordRequestBody body,
   ) async {

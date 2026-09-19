@@ -22,6 +22,17 @@ class AdminAttendanceModel {
     this.employeeImage,
     this.isEarly,
     this.isLate,
+    this.status,
+    this.nominalHours,
+    this.taskCalculatedHours,
+    this.underAllocation,
+    this.permitId,
+    this.checkInAddress,
+    this.checkOutAddress,
+    this.checkInMockLocation,
+    this.checkOutMockLocation,
+    this.earlyLeaveMinutes,
+    this.workedMinutes,
   });
 
   final int? id;
@@ -42,6 +53,17 @@ class AdminAttendanceModel {
   final String? employeeImage;
   final bool? isEarly;
   final bool? isLate;
+  final String? status;
+  final double? nominalHours;
+  final double? taskCalculatedHours;
+  final bool? underAllocation;
+  final String? permitId;
+  final String? checkInAddress;
+  final String? checkOutAddress;
+  final bool? checkInMockLocation;
+  final bool? checkOutMockLocation;
+  final int? earlyLeaveMinutes;
+  final int? workedMinutes;
 
   factory AdminAttendanceModel.fromJson(Map<String, dynamic> json) =>
       _$AdminAttendanceModelFromJson(json);
