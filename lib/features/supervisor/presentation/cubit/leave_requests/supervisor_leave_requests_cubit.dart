@@ -20,9 +20,11 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
   List<LeaveTypeModel> leaveTypes = const [];
   String? statusFilter;
   String userRole = 'Employee';
+  String currentUserId = '';
 
   Future<void> initRole() async {
     userRole = await sessionStorage.readUserRole() ?? 'Employee';
+    currentUserId = await sessionStorage.readUserId() ?? '';
   }
 
   Future<List<LeaveTypeModel>> loadLeaveTypes() async {
