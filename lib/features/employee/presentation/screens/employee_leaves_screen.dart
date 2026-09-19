@@ -79,7 +79,7 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                             return state.maybeWhen(
                               success: (balances, types, requests) {
                                 if (balances.isEmpty) return const SizedBox.shrink();
-                                return Container(
+                                return SizedBox(
                                   height: 200.h,
                                   child: LeaveBalancesListWidget(balances: balances),
                                 );

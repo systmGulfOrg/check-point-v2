@@ -14,7 +14,7 @@ class LeaveRequestCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final status = request.status?.toLowerCase() ?? 'pending';
+    final status = request.status.toLowerCase();
 
     final (statusKey, statusColor, statusBg) = switch (status) {
       'pending' => (

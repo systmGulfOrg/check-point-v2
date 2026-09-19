@@ -13,6 +13,7 @@ _$ShortLeaveRequestBodyImpl _$$ShortLeaveRequestBodyImplFromJson(
   startTime: json['startTime'] as String,
   endTime: json['endTime'] as String,
   permitType: json['permitType'] as String,
+  durationMinutes: (json['durationMinutes'] as num?)?.toInt(),
   reason: json['reason'] as String?,
 );
 
@@ -23,5 +24,6 @@ Map<String, dynamic> _$$ShortLeaveRequestBodyImplToJson(
   'startTime': instance.startTime,
   'endTime': instance.endTime,
   'permitType': instance.permitType,
+  'durationMinutes': instance.durationMinutes,
   'reason': instance.reason,
 };

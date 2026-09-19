@@ -16,7 +16,13 @@ _$ShortLeaveModelImpl _$$ShortLeaveModelImplFromJson(
   endTime: json['endTime'] as String,
   permitType: json['permitType'] as String,
   totalHours: (json['totalHours'] as num).toDouble(),
+  durationMinutes: (json['durationMinutes'] as num?)?.toInt(),
   status: json['status'] as String,
+  managerId: json['managerId'] as String?,
+  managerActionAt: json['managerActionAt'] == null
+      ? null
+      : DateTime.parse(json['managerActionAt'] as String),
+  managerRejectionReason: json['managerRejectionReason'] as String?,
   reason: json['reason'] as String?,
   createdAt: json['createdAt'] == null
       ? null
@@ -33,7 +39,11 @@ Map<String, dynamic> _$$ShortLeaveModelImplToJson(
   'endTime': instance.endTime,
   'permitType': instance.permitType,
   'totalHours': instance.totalHours,
+  'durationMinutes': instance.durationMinutes,
   'status': instance.status,
+  'managerId': instance.managerId,
+  'managerActionAt': instance.managerActionAt?.toIso8601String(),
+  'managerRejectionReason': instance.managerRejectionReason,
   'reason': instance.reason,
   'createdAt': instance.createdAt?.toIso8601String(),
 };

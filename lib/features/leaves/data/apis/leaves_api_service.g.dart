@@ -171,6 +171,27 @@ class _LeavesApiService implements LeavesApiService {
   }
 
   @override
+  Future<dynamic> cancelLeaveRequest(String id) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<dynamic>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/v2/leave-requests/${id}/cancel',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
   Future<List<ShortLeaveModel>> getShortLeaves() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -180,7 +201,7 @@ class _LeavesApiService implements LeavesApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/permissions/requests',
+            '/api/v1/leaves/permissions/requests',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -213,7 +234,7 @@ class _LeavesApiService implements LeavesApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/permissions/request',
+            '/api/v1/leaves/permissions/request',
             queryParameters: queryParameters,
             data: _data,
           )

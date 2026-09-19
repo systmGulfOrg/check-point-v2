@@ -32,10 +32,13 @@ abstract class LeavesApiService {
     @Body() Map<String, dynamic> body,
   );
 
-  @GET('/api/v1/permissions/requests')
+  @POST('/api/v2/leave-requests/{id}/cancel')
+  Future<dynamic> cancelLeaveRequest(@Path('id') String id);
+
+  @GET('/api/v1/leaves/permissions/requests')
   Future<List<ShortLeaveModel>> getShortLeaves();
 
-  @POST('/api/v1/permissions/request')
+  @POST('/api/v1/leaves/permissions/request')
   Future<ShortLeaveModel> submitShortLeaveRequest(
     @Body() ShortLeaveRequestBody body,
   );

@@ -61,6 +61,10 @@ import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employ
 import 'package:check_point_v2/features/leaves/data/apis/leaves_api_service.dart';
 import 'package:check_point_v2/features/leaves/data/repos/leaves_repo_impl.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/permit_cubit.dart';
+import 'package:check_point_v2/features/notifications/data/apis/notifications_api_service.dart';
+import 'package:check_point_v2/features/notifications/data/repos/notifications_repo_impl.dart';
+import 'package:check_point_v2/features/notifications/presentation/cubit/notifications_cubit.dart';
 
 import 'package:check_point_v2/features/supervisor/data/apis/supervisor_api_service.dart';
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_attendance_repo.dart';
@@ -148,6 +152,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<LeavesApiService>(
     () => LeavesApiService(sl<Dio>()),
   );
+  sl.registerLazySingleton<NotificationsApiService>(
+    () => NotificationsApiService(sl<Dio>()),
+  );
 
   // Repositories
   sl.registerLazySingleton<AuthRepo>(
@@ -215,6 +222,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<LeavesRepoImpl>(
     () => LeavesRepoImpl(api: sl<LeavesApiService>()),
+  );
+  sl.registerLazySingleton<NotificationsRepoImpl>(
+    () => NotificationsRepoImpl(api: sl<NotificationsApiService>()),
   );
 
   // UseCases
@@ -371,6 +381,12 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<LeavesCubit>(
     () => LeavesCubit(leavesRepo: sl<LeavesRepoImpl>()),
+  );
+  sl.registerFactory<PermitCubit>(
+    () => PermitCubit(leavesRepo: sl<LeavesRepoImpl>()),
+  );
+  sl.registerFactory<NotificationsCubit>(
+    () => NotificationsCubit(notificationsRepo: sl<NotificationsRepoImpl>()),
   );
   sl.registerFactory(() => AdminEmployeeAuditCubit(api: sl()));
 }

@@ -13,7 +13,11 @@ class ShortLeaveModel with _$ShortLeaveModel {
     required String endTime,
     required String permitType,
     required double totalHours,
+    int? durationMinutes,
     required String status,
+    String? managerId,
+    DateTime? managerActionAt,
+    String? managerRejectionReason,
     String? reason,
     DateTime? createdAt,
   }) = _ShortLeaveModel;

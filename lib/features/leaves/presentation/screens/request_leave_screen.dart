@@ -67,7 +67,10 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
             orElse: () => false,
           );
 
-          final types = state.maybeWhen(success: (_, t, __) => t, orElse: () => []);
+          final types = state.maybeWhen(
+            success: (balances, types, requests) => types,
+            orElse: () => [],
+          );
 
           return Padding(
             padding: EdgeInsets.all(16.w),
@@ -75,7 +78,7 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 DropdownButtonFormField<String>(
-                  value: _selectedLeaveTypeId,
+                  initialValue: _selectedLeaveTypeId,
                   items: types
                       .map<DropdownMenuItem<String>>(
                         (t) => DropdownMenuItem<String>(

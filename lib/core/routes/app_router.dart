@@ -41,6 +41,7 @@ import 'package:check_point_v2/features/employee/presentation/cubit/leave_reques
 import 'package:check_point_v2/features/employee/presentation/cubit/odoo_dashboard/employee_odoo_dashboard_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/plans/employee_plans_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/permit_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/screens/employee_main_screen.dart';
 import 'package:check_point_v2/features/employee/presentation/screens/employee_settings_screen.dart';
@@ -55,6 +56,7 @@ import 'package:check_point_v2/features/supervisor/presentation/cubit/team/super
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_leave_management_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_main_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_notifications_screen.dart';
+import 'package:check_point_v2/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_plans_screen.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/core/styles/app_motion.dart';
@@ -473,7 +475,10 @@ class AppRouter {
           settings: const RouteSettings(
             name: AppRoutes.supervisorNotifications,
           ),
-          child: const SupervisorNotificationsScreen(),
+          child: BlocProvider<NotificationsCubit>(
+            create: (_) => sl<NotificationsCubit>()..load(),
+            child: const SupervisorNotificationsScreen(),
+          ),
         );
 
       case AppRoutes.employee:
@@ -521,8 +526,8 @@ class AppRouter {
       case AppRoutes.permissionsRequest:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.permissionsRequest),
-          child: BlocProvider.value(
-            value: sl<LeavesCubit>(),
+          child: BlocProvider<PermitCubit>(
+            create: (_) => sl<PermitCubit>(),
             child: const RequestPermissionScreen(),
           ),
         );

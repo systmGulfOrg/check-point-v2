@@ -5,6 +5,8 @@ import '../models/leave_balance_model.dart';
 import '../models/leave_request_body.dart';
 import '../models/leave_request_model.dart';
 import '../models/leave_type_model.dart';
+import '../models/short_leave_model.dart';
+import '../models/short_leave_request_body.dart';
 
 class LeavesRepoImpl {
   LeavesRepoImpl({required this.api});
@@ -56,6 +58,33 @@ class LeavesRepoImpl {
     try {
       final model = await api.updateLeaveStatus(id, {'status': status});
       return ApiResult.success(model);
+    } catch (e, _) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  Future<ApiResult<void>> cancelLeaveRequest(String id) async {
+    try {
+      await api.cancelLeaveRequest(id);
+      return const ApiResult.success(null);
+    } catch (e, _) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  Future<ApiResult<List<ShortLeaveModel>>> getShortLeaves() async {
+    try {
+      return ApiResult.success(await api.getShortLeaves());
+    } catch (e, _) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  Future<ApiResult<ShortLeaveModel>> submitShortLeaveRequest(
+    ShortLeaveRequestBody body,
+  ) async {
+    try {
+      return ApiResult.success(await api.submitShortLeaveRequest(body));
     } catch (e, _) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

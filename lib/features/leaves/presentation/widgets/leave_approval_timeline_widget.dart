@@ -24,7 +24,7 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
           date: request.managerActionAt,
           reason: request.managerRejectionReason,
           isActive: request.managerActionAt != null,
-          isRejected: request.status?.toLowerCase() == 'rejectedbymanager',
+          isRejected: request.status.toLowerCase() == 'rejectedbymanager',
           isLast: false,
         ),
         _buildTimelineStep(
@@ -34,7 +34,7 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
           date: request.hrActionAt,
           reason: request.hrRejectionReason,
           isActive: request.hrActionAt != null,
-          isRejected: request.status?.toLowerCase() == 'rejectedbyhr',
+          isRejected: request.status.toLowerCase() == 'rejectedbyhr',
           isLast: true,
         ),
       ],

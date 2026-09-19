@@ -28,7 +28,11 @@ mixin _$ShortLeaveModel {
   String get endTime => throw _privateConstructorUsedError;
   String get permitType => throw _privateConstructorUsedError;
   double get totalHours => throw _privateConstructorUsedError;
+  int? get durationMinutes => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
+  String? get managerId => throw _privateConstructorUsedError;
+  DateTime? get managerActionAt => throw _privateConstructorUsedError;
+  String? get managerRejectionReason => throw _privateConstructorUsedError;
   String? get reason => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
@@ -57,7 +61,11 @@ abstract class $ShortLeaveModelCopyWith<$Res> {
     String endTime,
     String permitType,
     double totalHours,
+    int? durationMinutes,
     String status,
+    String? managerId,
+    DateTime? managerActionAt,
+    String? managerRejectionReason,
     String? reason,
     DateTime? createdAt,
   });
@@ -85,7 +93,11 @@ class _$ShortLeaveModelCopyWithImpl<$Res, $Val extends ShortLeaveModel>
     Object? endTime = null,
     Object? permitType = null,
     Object? totalHours = null,
+    Object? durationMinutes = freezed,
     Object? status = null,
+    Object? managerId = freezed,
+    Object? managerActionAt = freezed,
+    Object? managerRejectionReason = freezed,
     Object? reason = freezed,
     Object? createdAt = freezed,
   }) {
@@ -119,10 +131,26 @@ class _$ShortLeaveModelCopyWithImpl<$Res, $Val extends ShortLeaveModel>
                 ? _value.totalHours
                 : totalHours // ignore: cast_nullable_to_non_nullable
                       as double,
+            durationMinutes: freezed == durationMinutes
+                ? _value.durationMinutes
+                : durationMinutes // ignore: cast_nullable_to_non_nullable
+                      as int?,
             status: null == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as String,
+            managerId: freezed == managerId
+                ? _value.managerId
+                : managerId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            managerActionAt: freezed == managerActionAt
+                ? _value.managerActionAt
+                : managerActionAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            managerRejectionReason: freezed == managerRejectionReason
+                ? _value.managerRejectionReason
+                : managerRejectionReason // ignore: cast_nullable_to_non_nullable
+                      as String?,
             reason: freezed == reason
                 ? _value.reason
                 : reason // ignore: cast_nullable_to_non_nullable
@@ -154,7 +182,11 @@ abstract class _$$ShortLeaveModelImplCopyWith<$Res>
     String endTime,
     String permitType,
     double totalHours,
+    int? durationMinutes,
     String status,
+    String? managerId,
+    DateTime? managerActionAt,
+    String? managerRejectionReason,
     String? reason,
     DateTime? createdAt,
   });
@@ -181,7 +213,11 @@ class __$$ShortLeaveModelImplCopyWithImpl<$Res>
     Object? endTime = null,
     Object? permitType = null,
     Object? totalHours = null,
+    Object? durationMinutes = freezed,
     Object? status = null,
+    Object? managerId = freezed,
+    Object? managerActionAt = freezed,
+    Object? managerRejectionReason = freezed,
     Object? reason = freezed,
     Object? createdAt = freezed,
   }) {
@@ -215,10 +251,26 @@ class __$$ShortLeaveModelImplCopyWithImpl<$Res>
             ? _value.totalHours
             : totalHours // ignore: cast_nullable_to_non_nullable
                   as double,
+        durationMinutes: freezed == durationMinutes
+            ? _value.durationMinutes
+            : durationMinutes // ignore: cast_nullable_to_non_nullable
+                  as int?,
         status: null == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as String,
+        managerId: freezed == managerId
+            ? _value.managerId
+            : managerId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        managerActionAt: freezed == managerActionAt
+            ? _value.managerActionAt
+            : managerActionAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        managerRejectionReason: freezed == managerRejectionReason
+            ? _value.managerRejectionReason
+            : managerRejectionReason // ignore: cast_nullable_to_non_nullable
+                  as String?,
         reason: freezed == reason
             ? _value.reason
             : reason // ignore: cast_nullable_to_non_nullable
@@ -243,7 +295,11 @@ class _$ShortLeaveModelImpl implements _ShortLeaveModel {
     required this.endTime,
     required this.permitType,
     required this.totalHours,
+    this.durationMinutes,
     required this.status,
+    this.managerId,
+    this.managerActionAt,
+    this.managerRejectionReason,
     this.reason,
     this.createdAt,
   });
@@ -266,7 +322,15 @@ class _$ShortLeaveModelImpl implements _ShortLeaveModel {
   @override
   final double totalHours;
   @override
+  final int? durationMinutes;
+  @override
   final String status;
+  @override
+  final String? managerId;
+  @override
+  final DateTime? managerActionAt;
+  @override
+  final String? managerRejectionReason;
   @override
   final String? reason;
   @override
@@ -274,7 +338,7 @@ class _$ShortLeaveModelImpl implements _ShortLeaveModel {
 
   @override
   String toString() {
-    return 'ShortLeaveModel(id: $id, employeeId: $employeeId, date: $date, startTime: $startTime, endTime: $endTime, permitType: $permitType, totalHours: $totalHours, status: $status, reason: $reason, createdAt: $createdAt)';
+    return 'ShortLeaveModel(id: $id, employeeId: $employeeId, date: $date, startTime: $startTime, endTime: $endTime, permitType: $permitType, totalHours: $totalHours, durationMinutes: $durationMinutes, status: $status, managerId: $managerId, managerActionAt: $managerActionAt, managerRejectionReason: $managerRejectionReason, reason: $reason, createdAt: $createdAt)';
   }
 
   @override
@@ -293,7 +357,15 @@ class _$ShortLeaveModelImpl implements _ShortLeaveModel {
                 other.permitType == permitType) &&
             (identical(other.totalHours, totalHours) ||
                 other.totalHours == totalHours) &&
+            (identical(other.durationMinutes, durationMinutes) ||
+                other.durationMinutes == durationMinutes) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.managerId, managerId) ||
+                other.managerId == managerId) &&
+            (identical(other.managerActionAt, managerActionAt) ||
+                other.managerActionAt == managerActionAt) &&
+            (identical(other.managerRejectionReason, managerRejectionReason) ||
+                other.managerRejectionReason == managerRejectionReason) &&
             (identical(other.reason, reason) || other.reason == reason) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
@@ -310,7 +382,11 @@ class _$ShortLeaveModelImpl implements _ShortLeaveModel {
     endTime,
     permitType,
     totalHours,
+    durationMinutes,
     status,
+    managerId,
+    managerActionAt,
+    managerRejectionReason,
     reason,
     createdAt,
   );
@@ -341,7 +417,11 @@ abstract class _ShortLeaveModel implements ShortLeaveModel {
     required final String endTime,
     required final String permitType,
     required final double totalHours,
+    final int? durationMinutes,
     required final String status,
+    final String? managerId,
+    final DateTime? managerActionAt,
+    final String? managerRejectionReason,
     final String? reason,
     final DateTime? createdAt,
   }) = _$ShortLeaveModelImpl;
@@ -364,7 +444,15 @@ abstract class _ShortLeaveModel implements ShortLeaveModel {
   @override
   double get totalHours;
   @override
+  int? get durationMinutes;
+  @override
   String get status;
+  @override
+  String? get managerId;
+  @override
+  DateTime? get managerActionAt;
+  @override
+  String? get managerRejectionReason;
   @override
   String? get reason;
   @override

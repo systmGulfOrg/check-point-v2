@@ -1,10 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../data/models/short_leave_request_body.dart';
-import '../../data/repos/leaves_repo_impl.dart';
-import '../../../../core/di/service_locator.dart';
+import '../cubit/permit_cubit.dart';
+import '../cubit/permit_state.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/styles/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
@@ -21,7 +22,6 @@ class RequestPermissionScreen extends StatefulWidget {
 
 class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
   final _reasonController = TextEditingController();
-  final _repo = sl<LeavesRepoImpl>();
   final _formKey = GlobalKey<FormState>();
 
   bool _isSubmitting = false;
@@ -63,10 +63,11 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
     );
     if (time != null) {
       setState(() {
-        if (isStart)
+        if (isStart) {
           _startTime = time;
-        else
+        } else {
           _endTime = time;
+        }
       });
     }
   }
@@ -76,6 +77,14 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
     final hour = time.hour.toString().padLeft(2, '0');
     final minute = time.minute.toString().padLeft(2, '0');
     return '$hour:$minute';
+  }
+
+  int? _durationMinutes() {
+    if (_startTime == null || _endTime == null) return null;
+    final start = _startTime!.hour * 60 + _startTime!.minute;
+    final end = _endTime!.hour * 60 + _endTime!.minute;
+    final duration = end - start;
+    return duration > 0 ? duration : null;
   }
 
   Future<void> _submit() async {
@@ -88,17 +97,26 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
     }
 
     setState(() => _isSubmitting = true);
+    final permitCubit = context.read<PermitCubit>();
 
     final body = ShortLeaveRequestBody(
       date: _selectedDate!,
       startTime: _formatTime(_startTime),
       endTime: _formatTime(_endTime),
       permitType: _selectedPermitType,
+      durationMinutes: _durationMinutes(),
       reason: _reasonController.text.trim(),
     );
 
     try {
-      await _repo.api.submitShortLeaveRequest(body);
+      final submitted = await permitCubit.submit(body);
+      if (!submitted) {
+        final messageKey = switch (permitCubit.state) {
+          PermitError(:final messageKey) => messageKey,
+          _ => 'errors.unknown',
+        };
+        throw StateError(messageKey);
+      }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -112,7 +130,7 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString()),
+            content: Text('errors.unknown'.tr()),
             backgroundColor: AppColors.error,
           ),
         );
@@ -147,7 +165,7 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
               ),
               SizedBox(height: 8.h),
               DropdownButtonFormField<String>(
-                value: _selectedPermitType,
+                initialValue: _selectedPermitType,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
@@ -213,7 +231,7 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('From Time', style: AppTextStyles.font14Medium),
+                        Text('permissions.request.fromTime'.tr(), style: AppTextStyles.font14Medium),
                         SizedBox(height: 8.h),
                         InkWell(
                           onTap: () => _selectTime(true),
@@ -253,7 +271,7 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('To Time', style: AppTextStyles.font14Medium),
+                        Text('permissions.request.toTime'.tr(), style: AppTextStyles.font14Medium),
                         SizedBox(height: 8.h),
                         InkWell(
                           onTap: () => _selectTime(false),

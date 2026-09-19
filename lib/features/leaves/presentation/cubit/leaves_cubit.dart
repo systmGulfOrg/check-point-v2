@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/leave_request_body.dart';
 import '../../data/repos/leaves_repo_impl.dart';
@@ -7,6 +9,8 @@ class LeavesCubit extends Cubit<LeavesState> {
   LeavesCubit({required this.leavesRepo}) : super(const LeavesState.initial());
 
   final LeavesRepoImpl leavesRepo;
+
+  Future<void> loadMyLeaveRequests() => loadLeavesData();
 
   Future<void> loadLeavesData() async {
     emit(const LeavesState.loading());
@@ -38,7 +42,7 @@ class LeavesCubit extends Cubit<LeavesState> {
     result.when(
       success: (_) {
         emit(const LeavesState.submitSuccess());
-        loadLeavesData();
+        unawaited(loadLeavesData());
       },
       failure: (f) => emit(LeavesState.error(f.messageKey)),
     );
@@ -46,7 +50,7 @@ class LeavesCubit extends Cubit<LeavesState> {
 
   Future<void> cancelLeave(String id) async {
     emit(const LeavesState.loading());
-    final result = await leavesRepo.updateLeaveStatus(id, 'Cancelled');
+    final result = await leavesRepo.cancelLeaveRequest(id);
     result.when(
       success: (_) {
         emit(
@@ -54,7 +58,7 @@ class LeavesCubit extends Cubit<LeavesState> {
             'Leave request cancelled successfully',
           ),
         );
-        loadLeavesData();
+        unawaited(loadLeavesData());
       },
       failure: (f) => emit(LeavesState.error(f.messageKey)),
     );
