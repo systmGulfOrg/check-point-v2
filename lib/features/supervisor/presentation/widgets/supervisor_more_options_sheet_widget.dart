@@ -11,6 +11,7 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
     required this.onPlansTap,
     required this.onNotificationsTap,
     required this.onProfileTap,
+    required this.onRemoteWorkTap,
     super.key,
   });
 
@@ -18,6 +19,7 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
   final VoidCallback onPlansTap;
   final VoidCallback onNotificationsTap;
   final VoidCallback onProfileTap;
+  final VoidCallback onRemoteWorkTap;
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +82,16 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                   onTap: () {
                     Navigator.pop(context);
                     onNotificationsTap();
+                  },
+                ),
+                SupervisorMoreOptionWidget(
+                  icon: Icons.home_work_outlined,
+                  labelKey: 'remoteWork.title',
+                  backgroundColor: AppColors.softBlueBackground,
+                  iconColor: AppColors.info,
+                  onTap: () {
+                    Navigator.pop(context);
+                    onRemoteWorkTap();
                   },
                 ),
                 SupervisorMoreOptionWidget(

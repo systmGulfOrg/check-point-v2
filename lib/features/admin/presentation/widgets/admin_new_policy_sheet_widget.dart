@@ -24,7 +24,6 @@ class _AdminNewPolicySheetWidgetState extends State<AdminNewPolicySheetWidget> {
   final timeInController = TextEditingController();
   final timeOutController = TextEditingController();
   final graceController = TextEditingController();
-  final selectedDays = <String>{'sun', 'mon', 'tue', 'wed', 'thu'};
   int? _selectedShiftId;
   bool _isSubmitting = false;
 
@@ -78,16 +77,16 @@ class _AdminNewPolicySheetWidgetState extends State<AdminNewPolicySheetWidget> {
     final body = AddPoliceRequestBody(
       shiftId: effectiveShiftId,
       policyName: name.isEmpty ? 'Policy' : name,
-      workDays: selectedDays.toList(),
+      workDays: const [],
       startTime: timeIn,
       endTime: timeOut,
       allowedDelayTime: grace,
       allowedEarlyLeaveTime: 0,
     );
 
-    final success = await context
-        .read<AdminShiftsPoliciesCubit>()
-        .addPolicy(body);
+    final success = await context.read<AdminShiftsPoliciesCubit>().addPolicy(
+      body,
+    );
 
     if (!mounted) return;
     setState(() => _isSubmitting = false);
@@ -105,9 +104,7 @@ class _AdminNewPolicySheetWidgetState extends State<AdminNewPolicySheetWidget> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'errors.adminActionFailed'.tr(context: context),
-          ),
+          content: Text('errors.adminActionFailed'.tr(context: context)),
           backgroundColor: AppColors.error,
         ),
       );
@@ -244,57 +241,6 @@ class _AdminNewPolicySheetWidgetState extends State<AdminNewPolicySheetWidget> {
                 labelKey: 'admin.shifts.policies.graceLabel',
                 hintKey: 'admin.shifts.policies.graceHint',
                 controller: graceController,
-              ),
-              hSpace(16),
-              Text(
-                'admin.shifts.policies.workingDays'.tr(context: context),
-                style: AppTextStyles.font12Medium,
-              ),
-              hSpace(8),
-              Wrap(
-                spacing: 6.w,
-                runSpacing: 6.h,
-                children: [
-                  for (final day in const [
-                    'sun',
-                    'mon',
-                    'tue',
-                    'wed',
-                    'thu',
-                    'fri',
-                    'sat',
-                  ])
-                    InkWell(
-                      onTap: () => setState(() {
-                        if (selectedDays.contains(day)) {
-                          selectedDays.remove(day);
-                        } else {
-                          selectedDays.add(day);
-                        }
-                      }),
-                      borderRadius: BorderRadius.circular(8.r),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 7.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: selectedDays.contains(day)
-                              ? AppColors.brandPrimary
-                              : AppColors.pageBackground,
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Text(
-                          'admin.shifts.days.$day'.tr(context: context),
-                          style: AppTextStyles.font11Medium.copyWith(
-                            color: selectedDays.contains(day)
-                                ? AppColors.white
-                                : AppColors.textSecondary,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
               ),
               hSpace(20),
               Row(

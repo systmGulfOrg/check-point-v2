@@ -5,10 +5,10 @@ import 'package:check_point_v2/core/styles/app_motion.dart';
 import 'supervisor_attendance_screen.dart';
 import 'supervisor_home_screen.dart';
 import 'supervisor_profile_screen.dart';
-import 'supervisor_tasks_screen.dart';
 import 'supervisor_team_screen.dart';
 import 'package:check_point_v2/features/employee/presentation/screens/employee_clock_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_more_options_sheet_widget.dart';
+import 'package:check_point_v2/features/projects/presentation/screens/projects_screen.dart';
 
 class SupervisorMainScreen extends StatefulWidget {
   const SupervisorMainScreen({super.key});
@@ -47,7 +47,7 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
     EmployeeClockScreen(),
     SupervisorTeamScreen(),
     SupervisorAttendanceScreen(),
-    SupervisorTasksScreen(),
+    ProjectsScreen(),
     SupervisorProfileScreen(),
   ];
 
@@ -104,6 +104,8 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
                     _selectedNavIndex = 5;
                   });
                 },
+                onRemoteWorkTap: () =>
+                    Navigator.pushNamed(context, AppRoutes.remoteWork),
               ),
             );
             return;

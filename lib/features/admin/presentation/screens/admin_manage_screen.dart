@@ -107,6 +107,15 @@ class AdminManageScreen extends StatelessWidget {
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.adminAttendance),
             ),
+            hSpace(10),
+            AdminManageCardWidget(
+              icon: Icons.home_work_outlined,
+              iconColor: AppColors.info,
+              iconBackgroundColor: AppColors.softBlueBackground,
+              titleKey: 'admin.manage.remoteWork',
+              subtitleKey: 'admin.manage.remoteWorkSub',
+              onTap: () => Navigator.pushNamed(context, AppRoutes.remoteWork),
+            ),
           ],
         ),
       ),
