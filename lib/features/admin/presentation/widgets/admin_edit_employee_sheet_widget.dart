@@ -8,14 +8,11 @@ import 'package:check_point_v2/features/admin/data/models/employee/edit_employee
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/department_response_model.dart';
-import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_state.dart';
-import 'package:check_point_v2/features/admin/presentation/widgets/admin_new_shift_sheet_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_employee_work_system_widget.dart';
 
 class AdminEditEmployeeSheetWidget extends StatefulWidget {
   const AdminEditEmployeeSheetWidget({
@@ -47,7 +44,8 @@ class _AdminEditEmployeeSheetWidgetState
   late final Set<String> _selectedRoles;
   int? _selectedDepartmentId;
   int? _selectedBranchId;
-  int? _selectedShiftId;
+  late String _selectedWorkSystem;
+  String? _selectedRemoteWorkPolicyId;
   late bool _canAddAttendance;
   late bool _canAddPlan;
 
@@ -72,12 +70,8 @@ class _AdminEditEmployeeSheetWidgetState
     _mobileIdController = TextEditingController(
       text: widget.employee.mobileId ?? '',
     );
-    _phoneController = TextEditingController(
-      text: widget.employee.phone ?? '',
-    );
-    _emailController = TextEditingController(
-      text: widget.employee.email ?? '',
-    );
+    _phoneController = TextEditingController(text: widget.employee.phone ?? '');
+    _emailController = TextEditingController(text: widget.employee.email ?? '');
     _employeeCodeController = TextEditingController(
       text: widget.employee.employeeCode ?? '',
     );
@@ -90,7 +84,8 @@ class _AdminEditEmployeeSheetWidgetState
 
     _selectedDepartmentId = widget.employee.departmentId;
     _selectedBranchId = widget.employee.branchId;
-    _selectedShiftId = widget.employee.shiftId;
+    _selectedWorkSystem = widget.employee.workSystem ?? 'onsite';
+    _selectedRemoteWorkPolicyId = widget.employee.remoteWorkPolicyId;
     _canAddAttendance = widget.employee.canAddAttendance ?? true;
     _canAddPlan = widget.employee.canAddPlan ?? true;
   }
@@ -109,29 +104,20 @@ class _AdminEditEmployeeSheetWidgetState
     super.dispose();
   }
 
-  void _openAddShiftSheet() async {
-    final shiftsCubit = context.read<AdminShiftsPoliciesCubit>();
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppColors.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-      ),
-      builder: (_) => BlocProvider.value(
-        value: shiftsCubit,
-        child: const AdminNewShiftSheetWidget(),
-      ),
-    );
-    if (mounted && shiftsCubit.shifts.isNotEmpty) {
-      setState(() {
-        _selectedShiftId = shiftsCubit.shifts.last.id;
-      });
-    }
-  }
-
   void _handleSave() {
     if (_nameController.text.trim().isEmpty) return;
+    if (_selectedWorkSystem != 'onsite' &&
+        _selectedRemoteWorkPolicyId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'admin.employeeWizard.workPolicyRequired'.tr(context: context),
+          ),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
 
     widget.onSave(
       EditEmployeeRequestBody(
@@ -161,7 +147,8 @@ class _AdminEditEmployeeSheetWidgetState
         roles: _selectedRoles.toList(),
         departmentId: _selectedDepartmentId,
         branchId: _selectedBranchId,
-        shiftId: _selectedShiftId,
+        workSystem: _selectedWorkSystem,
+        remoteWorkPolicyId: _selectedRemoteWorkPolicyId,
         canAddAttendance: _canAddAttendance,
         canAddPlan: _canAddPlan,
         leaveBalance: int.tryParse(_leaveBalanceController.text.trim()),
@@ -243,7 +230,9 @@ class _AdminEditEmployeeSheetWidgetState
                       hSpace(6),
                       CustomTextFormField(
                         controller: _positionController,
-                        hintText: 'admin.employees.position'.tr(context: context),
+                        hintText: 'admin.employees.position'.tr(
+                          context: context,
+                        ),
                       ),
                     ],
                   ),
@@ -329,7 +318,9 @@ class _AdminEditEmployeeSheetWidgetState
                 return FilterChip(
                   label: Text(
                     switch (role) {
-                      'Supervisor' => 'admin.roles.supervisor'.tr(context: context),
+                      'Supervisor' => 'admin.roles.supervisor'.tr(
+                        context: context,
+                      ),
                       'Admin' => 'admin.roles.admin'.tr(context: context),
                       'HR' => 'admin.roles.hr'.tr(context: context),
                       _ => 'admin.roles.employee'.tr(context: context),
@@ -345,7 +336,9 @@ class _AdminEditEmployeeSheetWidgetState
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.r),
                     side: BorderSide(
-                      color: isSelected ? AppColors.brandPrimary : AppColors.border,
+                      color: isSelected
+                          ? AppColors.brandPrimary
+                          : AppColors.border,
                     ),
                   ),
                   onSelected: (selected) {
@@ -376,7 +369,9 @@ class _AdminEditEmployeeSheetWidgetState
                     departments.add(d);
                   }
                 }
-                final hasSelected = departments.any((d) => d.id == _selectedDepartmentId);
+                final hasSelected = departments.any(
+                  (d) => d.id == _selectedDepartmentId,
+                );
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -386,10 +381,14 @@ class _AdminEditEmployeeSheetWidgetState
                     ),
                     hSpace(6),
                     DropdownButtonFormField<int>(
-                      key: ValueKey('dept_${hasSelected ? _selectedDepartmentId : 'none'}'),
+                      key: ValueKey(
+                        'dept_${hasSelected ? _selectedDepartmentId : 'none'}',
+                      ),
                       initialValue: hasSelected ? _selectedDepartmentId : null,
                       isExpanded: true,
-                      hint: Text('admin.employees.department'.tr(context: context)),
+                      hint: Text(
+                        'admin.employees.department'.tr(context: context),
+                      ),
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: AppColors.fieldBackground,
@@ -423,7 +422,9 @@ class _AdminEditEmployeeSheetWidgetState
                     branches.add(b);
                   }
                 }
-                final hasSelected = branches.any((b) => b.id == _selectedBranchId);
+                final hasSelected = branches.any(
+                  (b) => b.id == _selectedBranchId,
+                );
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -433,7 +434,9 @@ class _AdminEditEmployeeSheetWidgetState
                     ),
                     hSpace(6),
                     DropdownButtonFormField<int>(
-                      key: ValueKey('branch_${hasSelected ? _selectedBranchId : 'none'}'),
+                      key: ValueKey(
+                        'branch_${hasSelected ? _selectedBranchId : 'none'}',
+                      ),
                       initialValue: hasSelected ? _selectedBranchId : null,
                       isExpanded: true,
                       hint: Text('admin.employees.branch'.tr(context: context)),
@@ -457,71 +460,15 @@ class _AdminEditEmployeeSheetWidgetState
               },
             ),
             hSpace(12),
-            BlocBuilder<AdminShiftsPoliciesCubit, AdminShiftsPoliciesState>(
-              builder: (context, shiftState) {
-                final rawShifts = shiftState.maybeWhen(
-                  success: (shifts, _) => shifts,
-                  orElse: () => context.read<AdminShiftsPoliciesCubit>().shifts,
-                );
-                final shifts = <ShiftModel>[];
-                final seenIds = <int>{};
-                for (final s in rawShifts) {
-                  final id = s.id;
-                  if (id != null && seenIds.add(id)) {
-                    shifts.add(s);
-                  }
-                }
-                final hasSelected = shifts.any((s) => s.id == _selectedShiftId);
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'admin.employees.shift'.tr(context: context),
-                          style: AppTextStyles.font12Medium,
-                        ),
-                        TextButton.icon(
-                          onPressed: _openAddShiftSheet,
-                          icon: Icon(Icons.add_rounded, size: 15.r),
-                          label: Text(
-                            'admin.employees.addShift'.tr(context: context),
-                            style: AppTextStyles.font12Bold.copyWith(
-                              color: AppColors.brandPrimary,
-                            ),
-                          ),
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            visualDensity: VisualDensity.compact,
-                          ),
-                        ),
-                      ],
-                    ),
-                    hSpace(4),
-                    DropdownButtonFormField<int>(
-                      key: ValueKey('shift_${hasSelected ? _selectedShiftId : 'none'}'),
-                      initialValue: hasSelected ? _selectedShiftId : null,
-                      isExpanded: true,
-                      hint: Text('admin.employees.selectShift'.tr(context: context)),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: AppColors.fieldBackground,
-                      ),
-                      items: shifts
-                          .map(
-                            (s) => DropdownMenuItem<int>(
-                              value: s.id,
-                              child: Text(s.name ?? '-'),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (val) =>
-                          setState(() => _selectedShiftId = val),
-                    ),
-                  ],
-                );
-              },
+            AdminEmployeeWorkSystemWidget(
+              selectedSystem: _selectedWorkSystem,
+              selectedPolicyId: _selectedRemoteWorkPolicyId,
+              onSystemChanged: (value) => setState(() {
+                _selectedWorkSystem = value;
+                _selectedRemoteWorkPolicyId = null;
+              }),
+              onPolicyChanged: (value) =>
+                  setState(() => _selectedRemoteWorkPolicyId = value),
             ),
             hSpace(14),
             SwitchListTile.adaptive(
