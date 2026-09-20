@@ -27,7 +27,7 @@ class SupervisorLeaveRequestsListWidget extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 36.h),
           child: Text(
-            'supervisor.leave.empty'.tr(context: context),
+            'employee.leaves.noLeaves'.tr(context: context),
             style: AppTextStyles.font14Regular.copyWith(
               color: AppColors.textSecondary,
             ),

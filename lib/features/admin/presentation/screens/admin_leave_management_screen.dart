@@ -13,6 +13,8 @@ import 'package:check_point_v2/features/admin/presentation/widgets/admin_leave_r
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_leave_requests_skeleton_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_leave_types_list_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_new_leave_type_sheet_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_official_holidays_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
 
 class AdminLeaveManagementScreen extends StatefulWidget {
   const AdminLeaveManagementScreen({super.key});
@@ -22,8 +24,7 @@ class AdminLeaveManagementScreen extends StatefulWidget {
       _AdminLeaveManagementScreenState();
 }
 
-class _AdminLeaveManagementScreenState
-    extends State<AdminLeaveManagementScreen>
+class _AdminLeaveManagementScreenState extends State<AdminLeaveManagementScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
   int _selectedFilter = 0;
@@ -31,7 +32,8 @@ class _AdminLeaveManagementScreenState
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
+    context.read<LeavesCubit>().loadOfficialHolidays();
     _tabController.addListener(() {
       if (mounted) setState(() {});
     });
@@ -60,15 +62,9 @@ class _AdminLeaveManagementScreenState
     List<AdminLeaveRequestModel> list,
   ) {
     return switch (_selectedFilter) {
-      1 => list
-          .where((r) => r.status?.toLowerCase() == 'pending')
-          .toList(),
-      2 => list
-          .where((r) => r.status?.toLowerCase() == 'approved')
-          .toList(),
-      3 => list
-          .where((r) => r.status?.toLowerCase() == 'rejected')
-          .toList(),
+      1 => list.where((r) => r.status?.toLowerCase() == 'pending').toList(),
+      2 => list.where((r) => r.status?.toLowerCase() == 'approved').toList(),
+      3 => list.where((r) => r.status?.toLowerCase() == 'rejected').toList(),
       _ => list,
     };
   }
@@ -94,6 +90,7 @@ class _AdminLeaveManagementScreenState
           tabs: [
             Tab(text: 'admin.leaveManagement.tabRequests'.tr(context: context)),
             Tab(text: 'admin.leaveManagement.tabTypes'.tr(context: context)),
+            Tab(text: 'admin.leaveManagement.tabHolidays'.tr(context: context)),
           ],
         ),
       ),
@@ -138,6 +135,7 @@ class _AdminLeaveManagementScreenState
                   children: [
                     _buildRequestsTab(requests),
                     _buildLeaveTypesTab(leaveTypes),
+                    const AdminOfficialHolidaysBlocBuilderWidget(),
                   ],
                 ),
               );

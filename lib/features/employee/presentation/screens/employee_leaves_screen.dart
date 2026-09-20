@@ -13,6 +13,7 @@ import 'package:check_point_v2/features/employee/presentation/cubit/leave_reques
 import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_leave_sheet_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_leave_card_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_leave_data.dart';
+import 'package:check_point_v2/features/leaves/presentation/widgets/leave_status_filter_widget.dart';
 
 class EmployeeLeavesScreen extends StatefulWidget {
   const EmployeeLeavesScreen({super.key});
@@ -23,8 +24,6 @@ class EmployeeLeavesScreen extends StatefulWidget {
 
 class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
   int _selectedFilterIndex = 0;
-  final _filters = ['All', 'Pending', 'Approved', 'Rejected'];
-
   @override
   void initState() {
     super.initState();
@@ -74,21 +73,21 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                        BlocBuilder<LeavesCubit, LeavesState>(
-                          builder: (context, state) {
-                            return state.maybeWhen(
-                              success: (balances, types, requests) {
-                                if (balances.isEmpty) return const SizedBox.shrink();
-                                return SizedBox(
-                                  height: 200.h,
-                                  child: LeaveBalancesListWidget(balances: balances),
-                                );
-                              },
-                              orElse: () => const SizedBox.shrink(),
-                            );
-                          },
-                        ),
-                        hSpace(16),
+              BlocBuilder<LeavesCubit, LeavesState>(
+                builder: (context, state) {
+                  return state.maybeWhen(
+                    success: (balances, types, requests) {
+                      if (balances.isEmpty) return const SizedBox.shrink();
+                      return SizedBox(
+                        height: 200.h,
+                        child: LeaveBalancesListWidget(balances: balances),
+                      );
+                    },
+                    orElse: () => const SizedBox.shrink(),
+                  );
+                },
+              ),
+              hSpace(16),
               Text(
                 'employee.leaves.title'.tr(context: context),
                 style: AppTextStyles.font24Bold,
@@ -153,19 +152,31 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                   };
 
                   final pendingCount = allLeaves
-                      .where((l) => l.status == 'Pending')
+                      .where((l) => l.status.toLowerCase() == 'pending')
                       .length;
 
                   final filteredLeaves = switch (_selectedFilterIndex) {
-                    1 => allLeaves.where((l) => l.status == 'Pending').toList(),
+                    1 =>
+                      allLeaves
+                          .where((l) => l.status.toLowerCase() == 'pending')
+                          .toList(),
                     2 =>
-                      allLeaves.where((l) => l.status == 'Approved').toList(),
+                      allLeaves
+                          .where((l) => l.status.toLowerCase() == 'approved')
+                          .toList(),
                     3 =>
-                      allLeaves.where((l) => l.status == 'Rejected').toList(),
+                      allLeaves
+                          .where((l) => l.status.toLowerCase() == 'rejected')
+                          .toList(),
                     _ => allLeaves,
                   };
 
-                  if (state is EmployeeLeaveRequestsStateLoading) {
+                  final isLoading = switch (state) {
+                    EmployeeLeaveRequestsStateLoading() => true,
+                    _ => false,
+                  };
+
+                  if (isLoading) {
                     return Expanded(
                       child: Skeletonizer(
                         child: RefreshIndicator(
@@ -193,93 +204,24 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                     );
                   }
 
+                  if (state case EmployeeLeaveRequestsStateError(
+                    :final messageKey,
+                  )) {
+                    return Expanded(
+                      child: Center(
+                        child: Text(messageKey.tr(context: context)),
+                      ),
+                    );
+                  }
+
                   return Expanded(
                     child: Column(
                       children: [
-                        Container(
-                          padding: EdgeInsets.all(4.r),
-                          decoration: BoxDecoration(
-                            color: AppColors.pageBackground,
-                            borderRadius: BorderRadius.circular(12.r),
-                            border: Border.all(color: AppColors.border),
-                          ),
-                          child: Row(
-                            children: [
-                              for (int i = 0; i < _filters.length; i++)
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () => setState(
-                                      () => _selectedFilterIndex = i,
-                                    ),
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 8.h,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: _selectedFilterIndex == i
-                                            ? AppColors.cardBackground
-                                            : AppColors.transparent,
-                                        borderRadius: BorderRadius.circular(
-                                          8.r,
-                                        ),
-                                        boxShadow: _selectedFilterIndex == i
-                                            ? const [
-                                                BoxShadow(
-                                                  color: AppColors.shadow,
-                                                  blurRadius: 4,
-                                                  offset: Offset(0, 1),
-                                                ),
-                                              ]
-                                            : null,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            _filters[i],
-                                            style: AppTextStyles.font13SemiBold
-                                                .copyWith(
-                                                  color:
-                                                      _selectedFilterIndex == i
-                                                      ? AppColors.textPrimary
-                                                      : AppColors.textSecondary,
-                                                ),
-                                          ),
-                                          if (i == 1 && pendingCount > 0) ...[
-                                            wSpace(4),
-                                            Container(
-                                              padding: EdgeInsets.all(4.r),
-                                              decoration: const BoxDecoration(
-                                                color: AppColors.error,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              constraints: BoxConstraints(
-                                                minWidth: 14.r,
-                                                minHeight: 14.r,
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  '$pendingCount',
-                                                  style: AppTextStyles
-                                                      .font11Medium
-                                                      .copyWith(
-                                                        color: AppColors.white,
-                                                        fontSize: 9.sp,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
+                        LeaveStatusFilterWidget(
+                          selectedIndex: _selectedFilterIndex,
+                          pendingCount: pendingCount,
+                          onSelected: (index) =>
+                              setState(() => _selectedFilterIndex = index),
                         ),
                         hSpace(16),
                         Row(

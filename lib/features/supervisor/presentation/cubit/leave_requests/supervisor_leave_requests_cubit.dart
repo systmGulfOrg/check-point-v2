@@ -22,6 +22,10 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
   String userRole = 'Employee';
   String currentUserId = '';
 
+  int get pendingCount => allRequests
+      .where((request) => request.status?.toLowerCase() == 'pending')
+      .length;
+
   Future<void> initRole() async {
     userRole = await sessionStorage.readUserRole() ?? 'Employee';
     currentUserId = await sessionStorage.readUserId() ?? '';

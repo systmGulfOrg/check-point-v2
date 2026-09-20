@@ -28,6 +28,8 @@ mixin _$LeavesState {
     )
     success,
     required TResult Function(String message) error,
+    required TResult Function(List<OfficialHolidayModel> holidays)
+    holidaysLoaded,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
     required TResult Function(String message) actionSuccess,
@@ -43,6 +45,7 @@ mixin _$LeavesState {
     )?
     success,
     TResult? Function(String message)? error,
+    TResult? Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
     TResult? Function(String message)? actionSuccess,
@@ -58,6 +61,7 @@ mixin _$LeavesState {
     )?
     success,
     TResult Function(String message)? error,
+    TResult Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
     TResult Function(String message)? actionSuccess,
@@ -69,6 +73,7 @@ mixin _$LeavesState {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
+    required TResult Function(_HolidaysLoaded value) holidaysLoaded,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
     required TResult Function(_ActionSuccess value) actionSuccess,
@@ -79,6 +84,7 @@ mixin _$LeavesState {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
+    TResult? Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
     TResult? Function(_ActionSuccess value)? actionSuccess,
@@ -89,6 +95,7 @@ mixin _$LeavesState {
     TResult Function(_Loading value)? loading,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
+    TResult Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
     TResult Function(_ActionSuccess value)? actionSuccess,
@@ -170,6 +177,8 @@ class _$InitialImpl implements _Initial {
     )
     success,
     required TResult Function(String message) error,
+    required TResult Function(List<OfficialHolidayModel> holidays)
+    holidaysLoaded,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
     required TResult Function(String message) actionSuccess,
@@ -189,6 +198,7 @@ class _$InitialImpl implements _Initial {
     )?
     success,
     TResult? Function(String message)? error,
+    TResult? Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
     TResult? Function(String message)? actionSuccess,
@@ -208,6 +218,7 @@ class _$InitialImpl implements _Initial {
     )?
     success,
     TResult Function(String message)? error,
+    TResult Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
     TResult Function(String message)? actionSuccess,
@@ -226,6 +237,7 @@ class _$InitialImpl implements _Initial {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
+    required TResult Function(_HolidaysLoaded value) holidaysLoaded,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
     required TResult Function(_ActionSuccess value) actionSuccess,
@@ -240,6 +252,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
+    TResult? Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
     TResult? Function(_ActionSuccess value)? actionSuccess,
@@ -254,6 +267,7 @@ class _$InitialImpl implements _Initial {
     TResult Function(_Loading value)? loading,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
+    TResult Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
     TResult Function(_ActionSuccess value)? actionSuccess,
@@ -322,6 +336,8 @@ class _$LoadingImpl implements _Loading {
     )
     success,
     required TResult Function(String message) error,
+    required TResult Function(List<OfficialHolidayModel> holidays)
+    holidaysLoaded,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
     required TResult Function(String message) actionSuccess,
@@ -341,6 +357,7 @@ class _$LoadingImpl implements _Loading {
     )?
     success,
     TResult? Function(String message)? error,
+    TResult? Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
     TResult? Function(String message)? actionSuccess,
@@ -360,6 +377,7 @@ class _$LoadingImpl implements _Loading {
     )?
     success,
     TResult Function(String message)? error,
+    TResult Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
     TResult Function(String message)? actionSuccess,
@@ -378,6 +396,7 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
+    required TResult Function(_HolidaysLoaded value) holidaysLoaded,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
     required TResult Function(_ActionSuccess value) actionSuccess,
@@ -392,6 +411,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
+    TResult? Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
     TResult? Function(_ActionSuccess value)? actionSuccess,
@@ -406,6 +426,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function(_Loading value)? loading,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
+    TResult Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
     TResult Function(_ActionSuccess value)? actionSuccess,
@@ -551,6 +572,8 @@ class _$SuccessImpl implements _Success {
     )
     success,
     required TResult Function(String message) error,
+    required TResult Function(List<OfficialHolidayModel> holidays)
+    holidaysLoaded,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
     required TResult Function(String message) actionSuccess,
@@ -570,6 +593,7 @@ class _$SuccessImpl implements _Success {
     )?
     success,
     TResult? Function(String message)? error,
+    TResult? Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
     TResult? Function(String message)? actionSuccess,
@@ -589,6 +613,7 @@ class _$SuccessImpl implements _Success {
     )?
     success,
     TResult Function(String message)? error,
+    TResult Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
     TResult Function(String message)? actionSuccess,
@@ -607,6 +632,7 @@ class _$SuccessImpl implements _Success {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
+    required TResult Function(_HolidaysLoaded value) holidaysLoaded,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
     required TResult Function(_ActionSuccess value) actionSuccess,
@@ -621,6 +647,7 @@ class _$SuccessImpl implements _Success {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
+    TResult? Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
     TResult? Function(_ActionSuccess value)? actionSuccess,
@@ -635,6 +662,7 @@ class _$SuccessImpl implements _Success {
     TResult Function(_Loading value)? loading,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
+    TResult Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
     TResult Function(_ActionSuccess value)? actionSuccess,
@@ -744,6 +772,8 @@ class _$ErrorImpl implements _Error {
     )
     success,
     required TResult Function(String message) error,
+    required TResult Function(List<OfficialHolidayModel> holidays)
+    holidaysLoaded,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
     required TResult Function(String message) actionSuccess,
@@ -763,6 +793,7 @@ class _$ErrorImpl implements _Error {
     )?
     success,
     TResult? Function(String message)? error,
+    TResult? Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
     TResult? Function(String message)? actionSuccess,
@@ -782,6 +813,7 @@ class _$ErrorImpl implements _Error {
     )?
     success,
     TResult Function(String message)? error,
+    TResult Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
     TResult Function(String message)? actionSuccess,
@@ -800,6 +832,7 @@ class _$ErrorImpl implements _Error {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
+    required TResult Function(_HolidaysLoaded value) holidaysLoaded,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
     required TResult Function(_ActionSuccess value) actionSuccess,
@@ -814,6 +847,7 @@ class _$ErrorImpl implements _Error {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
+    TResult? Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
     TResult? Function(_ActionSuccess value)? actionSuccess,
@@ -828,6 +862,7 @@ class _$ErrorImpl implements _Error {
     TResult Function(_Loading value)? loading,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
+    TResult Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
     TResult Function(_ActionSuccess value)? actionSuccess,
@@ -849,6 +884,211 @@ abstract class _Error implements LeavesState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$HolidaysLoadedImplCopyWith<$Res> {
+  factory _$$HolidaysLoadedImplCopyWith(
+    _$HolidaysLoadedImpl value,
+    $Res Function(_$HolidaysLoadedImpl) then,
+  ) = __$$HolidaysLoadedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<OfficialHolidayModel> holidays});
+}
+
+/// @nodoc
+class __$$HolidaysLoadedImplCopyWithImpl<$Res>
+    extends _$LeavesStateCopyWithImpl<$Res, _$HolidaysLoadedImpl>
+    implements _$$HolidaysLoadedImplCopyWith<$Res> {
+  __$$HolidaysLoadedImplCopyWithImpl(
+    _$HolidaysLoadedImpl _value,
+    $Res Function(_$HolidaysLoadedImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of LeavesState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? holidays = null}) {
+    return _then(
+      _$HolidaysLoadedImpl(
+        null == holidays
+            ? _value._holidays
+            : holidays // ignore: cast_nullable_to_non_nullable
+                  as List<OfficialHolidayModel>,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$HolidaysLoadedImpl implements _HolidaysLoaded {
+  const _$HolidaysLoadedImpl(final List<OfficialHolidayModel> holidays)
+    : _holidays = holidays;
+
+  final List<OfficialHolidayModel> _holidays;
+  @override
+  List<OfficialHolidayModel> get holidays {
+    if (_holidays is EqualUnmodifiableListView) return _holidays;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_holidays);
+  }
+
+  @override
+  String toString() {
+    return 'LeavesState.holidaysLoaded(holidays: $holidays)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HolidaysLoadedImpl &&
+            const DeepCollectionEquality().equals(other._holidays, _holidays));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_holidays));
+
+  /// Create a copy of LeavesState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HolidaysLoadedImplCopyWith<_$HolidaysLoadedImpl> get copyWith =>
+      __$$HolidaysLoadedImplCopyWithImpl<_$HolidaysLoadedImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(
+      List<LeaveBalanceModel> balances,
+      List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
+    )
+    success,
+    required TResult Function(String message) error,
+    required TResult Function(List<OfficialHolidayModel> holidays)
+    holidaysLoaded,
+    required TResult Function() submitting,
+    required TResult Function() submitSuccess,
+    required TResult Function(String message) actionSuccess,
+  }) {
+    return holidaysLoaded(holidays);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(
+      List<LeaveBalanceModel> balances,
+      List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
+    )?
+    success,
+    TResult? Function(String message)? error,
+    TResult? Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
+    TResult? Function()? submitting,
+    TResult? Function()? submitSuccess,
+    TResult? Function(String message)? actionSuccess,
+  }) {
+    return holidaysLoaded?.call(holidays);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(
+      List<LeaveBalanceModel> balances,
+      List<LeaveTypeModel> types,
+      List<LeaveRequestModel> requests,
+    )?
+    success,
+    TResult Function(String message)? error,
+    TResult Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
+    TResult Function()? submitting,
+    TResult Function()? submitSuccess,
+    TResult Function(String message)? actionSuccess,
+    required TResult orElse(),
+  }) {
+    if (holidaysLoaded != null) {
+      return holidaysLoaded(holidays);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Success value) success,
+    required TResult Function(_Error value) error,
+    required TResult Function(_HolidaysLoaded value) holidaysLoaded,
+    required TResult Function(_Submitting value) submitting,
+    required TResult Function(_SubmitSuccess value) submitSuccess,
+    required TResult Function(_ActionSuccess value) actionSuccess,
+  }) {
+    return holidaysLoaded(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Error value)? error,
+    TResult? Function(_HolidaysLoaded value)? holidaysLoaded,
+    TResult? Function(_Submitting value)? submitting,
+    TResult? Function(_SubmitSuccess value)? submitSuccess,
+    TResult? Function(_ActionSuccess value)? actionSuccess,
+  }) {
+    return holidaysLoaded?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Success value)? success,
+    TResult Function(_Error value)? error,
+    TResult Function(_HolidaysLoaded value)? holidaysLoaded,
+    TResult Function(_Submitting value)? submitting,
+    TResult Function(_SubmitSuccess value)? submitSuccess,
+    TResult Function(_ActionSuccess value)? actionSuccess,
+    required TResult orElse(),
+  }) {
+    if (holidaysLoaded != null) {
+      return holidaysLoaded(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _HolidaysLoaded implements LeavesState {
+  const factory _HolidaysLoaded(final List<OfficialHolidayModel> holidays) =
+      _$HolidaysLoadedImpl;
+
+  List<OfficialHolidayModel> get holidays;
+
+  /// Create a copy of LeavesState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$HolidaysLoadedImplCopyWith<_$HolidaysLoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -904,6 +1144,8 @@ class _$SubmittingImpl implements _Submitting {
     )
     success,
     required TResult Function(String message) error,
+    required TResult Function(List<OfficialHolidayModel> holidays)
+    holidaysLoaded,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
     required TResult Function(String message) actionSuccess,
@@ -923,6 +1165,7 @@ class _$SubmittingImpl implements _Submitting {
     )?
     success,
     TResult? Function(String message)? error,
+    TResult? Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
     TResult? Function(String message)? actionSuccess,
@@ -942,6 +1185,7 @@ class _$SubmittingImpl implements _Submitting {
     )?
     success,
     TResult Function(String message)? error,
+    TResult Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
     TResult Function(String message)? actionSuccess,
@@ -960,6 +1204,7 @@ class _$SubmittingImpl implements _Submitting {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
+    required TResult Function(_HolidaysLoaded value) holidaysLoaded,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
     required TResult Function(_ActionSuccess value) actionSuccess,
@@ -974,6 +1219,7 @@ class _$SubmittingImpl implements _Submitting {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
+    TResult? Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
     TResult? Function(_ActionSuccess value)? actionSuccess,
@@ -988,6 +1234,7 @@ class _$SubmittingImpl implements _Submitting {
     TResult Function(_Loading value)? loading,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
+    TResult Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
     TResult Function(_ActionSuccess value)? actionSuccess,
@@ -1056,6 +1303,8 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
     )
     success,
     required TResult Function(String message) error,
+    required TResult Function(List<OfficialHolidayModel> holidays)
+    holidaysLoaded,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
     required TResult Function(String message) actionSuccess,
@@ -1075,6 +1324,7 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
     )?
     success,
     TResult? Function(String message)? error,
+    TResult? Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
     TResult? Function(String message)? actionSuccess,
@@ -1094,6 +1344,7 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
     )?
     success,
     TResult Function(String message)? error,
+    TResult Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
     TResult Function(String message)? actionSuccess,
@@ -1112,6 +1363,7 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
+    required TResult Function(_HolidaysLoaded value) holidaysLoaded,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
     required TResult Function(_ActionSuccess value) actionSuccess,
@@ -1126,6 +1378,7 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
+    TResult? Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
     TResult? Function(_ActionSuccess value)? actionSuccess,
@@ -1140,6 +1393,7 @@ class _$SubmitSuccessImpl implements _SubmitSuccess {
     TResult Function(_Loading value)? loading,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
+    TResult Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
     TResult Function(_ActionSuccess value)? actionSuccess,
@@ -1235,6 +1489,8 @@ class _$ActionSuccessImpl implements _ActionSuccess {
     )
     success,
     required TResult Function(String message) error,
+    required TResult Function(List<OfficialHolidayModel> holidays)
+    holidaysLoaded,
     required TResult Function() submitting,
     required TResult Function() submitSuccess,
     required TResult Function(String message) actionSuccess,
@@ -1254,6 +1510,7 @@ class _$ActionSuccessImpl implements _ActionSuccess {
     )?
     success,
     TResult? Function(String message)? error,
+    TResult? Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult? Function()? submitting,
     TResult? Function()? submitSuccess,
     TResult? Function(String message)? actionSuccess,
@@ -1273,6 +1530,7 @@ class _$ActionSuccessImpl implements _ActionSuccess {
     )?
     success,
     TResult Function(String message)? error,
+    TResult Function(List<OfficialHolidayModel> holidays)? holidaysLoaded,
     TResult Function()? submitting,
     TResult Function()? submitSuccess,
     TResult Function(String message)? actionSuccess,
@@ -1291,6 +1549,7 @@ class _$ActionSuccessImpl implements _ActionSuccess {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
+    required TResult Function(_HolidaysLoaded value) holidaysLoaded,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_SubmitSuccess value) submitSuccess,
     required TResult Function(_ActionSuccess value) actionSuccess,
@@ -1305,6 +1564,7 @@ class _$ActionSuccessImpl implements _ActionSuccess {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
+    TResult? Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_SubmitSuccess value)? submitSuccess,
     TResult? Function(_ActionSuccess value)? actionSuccess,
@@ -1319,6 +1579,7 @@ class _$ActionSuccessImpl implements _ActionSuccess {
     TResult Function(_Loading value)? loading,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
+    TResult Function(_HolidaysLoaded value)? holidaysLoaded,
     TResult Function(_Submitting value)? submitting,
     TResult Function(_SubmitSuccess value)? submitSuccess,
     TResult Function(_ActionSuccess value)? actionSuccess,

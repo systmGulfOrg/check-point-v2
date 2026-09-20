@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/models/leave_balance_model.dart';
 import '../../data/models/leave_request_model.dart';
 import '../../data/models/leave_type_model.dart';
+import '../../data/models/official_holiday_model.dart';
 
 part 'leaves_state.freezed.dart';
 
@@ -15,6 +16,9 @@ class LeavesState with _$LeavesState {
     List<LeaveRequestModel> requests,
   ) = _Success;
   const factory LeavesState.error(String message) = _Error;
+  const factory LeavesState.holidaysLoaded(
+    List<OfficialHolidayModel> holidays,
+  ) = _HolidaysLoaded;
   const factory LeavesState.submitting() = _Submitting;
   const factory LeavesState.submitSuccess() = _SubmitSuccess;
   const factory LeavesState.actionSuccess(String message) = _ActionSuccess;

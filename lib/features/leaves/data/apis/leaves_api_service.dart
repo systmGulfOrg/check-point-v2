@@ -5,6 +5,7 @@ import '../models/leave_balance_model.dart';
 import '../models/leave_request_body.dart';
 import '../models/leave_request_model.dart';
 import '../models/leave_type_model.dart';
+import '../models/official_holiday_model.dart';
 import '../models/short_leave_model.dart';
 import '../models/short_leave_request_body.dart';
 
@@ -19,6 +20,11 @@ abstract class LeavesApiService {
 
   @GET('/api/v1/leaves/balances')
   Future<List<LeaveBalanceModel>> getLeaveBalances();
+
+  @GET('/api/v1/leaves/holidays')
+  Future<List<OfficialHolidayModel>> getOfficialHolidays({
+    @Query('year') int? year,
+  });
 
   @GET('/api/v1/leaves/requests')
   Future<List<LeaveRequestModel>> getLeaveRequests();

@@ -9,7 +9,7 @@ import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requ
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_state.dart';
 import 'package:check_point_v2/features/leaves/presentation/widgets/leave_balances_list_widget.dart';
-import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_leave_management_filter_widget.dart';
+import 'package:check_point_v2/features/leaves/presentation/widgets/leave_status_filter_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_leave_requests_bloc_builder_widget.dart';
 
 class SupervisorLeaveManagementScreen extends StatefulWidget {
@@ -71,13 +71,6 @@ class _SupervisorLeaveManagementScreenState
           'supervisor.leaveManagement.title'.tr(context: context),
           style: AppTextStyles.font18Bold,
         ),
-        actions: [
-          IconButton(
-            onPressed: () => _showApplyLeaveSheet(context),
-            icon: const Icon(Icons.add_circle_outline_rounded),
-            tooltip: 'employee.leaves.applyTitle'.tr(context: context),
-          ),
-        ],
       ),
       body: SafeArea(
         child: RefreshIndicator(
@@ -104,10 +97,12 @@ class _SupervisorLeaveManagementScreenState
                     );
                   },
                 ),
-                SupervisorLeaveManagementFilterWidget(
+                LeaveStatusFilterWidget(
                   selectedIndex: selectedFilter,
-                  onFilterSelected: (index) =>
-                      setState(() => selectedFilter = index),
+                  pendingCount: context
+                      .read<SupervisorLeaveRequestsCubit>()
+                      .pendingCount,
+                  onSelected: (index) => setState(() => selectedFilter = index),
                 ),
                 hSpace(16),
                 SupervisorLeaveRequestsBlocBuilderWidget(
@@ -117,6 +112,27 @@ class _SupervisorLeaveManagementScreenState
             ),
           ),
         ),
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton.extended(
+            heroTag: 'supervisorPermissionBtn',
+            onPressed: () =>
+                Navigator.pushNamed(context, AppRoutes.permissionsRequest),
+            backgroundColor: AppColors.brandSecondary,
+            icon: const Icon(Icons.timer),
+            label: Text('leaves.dashboard.requestPermission'.tr()),
+          ),
+          SizedBox(height: 12.h),
+          FloatingActionButton.extended(
+            heroTag: 'supervisorLeaveBtn',
+            onPressed: () => _showApplyLeaveSheet(context),
+            backgroundColor: AppColors.brandPrimary,
+            icon: const Icon(Icons.add),
+            label: Text('leaves.dashboard.requestLeave'.tr()),
+          ),
+        ],
       ),
     );
   }

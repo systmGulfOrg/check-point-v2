@@ -12,6 +12,15 @@ class LeavesCubit extends Cubit<LeavesState> {
 
   Future<void> loadMyLeaveRequests() => loadLeavesData();
 
+  Future<void> loadOfficialHolidays({int? year}) async {
+    emit(const LeavesState.loading());
+    final result = await leavesRepo.getOfficialHolidays(year: year);
+    result.when(
+      success: (holidays) => emit(LeavesState.holidaysLoaded(holidays)),
+      failure: (failure) => emit(LeavesState.error(failure.messageKey)),
+    );
+  }
+
   Future<void> loadLeavesData() async {
     emit(const LeavesState.loading());
 

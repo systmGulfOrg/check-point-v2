@@ -1,10 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
+import 'package:check_point_v2/features/leaves/presentation/widgets/leave_profile_sheet_widget.dart';
 
 class SupervisorProfileOptionsWidget extends StatelessWidget {
   const SupervisorProfileOptionsWidget({super.key});
@@ -26,6 +29,26 @@ class SupervisorProfileOptionsWidget extends StatelessWidget {
         'supervisor.profile.profileInformation',
         null,
         null,
+      ),
+      (
+        Icons.event_available_outlined,
+        'supervisor.profile.leaves',
+        null,
+        () {
+          final leavesCubit = context.read<LeavesCubit>()..loadLeavesData();
+          showModalBottomSheet<void>(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: AppColors.cardBackground,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            ),
+            builder: (_) => BlocProvider.value(
+              value: leavesCubit,
+              child: const LeaveProfileSheetWidget(),
+            ),
+          );
+        },
       ),
       (
         Icons.key_outlined,

@@ -29,8 +29,8 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
     switch (result) {
       case Success(:final data):
         emit(EmployeeLeaveRequestsState.success(data));
-      case Failure():
-        emit(const EmployeeLeaveRequestsState.success([]));
+      case Failure(:final failure):
+        emit(EmployeeLeaveRequestsState.error(failure.messageKey));
     }
   }
 

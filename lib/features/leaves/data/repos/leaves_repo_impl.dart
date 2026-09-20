@@ -5,6 +5,7 @@ import '../models/leave_balance_model.dart';
 import '../models/leave_request_body.dart';
 import '../models/leave_request_model.dart';
 import '../models/leave_type_model.dart';
+import '../models/official_holiday_model.dart';
 import '../models/short_leave_model.dart';
 import '../models/short_leave_request_body.dart';
 
@@ -25,6 +26,17 @@ class LeavesRepoImpl {
   Future<ApiResult<List<LeaveTypeModel>>> getLeaveTypes() async {
     try {
       final models = await api.getLeaveTypes();
+      return ApiResult.success(models);
+    } catch (e, _) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  Future<ApiResult<List<OfficialHolidayModel>>> getOfficialHolidays({
+    int? year,
+  }) async {
+    try {
+      final models = await api.getOfficialHolidays(year: year);
       return ApiResult.success(models);
     } catch (e, _) {
       return ApiResult.failure(ApiFailureMapper.map(e));
