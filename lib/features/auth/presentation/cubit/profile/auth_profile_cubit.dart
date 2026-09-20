@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
+import 'package:check_point_v2/core/auth/app_permissions.dart';
 import 'auth_profile_state.dart';
 
 class AuthProfileCubit extends Cubit<AuthProfileState> {
@@ -15,7 +16,10 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
       final userId = await sessionStorage.readUserId() ?? '';
       final username = await sessionStorage.readUserName() ?? '';
       final role = await sessionStorage.readUserRole() ?? '';
-      final permissions = await sessionStorage.readPermissions();
+      final permissions = {
+        ...AppPermissions.defaultsForRole(role),
+        ...await sessionStorage.readPermissions(),
+      }.toList();
       final name = username.trim();
       emit(
         AuthProfileState.success(

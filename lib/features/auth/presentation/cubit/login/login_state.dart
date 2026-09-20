@@ -13,5 +13,6 @@ abstract class LoginState with _$LoginState {
     String? selectedRole,
   }) = LoginSuccess;
   const factory LoginState.error(String messageKey) = LoginError;
-  const factory LoginState.deviceTransferRequired() = LoginDeviceTransferRequired;
+  const factory LoginState.deviceTransferRequired() =
+      LoginDeviceTransferRequired;
 }

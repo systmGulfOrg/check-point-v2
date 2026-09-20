@@ -17,6 +17,8 @@ class AuthSessionStorage {
   static const biometricTokenKey = 'biometric_login_token';
   static const biometricUsernameKey = 'biometric_username';
   static const biometricPasswordKey = 'biometric_password';
+  static const accountRequestDismissedMobileIdKey =
+      'account_request_dismissed_mobile_id';
 
   final FlutterSecureStorage secureStorage;
 
@@ -48,7 +50,10 @@ class AuthSessionStorage {
     if (role != null && role.isNotEmpty) {
       await secureStorage.write(key: userRoleKey, value: role);
     }
-    await secureStorage.write(key: permissionsKey, value: permissions.join(','));
+    await secureStorage.write(
+      key: permissionsKey,
+      value: permissions.join(','),
+    );
   }
 
   Future<String?> readToken() => secureStorage.read(key: tokenKey);
@@ -79,7 +84,12 @@ class AuthSessionStorage {
   Future<List<String>> readPermissions() async {
     final raw = await secureStorage.read(key: permissionsKey);
     if (raw == null || raw.isEmpty) return const [];
-    return raw.split(',').where((permission) => permission.isNotEmpty).toList();
+    return raw
+        .split(',')
+        .map((permission) => permission.trim())
+        .where((permission) => permission.isNotEmpty)
+        .toSet()
+        .toList();
   }
 
   Future<void> enableBiometricLogin({
@@ -135,6 +145,18 @@ class AuthSessionStorage {
     await secureStorage.delete(key: biometricUsernameKey);
     await secureStorage.delete(key: biometricPasswordKey);
   }
+
+  Future<String?> readAccountRequestDismissedMobileId() =>
+      secureStorage.read(key: accountRequestDismissedMobileIdKey);
+
+  Future<void> dismissAccountRequestForMobileId(String mobileId) =>
+      secureStorage.write(
+        key: accountRequestDismissedMobileIdKey,
+        value: mobileId,
+      );
+
+  Future<void> clearAccountRequestDismissal() =>
+      secureStorage.delete(key: accountRequestDismissedMobileIdKey);
 
   Future<void> clear() async {
     await secureStorage.delete(key: tokenKey);

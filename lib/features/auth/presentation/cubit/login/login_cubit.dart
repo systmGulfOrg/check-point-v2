@@ -34,6 +34,9 @@ class LoginCubit extends Cubit<LoginState> {
     );
     switch (result) {
       case Success<LoginResponseModel>(:final data):
+        await authSessionStorage.dismissAccountRequestForMobileId(
+          loginUseCase.deviceIdentityProvider.mobileId,
+        );
         emit(LoginState.success(data, selectedRole: role));
       case Failure<LoginResponseModel>(:final failure):
         if (failure.messageKey == 'errors.deviceLoginAccess') {
@@ -44,7 +47,6 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  
   Future<void> requestDeviceTransfer({
     required String userName,
     required String password,
@@ -58,10 +60,12 @@ class LoginCubit extends Cubit<LoginState> {
     final result = await loginUseCase.authRepo.requestDeviceTransfer(request);
     result.when(
       success: (_) {
-         emit(const LoginState.error('deviceTransferSuccess')); // we can use error state just to show a snackbar, or create a specific state
+        emit(
+          const LoginState.error('deviceTransferSuccess'),
+        ); // we can use error state just to show a snackbar, or create a specific state
       },
       failure: (failure) {
-         emit(LoginState.error(failure.messageKey));
+        emit(LoginState.error(failure.messageKey));
       },
     );
   }
@@ -80,6 +84,9 @@ class LoginCubit extends Cubit<LoginState> {
       return false;
     }
     if (session.token.isNotEmpty) {
+      await authSessionStorage.dismissAccountRequestForMobileId(
+        loginUseCase.deviceIdentityProvider.mobileId,
+      );
       emit(
         LoginState.success(
           LoginResponseModel(roles: [session.role], token: session.token),

@@ -3,6 +3,7 @@ import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/auth/data/apis/auth_api_service.dart';
 import 'package:check_point_v2/features/auth/data/models/account_request/account_request_model.dart';
+import 'package:check_point_v2/features/auth/data/models/account_request/account_request_status_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_response_model.dart';
 import 'auth_repo.dart';
@@ -13,7 +14,9 @@ class AuthRepoImpl implements AuthRepo {
   final AuthApiService api;
 
   @override
-  Future<ApiResult<bool>> requestDeviceTransfer(LoginRequestModel request) async {
+  Future<ApiResult<bool>> requestDeviceTransfer(
+    LoginRequestModel request,
+  ) async {
     try {
       await api.requestDeviceTransfer(request);
       return const ApiResult.success(true);
@@ -57,6 +60,18 @@ class AuthRepoImpl implements AuthRepo {
         );
       }
       return const ApiResult.success(null);
+    } catch (error) {
+      return ApiResult.failure(ApiFailureMapper.map(error));
+    }
+  }
+
+  @override
+  Future<ApiResult<AccountRequestStatusModel?>> getAccountRequestStatus(
+    String mobileId,
+  ) async {
+    try {
+      final response = await api.getAccountRequestStatus(mobileId);
+      return ApiResult.success(response.value);
     } catch (error) {
       return ApiResult.failure(ApiFailureMapper.map(error));
     }

@@ -42,5 +42,29 @@ class AppPermissions {
   static const auditView = 'audit.view';
 
   static bool has(Iterable<String> permissions, String permission) =>
-      permissions.contains(permission);
+      permissions.any(
+        (item) => item.trim().toLowerCase() == permission.trim().toLowerCase(),
+      );
+
+  static List<String> defaultsForRole(String role) {
+    switch (role.trim().toLowerCase()) {
+      case 'admin':
+      case 'hr':
+        return [
+          attendanceViewOwn, attendanceViewTeam, attendanceViewAll,
+          attendanceEdit, attendanceDelete, employeeView, employeeEdit,
+          employeeDelete, taskView, taskAssign, taskManage, remoteRequest,
+          remoteApprove, remotePolicyManage, leaveRequest, leaveApprove,
+          leaveManagerApprove, leaveHrApprove, permitApprove, planManage,
+        ];
+      case 'supervisor':
+        return [
+          attendanceViewOwn, attendanceViewTeam, employeeView, taskView,
+          taskAssign, leaveRequest, leaveManagerApprove, permitApprove,
+          remoteRequest, remoteApprove, reportView,
+        ];
+      default:
+        return [attendanceViewOwn, taskView, leaveRequest, remoteRequest];
+    }
+  }
 }

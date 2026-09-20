@@ -7,7 +7,11 @@ import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubi
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_state.dart';
 
 class LoginSubmitButtonWidget extends StatelessWidget {
-  const LoginSubmitButtonWidget({required this.onSubmit, this.rateLimitSeconds = 0, super.key});
+  const LoginSubmitButtonWidget({
+    required this.onSubmit,
+    this.rateLimitSeconds = 0,
+    super.key,
+  });
 
   final VoidCallback onSubmit;
   final int rateLimitSeconds;

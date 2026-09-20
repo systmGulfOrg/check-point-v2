@@ -15,6 +15,7 @@ import 'package:check_point_v2/features/auth/presentation/widgets/biometric_logi
 import 'package:check_point_v2/features/auth/presentation/widgets/brand_header_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/login_bloc_listener_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/login_submit_button_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/login_account_request_status_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/role_switcher_widget.dart';
 import 'package:check_point_v2/core/widgets/custom_dialog_widget.dart';
 
@@ -94,14 +95,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         state.maybeWhen(
           error: (msg) {
-            if (msg.toLowerCase().contains('rate limit') || msg.toLowerCase().contains('retry in')) {
+            if (msg.toLowerCase().contains('rate limit') ||
+                msg.toLowerCase().contains('retry in')) {
               int seconds = 60;
-              final match = RegExp(r'retry in (\d+)').firstMatch(msg.toLowerCase());
+              final match = RegExp(
+                r'retry in (\d+)',
+              ).firstMatch(msg.toLowerCase());
               if (match != null) {
                 final val = int.tryParse(match.group(1) ?? '');
                 if (val != null) {
@@ -116,7 +119,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 _rateLimitSeconds = seconds > 60 ? 60 : seconds;
               });
               _rateLimitTimer?.cancel();
-              _rateLimitTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+              _rateLimitTimer = Timer.periodic(const Duration(seconds: 1), (
+                timer,
+              ) {
                 if (_rateLimitSeconds > 0) {
                   setState(() {
                     _rateLimitSeconds--;
@@ -131,185 +136,191 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       },
       child: LoginBlocListenerWidget(
-
-      onDeviceTransferRequired: () {
-        showDialog(
-          context: context,
-          builder: (dialogContext) => CustomDialogWidget(
-            title: 'auth.login.deviceTransferTitle'.tr(context: context),
-            message: 'auth.login.deviceTransferMessage'.tr(context: context),
-            icon: Icons.phone_android_rounded,
-            onConfirm: () {
-              Navigator.pop(dialogContext);
-              context.read<LoginCubit>().requestDeviceTransfer(
-                    userName: _usernameController.text.trim(),
-                    password: _passwordController.text,
-                  );
-            },
-          ),
-        );
-      },
-      child: AuthShellWidget(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: LanguageSwitcherWidget(),
+        onDeviceTransferRequired: () {
+          showDialog(
+            context: context,
+            builder: (dialogContext) => CustomDialogWidget(
+              title: 'auth.login.deviceTransferTitle'.tr(context: context),
+              message: 'auth.login.deviceTransferMessage'.tr(context: context),
+              icon: Icons.phone_android_rounded,
+              onConfirm: () {
+                Navigator.pop(dialogContext);
+                context.read<LoginCubit>().requestDeviceTransfer(
+                  userName: _usernameController.text.trim(),
+                  password: _passwordController.text,
+                );
+              },
             ),
-            hSpace(12),
-            AuthCardWidget(
-              child: Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const BrandHeaderWidget(
-                      titleKey: 'auth.login.title',
-                      subtitleKey: 'auth.login.subtitle',
-                    ),
-                    hSpace(24),
-                    RoleSwitcherWidget(
-                      roles: _roles,
-                      selectedRole: _selectedRole,
-                      onRoleSelected: (role) {
-                        setState(() => _selectedRole = role);
-                      },
-                    ),
-                    hSpace(18),
-                    AuthLabeledFieldWidget(
-                      labelKey: 'auth.login.usernameLabel',
-                      hintKey: 'auth.login.usernameHint',
-                      controller: _usernameController,
-                      keyboardType: TextInputType.text,
-                      validator: (value) =>
-                          value == null || value.trim().isEmpty
-                          ? 'auth.login.required'.tr(context: context)
-                          : null,
-                      prefixIcon: Icon(
-                        Icons.mail_outline_rounded,
-                        size: 20.r,
-                        color: AppColors.placeholder,
+          );
+        },
+        child: AuthShellWidget(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: LanguageSwitcherWidget(),
+              ),
+              hSpace(12),
+              AuthCardWidget(
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const BrandHeaderWidget(
+                        titleKey: 'auth.login.title',
+                        subtitleKey: 'auth.login.subtitle',
                       ),
-                    ),
-                    hSpace(18),
-                    AuthLabeledFieldWidget(
-                      labelKey: 'auth.login.passwordLabel',
-                      hintKey: 'auth.login.passwordHint',
-                      controller: _passwordController,
-                      obscureText: _obscurePassword,
-                      validator: (value) => value == null || value.isEmpty
-                          ? 'auth.login.required'.tr(context: context)
-                          : null,
-                      prefixIcon: Icon(
-                        Icons.lock_outline_rounded,
-                        size: 20.r,
-                        color: AppColors.placeholder,
-                      ),
-                      // Keep the password field ergonomic without introducing extra state.
-                      // The visibility toggle stays local to this screen.
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() => _obscurePassword = !_obscurePassword);
+                      hSpace(24),
+                      RoleSwitcherWidget(
+                        roles: _roles,
+                        selectedRole: _selectedRole,
+                        onRoleSelected: (role) {
+                          setState(() => _selectedRole = role);
                         },
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
+                      ),
+                      hSpace(18),
+                      AuthLabeledFieldWidget(
+                        labelKey: 'auth.login.usernameLabel',
+                        hintKey: 'auth.login.usernameHint',
+                        controller: _usernameController,
+                        keyboardType: TextInputType.text,
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
+                            ? 'auth.login.required'.tr(context: context)
+                            : null,
+                        prefixIcon: Icon(
+                          Icons.mail_outline_rounded,
                           size: 20.r,
                           color: AppColors.placeholder,
                         ),
                       ),
-                    ),
-                    if (_isBiometricSupported) ...[
-                      hSpace(14),
-                      CheckboxListTile(
-                        value: _enableBiometricLogin,
-                        onChanged: (value) {
-                          setState(
-                            () => _enableBiometricLogin = value ?? false,
+                      hSpace(18),
+                      AuthLabeledFieldWidget(
+                        labelKey: 'auth.login.passwordLabel',
+                        hintKey: 'auth.login.passwordHint',
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'auth.login.required'.tr(context: context)
+                            : null,
+                        prefixIcon: Icon(
+                          Icons.lock_outline_rounded,
+                          size: 20.r,
+                          color: AppColors.placeholder,
+                        ),
+                        // Keep the password field ergonomic without introducing extra state.
+                        // The visibility toggle stays local to this screen.
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(
+                              () => _obscurePassword = !_obscurePassword,
+                            );
+                          },
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            size: 20.r,
+                            color: AppColors.placeholder,
+                          ),
+                        ),
+                      ),
+                      if (_isBiometricSupported) ...[
+                        hSpace(14),
+                        CheckboxListTile(
+                          value: _enableBiometricLogin,
+                          onChanged: (value) {
+                            setState(
+                              () => _enableBiometricLogin = value ?? false,
+                            );
+                          },
+                          dense: true,
+                          contentPadding: EdgeInsets.zero,
+                          activeColor: AppColors.brandPrimary,
+                          controlAffinity: ListTileControlAffinity.leading,
+                          title: Row(
+                            children: [
+                              Icon(
+                                Icons.fingerprint_rounded,
+                                size: 21.r,
+                                color: AppColors.brandPrimary,
+                              ),
+                              wSpace(8),
+                              Expanded(
+                                child: Text(
+                                  'auth.login.biometricLogin'.tr(
+                                    context: context,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyles.font14Regular,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      hSpace(10),
+                      LoginSubmitButtonWidget(
+                        rateLimitSeconds: _rateLimitSeconds,
+                        onSubmit: () {
+                          if (_rateLimitSeconds > 0) return;
+                          if (!(formKey.currentState?.validate() ?? false)) {
+                            return;
+                          }
+                          context.read<LoginCubit>().login(
+                            userName: _usernameController.text.trim(),
+                            password: _passwordController.text,
+                            role: switch (_selectedRole) {
+                              'auth.role.admin' => 'Admin',
+                              'auth.role.supervisor' => 'Supervisor',
+                              _ => 'Employee',
+                            },
+                            enableBiometricLogin: _enableBiometricLogin,
                           );
                         },
-                        dense: true,
-                        contentPadding: EdgeInsets.zero,
-                        activeColor: AppColors.brandPrimary,
-                        controlAffinity: ListTileControlAffinity.leading,
-                        title: Row(
-                          children: [
-                            Icon(
-                              Icons.fingerprint_rounded,
-                              size: 21.r,
-                              color: AppColors.brandPrimary,
-                            ),
-                            wSpace(8),
-                            Expanded(
-                              child: Text(
-                                'auth.login.biometricLogin'.tr(
-                                  context: context,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTextStyles.font14Regular,
+                      ),
+                      if (_hasSavedBiometric) ...[
+                        hSpace(12),
+                        BiometricLoginButtonWidget(
+                          onPressed: () {
+                            context.read<LoginCubit>().loginWithBiometrics(
+                              localizedReason: 'auth.login.biometricReason'.tr(
+                                context: context,
                               ),
-                            ),
-                          ],
+                            );
+                          },
+                        ),
+                      ],
+                      hSpace(18),
+                      const LoginAccountRequestStatusBlocBuilderWidget(),
+                      hSpace(12),
+                      TextButton(
+                        onPressed: () =>
+                            context.pushNamed(AppRoutes.requestAccess),
+                        child: Text(
+                          'auth.login.requestAccess'.tr(context: context),
+                        ),
+                      ),
+                      hSpace(8),
+                      Text(
+                        'auth.login.requestNote'.tr(context: context),
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.font13Regular.copyWith(
+                          height: 1.45,
                         ),
                       ),
                     ],
-                    hSpace(10),
-                    LoginSubmitButtonWidget(
-                      rateLimitSeconds: _rateLimitSeconds,
-                      onSubmit: () {
-                        if (_rateLimitSeconds > 0) return;
-                        if (!(formKey.currentState?.validate() ?? false)) {
-                          return;
-                        }
-                        context.read<LoginCubit>().login(
-                          userName: _usernameController.text.trim(),
-                          password: _passwordController.text,
-                          role: switch (_selectedRole) {
-                            'auth.role.admin' => 'Admin',
-                            'auth.role.supervisor' => 'Supervisor',
-                            _ => 'Employee',
-                          },
-                          enableBiometricLogin: _enableBiometricLogin,
-                        );
-                      },
-                    ),
-                    if (_hasSavedBiometric) ...[
-                      hSpace(12),
-                      BiometricLoginButtonWidget(
-                        onPressed: () {
-                          context.read<LoginCubit>().loginWithBiometrics(
-                            localizedReason: 'auth.login.biometricReason'.tr(
-                              context: context,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                    hSpace(18),
-                    TextButton(
-                      onPressed: () =>
-                          context.pushNamed(AppRoutes.requestAccess),
-                      child: Text(
-                        'auth.login.requestAccess'.tr(context: context),
-                      ),
-                    ),
-                    hSpace(8),
-                    Text(
-                      'auth.login.requestNote'.tr(context: context),
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.font13Regular.copyWith(height: 1.45),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

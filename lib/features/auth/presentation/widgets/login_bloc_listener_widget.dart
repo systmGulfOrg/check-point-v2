@@ -21,12 +21,13 @@ class LoginBlocListenerWidget extends StatelessWidget {
     listener: (context, state) {
       switch (state) {
         case LoginSuccess(:final user, :final selectedRole):
-          final role = (selectedRole ??
-                  (user.roles != null && user.roles!.isNotEmpty
-                      ? user.roles!.first
-                      : user.role ?? 'employee'))
-              .trim()
-              .toLowerCase();
+          final role =
+              (selectedRole ??
+                      (user.roles != null && user.roles!.isNotEmpty
+                          ? user.roles!.first
+                          : user.role ?? 'employee'))
+                  .trim()
+                  .toLowerCase();
           if (role == 'admin') {
             context.pushReplacementNamed(AppRoutes.admin);
           } else if (role == 'supervisor') {
@@ -37,7 +38,11 @@ class LoginBlocListenerWidget extends StatelessWidget {
         case LoginError(:final messageKey):
           if (messageKey == 'deviceTransferSuccess') {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('auth.login.deviceTransferSuccess'.tr(context: context))),
+              SnackBar(
+                content: Text(
+                  'auth.login.deviceTransferSuccess'.tr(context: context),
+                ),
+              ),
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
