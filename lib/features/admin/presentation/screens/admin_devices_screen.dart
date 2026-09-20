@@ -31,10 +31,14 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
     showDialog(
       context: context,
       builder: (ctx) => CustomDialogWidget(
-        title: isApprove ? 'Approve Transfer' : 'Reject Transfer',
+        title:
+            (isApprove
+                    ? 'admin.devices.approveTitle'
+                    : 'admin.devices.rejectTitle')
+                .tr(context: context),
         message: isApprove
-            ? 'Are you sure you want to approve this device transfer?'
-            : 'Are you sure you want to reject this device transfer?',
+            ? 'admin.devices.approveMessage'.tr(context: context)
+            : 'admin.devices.rejectMessage'.tr(context: context),
         icon: isApprove ? Icons.check_circle_outline : Icons.cancel_outlined,
         iconColor: isApprove ? AppColors.success : AppColors.error,
         iconBackgroundColor: isApprove
@@ -56,9 +60,12 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
             );
           }
         },
-        confirmLabel: isApprove ? 'Approve' : 'Reject',
+        confirmLabel:
+            (isApprove ? 'admin.devices.approve' : 'admin.devices.reject').tr(
+              context: context,
+            ),
         confirmButtonColor: isApprove ? AppColors.success : AppColors.error,
-        cancelLabel: 'Cancel',
+        cancelLabel: 'common.cancel'.tr(context: context),
       ),
     );
   }
@@ -71,16 +78,19 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
         backgroundColor: AppColors.white,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
-        title: Text('admin.devices.pendingTitle'.tr(context: context), style: AppTextStyles.font18Bold),
+        title: Text(
+          'admin.devices.pendingTitle'.tr(context: context),
+          style: AppTextStyles.font18Bold,
+        ),
       ),
       body: SafeArea(
         child: BlocConsumer<AdminPendingDevicesCubit, AdminPendingDevicesState>(
           listener: (context, state) {
             state.maybeMap(
               error: (state) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.message)));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message.tr(context: context))),
+                );
               },
               orElse: () {},
             );
@@ -159,12 +169,15 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        dev.employeeName ?? 'Unknown Employee',
+                                        dev.employeeName ??
+                                            'admin.devices.unknownEmployee'.tr(
+                                              context: context,
+                                            ),
                                         style: AppTextStyles.font16Bold,
                                       ),
                                       if (dev.deviceModel != null)
                                         Text(
-                                          'Model: ${dev.deviceModel}',
+                                          '${'admin.devices.model'.tr(context: context)}: ${dev.deviceModel}',
                                           style: AppTextStyles.font12Regular
                                               .copyWith(
                                                 color: AppColors.textSecondary,
@@ -186,12 +199,12 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Device ID: ${dev.deviceId}',
+                                    '${'admin.devices.deviceId'.tr(context: context)}: ${dev.deviceId}',
                                     style: AppTextStyles.font12Regular,
                                   ),
                                   if (dev.osVersion != null)
                                     Text(
-                                      'OS: ${dev.osVersion}',
+                                      '${'admin.devices.os'.tr(context: context)}: ${dev.osVersion}',
                                       style: AppTextStyles.font12Regular,
                                     ),
                                 ],
@@ -223,7 +236,11 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                                       dev.id,
                                       false,
                                     ),
-                                    child: const Text('Reject'),
+                                    child: Text(
+                                      'admin.devices.reject'.tr(
+                                        context: context,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 wSpace(12),
@@ -247,9 +264,13 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                                       dev.id,
                                       true,
                                     ),
-                                    child: const Text(
-                                      'Approve',
-                                      style: TextStyle(color: AppColors.white),
+                                    child: Text(
+                                      'admin.devices.approve'.tr(
+                                        context: context,
+                                      ),
+                                      style: const TextStyle(
+                                        color: AppColors.white,
+                                      ),
                                     ),
                                   ),
                                 ),

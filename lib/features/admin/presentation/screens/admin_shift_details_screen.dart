@@ -89,12 +89,10 @@ class AdminShiftDetailsScreen extends StatelessWidget {
                           final policy = policies[index];
                           final rawEmployees = policy.employees ?? const [];
                           final seenEmployeeIds = <String>{};
-                          final employees = rawEmployees
-                              .where((e) {
-                                final id = e.id ?? e.userName ?? '';
-                                return id.isEmpty || seenEmployeeIds.add(id);
-                              })
-                              .toList();
+                          final employees = rawEmployees.where((e) {
+                            final id = e.id ?? e.userName ?? '';
+                            return id.isEmpty || seenEmployeeIds.add(id);
+                          }).toList();
                           return AnimatedListItemWidget(
                             index: index,
                             child: Container(
@@ -165,17 +163,6 @@ class AdminShiftDetailsScreen extends StatelessWidget {
                                           ),
                                         ),
                                       ],
-                                    ),
-                                  ],
-                                  if (policy.workDays != null &&
-                                      policy.workDays!.isNotEmpty) ...[
-                                    hSpace(6),
-                                    Text(
-                                      '${'admin.shifts.policies.workingDays'.tr(context: context)}: ${policy.workDays!.join(', ')}',
-                                      style: AppTextStyles.font12Regular
-                                          .copyWith(
-                                            color: AppColors.textSecondary,
-                                          ),
                                     ),
                                   ],
                                   hSpace(10),

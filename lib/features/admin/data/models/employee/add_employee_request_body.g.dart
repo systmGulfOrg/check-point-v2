@@ -28,6 +28,8 @@ AddEmployeeRequestBody _$AddEmployeeRequestBodyFromJson(
   canAddAttendance: json['canAddAttendance'] as bool?,
   canAddPlan: json['canAddPlan'] as bool?,
   leaveBalance: (json['leaveBalance'] as num?)?.toInt(),
+  workSystem: json['workSystem'] as String?,
+  remoteWorkPolicyId: json['remoteWorkPolicyId'] as String?,
 );
 
 Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
@@ -50,4 +52,6 @@ Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
   'canAddAttendance': instance.canAddAttendance,
   'canAddPlan': instance.canAddPlan,
   'leaveBalance': instance.leaveBalance,
+  'workSystem': instance.workSystem,
+  'remoteWorkPolicyId': instance.remoteWorkPolicyId,
 };

@@ -9,6 +9,10 @@ class AdminTaskModel {
     this.title,
     this.description,
     this.status,
+    this.dueDate,
+    this.priorityStatus,
+    this.isOverdue,
+    this.completedAt,
     this.assignedEmployeeId,
     this.assignedEmployeeName,
   });
@@ -17,6 +21,10 @@ class AdminTaskModel {
   final String? title;
   final String? description;
   final String? status;
+  final String? dueDate;
+  final String? priorityStatus;
+  final bool? isOverdue;
+  final String? completedAt;
   final String? assignedEmployeeId;
   final String? assignedEmployeeName;
 

@@ -12,6 +12,10 @@ AdminTaskModel _$AdminTaskModelFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String?,
       description: json['description'] as String?,
       status: json['status'] as String?,
+      dueDate: json['dueDate'] as String?,
+      priorityStatus: json['priorityStatus'] as String?,
+      isOverdue: json['isOverdue'] as bool?,
+      completedAt: json['completedAt'] as String?,
       assignedEmployeeId: json['assignedEmployeeId'] as String?,
       assignedEmployeeName: json['assignedEmployeeName'] as String?,
     );
@@ -22,6 +26,10 @@ Map<String, dynamic> _$AdminTaskModelToJson(AdminTaskModel instance) =>
       'title': instance.title,
       'description': instance.description,
       'status': instance.status,
+      'dueDate': instance.dueDate,
+      'priorityStatus': instance.priorityStatus,
+      'isOverdue': instance.isOverdue,
+      'completedAt': instance.completedAt,
       'assignedEmployeeId': instance.assignedEmployeeId,
       'assignedEmployeeName': instance.assignedEmployeeName,
     };

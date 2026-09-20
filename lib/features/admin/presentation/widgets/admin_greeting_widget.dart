@@ -9,12 +9,14 @@ class AdminGreetingWidget extends StatelessWidget {
     required this.userNameKey,
     required this.dateText,
     this.greetingKey = 'admin.dashboard.greeting',
+    this.userName,
     super.key,
   });
 
   final String userNameKey;
   final String dateText;
   final String greetingKey;
+  final String? userName;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class AdminGreetingWidget extends StatelessWidget {
         ),
         hSpace(4),
         Text(
-          userNameKey.tr(context: context),
+          userName ?? userNameKey.tr(context: context),
           style: AppTextStyles.font24Bold.copyWith(
             color: AppColors.textPrimary,
           ),

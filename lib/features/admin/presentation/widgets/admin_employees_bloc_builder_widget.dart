@@ -12,7 +12,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_
 import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
+import 'package:check_point_v2/features/remote_work/presentation/cubit/remote_work_cubit.dart';
 import 'admin_delete_confirmation_dialog_widget.dart';
 import 'admin_edit_employee_sheet_widget.dart';
 import 'admin_employee_card_widget.dart';
@@ -38,8 +38,8 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
           BlocProvider<AdminBranchesCubit>(
             create: (_) => sl<AdminBranchesCubit>()..load(),
           ),
-          BlocProvider<AdminShiftsPoliciesCubit>(
-            create: (_) => sl<AdminShiftsPoliciesCubit>()..load(),
+          BlocProvider<RemoteWorkCubit>(
+            create: (_) => sl<RemoteWorkCubit>()..load(),
           ),
         ],
         child: AdminEditEmployeeSheetWidget(
@@ -78,77 +78,71 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
     builder: (context, state) {
       final canEdit = context.select<AuthProfileCubit, bool>(
         (cubit) => cubit.state.maybeWhen(
-          success: (
-            name,
-            userId,
-            role,
-            username,
-            permissions,
-          ) => AppPermissions.has(permissions, AppPermissions.employeeEdit),
+          success: (name, userId, role, username, permissions) =>
+              AppPermissions.has(permissions, AppPermissions.employeeEdit),
           orElse: () => false,
         ),
       );
       final canDelete = context.select<AuthProfileCubit, bool>(
         (cubit) => cubit.state.maybeWhen(
-          success: (
-            name,
-            userId,
-            role,
-            username,
-            permissions,
-          ) => AppPermissions.has(permissions, AppPermissions.employeeDelete),
+          success: (name, userId, role, username, permissions) =>
+              AppPermissions.has(permissions, AppPermissions.employeeDelete),
           orElse: () => false,
         ),
       );
       return switch (state) {
-      AdminEmployeesStateInitial() => const SizedBox.shrink(),
-      AdminEmployeesStateLoading() => const AdminEmployeesSkeletonWidget(),
-      AdminEmployeesStateError(:final messageKey) =>
-        AdminRequestsEmptyStateWidget(messageKey: messageKey),
-      AdminEmployeesStateSuccess(:final employees) ||
-      AdminEmployeesStateActionSuccess(:final employees) =>
-        employees.isEmpty
-            ? AdminRequestsEmptyStateWidget(messageKey: 'admin.employees.empty')
-            : Column(
-                children: [
-                  Text(
-                    'admin.employees.countHeader'.tr(
-                      context: context,
-                      args: [employees.length.toString()],
+        AdminEmployeesStateInitial() => const SizedBox.shrink(),
+        AdminEmployeesStateLoading() => const AdminEmployeesSkeletonWidget(),
+        AdminEmployeesStateError(:final messageKey) =>
+          AdminRequestsEmptyStateWidget(messageKey: messageKey),
+        AdminEmployeesStateSuccess(:final employees) ||
+        AdminEmployeesStateActionSuccess(:final employees) =>
+          employees.isEmpty
+              ? AdminRequestsEmptyStateWidget(
+                  messageKey: 'admin.employees.empty',
+                )
+              : Column(
+                  children: [
+                    Text(
+                      'admin.employees.countHeader'.tr(
+                        context: context,
+                        args: [employees.length.toString()],
+                      ),
+                      style: AppTextStyles.font13Regular.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                     ),
-                    style: AppTextStyles.font13Regular.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  hSpace(12),
-                  for (final employee in employees) ...[
-                    AdminEmployeeCardWidget(
-                      initials: _initials(employee.name),
-                      name: employee.name ?? employee.userName ?? '-',
-                      roles: employee.allRoles,
-                      email: (employee.email != null && employee.email!.isNotEmpty)
-                          ? employee.email!
-                          : (employee.userName ?? '-'),
-                      empCode: employee.employeeCode ?? employee.id ?? '-',
-                      department: employee.departmentName,
-                      isOnline: employee.canAddAttendance ?? false,
-                      onEdit: canEdit
-                          ? () => _showEditSheet(context, employee)
-                          : null,
-                      onDelete: canDelete
-                          ? () {
-                        if (employee.id != null) {
-                          _showDeleteDialog(context, employee.id!);
-                        }
-                      }
-                          : null,
-                      onTap: () =>
-                          EmployeeDetailsSheetWidget.show(context, employee),
-                    ),
-                    hSpace(10),
+                    hSpace(12),
+                    for (final employee in employees) ...[
+                      AdminEmployeeCardWidget(
+                        initials: _initials(employee.name),
+                        name: employee.name ?? employee.userName ?? '-',
+                        roles: employee.allRoles,
+                        email:
+                            (employee.email != null &&
+                                employee.email!.isNotEmpty)
+                            ? employee.email!
+                            : (employee.userName ?? '-'),
+                        empCode: employee.employeeCode ?? employee.id ?? '-',
+                        department: employee.departmentName,
+                        isOnline: employee.canAddAttendance ?? false,
+                        onEdit: canEdit
+                            ? () => _showEditSheet(context, employee)
+                            : null,
+                        onDelete: canDelete
+                            ? () {
+                                if (employee.id != null) {
+                                  _showDeleteDialog(context, employee.id!);
+                                }
+                              }
+                            : null,
+                        onTap: () =>
+                            EmployeeDetailsSheetWidget.show(context, employee),
+                      ),
+                      hSpace(10),
+                    ],
                   ],
-                ],
-              ),
+                ),
         _ => const SizedBox.shrink(),
       };
     },

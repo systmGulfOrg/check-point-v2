@@ -28,6 +28,8 @@ EditEmployeeRequestBody _$EditEmployeeRequestBodyFromJson(
       ?.map((e) => e as String)
       .toList(),
   leaveBalance: (json['leaveBalance'] as num?)?.toInt(),
+  workSystem: json['workSystem'] as String?,
+  remoteWorkPolicyId: json['remoteWorkPolicyId'] as String?,
 );
 
 Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
@@ -50,4 +52,7 @@ Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
   if (instance.canAddPlan case final value?) 'canAddPlan': value,
   if (instance.deviceToken case final value?) 'deviceToken': value,
   if (instance.leaveBalance case final value?) 'leaveBalance': value,
+  if (instance.workSystem case final value?) 'workSystem': value,
+  if (instance.remoteWorkPolicyId case final value?)
+    'remoteWorkPolicyId': value,
 };

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_state.dart';
@@ -33,6 +34,16 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final permissions = context.select<AuthProfileCubit, List<String>>(
+      (cubit) => cubit.state.maybeWhen(
+        success: (name, userId, role, username, permissions) => permissions,
+        orElse: () => const [],
+      ),
+    );
+    final canDeleteAttendance = AppPermissions.has(
+      permissions,
+      AppPermissions.attendanceDelete,
+    );
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -202,7 +213,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                                 );
                                 return AdminAttendanceRecordCardWidget(
                                   record: recordData,
-                                  onDelete: () {
+                                  onDelete: canDeleteAttendance ? () {
                                     if (item.id != null) {
                                       showDialog<void>(
                                         context: context,
@@ -225,7 +236,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                                             ),
                                       );
                                     }
-                                  },
+                                  } : null,
                                 );
                               },
                             ),

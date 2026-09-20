@@ -16,6 +16,8 @@ class ApproveAccountRequestBody {
     this.position,
     this.employeeCode,
     this.email,
+    this.workSystem,
+    this.remoteWorkPolicyId,
   });
 
   final String status;
@@ -29,6 +31,8 @@ class ApproveAccountRequestBody {
   final String? position;
   final String? employeeCode;
   final String? email;
+  final String? workSystem;
+  final String? remoteWorkPolicyId;
 
   factory ApproveAccountRequestBody.fromJson(Map<String, dynamic> json) =>
       _$ApproveAccountRequestBodyFromJson(json);

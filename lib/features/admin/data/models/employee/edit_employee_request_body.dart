@@ -22,6 +22,8 @@ class EditEmployeeRequestBody {
     this.canAddPlan,
     this.deviceToken,
     this.leaveBalance,
+    this.workSystem,
+    this.remoteWorkPolicyId,
   });
 
   final String? name;
@@ -42,6 +44,8 @@ class EditEmployeeRequestBody {
   final bool? canAddPlan;
   final List<String>? deviceToken;
   final int? leaveBalance;
+  final String? workSystem;
+  final String? remoteWorkPolicyId;
 
   factory EditEmployeeRequestBody.fromJson(Map<String, dynamic> json) =>
       _$EditEmployeeRequestBodyFromJson(json);

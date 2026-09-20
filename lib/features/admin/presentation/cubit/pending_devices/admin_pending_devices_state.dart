@@ -7,6 +7,8 @@ part 'admin_pending_devices_state.freezed.dart';
 class AdminPendingDevicesState with _$AdminPendingDevicesState {
   const factory AdminPendingDevicesState.initial() = _Initial;
   const factory AdminPendingDevicesState.loading() = _Loading;
-  const factory AdminPendingDevicesState.success(List<PendingDeviceModel> devices) = _Success;
+  const factory AdminPendingDevicesState.success(
+    List<PendingDeviceModel> devices,
+  ) = _Success;
   const factory AdminPendingDevicesState.error(String message) = _Error;
 }
