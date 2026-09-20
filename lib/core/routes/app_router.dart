@@ -28,7 +28,6 @@ import 'package:check_point_v2/features/admin/presentation/screens/admin_plans_s
 import 'package:check_point_v2/features/admin/presentation/screens/admin_request_details_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_shift_details_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_shifts_policies_screen.dart';
-import 'package:check_point_v2/features/admin/presentation/screens/admin_tasks_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_devices_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/pending_devices/admin_pending_devices_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_employee_directory_listener_widget.dart';
@@ -36,6 +35,7 @@ import 'package:check_point_v2/features/auth/presentation/cubit/session/auth_ses
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/request_account_status/request_account_status_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/screens/login_screen.dart';
 import 'package:check_point_v2/features/auth/presentation/screens/request_access_screen.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
@@ -60,6 +60,11 @@ import 'package:check_point_v2/features/supervisor/presentation/screens/supervis
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_notifications_screen.dart';
 import 'package:check_point_v2/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_plans_screen.dart';
+import 'package:check_point_v2/features/remote_work/presentation/cubit/remote_work_cubit.dart';
+import 'package:check_point_v2/features/remote_work/presentation/cubit/employee_work_access_cubit.dart';
+import 'package:check_point_v2/features/projects/presentation/cubit/projects_cubit.dart';
+import 'package:check_point_v2/features/projects/presentation/screens/projects_screen.dart';
+import 'package:check_point_v2/features/remote_work/presentation/screens/remote_work_screen.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/core/styles/app_motion.dart';
 import 'routes.dart';
@@ -146,8 +151,13 @@ class AppRouter {
       case AppRoutes.login:
         return _fadeRoute(
           settings: const RouteSettings(name: AppRoutes.login),
-          child: BlocProvider<LoginCubit>(
-            create: (_) => sl<LoginCubit>(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<LoginCubit>(create: (_) => sl<LoginCubit>()),
+              BlocProvider<RequestAccountStatusCubit>(
+                create: (_) => sl<RequestAccountStatusCubit>()..load(),
+              ),
+            ],
             child: const LoginScreen(),
           ),
         );
@@ -199,6 +209,9 @@ class AppRouter {
               ),
               BlocProvider<AdminShiftsPoliciesCubit>(
                 create: (_) => sl<AdminShiftsPoliciesCubit>()..load(),
+              ),
+              BlocProvider<RemoteWorkCubit>(
+                create: (_) => sl<RemoteWorkCubit>()..load(),
               ),
             ],
             child: AdminCreateEmployeeScreen(
@@ -344,8 +357,12 @@ class AppRouter {
               BlocProvider<AdminDepartmentsCubit>(
                 create: (_) => sl<AdminDepartmentsCubit>()..load(),
               ),
+              BlocProvider<AuthProfileCubit>(
+                create: (_) => sl<AuthProfileCubit>()..loadProfile(),
+              ),
+              BlocProvider<ProjectsCubit>(create: (_) => sl<ProjectsCubit>()),
             ],
-            child: const AdminTasksScreen(),
+            child: const ProjectsScreen(),
           ),
         );
 
@@ -372,10 +389,42 @@ class AppRouter {
               BlocProvider<AdminAttendanceCubit>(
                 create: (_) => sl<AdminAttendanceCubit>()..loadAttendance(),
               ),
+              BlocProvider<AuthProfileCubit>(
+                create: (_) => sl<AuthProfileCubit>()..loadProfile(),
+              ),
             ],
             child: const AdminAttendanceEmployeeDirectoryListenerWidget(
               child: AdminAttendanceScreen(),
             ),
+          ),
+        );
+
+      case AppRoutes.remoteWork:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.remoteWork),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<RemoteWorkCubit>(
+                create: (_) => sl<RemoteWorkCubit>()..load(),
+              ),
+              BlocProvider<EmployeeWorkAccessCubit>(
+                create: (_) => sl<EmployeeWorkAccessCubit>()..load(),
+              ),
+            ],
+            child: RemoteWorkScreen(sessionStorage: sl()),
+          ),
+        );
+      case AppRoutes.projects:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.projects),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AuthProfileCubit>(
+                create: (_) => sl<AuthProfileCubit>()..loadProfile(),
+              ),
+              BlocProvider<ProjectsCubit>(create: (_) => sl<ProjectsCubit>()),
+            ],
+            child: const ProjectsScreen(),
           ),
         );
 
@@ -420,7 +469,8 @@ class AppRouter {
                     sl<SupervisorAttendanceCubit>()..loadAttendance(),
               ),
               BlocProvider<EmployeeAttendanceCubit>(
-                create: (_) => sl<EmployeeAttendanceCubit>(),
+                create: (_) =>
+                    sl<EmployeeAttendanceCubit>()..loadAttendanceHistory(),
               ),
               BlocProvider<LeavesCubit>(
                 create: (_) => sl<LeavesCubit>()..loadLeavesData(),
@@ -432,6 +482,7 @@ class AppRouter {
               BlocProvider<SupervisorTasksCubit>(
                 create: (_) => sl<SupervisorTasksCubit>()..loadTasks(),
               ),
+              BlocProvider<ProjectsCubit>(create: (_) => sl<ProjectsCubit>()),
               BlocProvider<SupervisorPlansCubit>(
                 create: (_) => sl<SupervisorPlansCubit>()..loadPlans(),
               ),
@@ -503,8 +554,11 @@ class AppRouter {
                     sl<EmployeeAttendanceCubit>()..loadAttendanceHistory(),
               ),
               BlocProvider<EmployeeTasksCubit>(
-                create: (_) => sl<EmployeeTasksCubit>()..loadMyTasks(),
+                create: (_) => sl<EmployeeTasksCubit>()
+                  ..loadMyTasks()
+                  ..loadTeamMembers(),
               ),
+              BlocProvider<ProjectsCubit>(create: (_) => sl<ProjectsCubit>()),
               BlocProvider<EmployeePlansCubit>(
                 create: (_) => sl<EmployeePlansCubit>()..loadMyPlans(),
               ),

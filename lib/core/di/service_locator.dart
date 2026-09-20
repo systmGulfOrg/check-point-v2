@@ -41,6 +41,7 @@ import 'package:check_point_v2/features/auth/presentation/cubit/session/auth_ses
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/request_account_status/request_account_status_cubit.dart';
 import 'package:check_point_v2/features/employee/data/apis/employee_api_service.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_action_repo.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_action_repo_impl.dart';
@@ -68,6 +69,15 @@ import 'package:check_point_v2/features/leaves/presentation/cubit/permit_cubit.d
 import 'package:check_point_v2/features/notifications/data/apis/notifications_api_service.dart';
 import 'package:check_point_v2/features/notifications/data/repos/notifications_repo_impl.dart';
 import 'package:check_point_v2/features/notifications/presentation/cubit/notifications_cubit.dart';
+import 'package:check_point_v2/features/remote_work/data/apis/remote_work_api_service.dart';
+import 'package:check_point_v2/features/remote_work/data/repos/remote_work_repo.dart';
+import 'package:check_point_v2/features/remote_work/data/repos/remote_work_repo_impl.dart';
+import 'package:check_point_v2/features/remote_work/presentation/cubit/remote_work_cubit.dart';
+import 'package:check_point_v2/features/remote_work/presentation/cubit/employee_work_access_cubit.dart';
+import 'package:check_point_v2/features/projects/data/apis/projects_api_service.dart';
+import 'package:check_point_v2/features/projects/data/repos/projects_repo.dart';
+import 'package:check_point_v2/features/projects/data/repos/projects_repo_impl.dart';
+import 'package:check_point_v2/features/projects/presentation/cubit/projects_cubit.dart';
 
 import 'package:check_point_v2/features/supervisor/data/apis/supervisor_api_service.dart';
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_attendance_repo.dart';
@@ -152,16 +162,23 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<EmployeeApiService>(
     () => EmployeeApiService(sl<Dio>()),
   );
-  sl.registerLazySingleton<LeavesApiService>(
-    () => LeavesApiService(sl<Dio>()),
-  );
+  sl.registerLazySingleton<LeavesApiService>(() => LeavesApiService(sl<Dio>()));
   sl.registerLazySingleton<NotificationsApiService>(
     () => NotificationsApiService(sl<Dio>()),
+  );
+  sl.registerLazySingleton<RemoteWorkApiService>(
+    () => RemoteWorkApiService(sl<Dio>()),
+  );
+  sl.registerLazySingleton<ProjectsApiService>(
+    () => ProjectsApiService(sl<Dio>()),
   );
 
   // Repositories
   sl.registerLazySingleton<AuthRepo>(
     () => AuthRepoImpl(api: sl<AuthApiService>()),
+  );
+  sl.registerLazySingleton<ProjectsRepo>(
+    () => ProjectsRepoImpl(api: sl<ProjectsApiService>()),
   );
   sl.registerLazySingleton<AdminEmployeeRepo>(
     () => AdminEmployeeRepoImpl(api: sl<AdminApiService>()),
@@ -232,6 +249,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<NotificationsRepoImpl>(
     () => NotificationsRepoImpl(api: sl<NotificationsApiService>()),
   );
+  sl.registerLazySingleton<RemoteWorkRepo>(
+    () => RemoteWorkRepoImpl(api: sl<RemoteWorkApiService>()),
+  );
 
   // UseCases
   sl.registerLazySingleton<LoginUseCase>(
@@ -280,12 +300,28 @@ Future<void> setupServiceLocator() async {
     () => RequestAccountCubit(
       authRepo: sl<AuthRepo>(),
       deviceIdentityProvider: sl<DeviceIdentityProvider>(),
+      authSessionStorage: sl<AuthSessionStorage>(),
     ),
+  );
+  sl.registerFactory<RequestAccountStatusCubit>(
+    () => RequestAccountStatusCubit(
+      authRepo: sl<AuthRepo>(),
+      deviceIdentityProvider: sl<DeviceIdentityProvider>(),
+      authSessionStorage: sl<AuthSessionStorage>(),
+    ),
+  );
+  sl.registerFactory<RemoteWorkCubit>(
+    () => RemoteWorkCubit(repo: sl<RemoteWorkRepo>()),
+  );
+  sl.registerFactory<ProjectsCubit>(
+    () => ProjectsCubit(repo: sl<ProjectsRepo>()),
   );
   sl.registerFactory<AdminEmployeesCubit>(
     () => AdminEmployeesCubit(employeeRepo: sl<AdminEmployeeRepo>()),
   );
-  sl.registerFactory<AdminPendingDevicesCubit>(() => AdminPendingDevicesCubit(api: sl<AdminApiService>()));
+  sl.registerFactory<AdminPendingDevicesCubit>(
+    () => AdminPendingDevicesCubit(api: sl<AdminApiService>()),
+  );
   sl.registerFactory<AdminAccountRequestsCubit>(
     () => AdminAccountRequestsCubit(employeeRepo: sl<AdminEmployeeRepo>()),
   );
@@ -349,6 +385,12 @@ Future<void> setupServiceLocator() async {
       checkOutUseCase: sl<EmployeeCheckOutUseCase>(),
       attendanceVerificationService: sl<AttendanceVerificationService>(),
       localNotificationService: sl<LocalNotificationService>(),
+    ),
+  );
+  sl.registerFactory<EmployeeWorkAccessCubit>(
+    () => EmployeeWorkAccessCubit(
+      attendanceRepo: sl<EmployeeAttendanceRepo>(),
+      sessionStorage: sl<AuthSessionStorage>(),
     ),
   );
   sl.registerFactory<EmployeeDetailsCubit>(
