@@ -27,4 +27,5 @@ RemoteWorkPolicyModel _$RemoteWorkPolicyModelFromJson(
   allowedRadiusM: (json['allowedRadiusM'] as num?)?.toInt(),
   maxDaysPerWeek: (json['maxDaysPerWeek'] as num?)?.toInt(),
   isActive: json['isActive'] as bool? ?? true,
+  employeeCount: (json['employeeCount'] as num?)?.toInt() ?? 0,
 );

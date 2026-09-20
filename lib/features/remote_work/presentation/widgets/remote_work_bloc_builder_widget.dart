@@ -2,11 +2,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
 import 'package:check_point_v2/core/core.dart';
 import '../../data/models/remote_work_policy_model.dart';
 import '../../data/models/remote_work_request_model.dart';
 import '../cubit/remote_work_cubit.dart';
 import '../cubit/remote_work_state.dart';
+import 'remote_work_policy_employees_sheet_widget.dart';
 import 'remote_work_policy_sheet_widget.dart';
 
 class RemoteWorkBlocBuilderWidget extends StatelessWidget {
@@ -25,7 +28,37 @@ class RemoteWorkBlocBuilderWidget extends StatelessWidget {
     return BlocBuilder<RemoteWorkCubit, RemoteWorkState>(
       builder: (context, state) => state.when(
         initial: () => const SizedBox.shrink(),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => Skeletonizer(
+          enabled: true,
+          child: _RemoteWorkContent(
+            isAdmin: isAdmin,
+            canReview: canReview,
+            policyType: policyType,
+            policies: const [
+              RemoteWorkPolicyModel(
+                id: '1',
+                name: 'Loading Policy Name 1',
+                allowedDays: ['Sunday', 'Monday', 'Tuesday'],
+                onsiteDays: ['Wednesday', 'Thursday'],
+                workingHoursStart: '09:00',
+                workingHoursEnd: '17:00',
+                allowedDelayTime: 15,
+                employeeCount: 3,
+              ),
+              RemoteWorkPolicyModel(
+                id: '2',
+                name: 'Loading Policy Name 2',
+                allowedDays: ['Sunday', 'Monday', 'Tuesday'],
+                onsiteDays: ['Wednesday', 'Thursday'],
+                workingHoursStart: '09:00',
+                workingHoursEnd: '17:00',
+                allowedDelayTime: 15,
+                employeeCount: 5,
+              ),
+            ],
+            requests: const [],
+          ),
+        ),
         error: (messageKey) => Center(child: Text(messageKey.tr())),
         success: (policies, requests) => _RemoteWorkContent(
           isAdmin: isAdmin,
@@ -58,6 +91,19 @@ class _RemoteWorkContent extends StatelessWidget {
     final visiblePolicies = policies
         .where((policy) => policy.effectivePolicyType == policyType)
         .toList();
+
+    final titleKey = switch (policyType) {
+      'onsite' => 'remoteWork.onsitePolicies',
+      'hybrid' => 'remoteWork.hybridPolicies',
+      _ => 'remoteWork.policies',
+    };
+
+    final addLabelKey = switch (policyType) {
+      'onsite' => 'remoteWork.addOnsitePolicy',
+      'hybrid' => 'remoteWork.addHybridPolicy',
+      _ => 'remoteWork.addPolicy',
+    };
+
     return RefreshIndicator(
       onRefresh: context.read<RemoteWorkCubit>().load,
       child: ListView(
@@ -66,107 +112,40 @@ class _RemoteWorkContent extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _SectionTitle(
-                title: policyType == 'hybrid'
-                    ? 'remoteWork.hybridPolicies'.tr()
-                    : 'remoteWork.policies'.tr(),
-              ),
+              _SectionTitle(title: titleKey.tr()),
               if (isAdmin)
                 _ActionButton(
-                  label: policyType == 'hybrid'
-                      ? 'remoteWork.addHybridPolicy'.tr()
-                      : 'remoteWork.addPolicy'.tr(),
+                  label: addLabelKey.tr(),
                   icon: Icons.add_rounded,
                   onTap: () => _showPolicyDialog(context),
                 ),
             ],
           ),
-          ...visiblePolicies.asMap().entries.map(
-            (entry) => AnimatedListItemWidget(
-              index: entry.key,
-              child: _PolicyCard(policy: entry.value),
+          if (visiblePolicies.isEmpty)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 40.h),
+              child: Center(
+                child: Text(
+                  'remoteWork.noPolicies'.tr(context: context),
+                  style: AppTextStyles.font14Regular.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ),
+            )
+          else
+            ...visiblePolicies.asMap().entries.map(
+              (entry) => AnimatedListItemWidget(
+                index: entry.key,
+                child: _PolicyCard(
+                  policy: entry.value,
+                  isAdmin: isAdmin,
+                ),
+              ),
             ),
-          ),
         ],
       ),
     );
-  }
-
-  // ignore: unused_element, kept for the request API compatibility layer.
-  Future<void> _showRequestDialog(
-    BuildContext context,
-    List<RemoteWorkPolicyModel> policies,
-  ) async {
-    final reasonController = TextEditingController();
-    DateTime selectedDate = DateTime.now();
-    String? policyId = policies.where((p) => p.isActive).firstOrNull?.id;
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text('remoteWork.requestTitle'.tr()),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text('remoteWork.date'.tr()),
-                subtitle: Text(selectedDate.toIso8601String().split('T').first),
-                trailing: const Icon(Icons.calendar_today_outlined),
-                onTap: () async {
-                  final picked = await showDatePicker(
-                    context: context,
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(const Duration(days: 90)),
-                    initialDate: selectedDate,
-                  );
-                  if (picked != null) setState(() => selectedDate = picked);
-                },
-              ),
-              if (policies.isNotEmpty)
-                DropdownButtonFormField<String>(
-                  initialValue: policyId,
-                  items: policies
-                      .where((p) => p.isActive)
-                      .map(
-                        (p) =>
-                            DropdownMenuItem(value: p.id, child: Text(p.name)),
-                      )
-                      .toList(),
-                  onChanged: (value) => setState(() => policyId = value),
-                  decoration: InputDecoration(
-                    labelText: 'remoteWork.policy'.tr(),
-                  ),
-                ),
-              SizedBox(height: 12.h),
-              CustomTextFormField(
-                controller: reasonController,
-                hintText: 'remoteWork.reason'.tr(),
-                maxLines: 3,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text('common.cancel'.tr()),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.pop(dialogContext);
-                await context.read<RemoteWorkCubit>().createRequest(
-                  requestDate: selectedDate.toIso8601String(),
-                  policyId: policyId,
-                  reason: reasonController.text.trim(),
-                );
-              },
-              child: Text('remoteWork.submit'.tr()),
-            ),
-          ],
-        ),
-      ),
-    );
-    reasonController.dispose();
   }
 
   Future<void> _showPolicyDialog(BuildContext context) async {
@@ -205,45 +184,112 @@ class _ActionButton extends StatelessWidget {
   final VoidCallback onTap;
   @override
   Widget build(BuildContext context) => InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(8.r),
-    child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 15.r, color: AppColors.brandPrimary),
-          SizedBox(width: 3.w),
-          Text(
-            label,
-            style: AppTextStyles.font13SemiBold.copyWith(
-              color: AppColors.brandPrimary,
-            ),
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8.r),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 15.r, color: AppColors.brandPrimary),
+              SizedBox(width: 3.w),
+              Text(
+                label,
+                style: AppTextStyles.font13SemiBold.copyWith(
+                  color: AppColors.brandPrimary,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }
 
 class _PolicyCard extends StatelessWidget {
-  const _PolicyCard({required this.policy});
+  const _PolicyCard({
+    required this.policy,
+    required this.isAdmin,
+  });
+
   final RemoteWorkPolicyModel policy;
+  final bool isAdmin;
+
+  void _showEditPolicyDialog(BuildContext context) {
+    final cubit = context.read<RemoteWorkCubit>();
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.cardBackground,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (_) => BlocProvider.value(
+        value: cubit,
+        child: RemoteWorkPolicySheetWidget(
+          initialPolicyType: policy.effectivePolicyType,
+          existingPolicy: policy,
+        ),
+      ),
+    );
+  }
+
+  void _showDeletePolicyDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AppDeleteConfirmationDialogWidget(
+        title: 'remoteWork.deletePolicyTitle'.tr(context: context),
+        message: 'remoteWork.deletePolicyMessage'.tr(context: context),
+        onConfirm: () {
+          Navigator.pop(dialogContext);
+          context.read<RemoteWorkCubit>().deactivatePolicy(policy.id);
+        },
+      ),
+    );
+  }
+
+  void _showEmployeesSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.cardBackground,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (_) => RemoteWorkPolicyEmployeesSheetWidget(policy: policy),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isHybrid = policy.effectivePolicyType == 'hybrid';
+    final type = policy.effectivePolicyType;
+    final isHybrid = type == 'hybrid';
+    final isOnsite = type == 'onsite';
+
     String dayLabel(String value) => switch (value.toLowerCase()) {
-      'sun' || 'sunday' => 'admin.shifts.days.sun'.tr(context: context),
-      'mon' || 'monday' => 'admin.shifts.days.mon'.tr(context: context),
-      'tue' || 'tuesday' => 'admin.shifts.days.tue'.tr(context: context),
-      'wed' || 'wednesday' => 'admin.shifts.days.wed'.tr(context: context),
-      'thu' || 'thursday' => 'admin.shifts.days.thu'.tr(context: context),
-      'fri' || 'friday' => 'admin.shifts.days.fri'.tr(context: context),
-      'sat' || 'saturday' => 'admin.shifts.days.sat'.tr(context: context),
-      _ => value,
-    };
+          'sun' || 'sunday' => 'admin.shifts.days.sun'.tr(context: context),
+          'mon' || 'monday' => 'admin.shifts.days.mon'.tr(context: context),
+          'tue' || 'tuesday' => 'admin.shifts.days.tue'.tr(context: context),
+          'wed' || 'wednesday' => 'admin.shifts.days.wed'.tr(context: context),
+          'thu' || 'thursday' => 'admin.shifts.days.thu'.tr(context: context),
+          'fri' || 'friday' => 'admin.shifts.days.fri'.tr(context: context),
+          'sat' || 'saturday' => 'admin.shifts.days.sat'.tr(context: context),
+          _ => value,
+        };
+
     final remoteDays = policy.allowedDays.map(dayLabel).join('، ');
     final onsiteDays = policy.onsiteDays.map(dayLabel).join('، ');
+
+    final icon = isOnsite
+        ? Icons.business_rounded
+        : (isHybrid ? Icons.swap_horiz_rounded : Icons.home_work_outlined);
+
+    final iconBg = isOnsite
+        ? AppColors.softBrandBackground
+        : (isHybrid ? AppColors.softBlueBackground : AppColors.softBrandBackground);
+
+    final iconColor = isOnsite
+        ? AppColors.brandPrimary
+        : (isHybrid ? AppColors.info : AppColors.brandPrimary);
 
     return AppCardContainerWidget(
       margin: EdgeInsets.only(top: 10.h),
@@ -259,16 +305,12 @@ class _PolicyCard extends StatelessWidget {
                   width: 42.r,
                   height: 42.r,
                   decoration: BoxDecoration(
-                    color: isHybrid
-                        ? AppColors.softBlueBackground
-                        : AppColors.softBrandBackground,
+                    color: iconBg,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Icon(
-                    isHybrid
-                        ? Icons.swap_horiz_rounded
-                        : Icons.home_work_outlined,
-                    color: isHybrid ? AppColors.info : AppColors.brandPrimary,
+                    icon,
+                    color: iconColor,
                     size: 22.r,
                   ),
                 ),
@@ -289,68 +331,91 @@ class _PolicyCard extends StatelessWidget {
               ],
             ),
             hSpace(12),
-            Text(
-              '${'remoteWork.remoteDays'.tr(context: context)}: $remoteDays',
-              style: AppTextStyles.font12Regular,
-            ),
-            if (isHybrid && onsiteDays.isNotEmpty) ...[
+            if (!isOnsite && remoteDays.isNotEmpty) ...[
+              Text(
+                '${'remoteWork.remoteDays'.tr(context: context)}: $remoteDays',
+                style: AppTextStyles.font12Regular,
+              ),
               hSpace(4),
+            ],
+            if ((isHybrid || isOnsite) && onsiteDays.isNotEmpty) ...[
               Text(
                 '${'remoteWork.onsiteDays'.tr(context: context)}: $onsiteDays',
                 style: AppTextStyles.font12Regular,
               ),
+              hSpace(4),
             ],
-            hSpace(4),
             Text(
               '${policy.workingHoursStart ?? '--'} - ${policy.workingHoursEnd ?? '--'}  •  ${'remoteWork.gracePeriod'.tr(context: context)}: ${policy.allowedDelayTime ?? 0}',
               style: AppTextStyles.font12Regular,
+            ),
+            const Divider(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () => _showEmployeesSheet(context),
+                  borderRadius: BorderRadius.circular(8.r),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 6.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.pageBackground,
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.people_alt_outlined,
+                          size: 16.r,
+                          color: AppColors.brandPrimary,
+                        ),
+                        wSpace(6),
+                        Text(
+                          'remoteWork.viewEmployeesCount'.tr(
+                            context: context,
+                            args: ['${policy.employeeCount}'],
+                          ),
+                          style: AppTextStyles.font12Medium.copyWith(
+                            color: AppColors.brandPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (isAdmin)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () => _showEditPolicyDialog(context),
+                        icon: Icon(
+                          Icons.edit_outlined,
+                          size: 20.r,
+                          color: AppColors.brandPrimary,
+                        ),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      IconButton(
+                        onPressed: () => _showDeletePolicyDialog(context),
+                        icon: Icon(
+                          Icons.delete_outline_rounded,
+                          size: 20.r,
+                          color: AppColors.error,
+                        ),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ],
+                  ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
-}
-
-// ignore: unused_element, kept for existing request data compatibility.
-class _RequestCard extends StatelessWidget {
-  const _RequestCard({required this.request, required this.canReview});
-  final RemoteWorkRequestModel request;
-  final bool canReview;
-  @override
-  Widget build(BuildContext context) => Card(
-    child: ListTile(
-      leading: Icon(
-        Icons.laptop_mac_rounded,
-        color: request.status == 'Approved'
-            ? AppColors.success
-            : AppColors.warning,
-      ),
-      title: Text(request.employeeName ?? 'remoteWork.myRequest'.tr()),
-      subtitle: Text(
-        '${request.requestDate.split('T').first}\n${request.reason ?? ''}',
-      ),
-      isThreeLine: true,
-      trailing: canReview && request.status == 'Pending'
-          ? Wrap(
-              children: [
-                IconButton(
-                  onPressed: () => context.read<RemoteWorkCubit>().updateStatus(
-                    id: request.id,
-                    status: 'Approved',
-                  ),
-                  icon: const Icon(Icons.check, color: AppColors.success),
-                ),
-                IconButton(
-                  onPressed: () => context.read<RemoteWorkCubit>().updateStatus(
-                    id: request.id,
-                    status: 'Rejected',
-                  ),
-                  icon: const Icon(Icons.close, color: AppColors.error),
-                ),
-              ],
-            )
-          : Text(request.status),
-    ),
-  );
 }

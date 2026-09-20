@@ -104,4 +104,34 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
     }
     await load();
   }
+
+  Future<bool> updatePolicy({
+    required String id,
+    required String name,
+    required List<String> allowedDays,
+    required String policyType,
+    List<String> onsiteDays = const [],
+    String? start,
+    String? end,
+    int? allowedDelayTime,
+    int? maxDays,
+  }) async {
+    final result = await repo.updatePolicy(
+      id: id,
+      name: name,
+      allowedDays: allowedDays,
+      policyType: policyType,
+      onsiteDays: onsiteDays,
+      workingHoursStart: start,
+      workingHoursEnd: end,
+      allowedDelayTime: allowedDelayTime,
+      maxDaysPerWeek: maxDays,
+    );
+    if (result case Failure(:final failure)) {
+      emit(RemoteWorkState.error(failure.messageKey));
+      return false;
+    }
+    await load();
+    return true;
+  }
 }

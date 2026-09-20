@@ -16,8 +16,17 @@ abstract class RemoteWorkApiService {
     @Body() Map<String, dynamic> body,
   );
 
+  @PUT('/api/v2/remote-policies/{id}')
+  Future<dynamic> updatePolicy(
+    @Path('id') String id,
+    @Body() Map<String, dynamic> body,
+  );
+
   @DELETE('/api/v2/remote-policies/{id}')
   Future<dynamic> deactivatePolicy(@Path('id') String id);
+
+  @GET('/api/v2/remote-policies/{id}/employees')
+  Future<dynamic> getPolicyEmployees(@Path('id') String id);
 
   @GET('/api/v2/remote-requests')
   Future<dynamic> getRequests({

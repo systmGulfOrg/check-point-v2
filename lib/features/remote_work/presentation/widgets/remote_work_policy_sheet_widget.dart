@@ -4,16 +4,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/remote_work/data/models/remote_work_policy_model.dart';
 import 'package:check_point_v2/features/remote_work/presentation/cubit/remote_work_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_create_task_field_widget.dart';
 
 class RemoteWorkPolicySheetWidget extends StatefulWidget {
   const RemoteWorkPolicySheetWidget({
     required this.initialPolicyType,
+    this.existingPolicy,
     super.key,
   });
 
   final String initialPolicyType;
+  final RemoteWorkPolicyModel? existingPolicy;
 
   @override
   State<RemoteWorkPolicySheetWidget> createState() =>
@@ -22,18 +25,12 @@ class RemoteWorkPolicySheetWidget extends StatefulWidget {
 
 class _RemoteWorkPolicySheetWidgetState
     extends State<RemoteWorkPolicySheetWidget> {
-  final nameController = TextEditingController();
-  final startController = TextEditingController(text: '09:00');
-  final endController = TextEditingController(text: '17:00');
-  final graceController = TextEditingController(text: '15');
-  final remoteDays = <String>{
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-  };
-  final onsiteDays = <String>{'Friday', 'Saturday'};
+  late final TextEditingController nameController;
+  late final TextEditingController startController;
+  late final TextEditingController endController;
+  late final TextEditingController graceController;
+  final remoteDays = <String>{};
+  final onsiteDays = <String>{};
   late String policyType;
   bool isSubmitting = false;
 
@@ -60,7 +57,31 @@ class _RemoteWorkPolicySheetWidgetState
   @override
   void initState() {
     super.initState();
-    policyType = widget.initialPolicyType;
+    final p = widget.existingPolicy;
+    policyType = p?.effectivePolicyType ?? widget.initialPolicyType;
+
+    nameController = TextEditingController(text: p?.name ?? '');
+    startController = TextEditingController(
+      text: p?.workingHoursStart ?? '09:00',
+    );
+    endController = TextEditingController(text: p?.workingHoursEnd ?? '17:00');
+    graceController = TextEditingController(
+      text: (p?.allowedDelayTime ?? 15).toString(),
+    );
+
+    if (p != null) {
+      remoteDays.addAll(p.allowedDays);
+      onsiteDays.addAll(p.onsiteDays);
+    } else {
+      if (policyType == 'onsite') {
+        onsiteDays.addAll(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']);
+      } else if (policyType == 'hybrid') {
+        remoteDays.addAll(['Sunday', 'Tuesday', 'Thursday']);
+        onsiteDays.addAll(['Monday', 'Wednesday']);
+      } else {
+        remoteDays.addAll(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']);
+      }
+    }
   }
 
   @override
@@ -74,7 +95,10 @@ class _RemoteWorkPolicySheetWidgetState
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.existingPolicy != null;
     final isHybrid = policyType == 'hybrid';
+    final isOnsite = policyType == 'onsite';
+
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 16.h),
@@ -86,7 +110,9 @@ class _RemoteWorkPolicySheetWidgetState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'remoteWork.addPolicy'.tr(context: context),
+                    isEditing
+                        ? 'remoteWork.editPolicy'.tr(context: context)
+                        : 'remoteWork.addPolicy'.tr(context: context),
                     style: AppTextStyles.font18Bold,
                   ),
                   IconButton(
@@ -98,20 +124,25 @@ class _RemoteWorkPolicySheetWidgetState
               const Divider(color: AppColors.border),
               hSpace(14),
               Text(
-                (isHybrid
-                        ? 'remoteWork.hybridPolicy'
-                        : 'remoteWork.remotePolicy')
-                    .tr(context: context),
+                isOnsite
+                    ? 'remoteWork.onsitePolicy'.tr(context: context)
+                    : (isHybrid
+                        ? 'remoteWork.hybridPolicy'.tr(context: context)
+                        : 'remoteWork.remotePolicy'.tr(context: context)),
                 style: AppTextStyles.font14SemiBold.copyWith(
-                  color: isHybrid ? AppColors.info : AppColors.brandPrimary,
+                  color: isOnsite
+                      ? AppColors.brandPrimary
+                      : (isHybrid ? AppColors.info : AppColors.brandPrimary),
                 ),
               ),
               hSpace(14),
               SupervisorCreateTaskFieldWidget(
                 labelKey: 'remoteWork.policyName',
-                hintKey: isHybrid
-                    ? 'remoteWork.hybridPolicyHint'
-                    : 'remoteWork.remotePolicyHint',
+                hintKey: isOnsite
+                    ? 'remoteWork.onsitePolicyHint'
+                    : (isHybrid
+                        ? 'remoteWork.hybridPolicyHint'
+                        : 'remoteWork.remotePolicyHint'),
                 controller: nameController,
               ),
               hSpace(16),
@@ -162,52 +193,54 @@ class _RemoteWorkPolicySheetWidgetState
                 hintKey: 'admin.shifts.policies.graceHint',
                 controller: graceController,
               ),
-              hSpace(16),
-              Text(
-                'remoteWork.remoteDays'.tr(context: context),
-                style: AppTextStyles.font12Medium,
-              ),
-              hSpace(8),
-              Wrap(
-                spacing: 6.w,
-                runSpacing: 6.h,
-                children: [
-                  for (final day in dayKeys)
-                    InkWell(
-                      onTap: () => setState(() {
-                        if (remoteDays.contains(day)) {
-                          remoteDays.remove(day);
-                        } else {
-                          remoteDays.add(day);
-                        }
-                      }),
-                      borderRadius: BorderRadius.circular(8.r),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 7.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: remoteDays.contains(day)
-                              ? AppColors.brandPrimary
-                              : AppColors.pageBackground,
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Text(
-                          'admin.shifts.days.${dayTranslationKeys[day]}'.tr(
-                            context: context,
+              if (!isOnsite) ...[
+                hSpace(16),
+                Text(
+                  'remoteWork.remoteDays'.tr(context: context),
+                  style: AppTextStyles.font12Medium,
+                ),
+                hSpace(8),
+                Wrap(
+                  spacing: 6.w,
+                  runSpacing: 6.h,
+                  children: [
+                    for (final day in dayKeys)
+                      InkWell(
+                        onTap: () => setState(() {
+                          if (remoteDays.contains(day)) {
+                            remoteDays.remove(day);
+                          } else {
+                            remoteDays.add(day);
+                          }
+                        }),
+                        borderRadius: BorderRadius.circular(8.r),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 7.h,
                           ),
-                          style: AppTextStyles.font11Medium.copyWith(
+                          decoration: BoxDecoration(
                             color: remoteDays.contains(day)
-                                ? AppColors.white
-                                : AppColors.textSecondary,
+                                ? AppColors.brandPrimary
+                                : AppColors.pageBackground,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Text(
+                            'admin.shifts.days.${dayTranslationKeys[day]}'.tr(
+                              context: context,
+                            ),
+                            style: AppTextStyles.font11Medium.copyWith(
+                              color: remoteDays.contains(day)
+                                  ? AppColors.white
+                                  : AppColors.textSecondary,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                ],
-              ),
-              if (isHybrid) ...[
+                  ],
+                ),
+              ],
+              if (isHybrid || isOnsite) ...[
                 hSpace(16),
                 Text(
                   'remoteWork.onsiteDays'.tr(context: context),
@@ -271,8 +304,7 @@ class _RemoteWorkPolicySheetWidgetState
                       text: 'common.save'.tr(context: context),
                       isLoading: isSubmitting,
                       onTap: () async {
-                        if (remoteDays.isEmpty ||
-                            (isHybrid && onsiteDays.isEmpty)) {
+                        if (!isOnsite && remoteDays.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -283,30 +315,64 @@ class _RemoteWorkPolicySheetWidgetState
                           );
                           return;
                         }
-                        setState(() => isSubmitting = true);
-                        final saved = await context
-                            .read<RemoteWorkCubit>()
-                            .createPolicy(
-                              name: nameController.text.trim().isEmpty
-                                  ? (isHybrid
-                                        ? 'remoteWork.hybridPolicy'.tr(
-                                            context: context,
-                                          )
-                                        : 'remoteWork.remotePolicy'.tr(
-                                            context: context,
-                                          ))
-                                  : nameController.text.trim(),
-                              policyType: policyType,
-                              allowedDays: remoteDays.toList(),
-                              onsiteDays: isHybrid
-                                  ? onsiteDays.toList()
-                                  : const [],
-                              start: startController.text.trim(),
-                              end: endController.text.trim(),
-                              allowedDelayTime: int.tryParse(
-                                graceController.text.trim(),
+                        if (isHybrid && onsiteDays.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'remoteWork.daysRequired'.tr(context: context),
                               ),
-                            );
+                              backgroundColor: AppColors.error,
+                            ),
+                          );
+                          return;
+                        }
+
+                        setState(() => isSubmitting = true);
+                        final cubit = context.read<RemoteWorkCubit>();
+                        final name = nameController.text.trim().isEmpty
+                            ? (isOnsite
+                                ? 'remoteWork.onsitePolicy'.tr(context: context)
+                                : (isHybrid
+                                    ? 'remoteWork.hybridPolicy'.tr(context: context)
+                                    : 'remoteWork.remotePolicy'.tr(context: context)))
+                            : nameController.text.trim();
+
+                        final defaultDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
+                        final effectiveAllowedDays = isOnsite
+                            ? (onsiteDays.isNotEmpty ? onsiteDays.toList() : defaultDays)
+                            : remoteDays.toList();
+                        final effectiveOnsiteDays = (isOnsite || isHybrid)
+                            ? (onsiteDays.isNotEmpty ? onsiteDays.toList() : defaultDays)
+                            : <String>[];
+
+                        final bool saved;
+                        if (isEditing) {
+                          saved = await cubit.updatePolicy(
+                            id: widget.existingPolicy!.id,
+                            name: name,
+                            policyType: policyType,
+                            allowedDays: effectiveAllowedDays,
+                            onsiteDays: effectiveOnsiteDays,
+                            start: startController.text.trim(),
+                            end: endController.text.trim(),
+                            allowedDelayTime: int.tryParse(
+                              graceController.text.trim(),
+                            ),
+                          );
+                        } else {
+                          saved = await cubit.createPolicy(
+                            name: name,
+                            policyType: policyType,
+                            allowedDays: effectiveAllowedDays,
+                            onsiteDays: effectiveOnsiteDays,
+                            start: startController.text.trim(),
+                            end: endController.text.trim(),
+                            allowedDelayTime: int.tryParse(
+                              graceController.text.trim(),
+                            ),
+                          );
+                        }
+
                         if (!context.mounted) return;
                         if (saved) Navigator.pop(context);
                         setState(() => isSubmitting = false);

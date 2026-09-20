@@ -1,5 +1,6 @@
 import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import '../apis/remote_work_api_service.dart';
 import '../models/remote_work_policy_model.dart';
 import '../models/remote_work_request_model.dart';
@@ -78,6 +79,49 @@ class RemoteWorkRepoImpl implements RemoteWorkRepo {
   @override
   Future<ApiResult<void>> deactivatePolicy(String id) =>
       _run(() => api.deactivatePolicy(id));
+
+  @override
+  Future<ApiResult<void>> updatePolicy({
+    required String id,
+    required String name,
+    required List<String> allowedDays,
+    required String policyType,
+    List<String> onsiteDays = const [],
+    String? workingHoursStart,
+    String? workingHoursEnd,
+    int? allowedDelayTime,
+    int? maxDaysPerWeek,
+  }) => _run(
+    () => api.updatePolicy(id, {
+      'name': name,
+      'policyType': policyType,
+      'allowedDays': allowedDays,
+      'onsiteDays': onsiteDays,
+      'workingHoursStart': workingHoursStart,
+      'workingHoursEnd': workingHoursEnd,
+      'allowedDelayTime': allowedDelayTime,
+      'maxDaysPerWeek': maxDaysPerWeek,
+    }),
+  );
+
+  @override
+  Future<ApiResult<List<EmployeeModel>>> getPolicyEmployees(String policyId) async {
+    try {
+      final response = await api.getPolicyEmployees(policyId) as Map<String, dynamic>;
+      final value = response['value'];
+      final items = value is List ? value : (value is Map<String, dynamic> ? value['items'] : null);
+      return ApiResult.success(
+        items is List
+            ? items
+                .whereType<Map<String, dynamic>>()
+                .map(EmployeeModel.fromJson)
+                .toList()
+            : const [],
+      );
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
 
   @override
   Future<ApiResult<void>> createRequest({

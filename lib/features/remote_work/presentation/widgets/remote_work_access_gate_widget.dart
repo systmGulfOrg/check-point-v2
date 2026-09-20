@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:check_point_v2/core/core.dart';
 import '../cubit/employee_work_access_cubit.dart';
 import '../cubit/employee_work_access_state.dart';
@@ -21,6 +22,7 @@ class RemoteWorkAccessGateWidget extends StatelessWidget {
       return RemoteWorkTabsWidget(
         isAdmin: isAdmin,
         canReview: canReview,
+        showOnsite: true,
         showRemote: true,
         showHybrid: true,
       );
@@ -29,10 +31,20 @@ class RemoteWorkAccessGateWidget extends StatelessWidget {
     return BlocBuilder<EmployeeWorkAccessCubit, EmployeeWorkAccessState>(
       builder: (context, state) => switch (state) {
         EmployeeWorkAccessInitial() || EmployeeWorkAccessLoading() =>
-          const Center(child: CircularProgressIndicator()),
+          Skeletonizer(
+            enabled: true,
+            child: RemoteWorkTabsWidget(
+              isAdmin: isAdmin,
+              canReview: canReview,
+              showOnsite: true,
+              showRemote: true,
+              showHybrid: false,
+            ),
+          ),
         EmployeeWorkAccessAllowed(:final workSystem) => RemoteWorkTabsWidget(
           isAdmin: isAdmin,
           canReview: canReview,
+          showOnsite: workSystem == 'onsite',
           showRemote: workSystem == 'remote',
           showHybrid: workSystem == 'hybrid',
         ),

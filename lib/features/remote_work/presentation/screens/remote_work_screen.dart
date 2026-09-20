@@ -20,8 +20,12 @@ class RemoteWorkScreen extends StatelessWidget {
             backgroundColor: AppColors.white,
             appBar: AppBar(
               backgroundColor: AppColors.white,
+              foregroundColor: AppColors.textPrimary,
               elevation: 0,
-              title: Text('remoteWork.title'.tr(context: context)),
+              title: Text(
+                'remoteWork.title'.tr(context: context),
+                style: AppTextStyles.font18Bold,
+              ),
             ),
             body: RemoteWorkAccessGateWidget(
               isAdmin: isAdmin,

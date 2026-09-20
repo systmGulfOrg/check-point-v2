@@ -7,13 +7,15 @@ class RemoteWorkTabsWidget extends StatelessWidget {
   const RemoteWorkTabsWidget({
     required this.isAdmin,
     required this.canReview,
-    required this.showRemote,
-    required this.showHybrid,
+    this.showOnsite = true,
+    this.showRemote = true,
+    this.showHybrid = true,
     super.key,
   });
 
   final bool isAdmin;
   final bool canReview;
+  final bool showOnsite;
   final bool showRemote;
   final bool showHybrid;
 
@@ -21,6 +23,17 @@ class RemoteWorkTabsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final tabs = <Tab>[];
     final views = <Widget>[];
+
+    if (showOnsite) {
+      tabs.add(Tab(text: 'remoteWork.onsiteTab'.tr(context: context)));
+      views.add(
+        RemoteWorkBlocBuilderWidget(
+          isAdmin: isAdmin,
+          canReview: canReview,
+          policyType: 'onsite',
+        ),
+      );
+    }
     if (showRemote) {
       tabs.add(Tab(text: 'remoteWork.remoteTab'.tr(context: context)));
       views.add(
@@ -54,7 +67,9 @@ class RemoteWorkTabsWidget extends StatelessWidget {
               tabs: tabs,
             ),
           Expanded(
-            child: tabs.length == 1 ? views.first : TabBarView(children: views),
+            child: tabs.isEmpty
+                ? const SizedBox.shrink()
+                : (tabs.length == 1 ? views.first : TabBarView(children: views)),
           ),
         ],
       ),
