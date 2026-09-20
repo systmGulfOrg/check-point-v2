@@ -9,7 +9,3 @@ part of 'department_request_model.dart';
 DepartmentRequestModel _$DepartmentRequestModelFromJson(
   Map<String, dynamic> json,
 ) => DepartmentRequestModel(departmentName: json['departmentName'] as String);
-
-Map<String, dynamic> _$DepartmentRequestModelToJson(
-  DepartmentRequestModel instance,
-) => <String, dynamic>{'departmentName': instance.departmentName};

@@ -54,10 +54,9 @@ class AdminManageScreen extends StatelessWidget {
               icon: Icons.calendar_month_outlined,
               iconColor: AppColors.brandPrimary,
               iconBackgroundColor: AppColors.softBrandBackground,
-              titleKey: 'admin.manage.shiftsPolicies',
-              subtitleKey: 'admin.manage.shiftsPoliciesSub',
-              onTap: () =>
-                  Navigator.pushNamed(context, AppRoutes.adminShiftsPolicies),
+              titleKey: 'admin.manage.remoteWork',
+              subtitleKey: 'admin.manage.remoteWorkSub',
+              onTap: () => Navigator.pushNamed(context, AppRoutes.remoteWork),
             ),
             hSpace(10),
             AdminManageCardWidget(
@@ -106,15 +105,6 @@ class AdminManageScreen extends StatelessWidget {
               subtitleKey: 'admin.manage.attendanceRecordsSub',
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.adminAttendance),
-            ),
-            hSpace(10),
-            AdminManageCardWidget(
-              icon: Icons.home_work_outlined,
-              iconColor: AppColors.info,
-              iconBackgroundColor: AppColors.softBlueBackground,
-              titleKey: 'admin.manage.remoteWork',
-              subtitleKey: 'admin.manage.remoteWorkSub',
-              onTap: () => Navigator.pushNamed(context, AppRoutes.remoteWork),
             ),
           ],
         ),

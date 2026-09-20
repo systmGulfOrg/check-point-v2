@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import 'package:skeletonizer/skeletonizer.dart';
+
 import '../../../../core/core.dart';
 import '../../../../core/widgets/custom_dialog_widget.dart';
 import '../cubit/pending_devices/admin_pending_devices_cubit.dart';
@@ -96,13 +98,54 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
             );
           },
           builder: (context, state) {
+            final skeletonWidget = Skeletonizer(
+              enabled: true,
+              child: ListView.builder(
+                padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+                itemCount: 3,
+                itemBuilder: (context, index) => Container(
+                  margin: EdgeInsets.only(bottom: 12.h),
+                  padding: EdgeInsets.all(16.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          CircleAvatar(radius: 20.r, child: const Text('O')),
+                          wSpace(12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Employee Name Placeholder', style: AppTextStyles.font16Bold),
+                              Text('Model: Placeholder Phone', style: AppTextStyles.font12Regular),
+                            ],
+                          ),
+                        ],
+                      ),
+                      hSpace(12),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(12.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.pageBackground,
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Text('Device ID: 00000000-0000-0000-0000-000000000000'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+
             return state.map(
-              initial: (_) => const Center(
-                child: CircularProgressIndicator(color: AppColors.brandPrimary),
-              ),
-              loading: (_) => const Center(
-                child: CircularProgressIndicator(color: AppColors.brandPrimary),
-              ),
+              initial: (_) => skeletonWidget,
+              loading: (_) => skeletonWidget,
               error: (state) => Center(
                 child: Text(
                   state.message,

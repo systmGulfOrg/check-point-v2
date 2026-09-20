@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
 import 'admin_requests_empty_state_widget.dart';
@@ -18,8 +20,26 @@ class AdminSupervisorsPermissionListBlocBuilderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
       builder: (context, state) => switch (state) {
-        AdminEmployeesStateLoading() || AdminEmployeesStateInitial() =>
-          const Center(child: CircularProgressIndicator()),
+        AdminEmployeesStateLoading() || AdminEmployeesStateInitial() => Skeletonizer(
+            enabled: true,
+            child: AdminSupervisorsPermissionListWidget(
+              supervisors: const [
+                EmployeeModel(
+                  id: '1',
+                  name: 'Loading Supervisor',
+                  position: 'Department Manager',
+                  employeeCode: 'SUP-001',
+                ),
+                EmployeeModel(
+                  id: '2',
+                  name: 'Loading Supervisor 2',
+                  position: 'Team Leader',
+                  employeeCode: 'SUP-002',
+                ),
+              ],
+              onSupervisorTap: (_) {},
+            ),
+          ),
         AdminEmployeesStateError(:final messageKey) =>
           AdminRequestsEmptyStateWidget(messageKey: messageKey),
         AdminEmployeesStateSuccess(:final employees) ||

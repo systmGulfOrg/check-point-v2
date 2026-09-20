@@ -24,9 +24,11 @@ class AdminPermissionDetailsScreen extends StatelessWidget {
           style: AppTextStyles.font18Bold,
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
-        child: const AdminPermissionsDetailsBlocBuilderWidget(),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 0),
+          child: const AdminPermissionsDetailsBlocBuilderWidget(),
+        ),
       ),
     );
   }

@@ -24,17 +24,117 @@ class AdminPermissionsDetailsContentWidget extends StatelessWidget {
   final List<String> selectedPermissions;
   final bool saving;
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildAdminBanner(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        color: AppColors.softBrandBackground,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: AppColors.brandPrimary.withValues(alpha: 0.25),
+        ),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            Icons.verified_user_outlined,
+            color: AppColors.brandPrimary,
+            size: 42.r,
+          ),
+          hSpace(10),
+          Text(
+            'admin.permissions.adminAccess'.tr(context: context),
+            style: AppTextStyles.font16Bold,
+          ),
+          hSpace(4),
+          Text(
+            'admin.permissions.adminDescription'.tr(context: context),
+            textAlign: TextAlign.center,
+            style: AppTextStyles.font12Regular.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRolePermissionsList(
+    BuildContext context,
+    String role,
+  ) {
     final cubit = context.read<AdminPermissionsCubit>();
     final grouped = cubit.groupedPermissions(catalogue);
-    final isAdmin = cubit.isAdmin(user);
-    final role =
-        user.user.role ?? 'admin.permissions.employee'.tr(context: context);
-    final contact =
-        user.email ??
+
+    return ListView(
+      padding: EdgeInsets.only(top: 14.h, bottom: 24.h),
+      children: [
+        ...grouped.entries.map(
+          (entry) => Padding(
+            padding: EdgeInsets.only(bottom: 14.h),
+            child: Container(
+              padding: EdgeInsets.all(12.r),
+              decoration: BoxDecoration(
+                color: AppColors.pageBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(entry.key, style: AppTextStyles.font14Bold),
+                      AdminPermissionBadgeWidget(
+                        label: '${entry.value.length}',
+                        color: AppColors.info,
+                        background: AppColors.softBlueBackground,
+                      ),
+                    ],
+                  ),
+                  hSpace(8),
+                  ...entry.value.map(
+                    (permission) {
+                      final isBase = cubit.isBasePermission(permission);
+                      final isSelected = selectedPermissions.contains(permission);
+                      return AdminPermissionsPermissionRowWidget(
+                        permission: permission,
+                        enabled: isSelected || isBase,
+                        baseRole: isBase,
+                        onChanged: () => cubit.togglePermission(permission),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        CustomButton(
+          text: 'admin.permissions.save'.tr(context: context),
+          onTap: () async {
+            final saved = await cubit.saveSelected();
+            if (saved && context.mounted) Navigator.pop(context);
+          },
+          isLoading: saving,
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final roles = user.user.allRoles.isEmpty ? ['Employee'] : user.user.allRoles;
+    final isPureAdmin = roles.length == 1 && roles.first == 'Admin';
+    final hasMultipleRoles = roles.length > 1;
+
+    final roleText = roles.join(', ');
+    final contact = user.email ??
         user.employeeCode ??
         'admin.permissions.notAvailable'.tr(context: context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -55,7 +155,7 @@ class AdminPermissionsDetailsContentWidget extends StatelessWidget {
                 children: [
                   Text(user.name, style: AppTextStyles.font16Bold),
                   Text(
-                    '$role • $contact',
+                    '$roleText • $contact',
                     style: AppTextStyles.font12Regular.copyWith(
                       color: AppColors.placeholder,
                     ),
@@ -65,91 +165,44 @@ class AdminPermissionsDetailsContentWidget extends StatelessWidget {
             ),
           ],
         ),
-        hSpace(18),
-        if (isAdmin)
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(16.r),
-            decoration: BoxDecoration(
-              color: AppColors.softBrandBackground,
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(
-                color: AppColors.brandPrimary.withValues(alpha: 0.25),
-              ),
-            ),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.verified_user_outlined,
-                  color: AppColors.brandPrimary,
-                  size: 42.r,
-                ),
-                hSpace(10),
-                Text(
-                  'admin.permissions.adminAccess'.tr(context: context),
-                  style: AppTextStyles.font16Bold,
-                ),
-                hSpace(4),
-                Text(
-                  'admin.permissions.adminDescription'.tr(context: context),
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.font12Regular.copyWith(
-                    color: AppColors.textSecondary,
+        hSpace(14),
+        if (isPureAdmin)
+          Expanded(child: SingleChildScrollView(child: _buildAdminBanner(context)))
+        else if (hasMultipleRoles)
+          Expanded(
+            child: DefaultTabController(
+              length: roles.length,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TabBar(
+                    isScrollable: true,
+                    labelColor: AppColors.brandPrimary,
+                    unselectedLabelColor: AppColors.textSecondary,
+                    indicatorColor: AppColors.brandPrimary,
+                    tabs: roles.map((r) => Tab(text: r)).toList(),
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: TabBarView(
+                      children: roles.map((r) {
+                        if (r == 'Admin') {
+                          return Padding(
+                            padding: EdgeInsets.only(top: 16.h),
+                            child: SingleChildScrollView(
+                              child: _buildAdminBanner(context),
+                            ),
+                          );
+                        }
+                        return _buildRolePermissionsList(context, r);
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
             ),
           )
         else
-          ...grouped.entries.map(
-            (entry) => Padding(
-              padding: EdgeInsets.only(bottom: 14.h),
-              child: Container(
-                padding: EdgeInsets.all(12.r),
-                decoration: BoxDecoration(
-                  color: AppColors.pageBackground,
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: AppColors.border),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(entry.key, style: AppTextStyles.font14Bold),
-                        AdminPermissionBadgeWidget(
-                          label: '${entry.value.length}',
-                          color: AppColors.info,
-                          background: AppColors.softBlueBackground,
-                        ),
-                      ],
-                    ),
-                    hSpace(8),
-                    ...entry.value.map(
-                      (permission) => AdminPermissionsPermissionRowWidget(
-                        permission: permission,
-                        enabled:
-                            selectedPermissions.contains(permission) ||
-                            cubit.isBasePermission(permission),
-                        baseRole: cubit.isBasePermission(permission),
-                        onChanged: () => cubit.togglePermission(permission),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        if (!isAdmin)
-          CustomButton(
-            text: 'admin.permissions.save'.tr(context: context),
-            onTap: () async {
-              final saved = await cubit.saveSelected();
-              if (saved && context.mounted) Navigator.pop(context);
-            },
-            isLoading: saving,
-          ),
+          Expanded(child: _buildRolePermissionsList(context, roles.first)),
       ],
     );
   }

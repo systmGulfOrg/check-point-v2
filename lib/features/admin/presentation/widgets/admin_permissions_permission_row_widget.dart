@@ -22,33 +22,42 @@ class AdminPermissionsPermissionRowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final label = permission.split('.').last.replaceAll('_', ' ');
-    return InkWell(
-      onTap: baseRole ? null : onChanged,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 7.h),
-        child: Row(
-          children: [
-            Checkbox(
-              value: enabled,
-              onChanged: baseRole ? null : (_) => onChanged(),
-              activeColor: AppColors.brandPrimary,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(label, style: AppTextStyles.font13SemiBold),
-                  Text(permission, style: AppTextStyles.font11Regular.copyWith(color: AppColors.placeholder)),
-                ],
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: baseRole ? null : onChanged,
+        borderRadius: BorderRadius.circular(6.r),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 4.w),
+          child: Row(
+            children: [
+              Checkbox(
+                value: enabled,
+                onChanged: baseRole ? null : (_) => onChanged(),
+                activeColor: AppColors.brandPrimary,
               ),
-            ),
-            if (baseRole)
-              AdminPermissionBadgeWidget(
-                label: 'admin.permissions.base'.tr(context: context),
-                color: AppColors.info,
-                background: AppColors.softBlueBackground,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(label, style: AppTextStyles.font13SemiBold),
+                    Text(
+                      permission,
+                      style: AppTextStyles.font11Regular.copyWith(
+                        color: AppColors.placeholder,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-          ],
+              if (baseRole)
+                AdminPermissionBadgeWidget(
+                  label: 'admin.permissions.base'.tr(context: context),
+                  color: AppColors.info,
+                  background: AppColors.softBlueBackground,
+                ),
+            ],
+          ),
         ),
       ),
     );

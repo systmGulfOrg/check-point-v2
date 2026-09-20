@@ -1,13 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import '../../data/models/permissions/admin_permission_employee_model.dart';
+import '../../data/models/permissions/admin_permission_user_model.dart';
 import '../cubit/permissions/admin_permissions_cubit.dart';
 import '../cubit/permissions/admin_permissions_state.dart';
-import 'admin_requests_empty_state_widget.dart';
 import 'admin_permissions_user_card_widget.dart';
+import 'admin_requests_empty_state_widget.dart';
 
 class AdminPermissionsBlocBuilderWidget extends StatelessWidget {
   const AdminPermissionsBlocBuilderWidget({
@@ -21,8 +23,39 @@ class AdminPermissionsBlocBuilderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AdminPermissionsCubit, AdminPermissionsState>(
       builder: (context, state) => switch (state) {
-        AdminPermissionsInitial() || AdminPermissionsLoading() =>
-          const Center(child: CircularProgressIndicator()),
+        AdminPermissionsInitial() || AdminPermissionsLoading() => Skeletonizer(
+            enabled: true,
+            child: Column(
+              children: [
+                CustomTextFormField(
+                  hintText: 'admin.permissions.search'.tr(context: context),
+                  prefixIcon: const Icon(Icons.search),
+                ),
+                hSpace(14),
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: 4,
+                  separatorBuilder: (_, _) => hSpace(10),
+                  itemBuilder: (_, index) => AdminPermissionsUserCardWidget(
+                    user: AdminPermissionEmployeeModel(
+                      id: '$index',
+                      name: 'Loading Employee Name',
+                      email: 'employee@company.com',
+                      employeeCode: 'EMP-00$index',
+                      user: const AdminPermissionUserModel(
+                        id: '1',
+                        role: 'Supervisor',
+                        roles: ['Supervisor'],
+                        isActive: true,
+                      ),
+                    ),
+                    onManage: () {},
+                  ),
+                ),
+              ],
+            ),
+          ),
         AdminPermissionsError(:final messageKey) =>
           AdminRequestsEmptyStateWidget(messageKey: messageKey),
         AdminPermissionsSuccess(:final users, :final searchQuery) =>

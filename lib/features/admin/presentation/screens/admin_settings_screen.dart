@@ -6,6 +6,7 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_profile_card_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/edit_profile_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_section_card_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_sign_out_button_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_tile_widget.dart';
@@ -52,6 +53,7 @@ class AdminSettingsScreen extends StatelessWidget {
                   icon: Icons.person_outline_rounded,
                   titleKey: 'admin.settings.profileInfo',
                   valueKey: 'admin.settings.userName',
+                  onTap: () => showEditProfileSheet(context),
                 ),
                 AdminSettingsTileWidget(
                   icon: Icons.key_outlined,

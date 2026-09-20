@@ -262,7 +262,7 @@ class _AdminFullMapPickerDialogWidgetState
         elevation: 0,
         title: Text(
           'admin.locations.create.geofenceTitle'.tr(context: context),
-          style: AppTextStyles.font16Bold,
+          style: AppTextStyles.font18Bold,
         ),
         actions: [
           TextButton(

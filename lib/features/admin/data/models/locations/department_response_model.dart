@@ -41,5 +41,8 @@ class DepartmentModel {
   final String? departmentName;
 
   factory DepartmentModel.fromJson(Map<String, dynamic> json) =>
-      _$DepartmentModelFromJson(json);
+      _$DepartmentModelFromJson({
+        ...json,
+        'departmentName': json['departmentName'] ?? json['name'],
+      });
 }
