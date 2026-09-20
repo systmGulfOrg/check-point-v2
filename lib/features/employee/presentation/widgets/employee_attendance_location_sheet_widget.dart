@@ -75,17 +75,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
   }
 
   Set<String> get allowedTypes {
-    if (widget.isCheckOut || isWorkScheduleLoading) {
-      return const {'Branch', 'Customer', 'Site', 'Remote'};
-    }
-    return switch (context
-        .read<EmployeeAttendanceCubit>()
-        .employeeProfile
-        ?.todayWorkMode) {
-      'remote' => const {'Remote'},
-      'onsite' => const {'Branch', 'Customer', 'Site'},
-      _ => const <String>{},
-    };
+    return const {'Branch', 'Customer', 'Site', 'Remote'};
   }
 
   @override
@@ -219,17 +209,6 @@ class _EmployeeAttendanceLocationSheetWidgetState
   }
 
   Future<void> _submit() async {
-    if (!widget.isCheckOut &&
-        (isWorkScheduleLoading || !allowedTypes.contains(type))) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'attendance.workScheduleUnavailable'.tr(context: context),
-          ),
-        ),
-      );
-      return;
-    }
     if (type != 'Remote' && !isInside) {
       final messageKey = userLocation == null
           ? 'errors.locationUnavailable'
