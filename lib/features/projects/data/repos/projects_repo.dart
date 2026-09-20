@@ -6,6 +6,11 @@ import '../models/project_models.dart';
 abstract class ProjectsRepo {
   Future<ApiResult<List<ProjectModel>>> getProjects();
   Future<ApiResult<ProjectModel>> createProject(Map<String, dynamic> body);
+  Future<ApiResult<ProjectModel>> updateProject(
+    String id,
+    Map<String, dynamic> body,
+  );
+  Future<ApiResult<void>> deleteProject(String id);
   Future<ApiResult<ProjectStatusModel>> createStatus(
     String projectId,
     String name,

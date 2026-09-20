@@ -277,8 +277,14 @@ mixin _$ProjectModel {
   String? get description => throw _privateConstructorUsedError;
   String? get startDate => throw _privateConstructorUsedError;
   String? get endDate => throw _privateConstructorUsedError;
-  String? get departmentId => throw _privateConstructorUsedError;
+  String? get departmentId =>
+      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
+  @JsonKey(readValue: _readDepartmentName)
   String? get departmentName => throw _privateConstructorUsedError;
+  String? get managerId =>
+      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
+  @JsonKey(readValue: _readManagerName)
+  String? get managerName => throw _privateConstructorUsedError;
   List<ProjectStatusModel> get statuses => throw _privateConstructorUsedError;
 
   /// Serializes this ProjectModel to a JSON map.
@@ -306,7 +312,9 @@ abstract class $ProjectModelCopyWith<$Res> {
     String? startDate,
     String? endDate,
     String? departmentId,
-    String? departmentName,
+    @JsonKey(readValue: _readDepartmentName) String? departmentName,
+    String? managerId,
+    @JsonKey(readValue: _readManagerName) String? managerName,
     List<ProjectStatusModel> statuses,
   });
 }
@@ -334,6 +342,8 @@ class _$ProjectModelCopyWithImpl<$Res, $Val extends ProjectModel>
     Object? endDate = freezed,
     Object? departmentId = freezed,
     Object? departmentName = freezed,
+    Object? managerId = freezed,
+    Object? managerName = freezed,
     Object? statuses = null,
   }) {
     return _then(
@@ -370,6 +380,14 @@ class _$ProjectModelCopyWithImpl<$Res, $Val extends ProjectModel>
                 ? _value.departmentName
                 : departmentName // ignore: cast_nullable_to_non_nullable
                       as String?,
+            managerId: freezed == managerId
+                ? _value.managerId
+                : managerId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            managerName: freezed == managerName
+                ? _value.managerName
+                : managerName // ignore: cast_nullable_to_non_nullable
+                      as String?,
             statuses: null == statuses
                 ? _value.statuses
                 : statuses // ignore: cast_nullable_to_non_nullable
@@ -397,7 +415,9 @@ abstract class _$$ProjectModelImplCopyWith<$Res>
     String? startDate,
     String? endDate,
     String? departmentId,
-    String? departmentName,
+    @JsonKey(readValue: _readDepartmentName) String? departmentName,
+    String? managerId,
+    @JsonKey(readValue: _readManagerName) String? managerName,
     List<ProjectStatusModel> statuses,
   });
 }
@@ -424,6 +444,8 @@ class __$$ProjectModelImplCopyWithImpl<$Res>
     Object? endDate = freezed,
     Object? departmentId = freezed,
     Object? departmentName = freezed,
+    Object? managerId = freezed,
+    Object? managerName = freezed,
     Object? statuses = null,
   }) {
     return _then(
@@ -460,6 +482,14 @@ class __$$ProjectModelImplCopyWithImpl<$Res>
             ? _value.departmentName
             : departmentName // ignore: cast_nullable_to_non_nullable
                   as String?,
+        managerId: freezed == managerId
+            ? _value.managerId
+            : managerId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        managerName: freezed == managerName
+            ? _value.managerName
+            : managerName // ignore: cast_nullable_to_non_nullable
+                  as String?,
         statuses: null == statuses
             ? _value._statuses
             : statuses // ignore: cast_nullable_to_non_nullable
@@ -480,7 +510,9 @@ class _$ProjectModelImpl implements _ProjectModel {
     this.startDate,
     this.endDate,
     this.departmentId,
-    this.departmentName,
+    @JsonKey(readValue: _readDepartmentName) this.departmentName,
+    this.managerId,
+    @JsonKey(readValue: _readManagerName) this.managerName,
     final List<ProjectStatusModel> statuses = const <ProjectStatusModel>[],
   }) : _statuses = statuses;
 
@@ -501,8 +533,16 @@ class _$ProjectModelImpl implements _ProjectModel {
   final String? endDate;
   @override
   final String? departmentId;
+  // ignore: invalid_annotation_target
   @override
+  @JsonKey(readValue: _readDepartmentName)
   final String? departmentName;
+  @override
+  final String? managerId;
+  // ignore: invalid_annotation_target
+  @override
+  @JsonKey(readValue: _readManagerName)
+  final String? managerName;
   final List<ProjectStatusModel> _statuses;
   @override
   @JsonKey()
@@ -514,7 +554,7 @@ class _$ProjectModelImpl implements _ProjectModel {
 
   @override
   String toString() {
-    return 'ProjectModel(id: $id, name: $name, code: $code, description: $description, startDate: $startDate, endDate: $endDate, departmentId: $departmentId, departmentName: $departmentName, statuses: $statuses)';
+    return 'ProjectModel(id: $id, name: $name, code: $code, description: $description, startDate: $startDate, endDate: $endDate, departmentId: $departmentId, departmentName: $departmentName, managerId: $managerId, managerName: $managerName, statuses: $statuses)';
   }
 
   @override
@@ -534,6 +574,10 @@ class _$ProjectModelImpl implements _ProjectModel {
                 other.departmentId == departmentId) &&
             (identical(other.departmentName, departmentName) ||
                 other.departmentName == departmentName) &&
+            (identical(other.managerId, managerId) ||
+                other.managerId == managerId) &&
+            (identical(other.managerName, managerName) ||
+                other.managerName == managerName) &&
             const DeepCollectionEquality().equals(other._statuses, _statuses));
   }
 
@@ -549,6 +593,8 @@ class _$ProjectModelImpl implements _ProjectModel {
     endDate,
     departmentId,
     departmentName,
+    managerId,
+    managerName,
     const DeepCollectionEquality().hash(_statuses),
   );
 
@@ -575,7 +621,9 @@ abstract class _ProjectModel implements ProjectModel {
     final String? startDate,
     final String? endDate,
     final String? departmentId,
-    final String? departmentName,
+    @JsonKey(readValue: _readDepartmentName) final String? departmentName,
+    final String? managerId,
+    @JsonKey(readValue: _readManagerName) final String? managerName,
     final List<ProjectStatusModel> statuses,
   }) = _$ProjectModelImpl;
 
@@ -595,9 +643,15 @@ abstract class _ProjectModel implements ProjectModel {
   @override
   String? get endDate;
   @override
-  String? get departmentId;
+  String? get departmentId; // ignore: invalid_annotation_target
   @override
+  @JsonKey(readValue: _readDepartmentName)
   String? get departmentName;
+  @override
+  String? get managerId; // ignore: invalid_annotation_target
+  @override
+  @JsonKey(readValue: _readManagerName)
+  String? get managerName;
   @override
   List<ProjectStatusModel> get statuses;
 

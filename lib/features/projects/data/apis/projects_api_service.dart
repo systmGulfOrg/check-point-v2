@@ -15,6 +15,15 @@ abstract class ProjectsApiService {
   @POST('/api/v2/projects')
   Future<dynamic> createProject(@Body() Map<String, dynamic> body);
 
+  @PUT('/api/v2/projects/{id}')
+  Future<dynamic> updateProject(
+    @Path('id') String id,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @DELETE('/api/v2/projects/{id}')
+  Future<dynamic> deleteProject(@Path('id') String id);
+
   @POST('/api/v2/projects/{id}/statuses')
   Future<dynamic> createStatus(
     @Path('id') String projectId,

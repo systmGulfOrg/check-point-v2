@@ -54,6 +54,24 @@ class ProjectsRepoImpl implements ProjectsRepo {
   }
 
   @override
+  Future<ApiResult<ProjectModel>> updateProject(
+    String id,
+    Map<String, dynamic> body,
+  ) async {
+    try {
+      return ApiResult.success(
+        ProjectModel.fromJson(_value(await api.updateProject(id, body))),
+      );
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<void>> deleteProject(String id) =>
+      _run(() => api.deleteProject(id));
+
+  @override
   Future<ApiResult<ProjectStatusModel>> createStatus(
     String projectId,
     String name,

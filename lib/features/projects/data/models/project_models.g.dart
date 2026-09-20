@@ -35,7 +35,9 @@ _$ProjectModelImpl _$$ProjectModelImplFromJson(Map<String, dynamic> json) =>
       startDate: json['startDate'] as String?,
       endDate: json['endDate'] as String?,
       departmentId: json['departmentId'] as String?,
-      departmentName: json['departmentName'] as String?,
+      departmentName: _readDepartmentName(json, 'departmentName') as String?,
+      managerId: json['managerId'] as String?,
+      managerName: _readManagerName(json, 'managerName') as String?,
       statuses:
           (json['statuses'] as List<dynamic>?)
               ?.map(
@@ -55,6 +57,8 @@ Map<String, dynamic> _$$ProjectModelImplToJson(_$ProjectModelImpl instance) =>
       'endDate': instance.endDate,
       'departmentId': instance.departmentId,
       'departmentName': instance.departmentName,
+      'managerId': instance.managerId,
+      'managerName': instance.managerName,
       'statuses': instance.statuses,
     };
 

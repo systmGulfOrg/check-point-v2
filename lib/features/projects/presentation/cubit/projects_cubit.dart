@@ -26,6 +26,22 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     );
   }
 
+  Future<void> updateProject(String id, Map<String, dynamic> body) async {
+    final result = await repo.updateProject(id, body);
+    result.when(
+      success: (_) => loadProjects(),
+      failure: (failure) => emit(ProjectsState.error(failure.messageKey)),
+    );
+  }
+
+  Future<void> deleteProject(String id) async {
+    final result = await repo.deleteProject(id);
+    result.when(
+      success: (_) => loadProjects(),
+      failure: (failure) => emit(ProjectsState.error(failure.messageKey)),
+    );
+  }
+
   Future<void> openProject(ProjectModel project) async {
     final current = state;
     if (current is! ProjectsStateSuccess) return;

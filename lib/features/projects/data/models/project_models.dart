@@ -3,6 +3,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'project_models.freezed.dart';
 part 'project_models.g.dart';
 
+Object? _readDepartmentName(Map json, String key) =>
+    json['departmentName'] ??
+    (json['department'] is Map ? json['department']['name'] : null);
+
+Object? _readManagerName(Map json, String key) =>
+    json['managerName'] ??
+    (json['manager'] is Map ? json['manager']['name'] : null);
+
 @freezed
 class ProjectStatusModel with _$ProjectStatusModel {
   const factory ProjectStatusModel({
@@ -27,7 +35,11 @@ class ProjectModel with _$ProjectModel {
     String? startDate,
     String? endDate,
     String? departmentId,
-    String? departmentName,
+    // ignore: invalid_annotation_target
+    @JsonKey(readValue: _readDepartmentName) String? departmentName,
+    String? managerId,
+    // ignore: invalid_annotation_target
+    @JsonKey(readValue: _readManagerName) String? managerName,
     @Default(<ProjectStatusModel>[]) List<ProjectStatusModel> statuses,
   }) = _ProjectModel;
 
