@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/styles/app_colors.dart';
+import 'package:check_point_v2/core/styles/app_font_family.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 
 class AppTheme {
@@ -42,7 +43,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12.r),
         ),
       ),
-      fontFamily: 'Roboto',
+      fontFamily: AppFontFamily.primary,
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: AppColors.brandPrimary,

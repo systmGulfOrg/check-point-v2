@@ -15,6 +15,7 @@ class CustomButton extends StatelessWidget {
     this.textColor = AppColors.white,
     this.height = 48,
     this.gradient,
+    this.icon,
   });
 
   final String text;
@@ -25,6 +26,7 @@ class CustomButton extends StatelessWidget {
   final Color textColor;
   final double height;
   final Gradient? gradient;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +60,21 @@ class CustomButton extends StatelessWidget {
                     ),
                   ),
                 )
-              : Text(
-                  text,
-                  style: AppTextStyles.font16Bold.copyWith(color: textColor),
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (icon != null) ...[
+                      Icon(icon, color: textColor, size: 18.r),
+                      SizedBox(width: 6.w),
+                    ],
+                    Text(
+                      text,
+                      style: AppTextStyles.font16Bold.copyWith(
+                        color: textColor,
+                      ),
+                    ),
+                  ],
                 ),
         ),
       ),
