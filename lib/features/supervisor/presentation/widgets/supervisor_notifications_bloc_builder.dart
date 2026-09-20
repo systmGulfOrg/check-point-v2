@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import 'package:skeletonizer/skeletonizer.dart';
+
 import '../../../../core/core.dart';
 import '../../../notifications/presentation/cubit/notifications_cubit.dart';
 import '../../../notifications/presentation/cubit/notifications_state.dart';
@@ -16,7 +18,20 @@ class SupervisorNotificationsBlocBuilder extends StatelessWidget {
     return BlocBuilder<NotificationsCubit, NotificationsState>(
       builder: (context, state) => switch (state) {
         NotificationsInitial() => const SizedBox.shrink(),
-        NotificationsLoading() => const Center(child: CircularProgressIndicator()),
+        NotificationsLoading() => Skeletonizer(
+              enabled: true,
+              child: ListView.separated(
+                padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+                itemCount: 4,
+                separatorBuilder: (_, _) => hSpace(10),
+                itemBuilder: (_, _) => const SupervisorNotificationCardWidget(
+                  typeKey: 'Notification',
+                  titleKey: 'Loading Notification Title Placeholder',
+                  messageKey: 'Loading notification message details placeholder',
+                  isWarning: false,
+                ),
+              ),
+            ),
         NotificationsError(:final messageKey) => Center(child: Text(messageKey.tr())),
         NotificationsSuccess(:final notifications, :final unreadCount) => notifications.isEmpty
             ? Center(child: Text('common.noData'.tr()))

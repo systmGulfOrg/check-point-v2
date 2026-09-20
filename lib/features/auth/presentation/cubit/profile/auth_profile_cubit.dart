@@ -34,4 +34,43 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
       emit(const AuthProfileState.error('errors.profileLoadFailed'));
     }
   }
+
+  Future<void> updateProfile({
+    required String name,
+    required String username,
+  }) async {
+    try {
+      final token = await sessionStorage.readToken() ?? '';
+      final userId = await sessionStorage.readUserId() ?? '';
+      final role = await sessionStorage.readUserRole() ?? '';
+      final permissions = await sessionStorage.readPermissions();
+      final departmentId = await sessionStorage.readDepartmentId();
+      final branchId = await sessionStorage.readBranchId();
+
+      await sessionStorage.saveUserSession(
+        token: token,
+        userId: userId,
+        departmentId: departmentId,
+        branchId: branchId,
+        userName: name.isNotEmpty ? name : username,
+        role: role,
+        permissions: permissions,
+      );
+
+      emit(
+        AuthProfileState.success(
+          name: name,
+          userId: userId,
+          role: role,
+          username: username,
+          permissions: {
+            ...AppPermissions.defaultsForRole(role),
+            ...permissions,
+          }.toList(),
+        ),
+      );
+    } catch (_) {
+      emit(const AuthProfileState.error('errors.profileLoadFailed'));
+    }
+  }
 }

@@ -31,15 +31,15 @@ abstract class EmployeeApiService {
 
   // Attendance
   @POST(ApiConstants.employeeCheckIn)
-  Future<AdminAttendanceModel> checkIn(@Body() EmployeeCheckInRequestBody body);
+  Future<dynamic> checkIn(@Body() EmployeeCheckInRequestBody body);
 
   @POST(ApiConstants.employeeCheckInWithoutPlan)
-  Future<AdminAttendanceModel> checkInWithoutPlan(
+  Future<dynamic> checkInWithoutPlan(
     @Body() EmployeeCheckInRequestBody body,
   );
 
   @POST(ApiConstants.employeeCheckOut)
-  Future<AdminAttendanceModel> checkOut(
+  Future<dynamic> checkOut(
     @Body() EmployeeCheckOutRequestBody body,
   );
 

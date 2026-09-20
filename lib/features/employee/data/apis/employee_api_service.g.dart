@@ -18,13 +18,13 @@ class _EmployeeApiService implements EmployeeApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<AdminAttendanceModel> checkIn(EmployeeCheckInRequestBody body) async {
+  Future<dynamic> checkIn(EmployeeCheckInRequestBody body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body.toJson());
-    final _options = _setStreamType<AdminAttendanceModel>(
+    final _options = _setStreamType<dynamic>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -34,27 +34,19 @@ class _EmployeeApiService implements EmployeeApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late AdminAttendanceModel _value;
-    try {
-      _value = AdminAttendanceModel.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
     return _value;
   }
 
   @override
-  Future<AdminAttendanceModel> checkInWithoutPlan(
-    EmployeeCheckInRequestBody body,
-  ) async {
+  Future<dynamic> checkInWithoutPlan(EmployeeCheckInRequestBody body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body.toJson());
-    final _options = _setStreamType<AdminAttendanceModel>(
+    final _options = _setStreamType<dynamic>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -64,27 +56,19 @@ class _EmployeeApiService implements EmployeeApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late AdminAttendanceModel _value;
-    try {
-      _value = AdminAttendanceModel.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
     return _value;
   }
 
   @override
-  Future<AdminAttendanceModel> checkOut(
-    EmployeeCheckOutRequestBody body,
-  ) async {
+  Future<dynamic> checkOut(EmployeeCheckOutRequestBody body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body.toJson());
-    final _options = _setStreamType<AdminAttendanceModel>(
+    final _options = _setStreamType<dynamic>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -94,14 +78,8 @@ class _EmployeeApiService implements EmployeeApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late AdminAttendanceModel _value;
-    try {
-      _value = AdminAttendanceModel.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
     return _value;
   }
 

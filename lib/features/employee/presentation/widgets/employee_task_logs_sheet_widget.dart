@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import 'package:skeletonizer/skeletonizer.dart';
+
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/employee/data/models/tasks/employee_task_log_model.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_cubit.dart';
@@ -19,9 +21,22 @@ class EmployeeTaskLogsSheetWidget extends StatelessWidget {
       builder: (context, snapshot) {
         final result = snapshot.data;
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Padding(
-            padding: EdgeInsets.all(32),
-            child: Center(child: CircularProgressIndicator()),
+          return Padding(
+            padding: EdgeInsets.all(20.r),
+            child: Skeletonizer(
+              enabled: true,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Loading Task Logs Placeholder Title', style: AppTextStyles.font18Bold),
+                  hSpace(14),
+                  const Text('2026-09-20 • 60 min • Skeleton task log item'),
+                  hSpace(10),
+                  const Text('2026-09-20 • 45 min • Skeleton task log item'),
+                ],
+              ),
+            ),
           );
         }
         final errorKey = switch (result) {

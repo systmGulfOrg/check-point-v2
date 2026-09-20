@@ -97,11 +97,14 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
     EmployeeCheckInRequestBody body,
   ) async {
     try {
-      await odooAttendanceService.syncCheckIn(
-        employeeIdStr: body.employeeIdd,
-        area: body.area ?? 'Office',
-      );
-      final model = await api.checkIn(body);
+      try {
+        await odooAttendanceService.syncCheckIn(
+          employeeIdStr: body.employeeIdd,
+          area: body.area ?? 'Office',
+        );
+      } catch (_) {}
+      final response = await api.checkIn(body);
+      final model = _parseCheckInResponse(response, body);
       return ApiResult.success(model);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
@@ -113,11 +116,14 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
     EmployeeCheckInRequestBody body,
   ) async {
     try {
-      await odooAttendanceService.syncCheckIn(
-        employeeIdStr: body.employeeIdd,
-        area: body.area ?? 'Office',
-      );
-      final model = await api.checkInWithoutPlan(body);
+      try {
+        await odooAttendanceService.syncCheckIn(
+          employeeIdStr: body.employeeIdd,
+          area: body.area ?? 'Office',
+        );
+      } catch (_) {}
+      final response = await api.checkInWithoutPlan(body);
+      final model = _parseCheckInResponse(response, body);
       return ApiResult.success(model);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
@@ -129,12 +135,52 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
     EmployeeCheckOutRequestBody body,
   ) async {
     try {
-      await odooAttendanceService.syncCheckOut(employeeIdStr: body.employeeId);
-      final model = await api.checkOut(body);
+      try {
+        await odooAttendanceService.syncCheckOut(employeeIdStr: body.employeeId);
+      } catch (_) {}
+      final response = await api.checkOut(body);
+      final model = _parseCheckOutResponse(response, body);
       return ApiResult.success(model);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
+  }
+
+  AdminAttendanceModel _parseCheckInResponse(
+    dynamic response,
+    EmployeeCheckInRequestBody body,
+  ) {
+    if (response is AdminAttendanceModel) return response;
+    if (response is Map<String, dynamic>) {
+      final val = response['value'];
+      if (val is Map<String, dynamic>) {
+        return AdminAttendanceModel.fromJson(val);
+      }
+    }
+    return AdminAttendanceModel(
+      employeeId: body.employeeIdd,
+      area: body.area,
+      clockInTime: DateTime.now().toIso8601String(),
+      status: 'Present',
+    );
+  }
+
+  AdminAttendanceModel _parseCheckOutResponse(
+    dynamic response,
+    EmployeeCheckOutRequestBody body,
+  ) {
+    if (response is AdminAttendanceModel) return response;
+    if (response is Map<String, dynamic>) {
+      final val = response['value'];
+      if (val is Map<String, dynamic>) {
+        return AdminAttendanceModel.fromJson(val);
+      }
+    }
+    return AdminAttendanceModel(
+      employeeId: body.employeeId,
+      clockOutTime: DateTime.now().toIso8601String(),
+      status: 'Present',
+    );
   }
 
   @override

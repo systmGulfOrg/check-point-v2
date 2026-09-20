@@ -6,6 +6,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/edit_profile_sheet_widget.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/widgets/leave_profile_sheet_widget.dart';
 
@@ -28,7 +29,7 @@ class SupervisorProfileOptionsWidget extends StatelessWidget {
         Icons.person_outline_rounded,
         'supervisor.profile.profileInformation',
         null,
-        null,
+        () => showEditProfileSheet(context),
       ),
       (
         Icons.event_available_outlined,

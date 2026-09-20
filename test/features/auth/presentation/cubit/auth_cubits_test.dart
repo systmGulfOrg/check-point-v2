@@ -3,6 +3,7 @@ import 'package:check_point_v2/core/network/device_identity_provider.dart';
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/auth/biometric_auth_service.dart';
 import 'package:check_point_v2/features/auth/data/models/account_request/account_request_model.dart';
+import 'package:check_point_v2/features/auth/data/models/account_request/account_request_status_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_response_model.dart';
 import 'package:check_point_v2/features/auth/data/repos/auth_repo.dart';
@@ -32,6 +33,10 @@ class _FakeDeviceIdentityProvider extends DeviceIdentityProvider {
 }
 
 class _FakeAuthRepo implements AuthRepo {
+  @override
+  Future<ApiResult<AccountRequestStatusModel?>> getAccountRequestStatus(String mobileId) async =>
+      const ApiResult.success(null);
+
   @override
   Future<ApiResult<bool>> requestDeviceTransfer(LoginRequestModel request) async => const ApiResult.success(true);
   _FakeAuthRepo({required this.loginResponse});
@@ -198,6 +203,7 @@ void main() {
           fakeMobileId: 'mobile-456',
           fakeDeviceToken: 'device-token-456',
         ),
+        authSessionStorage: AuthSessionStorage(secureStorage: const FlutterSecureStorage()),
       );
       addTearDown(cubit.close);
 
