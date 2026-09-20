@@ -1,4 +1,4 @@
-# Haseem Project Rules
+# Check Point Project Rules
 
 > **MANDATORY FOR ALL AI AGENTS (Claude, Cursor, Copilot, Codex, Gemini, or any other assistant):**
 > You **MUST** read this entire file before making any change to the repository.
@@ -747,7 +747,7 @@ class AppConfig {
 }
 
 // build
-flutter run --dart-define=BASE_URL=https://api.dev.haseem.app --dart-define=ENV=dev
+flutter run --dart-define=BASE_URL=https://api.example.com --dart-define=ENV=dev
 ```
 
 ---
