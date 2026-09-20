@@ -114,6 +114,7 @@ class _SupervisorLeaveManagementScreenState
         ),
       ),
       floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton.extended(

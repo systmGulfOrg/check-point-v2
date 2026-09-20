@@ -53,7 +53,11 @@ class SupervisorLeaveRequestsBlocBuilderWidget extends StatelessWidget {
               requests: switch (selectedFilterIndex) {
                 1 =>
                   requests
-                      .where((r) => r.status?.toLowerCase() == 'pending')
+                      .where(
+                        (r) =>
+                            r.status?.toLowerCase() == 'pending' ||
+                            r.status?.toLowerCase() == 'pendinghr',
+                      )
                       .toList(),
                 2 =>
                   requests
@@ -68,12 +72,21 @@ class SupervisorLeaveRequestsBlocBuilderWidget extends StatelessWidget {
               userRole: cubit.userRole,
               onApprove: (req) {
                 if (req.ulid != null) {
-                  cubit.approveRequest(req.ulid!, cubit.userRole);
+                  cubit.approveRequest(
+                    req.ulid!,
+                    cubit.userRole,
+                    currentStatus: req.status,
+                  );
                 }
               },
               onReject: (req) {
                 if (req.ulid != null) {
-                  _showRejectReasonDialog(context, cubit, req.ulid!);
+                  _showRejectReasonDialog(
+                    context,
+                    cubit,
+                    req.ulid!,
+                    currentStatus: req.status,
+                  );
                 }
               },
             ),
@@ -94,8 +107,9 @@ class SupervisorLeaveRequestsBlocBuilderWidget extends StatelessWidget {
   void _showRejectReasonDialog(
     BuildContext context,
     SupervisorLeaveRequestsCubit cubit,
-    String ulid,
-  ) {
+    String ulid, {
+    String? currentStatus,
+  }) {
     final controller = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
@@ -132,6 +146,7 @@ class SupervisorLeaveRequestsBlocBuilderWidget extends StatelessWidget {
                   ulid,
                   cubit.userRole,
                   controller.text.trim(),
+                  currentStatus: currentStatus,
                 );
               }
             },

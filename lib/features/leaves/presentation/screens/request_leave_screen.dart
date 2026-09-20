@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import 'package:check_point_v2/core/core.dart';
 import '../../data/models/leave_request_body.dart';
 import '../cubit/leaves_cubit.dart';
 import '../cubit/leaves_state.dart';
@@ -44,7 +45,16 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('leaves.request.title'.tr())),
+      backgroundColor: AppColors.white,
+      appBar: AppBar(
+        backgroundColor: AppColors.white,
+        foregroundColor: AppColors.textPrimary,
+        elevation: 0,
+        title: Text(
+          'leaves.request.title'.tr(context: context),
+          style: AppTextStyles.font18Bold,
+        ),
+      ),
       body: BlocConsumer<LeavesCubit, LeavesState>(
         listener: (context, state) {
           state.whenOrNull(

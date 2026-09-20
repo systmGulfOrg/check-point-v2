@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/models/leave_balance_model.dart';
 import '../../data/models/leave_request_body.dart';
+import '../../data/models/leave_request_model.dart';
+import '../../data/models/leave_type_model.dart';
 import '../../data/repos/leaves_repo_impl.dart';
 import 'leaves_state.dart';
 
@@ -21,6 +24,8 @@ class LeavesCubit extends Cubit<LeavesState> {
     );
   }
 
+  List<LeaveTypeModel> leaveTypes = [];
+
   Future<void> loadLeavesData() async {
     emit(const LeavesState.loading());
 
@@ -28,21 +33,23 @@ class LeavesCubit extends Cubit<LeavesState> {
     final typesResult = await leavesRepo.getLeaveTypes();
     final requestsResult = await leavesRepo.getLeaveRequests();
 
-    balancesResult.when(
-      success: (balances) {
-        typesResult.when(
-          success: (types) {
-            requestsResult.when(
-              success: (requests) =>
-                  emit(LeavesState.success(balances, types, requests)),
-              failure: (f) => emit(LeavesState.error(f.messageKey)),
-            );
-          },
-          failure: (f) => emit(LeavesState.error(f.messageKey)),
-        );
-      },
-      failure: (f) => emit(LeavesState.error(f.messageKey)),
+    final balances = balancesResult.when(
+      success: (data) => data,
+      failure: (_) => const <LeaveBalanceModel>[],
     );
+    final types = typesResult.when(
+      success: (data) {
+        leaveTypes = data;
+        return data;
+      },
+      failure: (_) => const <LeaveTypeModel>[],
+    );
+    final requests = requestsResult.when(
+      success: (data) => data,
+      failure: (_) => const <LeaveRequestModel>[],
+    );
+
+    emit(LeavesState.success(balances, types, requests));
   }
 
   Future<void> submitLeave(LeaveRequestBody body) async {

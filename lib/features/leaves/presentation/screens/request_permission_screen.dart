@@ -143,13 +143,14 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text(
-          'permissions.request.title'.tr(),
-          style: AppTextStyles.font16Bold,
+          'permissions.request.title'.tr(context: context),
+          style: AppTextStyles.font18Bold,
         ),
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppColors.white,
+        foregroundColor: AppColors.textPrimary,
         elevation: 0,
       ),
       body: SingleChildScrollView(

@@ -26,7 +26,10 @@ class AdminLeaveRequestData {
   bool get isPending {
     final s = statusKey.toLowerCase();
     return s == 'pending' ||
+        s == 'pendinghr' ||
+        s == 'pendingmanager' ||
         s == 'supervisor.leave.pending' ||
-        s == 'admin.leavemanagement.pending';
+        s == 'admin.leavemanagement.pending' ||
+        s.contains('pending');
   }
 }

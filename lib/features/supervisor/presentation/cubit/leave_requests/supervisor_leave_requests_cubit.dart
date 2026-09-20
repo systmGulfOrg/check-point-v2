@@ -122,9 +122,18 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
   Future<void> loadLeaveRequests({int? departmentId, String? type}) =>
       loadRequests(departmentId: departmentId, type: type);
 
-  Future<bool> approveRequest(String ulid, String role) async {
+  Future<bool> approveRequest(
+    String ulid,
+    String role, {
+    String? currentStatus,
+  }) async {
     emit(const SupervisorLeaveRequestsState.loading());
-    final action = role == 'Admin' ? 'ApproveHR' : 'ApproveManager';
+    final reqStatus = (currentStatus ?? '').toLowerCase();
+    final action = reqStatus == 'pendinghr'
+        ? 'ApproveHR'
+        : (reqStatus == 'pending'
+            ? 'ApproveManager'
+            : (role == 'Admin' ? 'ApproveHR' : 'ApproveManager'));
     final result = await leaveRequestsRepo.approveOrRejectLeaveRequestV2(
       ulid,
       action,
@@ -142,9 +151,19 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
     );
   }
 
-  Future<bool> rejectRequest(String ulid, String role, String reason) async {
+  Future<bool> rejectRequest(
+    String ulid,
+    String role,
+    String reason, {
+    String? currentStatus,
+  }) async {
     emit(const SupervisorLeaveRequestsState.loading());
-    final action = role == 'Admin' ? 'RejectHR' : 'RejectManager';
+    final reqStatus = (currentStatus ?? '').toLowerCase();
+    final action = reqStatus == 'pendinghr'
+        ? 'RejectHR'
+        : (reqStatus == 'pending'
+            ? 'RejectManager'
+            : (role == 'Admin' ? 'RejectHR' : 'RejectManager'));
     final result = await leaveRequestsRepo.approveOrRejectLeaveRequestV2(
       ulid,
       action,
