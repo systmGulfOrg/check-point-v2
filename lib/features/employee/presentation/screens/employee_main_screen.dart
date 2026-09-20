@@ -8,7 +8,7 @@ import 'employee_home_screen.dart';
 import 'package:check_point_v2/features/leaves/presentation/screens/leaves_dashboard_screen.dart';
 import 'employee_plans_screen.dart';
 import 'employee_settings_screen.dart';
-import 'employee_tasks_screen.dart';
+import 'package:check_point_v2/features/projects/presentation/screens/projects_screen.dart';
 
 class EmployeeMainScreen extends StatefulWidget {
   const EmployeeMainScreen({super.key});
@@ -28,7 +28,7 @@ class _EmployeeMainScreenState extends State<EmployeeMainScreen> {
         onViewAllPlans: () => setState(() => _selectedIndex = 3),
       ),
       const EmployeeClockScreen(),
-      const EmployeeTasksScreen(),
+      const ProjectsScreen(),
       const EmployeePlansScreen(),
       const LeavesDashboardScreen(),
       const EmployeeSettingsScreen(),

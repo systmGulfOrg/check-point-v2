@@ -27,6 +27,7 @@ class EmployeeCheckInUseCase {
       'Branch' => 'Office',
       'Customer' => 'Customer',
       'Site' => 'Site',
+      'Remote' => 'Remote',
       _ => 'Office',
     };
     final requestBody = EmployeeCheckInRequestBody(

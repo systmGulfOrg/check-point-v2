@@ -9,6 +9,7 @@ import 'package:check_point_v2/features/employee/presentation/cubit/plans/employ
 import 'package:check_point_v2/features/employee/presentation/cubit/plans/employee_plans_state.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_plan_data.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_plan_detail_card_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_new_project_button_widget.dart';
 
 class EmployeePlansScreen extends StatefulWidget {
   const EmployeePlansScreen({super.key});
@@ -37,6 +38,18 @@ class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
               Text(
                 'employee.plans.title'.tr(context: context),
                 style: AppTextStyles.font24Bold,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, AppRoutes.projects),
+                    icon: const Icon(Icons.view_kanban_outlined),
+                    label: Text('projects.title'.tr(context: context)),
+                  ),
+                  const EmployeeNewProjectButtonWidget(),
+                ],
               ),
               hSpace(14),
               BlocConsumer<EmployeePlansCubit, EmployeePlansState>(
@@ -115,9 +128,7 @@ class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
                         hSpace(12),
                         Expanded(
                           child: plans.isEmpty
-                              ? Center(
-                                  child: Text('employee.plans.empty'.tr()),
-                                )
+                              ? Center(child: Text('employee.plans.empty'.tr()))
                               : RefreshIndicator(
                                   color: AppColors.brandPrimary,
                                   onRefresh: context

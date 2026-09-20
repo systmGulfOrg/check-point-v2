@@ -9,6 +9,7 @@ import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/single_employee_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employees_response_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/result_model.dart';
 import 'package:check_point_v2/features/employee/data/models/password/employee_change_password_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_in_request_body.dart';
@@ -66,6 +67,9 @@ abstract class EmployeeApiService {
   @GET('${ApiConstants.employees}/{id}')
   Future<SingleEmployeeResponseModel> getEmployeeById(@Path('id') String id);
 
+  @GET('${ApiConstants.employees}/departmentId/{id}')
+  Future<EmployeesResponseModel> getEmployeesInDepartment(@Path('id') int id);
+
   @GET('${ApiConstants.customers}/customerType/{type}')
   Future<CustomerResponseModel> getCustomersByType(@Path('type') String type);
 
@@ -77,6 +81,9 @@ abstract class EmployeeApiService {
 
   @GET('${ApiConstants.plans}/{id}')
   Future<SinglePlanResponseModel> getPlanById(@Path('id') int id);
+
+  @POST(ApiConstants.plans)
+  Future<ResultModel> createPlan(@Body() CreatePlanRequestBody body);
 
   @POST(ApiConstants.planFeedback)
   Future<ResultModel> addPlanFeedback(
@@ -102,11 +109,26 @@ abstract class EmployeeApiService {
     @Body() EmployeeUpdateTaskStatusRequestBody body,
   );
 
+  @POST(ApiConstants.tasks)
+  Future<ResultModel> addTask(@Body() AddTaskRequestBody body);
+
+  @PUT('${ApiConstants.tasks}/{id}')
+  Future<ResultModel> editTask(
+    @Path('id') int id,
+    @Body() AddTaskRequestBody body,
+  );
+
+  @POST('${ApiConstants.tasks}/assignTask')
+  Future<ResultModel> assignTask(@Body() AssignTaskRequestBody body);
+
   @POST('/api/v2/tasks/{id}/time-logs')
   Future<dynamic> logTaskTime(
     @Path('id') String taskId,
     @Body() Map<String, dynamic> body,
   );
+
+  @GET('/api/v2/tasks/{id}/time-logs')
+  Future<dynamic> getTaskLogs(@Path('id') String taskId);
 
   @GET('/api/v2/tasks/productive-hours')
   Future<dynamic> getProductiveHours({

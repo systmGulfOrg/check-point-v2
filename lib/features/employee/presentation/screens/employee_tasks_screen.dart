@@ -9,6 +9,8 @@ import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employ
 import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_state.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_task_data.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_task_detail_card_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_new_task_button_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_task_logs_sheet_widget.dart';
 
 class EmployeeTasksScreen extends StatefulWidget {
   const EmployeeTasksScreen({super.key});
@@ -40,6 +42,10 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
               Text(
                 'employee.tasks.title'.tr(context: context),
                 style: AppTextStyles.font24Bold,
+              ),
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: const EmployeeNewTaskButtonWidget(),
               ),
               hSpace(16),
               Container(
@@ -93,13 +99,15 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                 listener: (context, state) {
                   switch (state) {
                     case EmployeeTasksStateActionSuccess(:final message):
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(message)));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(message.tr(context: context))),
+                      );
                     case EmployeeTasksStateError(:final messageKey):
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(messageKey)));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(messageKey.tr(context: context)),
+                        ),
+                      );
                     default:
                       break;
                   }
@@ -112,9 +120,14 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                             (t) => EmployeeTaskData(
                               id: '${t.id ?? 0}',
                               title: t.title ?? '',
-                              dueDate: 'Task #${t.id ?? 0}',
+                              dueDate: t.dueDate == null
+                                  ? 'tasks.noDueDate'.tr(context: context)
+                                  : AppDateFormatter.formatDateString(
+                                      t.dueDate,
+                                      pattern: 'dd MMM yyyy',
+                                    ),
                               status: t.status ?? 'Active',
-                              priority: 'Normal',
+                              priority: t.priorityStatus,
                               description: t.description ?? '',
                               progressPercentage: 50,
                               assignees: const ['EM'],
@@ -185,9 +198,7 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                         hSpace(12),
                         Expanded(
                           child: filteredTasks.isEmpty
-                              ? Center(
-                                  child: Text('employee.tasks.empty'.tr()),
-                                )
+                              ? Center(child: Text('employee.tasks.empty'.tr()))
                               : RefreshIndicator(
                                   color: AppColors.brandPrimary,
                                   onRefresh: context
@@ -203,6 +214,38 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                                           index: index,
                                           child: EmployeeTaskDetailCardWidget(
                                             task: filteredTasks[index],
+                                            onStatusToggle: () {
+                                              final task = filteredTasks[index];
+                                              final isDone =
+                                                  task.status.toLowerCase() ==
+                                                      'completed' ||
+                                                  task.status.toLowerCase() ==
+                                                      'done';
+                                              context
+                                                  .read<EmployeeTasksCubit>()
+                                                  .updateTaskStatus(
+                                                    int.tryParse(task.id) ?? 0,
+                                                    isDone
+                                                        ? 'In Progress'
+                                                        : 'Completed',
+                                                  );
+                                            },
+                                            onLogsTap: () => showModalBottomSheet<void>(
+                                              context: context,
+                                              isScrollControlled: true,
+                                              backgroundColor:
+                                                  AppColors.cardBackground,
+                                              builder: (_) => BlocProvider.value(
+                                                value: context
+                                                    .read<EmployeeTasksCubit>(),
+                                                child:
+                                                    EmployeeTaskLogsSheetWidget(
+                                                      taskId:
+                                                          filteredTasks[index]
+                                                              .id,
+                                                    ),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                   ),

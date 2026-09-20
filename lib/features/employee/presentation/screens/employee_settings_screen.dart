@@ -72,6 +72,18 @@ class EmployeeSettingsScreen extends StatelessWidget {
               ),
               hSpace(20),
               EmployeeSettingsSectionCardWidget(
+                sectionTitleKey: 'remoteWork.title',
+                tiles: [
+                  EmployeeSettingsTileWidget(
+                    icon: Icons.home_work_outlined,
+                    titleKey: 'remoteWork.title',
+                    valueKey: 'remoteWork.manageRequest',
+                    onTap: () => Navigator.pushNamed(context, AppRoutes.remoteWork),
+                  ),
+                ],
+              ),
+              hSpace(20),
+              EmployeeSettingsSectionCardWidget(
                 sectionTitleKey: 'employee.settings.sectionSystem',
                 tiles: [
                   EmployeeSettingsTileWidget(

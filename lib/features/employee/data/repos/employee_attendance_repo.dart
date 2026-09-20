@@ -38,6 +38,7 @@ abstract class EmployeeAttendanceRepo {
     int itemCount = 10,
   });
   Future<ApiResult<AdminPlanModel>> getPlanById(int id);
+  Future<ApiResult<void>> createPlan(CreatePlanRequestBody body);
   Future<ApiResult<void>> addPlanFeedback(EmployeePlanFeedbackRequestBody body);
   Future<ApiResult<void>> trackEmployeeLocation(TrackUserRequestBody body);
   Future<ApiResult<void>> removeAssignCustomerPlan(

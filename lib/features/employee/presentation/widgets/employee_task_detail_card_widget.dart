@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'employee_assignee_avatar_widget.dart';
@@ -7,9 +8,16 @@ import 'employee_status_badge_widget.dart';
 import 'employee_task_data.dart';
 
 class EmployeeTaskDetailCardWidget extends StatelessWidget {
-  const EmployeeTaskDetailCardWidget({required this.task, super.key});
+  const EmployeeTaskDetailCardWidget({
+    required this.task,
+    super.key,
+    this.onStatusToggle,
+    this.onLogsTap,
+  });
 
   final EmployeeTaskData task;
+  final VoidCallback? onStatusToggle;
+  final VoidCallback? onLogsTap;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +51,11 @@ class EmployeeTaskDetailCardWidget extends StatelessWidget {
                 child: Text(task.title, style: AppTextStyles.font16Bold),
               ),
               wSpace(12),
-              EmployeeStatusBadgeWidget(status: task.status),
+              InkWell(
+                onTap: onStatusToggle,
+                borderRadius: BorderRadius.circular(16.r),
+                child: EmployeeStatusBadgeWidget(status: task.status),
+              ),
             ],
           ),
           if (task.priority != null) ...[
@@ -69,6 +81,17 @@ class EmployeeTaskDetailCardWidget extends StatelessWidget {
               task.description!,
               style: AppTextStyles.font13Regular.copyWith(
                 color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+          if (onLogsTap != null) ...[
+            hSpace(8),
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: TextButton.icon(
+                onPressed: onLogsTap,
+                icon: Icon(Icons.history_rounded, size: 16.r),
+                label: Text('employee.tasks.logs'.tr()),
               ),
             ),
           ],

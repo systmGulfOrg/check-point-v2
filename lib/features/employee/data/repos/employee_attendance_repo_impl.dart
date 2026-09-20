@@ -182,6 +182,16 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
   }
 
   @override
+  Future<ApiResult<void>> createPlan(CreatePlanRequestBody body) async {
+    try {
+      await api.createPlan(body);
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
   Future<ApiResult<void>> addPlanFeedback(
     EmployeePlanFeedbackRequestBody body,
   ) async {
