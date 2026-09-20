@@ -9,12 +9,14 @@ class EmployeeAttendanceLocationTypeSelectorWidget extends StatelessWidget {
     required this.selectedType,
     required this.onTypeChanged,
     required this.allowedTypes,
+    required this.onDisabledTypeTap,
     super.key,
   });
 
   final String selectedType;
   final ValueChanged<String> onTypeChanged;
   final Set<String> allowedTypes;
+  final ValueChanged<String> onDisabledTypeTap;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class EmployeeAttendanceLocationTypeSelectorWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16.r),
                     onTap: allowedTypes.contains(option.$1)
                         ? () => onTypeChanged(option.$1)
-                        : null,
+                        : () => onDisabledTypeTap(option.$1),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 180),
                       padding: EdgeInsets.symmetric(vertical: 10.h),

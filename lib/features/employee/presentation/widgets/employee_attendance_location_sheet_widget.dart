@@ -75,7 +75,32 @@ class _EmployeeAttendanceLocationSheetWidgetState
   }
 
   Set<String> get allowedTypes {
-    return const {'Branch', 'Customer', 'Site', 'Remote'};
+    if (widget.isCheckOut || isWorkScheduleLoading) {
+      return const {'Branch', 'Customer', 'Site', 'Remote'};
+    }
+    return switch (context
+        .read<EmployeeAttendanceCubit>()
+        .employeeProfile
+        ?.todayWorkMode) {
+      'remote' => const {'Remote'},
+      'onsite' => const {'Branch', 'Customer', 'Site'},
+      _ => const <String>{},
+    };
+  }
+
+  void _showDisabledTypeMessage(String value) {
+    final mode = context
+        .read<EmployeeAttendanceCubit>()
+        .employeeProfile
+        ?.todayWorkMode;
+    final messageKey = switch (mode) {
+      'remote' => 'attendance.remoteWorkDayLocationMessage',
+      'onsite' => 'attendance.onsiteWorkDayLocationMessage',
+      _ => 'attendance.unscheduledWorkDayLocationMessage',
+    };
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(messageKey.tr(context: context))));
   }
 
   @override
@@ -209,6 +234,10 @@ class _EmployeeAttendanceLocationSheetWidgetState
   }
 
   Future<void> _submit() async {
+    if (!widget.isCheckOut && !allowedTypes.contains(type)) {
+      _showDisabledTypeMessage(type);
+      return;
+    }
     if (type != 'Remote' && !isInside) {
       final messageKey = userLocation == null
           ? 'errors.locationUnavailable'
@@ -335,6 +364,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
                       selectedType: type,
                       onTypeChanged: _changeType,
                       allowedTypes: allowedTypes,
+                      onDisabledTypeTap: _showDisabledTypeMessage,
                     ),
                     if (!widget.isCheckOut) ...[
                       hSpace(8),
