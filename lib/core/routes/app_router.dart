@@ -21,6 +21,8 @@ import 'package:check_point_v2/features/admin/presentation/screens/admin_leave_m
 import 'package:check_point_v2/features/admin/presentation/screens/admin_locations_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_main_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_permission_details_screen.dart';
+import 'package:check_point_v2/features/admin/data/models/permissions/admin_permission_employee_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/permissions/admin_permissions_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_permissions_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_plans_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_request_details_screen.dart';
@@ -280,15 +282,15 @@ class AppRouter {
       case AppRoutes.adminPermissions:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminPermissions),
-          child: BlocProvider<AdminEmployeesCubit>(
-            create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
+          child: BlocProvider<AdminPermissionsCubit>(
+            create: (_) => sl<AdminPermissionsCubit>()..load(),
             child: const AdminPermissionsScreen(),
           ),
         );
 
       case AppRoutes.adminPermissionDetails:
         final supervisorKey = settings.arguments;
-        if (supervisorKey is! String) {
+        if (supervisorKey is! AdminPermissionEmployeeModel) {
           return _fadeRoute(
             settings: settings,
             child: const Scaffold(
@@ -298,8 +300,10 @@ class AppRouter {
         }
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminPermissionDetails),
-          child: BlocProvider<AdminEmployeesCubit>(
-            create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
+          child: BlocProvider<AdminPermissionsCubit>(
+            create: (_) =>
+                sl<AdminPermissionsCubit>()
+                  ..load(selectedUserId: supervisorKey.user.id),
             child: AdminPermissionDetailsScreen(supervisorKey: supervisorKey),
           ),
         );
@@ -418,7 +422,9 @@ class AppRouter {
               BlocProvider<EmployeeAttendanceCubit>(
                 create: (_) => sl<EmployeeAttendanceCubit>(),
               ),
-              BlocProvider<LeavesCubit>(create: (_) => sl<LeavesCubit>()),
+              BlocProvider<LeavesCubit>(
+                create: (_) => sl<LeavesCubit>()..loadLeavesData(),
+              ),
               BlocProvider<SupervisorLeaveRequestsCubit>(
                 create: (_) =>
                     sl<SupervisorLeaveRequestsCubit>()..loadLeaveRequests(),

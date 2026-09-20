@@ -67,6 +67,25 @@ abstract class AdminApiService {
   @GET('${ApiConstants.employees}/departmentId/{id}')
   Future<EmployeesResponseModel> getEmployeesInDepartment(@Path('id') int id);
 
+  // Fine-grained permissions
+  @GET('/api/v2/employees')
+  Future<dynamic> getPermissionEmployees({
+    @Query('itemCount') int itemCount = 200,
+    @Query('index') int index = 0,
+  });
+
+  @GET('/api/v2/permissions/catalogue')
+  Future<dynamic> getPermissionsCatalogue();
+
+  @GET('/api/v2/users/{id}/permissions')
+  Future<dynamic> getUserPermissions(@Path('id') String userId);
+
+  @PUT('/api/v2/users/{id}/permissions')
+  Future<dynamic> updateUserPermissions(
+    @Path('id') String userId,
+    @Body() Map<String, dynamic> body,
+  );
+
   @POST(ApiConstants.employees)
   Future<ResultModel> addEmployee(@Body() AddEmployeeRequestBody body);
 

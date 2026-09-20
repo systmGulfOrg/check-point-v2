@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/features/admin/presentation/widgets/admin_supervisors_permission_list_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_permissions_bloc_builder_widget.dart';
 
 class AdminPermissionsScreen extends StatelessWidget {
   const AdminPermissionsScreen({super.key});
@@ -32,11 +32,11 @@ class AdminPermissionsScreen extends StatelessWidget {
                 style: AppTextStyles.font12Regular,
               ),
               hSpace(14),
-              AdminSupervisorsPermissionListBlocBuilderWidget(
-                onSupervisorTap: (key) => Navigator.pushNamed(
+              AdminPermissionsBlocBuilderWidget(
+                onManage: (user) => Navigator.pushNamed(
                   context,
                   AppRoutes.adminPermissionDetails,
-                  arguments: key,
+                  arguments: user,
                 ),
               ),
             ],

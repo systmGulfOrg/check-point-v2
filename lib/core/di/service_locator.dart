@@ -61,6 +61,9 @@ import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employ
 import 'package:check_point_v2/features/leaves/data/apis/leaves_api_service.dart';
 import 'package:check_point_v2/features/leaves/data/repos/leaves_repo_impl.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
+import 'package:check_point_v2/features/admin/data/repos/admin_permissions_repo.dart';
+import 'package:check_point_v2/features/admin/data/repos/admin_permissions_repo_impl.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/permissions/admin_permissions_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/permit_cubit.dart';
 import 'package:check_point_v2/features/notifications/data/apis/notifications_api_service.dart';
 import 'package:check_point_v2/features/notifications/data/repos/notifications_repo_impl.dart';
@@ -162,6 +165,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<AdminEmployeeRepo>(
     () => AdminEmployeeRepoImpl(api: sl<AdminApiService>()),
+  );
+  sl.registerLazySingleton<AdminPermissionsRepo>(
+    () => AdminPermissionsRepoImpl(api: sl<AdminApiService>()),
   );
   sl.registerLazySingleton<AdminLocationsRepo>(
     () => AdminLocationsRepoImpl(api: sl<AdminApiService>()),
@@ -389,4 +395,7 @@ Future<void> setupServiceLocator() async {
     () => NotificationsCubit(notificationsRepo: sl<NotificationsRepoImpl>()),
   );
   sl.registerFactory(() => AdminEmployeeAuditCubit(api: sl()));
+  sl.registerFactory<AdminPermissionsCubit>(
+    () => AdminPermissionsCubit(permissionsRepo: sl<AdminPermissionsRepo>()),
+  );
 }
