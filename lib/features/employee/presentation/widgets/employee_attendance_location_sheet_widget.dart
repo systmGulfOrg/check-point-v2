@@ -78,7 +78,10 @@ class _EmployeeAttendanceLocationSheetWidgetState
     if (widget.isCheckOut || isWorkScheduleLoading) {
       return const {'Branch', 'Customer', 'Site', 'Remote'};
     }
-    return switch (context.read<EmployeeAttendanceCubit>().employeeProfile?.todayWorkMode) {
+    return switch (context
+        .read<EmployeeAttendanceCubit>()
+        .employeeProfile
+        ?.todayWorkMode) {
       'remote' => const {'Remote'},
       'onsite' => const {'Branch', 'Customer', 'Site'},
       _ => const <String>{},
@@ -127,13 +130,14 @@ class _EmployeeAttendanceLocationSheetWidgetState
       targetPoints.length == 1 ? targetPoints.first : null;
 
   bool get isInside =>
-      type == 'Remote' || (userLocation != null &&
-      targetPoints.isNotEmpty &&
-      context.read<EmployeeAttendanceCubit>().isWithinAttendanceArea(
-        point: userLocation!,
-        center: targetCenter,
-        polygon: targetCenter == null ? targetPoints : const [],
-      ));
+      type == 'Remote' ||
+      (userLocation != null &&
+          targetPoints.isNotEmpty &&
+          context.read<EmployeeAttendanceCubit>().isWithinAttendanceArea(
+            point: userLocation!,
+            center: targetCenter,
+            polygon: targetCenter == null ? targetPoints : const [],
+          ));
 
   void _focusTarget() {
     final target =
@@ -215,9 +219,14 @@ class _EmployeeAttendanceLocationSheetWidgetState
   }
 
   Future<void> _submit() async {
-    if (!widget.isCheckOut && (isWorkScheduleLoading || !allowedTypes.contains(type))) {
+    if (!widget.isCheckOut &&
+        (isWorkScheduleLoading || !allowedTypes.contains(type))) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('attendance.workScheduleUnavailable'.tr(context: context))),
+        SnackBar(
+          content: Text(
+            'attendance.workScheduleUnavailable'.tr(context: context),
+          ),
+        ),
       );
       return;
     }
@@ -278,214 +287,282 @@ class _EmployeeAttendanceLocationSheetWidgetState
         child: Padding(
           padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 12.h),
           child: SingleChildScrollView(
-            child:
-                BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
-                  builder: (context, state) {
-                    final branches = switch (state) {
-                      EmployeeAttendanceStateBranchesLoaded(:final branches) =>
-                        branches,
-                      _ => const <BranchModel>[],
-                    };
-                    final customers = switch (state) {
-                      EmployeeAttendanceStateTargetsLoaded(:final targets) =>
-                        targets,
-                      _ => const <CustomerModel>[],
-                    };
-                    switch (state) {
-                      case EmployeeAttendanceStateBranchesLoaded(
-                        :final branches,
-                      ):
-                        availableBranches = branches;
-                      case EmployeeAttendanceStateTargetsLoaded(:final targets):
-                        availableCustomers = targets;
-                      default:
-                        break;
-                    }
-                    final branchOptions = availableBranches.isNotEmpty
-                        ? availableBranches
-                        : branches;
-                    final customerOptions = availableCustomers.isNotEmpty
-                        ? availableCustomers
-                        : customers;
-                    if (type == 'Branch' &&
-                        branch == null &&
-                        branchOptions.isNotEmpty) {
-                      branch = branchOptions.first;
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _focusTarget();
-                        _loadTargetAddress();
-                      });
-                    }
-                    if (type != 'Branch' &&
-                        customer == null &&
-                        customerOptions.isNotEmpty) {
-                      customer = customerOptions.first;
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _focusTarget();
-                        _loadTargetAddress();
-                      });
-                    }
-                    final points = targetPoints;
-                    final mapCenter =
-                        targetCenter ??
-                        userLocation ??
-                        const LatLng(30.0444, 31.2357);
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.isCheckOut
-                              ? 'employee.home.checkOutAction'.tr()
-                              : 'employee.home.checkInAction'.tr(),
-                          style: AppTextStyles.font20Bold,
+            child: BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
+              builder: (context, state) {
+                final branches = switch (state) {
+                  EmployeeAttendanceStateBranchesLoaded(:final branches) =>
+                    branches,
+                  _ => const <BranchModel>[],
+                };
+                final customers = switch (state) {
+                  EmployeeAttendanceStateTargetsLoaded(:final targets) =>
+                    targets,
+                  _ => const <CustomerModel>[],
+                };
+                switch (state) {
+                  case EmployeeAttendanceStateBranchesLoaded(:final branches):
+                    availableBranches = branches;
+                  case EmployeeAttendanceStateTargetsLoaded(:final targets):
+                    availableCustomers = targets;
+                  default:
+                    break;
+                }
+                final branchOptions = availableBranches.isNotEmpty
+                    ? availableBranches
+                    : branches;
+                final customerOptions = availableCustomers.isNotEmpty
+                    ? availableCustomers
+                    : customers;
+                if (type == 'Branch' &&
+                    branch == null &&
+                    branchOptions.isNotEmpty) {
+                  branch = branchOptions.first;
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _focusTarget();
+                    _loadTargetAddress();
+                  });
+                }
+                if (type != 'Branch' &&
+                    customer == null &&
+                    customerOptions.isNotEmpty) {
+                  customer = customerOptions.first;
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _focusTarget();
+                    _loadTargetAddress();
+                  });
+                }
+                final points = targetPoints;
+                final mapCenter =
+                    targetCenter ??
+                    userLocation ??
+                    const LatLng(30.0444, 31.2357);
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.isCheckOut
+                          ? 'employee.home.checkOutAction'.tr()
+                          : 'employee.home.checkInAction'.tr(),
+                      style: AppTextStyles.font20Bold,
+                    ),
+                    hSpace(12),
+                    Text(
+                      'attendance.locationType'.tr(),
+                      style: AppTextStyles.font14SemiBold,
+                    ),
+                    hSpace(6),
+                    EmployeeAttendanceLocationTypeSelectorWidget(
+                      selectedType: type,
+                      onTypeChanged: _changeType,
+                      allowedTypes: allowedTypes,
+                    ),
+                    if (!widget.isCheckOut) ...[
+                      hSpace(8),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(12.r),
+                        decoration: BoxDecoration(
+                          color: AppColors.pageBackground,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(color: AppColors.border),
                         ),
-                        hSpace(12),
-                        Text(
-                          'attendance.locationType'.tr(),
-                          style: AppTextStyles.font14SemiBold,
-                        ),
-                        hSpace(6),
-                        EmployeeAttendanceLocationTypeSelectorWidget(
-                          selectedType: type,
-                          onTypeChanged: _changeType,
-                          allowedTypes: allowedTypes,
-                        ),
-                        if (!widget.isCheckOut) ...[
-                          hSpace(8),
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(12.r),
-                            decoration: BoxDecoration(
-                              color: AppColors.pageBackground,
-                              borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(color: AppColors.border),
-                            ),
-                            child: isWorkScheduleLoading
-                                ? Text('attendance.loadingWorkSchedule'.tr())
-                                : Text(
+                        child: isWorkScheduleLoading
+                            ? Text('attendance.loadingWorkSchedule'.tr())
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (context
+                                          .read<EmployeeAttendanceCubit>()
+                                          .employeeProfile
+                                          ?.todayWorkMode ==
+                                      'remote')
+                                    Text(
+                                      'attendance.todayWorkFromHome'.tr(
+                                        context: context,
+                                      ),
+                                      style: AppTextStyles.font14SemiBold
+                                          .copyWith(color: AppColors.info),
+                                    ),
+                                  if (context
+                                          .read<EmployeeAttendanceCubit>()
+                                          .employeeProfile
+                                          ?.todayWorkMode ==
+                                      'onsite')
+                                    Text(
+                                      'attendance.todayWorkFromOffice'.tr(
+                                        context: context,
+                                      ),
+                                      style: AppTextStyles.font14SemiBold
+                                          .copyWith(
+                                            color: AppColors.brandPrimaryDark,
+                                          ),
+                                    ),
+                                  if (context
+                                              .read<EmployeeAttendanceCubit>()
+                                              .employeeProfile
+                                              ?.todayWorkMode ==
+                                          'remote' ||
+                                      context
+                                              .read<EmployeeAttendanceCubit>()
+                                              .employeeProfile
+                                              ?.todayWorkMode ==
+                                          'onsite')
+                                    hSpace(4),
+                                  Text(
                                     'attendance.workScheduleSummary'.tr(
                                       namedArgs: {
-                                        'system': (context.read<EmployeeAttendanceCubit>().employeeProfile?.workSystem ?? 'onsite').tr(),
-                                        'mode': (context.read<EmployeeAttendanceCubit>().employeeProfile?.todayWorkMode ?? 'off').tr(),
-                                        'day': context.read<EmployeeAttendanceCubit>().employeeProfile?.todayWorkDay ?? '--',
-                                        'start': context.read<EmployeeAttendanceCubit>().employeeProfile?.todayWorkStart ?? '--:--',
-                                        'end': context.read<EmployeeAttendanceCubit>().employeeProfile?.todayWorkEnd ?? '--:--',
+                                        'system':
+                                            (context
+                                                        .read<
+                                                          EmployeeAttendanceCubit
+                                                        >()
+                                                        .employeeProfile
+                                                        ?.workSystem ??
+                                                    'onsite')
+                                                .tr(),
+                                        'mode':
+                                            (context
+                                                        .read<
+                                                          EmployeeAttendanceCubit
+                                                        >()
+                                                        .employeeProfile
+                                                        ?.todayWorkMode ??
+                                                    'off')
+                                                .tr(),
+                                        'day':
+                                            context
+                                                .read<EmployeeAttendanceCubit>()
+                                                .employeeProfile
+                                                ?.todayWorkDay ??
+                                            '--',
+                                        'start':
+                                            context
+                                                .read<EmployeeAttendanceCubit>()
+                                                .employeeProfile
+                                                ?.todayWorkStart ??
+                                            '--:--',
+                                        'end':
+                                            context
+                                                .read<EmployeeAttendanceCubit>()
+                                                .employeeProfile
+                                                ?.todayWorkEnd ??
+                                            '--:--',
                                       },
                                     ),
                                     style: AppTextStyles.font12Regular,
                                   ),
-                          ),
-                        ],
-                        hSpace(8),
-                        if (type != 'Remote')
-                          EmployeeAttendanceTargetDropdownWidget(
-                            type: type,
-                            branches: branchOptions,
-                            customers: customerOptions,
-                            selectedBranch: branch,
-                            selectedCustomer: customer,
-                            onBranchChanged: (selected) {
-                              setState(() => branch = selected);
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                _focusTarget();
-                                _loadTargetAddress();
-                              });
-                            },
-                            onCustomerChanged: (selected) {
-                              setState(() => customer = selected);
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                _focusTarget();
-                                _loadTargetAddress();
-                              });
-                            },
-                          ),
-                        if (type == 'Remote') ...[
-                          hSpace(18),
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(16.r),
-                            decoration: BoxDecoration(
-                              color: AppColors.softBlueBackground,
-                              borderRadius: BorderRadius.circular(14.r),
-                            ),
-                            child: Text(
-                              'attendance.remoteDescription'.tr(
-                                context: context,
+                                ],
                               ),
-                            ),
-                          ),
-                          hSpace(12),
-                          CustomButton(
-                            text: widget.isCheckOut
-                                ? 'employee.home.checkOutAction'.tr()
-                                : 'employee.home.checkInAction'.tr(),
-                            isLoading: state is EmployeeAttendanceStateLoading,
-                            enabled: true,
-                            onTap: _submit,
-                          ),
-                        ] else if (points.isEmpty) ...[
-                          hSpace(20),
-                          Center(
-                            child: state is EmployeeAttendanceStateLoading
-                                ? const CircularProgressIndicator()
-                                : Text(
-                                    'attendance.noLocationData'.tr(),
-                                    style: AppTextStyles.font14SemiBold,
-                                    textAlign: TextAlign.center,
-                                  ),
-                          ),
-                        ] else ...[
-                          hSpace(12),
-                          EmployeeAttendanceLocationMapWidget(
-                            isExpanded: isMapExpanded,
-                            mapCenter: mapCenter,
-                            userLocation: userLocation,
-                            targetPoints: points,
-                            targetCenter: targetCenter,
-                            targetType: type,
-                            targetName: branch?.name ?? customer?.name,
-                            onMapCreated: (controller) =>
-                                mapController = controller,
-                            onToggleExpanded: () =>
-                                setState(() => isMapExpanded = !isMapExpanded),
-                          ),
-                          hSpace(10),
-                          AttendanceTargetDetailsWidget(
-                            name: branch?.name ?? customer?.name ?? type,
-                            address:
-                                targetAddress ??
-                                branch?.location ??
-                                customer?.location,
-                            isAddressLoading: isAddressLoading,
-                            onCopyAddress: _copyTargetAddress,
-                          ),
-                          hSpace(10),
-                          EmployeeAttendanceLocationStatusWidget(
-                            userLocation: userLocation,
-                            isInside: isInside,
-                          ),
-                          hSpace(8),
-                          Text(
-                            'attendance.securityNote'.tr(),
-                            style: AppTextStyles.font12Regular.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                          hSpace(10),
-                          CustomButton(
-                            text: widget.isCheckOut
-                                ? 'employee.home.checkOutAction'.tr()
-                                : 'employee.home.checkInAction'.tr(),
-                            isLoading: state is EmployeeAttendanceStateLoading,
-                            enabled: true,
-                            onTap: _submit,
-                          ),
-                        ],
-                      ],
-                    );
-                  },
-                ),
+                      ),
+                    ],
+                    hSpace(8),
+                    if (type != 'Remote')
+                      EmployeeAttendanceTargetDropdownWidget(
+                        type: type,
+                        branches: branchOptions,
+                        customers: customerOptions,
+                        selectedBranch: branch,
+                        selectedCustomer: customer,
+                        onBranchChanged: (selected) {
+                          setState(() => branch = selected);
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _focusTarget();
+                            _loadTargetAddress();
+                          });
+                        },
+                        onCustomerChanged: (selected) {
+                          setState(() => customer = selected);
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _focusTarget();
+                            _loadTargetAddress();
+                          });
+                        },
+                      ),
+                    if (type == 'Remote') ...[
+                      hSpace(18),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(16.r),
+                        decoration: BoxDecoration(
+                          color: AppColors.softBlueBackground,
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
+                        child: Text(
+                          'attendance.remoteDescription'.tr(context: context),
+                        ),
+                      ),
+                      hSpace(12),
+                      CustomButton(
+                        text: widget.isCheckOut
+                            ? 'employee.home.checkOutAction'.tr()
+                            : 'employee.home.checkInAction'.tr(),
+                        isLoading: state is EmployeeAttendanceStateLoading,
+                        enabled: true,
+                        onTap: _submit,
+                      ),
+                    ] else if (points.isEmpty) ...[
+                      hSpace(20),
+                      Center(
+                        child: state is EmployeeAttendanceStateLoading
+                            ? const CircularProgressIndicator()
+                            : Text(
+                                'attendance.noLocationData'.tr(),
+                                style: AppTextStyles.font14SemiBold,
+                                textAlign: TextAlign.center,
+                              ),
+                      ),
+                    ] else ...[
+                      hSpace(12),
+                      EmployeeAttendanceLocationMapWidget(
+                        isExpanded: isMapExpanded,
+                        mapCenter: mapCenter,
+                        userLocation: userLocation,
+                        targetPoints: points,
+                        targetCenter: targetCenter,
+                        targetType: type,
+                        targetName: branch?.name ?? customer?.name,
+                        onMapCreated: (controller) =>
+                            mapController = controller,
+                        onToggleExpanded: () =>
+                            setState(() => isMapExpanded = !isMapExpanded),
+                      ),
+                      hSpace(10),
+                      AttendanceTargetDetailsWidget(
+                        name: branch?.name ?? customer?.name ?? type,
+                        address:
+                            targetAddress ??
+                            branch?.location ??
+                            customer?.location,
+                        isAddressLoading: isAddressLoading,
+                        onCopyAddress: _copyTargetAddress,
+                      ),
+                      hSpace(10),
+                      EmployeeAttendanceLocationStatusWidget(
+                        userLocation: userLocation,
+                        isInside: isInside,
+                      ),
+                      hSpace(8),
+                      Text(
+                        'attendance.securityNote'.tr(),
+                        style: AppTextStyles.font12Regular.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      hSpace(10),
+                      CustomButton(
+                        text: widget.isCheckOut
+                            ? 'employee.home.checkOutAction'.tr()
+                            : 'employee.home.checkInAction'.tr(),
+                        isLoading: state is EmployeeAttendanceStateLoading,
+                        enabled: true,
+                        onTap: _submit,
+                      ),
+                    ],
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),

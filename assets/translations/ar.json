@@ -851,6 +851,8 @@
   "attendance.remoteDescription": "الحضور عن بُعد متاح فقط بعد الموافقة على طلب العمل عن بُعد، ولا يحتاج إلى حدود موقع.",
   "attendance.loadingWorkSchedule": "جارٍ تحميل جدول العمل لليوم...",
   "attendance.workScheduleUnavailable": "جدول العمل لليوم غير متاح، تم إيقاف تسجيل الحضور مؤقتًا.",
+  "attendance.todayWorkFromHome": "أنت تعمل من المنزل اليوم",
+  "attendance.todayWorkFromOffice": "أنت تعمل من مقر الشركة اليوم",
   "attendance.workScheduleSummary": "نظام العمل: {system}\nاليوم: {mode} ({day})\nالوقت: {start} - {end}",
   "onsite": "من مقر الشركة",
   "remote": "عن بُعد",

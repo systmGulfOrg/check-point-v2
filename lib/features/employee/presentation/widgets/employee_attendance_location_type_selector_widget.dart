@@ -37,15 +37,18 @@ class EmployeeAttendanceLocationTypeSelectorWidget extends StatelessWidget {
         child: Row(
           children: [
             for (final option in options)
-              if (allowedTypes.contains(option.$1)) SizedBox(
+              SizedBox(
                 width: 88.w,
                 child: Semantics(
                   button: true,
                   selected: selectedType == option.$1,
+                  enabled: allowedTypes.contains(option.$1),
                   label: option.$2.tr(context: context),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(16.r),
-                    onTap: () => onTypeChanged(option.$1),
+                    onTap: allowedTypes.contains(option.$1)
+                        ? () => onTypeChanged(option.$1)
+                        : null,
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 180),
                       padding: EdgeInsets.symmetric(vertical: 10.h),
@@ -80,7 +83,11 @@ class EmployeeAttendanceLocationTypeSelectorWidget extends StatelessWidget {
                               option.$2.tr(context: context),
                               overflow: TextOverflow.ellipsis,
                               style: AppTextStyles.font12SemiBold.copyWith(
-                                color: selectedType == option.$1
+                                color: !allowedTypes.contains(option.$1)
+                                    ? AppColors.textSecondary.withValues(
+                                        alpha: 0.45,
+                                      )
+                                    : selectedType == option.$1
                                     ? AppColors.textPrimary
                                     : AppColors.textSecondary,
                               ),

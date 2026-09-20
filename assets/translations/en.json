@@ -851,6 +851,8 @@
   "attendance.remoteDescription": "Remote check-in is available only for an approved remote work request. Location boundaries are not required.",
   "attendance.loadingWorkSchedule": "Loading today's work schedule...",
   "attendance.workScheduleUnavailable": "Today's work schedule is unavailable. Attendance is temporarily locked.",
+  "attendance.todayWorkFromHome": "You are working from home today",
+  "attendance.todayWorkFromOffice": "You are working from the office today",
   "attendance.workScheduleSummary": "System: {system}\nToday: {mode} ({day})\nHours: {start} - {end}",
   "onsite": "Onsite",
   "remote": "Remote",
