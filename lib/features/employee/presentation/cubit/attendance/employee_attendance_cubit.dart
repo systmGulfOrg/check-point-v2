@@ -36,6 +36,19 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
   AdminAttendanceModel? todayAttendance;
   EmployeeModel? employeeProfile;
 
+  Future<EmployeeModel?> loadEmployeeProfile() async {
+    final employeeId = await sessionStorage.readUserId();
+    if (employeeId == null || employeeId.isEmpty) return null;
+    final result = await attendanceRepo.getEmployeeById(employeeId);
+    return result.when(
+      success: (data) {
+        employeeProfile = data;
+        return data;
+      },
+      failure: (_) => null,
+    );
+  }
+
   bool hasClockIn(AdminAttendanceModel? attendance) =>
       _hasAttendanceTime(attendance?.clockInTime);
 

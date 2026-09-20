@@ -8,11 +8,13 @@ class EmployeeAttendanceLocationTypeSelectorWidget extends StatelessWidget {
   const EmployeeAttendanceLocationTypeSelectorWidget({
     required this.selectedType,
     required this.onTypeChanged,
+    required this.allowedTypes,
     super.key,
   });
 
   final String selectedType;
   final ValueChanged<String> onTypeChanged;
+  final Set<String> allowedTypes;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class EmployeeAttendanceLocationTypeSelectorWidget extends StatelessWidget {
       ('Branch', 'attendance.branch'),
       ('Customer', 'attendance.customer'),
       ('Site', 'attendance.site'),
+      ('Remote', 'attendance.remote'),
     ];
 
     return Container(
@@ -29,61 +32,68 @@ class EmployeeAttendanceLocationTypeSelectorWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(color: AppColors.border),
       ),
-      child: Row(
-        children: [
-          for (final option in options)
-            Expanded(
-              child: Semantics(
-                button: true,
-                selected: selectedType == option.$1,
-                label: option.$2.tr(),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(16.r),
-                  onTap: () => onTypeChanged(option.$1),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    padding: EdgeInsets.symmetric(vertical: 10.h),
-                    decoration: BoxDecoration(
-                      color: selectedType == option.$1
-                          ? AppColors.selectedBackground
-                          : AppColors.transparent,
-                      borderRadius: BorderRadius.circular(16.r),
-                      boxShadow: selectedType == option.$1
-                          ? const [
-                              BoxShadow(
-                                color: AppColors.shadow,
-                                blurRadius: 4,
-                                offset: Offset(0, 1),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            for (final option in options)
+              if (allowedTypes.contains(option.$1)) SizedBox(
+                width: 88.w,
+                child: Semantics(
+                  button: true,
+                  selected: selectedType == option.$1,
+                  label: option.$2.tr(context: context),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16.r),
+                    onTap: () => onTypeChanged(option.$1),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 180),
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      decoration: BoxDecoration(
+                        color: selectedType == option.$1
+                            ? AppColors.selectedBackground
+                            : AppColors.transparent,
+                        borderRadius: BorderRadius.circular(16.r),
+                        boxShadow: selectedType == option.$1
+                            ? const [
+                                BoxShadow(
+                                  color: AppColors.shadow,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 1),
+                                ),
+                              ]
+                            : null,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (selectedType == option.$1) ...[
+                            Icon(
+                              Icons.check_rounded,
+                              size: 16.r,
+                              color: AppColors.brandPrimaryDark,
+                            ),
+                            wSpace(4),
+                          ],
+                          Flexible(
+                            child: Text(
+                              option.$2.tr(context: context),
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.font12SemiBold.copyWith(
+                                color: selectedType == option.$1
+                                    ? AppColors.textPrimary
+                                    : AppColors.textSecondary,
                               ),
-                            ]
-                          : null,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (selectedType == option.$1) ...[
-                          Icon(
-                            Icons.check_rounded,
-                            size: 16.r,
-                            color: AppColors.brandPrimaryDark,
+                            ),
                           ),
-                          wSpace(4),
                         ],
-                        Text(
-                          option.$2.tr(),
-                          style: AppTextStyles.font12SemiBold.copyWith(
-                            color: selectedType == option.$1
-                                ? AppColors.textPrimary
-                                : AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

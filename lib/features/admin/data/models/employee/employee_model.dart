@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:check_point_v2/core/utils/legacy_api_json_converters.dart';
+import 'employee_work_policy_model.dart';
 
 part 'employee_model.g.dart';
 
@@ -29,6 +30,15 @@ class EmployeeModel {
     this.canAddPlan,
     this.shiftName,
     this.shiftId,
+    this.workSystem,
+    this.remoteWorkPolicyId,
+    this.workPolicy,
+    this.todayWorkMode,
+    this.todayWorkDay,
+    this.todayIsWorkingDay,
+    this.todayWorkStart,
+    this.todayWorkEnd,
+    this.todayAllowedDelayTime,
     this.clockInTime,
     this.clockOutTime,
     this.area,
@@ -57,6 +67,15 @@ class EmployeeModel {
   final bool? canAddPlan;
   final String? shiftName;
   final int? shiftId;
+  final String? workSystem;
+  final String? remoteWorkPolicyId;
+  final EmployeeWorkPolicyModel? workPolicy;
+  final String? todayWorkMode;
+  final String? todayWorkDay;
+  final bool? todayIsWorkingDay;
+  final String? todayWorkStart;
+  final String? todayWorkEnd;
+  final int? todayAllowedDelayTime;
   @JsonKey(fromJson: legacyApiValueToString)
   final String? clockInTime;
   @JsonKey(fromJson: legacyApiValueToString)
