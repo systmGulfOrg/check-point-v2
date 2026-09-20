@@ -858,6 +858,8 @@
   "remote": "من البيت",
   "hybrid": "هايبرد",
   "off": "مفيش شغل متحدد",
+  "employee.home.defaultName": "الموظف",
+  "employee.home.leaveBalance": "يوم متبقي",
   "attendance.noLocationData": "لم يتم العثور على بيانات موقع الحضور.",
   "attendance.expandMap": "توسيع الخريطة",
   "attendance.collapseMap": "تصغير الخريطة",

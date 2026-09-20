@@ -858,6 +858,8 @@
   "remote": "Remote",
   "hybrid": "Hybrid",
   "off": "Not scheduled",
+  "employee.home.defaultName": "Employee",
+  "employee.home.leaveBalance": "days left",
   "attendance.noLocationData": "No attendance location data found.",
   "attendance.expandMap": "Expand map",
   "attendance.collapseMap": "Collapse map",

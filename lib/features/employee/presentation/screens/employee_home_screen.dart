@@ -13,7 +13,7 @@ import 'package:check_point_v2/features/employee/presentation/cubit/plans/employ
 import 'package:check_point_v2/features/employee/presentation/cubit/plans/employee_plans_state.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_state.dart';
-import 'package:check_point_v2/features/employee/presentation/widgets/employee_header_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_header_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_plan_data.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_plans_section_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_stats_row_widget.dart';
@@ -109,12 +109,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  EmployeeHeaderWidget(
-                    titleKey: 'employee.home.title',
-                    userName: 'Employee',
-                    dateText: AppDateFormatter.formatFullDate(DateTime.now()),
-                    notificationCount: 0,
-                  ),
+                  const EmployeeHomeHeaderBlocBuilderWidget(),
                   hSpace(20),
                   BlocConsumer<
                     EmployeeAttendanceCubit,
@@ -196,6 +191,12 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                           .read<EmployeeAttendanceCubit>()
                           .employeeProfile;
                       final cubit = context.read<EmployeeAttendanceCubit>();
+                      final workMode = profile?.todayWorkMode ?? 'onsite';
+                      final workSystem = profile?.workSystem ?? 'onsite';
+                      final clockIn =
+                          profile?.todayWorkStart ?? profile?.clockInTime;
+                      final clockOut =
+                          profile?.todayWorkEnd ?? profile?.clockOutTime;
                       final isCheckedIn =
                           cubit.hasClockIn(attendance) &&
                           !cubit.hasClockOut(attendance);
@@ -205,7 +206,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                         child: EmployeeTodayCardWidget(
                           policyText:
                               '${profile?.shiftName ?? 'employee.home.defaultPolicy'.tr(context: context)} — '
-                              '${AppDateFormatter.formatTimeString(profile?.clockInTime)}–${AppDateFormatter.formatTimeString(profile?.clockOutTime)}',
+                              '${AppDateFormatter.formatTimeString(clockIn)}–${AppDateFormatter.formatTimeString(clockOut)}',
                           isOnTime: attendance?.isLate != true,
                           checkInTime: AppDateFormatter.formatTimeString(
                             attendance?.clockInTime,
@@ -216,6 +217,9 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                           isCheckedIn: isCheckedIn,
                           hasCheckedOut: hasCheckedOut,
                           workedHours: attendance?.dayHours,
+                          leaveBalance: profile?.leaveBalance,
+                          workModeText: workMode.tr(context: context),
+                          workSystemText: workSystem.tr(context: context),
                           onToggleCheckInOut: _toggleCheckInOut,
                         ),
                       );

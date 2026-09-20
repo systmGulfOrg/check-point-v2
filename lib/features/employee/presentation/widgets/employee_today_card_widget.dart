@@ -14,6 +14,9 @@ class EmployeeTodayCardWidget extends StatelessWidget {
     required this.isCheckedIn,
     required this.hasCheckedOut,
     required this.workedHours,
+    required this.leaveBalance,
+    required this.workModeText,
+    required this.workSystemText,
     required this.onToggleCheckInOut,
     super.key,
   });
@@ -25,6 +28,9 @@ class EmployeeTodayCardWidget extends StatelessWidget {
   final bool isCheckedIn;
   final bool hasCheckedOut;
   final String? workedHours;
+  final int? leaveBalance;
+  final String workModeText;
+  final String workSystemText;
   final VoidCallback onToggleCheckInOut;
 
   @override
@@ -72,6 +78,61 @@ class EmployeeTodayCardWidget extends StatelessWidget {
               ),
               if (isOnTime && isCheckedIn)
                 const EmployeeStatusBadgeWidget(status: 'On Time'),
+            ],
+          ),
+          hSpace(16),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 7.h),
+                decoration: BoxDecoration(
+                  color: AppColors.softBlueBackground,
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.home_work_outlined,
+                      size: 16.r,
+                      color: AppColors.info,
+                    ),
+                    wSpace(5),
+                    Text(
+                      '$workSystemText • $workModeText',
+                      style: AppTextStyles.font11Medium.copyWith(
+                        color: AppColors.info,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 7.h),
+                decoration: BoxDecoration(
+                  color: AppColors.softGreenBackground,
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.beach_access_outlined,
+                      size: 16.r,
+                      color: AppColors.success,
+                    ),
+                    wSpace(5),
+                    Text(
+                      '${leaveBalance ?? '--'} ${'employee.home.leaveBalance'.tr(context: context)}',
+                      style: AppTextStyles.font11Medium.copyWith(
+                        color: AppColors.success,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           hSpace(16),
