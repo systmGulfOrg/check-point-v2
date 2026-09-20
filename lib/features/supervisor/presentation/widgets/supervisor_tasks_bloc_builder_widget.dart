@@ -16,10 +16,12 @@ import 'supervisor_tasks_list_widget.dart';
 class SupervisorTasksBlocBuilderWidget extends StatelessWidget {
   const SupervisorTasksBlocBuilderWidget({
     required this.selectedFilterIndex,
+    required this.canManageTasks,
     super.key,
   });
 
   final int selectedFilterIndex;
+  final bool canManageTasks;
 
   static const _dummyTasks = [
     AdminTaskModel(
@@ -85,7 +87,7 @@ class SupervisorTasksBlocBuilderWidget extends StatelessWidget {
                     .toList(),
               _ => tasks,
             },
-            onEdit: (task) {
+            onEdit: canManageTasks ? (task) {
               showModalBottomSheet<void>(
                 context: context,
                 isScrollControlled: true,
@@ -103,7 +105,7 @@ class SupervisorTasksBlocBuilderWidget extends StatelessWidget {
                   child: SupervisorEditTaskSheetWidget(task: task),
                 ),
               );
-            },
+            } : null,
             onStatusToggle: (task) {
               if (task.id != null) {
                 final isDone =
@@ -117,11 +119,11 @@ class SupervisorTasksBlocBuilderWidget extends StatelessWidget {
                 );
               }
             },
-            onDelete: (task) {
+            onDelete: canManageTasks ? (task) {
               if (task.id != null) {
                 _showDeleteDialog(context, cubit, task.id!);
               }
-            },
+            } : null,
           ),
           SupervisorTasksError(:final messageKey) => Center(
             child: Text(

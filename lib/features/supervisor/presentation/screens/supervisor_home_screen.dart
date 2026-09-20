@@ -7,8 +7,8 @@ import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance
 import 'package:check_point_v2/features/supervisor/presentation/cubit/plans/supervisor_plans_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/widgets/admin_greeting_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_top_bar_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_personal_dashboard_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_active_tasks_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_alert_banner_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_stats_grid_bloc_builder_widget.dart';
@@ -19,8 +19,6 @@ class SupervisorHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = AppDateFormatter.formatFullDate(DateTime.now());
-
     return SafeArea(
       child: RefreshIndicator(
         color: AppColors.brandPrimary,
@@ -38,12 +36,7 @@ class SupervisorHomeScreen extends StatelessWidget {
             children: [
               const SupervisorTopBarWidget(),
               hSpace(20),
-              AdminGreetingWidget(
-                greetingKey: 'supervisor.dashboard.greeting',
-                userNameKey: 'supervisor.dashboard.user',
-                dateText: formattedDate,
-              ),
-              hSpace(20),
+              const SupervisorPersonalDashboardBlocBuilderWidget(),
               const SupervisorAlertBannerBlocBuilderWidget(),
               hSpace(20),
               const SupervisorStatsGridBlocBuilderWidget(),

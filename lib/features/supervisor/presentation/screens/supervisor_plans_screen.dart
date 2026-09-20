@@ -23,6 +23,12 @@ class SupervisorPlansScreen extends StatelessWidget {
           'supervisor.plans.title'.tr(context: context),
           style: AppTextStyles.font18Bold,
         ),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.projects),
+            icon: const Icon(Icons.view_kanban_outlined),
+          ),
+        ],
       ),
       body: SafeArea(
         child: RefreshIndicator(

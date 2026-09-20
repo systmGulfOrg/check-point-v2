@@ -23,6 +23,8 @@ class _SupervisorCreateTaskSheetWidgetState
     extends State<SupervisorCreateTaskSheetWidget> {
   late final TextEditingController titleController;
   late final TextEditingController descriptionController;
+  late final TextEditingController dueDateController;
+  String selectedPriority = 'Medium';
   Set<String> selectedEmployeeIds = {};
   bool isSubmitting = false;
 
@@ -31,12 +33,14 @@ class _SupervisorCreateTaskSheetWidgetState
     super.initState();
     titleController = TextEditingController();
     descriptionController = TextEditingController();
+    dueDateController = TextEditingController();
   }
 
   @override
   void dispose() {
     titleController.dispose();
     descriptionController.dispose();
+    dueDateController.dispose();
     super.dispose();
   }
 
@@ -59,10 +63,13 @@ class _SupervisorCreateTaskSheetWidgetState
       AddTaskRequestBody(
         title: title,
         description: descriptionController.text.trim(),
+        dueDate: dueDateController.text.trim().isNotEmpty
+            ? dueDateController.text.trim()
+            : null,
         assignedEmployeeId: selectedEmployeeIds.isNotEmpty
             ? selectedEmployeeIds.first
             : null,
-        priorityStatus: 'Medium',
+        priorityStatus: selectedPriority,
         status: 'Pending',
       ),
     );
@@ -116,6 +123,77 @@ class _SupervisorCreateTaskSheetWidgetState
                 hintKey: 'supervisor.tasks.create.descriptionHint',
                 controller: descriptionController,
                 maxLines: 3,
+              ),
+              hSpace(16),
+              Row(
+                children: [
+                  Expanded(
+                    child: SupervisorCreateTaskFieldWidget(
+                      labelKey: 'supervisor.tasks.create.dueDateLabel',
+                      hintKey: 'supervisor.tasks.create.dueDateHint',
+                      controller: dueDateController,
+                      readOnly: true,
+                      onTap: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2030),
+                          initialDate: DateTime.now(),
+                        );
+                        if (date != null && context.mounted) {
+                          dueDateController.text =
+                              AppDateFormatter.formatYearMonthDay(date);
+                        }
+                      },
+                      suffixIcon: Icon(
+                        Icons.calendar_today_outlined,
+                        size: 18.r,
+                      ),
+                    ),
+                  ),
+                  wSpace(12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'supervisor.tasks.create.priorityLabel'.tr(
+                            context: context,
+                          ),
+                          style: AppTextStyles.font12Medium,
+                        ),
+                        hSpace(8),
+                        DropdownButtonFormField<String>(
+                          key: ValueKey(selectedPriority),
+                          initialValue: selectedPriority,
+                          decoration: InputDecoration(
+                            hintText: 'supervisor.tasks.priority.medium'.tr(
+                              context: context,
+                            ),
+                          ),
+                          items: [
+                            for (final priority in const [
+                              'Low',
+                              'Medium',
+                              'High',
+                              'Critical',
+                            ])
+                              DropdownMenuItem(
+                                value: priority,
+                                child: Text(
+                                  'supervisor.tasks.priority.${priority.toLowerCase()}'
+                                      .tr(context: context),
+                                ),
+                              ),
+                          ],
+                          onChanged: (value) => setState(() {
+                            selectedPriority = value ?? selectedPriority;
+                          }),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               hSpace(16),
               BlocBuilder<SupervisorTeamCubit, SupervisorTeamState>(

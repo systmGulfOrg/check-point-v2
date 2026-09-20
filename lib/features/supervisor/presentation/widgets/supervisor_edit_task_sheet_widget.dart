@@ -38,8 +38,12 @@ class _SupervisorEditTaskSheetWidgetState
     descriptionController = TextEditingController(
       text: widget.task.description ?? '',
     );
-    dueDateController = TextEditingController();
-    selectedPriority = 'Medium';
+    dueDateController = TextEditingController(
+      text: widget.task.dueDate == null
+          ? ''
+          : AppDateFormatter.formatDateString(widget.task.dueDate),
+    );
+    selectedPriority = widget.task.priorityStatus ?? 'Medium';
     selectedStatus = switch (widget.task.status) {
       'In Progress' => 'InProgress',
       'Pending' ||

@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -30,13 +29,7 @@ class SupervisorAttendancePermissionGateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final permissions = context.select<AuthProfileCubit, List<String>>(
       (cubit) => cubit.state.maybeWhen(
-        success: (
-          name,
-          userId,
-          role,
-          username,
-          permissions,
-        ) => permissions,
+        success: (name, userId, role, username, permissions) => permissions,
         orElse: () => const [],
       ),
     );
@@ -49,12 +42,11 @@ class SupervisorAttendancePermissionGateWidget extends StatelessWidget {
       return Padding(
         padding: EdgeInsets.only(top: 36.h),
         child: Center(
-          child: Text(
-            'errors.noPermission'.tr(context: context),
-            textAlign: TextAlign.center,
-            style: AppTextStyles.font14Regular.copyWith(
-              color: AppColors.textSecondary,
-            ),
+          child: const AppMessageWidget(
+            messageKey: 'errors.noPermission',
+            icon: Icons.lock_outline_rounded,
+            iconBackgroundColor: AppColors.softBlueBackground,
+            iconColor: AppColors.info,
           ),
         ),
       );

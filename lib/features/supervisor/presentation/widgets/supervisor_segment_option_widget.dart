@@ -23,18 +23,24 @@ class SupervisorSegmentOptionWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8.r),
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
         padding: EdgeInsets.symmetric(vertical: 10.h),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.white : AppColors.transparent,
           borderRadius: BorderRadius.circular(8.r),
         ),
         alignment: Alignment.center,
-        child: Text(
-          labelKey.tr(context: context, args: labelArgs),
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
           style: AppTextStyles.font12Medium.copyWith(
-            color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
+            color: isSelected
+                ? AppColors.textPrimary
+                : AppColors.textSecondary,
           ),
+          child: Text(labelKey.tr(context: context, args: labelArgs)),
         ),
       ),
     );
