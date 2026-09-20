@@ -37,16 +37,14 @@ class LoginBlocListenerWidget extends StatelessWidget {
           }
         case LoginError(:final messageKey):
           if (messageKey == 'deviceTransferSuccess') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'auth.login.deviceTransferSuccess'.tr(context: context),
-                ),
-              ),
+            CustomSnackBar.showSuccess(
+              context,
+              message: 'auth.login.deviceTransferSuccess'.tr(context: context),
             );
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(messageKey.tr(context: context))),
+            CustomSnackBar.showError(
+              context,
+              message: messageKey.tr(context: context),
             );
           }
         case LoginDeviceTransferRequired():

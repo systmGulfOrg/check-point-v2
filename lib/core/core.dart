@@ -27,4 +27,5 @@ export 'widgets/custom_text_form_field.dart';
 export 'widgets/language_switcher_widget.dart';
 export 'widgets/animated_list_item_widget.dart';
 export 'widgets/app_delete_confirmation_dialog_widget.dart';
+export 'widgets/custom_snack_bar.dart';
 export 'utils/app_date_formatter.dart';

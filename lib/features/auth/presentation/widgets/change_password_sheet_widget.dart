@@ -65,19 +65,15 @@ class _ChangePasswordSheetWidgetState extends State<ChangePasswordSheetWidget> {
       listener: (context, state) {
         switch (state) {
           case EmployeeChangePasswordStateSuccess():
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('profile.password.success'.tr(context: context)),
-                backgroundColor: AppColors.success,
-              ),
+            CustomSnackBar.showSuccess(
+              context,
+              message: 'profile.password.success'.tr(context: context),
             );
             Navigator.pop(context);
           case EmployeeChangePasswordStateError(:final messageKey):
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(messageKey.tr(context: context)),
-                backgroundColor: AppColors.error,
-              ),
+            CustomSnackBar.showError(
+              context,
+              message: messageKey.tr(context: context),
             );
           default:
             break;

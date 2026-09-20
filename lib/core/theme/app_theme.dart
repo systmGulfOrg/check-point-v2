@@ -21,6 +21,19 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.white,
       canvasColor: AppColors.white,
       cardColor: AppColors.cardBackground,
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.white,
+        foregroundColor: AppColors.textPrimary,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        centerTitle: false,
+        titleTextStyle: AppTextStyles.font18Bold.copyWith(
+          color: AppColors.textPrimary,
+        ),
+        iconTheme: const IconThemeData(
+          color: AppColors.textPrimary,
+        ),
+      ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: AppColors.textPrimary,
