@@ -5,6 +5,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_details_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
@@ -74,7 +75,32 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) => BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
-    builder: (context, state) => switch (state) {
+    builder: (context, state) {
+      final canEdit = context.select<AuthProfileCubit, bool>(
+        (cubit) => cubit.state.maybeWhen(
+          success: (
+            name,
+            userId,
+            role,
+            username,
+            permissions,
+          ) => AppPermissions.has(permissions, AppPermissions.employeeEdit),
+          orElse: () => false,
+        ),
+      );
+      final canDelete = context.select<AuthProfileCubit, bool>(
+        (cubit) => cubit.state.maybeWhen(
+          success: (
+            name,
+            userId,
+            role,
+            username,
+            permissions,
+          ) => AppPermissions.has(permissions, AppPermissions.employeeDelete),
+          orElse: () => false,
+        ),
+      );
+      return switch (state) {
       AdminEmployeesStateInitial() => const SizedBox.shrink(),
       AdminEmployeesStateLoading() => const AdminEmployeesSkeletonWidget(),
       AdminEmployeesStateError(:final messageKey) =>
@@ -106,12 +132,16 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
                       empCode: employee.employeeCode ?? employee.id ?? '-',
                       department: employee.departmentName,
                       isOnline: employee.canAddAttendance ?? false,
-                      onEdit: () => _showEditSheet(context, employee),
-                      onDelete: () {
+                      onEdit: canEdit
+                          ? () => _showEditSheet(context, employee)
+                          : null,
+                      onDelete: canDelete
+                          ? () {
                         if (employee.id != null) {
                           _showDeleteDialog(context, employee.id!);
                         }
-                      },
+                      }
+                          : null,
                       onTap: () =>
                           EmployeeDetailsSheetWidget.show(context, employee),
                     ),
@@ -119,7 +149,8 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
                   ],
                 ],
               ),
-      _ => const SizedBox.shrink(),
+        _ => const SizedBox.shrink(),
+      };
     },
   );
 

@@ -15,6 +15,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
       final userId = await sessionStorage.readUserId() ?? '';
       final username = await sessionStorage.readUserName() ?? '';
       final role = await sessionStorage.readUserRole() ?? '';
+      final permissions = await sessionStorage.readPermissions();
       final name = username.trim();
       emit(
         AuthProfileState.success(
@@ -22,6 +23,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
           userId: userId,
           role: role,
           username: username,
+          permissions: permissions,
         ),
       );
     } catch (_) {

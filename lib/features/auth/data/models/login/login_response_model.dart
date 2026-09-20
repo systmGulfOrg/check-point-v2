@@ -10,6 +10,7 @@ class LoginResponseModel {
     this.name,
     this.role,
     this.roles,
+    this.permissions,
     this.token,
     this.branchId,
     this.branchName,
@@ -20,6 +21,7 @@ class LoginResponseModel {
   final String? name;
   final String? role;
   final List<String>? roles;
+  final List<String>? permissions;
   final String? token;
   final int? branchId;
   final String? branchName;

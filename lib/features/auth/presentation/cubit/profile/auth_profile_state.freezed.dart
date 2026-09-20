@@ -26,6 +26,7 @@ mixin _$AuthProfileState {
       String userId,
       String role,
       String username,
+      List<String> permissions,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -34,7 +35,13 @@ mixin _$AuthProfileState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String name, String userId, String role, String username)?
+    TResult? Function(
+      String name,
+      String userId,
+      String role,
+      String username,
+      List<String> permissions,
+    )?
     success,
     TResult? Function(String messageKey)? error,
   }) => throw _privateConstructorUsedError;
@@ -42,7 +49,13 @@ mixin _$AuthProfileState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String name, String userId, String role, String username)?
+    TResult Function(
+      String name,
+      String userId,
+      String role,
+      String username,
+      List<String> permissions,
+    )?
     success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
@@ -143,6 +156,7 @@ class _$AuthProfileInitialImpl implements AuthProfileInitial {
       String userId,
       String role,
       String username,
+      List<String> permissions,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -155,7 +169,13 @@ class _$AuthProfileInitialImpl implements AuthProfileInitial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String name, String userId, String role, String username)?
+    TResult? Function(
+      String name,
+      String userId,
+      String role,
+      String username,
+      List<String> permissions,
+    )?
     success,
     TResult? Function(String messageKey)? error,
   }) {
@@ -167,7 +187,13 @@ class _$AuthProfileInitialImpl implements AuthProfileInitial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String name, String userId, String role, String username)?
+    TResult Function(
+      String name,
+      String userId,
+      String role,
+      String username,
+      List<String> permissions,
+    )?
     success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
@@ -270,6 +296,7 @@ class _$AuthProfileLoadingImpl implements AuthProfileLoading {
       String userId,
       String role,
       String username,
+      List<String> permissions,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -282,7 +309,13 @@ class _$AuthProfileLoadingImpl implements AuthProfileLoading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String name, String userId, String role, String username)?
+    TResult? Function(
+      String name,
+      String userId,
+      String role,
+      String username,
+      List<String> permissions,
+    )?
     success,
     TResult? Function(String messageKey)? error,
   }) {
@@ -294,7 +327,13 @@ class _$AuthProfileLoadingImpl implements AuthProfileLoading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String name, String userId, String role, String username)?
+    TResult Function(
+      String name,
+      String userId,
+      String role,
+      String username,
+      List<String> permissions,
+    )?
     success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
@@ -354,7 +393,13 @@ abstract class _$$AuthProfileSuccessImplCopyWith<$Res> {
     $Res Function(_$AuthProfileSuccessImpl) then,
   ) = __$$AuthProfileSuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String name, String userId, String role, String username});
+  $Res call({
+    String name,
+    String userId,
+    String role,
+    String username,
+    List<String> permissions,
+  });
 }
 
 /// @nodoc
@@ -375,6 +420,7 @@ class __$$AuthProfileSuccessImplCopyWithImpl<$Res>
     Object? userId = null,
     Object? role = null,
     Object? username = null,
+    Object? permissions = null,
   }) {
     return _then(
       _$AuthProfileSuccessImpl(
@@ -394,6 +440,10 @@ class __$$AuthProfileSuccessImplCopyWithImpl<$Res>
             ? _value.username
             : username // ignore: cast_nullable_to_non_nullable
                   as String,
+        permissions: null == permissions
+            ? _value._permissions
+            : permissions // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
       ),
     );
   }
@@ -407,7 +457,8 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
     required this.userId,
     required this.role,
     required this.username,
-  });
+    required final List<String> permissions,
+  }) : _permissions = permissions;
 
   @override
   final String name;
@@ -417,10 +468,17 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
   final String role;
   @override
   final String username;
+  final List<String> _permissions;
+  @override
+  List<String> get permissions {
+    if (_permissions is EqualUnmodifiableListView) return _permissions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_permissions);
+  }
 
   @override
   String toString() {
-    return 'AuthProfileState.success(name: $name, userId: $userId, role: $role, username: $username)';
+    return 'AuthProfileState.success(name: $name, userId: $userId, role: $role, username: $username, permissions: $permissions)';
   }
 
   @override
@@ -432,11 +490,22 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.role, role) || other.role == role) &&
             (identical(other.username, username) ||
-                other.username == username));
+                other.username == username) &&
+            const DeepCollectionEquality().equals(
+              other._permissions,
+              _permissions,
+            ));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, name, userId, role, username);
+  int get hashCode => Object.hash(
+    runtimeType,
+    name,
+    userId,
+    role,
+    username,
+    const DeepCollectionEquality().hash(_permissions),
+  );
 
   /// Create a copy of AuthProfileState
   /// with the given fields replaced by the non-null parameter values.
@@ -459,11 +528,12 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
       String userId,
       String role,
       String username,
+      List<String> permissions,
     )
     success,
     required TResult Function(String messageKey) error,
   }) {
-    return success(name, userId, role, username);
+    return success(name, userId, role, username, permissions);
   }
 
   @override
@@ -471,11 +541,17 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String name, String userId, String role, String username)?
+    TResult? Function(
+      String name,
+      String userId,
+      String role,
+      String username,
+      List<String> permissions,
+    )?
     success,
     TResult? Function(String messageKey)? error,
   }) {
-    return success?.call(name, userId, role, username);
+    return success?.call(name, userId, role, username, permissions);
   }
 
   @override
@@ -483,13 +559,19 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String name, String userId, String role, String username)?
+    TResult Function(
+      String name,
+      String userId,
+      String role,
+      String username,
+      List<String> permissions,
+    )?
     success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success(name, userId, role, username);
+      return success(name, userId, role, username, permissions);
     }
     return orElse();
   }
@@ -538,12 +620,14 @@ abstract class AuthProfileSuccess implements AuthProfileState {
     required final String userId,
     required final String role,
     required final String username,
+    required final List<String> permissions,
   }) = _$AuthProfileSuccessImpl;
 
   String get name;
   String get userId;
   String get role;
   String get username;
+  List<String> get permissions;
 
   /// Create a copy of AuthProfileState
   /// with the given fields replaced by the non-null parameter values.
@@ -633,6 +717,7 @@ class _$AuthProfileErrorImpl implements AuthProfileError {
       String userId,
       String role,
       String username,
+      List<String> permissions,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -645,7 +730,13 @@ class _$AuthProfileErrorImpl implements AuthProfileError {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String name, String userId, String role, String username)?
+    TResult? Function(
+      String name,
+      String userId,
+      String role,
+      String username,
+      List<String> permissions,
+    )?
     success,
     TResult? Function(String messageKey)? error,
   }) {
@@ -657,7 +748,13 @@ class _$AuthProfileErrorImpl implements AuthProfileError {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String name, String userId, String role, String username)?
+    TResult Function(
+      String name,
+      String userId,
+      String role,
+      String username,
+      List<String> permissions,
+    )?
     success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),

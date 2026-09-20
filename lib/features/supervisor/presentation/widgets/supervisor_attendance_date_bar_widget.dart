@@ -8,13 +8,13 @@ class SupervisorAttendanceDateBarWidget extends StatelessWidget {
   const SupervisorAttendanceDateBarWidget({
     required this.selectedDate,
     required this.onDateChanged,
-    required this.onAddPressed,
+    this.onAddPressed,
     super.key,
   });
 
   final DateTime selectedDate;
   final ValueChanged<DateTime> onDateChanged;
-  final VoidCallback onAddPressed;
+  final VoidCallback? onAddPressed;
 
   bool get _isToday {
     final now = DateTime.now();
@@ -213,8 +213,9 @@ class SupervisorAttendanceDateBarWidget extends StatelessWidget {
             ),
           ),
         ),
-        wSpace(10),
-        Container(
+        if (onAddPressed != null) ...[
+          wSpace(10),
+          Container(
           decoration: BoxDecoration(
             color: AppColors.brandPrimary,
             borderRadius: BorderRadius.circular(14.r),
@@ -237,7 +238,8 @@ class SupervisorAttendanceDateBarWidget extends StatelessWidget {
               ),
             ),
           ),
-        ),
+          ),
+        ],
       ],
     );
   }

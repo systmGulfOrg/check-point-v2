@@ -53,6 +53,7 @@ class LoginUseCase {
           userName: data.userName ?? data.name,
           role: role,
           branchId: data.branchId,
+          permissions: data.permissions ?? const [],
         );
 
         if (enableBiometricLogin && await biometricAuthService.isAvailable()) {

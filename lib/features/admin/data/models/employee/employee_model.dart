@@ -12,6 +12,8 @@ class EmployeeModel {
     this.name,
     this.role,
     this.roles,
+    this.permissions,
+    this.customPermissions,
     this.position,
     this.departmentName,
     this.departmentId,
@@ -38,6 +40,8 @@ class EmployeeModel {
   final String? name;
   final String? role;
   final List<String>? roles;
+  final List<String>? permissions;
+  final List<String>? customPermissions;
   final String? position;
   final String? departmentName;
   final int? departmentId;

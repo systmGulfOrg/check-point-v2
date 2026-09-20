@@ -15,6 +15,7 @@ export 'network/api_result.dart';
 export 'network/device_identity_provider.dart';
 export 'network/dio_factory.dart';
 export 'auth/auth_session_storage.dart';
+export 'auth/app_permissions.dart';
 export 'auth/biometric_auth_service.dart';
 export 'services/attendance_verification_service.dart';
 export 'widgets/custom_button.dart';

@@ -11,6 +11,7 @@ class AuthSessionStorage {
   static const branchIdKey = 'branch_id';
   static const userNameKey = 'user_name';
   static const userRoleKey = 'user_role';
+  static const permissionsKey = 'user_permissions';
   static const biometricEnabledKey = 'biometric_login_enabled';
   static const biometricRoleKey = 'biometric_login_role';
   static const biometricTokenKey = 'biometric_login_token';
@@ -26,6 +27,7 @@ class AuthSessionStorage {
     int? branchId,
     String? userName,
     String? role,
+    List<String> permissions = const [],
   }) async {
     await secureStorage.write(key: tokenKey, value: token);
     if (userId != null && userId.isNotEmpty) {
@@ -46,6 +48,7 @@ class AuthSessionStorage {
     if (role != null && role.isNotEmpty) {
       await secureStorage.write(key: userRoleKey, value: role);
     }
+    await secureStorage.write(key: permissionsKey, value: permissions.join(','));
   }
 
   Future<String?> readToken() => secureStorage.read(key: tokenKey);
@@ -72,6 +75,12 @@ class AuthSessionStorage {
   Future<String?> readUserName() => secureStorage.read(key: userNameKey);
 
   Future<String?> readUserRole() => secureStorage.read(key: userRoleKey);
+
+  Future<List<String>> readPermissions() async {
+    final raw = await secureStorage.read(key: permissionsKey);
+    if (raw == null || raw.isEmpty) return const [];
+    return raw.split(',').where((permission) => permission.isNotEmpty).toList();
+  }
 
   Future<void> enableBiometricLogin({
     required String role,
@@ -134,5 +143,6 @@ class AuthSessionStorage {
     await secureStorage.delete(key: branchIdKey);
     await secureStorage.delete(key: userNameKey);
     await secureStorage.delete(key: userRoleKey);
+    await secureStorage.delete(key: permissionsKey);
   }
 }

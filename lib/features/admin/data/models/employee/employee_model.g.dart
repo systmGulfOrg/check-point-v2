@@ -15,6 +15,12 @@ EmployeeModel _$EmployeeModelFromJson(Map<String, dynamic> json) =>
       roles: (json['roles'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      permissions: (json['permissions'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      customPermissions: (json['customPermissions'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       position: json['position'] as String?,
       departmentName: json['departmentName'] as String?,
       departmentId: (json['departmentId'] as num?)?.toInt(),
@@ -45,6 +51,8 @@ Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
       'name': instance.name,
       'role': instance.role,
       'roles': instance.roles,
+      'permissions': instance.permissions,
+      'customPermissions': instance.customPermissions,
       'position': instance.position,
       'departmentName': instance.departmentName,
       'departmentId': instance.departmentId,

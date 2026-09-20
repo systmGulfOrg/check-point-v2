@@ -6,11 +6,8 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
-import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_attendance_bloc_builder_widget.dart';
-import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_attendance_date_bar_widget.dart';
-import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_attendance_filter_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_clock_in_employee_sheet_widget.dart';
-import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_leave_requests_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_attendance_permission_gate_widget.dart';
 
 class SupervisorAttendanceScreen extends StatefulWidget {
   const SupervisorAttendanceScreen({super.key});
@@ -80,26 +77,13 @@ class _SupervisorAttendanceScreenState
                   ),
                 ],
               ),
-              hSpace(16),
-              SupervisorAttendanceDateBarWidget(
+              SupervisorAttendancePermissionGateWidget(
                 selectedDate: selectedDate,
+                selectedTab: selectedTab,
                 onDateChanged: _onDateChanged,
+                onTabSelected: (index) => setState(() => selectedTab = index),
                 onAddPressed: _openClockInSheet,
               ),
-              hSpace(16),
-              SupervisorAttendanceFilterWidget(
-                selectedIndex: selectedTab,
-                onTabSelected: (index) => setState(() => selectedTab = index),
-              ),
-              hSpace(16),
-              if (selectedTab < 3)
-                SupervisorAttendanceBlocBuilderWidget(
-                  selectedFilterIndex: selectedTab,
-                )
-              else
-                const SupervisorLeaveRequestsBlocBuilderWidget(
-                  selectedFilterIndex: 0,
-                ),
             ],
           ),
         ),

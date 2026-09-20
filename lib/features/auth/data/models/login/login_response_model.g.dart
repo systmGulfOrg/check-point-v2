@@ -15,6 +15,9 @@ LoginResponseModel _$LoginResponseModelFromJson(Map<String, dynamic> json) =>
       roles: (json['roles'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      permissions: (json['permissions'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       token: json['token'] as String?,
       branchId: (json['branchId'] as num?)?.toInt(),
       branchName: json['branchName'] as String?,
@@ -27,6 +30,7 @@ Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
       'name': instance.name,
       'role': instance.role,
       'roles': instance.roles,
+      'permissions': instance.permissions,
       'token': instance.token,
       'branchId': instance.branchId,
       'branchName': instance.branchName,
