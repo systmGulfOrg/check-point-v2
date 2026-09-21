@@ -67,7 +67,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
     if (!mounted) return;
     setState(() => isWorkScheduleLoading = false);
     final mode = profile?.todayWorkMode;
-    if (!widget.isCheckOut && mode == 'remote') {
+    if (mode == 'remote') {
       _changeType('Remote');
     } else if (mode == 'onsite' && type == 'Remote') {
       _changeType('Branch');

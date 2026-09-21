@@ -44,7 +44,7 @@ abstract class EmployeeApiService {
   );
 
   @POST(ApiConstants.employeeCheckOutWithoutPlan)
-  Future<AdminAttendanceModel> checkOutWithoutPlan(
+  Future<dynamic> checkOutWithoutPlan(
     @Body() EmployeeCheckOutRequestBody body,
   );
 

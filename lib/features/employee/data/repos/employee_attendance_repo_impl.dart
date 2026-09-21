@@ -189,7 +189,8 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
   ) async {
     try {
       await odooAttendanceService.syncCheckOut(employeeIdStr: body.employeeId);
-      final model = await api.checkOutWithoutPlan(body);
+      final response = await api.checkOutWithoutPlan(body);
+      final model = _parseCheckOutResponse(response, body);
       return ApiResult.success(model);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
