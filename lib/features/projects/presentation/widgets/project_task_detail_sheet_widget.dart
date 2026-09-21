@@ -99,7 +99,9 @@ class _ProjectTaskDetailSheetWidgetState
     if (action == null || action.isEmpty) return 'projects.activity'.tr();
     return switch (action) {
       'task.status_updated' => 'projects.statusUpdated'.tr(context: context),
-      'task.assignees_updated' => 'projects.assigneesUpdated'.tr(context: context),
+      'task.assignees_updated' => 'projects.assigneesUpdated'.tr(
+        context: context,
+      ),
       'task.tags_updated' => 'projects.tagsUpdated'.tr(context: context),
       'task.created' => 'projects.taskCreated'.tr(context: context),
       'task.updated' => 'projects.taskUpdated'.tr(context: context),
@@ -109,6 +111,7 @@ class _ProjectTaskDetailSheetWidgetState
 
   Future<void> _manageAssignees() async {
     final cubit = context.read<ProjectsCubit>();
+    var localIds = List<String>.from(_currentAssigneeIds);
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -116,44 +119,55 @@ class _ProjectTaskDetailSheetWidgetState
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.all(20.r),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'projects.assignees'.tr(context: context),
-              style: AppTextStyles.font18Bold,
-            ),
-            SizedBox(height: 16.h),
-            AssigneeMultiSelectWidget(
-              selectedIds: _currentAssigneeIds,
-              fallbackOptions: widget.task.assigneeIds,
-              onChanged: (updated) => setState(() => _currentAssigneeIds = updated),
-            ),
-            SizedBox(height: 20.h),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.brandPrimary,
-                  padding: EdgeInsets.symmetric(vertical: 14.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
+      builder: (ctx) => BlocProvider.value(
+        value: cubit,
+        child: StatefulBuilder(
+          builder: (innerCtx, setInnerState) => Padding(
+            padding: EdgeInsets.all(20.r),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'projects.assignees'.tr(context: innerCtx),
+                  style: AppTextStyles.font18Bold,
+                ),
+                SizedBox(height: 16.h),
+                AssigneeMultiSelectWidget(
+                  selectedIds: localIds,
+                  fallbackOptions: widget.task.assigneeIds,
+                  onChanged: (updated) =>
+                      setInnerState(() => localIds = updated),
+                ),
+                SizedBox(height: 20.h),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.brandPrimary,
+                      padding: EdgeInsets.symmetric(vertical: 14.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    onPressed: () async {
+                      Navigator.pop(ctx);
+                      if (mounted) {
+                        setState(() => _currentAssigneeIds = localIds);
+                      }
+                      await cubit.assignTask(widget.task.id, localIds);
+                    },
+                    child: Text(
+                      'common.save'.tr(context: innerCtx),
+                      style: AppTextStyles.font14Bold.copyWith(
+                        color: AppColors.white,
+                      ),
+                    ),
                   ),
                 ),
-                onPressed: () async {
-                  Navigator.pop(ctx);
-                  await cubit.assignTask(widget.task.id, _currentAssigneeIds);
-                },
-                child: Text(
-                  'common.save'.tr(context: context),
-                  style: AppTextStyles.font14Bold.copyWith(color: AppColors.white),
-                ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -258,14 +272,18 @@ class _ProjectTaskDetailSheetWidgetState
                         if (widget.task.startDate?.isNotEmpty == true)
                           _buildChip(
                             icon: Icons.calendar_today_rounded,
-                            label: AppDateFormatter.formatDateString(widget.task.startDate),
+                            label: AppDateFormatter.formatDateString(
+                              widget.task.startDate,
+                            ),
                             bg: AppColors.pageBackground,
                             textColor: AppColors.textSecondary,
                           ),
                         if (widget.task.dueDate?.isNotEmpty == true)
                           _buildChip(
                             icon: Icons.event_rounded,
-                            label: AppDateFormatter.formatDateString(widget.task.dueDate),
+                            label: AppDateFormatter.formatDateString(
+                              widget.task.dueDate,
+                            ),
                             bg: AppColors.softBrandBackground,
                             textColor: AppColors.brandPrimary,
                           ),
@@ -409,7 +427,8 @@ class _ProjectTaskDetailSheetWidgetState
         final initial = displayName.trim().isNotEmpty
             ? displayName.trim()[0].toUpperCase()
             : '?';
-        final subtitle = emp?.position ?? emp?.email ?? emp?.departmentName ?? id;
+        final subtitle =
+            emp?.position ?? emp?.email ?? emp?.departmentName ?? id;
 
         return Container(
           margin: EdgeInsets.only(bottom: 8.h),
@@ -419,7 +438,10 @@ class _ProjectTaskDetailSheetWidgetState
             border: Border.all(color: AppColors.border),
           ),
           child: ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 4.h),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 14.w,
+              vertical: 4.h,
+            ),
             leading: CircleAvatar(
               radius: 20.r,
               backgroundColor: AppColors.softBrandBackground,
@@ -435,10 +457,7 @@ class _ProjectTaskDetailSheetWidgetState
                       ),
                     ),
             ),
-            title: Text(
-              displayName,
-              style: AppTextStyles.font14Bold,
-            ),
+            title: Text(displayName, style: AppTextStyles.font14Bold),
             subtitle: Text(
               subtitle,
               style: AppTextStyles.font12Regular.copyWith(
@@ -479,8 +498,14 @@ class _ProjectTaskDetailSheetWidgetState
             border: Border.all(color: AppColors.border),
           ),
           child: ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 4.h),
-            leading: Icon(Icons.insert_drive_file_outlined, color: AppColors.brandPrimary),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 14.w,
+              vertical: 4.h,
+            ),
+            leading: Icon(
+              Icons.insert_drive_file_outlined,
+              color: AppColors.brandPrimary,
+            ),
             title: Text(
               file.fileName ?? 'File',
               style: AppTextStyles.font14Bold,
@@ -557,10 +582,7 @@ class _ProjectTaskDetailSheetWidgetState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          formattedAction,
-                          style: AppTextStyles.font13Bold,
-                        ),
+                        Text(formattedAction, style: AppTextStyles.font13Bold),
                         if (actor.isNotEmpty || dateStr.isNotEmpty)
                           SizedBox(height: 2.h),
                         if (actor.isNotEmpty || dateStr.isNotEmpty)
