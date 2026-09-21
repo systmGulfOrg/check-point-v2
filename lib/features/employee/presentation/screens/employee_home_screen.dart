@@ -194,9 +194,13 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                       final workMode = profile?.todayWorkMode ?? 'onsite';
                       final workSystem = profile?.workSystem ?? 'onsite';
                       final clockIn =
-                          profile?.todayWorkStart ?? profile?.clockInTime;
+                          profile?.todayWorkStart ??
+                          profile?.workPolicy?.workingHoursStart ??
+                          profile?.clockInTime;
                       final clockOut =
-                          profile?.todayWorkEnd ?? profile?.clockOutTime;
+                          profile?.todayWorkEnd ??
+                          profile?.workPolicy?.workingHoursEnd ??
+                          profile?.clockOutTime;
                       final isCheckedIn =
                           cubit.hasClockIn(attendance) &&
                           !cubit.hasClockOut(attendance);

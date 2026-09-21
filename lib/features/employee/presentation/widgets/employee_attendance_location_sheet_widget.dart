@@ -450,12 +450,22 @@ class _EmployeeAttendanceLocationSheetWidgetState
                                                 .read<EmployeeAttendanceCubit>()
                                                 .employeeProfile
                                                 ?.todayWorkStart ??
+                                            context
+                                                .read<EmployeeAttendanceCubit>()
+                                                .employeeProfile
+                                                ?.workPolicy
+                                                ?.workingHoursStart ??
                                             '--:--',
                                         'end':
                                             context
                                                 .read<EmployeeAttendanceCubit>()
                                                 .employeeProfile
                                                 ?.todayWorkEnd ??
+                                            context
+                                                .read<EmployeeAttendanceCubit>()
+                                                .employeeProfile
+                                                ?.workPolicy
+                                                ?.workingHoursEnd ??
                                             '--:--',
                                       },
                                     ),

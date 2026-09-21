@@ -39,11 +39,13 @@ class EmployeesPageModel {
   final bool? hasPreviousPage;
 
   List<EmployeeModel> get list => (items ?? data ?? const [])
-      .where((e) =>
-          e.userName?.toLowerCase() != 'admin' &&
-          e.name.toLowerCase() != 'demo administrator' &&
-          e.employeeCode?.toLowerCase() != 'emp-0001' &&
-          !e.allRoles.any((r) => r.toLowerCase() == 'admin'))
+      .where(
+        (e) =>
+            e.userName?.toLowerCase() != 'admin' &&
+            e.name?.toLowerCase() != 'demo administrator' &&
+            e.employeeCode?.toLowerCase() != 'emp-0001' &&
+            !e.allRoles.any((r) => r.toLowerCase() == 'admin'),
+      )
       .toList();
 
   factory EmployeesPageModel.fromJson(Map<String, dynamic> json) =>
