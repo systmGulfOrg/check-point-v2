@@ -7,6 +7,7 @@ import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_profile_card_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/edit_profile_sheet_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/user_permissions_sheet_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_section_card_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_sign_out_button_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_tile_widget.dart';
@@ -69,6 +70,12 @@ class EmployeeSettingsScreen extends StatelessWidget {
                     icon: Icons.notifications_none_rounded,
                     titleKey: 'employee.settings.notifications',
                     valueKey: 'employee.settings.enabled',
+                  ),
+                  EmployeeSettingsTileWidget(
+                    icon: Icons.shield_outlined,
+                    titleKey: 'admin.settings.permissions',
+                    valueKey: 'admin.settings.roleBased',
+                    onTap: () => showUserPermissionsSheet(context),
                   ),
                 ],
               ),
