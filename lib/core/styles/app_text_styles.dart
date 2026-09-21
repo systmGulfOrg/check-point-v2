@@ -54,6 +54,12 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
+  static TextStyle get font13Bold => TextStyle(
+    color: AppColors.textPrimary,
+    fontSize: 13.sp,
+    fontWeight: FontWeight.w700,
+  );
+
   static TextStyle get font13Regular => TextStyle(
     color: AppColors.textSecondary,
     fontSize: 13.sp,
