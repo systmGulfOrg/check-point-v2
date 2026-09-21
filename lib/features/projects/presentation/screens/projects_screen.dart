@@ -19,6 +19,7 @@ import '../cubit/projects_cubit.dart';
 import '../cubit/projects_state.dart';
 import '../widgets/assignee_multi_select_widget.dart';
 import '../widgets/project_card_widget.dart';
+import '../widgets/project_task_detail_sheet_widget.dart';
 import '../widgets/project_task_card_widget.dart';
 
 class ProjectDragData {
@@ -733,173 +734,17 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.transparent,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
       ),
       builder: (sheetContext) => BlocProvider.value(
         value: cubit,
-        child: BlocBuilder<ProjectsCubit, ProjectsState>(
-          builder: (context, state) {
-            final audit = state is ProjectsStateSuccess
-                ? state.audit
-                : const <TaskAuditModel>[];
-            return SafeArea(
-              child: FractionallySizedBox(
-                heightFactor: .92,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(20.r),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              task.title,
-                              style: AppTextStyles.font20Bold,
-                            ),
-                          ),
-                          if (canManage)
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pop(sheetContext);
-                                _editTask(context, cubit, task);
-                              },
-                              icon: const Icon(Icons.edit_outlined),
-                            ),
-                        ],
-                      ),
-                      SizedBox(height: 14.h),
-                      Wrap(
-                        spacing: 8.w,
-                        runSpacing: 8.h,
-                        children: [
-                          _detailPill(
-                            context,
-                            'projects.status'.tr(context: context),
-                            project.statuses
-                                .firstWhere(
-                                  (item) => item.id == task.statusId,
-                                  orElse: () => project.statuses.first,
-                                )
-                                .name,
-                            bg: AppColors.pageBackground,
-                            textColor: AppColors.textPrimary,
-                          ),
-                          _detailPill(
-                            context,
-                            'projects.priority'.tr(context: context),
-                            task.priority ?? 'NORMAL',
-                            bg: _priorityBackground(task.priority),
-                            textColor: _priorityColor(task.priority),
-                          ),
-                          _detailPill(
-                            context,
-                            'projects.expectedMinutes'.tr(context: context),
-                            '${task.estimatedMinutes ?? 0} min',
-                          ),
-                          if (task.startDate?.isNotEmpty == true)
-                            _detailPill(
-                              context,
-                              'projects.startDate'.tr(context: context),
-                              AppDateFormatter.formatDateString(task.startDate),
-                            ),
-                          if (task.dueDate?.isNotEmpty == true)
-                            _detailPill(
-                              context,
-                              'projects.dueDate'.tr(context: context),
-                              AppDateFormatter.formatDateString(task.dueDate),
-                            ),
-                        ],
-                      ),
-                      SizedBox(height: 20.h),
-                      _detailHeading(
-                        context,
-                        'projects.description'.tr(context: context),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(14.r),
-                        decoration: BoxDecoration(
-                          color: AppColors.pageBackground,
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: Text(
-                          task.description?.isNotEmpty == true
-                              ? task.description!
-                              : 'projects.noDescription'.tr(context: context),
-                        ),
-                      ),
-                      SizedBox(height: 20.h),
-                      _detailHeading(
-                        context,
-                        'projects.assignees'.tr(context: context),
-                      ),
-                      if (task.assigneeIds.isEmpty)
-                        Text(
-                          'projects.noAssignees'.tr(context: context),
-                          style: AppTextStyles.font13Regular,
-                        )
-                      else
-                        ...task.assigneeIds.map(
-                          (id) => ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: CircleAvatar(
-                              child: Text(
-                                id.trim().isNotEmpty
-                                    ? id.trim()[0].toUpperCase()
-                                    : '?',
-                              ),
-                            ),
-                            title: Text(id),
-                          ),
-                        ),
-                      SizedBox(height: 12.h),
-                      _detailHeading(
-                        context,
-                        'projects.attachments'.tr(context: context),
-                      ),
-                      if (task.attachments.isEmpty)
-                        Text(
-                          'projects.noAttachments'.tr(context: context),
-                          style: AppTextStyles.font13Regular,
-                        )
-                      else
-                        ...task.attachments.map(
-                          (file) => ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.attach_file),
-                            title: Text(file.fileName ?? 'file'),
-                          ),
-                        ),
-                      SizedBox(height: 12.h),
-                      _detailHeading(
-                        context,
-                        'projects.activity'.tr(context: context),
-                      ),
-                      if (audit.isEmpty)
-                        Text(
-                          'projects.noActivity'.tr(context: context),
-                          style: AppTextStyles.font13Regular,
-                        )
-                      else
-                        ...audit.map(
-                          (item) => ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.history),
-                            title: Text(item.action ?? ''),
-                            subtitle: Text(
-                              '${item.actorName ?? ''}  ${item.createdAt ?? ''}',
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
+        child: ProjectTaskDetailSheetWidget(
+          task: task,
+          project: project,
+          canManage: canManage,
+          onEdit: () => _editTask(context, cubit, task),
         ),
       ),
     );
