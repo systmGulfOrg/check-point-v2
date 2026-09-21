@@ -163,7 +163,10 @@ class ProjectsRepoImpl implements ProjectsRepo {
 
   @override
   Future<ApiResult<void>> assignTask(String taskId, List<String> employeeIds) =>
-      _run(() => api.assignTask(taskId, {'employeeIds': employeeIds}));
+      _run(() => api.assignTask(taskId, {
+            'assigneeIds': employeeIds,
+            'employeeIds': employeeIds,
+          }));
 
   @override
   Future<ApiResult<void>> uploadAttachment(String taskId, File file) =>
