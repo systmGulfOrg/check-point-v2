@@ -1,0 +1,8 @@
+{
+  "dart.flutterSdkPath": "/home/osama/fvm/versions/3.38.5",
+  "dart.runAndDebug": {
+    "flutterMode": "release"
+  },
+  "editor.formatOnSave": true,
+  "java.configuration.updateBuildFiles": "automatic"
+}
