@@ -30,7 +30,9 @@ class AdminAttendanceTimeFieldWidget extends StatelessWidget {
               initialTime: TimeOfDay.now(),
             );
             if (time != null && context.mounted) {
-              controller.text = time.format(context);
+              final h = time.hour.toString().padLeft(2, '0');
+              final m = time.minute.toString().padLeft(2, '0');
+              controller.text = '$h:$m';
             }
           },
         ),

@@ -667,6 +667,9 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                                 : '-',
                           ),
                           ('Roles', selectedRoles.join(', ')),
+                          ('Work System', selectedWorkSystem),
+                          if (selectedWorkSystem != 'onsite')
+                            ('Work Policy', selectedRemoteWorkPolicyId ?? '-'),
                           ('Department ID', '${selectedDepartmentId ?? '-'}'),
                           ('Branch ID', '${selectedBranchId ?? '-'}'),
                           ('Shift ID', '${selectedShiftId ?? '-'}'),

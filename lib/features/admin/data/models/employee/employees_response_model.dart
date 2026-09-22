@@ -43,8 +43,7 @@ class EmployeesPageModel {
         (e) =>
             e.userName?.toLowerCase() != 'admin' &&
             e.name?.toLowerCase() != 'demo administrator' &&
-            e.employeeCode?.toLowerCase() != 'emp-0001' &&
-            !e.allRoles.any((r) => r.toLowerCase() == 'admin'),
+            e.employeeCode?.toLowerCase() != 'emp-0001',
       )
       .toList();
 

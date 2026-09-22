@@ -8,8 +8,9 @@ import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_pro
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_state.dart';
-import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_filter_bar_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_action_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_advanced_filter_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_filter_bar_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_record_card_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_record_data.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_skeleton_widget.dart';
@@ -43,6 +44,10 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
     final canDeleteAttendance = AppPermissions.has(
       permissions,
       AppPermissions.attendanceDelete,
+    );
+    final canEditAttendance = AppPermissions.has(
+      permissions,
+      AppPermissions.attendanceEdit,
     );
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -213,6 +218,31 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                                 );
                                 return AdminAttendanceRecordCardWidget(
                                   record: recordData,
+                                  onEdit: canEditAttendance && item.id != null
+                                      ? () {
+                                          showModalBottomSheet<void>(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                top: Radius.circular(20.r),
+                                              ),
+                                            ),
+                                            builder: (_) => BlocProvider.value(
+                                              value: context.read<
+                                                  AdminAttendanceCubit>(),
+                                              child:
+                                                  AdminAttendanceActionSheetWidget(
+                                                record: recordData,
+                                                attendanceId: item.id!,
+                                                action:
+                                                    AdminAttendanceAction.edit,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      : null,
                                   onDelete: canDeleteAttendance ? () {
                                     if (item.id != null) {
                                       showDialog<void>(

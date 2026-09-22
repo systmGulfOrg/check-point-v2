@@ -72,29 +72,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
       backgroundColor: AppColors.white,
       body: SafeArea(
         child: MultiBlocListener(
-          listeners: [
-            BlocListener<EmployeeTasksCubit, EmployeeTasksState>(
-              listener: (context, state) {
-                if (state case EmployeeTasksStateSuccess(:final tasks)) {
-                  unawaited(
-                    context.read<EmployeeAttendanceCubit>().scheduleReminders(
-                      attendanceTitle: 'employee.notifications.attendanceTitle'
-                          .tr(context: context),
-                      attendanceBody: 'employee.notifications.attendanceBody'
-                          .tr(context: context),
-                      tasksTitle: 'employee.notifications.tasksTitle'.tr(
-                        context: context,
-                      ),
-                      tasksBody: 'employee.notifications.tasksBody'.tr(
-                        context: context,
-                      ),
-                      tasks: tasks,
-                    ),
-                  );
-                }
-              },
-            ),
-          ],
+          listeners: const [],
           child: RefreshIndicator(
             onRefresh: () async {
               await Future.wait([
@@ -116,34 +94,6 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                     EmployeeAttendanceState
                   >(
                     listener: (context, state) {
-                      if (state case EmployeeAttendanceStateHistoryLoaded()) {
-                        final tasksState = context
-                            .read<EmployeeTasksCubit>()
-                            .state;
-                        if (tasksState case EmployeeTasksStateSuccess(
-                          :final tasks,
-                        )) {
-                          unawaited(
-                            context
-                                .read<EmployeeAttendanceCubit>()
-                                .scheduleReminders(
-                                  attendanceTitle:
-                                      'employee.notifications.attendanceTitle'
-                                          .tr(context: context),
-                                  attendanceBody:
-                                      'employee.notifications.attendanceBody'
-                                          .tr(context: context),
-                                  tasksTitle:
-                                      'employee.notifications.tasksTitle'.tr(
-                                        context: context,
-                                      ),
-                                  tasksBody: 'employee.notifications.tasksBody'
-                                      .tr(context: context),
-                                  tasks: tasks,
-                                ),
-                          );
-                        }
-                      }
                       switch (state) {
                         case EmployeeAttendanceStateCheckInSuccess():
                           unawaited(

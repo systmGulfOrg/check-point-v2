@@ -7,5 +7,13 @@ abstract class AdminAttendanceRepo {
     int index = 0,
   });
 
+  Future<ApiResult<void>> updateAttendance({
+    required int id,
+    String? clockInTime,
+    String? clockOutTime,
+    String? status,
+    String? reason,
+  });
+
   Future<ApiResult<void>> deleteAttendance(int id);
 }

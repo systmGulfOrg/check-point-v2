@@ -46,6 +46,7 @@ class AdminEmployeeWorkSystemWidget extends StatelessWidget {
             ),
             hSpace(8),
             DropdownButtonFormField<String>(
+              key: ValueKey('work_system_$selectedSystem'),
               initialValue: selectedSystem,
               isExpanded: true,
               decoration: InputDecoration(
@@ -85,6 +86,9 @@ class AdminEmployeeWorkSystemWidget extends StatelessWidget {
               ),
               hSpace(8),
               DropdownButtonFormField<String>(
+                key: ValueKey(
+                  'work_policy_${selectedSystem}_${hasSelectedPolicy ? selectedPolicyId : 'none'}',
+                ),
                 initialValue: hasSelectedPolicy ? selectedPolicyId : null,
                 isExpanded: true,
                 hint: Text(

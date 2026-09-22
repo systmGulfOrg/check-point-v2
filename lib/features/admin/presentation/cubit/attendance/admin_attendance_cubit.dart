@@ -203,6 +203,33 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
     }
   }
 
+  Future<bool> updateAttendance({
+    required int id,
+    String? clockInTime,
+    String? clockOutTime,
+    String? status,
+    String? reason,
+  }) async {
+    emit(const AdminAttendanceState.loading());
+    final result = await attendanceRepo.updateAttendance(
+      id: id,
+      clockInTime: clockInTime,
+      clockOutTime: clockOutTime,
+      status: status,
+      reason: reason,
+    );
+    switch (result) {
+      case Success():
+        await loadAttendance();
+        return true;
+      case Failure(:final failure):
+        emit(AdminAttendanceState.error(failure.messageKey));
+        return false;
+      default:
+        return false;
+    }
+  }
+
   Future<bool> deleteAttendance(int id) async {
     emit(const AdminAttendanceState.loading());
     final result = await attendanceRepo.deleteAttendance(id);

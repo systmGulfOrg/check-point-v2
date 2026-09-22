@@ -25,6 +25,27 @@ class AdminAttendanceRepoImpl implements AdminAttendanceRepo {
   }
 
   @override
+  Future<ApiResult<void>> updateAttendance({
+    required int id,
+    String? clockInTime,
+    String? clockOutTime,
+    String? status,
+    String? reason,
+  }) async {
+    try {
+      await api.updateAttendance(id, {
+        if (clockInTime case final val?) 'clockInTime': val,
+        if (clockOutTime case final val?) 'clockOutTime': val,
+        if (status case final val?) 'status': val,
+        if (reason case final val? when val.isNotEmpty) 'reason': val,
+      });
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
   Future<ApiResult<void>> deleteAttendance(int id) async {
     try {
       await api.deleteAttendance(id);

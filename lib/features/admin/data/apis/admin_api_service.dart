@@ -264,6 +264,12 @@ abstract class AdminApiService {
     @Query('index') int index = 0,
   });
 
+  @PUT('${ApiConstants.attendance}/{id}')
+  Future<ResultModel> updateAttendance(
+    @Path('id') int id,
+    @Body() Map<String, dynamic> body,
+  );
+
   @DELETE('${ApiConstants.attendance}/{id}')
   Future<ResultModel> deleteAttendance(@Path('id') int id);
 
