@@ -33,6 +33,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/
 import 'package:check_point_v2/features/admin/presentation/cubit/plans/admin_plans_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee_profile/admin_employee_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/data/apis/auth_api_service.dart';
 import 'package:check_point_v2/features/auth/data/repos/auth_repo.dart';
 import 'package:check_point_v2/features/auth/data/repos/auth_repo_impl.dart';
@@ -318,6 +319,13 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<AdminEmployeesCubit>(
     () => AdminEmployeesCubit(employeeRepo: sl<AdminEmployeeRepo>()),
+  );
+  sl.registerFactory<AdminEmployeeProfileCubit>(
+    () => AdminEmployeeProfileCubit(
+      attendanceRepo: sl<EmployeeAttendanceRepo>(),
+      adminApiService: sl<AdminApiService>(),
+      leavesApiService: sl<LeavesApiService>(),
+    ),
   );
   sl.registerFactory<AdminPendingDevicesCubit>(
     () => AdminPendingDevicesCubit(api: sl<AdminApiService>()),

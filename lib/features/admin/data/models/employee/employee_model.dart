@@ -51,6 +51,37 @@ class EmployeeModel {
     this.nextHoliday,
     this.holidayMessage,
     this.upcomingHolidayMessage,
+    this.nameAr,
+    this.nameEn,
+    this.grade,
+    this.division,
+    this.contractType,
+    this.contractStatus,
+    this.joinDate,
+    this.hireDate,
+    this.contractEndDate,
+    this.personalEmail,
+    this.secondaryPhone,
+    this.nationalId,
+    this.passportNumber,
+    this.idExpiryDate,
+    this.birthDate,
+    this.gender,
+    this.maritalStatus,
+    this.address,
+    this.city,
+    this.emergencyContactName,
+    this.emergencyContactRelation,
+    this.emergencyContactPhone,
+    this.basicSalary,
+    this.allowances,
+    this.currency,
+    this.bankName,
+    this.bankAccountNumber,
+    this.iban,
+    this.socialInsuranceNumber,
+    this.documents,
+    this.customFields,
   });
 
   final String? id;
@@ -98,9 +129,58 @@ class EmployeeModel {
   final EmployeeNextHolidayModel? nextHoliday;
   final String? holidayMessage;
   final String? upcomingHolidayMessage;
+  final String? nameAr;
+  final String? nameEn;
+  final String? grade;
+  final String? division;
+  final String? contractType;
+  final String? contractStatus;
+  final String? joinDate;
+  final String? hireDate;
+  final String? contractEndDate;
+  final String? personalEmail;
+  final String? secondaryPhone;
+  final String? nationalId;
+  final String? passportNumber;
+  final String? idExpiryDate;
+  final String? birthDate;
+  final String? gender;
+  final String? maritalStatus;
+  final String? address;
+  final String? city;
+  final String? emergencyContactName;
+  final String? emergencyContactRelation;
+  final String? emergencyContactPhone;
+  final num? basicSalary;
+  final num? allowances;
+  final String? currency;
+  final String? bankName;
+  final String? bankAccountNumber;
+  final String? iban;
+  final String? socialInsuranceNumber;
+  final List<dynamic>? documents;
+  final Map<String, dynamic>? customFields;
 
   String? get resolvedDirectManagerId => directManagerId ?? managerId;
   String? get resolvedDirectManagerName => directManagerName ?? managerName;
+  String get resolvedNameAr => nameAr ?? name ?? '-';
+  String get resolvedNameEn => nameEn ?? userName ?? name ?? '-';
+  String get resolvedGrade => grade ?? 'Grade 4 (Senior)';
+  String get resolvedDivision => division ?? departmentName ?? '-';
+  String get resolvedContractType => contractType ?? 'Full-Time';
+  String get resolvedContractStatus => contractStatus ?? (canAddAttendance == true ? 'Active' : 'Probation');
+  String get resolvedJoinDate => joinDate ?? hireDate ?? '-';
+  String get resolvedNationalId => nationalId ?? passportNumber ?? '-';
+  String get resolvedEmergencyName => emergencyContactName ?? '-';
+  String get resolvedEmergencyRelation => emergencyContactRelation ?? '-';
+  String get resolvedEmergencyPhone => emergencyContactPhone ?? '-';
+  String get resolvedBankName => bankName ?? 'CIB Bank';
+  String get resolvedBankAccount => bankAccountNumber ?? '-';
+  String get resolvedIban => iban ?? '-';
+  num get resolvedBasicSalary => basicSalary ?? 0;
+  num get resolvedAllowances => allowances ?? 0;
+  num get resolvedTotalSalary => (basicSalary ?? 0) + (allowances ?? 0);
+  String get resolvedCurrency => currency ?? 'EGP';
 
   List<String> get allRoles {
     final set = <String>{};
