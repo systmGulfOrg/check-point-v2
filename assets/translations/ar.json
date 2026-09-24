@@ -1368,5 +1368,12 @@
   "employee.profile.permissionsCount": "صلاحية مفعلة",
   "employee.profile.sectionDevices": "الهواتف والأجهزة المعتمدة",
   "employee.profile.noRegisteredDevices": "لا توجد أجهزة مسجلة حالياً",
-  "employee.profile.notRegistered": "غير مسجل"
+  "employee.profile.notRegistered": "غير مسجل",
+  "employee.profile.uploadDoc": "رفع المستند",
+  "employee.profile.replaceDoc": "تغيير",
+  "employee.profile.deleteDoc": "حذف",
+  "employee.profile.docUploadedSuccess": "تم رفع المستند بنجاح",
+  "employee.profile.docDeletedSuccess": "تم حذف المستند بنجاح",
+  "employee.profile.addOtherDoc": "إضافة مستند آخر",
+  "employee.profile.notUploaded": "لم يتم الرفع"
 }

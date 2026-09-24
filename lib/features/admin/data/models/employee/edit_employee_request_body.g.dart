@@ -61,6 +61,9 @@ EditEmployeeRequestBody _$EditEmployeeRequestBodyFromJson(
   bankAccountNumber: json['bankAccountNumber'] as String?,
   iban: json['iban'] as String?,
   socialInsuranceNumber: json['socialInsuranceNumber'] as String?,
+  documents: (json['documents'] as List<dynamic>?)
+      ?.map((e) => e as Map<String, dynamic>)
+      .toList(),
 );
 
 Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
@@ -121,4 +124,5 @@ Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
   if (instance.iban case final value?) 'iban': value,
   if (instance.socialInsuranceNumber case final value?)
     'socialInsuranceNumber': value,
+  if (instance.documents case final value?) 'documents': value,
 };

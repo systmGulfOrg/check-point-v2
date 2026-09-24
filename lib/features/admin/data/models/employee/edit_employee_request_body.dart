@@ -55,6 +55,7 @@ class EditEmployeeRequestBody {
     this.bankAccountNumber,
     this.iban,
     this.socialInsuranceNumber,
+    this.documents,
   });
 
   final String? name;
@@ -108,6 +109,7 @@ class EditEmployeeRequestBody {
   final String? bankAccountNumber;
   final String? iban;
   final String? socialInsuranceNumber;
+  final List<Map<String, dynamic>>? documents;
 
   factory EditEmployeeRequestBody.fromJson(Map<String, dynamic> json) =>
       _$EditEmployeeRequestBodyFromJson(json);

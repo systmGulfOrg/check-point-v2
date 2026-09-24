@@ -1368,5 +1368,12 @@
   "employee.profile.permissionsCount": "Permissions",
   "employee.profile.sectionDevices": "Registered Mobile Devices",
   "employee.profile.noRegisteredDevices": "No registered devices yet",
-  "employee.profile.notRegistered": "Not Registered"
+  "employee.profile.notRegistered": "Not Registered",
+  "employee.profile.uploadDoc": "Upload",
+  "employee.profile.replaceDoc": "Replace",
+  "employee.profile.deleteDoc": "Delete",
+  "employee.profile.docUploadedSuccess": "Document uploaded successfully",
+  "employee.profile.docDeletedSuccess": "Document deleted successfully",
+  "employee.profile.addOtherDoc": "Add Another Document",
+  "employee.profile.notUploaded": "Not Uploaded"
 }

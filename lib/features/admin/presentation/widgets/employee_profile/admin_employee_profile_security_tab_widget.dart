@@ -5,6 +5,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/device/pending_device_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'admin_employee_profile_documents_card_widget.dart';
 import 'admin_employee_profile_info_card_widget.dart';
 
 class AdminEmployeeProfileSecurityTabWidget extends StatelessWidget {
@@ -24,42 +25,7 @@ class AdminEmployeeProfileSecurityTabWidget extends StatelessWidget {
       child: Column(
         children: [
           // 1. Digital Documents
-          AdminEmployeeProfileInfoCardWidget(
-            title: 'employee.profile.sectionDocuments'.tr(context: context),
-            icon: Icons.folder_copy_outlined,
-            children: [
-              _buildDocumentItem(
-                context,
-                title: 'employee.profile.docContract'.tr(context: context),
-                fileName: 'Employment_Contract_${employee.employeeCode ?? 'EMP'}.pdf',
-                status: 'employee.profile.docUploaded'.tr(context: context),
-                isUploaded: true,
-              ),
-              _buildDocumentItem(
-                context,
-                title: 'employee.profile.docDegree'.tr(context: context),
-                fileName: 'Graduation_Certificate.pdf',
-                status: 'employee.profile.docUploaded'.tr(context: context),
-                isUploaded: true,
-              ),
-              _buildDocumentItem(
-                context,
-                title: 'employee.profile.docCriminal'.tr(context: context),
-                fileName: 'Criminal_Record.pdf',
-                status: 'employee.profile.docUploaded'.tr(context: context),
-                isUploaded: true,
-              ),
-              _buildDocumentItem(
-                context,
-                title: 'employee.profile.docInsurance'.tr(context: context),
-                fileName: 'Insurance_Form_1.pdf',
-                status: employee.socialInsuranceNumber != null
-                    ? 'employee.profile.docUploaded'.tr(context: context)
-                    : 'employee.profile.docPending'.tr(context: context),
-                isUploaded: employee.socialInsuranceNumber != null,
-              ),
-            ],
-          ),
+          AdminEmployeeProfileDocumentsCardWidget(employee: employee),
 
           // 2. System Access & RBAC Permissions
           AdminEmployeeProfileInfoCardWidget(
@@ -294,79 +260,5 @@ class AdminEmployeeProfileSecurityTabWidget extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildDocumentItem(
-    BuildContext context, {
-    required String title,
-    required String fileName,
-    required String status,
-    required bool isUploaded,
-  }) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 8.h),
-      padding: EdgeInsets.all(12.r),
-      decoration: BoxDecoration(
-        color: AppColors.pageBackground,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-              color: isUploaded
-                  ? AppColors.softBrandBackground
-                  : AppColors.softYellowBackground,
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Icon(
-              Icons.picture_as_pdf_outlined,
-              size: 20.r,
-              color: isUploaded
-                  ? AppColors.brandPrimary
-                  : AppColors.warningOrange,
-            ),
-          ),
-          wSpace(12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppTextStyles.font13Medium.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                hSpace(2),
-                Text(
-                  fileName,
-                  style: AppTextStyles.font11Regular.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-            decoration: BoxDecoration(
-              color: isUploaded
-                  ? AppColors.softGreenBackground
-                  : AppColors.softYellowBackground,
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Text(
-              status,
-              style: AppTextStyles.font11Medium.copyWith(
-                color: isUploaded ? AppColors.success : AppColors.warningOrange,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
+
