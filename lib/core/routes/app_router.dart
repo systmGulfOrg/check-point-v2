@@ -43,6 +43,7 @@ import 'package:check_point_v2/features/employee/presentation/cubit/leave_reques
 import 'package:check_point_v2/features/employee/presentation/cubit/odoo_dashboard/employee_odoo_dashboard_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/plans/employee_plans_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/permit_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/screens/employee_main_screen.dart';
@@ -489,6 +490,10 @@ class AppRouter {
               BlocProvider<SupervisorTeamCubit>(
                 create: (_) => sl<SupervisorTeamCubit>()..loadTeam(),
               ),
+              BlocProvider<UpcomingHolidayCubit>(
+                create: (_) =>
+                    sl<UpcomingHolidayCubit>()..loadUpcomingHoliday(),
+              ),
             ],
             child: const SupervisorMainScreen(),
           ),
@@ -572,6 +577,10 @@ class AppRouter {
               BlocProvider<EmployeeOdooDashboardCubit>(
                 create: (_) =>
                     sl<EmployeeOdooDashboardCubit>()..fetchDashboardData(),
+              ),
+              BlocProvider<UpcomingHolidayCubit>(
+                create: (_) =>
+                    sl<UpcomingHolidayCubit>()..loadUpcomingHoliday(),
               ),
             ],
             child: const EmployeeMainScreen(),

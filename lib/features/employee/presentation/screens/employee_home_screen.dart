@@ -21,6 +21,9 @@ import 'package:check_point_v2/features/employee/presentation/widgets/employee_t
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_tasks_section_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_today_card_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_location_sheet_widget.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_state.dart';
+import 'package:check_point_v2/features/leaves/presentation/widgets/upcoming_holiday_card_bloc_builder_widget.dart';
 
 class EmployeeHomeScreen extends StatefulWidget {
   const EmployeeHomeScreen({
@@ -46,6 +49,42 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
   }
 
   void _toggleCheckInOut() {
+    final cubit = context.read<EmployeeAttendanceCubit>();
+    final profile = cubit.employeeProfile;
+    final holidayState = context.read<UpcomingHolidayCubit>().state;
+    final isHoliday = (profile?.todayHoliday != null &&
+            profile!.todayHoliday!.isHoliday == true) ||
+        (profile?.todayWorkMode == 'off' && profile?.todayHoliday != null) ||
+        (holidayState is UpcomingHolidayStateLoaded &&
+            holidayState.isTodayHoliday);
+
+    if (isHoliday) {
+      final holidayName = profile?.todayHoliday?.arabicName ??
+          profile?.todayHoliday?.name ??
+          (holidayState is UpcomingHolidayStateLoaded
+              ? holidayState.todayHoliday?.name
+              : null) ??
+          '';
+      final holidayGreeting = profile?.todayHoliday?.greeting ??
+          profile?.holidayMessage ??
+          'holidays.todayHolidayGreeting'.tr(context: context);
+
+      showDialog<void>(
+        context: context,
+        builder: (ctx) => CustomDialogWidget(
+          title: 'holidays.todayHolidayTitle'.tr(context: ctx),
+          message:
+              '${'holidays.todayHolidayTitle'.tr(context: ctx)}: $holidayName\n$holidayGreeting\n${'holidays.attendanceNotAllowed'.tr(context: ctx)}',
+          confirmLabel: 'core.actions.ok'.tr(context: ctx),
+          onConfirm: () => Navigator.of(ctx).pop(),
+          icon: Icons.celebration_rounded,
+          iconColor: AppColors.success,
+          confirmButtonColor: AppColors.success,
+        ),
+      );
+      return;
+    }
+
     final attendanceCubit = context.read<EmployeeAttendanceCubit>();
     showModalBottomSheet<void>(
       context: context,
@@ -71,24 +110,25 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
-        child: MultiBlocListener(
-          listeners: const [],
-          child: RefreshIndicator(
-            onRefresh: () async {
-              await Future.wait([
-                context.read<EmployeeAttendanceCubit>().loadAttendanceHistory(),
-                context.read<EmployeeTasksCubit>().loadMyTasks(),
-                context.read<EmployeePlansCubit>().loadMyPlans(),
-              ]);
-            },
-            child: SingleChildScrollView(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              context.read<EmployeeAttendanceCubit>().loadAttendanceHistory(),
+              context.read<EmployeeTasksCubit>().loadMyTasks(),
+              context.read<EmployeePlansCubit>().loadMyPlans(),
+              context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
+            ]);
+          },
+          child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const EmployeeHomeHeaderBlocBuilderWidget(),
-                  hSpace(20),
+                  hSpace(16),
+                  const UpcomingHolidayCardBlocBuilderWidget(),
+                  hSpace(16),
                   BlocConsumer<
                     EmployeeAttendanceCubit,
                     EmployeeAttendanceState
@@ -155,6 +195,24 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                           cubit.hasClockIn(attendance) &&
                           !cubit.hasClockOut(attendance);
                       final hasCheckedOut = cubit.hasClockOut(attendance);
+                      final holidayState =
+                          context.watch<UpcomingHolidayCubit?>()?.state;
+                      final isHolidayFromCubit =
+                          holidayState is UpcomingHolidayStateLoaded &&
+                              holidayState.isTodayHoliday;
+                      final isTodayHoliday = (profile?.todayHoliday != null &&
+                              profile!.todayHoliday!.isHoliday == true) ||
+                          (profile?.todayWorkMode == 'off' &&
+                              profile?.todayHoliday != null) ||
+                          isHolidayFromCubit;
+                      final holidayName = profile?.todayHoliday?.arabicName ??
+                          profile?.todayHoliday?.name ??
+                          (holidayState is UpcomingHolidayStateLoaded
+                              ? holidayState.todayHoliday?.name
+                              : null);
+                      final holidayGreeting = profile?.todayHoliday?.greeting ??
+                          profile?.holidayMessage;
+
                       return Skeletonizer(
                         enabled: state is EmployeeAttendanceStateLoading,
                         child: EmployeeTodayCardWidget(
@@ -175,6 +233,9 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                           workModeText: workMode.tr(context: context),
                           workSystemText: workSystem.tr(context: context),
                           onToggleCheckInOut: _toggleCheckInOut,
+                          isTodayHoliday: isTodayHoliday,
+                          holidayGreeting: holidayGreeting,
+                          holidayName: holidayName,
                         ),
                       );
                     },
@@ -284,7 +345,6 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
             ),
           ),
         ),
-      ),
     );
   }
 }

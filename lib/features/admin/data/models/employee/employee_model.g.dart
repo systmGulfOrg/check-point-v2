@@ -55,6 +55,22 @@ EmployeeModel _$EmployeeModelFromJson(Map<String, dynamic> json) =>
       clockOutTime: legacyApiValueToString(json['clockOutTime']),
       area: json['area'] as String?,
       leaveBalance: (json['leaveBalance'] as num?)?.toInt(),
+      directManagerId: json['directManagerId'] as String?,
+      directManagerName: json['directManagerName'] as String?,
+      managerId: json['managerId'] as String?,
+      managerName: json['managerName'] as String?,
+      todayHoliday: json['todayHoliday'] == null
+          ? null
+          : EmployeeTodayHolidayModel.fromJson(
+              json['todayHoliday'] as Map<String, dynamic>,
+            ),
+      nextHoliday: json['nextHoliday'] == null
+          ? null
+          : EmployeeNextHolidayModel.fromJson(
+              json['nextHoliday'] as Map<String, dynamic>,
+            ),
+      holidayMessage: json['holidayMessage'] as String?,
+      upcomingHolidayMessage: json['upcomingHolidayMessage'] as String?,
     );
 
 Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
@@ -94,4 +110,12 @@ Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
       'clockOutTime': instance.clockOutTime,
       'area': instance.area,
       'leaveBalance': instance.leaveBalance,
+      'directManagerId': instance.directManagerId,
+      'directManagerName': instance.directManagerName,
+      'managerId': instance.managerId,
+      'managerName': instance.managerName,
+      'todayHoliday': instance.todayHoliday,
+      'nextHoliday': instance.nextHoliday,
+      'holidayMessage': instance.holidayMessage,
+      'upcomingHolidayMessage': instance.upcomingHolidayMessage,
     };

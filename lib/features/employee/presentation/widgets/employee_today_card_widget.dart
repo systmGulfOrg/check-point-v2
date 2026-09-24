@@ -18,6 +18,9 @@ class EmployeeTodayCardWidget extends StatelessWidget {
     required this.workModeText,
     required this.workSystemText,
     required this.onToggleCheckInOut,
+    this.isTodayHoliday = false,
+    this.holidayGreeting,
+    this.holidayName,
     super.key,
   });
 
@@ -32,6 +35,9 @@ class EmployeeTodayCardWidget extends StatelessWidget {
   final String workModeText;
   final String workSystemText;
   final VoidCallback onToggleCheckInOut;
+  final bool isTodayHoliday;
+  final String? holidayGreeting;
+  final String? holidayName;
 
   @override
   Widget build(BuildContext context) {
@@ -214,7 +220,41 @@ class EmployeeTodayCardWidget extends StatelessWidget {
             ],
           ),
           hSpace(16),
-          if (hasCheckedOut && !isCheckedIn)
+          if (isTodayHoliday)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
+              decoration: BoxDecoration(
+                color: AppColors.softGreenBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: AppColors.success.withValues(alpha: 0.35),
+                  width: 1.2,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.celebration_rounded,
+                    color: AppColors.success,
+                    size: 22.r,
+                  ),
+                  wSpace(8),
+                  Expanded(
+                    child: Text(
+                      holidayGreeting ??
+                          '${'holidays.todayHolidayTitle'.tr(context: context)}: ${holidayName ?? ''} - ${'holidays.todayHolidayGreeting'.tr(context: context)}',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.font13SemiBold.copyWith(
+                        color: AppColors.success,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else if (hasCheckedOut && !isCheckedIn)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

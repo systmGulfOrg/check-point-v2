@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-
 import 'package:check_point_v2/core/utils/legacy_api_json_converters.dart';
+import 'employee_holiday_models.dart';
 import 'employee_work_policy_model.dart';
 
 part 'employee_model.g.dart';
@@ -43,6 +43,14 @@ class EmployeeModel {
     this.clockOutTime,
     this.area,
     this.leaveBalance,
+    this.directManagerId,
+    this.directManagerName,
+    this.managerId,
+    this.managerName,
+    this.todayHoliday,
+    this.nextHoliday,
+    this.holidayMessage,
+    this.upcomingHolidayMessage,
   });
 
   final String? id;
@@ -82,6 +90,17 @@ class EmployeeModel {
   final String? clockOutTime;
   final String? area;
   final int? leaveBalance;
+  final String? directManagerId;
+  final String? directManagerName;
+  final String? managerId;
+  final String? managerName;
+  final EmployeeTodayHolidayModel? todayHoliday;
+  final EmployeeNextHolidayModel? nextHoliday;
+  final String? holidayMessage;
+  final String? upcomingHolidayMessage;
+
+  String? get resolvedDirectManagerId => directManagerId ?? managerId;
+  String? get resolvedDirectManagerName => directManagerName ?? managerName;
 
   List<String> get allRoles {
     final set = <String>{};

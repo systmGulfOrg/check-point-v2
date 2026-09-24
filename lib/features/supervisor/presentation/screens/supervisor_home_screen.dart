@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
+import 'package:check_point_v2/features/leaves/presentation/widgets/upcoming_holiday_card_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/plans/supervisor_plans_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
@@ -27,6 +29,7 @@ class SupervisorHomeScreen extends StatelessWidget {
           context.read<SupervisorPlansCubit>().loadPlans(),
           context.read<SupervisorTasksCubit>().loadTasks(),
           context.read<SupervisorTeamCubit>().loadTeam(),
+          context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
         ]),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -35,7 +38,9 @@ class SupervisorHomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SupervisorTopBarWidget(),
-              hSpace(20),
+              hSpace(16),
+              const UpcomingHolidayCardBlocBuilderWidget(),
+              hSpace(16),
               const SupervisorPersonalDashboardBlocBuilderWidget(),
               const SupervisorAlertBannerBlocBuilderWidget(),
               hSpace(20),
