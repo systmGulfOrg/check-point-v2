@@ -50,60 +50,48 @@ class _AdminRejectRequestDialogWidgetState
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-      backgroundColor: AppColors.white,
-      insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+      backgroundColor: AppColors.cardBackground,
+      insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Padding(
-        padding: EdgeInsets.all(22.r),
+        padding: EdgeInsets.all(20.r),
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(10.r),
-                    decoration: BoxDecoration(
-                      color: AppColors.softRedBackground,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Icon(
-                      Icons.cancel_outlined,
-                      color: AppColors.error,
-                      size: 24.r,
-                    ),
-                  ),
-                  vSpace(12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'admin.requests.rejectRequest'.tr(context: context),
-                          style: AppTextStyles.font16Bold,
-                        ),
-                        hSpace(2),
-                        Text(
-                          widget.applicantName,
-                          style: AppTextStyles.font12Regular.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              Container(
+                width: 56.r,
+                height: 56.r,
+                decoration: const BoxDecoration(
+                  color: AppColors.softRedBackground,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.cancel_outlined,
+                  color: AppColors.error,
+                  size: 28.r,
+                ),
               ),
-              hSpace(18),
+              hSpace(16),
               Text(
-                'admin.requests.rejectReasonLabel'.tr(context: context),
-                style: AppTextStyles.font13SemiBold,
+                'admin.requests.rejectRequest'.tr(context: context),
+                textAlign: TextAlign.center,
+                style: AppTextStyles.font18Bold.copyWith(
+                  color: AppColors.textPrimary,
+                ),
               ),
-              hSpace(8),
+              hSpace(4),
+              Text(
+                widget.applicantName,
+                textAlign: TextAlign.center,
+                style: AppTextStyles.font14Regular.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              hSpace(16),
               CustomTextFormField(
                 controller: _reasonController,
                 hintText: 'admin.requests.rejectReasonHint'.tr(context: context),
@@ -119,28 +107,21 @@ class _AdminRejectRequestDialogWidgetState
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.textPrimary,
-                        side: const BorderSide(color: AppColors.border),
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                      child: Text(
-                        'admin.locations.create.cancel'.tr(context: context),
-                        style: AppTextStyles.font14Medium,
-                      ),
+                    child: CustomButton(
+                      text: 'admin.locations.create.cancel'.tr(context: context),
+                      onTap: () => Navigator.pop(context),
+                      backgroundColor: AppColors.pageBackground,
+                      textColor: AppColors.textPrimary,
+                      height: 44,
                     ),
                   ),
-                  vSpace(10),
+                  wSpace(12),
                   Expanded(
                     child: CustomButton(
                       text: 'admin.requests.reject'.tr(context: context),
                       onTap: _submit,
                       backgroundColor: AppColors.error,
+                      textColor: AppColors.white,
                       height: 44,
                     ),
                   ),

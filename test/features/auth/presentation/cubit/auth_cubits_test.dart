@@ -62,6 +62,16 @@ class _FakeAuthSessionStorage extends AuthSessionStorage {
   _FakeAuthSessionStorage()
     : super(secureStorage: const FlutterSecureStorage());
 
+  final _storage = <String, String>{};
+
+  @override
+  Future<void> enableBiometricLogin({
+    required String role,
+    String? token,
+    String? username,
+    String? password,
+  }) async {}
+
   @override
   Future<void> disableBiometricLogin() async {}
 
@@ -69,12 +79,21 @@ class _FakeAuthSessionStorage extends AuthSessionStorage {
   Future<void> saveUserSession({
     required String token,
     String? userId,
+    String? employeeId,
     int? departmentId,
     int? branchId,
     String? userName,
     String? role,
     List<String> permissions = const [],
-  }) async {}
+  }) async {
+    _storage[AuthSessionStorage.tokenKey] = token;
+  }
+
+  @override
+  Future<String?> readToken() async => _storage[AuthSessionStorage.tokenKey];
+
+  @override
+  Future<void> clearAccountRequestDismissal() async {}
 }
 
 class _FakeBiometricAuthService extends BiometricAuthService {
@@ -86,6 +105,9 @@ class _FakeBiometricAuthService extends BiometricAuthService {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  FlutterSecureStorage.setMockInitialValues({});
+
   group('LoginCubit', () {
     test('builds the login request with device identity from DI', () async {
       final loginResponse = const LoginResponseModel(

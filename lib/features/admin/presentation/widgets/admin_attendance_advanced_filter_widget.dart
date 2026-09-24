@@ -370,6 +370,7 @@ class AdminAttendanceAdvancedFilterWidget extends StatelessWidget {
                   'all',
                   'onTime',
                   'late',
+                  'absent',
                   'earlyCheckout',
                 ])
                   ChoiceChip(

@@ -8,6 +8,8 @@ import 'package:check_point_v2/features/admin/data/models/employee/edit_employee
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/department_response_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
@@ -84,11 +86,14 @@ class _AdminEditEmployeeSheetWidgetState
 
     _selectedDepartmentId = widget.employee.departmentId;
     _selectedBranchId = widget.employee.branchId;
+    _selectedDirectManagerId = widget.employee.resolvedDirectManagerId;
     _selectedWorkSystem = widget.employee.workSystem ?? 'onsite';
     _selectedRemoteWorkPolicyId = widget.employee.remoteWorkPolicyId;
     _canAddAttendance = widget.employee.canAddAttendance ?? true;
     _canAddPlan = widget.employee.canAddPlan ?? true;
   }
+
+  String? _selectedDirectManagerId;
 
   @override
   void dispose() {
@@ -147,6 +152,8 @@ class _AdminEditEmployeeSheetWidgetState
         roles: _selectedRoles.toList(),
         departmentId: _selectedDepartmentId,
         branchId: _selectedBranchId,
+        directManagerId: _selectedDirectManagerId,
+        managerId: _selectedDirectManagerId,
         workSystem: _selectedWorkSystem,
         remoteWorkPolicyId: _selectedRemoteWorkPolicyId,
         canAddAttendance: _canAddAttendance,
@@ -454,6 +461,64 @@ class _AdminEditEmployeeSheetWidgetState
                           .toList(),
                       onChanged: (val) =>
                           setState(() => _selectedBranchId = val),
+                    ),
+                  ],
+                );
+              },
+            ),
+            hSpace(12),
+            BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
+              builder: (context, empState) {
+                final employees = context.read<AdminEmployeesCubit>().employees;
+                final validEmployees = employees
+                    .where((e) => e.id != null && e.id != widget.employee.id)
+                    .toList();
+                final hasSelected = validEmployees.any(
+                  (e) => e.id == _selectedDirectManagerId,
+                );
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'admin.employees.directManager'.tr(context: context),
+                      style: AppTextStyles.font12Medium,
+                    ),
+                    hSpace(6),
+                    DropdownButtonFormField<String?>(
+                      key: ValueKey(
+                        'manager_${hasSelected ? _selectedDirectManagerId : 'none'}',
+                      ),
+                      initialValue: hasSelected ? _selectedDirectManagerId : null,
+                      isExpanded: true,
+                      hint: Text(
+                        'admin.employeeWizard.selectDirectManager'.tr(
+                          context: context,
+                        ),
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.fieldBackground,
+                      ),
+                      items: [
+                        DropdownMenuItem<String?>(
+                          value: null,
+                          child: Text(
+                            'admin.employeeWizard.noDirectManager'.tr(
+                              context: context,
+                            ),
+                          ),
+                        ),
+                        ...validEmployees.map(
+                          (e) => DropdownMenuItem<String?>(
+                            value: e.id,
+                            child: Text(
+                              '${e.name ?? e.userName ?? '-'} (${e.role ?? 'Employee'})',
+                            ),
+                          ),
+                        ),
+                      ],
+                      onChanged: (val) =>
+                          setState(() => _selectedDirectManagerId = val),
                     ),
                   ],
                 );

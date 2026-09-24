@@ -6,7 +6,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/core.dart';
-import '../../../../core/widgets/custom_dialog_widget.dart';
 import '../cubit/pending_devices/admin_pending_devices_cubit.dart';
 import '../cubit/pending_devices/admin_pending_devices_state.dart';
 
@@ -121,8 +120,14 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Employee Name Placeholder', style: AppTextStyles.font16Bold),
-                              Text('Model: Placeholder Phone', style: AppTextStyles.font12Regular),
+                              Text(
+                                'Employee Name Placeholder',
+                                style: AppTextStyles.font16Bold,
+                              ),
+                              Text(
+                                'Model: Placeholder Phone',
+                                style: AppTextStyles.font12Regular,
+                              ),
                             ],
                           ),
                         ],
@@ -135,7 +140,9 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                           color: AppColors.pageBackground,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
-                        child: Text('Device ID: 00000000-0000-0000-0000-000000000000'),
+                        child: Text(
+                          'Device ID: 00000000-0000-0000-0000-000000000000',
+                        ),
                       ),
                     ],
                   ),

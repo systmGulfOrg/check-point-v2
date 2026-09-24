@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:check_point_v2/core/app/app_config.dart';
@@ -7,6 +8,7 @@ class AuthSessionStorage {
 
   static String get tokenKey => AppConfig.authTokenKey;
   static const userIdKey = 'user_id';
+  static const employeeIdKey = 'employee_id';
   static const departmentIdKey = 'department_id';
   static const branchIdKey = 'branch_id';
   static const userNameKey = 'user_name';
@@ -22,9 +24,22 @@ class AuthSessionStorage {
 
   final FlutterSecureStorage secureStorage;
 
+  static Map<String, dynamic>? decodeJwtPayload(String token) {
+    try {
+      final parts = token.split('.');
+      if (parts.length < 2) return null;
+      final normalized = base64Url.normalize(parts[1]);
+      final payloadString = utf8.decode(base64Url.decode(normalized));
+      return jsonDecode(payloadString) as Map<String, dynamic>;
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<void> saveUserSession({
     required String token,
     String? userId,
+    String? employeeId,
     int? departmentId,
     int? branchId,
     String? userName,
@@ -32,6 +47,13 @@ class AuthSessionStorage {
     List<String> permissions = const [],
   }) async {
     await secureStorage.write(key: tokenKey, value: token);
+    final payload = decodeJwtPayload(token);
+    final resolvedEmployeeId = employeeId ??
+        payload?['employeeId'] as String? ??
+        payload?['EmployeeId'] as String?;
+    if (resolvedEmployeeId != null && resolvedEmployeeId.isNotEmpty) {
+      await secureStorage.write(key: employeeIdKey, value: resolvedEmployeeId);
+    }
     if (userId != null && userId.isNotEmpty) {
       await secureStorage.write(key: userIdKey, value: userId);
     }
@@ -59,6 +81,22 @@ class AuthSessionStorage {
   Future<String?> readToken() => secureStorage.read(key: tokenKey);
 
   Future<String?> readUserId() => secureStorage.read(key: userIdKey);
+
+  Future<String?> readEmployeeId() async {
+    final direct = await secureStorage.read(key: employeeIdKey);
+    if (direct != null && direct.isNotEmpty) return direct;
+    final token = await readToken();
+    if (token != null) {
+      final payload = decodeJwtPayload(token);
+      final fromToken = payload?['employeeId'] as String? ??
+          payload?['EmployeeId'] as String?;
+      if (fromToken != null && fromToken.isNotEmpty) {
+        await secureStorage.write(key: employeeIdKey, value: fromToken);
+        return fromToken;
+      }
+    }
+    return readUserId();
+  }
 
   Future<int?> readDepartmentId() async {
     final raw = await secureStorage.read(key: departmentIdKey);

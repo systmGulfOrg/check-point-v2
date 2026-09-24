@@ -7,11 +7,30 @@ class AdminAttendanceTimeFieldWidget extends StatelessWidget {
   const AdminAttendanceTimeFieldWidget({
     required this.labelKey,
     required this.controller,
+    this.validator,
     super.key,
   });
 
   final String labelKey;
   final TextEditingController controller;
+  final String? Function(String?)? validator;
+
+  TimeOfDay _parseInitialTime(String text) {
+    if (text.isEmpty || text == '--:--') return TimeOfDay.now();
+    final clean = text.trim().toUpperCase();
+    final isPm = clean.contains('PM');
+    final isAm = clean.contains('AM');
+    final timePart = clean.replaceAll('AM', '').replaceAll('PM', '').trim();
+    final parts = timePart.split(':');
+    if (parts.length >= 2) {
+      var h = int.tryParse(parts[0]) ?? 12;
+      final m = int.tryParse(parts[1]) ?? 0;
+      if (isPm && h < 12) h += 12;
+      if (isAm && h == 12) h = 0;
+      return TimeOfDay(hour: h.clamp(0, 23), minute: m.clamp(0, 59));
+    }
+    return TimeOfDay.now();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +43,11 @@ class AdminAttendanceTimeFieldWidget extends StatelessWidget {
           controller: controller,
           hintText: 'supervisor.plans.create.timeHint'.tr(context: context),
           readOnly: true,
+          validator: validator,
           onTap: () async {
             final time = await showTimePicker(
               context: context,
-              initialTime: TimeOfDay.now(),
+              initialTime: _parseInitialTime(controller.text),
             );
             if (time != null && context.mounted) {
               final h = time.hour.toString().padLeft(2, '0');

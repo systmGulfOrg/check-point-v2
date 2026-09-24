@@ -23,32 +23,76 @@ class AdminShiftsPoliciesScreen extends StatelessWidget {
     final nameController = TextEditingController(text: currentName);
     showDialog<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text('admin.shifts.edit.title'.tr(context: context)),
-        content: TextField(
-          controller: nameController,
-          decoration: InputDecoration(
-            labelText: 'admin.shifts.edit.nameLabel'.tr(context: context),
+      builder: (dialogContext) => Dialog(
+        backgroundColor: AppColors.cardBackground,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
+        child: Padding(
+          padding: EdgeInsets.all(20.r),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 56.r,
+                height: 56.r,
+                decoration: BoxDecoration(
+                  color: AppColors.brandPrimary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.edit_outlined,
+                  color: AppColors.brandPrimary,
+                  size: 28.r,
+                ),
+              ),
+              hSpace(16),
+              Text(
+                'admin.shifts.edit.title'.tr(context: context),
+                textAlign: TextAlign.center,
+                style: AppTextStyles.font18Bold.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              hSpace(16),
+              CustomTextFormField(
+                controller: nameController,
+                hintText: 'admin.shifts.edit.nameLabel'.tr(context: context),
+              ),
+              hSpace(20),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomButton(
+                      text: 'admin.shifts.edit.cancel'.tr(context: context),
+                      onTap: () => Navigator.pop(dialogContext),
+                      backgroundColor: AppColors.pageBackground,
+                      textColor: AppColors.textPrimary,
+                      height: 44,
+                    ),
+                  ),
+                  wSpace(12),
+                  Expanded(
+                    child: CustomButton(
+                      text: 'admin.shifts.edit.save'.tr(context: context),
+                      onTap: () {
+                        if (nameController.text.trim().isNotEmpty) {
+                          context.read<AdminShiftsPoliciesCubit>().editShift(
+                            shiftId,
+                            AddShiftRequestBody(name: nameController.text.trim()),
+                          );
+                          Navigator.pop(dialogContext);
+                        }
+                      },
+                      backgroundColor: AppColors.brandPrimary,
+                      textColor: AppColors.white,
+                      height: 44,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text('admin.shifts.edit.cancel'.tr(context: context)),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (nameController.text.trim().isNotEmpty) {
-                context.read<AdminShiftsPoliciesCubit>().editShift(
-                  shiftId,
-                  AddShiftRequestBody(name: nameController.text.trim()),
-                );
-                Navigator.pop(dialogContext);
-              }
-            },
-            child: Text('admin.shifts.edit.save'.tr(context: context)),
-          ),
-        ],
       ),
     ).whenComplete(nameController.dispose);
   }

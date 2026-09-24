@@ -8,12 +8,17 @@ import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_pro
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_state.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_absent_employees_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_action_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_advanced_filter_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_filter_bar_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_record_card_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_record_data.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_skeleton_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_today_summary_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_delete_confirmation_dialog_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_requests_empty_state_widget.dart';
 
@@ -33,6 +38,25 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
     super.dispose();
   }
 
+  void _openAbsentEmployeesSheet(
+    BuildContext context,
+    List<EmployeeModel> absentEmployees,
+  ) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.r),
+        ),
+      ),
+      builder: (_) => AdminAbsentEmployeesSheetWidget(
+        absentEmployees: absentEmployees,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final permissions = context.select<AuthProfileCubit, List<String>>(
@@ -49,6 +73,17 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
       permissions,
       AppPermissions.attendanceEdit,
     );
+
+    final employees = switch (context.watch<AdminEmployeesCubit>().state) {
+      AdminEmployeesStateSuccess(:final employees) => employees,
+      AdminEmployeesStateActionSuccess(:final employees) => employees,
+      _ => const <EmployeeModel>[],
+    };
+    final attendanceCubit = context.watch<AdminAttendanceCubit>();
+    final absentEmployees = attendanceCubit.getAbsentEmployees(employees);
+    final absentCount = absentEmployees.length;
+    final presentCount = attendanceCubit.todayPresentCount;
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -59,10 +94,37 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
           'admin.attendance.title'.tr(context: context),
           style: AppTextStyles.font18Bold,
         ),
+        actions: [
+          Padding(
+            padding: EdgeInsetsDirectional.only(end: 8.w),
+            child: IconButton(
+              onPressed: () => _openAbsentEmployeesSheet(
+                context,
+                absentEmployees,
+              ),
+              tooltip: 'admin.attendance.absentTitle'.tr(context: context),
+              icon: Badge(
+                isLabelVisible: absentCount > 0,
+                label: Text('$absentCount'),
+                backgroundColor: AppColors.error,
+                child: Icon(
+                  Icons.person_off_outlined,
+                  size: 22.r,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: context.read<AdminAttendanceCubit>().loadAttendance,
+          onRefresh: () async {
+            await Future.wait([
+              context.read<AdminAttendanceCubit>().loadAttendance(),
+              context.read<AdminEmployeesCubit>().loadEmployees(),
+            ]);
+          },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
@@ -82,6 +144,15 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                       ),
                     ),
                   ],
+                ),
+                hSpace(12),
+                AdminAttendanceTodaySummaryWidget(
+                  presentCount: presentCount,
+                  absentCount: absentCount,
+                  onTapAbsent: () => _openAbsentEmployeesSheet(
+                    context,
+                    absentEmployees,
+                  ),
                 ),
                 hSpace(14),
                 const AdminAttendanceAdvancedFilterWidget(),
@@ -223,6 +294,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                                           showModalBottomSheet<void>(
                                             context: context,
                                             isScrollControlled: true,
+                                            backgroundColor: AppColors.white,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.vertical(

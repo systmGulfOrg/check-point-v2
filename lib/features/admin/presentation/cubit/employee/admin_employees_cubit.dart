@@ -13,6 +13,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
 
   final AdminEmployeeRepo employeeRepo;
   List<EmployeeModel> allEmployees = const [];
+  List<EmployeeModel> get employees => allEmployees;
   String? roleFilter;
 
   Future<void> loadEmployees() async {

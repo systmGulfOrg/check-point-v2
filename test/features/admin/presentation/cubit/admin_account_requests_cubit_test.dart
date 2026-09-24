@@ -153,7 +153,7 @@ void main() {
 
       await cubit.loadRequests();
 
-      final success = await cubit.approveRequest(
+      final error = await cubit.approveRequest(
         id: 1,
         body: const ApproveAccountRequestBody(
           userName: 'ahmed',
@@ -163,7 +163,7 @@ void main() {
         ),
       );
 
-      expect(success, isTrue);
+      expect(error, isNull);
       expect(repo.requests.firstWhere((r) => r.id == 1).status, 'Approved');
     });
 
@@ -174,12 +174,12 @@ void main() {
 
       await cubit.loadRequests();
 
-      final success = await cubit.rejectRequest(
+      final error = await cubit.rejectRequest(
         id: 1,
         reason: 'Device not registered with company',
       );
 
-      expect(success, isTrue);
+      expect(error, isNull);
       final req = repo.requests.firstWhere((r) => r.id == 1);
       expect(req.status, 'Rejected');
       expect(req.rejectReason, 'Device not registered with company');

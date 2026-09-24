@@ -17,7 +17,6 @@ import 'package:check_point_v2/features/auth/presentation/widgets/login_bloc_lis
 import 'package:check_point_v2/features/auth/presentation/widgets/login_submit_button_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/login_account_request_status_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/role_switcher_widget.dart';
-import 'package:check_point_v2/core/widgets/custom_dialog_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

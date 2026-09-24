@@ -34,10 +34,10 @@ class AdminAttendanceRepoImpl implements AdminAttendanceRepo {
   }) async {
     try {
       await api.updateAttendance(id, {
-        if (clockInTime case final val?) 'clockInTime': val,
-        if (clockOutTime case final val?) 'clockOutTime': val,
-        if (status case final val?) 'status': val,
-        if (reason case final val? when val.isNotEmpty) 'reason': val,
+        'clockInTime': ?clockInTime,
+        'clockOutTime': ?clockOutTime,
+        'status': ?status,
+        if (reason != null && reason.isNotEmpty) 'reason': reason,
       });
       return const ApiResult.success(null);
     } catch (e) {

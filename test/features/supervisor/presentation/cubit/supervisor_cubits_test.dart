@@ -40,6 +40,12 @@ class _FakeAuthSessionStorage extends AuthSessionStorage {
 
   @override
   Future<String?> readUserId() async => '01M2TEST';
+
+  @override
+  Future<String?> readEmployeeId() async => '01M2TEST';
+
+  @override
+  Future<String?> readToken() async => null;
 }
 
 class _FakeSupervisorTeamRepo implements SupervisorTeamRepo {
@@ -201,6 +207,7 @@ class _FakeSupervisorPlansRepo implements SupervisorPlansRepo {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  FlutterSecureStorage.setMockInitialValues({});
 
   group('Supervisor Cubits Tests', () {
     test('SupervisorTeamCubit loads team members successfully', () async {

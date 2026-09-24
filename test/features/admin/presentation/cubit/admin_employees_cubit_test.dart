@@ -163,8 +163,8 @@ void main() {
         shiftId: 1,
       );
 
-      final success = await cubit.addEmployee(body);
-      expect(success, isTrue);
+      final error = await cubit.addEmployee(body);
+      expect(error, isNull);
       expect(repo.employees, hasLength(3));
     });
   });

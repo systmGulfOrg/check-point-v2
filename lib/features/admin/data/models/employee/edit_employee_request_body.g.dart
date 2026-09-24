@@ -30,6 +30,8 @@ EditEmployeeRequestBody _$EditEmployeeRequestBodyFromJson(
   leaveBalance: (json['leaveBalance'] as num?)?.toInt(),
   workSystem: json['workSystem'] as String?,
   remoteWorkPolicyId: json['remoteWorkPolicyId'] as String?,
+  directManagerId: json['directManagerId'] as String?,
+  managerId: json['managerId'] as String?,
 );
 
 Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
@@ -55,4 +57,6 @@ Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
   if (instance.workSystem case final value?) 'workSystem': value,
   if (instance.remoteWorkPolicyId case final value?)
     'remoteWorkPolicyId': value,
+  if (instance.directManagerId case final value?) 'directManagerId': value,
+  if (instance.managerId case final value?) 'managerId': value,
 };

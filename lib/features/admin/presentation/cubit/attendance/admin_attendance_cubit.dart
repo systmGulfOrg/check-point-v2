@@ -22,6 +22,7 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
   final AdminAttendanceRepo attendanceRepo;
 
   List<AdminAttendanceModel> _allRecords = [];
+  List<EmployeeModel> _employees = [];
   AdminAttendanceDateFilter _selectedDateFilter =
       AdminAttendanceDateFilter.today;
   DateTime? _customStartDate;
@@ -40,8 +41,70 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
   String? get selectedEmployeeId => _selectedEmployeeId;
   int? get selectedDepartmentId => _selectedDepartmentId;
   String get selectedStatus => _selectedStatus;
+  List<EmployeeModel> get employees => _employees;
+
+  List<AdminAttendanceModel> get todayRecords {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    return _allRecords.where((record) {
+      final recordDate = _parseDate(record.attendanceDate);
+      if (recordDate == null) return false;
+      final recordDay = DateTime(
+        recordDate.year,
+        recordDate.month,
+        recordDate.day,
+      );
+      return recordDay.isAtSameMomentAs(today);
+    }).toList();
+  }
+
+  List<AdminAttendanceModel> get todayPresentRecords {
+    return todayRecords.where((r) {
+      final hasClockIn = r.clockInTime != null &&
+          r.clockInTime!.trim().isNotEmpty &&
+          r.clockInTime != '--:--' &&
+          !r.clockInTime!.startsWith('00:00');
+      final isNotAbsent = r.status?.toLowerCase() != 'absent';
+      return hasClockIn && isNotAbsent;
+    }).toList();
+  }
+
+  List<EmployeeModel> get absentEmployeesToday => getAbsentEmployees();
+
+  List<EmployeeModel> getAbsentEmployees([List<EmployeeModel>? employeeList]) {
+    final employeesToUse = employeeList != null && employeeList.isNotEmpty
+        ? employeeList
+        : _employees;
+    final presentIds = <String>{};
+    final presentNames = <String>{};
+
+    for (final r in todayPresentRecords) {
+      if (r.employeeId != null && r.employeeId!.isNotEmpty) {
+        presentIds.add(r.employeeId!);
+      }
+      if (r.employeeName != null && r.employeeName!.trim().isNotEmpty) {
+        presentNames.add(r.employeeName!.trim().toLowerCase());
+      }
+    }
+
+    return employeesToUse.where((emp) {
+      final id = emp.id;
+      final name = (emp.name ?? emp.userName ?? '').trim().toLowerCase();
+      if (id != null && id.isNotEmpty && presentIds.contains(id)) {
+        return false;
+      }
+      if (name.isNotEmpty && presentNames.contains(name)) {
+        return false;
+      }
+      return true;
+    }).toList();
+  }
+
+  int get todayPresentCount => todayPresentRecords.length;
+  int get todayAbsentCount => absentEmployeesToday.length;
 
   void setEmployeeDirectory(List<EmployeeModel> employees) {
+    _employees = employees;
     _employeeDepartmentById = {
       for (final employee in employees)
         if (employee.id != null) employee.id!: employee.departmentId,
@@ -135,6 +198,7 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
         'late' => record.isLate == true,
         'earlyCheckout' => record.isEarly == true,
         'onTime' => record.isLate != true && record.isEarly != true,
+        'absent' => record.status?.toLowerCase() == 'absent',
         _ => true,
       };
       if (!statusMatches) return false;

@@ -31,27 +31,15 @@ class AdminLeaveTypesListWidget extends StatelessWidget {
     if (item.id == null) return;
     showDialog<void>(
       context: context,
-      builder: (dialogCtx) => AlertDialog(
-        title: Text(
-          'admin.leaveManagement.deleteTypeConfirm'.tr(context: context),
-          style: AppTextStyles.font14SemiBold,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogCtx),
-            child: Text('admin.leaveManagement.cancel'.tr(context: context)),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogCtx);
-              context.read<AdminLeaveRequestsCubit>().deleteLeaveType(item.id!);
-            },
-            child: Text(
-              'common.delete'.tr(context: context),
-              style: const TextStyle(color: AppColors.error),
-            ),
-          ),
-        ],
+      builder: (dialogCtx) => AppDeleteConfirmationDialogWidget(
+        title: 'admin.locations.delete'.tr(context: context),
+        message: 'admin.leaveManagement.deleteTypeConfirm'.tr(context: context),
+        cancelLabel: 'admin.leaveManagement.cancel'.tr(context: context),
+        confirmLabel: 'common.delete'.tr(context: context),
+        onConfirm: () {
+          Navigator.pop(dialogCtx);
+          context.read<AdminLeaveRequestsCubit>().deleteLeaveType(item.id!);
+        },
       ),
     );
   }

@@ -18,6 +18,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_new_shift_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_wizard_field_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_wizard_stepper_widget.dart';
@@ -48,6 +49,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
   int? selectedDepartmentId;
   int? selectedBranchId;
   int? selectedShiftId;
+  String? selectedDirectManagerId;
   bool canAddAttendance = true;
   bool canAddPlan = true;
   bool isSaving = false;
@@ -66,6 +68,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
   @override
   void initState() {
     super.initState();
+    context.read<AdminEmployeesCubit>().loadEmployees();
     nameController = TextEditingController(text: widget.accountRequest?.name);
     usernameController = TextEditingController(
       text: widget.accountRequest?.name != null
@@ -600,6 +603,56 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                             );
                           },
                         ),
+                        BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
+                          builder: (context, empState) {
+                            final employees = context
+                                .read<AdminEmployeesCubit>()
+                                .employees;
+                            final validEmployees = employees
+                                .where((e) => e.id != null)
+                                .toList();
+                            return AdminWizardFieldWidget(
+                              label: 'admin.employeeWizard.directManager'.tr(
+                                context: context,
+                              ),
+                              child: DropdownButtonFormField<String?>(
+                                key: ValueKey(
+                                  'direct_manager_${selectedDirectManagerId ?? 'none'}',
+                                ),
+                                initialValue: selectedDirectManagerId,
+                                isExpanded: true,
+                                hint: Text(
+                                  'admin.employeeWizard.selectDirectManager'
+                                      .tr(context: context),
+                                ),
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.fieldBackground,
+                                ),
+                                items: [
+                                  DropdownMenuItem<String?>(
+                                    value: null,
+                                    child: Text(
+                                      'admin.employeeWizard.noDirectManager'
+                                          .tr(context: context),
+                                    ),
+                                  ),
+                                  ...validEmployees.map(
+                                    (e) => DropdownMenuItem<String?>(
+                                      value: e.id,
+                                      child: Text(
+                                        '${e.name ?? e.userName ?? '-'} (${e.role ?? 'Employee'})',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (val) => setState(
+                                  () => selectedDirectManagerId = val,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                         hSpace(16),
                         SwitchListTile.adaptive(
                           value: canAddAttendance,
@@ -871,6 +924,8 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                             canAddPlan: canAddPlan,
                             workSystem: selectedWorkSystem,
                             remoteWorkPolicyId: selectedRemoteWorkPolicyId,
+                            directManagerId: selectedDirectManagerId,
+                            managerId: selectedDirectManagerId,
                           );
 
                           final employeesCubit = context

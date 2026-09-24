@@ -30,6 +30,8 @@ AddEmployeeRequestBody _$AddEmployeeRequestBodyFromJson(
   leaveBalance: (json['leaveBalance'] as num?)?.toInt(),
   workSystem: json['workSystem'] as String?,
   remoteWorkPolicyId: json['remoteWorkPolicyId'] as String?,
+  directManagerId: json['directManagerId'] as String?,
+  managerId: json['managerId'] as String?,
 );
 
 Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
@@ -54,4 +56,6 @@ Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
   'leaveBalance': instance.leaveBalance,
   'workSystem': instance.workSystem,
   'remoteWorkPolicyId': instance.remoteWorkPolicyId,
+  'directManagerId': instance.directManagerId,
+  'managerId': instance.managerId,
 };

@@ -239,7 +239,7 @@ abstract class AdminApiService {
   );
 
   @DELETE('${ApiConstants.leaveRequests}/{id}')
-  Future<ResultModel> deleteLeaveRequest(@Path('id') int id);
+  Future<ResultModel> deleteLeaveRequest(@Path('id') dynamic id);
 
   // Leave Types
   @GET(ApiConstants.leaveTypes)
