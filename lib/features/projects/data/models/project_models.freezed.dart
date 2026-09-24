@@ -663,6 +663,244 @@ abstract class _ProjectModel implements ProjectModel {
       throw _privateConstructorUsedError;
 }
 
+/// @nodoc
+mixin _$TaskAssigneeModel {
+  String? get taskId => throw _privateConstructorUsedError;
+  String? get employeeId => throw _privateConstructorUsedError;
+  String? get assignedAt => throw _privateConstructorUsedError;
+  String? get employeeName => throw _privateConstructorUsedError;
+  String? get employeeImageUrl => throw _privateConstructorUsedError;
+
+  /// Create a copy of TaskAssigneeModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TaskAssigneeModelCopyWith<TaskAssigneeModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TaskAssigneeModelCopyWith<$Res> {
+  factory $TaskAssigneeModelCopyWith(
+    TaskAssigneeModel value,
+    $Res Function(TaskAssigneeModel) then,
+  ) = _$TaskAssigneeModelCopyWithImpl<$Res, TaskAssigneeModel>;
+  @useResult
+  $Res call({
+    String? taskId,
+    String? employeeId,
+    String? assignedAt,
+    String? employeeName,
+    String? employeeImageUrl,
+  });
+}
+
+/// @nodoc
+class _$TaskAssigneeModelCopyWithImpl<$Res, $Val extends TaskAssigneeModel>
+    implements $TaskAssigneeModelCopyWith<$Res> {
+  _$TaskAssigneeModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of TaskAssigneeModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? taskId = freezed,
+    Object? employeeId = freezed,
+    Object? assignedAt = freezed,
+    Object? employeeName = freezed,
+    Object? employeeImageUrl = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            taskId: freezed == taskId
+                ? _value.taskId
+                : taskId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            employeeId: freezed == employeeId
+                ? _value.employeeId
+                : employeeId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            assignedAt: freezed == assignedAt
+                ? _value.assignedAt
+                : assignedAt // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            employeeName: freezed == employeeName
+                ? _value.employeeName
+                : employeeName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            employeeImageUrl: freezed == employeeImageUrl
+                ? _value.employeeImageUrl
+                : employeeImageUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$TaskAssigneeModelImplCopyWith<$Res>
+    implements $TaskAssigneeModelCopyWith<$Res> {
+  factory _$$TaskAssigneeModelImplCopyWith(
+    _$TaskAssigneeModelImpl value,
+    $Res Function(_$TaskAssigneeModelImpl) then,
+  ) = __$$TaskAssigneeModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String? taskId,
+    String? employeeId,
+    String? assignedAt,
+    String? employeeName,
+    String? employeeImageUrl,
+  });
+}
+
+/// @nodoc
+class __$$TaskAssigneeModelImplCopyWithImpl<$Res>
+    extends _$TaskAssigneeModelCopyWithImpl<$Res, _$TaskAssigneeModelImpl>
+    implements _$$TaskAssigneeModelImplCopyWith<$Res> {
+  __$$TaskAssigneeModelImplCopyWithImpl(
+    _$TaskAssigneeModelImpl _value,
+    $Res Function(_$TaskAssigneeModelImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of TaskAssigneeModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? taskId = freezed,
+    Object? employeeId = freezed,
+    Object? assignedAt = freezed,
+    Object? employeeName = freezed,
+    Object? employeeImageUrl = freezed,
+  }) {
+    return _then(
+      _$TaskAssigneeModelImpl(
+        taskId: freezed == taskId
+            ? _value.taskId
+            : taskId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        employeeId: freezed == employeeId
+            ? _value.employeeId
+            : employeeId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        assignedAt: freezed == assignedAt
+            ? _value.assignedAt
+            : assignedAt // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        employeeName: freezed == employeeName
+            ? _value.employeeName
+            : employeeName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        employeeImageUrl: freezed == employeeImageUrl
+            ? _value.employeeImageUrl
+            : employeeImageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$TaskAssigneeModelImpl implements _TaskAssigneeModel {
+  const _$TaskAssigneeModelImpl({
+    this.taskId,
+    this.employeeId,
+    this.assignedAt,
+    this.employeeName,
+    this.employeeImageUrl,
+  });
+
+  @override
+  final String? taskId;
+  @override
+  final String? employeeId;
+  @override
+  final String? assignedAt;
+  @override
+  final String? employeeName;
+  @override
+  final String? employeeImageUrl;
+
+  @override
+  String toString() {
+    return 'TaskAssigneeModel(taskId: $taskId, employeeId: $employeeId, assignedAt: $assignedAt, employeeName: $employeeName, employeeImageUrl: $employeeImageUrl)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TaskAssigneeModelImpl &&
+            (identical(other.taskId, taskId) || other.taskId == taskId) &&
+            (identical(other.employeeId, employeeId) ||
+                other.employeeId == employeeId) &&
+            (identical(other.assignedAt, assignedAt) ||
+                other.assignedAt == assignedAt) &&
+            (identical(other.employeeName, employeeName) ||
+                other.employeeName == employeeName) &&
+            (identical(other.employeeImageUrl, employeeImageUrl) ||
+                other.employeeImageUrl == employeeImageUrl));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    taskId,
+    employeeId,
+    assignedAt,
+    employeeName,
+    employeeImageUrl,
+  );
+
+  /// Create a copy of TaskAssigneeModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TaskAssigneeModelImplCopyWith<_$TaskAssigneeModelImpl> get copyWith =>
+      __$$TaskAssigneeModelImplCopyWithImpl<_$TaskAssigneeModelImpl>(
+        this,
+        _$identity,
+      );
+}
+
+abstract class _TaskAssigneeModel implements TaskAssigneeModel {
+  const factory _TaskAssigneeModel({
+    final String? taskId,
+    final String? employeeId,
+    final String? assignedAt,
+    final String? employeeName,
+    final String? employeeImageUrl,
+  }) = _$TaskAssigneeModelImpl;
+
+  @override
+  String? get taskId;
+  @override
+  String? get employeeId;
+  @override
+  String? get assignedAt;
+  @override
+  String? get employeeName;
+  @override
+  String? get employeeImageUrl;
+
+  /// Create a copy of TaskAssigneeModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TaskAssigneeModelImplCopyWith<_$TaskAssigneeModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 ProjectTaskModel _$ProjectTaskModelFromJson(Map<String, dynamic> json) {
   return _ProjectTaskModel.fromJson(json);
 }
@@ -680,9 +918,13 @@ mixin _$ProjectTaskModel {
   String? get dueDate => throw _privateConstructorUsedError;
   int? get estimatedMinutes => throw _privateConstructorUsedError;
   int? get actualMinutes =>
-      throw _privateConstructorUsedError; // ignore: invalid_annotation_target, Freezed forwards this converter to the generated field.
-  @JsonKey(fromJson: _assigneeIdsFromJson)
-  List<String> get assigneeIds => throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
+  @JsonKey(
+    readValue: _readAssignees,
+    fromJson: _assigneesFromJson,
+    toJson: _assigneesToJson,
+  )
+  List<TaskAssigneeModel> get assignees => throw _privateConstructorUsedError;
   List<TaskAttachmentModel> get attachments =>
       throw _privateConstructorUsedError;
 
@@ -715,7 +957,12 @@ abstract class $ProjectTaskModelCopyWith<$Res> {
     String? dueDate,
     int? estimatedMinutes,
     int? actualMinutes,
-    @JsonKey(fromJson: _assigneeIdsFromJson) List<String> assigneeIds,
+    @JsonKey(
+      readValue: _readAssignees,
+      fromJson: _assigneesFromJson,
+      toJson: _assigneesToJson,
+    )
+    List<TaskAssigneeModel> assignees,
     List<TaskAttachmentModel> attachments,
   });
 }
@@ -746,7 +993,7 @@ class _$ProjectTaskModelCopyWithImpl<$Res, $Val extends ProjectTaskModel>
     Object? dueDate = freezed,
     Object? estimatedMinutes = freezed,
     Object? actualMinutes = freezed,
-    Object? assigneeIds = null,
+    Object? assignees = null,
     Object? attachments = null,
   }) {
     return _then(
@@ -795,10 +1042,10 @@ class _$ProjectTaskModelCopyWithImpl<$Res, $Val extends ProjectTaskModel>
                 ? _value.actualMinutes
                 : actualMinutes // ignore: cast_nullable_to_non_nullable
                       as int?,
-            assigneeIds: null == assigneeIds
-                ? _value.assigneeIds
-                : assigneeIds // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
+            assignees: null == assignees
+                ? _value.assignees
+                : assignees // ignore: cast_nullable_to_non_nullable
+                      as List<TaskAssigneeModel>,
             attachments: null == attachments
                 ? _value.attachments
                 : attachments // ignore: cast_nullable_to_non_nullable
@@ -830,7 +1077,12 @@ abstract class _$$ProjectTaskModelImplCopyWith<$Res>
     String? dueDate,
     int? estimatedMinutes,
     int? actualMinutes,
-    @JsonKey(fromJson: _assigneeIdsFromJson) List<String> assigneeIds,
+    @JsonKey(
+      readValue: _readAssignees,
+      fromJson: _assigneesFromJson,
+      toJson: _assigneesToJson,
+    )
+    List<TaskAssigneeModel> assignees,
     List<TaskAttachmentModel> attachments,
   });
 }
@@ -860,7 +1112,7 @@ class __$$ProjectTaskModelImplCopyWithImpl<$Res>
     Object? dueDate = freezed,
     Object? estimatedMinutes = freezed,
     Object? actualMinutes = freezed,
-    Object? assigneeIds = null,
+    Object? assignees = null,
     Object? attachments = null,
   }) {
     return _then(
@@ -909,10 +1161,10 @@ class __$$ProjectTaskModelImplCopyWithImpl<$Res>
             ? _value.actualMinutes
             : actualMinutes // ignore: cast_nullable_to_non_nullable
                   as int?,
-        assigneeIds: null == assigneeIds
-            ? _value._assigneeIds
-            : assigneeIds // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
+        assignees: null == assignees
+            ? _value._assignees
+            : assignees // ignore: cast_nullable_to_non_nullable
+                  as List<TaskAssigneeModel>,
         attachments: null == attachments
             ? _value._attachments
             : attachments // ignore: cast_nullable_to_non_nullable
@@ -924,7 +1176,7 @@ class __$$ProjectTaskModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ProjectTaskModelImpl implements _ProjectTaskModel {
+class _$ProjectTaskModelImpl extends _ProjectTaskModel {
   const _$ProjectTaskModelImpl({
     required this.id,
     required this.title,
@@ -937,12 +1189,17 @@ class _$ProjectTaskModelImpl implements _ProjectTaskModel {
     this.dueDate,
     this.estimatedMinutes,
     this.actualMinutes,
-    @JsonKey(fromJson: _assigneeIdsFromJson)
-    final List<String> assigneeIds = const <String>[],
+    @JsonKey(
+      readValue: _readAssignees,
+      fromJson: _assigneesFromJson,
+      toJson: _assigneesToJson,
+    )
+    final List<TaskAssigneeModel> assignees = const <TaskAssigneeModel>[],
     final List<TaskAttachmentModel> attachments = const <TaskAttachmentModel>[],
   }) : _tags = tags,
-       _assigneeIds = assigneeIds,
-       _attachments = attachments;
+       _assignees = assignees,
+       _attachments = attachments,
+       super._();
 
   factory _$ProjectTaskModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProjectTaskModelImplFromJson(json);
@@ -976,15 +1233,19 @@ class _$ProjectTaskModelImpl implements _ProjectTaskModel {
   final int? estimatedMinutes;
   @override
   final int? actualMinutes;
-  // ignore: invalid_annotation_target, Freezed forwards this converter to the generated field.
-  final List<String> _assigneeIds;
-  // ignore: invalid_annotation_target, Freezed forwards this converter to the generated field.
+  // ignore: invalid_annotation_target
+  final List<TaskAssigneeModel> _assignees;
+  // ignore: invalid_annotation_target
   @override
-  @JsonKey(fromJson: _assigneeIdsFromJson)
-  List<String> get assigneeIds {
-    if (_assigneeIds is EqualUnmodifiableListView) return _assigneeIds;
+  @JsonKey(
+    readValue: _readAssignees,
+    fromJson: _assigneesFromJson,
+    toJson: _assigneesToJson,
+  )
+  List<TaskAssigneeModel> get assignees {
+    if (_assignees is EqualUnmodifiableListView) return _assignees;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_assigneeIds);
+    return EqualUnmodifiableListView(_assignees);
   }
 
   final List<TaskAttachmentModel> _attachments;
@@ -998,7 +1259,7 @@ class _$ProjectTaskModelImpl implements _ProjectTaskModel {
 
   @override
   String toString() {
-    return 'ProjectTaskModel(id: $id, title: $title, projectId: $projectId, statusId: $statusId, description: $description, priority: $priority, tags: $tags, startDate: $startDate, dueDate: $dueDate, estimatedMinutes: $estimatedMinutes, actualMinutes: $actualMinutes, assigneeIds: $assigneeIds, attachments: $attachments)';
+    return 'ProjectTaskModel(id: $id, title: $title, projectId: $projectId, statusId: $statusId, description: $description, priority: $priority, tags: $tags, startDate: $startDate, dueDate: $dueDate, estimatedMinutes: $estimatedMinutes, actualMinutes: $actualMinutes, assignees: $assignees, attachments: $attachments)';
   }
 
   @override
@@ -1025,8 +1286,8 @@ class _$ProjectTaskModelImpl implements _ProjectTaskModel {
             (identical(other.actualMinutes, actualMinutes) ||
                 other.actualMinutes == actualMinutes) &&
             const DeepCollectionEquality().equals(
-              other._assigneeIds,
-              _assigneeIds,
+              other._assignees,
+              _assignees,
             ) &&
             const DeepCollectionEquality().equals(
               other._attachments,
@@ -1049,7 +1310,7 @@ class _$ProjectTaskModelImpl implements _ProjectTaskModel {
     dueDate,
     estimatedMinutes,
     actualMinutes,
-    const DeepCollectionEquality().hash(_assigneeIds),
+    const DeepCollectionEquality().hash(_assignees),
     const DeepCollectionEquality().hash(_attachments),
   );
 
@@ -1070,7 +1331,7 @@ class _$ProjectTaskModelImpl implements _ProjectTaskModel {
   }
 }
 
-abstract class _ProjectTaskModel implements ProjectTaskModel {
+abstract class _ProjectTaskModel extends ProjectTaskModel {
   const factory _ProjectTaskModel({
     required final String id,
     required final String title,
@@ -1083,9 +1344,15 @@ abstract class _ProjectTaskModel implements ProjectTaskModel {
     final String? dueDate,
     final int? estimatedMinutes,
     final int? actualMinutes,
-    @JsonKey(fromJson: _assigneeIdsFromJson) final List<String> assigneeIds,
+    @JsonKey(
+      readValue: _readAssignees,
+      fromJson: _assigneesFromJson,
+      toJson: _assigneesToJson,
+    )
+    final List<TaskAssigneeModel> assignees,
     final List<TaskAttachmentModel> attachments,
   }) = _$ProjectTaskModelImpl;
+  const _ProjectTaskModel._() : super._();
 
   factory _ProjectTaskModel.fromJson(Map<String, dynamic> json) =
       _$ProjectTaskModelImpl.fromJson;
@@ -1111,10 +1378,14 @@ abstract class _ProjectTaskModel implements ProjectTaskModel {
   @override
   int? get estimatedMinutes;
   @override
-  int? get actualMinutes; // ignore: invalid_annotation_target, Freezed forwards this converter to the generated field.
+  int? get actualMinutes; // ignore: invalid_annotation_target
   @override
-  @JsonKey(fromJson: _assigneeIdsFromJson)
-  List<String> get assigneeIds;
+  @JsonKey(
+    readValue: _readAssignees,
+    fromJson: _assigneesFromJson,
+    toJson: _assigneesToJson,
+  )
+  List<TaskAssigneeModel> get assignees;
   @override
   List<TaskAttachmentModel> get attachments;
 

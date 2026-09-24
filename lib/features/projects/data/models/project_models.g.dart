@@ -78,9 +78,9 @@ _$ProjectTaskModelImpl _$$ProjectTaskModelImplFromJson(
   dueDate: json['dueDate'] as String?,
   estimatedMinutes: (json['estimatedMinutes'] as num?)?.toInt(),
   actualMinutes: (json['actualMinutes'] as num?)?.toInt(),
-  assigneeIds: json['assigneeIds'] == null
-      ? const <String>[]
-      : _assigneeIdsFromJson(json['assigneeIds']),
+  assignees: _readAssignees(json, 'assignees') == null
+      ? const <TaskAssigneeModel>[]
+      : _assigneesFromJson(_readAssignees(json, 'assignees')),
   attachments:
       (json['attachments'] as List<dynamic>?)
           ?.map((e) => TaskAttachmentModel.fromJson(e as Map<String, dynamic>))
@@ -102,7 +102,7 @@ Map<String, dynamic> _$$ProjectTaskModelImplToJson(
   'dueDate': instance.dueDate,
   'estimatedMinutes': instance.estimatedMinutes,
   'actualMinutes': instance.actualMinutes,
-  'assigneeIds': instance.assigneeIds,
+  'assignees': _assigneesToJson(instance.assignees),
   'attachments': instance.attachments,
 };
 

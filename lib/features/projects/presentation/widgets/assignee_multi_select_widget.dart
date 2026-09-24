@@ -91,9 +91,9 @@ class _AssigneeMultiSelectWidgetState
             ),
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
             ),
-            padding: EdgeInsets.all(16.r),
+            padding: EdgeInsets.all(20.r),
             child: SafeArea(
               child: StatefulBuilder(
                 builder: (sheetContext, setSheetState) {
@@ -150,12 +150,14 @@ class _AssigneeMultiSelectWidgetState
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'projects.assignees'.tr(context: context),
-                            style: AppTextStyles.font18Bold,
+                          Expanded(
+                            child: Text(
+                              'projects.selectAssignees'.tr(context: context),
+                              style: AppTextStyles.font18Bold,
+                            ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.close),
+                            icon: const Icon(Icons.close_rounded),
                             onPressed: () => Navigator.pop(sheetContext),
                           ),
                         ],
@@ -164,7 +166,7 @@ class _AssigneeMultiSelectWidgetState
                       CustomTextFormField(
                         hintText: 'common.search'.tr(context: context),
                         controller: searchController,
-                        prefixIcon: const Icon(Icons.search),
+                        prefixIcon: const Icon(Icons.search_rounded),
                         onChanged: (_) => setSheetState(() {}),
                       ),
                       SizedBox(height: 12.h),
@@ -233,7 +235,7 @@ class _AssigneeMultiSelectWidgetState
                         width: double.infinity,
                         child: CustomButton(
                           text: 'common.save'.tr(context: context),
-                          icon: Icons.check,
+                          icon: Icons.check_rounded,
                           onTap: () {
                             widget.onChanged(currentSelected.toList());
                             Navigator.pop(sheetContext);
@@ -259,13 +261,15 @@ class _AssigneeMultiSelectWidgetState
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'projects.assignees'.tr(context: context),
-              style: AppTextStyles.font14Bold,
+            Expanded(
+              child: Text(
+                'projects.assignees'.tr(context: context),
+                style: AppTextStyles.font14Bold,
+              ),
             ),
             TextButton.icon(
               onPressed: _openSelectionSheet,
-              icon: const Icon(Icons.add, size: 16),
+              icon: const Icon(Icons.add_rounded, size: 16),
               label: Text(
                 'common.select'.tr(context: context),
                 style: AppTextStyles.font12Bold.copyWith(
@@ -278,13 +282,13 @@ class _AssigneeMultiSelectWidgetState
         SizedBox(height: 4.h),
         InkWell(
           onTap: _openSelectionSheet,
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(12.r),
           child: Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
             decoration: BoxDecoration(
               color: AppColors.pageBackground,
-              borderRadius: BorderRadius.circular(10.r),
+              borderRadius: BorderRadius.circular(12.r),
               border: Border.all(color: AppColors.border),
             ),
             child: widget.selectedIds.isEmpty
@@ -292,13 +296,13 @@ class _AssigneeMultiSelectWidgetState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'projects.noAssignees'.tr(context: context),
+                        'projects.selectAssignees'.tr(context: context),
                         style: AppTextStyles.font13Regular.copyWith(
                           color: AppColors.textSecondary,
                         ),
                       ),
                       const Icon(
-                        Icons.arrow_drop_down,
+                        Icons.arrow_drop_down_rounded,
                         color: AppColors.textSecondary,
                       ),
                     ],

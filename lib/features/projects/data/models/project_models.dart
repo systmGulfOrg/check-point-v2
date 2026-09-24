@@ -11,6 +11,9 @@ Object? _readManagerName(Map json, String key) =>
     json['managerName'] ??
     (json['manager'] is Map ? json['manager']['name'] : null);
 
+Object? _readAssignees(Map json, String key) =>
+    json['assignees'] ?? json['assigneeIds'];
+
 @freezed
 class ProjectStatusModel with _$ProjectStatusModel {
   const factory ProjectStatusModel({
@@ -48,6 +51,29 @@ class ProjectModel with _$ProjectModel {
 }
 
 @freezed
+class TaskAssigneeModel with _$TaskAssigneeModel {
+  const factory TaskAssigneeModel({
+    String? taskId,
+    String? employeeId,
+    String? assignedAt,
+    String? employeeName,
+    String? employeeImageUrl,
+  }) = _TaskAssigneeModel;
+
+  factory TaskAssigneeModel.fromJson(Map<String, dynamic> json) {
+    final emp = json['employee'] is Map ? json['employee'] as Map : null;
+    return TaskAssigneeModel(
+      taskId: json['taskId']?.toString(),
+      employeeId: (json['employeeId'] ?? emp?['id'] ?? json['id'])?.toString(),
+      assignedAt: json['assignedAt']?.toString(),
+      employeeName:
+          (emp?['name'] ?? json['name'] ?? json['userName'])?.toString(),
+      employeeImageUrl: (emp?['imageUrl'] ?? json['imageUrl'])?.toString(),
+    );
+  }
+}
+
+@freezed
 class ProjectTaskModel with _$ProjectTaskModel {
   const factory ProjectTaskModel({
     required String id,
@@ -61,12 +87,23 @@ class ProjectTaskModel with _$ProjectTaskModel {
     String? dueDate,
     int? estimatedMinutes,
     int? actualMinutes,
-    // ignore: invalid_annotation_target, Freezed forwards this converter to the generated field.
-    @JsonKey(fromJson: _assigneeIdsFromJson)
-    @Default(<String>[])
-    List<String> assigneeIds,
+    // ignore: invalid_annotation_target
+    @JsonKey(
+      readValue: _readAssignees,
+      fromJson: _assigneesFromJson,
+      toJson: _assigneesToJson,
+    )
+    @Default(<TaskAssigneeModel>[])
+    List<TaskAssigneeModel> assignees,
     @Default(<TaskAttachmentModel>[]) List<TaskAttachmentModel> attachments,
   }) = _ProjectTaskModel;
+
+  const ProjectTaskModel._();
+
+  List<String> get assigneeIds => assignees
+      .map((a) => a.employeeId ?? '')
+      .where((id) => id.isNotEmpty)
+      .toList();
 
   factory ProjectTaskModel.fromJson(Map<String, dynamic> json) =>
       _$ProjectTaskModelFromJson(json);
@@ -100,15 +137,39 @@ class TaskAuditModel with _$TaskAuditModel {
       _$TaskAuditModelFromJson(json);
 }
 
-List<String> _assigneeIdsFromJson(Object? value) => value is List
-    ? value
-          .map(
-            (item) => item is String
-                ? item
-                : item is Map
-                ? '${item['employeeId'] ?? item['id'] ?? ''}'
-                : '',
-          )
-          .where((item) => item.isNotEmpty)
-          .toList()
-    : const [];
+List<TaskAssigneeModel> _assigneesFromJson(Object? value) {
+  if (value is! List) return const [];
+  return value
+      .map((item) {
+        if (item is Map) {
+          return TaskAssigneeModel.fromJson(Map<String, dynamic>.from(item));
+        } else if (item is String && item.isNotEmpty) {
+          return TaskAssigneeModel(employeeId: item, employeeName: item);
+        }
+        return const TaskAssigneeModel();
+      })
+      .where(
+        (a) =>
+            (a.employeeId?.isNotEmpty == true ||
+                a.employeeName?.isNotEmpty == true),
+      )
+      .toList();
+}
+
+List<Map<String, dynamic>> _assigneesToJson(
+  List<TaskAssigneeModel> assignees,
+) =>
+    assignees
+        .map(
+          (a) => {
+            'taskId': a.taskId,
+            'employeeId': a.employeeId,
+            'assignedAt': a.assignedAt,
+            'employee': {
+              'id': a.employeeId,
+              'name': a.employeeName,
+              'imageUrl': a.employeeImageUrl,
+            },
+          },
+        )
+        .toList();

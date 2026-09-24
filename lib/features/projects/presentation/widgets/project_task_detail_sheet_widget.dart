@@ -5,7 +5,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
-import 'package:check_point_v2/core/utils/app_date_formatter.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
 import 'package:check_point_v2/features/projects/data/models/project_models.dart';
@@ -35,7 +34,6 @@ class ProjectTaskDetailSheetWidget extends StatefulWidget {
 class _ProjectTaskDetailSheetWidgetState
     extends State<ProjectTaskDetailSheetWidget> {
   List<EmployeeModel> _employees = [];
-  bool _isLoadingEmployees = false;
   late List<String> _currentAssigneeIds;
 
   @override
@@ -46,7 +44,6 @@ class _ProjectTaskDetailSheetWidgetState
   }
 
   Future<void> _fetchEmployees() async {
-    setState(() => _isLoadingEmployees = true);
     try {
       final repo = sl<AdminEmployeeRepo>();
       final result = await repo.getEmployees(page: 0, pageSize: 100);
@@ -55,17 +52,12 @@ class _ProjectTaskDetailSheetWidgetState
           if (mounted) {
             setState(() {
               _employees = list;
-              _isLoadingEmployees = false;
             });
           }
         },
-        failure: (_) {
-          if (mounted) setState(() => _isLoadingEmployees = false);
-        },
+        failure: (_) {},
       );
-    } catch (_) {
-      if (mounted) setState(() => _isLoadingEmployees = false);
-    }
+    } catch (_) {}
   }
 
   EmployeeModel? _findEmployee(String id) {
@@ -73,6 +65,32 @@ class _ProjectTaskDetailSheetWidgetState
       (e) => e.id == id || e.userName == id || e.name == id,
       orElse: () => EmployeeModel(id: id, name: id),
     );
+  }
+
+  String _getAssigneeName(String id) {
+    final direct = widget.task.assignees.firstWhere(
+      (a) => a.employeeId == id || a.employeeName == id,
+      orElse: () => const TaskAssigneeModel(),
+    );
+    if (direct.employeeName?.isNotEmpty == true) {
+      return direct.employeeName!;
+    }
+    final emp = _findEmployee(id);
+    return emp?.name?.isNotEmpty == true
+        ? emp!.name!
+        : (emp?.userName?.isNotEmpty == true ? emp!.userName! : id);
+  }
+
+  String? _getAssigneeImageUrl(String id) {
+    final direct = widget.task.assignees.firstWhere(
+      (a) => a.employeeId == id || a.employeeName == id,
+      orElse: () => const TaskAssigneeModel(),
+    );
+    if (direct.employeeImageUrl?.isNotEmpty == true) {
+      return direct.employeeImageUrl!;
+    }
+    final emp = _findEmployee(id);
+    return emp?.imageUrl;
   }
 
   Color _priorityColor(String? priority) {
@@ -395,7 +413,7 @@ class _ProjectTaskDetailSheetWidgetState
         SizedBox(width: 8.w),
         Text(title, style: AppTextStyles.font16Bold),
         const Spacer(),
-        if (action != null) action,
+        ?action,
       ],
     );
   }
@@ -420,10 +438,9 @@ class _ProjectTaskDetailSheetWidgetState
 
     return Column(
       children: _currentAssigneeIds.map((id) {
+        final displayName = _getAssigneeName(id);
+        final imageUrl = _getAssigneeImageUrl(id);
         final emp = _findEmployee(id);
-        final displayName = emp?.name?.isNotEmpty == true
-            ? emp!.name!
-            : (emp?.userName?.isNotEmpty == true ? emp!.userName! : id);
         final initial = displayName.trim().isNotEmpty
             ? displayName.trim()[0].toUpperCase()
             : '?';
@@ -445,10 +462,10 @@ class _ProjectTaskDetailSheetWidgetState
             leading: CircleAvatar(
               radius: 20.r,
               backgroundColor: AppColors.softBrandBackground,
-              backgroundImage: emp?.imageUrl?.isNotEmpty == true
-                  ? NetworkImage(emp!.imageUrl!)
+              backgroundImage: imageUrl?.isNotEmpty == true
+                  ? NetworkImage(imageUrl!)
                   : null,
-              child: emp?.imageUrl?.isNotEmpty == true
+              child: imageUrl?.isNotEmpty == true
                   ? null
                   : Text(
                       initial,
@@ -458,12 +475,14 @@ class _ProjectTaskDetailSheetWidgetState
                     ),
             ),
             title: Text(displayName, style: AppTextStyles.font14Bold),
-            subtitle: Text(
-              subtitle,
-              style: AppTextStyles.font12Regular.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
+            subtitle: subtitle != displayName
+                ? Text(
+                    subtitle,
+                    style: AppTextStyles.font12Regular.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  )
+                : null,
           ),
         );
       }).toList(),

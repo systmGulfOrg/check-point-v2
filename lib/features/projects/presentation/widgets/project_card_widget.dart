@@ -43,10 +43,11 @@ class ProjectCardWidget extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(16.r),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: 44.r,
-                    height: 44.r,
+                    width: 46.r,
+                    height: 46.r,
                     decoration: BoxDecoration(
                       color: AppColors.softBrandBackground,
                       borderRadius: BorderRadius.circular(12.r),
@@ -57,18 +58,42 @@ class ProjectCardWidget extends StatelessWidget {
                       size: 24.r,
                     ),
                   ),
-                  vSpace(12),
+                  wSpace(12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          project.name,
-                          style: AppTextStyles.font16Bold,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                project.name,
+                                style: AppTextStyles.font16Bold,
+                              ),
+                            ),
+                            if (project.code?.isNotEmpty == true)
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w,
+                                  vertical: 2.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.pageBackground,
+                                  borderRadius: BorderRadius.circular(4.r),
+                                  border: Border.all(color: AppColors.border),
+                                ),
+                                child: Text(
+                                  project.code!,
+                                  style: AppTextStyles.font12Bold.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                         if (project.departmentName?.isNotEmpty == true ||
                             project.managerName?.isNotEmpty == true) ...[
-                          hSpace(4),
+                          hSpace(6),
                           Wrap(
                             spacing: 6.w,
                             runSpacing: 4.h,
@@ -76,22 +101,22 @@ class ProjectCardWidget extends StatelessWidget {
                               if (project.departmentName?.isNotEmpty == true)
                                 Container(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: 6.w,
-                                    vertical: 2.h,
+                                    horizontal: 8.w,
+                                    vertical: 3.h,
                                   ),
                                   decoration: BoxDecoration(
                                     color: AppColors.softBlueBackground,
-                                    borderRadius: BorderRadius.circular(4.r),
+                                    borderRadius: BorderRadius.circular(6.r),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
                                         Icons.business_rounded,
-                                        size: 12.r,
+                                        size: 13.r,
                                         color: AppColors.brandPrimary,
                                       ),
-                                      wSpace(3),
+                                      wSpace(4),
                                       Text(
                                         project.departmentName!,
                                         style: AppTextStyles.font11Medium.copyWith(
@@ -104,22 +129,22 @@ class ProjectCardWidget extends StatelessWidget {
                               if (project.managerName?.isNotEmpty == true)
                                 Container(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: 6.w,
-                                    vertical: 2.h,
+                                    horizontal: 8.w,
+                                    vertical: 3.h,
                                   ),
                                   decoration: BoxDecoration(
                                     color: AppColors.softBrandBackground,
-                                    borderRadius: BorderRadius.circular(4.r),
+                                    borderRadius: BorderRadius.circular(6.r),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
                                         Icons.person_outline_rounded,
-                                        size: 12.r,
+                                        size: 13.r,
                                         color: AppColors.brandPrimary,
                                       ),
-                                      wSpace(3),
+                                      wSpace(4),
                                       Text(
                                         project.managerName!,
                                         style: AppTextStyles.font11Medium.copyWith(
@@ -132,16 +157,41 @@ class ProjectCardWidget extends StatelessWidget {
                             ],
                           ),
                         ],
-                        if (project.description?.isNotEmpty == true ||
-                            project.code?.isNotEmpty == true) ...[
-                          hSpace(4),
+                        if (project.description?.isNotEmpty == true) ...[
+                          hSpace(6),
                           Text(
-                            project.description ?? project.code ?? '',
+                            project.description!,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: AppTextStyles.font12Regular.copyWith(
                               color: AppColors.textSecondary,
                             ),
+                          ),
+                        ],
+                        if (project.statuses.isNotEmpty) ...[
+                          hSpace(8),
+                          Wrap(
+                            spacing: 4.w,
+                            runSpacing: 4.h,
+                            children: project.statuses.map((status) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w,
+                                  vertical: 2.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.pageBackground,
+                                  borderRadius: BorderRadius.circular(4.r),
+                                  border: Border.all(color: AppColors.border),
+                                ),
+                                child: Text(
+                                  status.name,
+                                  style: AppTextStyles.font11Regular.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
                         ],
                       ],
@@ -169,11 +219,22 @@ class ProjectCardWidget extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 6.h),
                           child: Center(
-                            child: Text(
-                              'common.edit'.tr(context: context),
-                              style: AppTextStyles.font14Bold.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.edit_outlined,
+                                  size: 16,
+                                  color: AppColors.textSecondary,
+                                ),
+                                wSpace(6),
+                                Text(
+                                  'common.edit'.tr(context: context),
+                                  style: AppTextStyles.font14Bold.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -193,11 +254,22 @@ class ProjectCardWidget extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 6.h),
                           child: Center(
-                            child: Text(
-                              'common.delete'.tr(context: context),
-                              style: AppTextStyles.font14Bold.copyWith(
-                                color: AppColors.error,
-                              ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.delete_outline,
+                                  size: 16,
+                                  color: AppColors.error,
+                                ),
+                                wSpace(6),
+                                Text(
+                                  'common.delete'.tr(context: context),
+                                  style: AppTextStyles.font14Bold.copyWith(
+                                    color: AppColors.error,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
