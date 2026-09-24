@@ -11,6 +11,7 @@ import 'admin_employee_profile_header_widget.dart';
 import 'admin_employee_profile_job_tab_widget.dart';
 import 'admin_employee_profile_payroll_tab_widget.dart';
 import 'admin_employee_profile_security_tab_widget.dart';
+import 'admin_employee_profile_skeleton_widget.dart';
 
 class AdminEmployeeProfileBlocBuilderWidget extends StatefulWidget {
   const AdminEmployeeProfileBlocBuilderWidget({super.key});
@@ -42,8 +43,8 @@ class _AdminEmployeeProfileBlocBuilderWidgetState
     return BlocBuilder<AdminEmployeeProfileCubit, AdminEmployeeProfileState>(
       builder: (context, state) {
         return state.when(
-          initial: () => const Center(child: CircularProgressIndicator()),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          initial: () => const AdminEmployeeProfileSkeletonWidget(),
+          loading: () => const AdminEmployeeProfileSkeletonWidget(),
           error: (messageKey) => Center(
             child: Padding(
               padding: EdgeInsets.all(24.r),
