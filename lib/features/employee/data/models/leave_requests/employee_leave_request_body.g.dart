@@ -15,6 +15,7 @@ EmployeeLeaveRequestBody _$EmployeeLeaveRequestBodyFromJson(
   reason: json['reason'] as String,
   remark: json['remark'] as String,
   leaveRequestType: json['leaveRequestType'] as String,
+  attachmentUrl: json['attachmentUrl'] as String?,
 );
 
 Map<String, dynamic> _$EmployeeLeaveRequestBodyToJson(
@@ -26,4 +27,5 @@ Map<String, dynamic> _$EmployeeLeaveRequestBodyToJson(
   'reason': instance.reason,
   'remark': instance.remark,
   'leaveRequestType': instance.leaveRequestType,
+  'attachmentUrl': instance.attachmentUrl,
 };

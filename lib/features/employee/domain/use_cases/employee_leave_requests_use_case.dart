@@ -33,6 +33,7 @@ class EmployeeLeaveRequestsUseCase {
     required String reason,
     required String remark,
     required String leaveRequestType,
+    String? attachmentUrl,
   }) async {
     final employeeId = await sessionStorage.readUserId() ?? '';
     return actionRepo.createLeaveRequest(
@@ -43,6 +44,7 @@ class EmployeeLeaveRequestsUseCase {
         reason: reason,
         remark: remark,
         leaveRequestType: leaveRequestType,
+        attachmentUrl: attachmentUrl,
       ),
     );
   }

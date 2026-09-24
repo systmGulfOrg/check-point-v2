@@ -13,18 +13,18 @@ class LeaveBalancesListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (balances.isEmpty) return const SizedBox.shrink();
     return SizedBox(
-      height: 250.h,
+      height: 175.h,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        clipBehavior: Clip.none,
         itemCount: balances.length,
         itemBuilder: (context, index) {
-          return SizedBox(
-            width: 300.w,
-            child: Padding(
-              padding: EdgeInsets.only(right: 16.w),
-              child: LeaveBalanceCardWidget(balance: balances[index]),
+          return Container(
+            width: 290.w,
+            margin: EdgeInsetsDirectional.only(
+              end: index == balances.length - 1 ? 0 : 12.w,
             ),
+            child: LeaveBalanceCardWidget(balance: balances[index]),
           );
         },
       ),

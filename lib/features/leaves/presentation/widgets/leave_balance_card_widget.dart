@@ -2,8 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/styles/app_colors.dart';
-import '../../../../core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../../data/models/leave_balance_model.dart';
 
 class LeaveBalanceCardWidget extends StatelessWidget {
@@ -11,110 +10,193 @@ class LeaveBalanceCardWidget extends StatelessWidget {
 
   final LeaveBalanceModel balance;
 
+  IconData _getIcon(String name) {
+    final lower = name.toLowerCase();
+    if (lower.contains('annual') || lower.contains('سنوية') || lower.contains('اعتيادية')) {
+      return Icons.beach_access_rounded;
+    }
+    if (lower.contains('casual') || lower.contains('عارضة')) {
+      return Icons.bolt_rounded;
+    }
+    if (lower.contains('sick') || lower.contains('مرضية')) {
+      return Icons.local_hospital_rounded;
+    }
+    return Icons.event_available_rounded;
+  }
+
+  Color _getColor(String name) {
+    final lower = name.toLowerCase();
+    if (lower.contains('annual') || lower.contains('سنوية') || lower.contains('اعتيادية')) {
+      return AppColors.brandPrimary;
+    }
+    if (lower.contains('casual') || lower.contains('عارضة')) {
+      return AppColors.warning;
+    }
+    if (lower.contains('sick') || lower.contains('مرضية')) {
+      return AppColors.error;
+    }
+    return AppColors.success;
+  }
+
+  String _getTranslatedName(String name) {
+    if (name.startsWith('leaves.dashboard.')) {
+      return name.tr();
+    }
+    return name;
+  }
+
   @override
   Widget build(BuildContext context) {
     final usedRatio = balance.totalAllocated > 0
-        ? balance.usedBalance / balance.totalAllocated
+        ? (balance.usedBalance / balance.totalAllocated).clamp(0.0, 1.0)
         : 0.0;
+    final color = _getColor(balance.leaveTypeName);
+    final icon = _getIcon(balance.leaveTypeName);
+    final title = _getTranslatedName(balance.leaveTypeName);
 
     return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: AppColors.border),
         boxShadow: const [
           BoxShadow(
             color: AppColors.shadow,
-            offset: Offset(0, 4),
-            blurRadius: 12,
+            offset: Offset(0, 2),
+            blurRadius: 8,
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(balance.leaveTypeName, style: AppTextStyles.font16Bold),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                width: 36.r,
+                height: 36.r,
                 decoration: BoxDecoration(
-                  color: AppColors.softGreenBackground,
+                  color: color.withAlpha(25),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Icon(icon, color: color, size: 20.r),
+              ),
+              wSpace(10),
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppTextStyles.font14Bold,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: AppColors.softBrandBackground,
                   borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Text(
-                  '${balance.remainingBalance} ${'leaves.dashboard.daysLeft'.tr()}',
+                  '${balance.remainingBalance} ${'leaves.dashboard.daysLeft'.tr(context: context)}',
                   style: AppTextStyles.font12Bold.copyWith(
-                    color: AppColors.success,
+                    color: AppColors.brandPrimary,
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          hSpace(14),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildStatColumn(
-                'leaves.dashboard.total'.tr(),
+                context,
+                'leaves.dashboard.total'.tr(context: context),
                 '${balance.totalAllocated}',
+                AppColors.textPrimary,
+              ),
+              Container(
+                width: 1,
+                height: 28.h,
+                color: AppColors.border,
               ),
               _buildStatColumn(
-                'leaves.dashboard.used'.tr(),
+                context,
+                'leaves.dashboard.used'.tr(context: context),
                 '${balance.usedBalance}',
-                color: AppColors.warning,
+                AppColors.warning,
+              ),
+              Container(
+                width: 1,
+                height: 28.h,
+                color: AppColors.border,
               ),
               _buildStatColumn(
-                'leaves.dashboard.remaining'.tr(),
+                context,
+                'leaves.dashboard.remaining'.tr(context: context),
                 '${balance.remainingBalance}',
-                color: AppColors.success,
+                color,
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          hSpace(12),
           ClipRRect(
-            borderRadius: BorderRadius.circular(8.r),
+            borderRadius: BorderRadius.circular(6.r),
             child: LinearProgressIndicator(
               value: usedRatio,
-              minHeight: 8.h,
-              backgroundColor: AppColors.border,
+              minHeight: 6.h,
+              backgroundColor: AppColors.pageBackground,
               valueColor: AlwaysStoppedAnimation<Color>(
-                usedRatio > 0.8 ? AppColors.error : AppColors.brandPrimary,
+                usedRatio > 0.8 ? AppColors.error : color,
               ),
             ),
           ),
-          SizedBox(height: 8.h),
+          hSpace(6),
           if (usedRatio > 0.8)
             Text(
-              'leaves.dashboard.warningLowBalance'.tr(),
-              style: AppTextStyles.font12Medium.copyWith(
+              'leaves.dashboard.warningLowBalance'.tr(context: context),
+              style: AppTextStyles.font11Medium.copyWith(
                 color: AppColors.error,
               ),
             )
-          else if (usedRatio == 0.0)
+          else
             Text(
-              'leaves.dashboard.noLeavesTaken'.tr(),
-              style: AppTextStyles.font12Regular,
+              usedRatio == 0.0
+                  ? 'leaves.dashboard.noLeavesTaken'.tr(context: context)
+                  : '${(usedRatio * 100).toInt()}% ${'leaves.dashboard.used'.tr(context: context)}',
+              style: AppTextStyles.font11Regular.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
         ],
       ),
     );
   }
 
-  Widget _buildStatColumn(String label, String value, {Color? color}) {
+  Widget _buildStatColumn(
+    BuildContext context,
+    String label,
+    String value,
+    Color color,
+  ) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           value,
-          style: AppTextStyles.font24Bold.copyWith(
-            color: color ?? AppColors.textPrimary,
+          style: AppTextStyles.font18Bold.copyWith(
+            color: color,
           ),
         ),
-        SizedBox(height: 4.h),
-        Text(label, style: AppTextStyles.font12Medium),
+        hSpace(2),
+        Text(
+          label,
+          style: AppTextStyles.font11Regular.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
       ],
     );
   }

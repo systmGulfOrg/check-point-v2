@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -19,6 +23,7 @@ class ApplyForLeaveSheetWidget extends StatefulWidget {
     required String reason,
     required String remark,
     required String leaveRequestType,
+    String? attachmentUrl,
   })
   onSubmit;
 
@@ -37,6 +42,8 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
   DateTime? _startDate;
   DateTime? _endDate;
   late String _selectedLeaveRequestType;
+  String? _attachedFileName;
+  String? _attachedFileBase64;
   final _defaultLeaveRequestTypes = const [
     'LeaveRequest',
     'RequestClaim',
@@ -66,6 +73,69 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
     _reasonController.dispose();
     _remarkController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickAttachment() async {
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'],
+        withData: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        String? base64Data;
+        if (file.bytes != null) {
+          final ext = file.extension?.toLowerCase() ?? 'pdf';
+          final mimeType = ext == 'png'
+              ? 'image/png'
+              : (ext == 'jpg' || ext == 'jpeg')
+                  ? 'image/jpeg'
+                  : ext == 'pdf'
+                      ? 'application/pdf'
+                      : 'application/octet-stream';
+          base64Data = 'data:$mimeType;base64,${base64Encode(file.bytes!)}';
+        } else if (file.path != null) {
+          final bytes = await File(file.path!).readAsBytes();
+          final ext = file.extension?.toLowerCase() ?? 'pdf';
+          final mimeType = ext == 'png'
+              ? 'image/png'
+              : (ext == 'jpg' || ext == 'jpeg')
+                  ? 'image/jpeg'
+                  : ext == 'pdf'
+                      ? 'application/pdf'
+                      : 'application/octet-stream';
+          base64Data = 'data:$mimeType;base64,${base64Encode(bytes)}';
+        }
+
+        setState(() {
+          _attachedFileName = file.name;
+          _attachedFileBase64 = base64Data;
+        });
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'leaves.request.attachmentSelected'.tr(context: context),
+              ),
+              backgroundColor: AppColors.success,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error picking file: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _selectDate({required bool isStartDate}) async {
@@ -109,6 +179,14 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedType = widget.leaveTypes
+        .where(
+          (t) =>
+              t.id?.toString() == _selectedLeaveRequestType ||
+              t.typeName == _selectedLeaveRequestType,
+        )
+        .firstOrNull;
+
     return Container(
       padding: EdgeInsets.only(
         top: 20.h,
@@ -167,7 +245,8 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                     ),
                     items: widget.leaveTypes.isNotEmpty
                         ? widget.leaveTypes.map((type) {
-                            final val = type.id?.toString() ?? type.typeName ?? '';
+                            final val =
+                                type.id?.toString() ?? type.typeName ?? '';
                             final name = type.typeName ?? val;
                             return DropdownMenuItem<String>(
                               value: val,
@@ -198,6 +277,214 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                   ),
                 ),
               ),
+              if (selectedType != null) ...[
+                hSpace(10),
+                Wrap(
+                  spacing: 8.w,
+                  runSpacing: 8.h,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: (selectedType.isPaid ?? true)
+                            ? AppColors.success.withValues(alpha: 0.1)
+                            : AppColors.warning.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: Border.all(
+                          color: (selectedType.isPaid ?? true)
+                              ? AppColors.success.withValues(alpha: 0.3)
+                              : AppColors.warning.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            (selectedType.isPaid ?? true)
+                                ? Icons.check_circle_outline_rounded
+                                : Icons.info_outline_rounded,
+                            size: 15.r,
+                            color: (selectedType.isPaid ?? true)
+                                ? AppColors.success
+                                : AppColors.warning,
+                          ),
+                          wSpace(6),
+                          Text(
+                            (selectedType.isPaid ?? true)
+                                ? 'leaves.request.paid'.tr(context: context)
+                                : 'leaves.request.unpaid'.tr(context: context),
+                            style: AppTextStyles.font12Medium.copyWith(
+                              color: (selectedType.isPaid ?? true)
+                                  ? AppColors.success
+                                  : AppColors.warning,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (selectedType.maxDaysPerYear != null)
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 6.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.brandPrimary.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(8.r),
+                          border: Border.all(
+                            color: AppColors.brandPrimary.withValues(alpha: 0.2),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.event_note_outlined,
+                              size: 15.r,
+                              color: AppColors.brandPrimary,
+                            ),
+                            wSpace(6),
+                            Text(
+                              'leaves.request.maxDays'.tr(
+                                context: context,
+                                args: [selectedType.maxDaysPerYear.toString()],
+                              ),
+                              style: AppTextStyles.font12Medium.copyWith(
+                                color: AppColors.brandPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+              if (selectedType != null &&
+                  (selectedType.requiresAttachment ?? false)) ...[
+                hSpace(14),
+                Row(
+                  children: [
+                    Text(
+                      'leaves.request.attachmentRequired'.tr(context: context),
+                      style: AppTextStyles.font13SemiBold,
+                    ),
+                    wSpace(4),
+                    Text(
+                      '*',
+                      style: AppTextStyles.font13SemiBold.copyWith(
+                        color: AppColors.error,
+                      ),
+                    ),
+                  ],
+                ),
+                hSpace(8),
+                if (_attachedFileName == null)
+                  InkWell(
+                    onTap: _pickAttachment,
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 18.h,
+                        horizontal: 16.w,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.pageBackground,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color: AppColors.brandPrimary.withValues(alpha: 0.4),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.cloud_upload_outlined,
+                            size: 24.r,
+                            color: AppColors.brandPrimary,
+                          ),
+                          wSpace(8),
+                          Text(
+                            'leaves.request.uploadAttachment'.tr(
+                              context: context,
+                            ),
+                            style: AppTextStyles.font14Medium.copyWith(
+                              color: AppColors.brandPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10.h,
+                      horizontal: 12.w,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.pageBackground,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: AppColors.success.withValues(alpha: 0.5),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(6.r),
+                          decoration: BoxDecoration(
+                            color: AppColors.brandPrimary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Icon(
+                            Icons.insert_drive_file_outlined,
+                            size: 18.r,
+                            color: AppColors.brandPrimary,
+                          ),
+                        ),
+                        wSpace(10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _attachedFileName!,
+                                style: AppTextStyles.font14Medium.copyWith(
+                                  color: AppColors.textPrimary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              hSpace(2),
+                              Text(
+                                'leaves.request.attachmentSelected'.tr(
+                                  context: context,
+                                ),
+                                style: AppTextStyles.font11Regular.copyWith(
+                                  color: AppColors.success,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () =>
+                              setState(() => _attachedFileName = null),
+                          icon: const Icon(
+                            Icons.delete_outline_rounded,
+                            color: AppColors.error,
+                          ),
+                          tooltip: 'leaves.request.removeAttachment'.tr(
+                            context: context,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
               hSpace(14),
               Row(
                 children: [
@@ -331,6 +618,20 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                         if (!(_formKey.currentState?.validate() ?? false)) {
                           return;
                         }
+                        if ((selectedType?.requiresAttachment ?? false) &&
+                            _attachedFileName == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'leaves.request.attachmentMissing'.tr(
+                                  context: context,
+                                ),
+                              ),
+                              backgroundColor: AppColors.error,
+                            ),
+                          );
+                          return;
+                        }
                         widget.onSubmit(
                           leaveRequestType: _selectedLeaveRequestType,
                           startDate: AppDateFormatter.formatYearMonthDay(
@@ -341,6 +642,7 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                           ),
                           reason: _reasonController.text.trim(),
                           remark: _remarkController.text.trim(),
+                          attachmentUrl: _attachedFileBase64,
                         );
                         Navigator.pop(context);
                       },

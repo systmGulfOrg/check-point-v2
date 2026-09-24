@@ -11,6 +11,7 @@ class AdminLeaveRequestData {
     required this.statusKey,
     required this.statusColor,
     required this.statusBackgroundColor,
+    this.attachmentUrl,
   });
 
   final String initials;
@@ -22,6 +23,7 @@ class AdminLeaveRequestData {
   final String statusKey;
   final Color statusColor;
   final Color statusBackgroundColor;
+  final String? attachmentUrl;
 
   bool get isPending {
     final s = statusKey.toLowerCase();

@@ -46,6 +46,7 @@ class _SupervisorLeaveManagementScreenState
               required reason,
               required remark,
               required leaveRequestType,
+              attachmentUrl,
             }) {
               cubit.submitLeaveRequest(
                 startDate: startDate,
@@ -53,6 +54,7 @@ class _SupervisorLeaveManagementScreenState
                 reason: reason,
                 remark: remark,
                 leaveRequestType: leaveRequestType,
+                attachmentUrl: attachmentUrl,
               );
             },
       ),
@@ -87,10 +89,19 @@ class _SupervisorLeaveManagementScreenState
                     return state.maybeWhen(
                       success: (balances, types, requests) {
                         if (balances.isEmpty) return const SizedBox.shrink();
-                        return Container(
-                          height: 200.h,
-                          margin: EdgeInsets.only(bottom: 16.h),
-                          child: LeaveBalancesListWidget(balances: balances),
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'leaves.dashboard.balanceTitle'.tr(context: context),
+                              style: AppTextStyles.font16Bold,
+                            ),
+                            hSpace(8),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 16.h),
+                              child: LeaveBalancesListWidget(balances: balances),
+                            ),
+                          ],
                         );
                       },
                       orElse: () => const SizedBox.shrink(),

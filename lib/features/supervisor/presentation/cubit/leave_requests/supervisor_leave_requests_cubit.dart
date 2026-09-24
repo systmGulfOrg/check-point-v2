@@ -48,6 +48,7 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
     required String reason,
     required String remark,
     required String leaveRequestType,
+    String? attachmentUrl,
   }) async {
     emit(const SupervisorLeaveRequestsState.loading());
     final employeeId = await sessionStorage.readUserId() ?? '';
@@ -59,6 +60,7 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
         reason: reason,
         remark: remark,
         leaveRequestType: leaveRequestType,
+        attachmentUrl: attachmentUrl,
       ),
     );
     return result.when(

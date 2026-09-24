@@ -11,6 +11,7 @@ class EmployeeLeaveRequestBody {
     required this.reason,
     required this.remark,
     required this.leaveRequestType,
+    this.attachmentUrl,
   });
 
   final String employeeId;
@@ -19,6 +20,7 @@ class EmployeeLeaveRequestBody {
   final String reason;
   final String remark;
   final String leaveRequestType;
+  final String? attachmentUrl;
 
   factory EmployeeLeaveRequestBody.fromJson(Map<String, dynamic> json) =>
       _$EmployeeLeaveRequestBodyFromJson(json);

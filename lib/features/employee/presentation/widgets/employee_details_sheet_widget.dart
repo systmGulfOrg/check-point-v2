@@ -246,6 +246,21 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                     ),
                   ],
                 ),
+                if (employee.resolvedDirectManagerName != null &&
+                    employee.resolvedDirectManagerName!.isNotEmpty) ...[
+                  hSpace(8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _infoItem(
+                          context,
+                          'admin.employees.directManager'.tr(context: context),
+                          employee.resolvedDirectManagerName!,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 if (employee.phone != null && employee.phone!.isNotEmpty) ...[
                   hSpace(8),
                   Row(

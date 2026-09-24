@@ -20,6 +20,7 @@ class AdminLeaveRequestModel {
     this.startDate,
     this.endDate,
     this.reason,
+    this.attachmentUrl,
     this.status,
     this.managerId,
     this.managerName,
@@ -42,6 +43,7 @@ class AdminLeaveRequestModel {
   @JsonKey(fromJson: legacyApiValueToString)
   final String? endDate;
   final String? reason;
+  final String? attachmentUrl;
   final String? status;
   // Stage 1
   final String? managerId;

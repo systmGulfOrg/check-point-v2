@@ -109,55 +109,27 @@ class SupervisorLeaveRequestsBlocBuilderWidget extends StatelessWidget {
     SupervisorLeaveRequestsCubit cubit,
     String ulid, {
     String? currentStatus,
-  }) {
-    final controller = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-
-    showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('leaves.rejection.reason'.tr(context: ctx)),
-        content: Form(
-          key: formKey,
-          child: TextFormField(
-            controller: controller,
-            decoration: InputDecoration(
-              hintText: 'leaves.rejection.reasonHint'.tr(context: ctx),
-            ),
-            validator: (value) {
-              if (value == null || value.trim().length < 10) {
-                return 'leaves.rejection.reasonRequired'.tr(context: ctx);
-              }
-              return null;
-            },
-            maxLines: 3,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text('cancel'.tr(context: ctx)),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                Navigator.pop(ctx);
-                cubit.rejectRequest(
-                  ulid,
-                  cubit.userRole,
-                  controller.text.trim(),
-                  currentStatus: currentStatus,
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            child: Text(
-              'supervisor.leave.reject'.tr(context: ctx),
-              style: const TextStyle(color: AppColors.white),
-            ),
-          ),
-        ],
-      ),
+  }) async {
+    final reason = await AppRejectReasonDialogWidget.show(
+      context,
+      title: 'leaves.rejection.reason'.tr(context: context),
+      hintText: 'leaves.rejection.reasonHint'.tr(context: context),
+      confirmLabel: 'supervisor.leave.reject'.tr(context: context),
+      validator: (value) {
+        if (value == null || value.trim().length < 10) {
+          return 'leaves.rejection.reasonRequired'.tr(context: context);
+        }
+        return null;
+      },
     );
+
+    if (reason != null && reason.trim().isNotEmpty) {
+      cubit.rejectRequest(
+        ulid,
+        cubit.userRole,
+        reason.trim(),
+        currentStatus: currentStatus,
+      );
+    }
   }
 }
