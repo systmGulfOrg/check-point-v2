@@ -174,6 +174,18 @@ class AppRouter {
               BlocProvider<AuthProfileCubit>(
                 create: (_) => sl<AuthProfileCubit>()..loadProfile(),
               ),
+              BlocProvider<AdminEmployeesCubit>(
+                create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
+              ),
+              BlocProvider<AdminDepartmentsCubit>(
+                create: (_) => sl<AdminDepartmentsCubit>()..load(),
+              ),
+              BlocProvider<AdminBranchesCubit>(
+                create: (_) => sl<AdminBranchesCubit>()..load(),
+              ),
+              BlocProvider<RemoteWorkCubit>(
+                create: (_) => sl<RemoteWorkCubit>()..load(),
+              ),
             ],
             child: AdminEmployeeProfileScreen(employee: employee),
           ),

@@ -1,21 +1,18 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_profile/admin_employee_profile_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/widgets/admin_edit_employee_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/employee_profile/admin_employee_profile_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/employee_profile/edit/admin_employee_profile_edit_form_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
-import 'package:check_point_v2/features/remote_work/presentation/cubit/remote_work_cubit.dart';
 
-class AdminEmployeeProfileScreen extends StatelessWidget {
+class AdminEmployeeProfileScreen extends StatefulWidget {
   const AdminEmployeeProfileScreen({
     required this.employee,
     super.key,
@@ -23,45 +20,65 @@ class AdminEmployeeProfileScreen extends StatelessWidget {
 
   final EmployeeModel employee;
 
-  void _showEditSheet(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppColors.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
-      builder: (_) => MultiBlocProvider(
-        providers: [
-          BlocProvider<AdminEmployeesCubit>(
-            create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
-          ),
-          BlocProvider<AdminDepartmentsCubit>(
-            create: (_) => sl<AdminDepartmentsCubit>()..load(),
-          ),
-          BlocProvider<AdminBranchesCubit>(
-            create: (_) => sl<AdminBranchesCubit>()..load(),
-          ),
-          BlocProvider<RemoteWorkCubit>(
-            create: (_) => sl<RemoteWorkCubit>()..load(),
-          ),
-        ],
-        child: AdminEditEmployeeSheetWidget(
-          employee: employee,
-          onSave: (body) async {
-            if (employee.id != null) {
-              final cubit = sl<AdminEmployeesCubit>();
-              await cubit.editEmployee(employee.id!, body);
-              if (context.mounted) {
-                context
-                    .read<AdminEmployeeProfileCubit>()
-                    .load(employee.id!, initialEmployee: employee);
-              }
-            }
-          },
-        ),
-      ),
+  @override
+  State<AdminEmployeeProfileScreen> createState() =>
+      _AdminEmployeeProfileScreenState();
+}
+
+class _AdminEmployeeProfileScreenState
+    extends State<AdminEmployeeProfileScreen> {
+  bool _isEditing = false;
+
+  EmployeeModel _resolveCurrentEmployee() {
+    final state = context.read<AdminEmployeeProfileCubit>().state;
+    return state.maybeWhen(
+      success: (
+        emp,
+        attendance,
+        selectedMonth,
+        attendedDays,
+        absentDays,
+        lateDays,
+        earlyLeaveDays,
+        totalHours,
+        devicesHistory,
+        leaveRequests,
+        leaveBalances,
+        permissions,
+      ) =>
+          emp,
+      orElse: () => widget.employee,
     );
+  }
+
+  Future<void> _handleSave(EditEmployeeRequestBody body) async {
+    final currentEmp = _resolveCurrentEmployee();
+    final empId = currentEmp.id ?? widget.employee.id;
+    if (empId == null) return;
+
+    final cubit = sl<AdminEmployeesCubit>();
+    final error = await cubit.editEmployee(empId, body);
+    if (!mounted) return;
+
+    if (error == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Employee updated successfully'),
+          backgroundColor: AppColors.success,
+        ),
+      );
+      context
+          .read<AdminEmployeeProfileCubit>()
+          .load(empId, initialEmployee: currentEmp);
+      setState(() => _isEditing = false);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.tr(context: context)),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
   }
 
   @override
@@ -74,11 +91,14 @@ class AdminEmployeeProfileScreen extends StatelessWidget {
       ),
     );
 
+    final currentEmp = _resolveCurrentEmployee();
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text(
-          'employee.profile.title'.tr(context: context),
+          (_isEditing ? 'employee.profile.edit' : 'employee.profile.title')
+              .tr(context: context),
           style: AppTextStyles.font18Bold.copyWith(
             color: AppColors.textPrimary,
           ),
@@ -87,34 +107,52 @@ class AdminEmployeeProfileScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () {
+            if (_isEditing) {
+              setState(() => _isEditing = false);
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
+          icon: Icon(
+            _isEditing
+                ? Icons.close_rounded
+                : Icons.arrow_back_ios_new_rounded,
+          ),
           color: AppColors.textPrimary,
         ),
         actions: [
-          if (canEdit)
+          if (!_isEditing && canEdit)
             IconButton(
-              onPressed: () => _showEditSheet(context),
+              onPressed: () => setState(() => _isEditing = true),
               icon: const Icon(Icons.edit_outlined),
               color: AppColors.brandPrimary,
               tooltip: 'employee.profile.edit'.tr(context: context),
             ),
-          IconButton(
-            onPressed: () {
-              if (employee.id != null) {
-                context
-                    .read<AdminEmployeeProfileCubit>()
-                    .load(employee.id!, initialEmployee: employee);
-              }
-            },
-            icon: const Icon(Icons.refresh_rounded),
-            color: AppColors.textPrimary,
-            tooltip: 'core.actions.refresh'.tr(context: context),
-          ),
+          if (!_isEditing)
+            IconButton(
+              onPressed: () {
+                final empId = currentEmp.id ?? widget.employee.id;
+                if (empId != null) {
+                  context
+                      .read<AdminEmployeeProfileCubit>()
+                      .load(empId, initialEmployee: currentEmp);
+                }
+              },
+              icon: const Icon(Icons.refresh_rounded),
+              color: AppColors.textPrimary,
+              tooltip: 'core.actions.refresh'.tr(context: context),
+            ),
         ],
       ),
-      body: const SafeArea(
-        child: AdminEmployeeProfileBlocBuilderWidget(),
+      body: SafeArea(
+        child: _isEditing
+            ? AdminEmployeeProfileEditFormWidget(
+                employee: currentEmp,
+                onSave: _handleSave,
+                onCancel: () => setState(() => _isEditing = false),
+              )
+            : const AdminEmployeeProfileBlocBuilderWidget(),
       ),
     );
   }
