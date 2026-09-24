@@ -738,7 +738,7 @@ class _EmployeeApiService implements EmployeeApiService {
   }
 
   @override
-  Future<ResultModel> deleteLeaveRequest(int id) async {
+  Future<ResultModel> deleteLeaveRequest(dynamic id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

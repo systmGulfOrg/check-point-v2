@@ -49,6 +49,7 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                 required reason,
                 required remark,
                 required leaveRequestType,
+                attachmentUrl,
               }) {
                 cubit.submitLeaveRequest(
                   startDate: startDate,
@@ -56,6 +57,7 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                   reason: reason,
                   remark: remark,
                   leaveRequestType: leaveRequestType,
+                  attachmentUrl: attachmentUrl,
                 );
               },
         ),
@@ -128,6 +130,12 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                                   '${l.startDate ?? ''} – ${l.endDate ?? ''}',
                               reason: l.reason != null ? '"${l.reason}"' : null,
                               appliedDate: 'Request #${l.id ?? 0}',
+                              managerName: l.managerName,
+                              managerActionAt: l.managerActionAt,
+                              managerRejectionReason: l.managerRejectionReason,
+                              hrName: l.hrName,
+                              hrActionAt: l.hrActionAt,
+                              hrRejectionReason: l.hrRejectionReason,
                             ),
                           )
                           .toList(),
@@ -265,6 +273,44 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                                           index: index,
                                           child: EmployeeLeaveCardWidget(
                                             leave: filteredLeaves[index],
+                                            onDelete: () {
+                                              final leaveId =
+                                                  filteredLeaves[index].id;
+                                              final cubit = context.read<
+                                                  EmployeeLeaveRequestsCubit>();
+                                              showDialog<bool>(
+                                                context: context,
+                                                builder: (dialogCtx) =>
+                                                    AppDeleteConfirmationDialogWidget(
+                                                  title:
+                                                      'admin.leaveManagement.deleteTitle'
+                                                          .tr(
+                                                              context:
+                                                                  dialogCtx),
+                                                  message:
+                                                      'admin.leaveManagement.deleteMessage'
+                                                          .tr(
+                                                              context:
+                                                                  dialogCtx),
+                                                  confirmLabel:
+                                                      'admin.leaveManagement.deleteConfirm'
+                                                          .tr(
+                                                              context:
+                                                                  dialogCtx),
+                                                  onConfirm: () async {
+                                                    Navigator.of(dialogCtx)
+                                                        .pop(true);
+                                                  },
+                                                ),
+                                              ).then((confirmed) {
+                                                if (confirmed == true) {
+                                                  final idInt =
+                                                      int.tryParse(leaveId);
+                                                  cubit.deleteLeaveRequest(
+                                                      idInt ?? leaveId);
+                                                }
+                                              });
+                                            },
                                           ),
                                         ),
                                   ),

@@ -66,7 +66,7 @@ class EmployeeActionRepoImpl implements EmployeeActionRepo {
   }
 
   @override
-  Future<ApiResult<void>> deleteLeaveRequest(int id) async {
+  Future<ApiResult<void>> deleteLeaveRequest(dynamic id) async {
     try {
       await api.deleteLeaveRequest(id);
       return const ApiResult.success(null);

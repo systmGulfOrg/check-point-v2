@@ -18,7 +18,7 @@ abstract class EmployeeActionRepo {
     String employeeId,
     String type,
   );
-  Future<ApiResult<void>> deleteLeaveRequest(int id);
+  Future<ApiResult<void>> deleteLeaveRequest(dynamic id);
   Future<ApiResult<List<AdminTaskModel>>> getEmployeeTasks(String employeeId);
   Future<ApiResult<List<EmployeeModel>>> getTeamEmployees(int departmentId);
   Future<ApiResult<EmployeeModel>> getEmployeeProfile(String employeeId);

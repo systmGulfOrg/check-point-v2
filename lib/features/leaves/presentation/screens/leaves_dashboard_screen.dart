@@ -44,6 +44,9 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
               (t) => admin_lt.LeaveTypeModel(
                 id: int.tryParse(t.id),
                 typeName: t.typeName,
+                isPaid: t.isPaid,
+                requiresAttachment: t.requiresAttachment,
+                maxDaysPerYear: t.maxDaysPerYear,
               ),
             )
             .toList(),
@@ -53,6 +56,7 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
           required reason,
           required remark,
           required leaveRequestType,
+          attachmentUrl,
         }) {
           cubit.submitLeave(
             LeaveRequestBody(
@@ -60,6 +64,7 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
               startDate: DateTime.parse(startDate),
               endDate: DateTime.parse(endDate),
               reason: reason,
+              attachmentUrl: attachmentUrl,
             ),
           );
         },
@@ -72,6 +77,7 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           'leaves.dashboard.title'.tr(context: context),
           style: AppTextStyles.font18Bold,
@@ -109,20 +115,25 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (balances.isNotEmpty) ...[
-                        Container(
-                          height: 200.h,
-                          margin: EdgeInsets.only(bottom: 16.h),
+                        Text(
+                          'leaves.dashboard.balanceTitle'.tr(context: context),
+                          style: AppTextStyles.font16Bold,
+                        ),
+                        hSpace(8),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 16.h),
                           child: LeaveBalancesListWidget(balances: balances),
                         ),
                       ],
                       LeaveStatusFilterWidget(
                         selectedIndex: _selectedFilterIndex,
                         pendingCount: requests
-                            .where(
-                              (r) =>
-                                  r.status.toLowerCase() == 'pending' ||
-                                  r.status.toLowerCase() == 'pendinghr',
-                            )
+                            .where((r) {
+                              final s = r.status.toLowerCase();
+                              return s == 'pending' ||
+                                  s == 'pendinghr' ||
+                                  s == 'pendingmanager';
+                            })
                             .length,
                         onSelected: (index) =>
                             setState(() => _selectedFilterIndex = index),
@@ -180,8 +191,12 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
       final s = r.status.toLowerCase();
       return switch (_selectedFilterIndex) {
         1 => s == 'pending' || s == 'pendinghr' || s == 'pendingmanager',
-        2 => s == 'approved',
-        3 => s == 'rejected' || s == 'rejectedbymanager' || s == 'rejectedbyhr',
+        2 => s == 'approved' ||
+            s == 'approvedbyhr' ||
+            s == 'approvedbymanager',
+        3 => s == 'rejected' ||
+            s == 'rejectedbymanager' ||
+            s == 'rejectedbyhr',
         _ => true,
       };
     }).toList();
@@ -206,7 +221,30 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
         .map(
           (req) => Padding(
             padding: EdgeInsets.only(bottom: 12.h),
-            child: LeaveRequestCardWidget(request: req),
+            child: LeaveRequestCardWidget(
+              request: req,
+              onDelete: () {
+                final cubit = context.read<LeavesCubit>();
+                showDialog<bool>(
+                  context: context,
+                  builder: (dialogCtx) => AppDeleteConfirmationDialogWidget(
+                    title: 'admin.leaveManagement.deleteTitle'
+                        .tr(context: dialogCtx),
+                    message: 'admin.leaveManagement.deleteMessage'
+                        .tr(context: dialogCtx),
+                    confirmLabel: 'admin.leaveManagement.deleteConfirm'
+                        .tr(context: dialogCtx),
+                    onConfirm: () async {
+                      Navigator.of(dialogCtx).pop(true);
+                    },
+                  ),
+                ).then((confirmed) {
+                  if (confirmed == true) {
+                    cubit.deleteLeaveRequest(req.id);
+                  }
+                });
+              },
+            ),
           ),
         )
         .toList();

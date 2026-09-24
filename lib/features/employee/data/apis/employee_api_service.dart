@@ -144,7 +144,7 @@ abstract class EmployeeApiService {
   Future<ResultModel> createLeaveRequest(@Body() EmployeeLeaveRequestBody body);
 
   @DELETE('${ApiConstants.leaveRequests}/{id}')
-  Future<ResultModel> deleteLeaveRequest(@Path('id') int id);
+  Future<ResultModel> deleteLeaveRequest(@Path('id') dynamic id);
 
   @GET('${ApiConstants.leaveRequests}/employeeId/{employeeId}')
   Future<LeaveRequestsResponseModel> getLeaveRequestsForEmployee(

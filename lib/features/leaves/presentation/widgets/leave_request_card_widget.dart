@@ -2,22 +2,26 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/styles/app_colors.dart';
-import '../../../../core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../../data/models/leave_request_model.dart';
 import 'leave_approval_timeline_widget.dart';
 
 class LeaveRequestCardWidget extends StatelessWidget {
-  const LeaveRequestCardWidget({super.key, required this.request});
+  const LeaveRequestCardWidget({
+    super.key,
+    required this.request,
+    this.onDelete,
+  });
 
   final LeaveRequestModel request;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
     final status = request.status.toLowerCase();
 
     final (statusKey, statusColor, statusBg) = switch (status) {
-      'pending' => (
+      'pending' || 'pendingmanager' => (
         'leaves.status.pending',
         AppColors.warningOrange,
         AppColors.softYellowBackground,
@@ -27,18 +31,13 @@ class LeaveRequestCardWidget extends StatelessWidget {
         AppColors.warningOrange,
         AppColors.softYellowBackground,
       ),
-      'approved' => (
+      'approved' || 'approvedbyhr' || 'approvedbymanager' => (
         'leaves.status.approved',
         AppColors.success,
         AppColors.softGreenBackground,
       ),
-      'rejectedbymanager' => (
-        'leaves.status.rejectedByManager',
-        AppColors.error,
-        AppColors.softRedBackground,
-      ),
-      'rejectedbyhr' => (
-        'leaves.status.rejectedByHR',
+      'rejected' || 'rejectedbymanager' || 'rejectedbyhr' => (
+        'leaves.status.rejected',
         AppColors.error,
         AppColors.softRedBackground,
       ),
@@ -85,7 +84,7 @@ class LeaveRequestCardWidget extends StatelessWidget {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      '${request.startDate} - ${request.endDate}',
+                      '${AppDateFormatter.formatDate(request.startDate)} - ${AppDateFormatter.formatDate(request.endDate)} (${request.totalDays} ${'leaves.dashboard.days'.tr()})',
                       style: AppTextStyles.font13Regular.copyWith(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w500,
@@ -104,36 +103,89 @@ class LeaveRequestCardWidget extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
+                    if (request.attachmentUrl != null &&
+                        request.attachmentUrl!.isNotEmpty) ...[
+                      SizedBox(height: 6.h),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.brandPrimary.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.attach_file_rounded,
+                              size: 13.r,
+                              color: AppColors.brandPrimary,
+                            ),
+                            SizedBox(width: 4.w),
+                            Text(
+                              'leaves.request.hasAttachment'.tr(),
+                              style: AppTextStyles.font11Regular.copyWith(
+                                color: AppColors.brandPrimary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: statusBg,
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6.r,
-                      height: 6.r,
-                      decoration: BoxDecoration(
-                        color: statusColor,
-                        shape: BoxShape.circle,
-                      ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: statusBg,
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
-                    SizedBox(width: 6.w),
-                    Text(
-                      statusKey.tr(),
-                      style: AppTextStyles.font12Medium.copyWith(
-                        color: statusColor,
-                        fontWeight: FontWeight.w600,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 6.r,
+                          height: 6.r,
+                          decoration: BoxDecoration(
+                            color: statusColor,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        SizedBox(width: 6.w),
+                        Text(
+                          statusKey.tr(),
+                          style: AppTextStyles.font12Medium.copyWith(
+                            color: statusColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (onDelete != null) ...[
+                    SizedBox(width: 8.w),
+                    InkWell(
+                      onTap: onDelete,
+                      borderRadius: BorderRadius.circular(8.r),
+                      child: Padding(
+                        padding: EdgeInsets.all(4.r),
+                        child: Icon(
+                          Icons.delete_outline_rounded,
+                          size: 18.r,
+                          color: AppColors.error,
+                        ),
                       ),
                     ),
                   ],
-                ),
+                ],
               ),
             ],
           ),

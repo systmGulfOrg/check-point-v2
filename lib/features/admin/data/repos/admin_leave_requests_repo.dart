@@ -7,7 +7,7 @@ abstract class AdminLeaveRequestsRepo {
   Future<ApiResult<void>> approveOrRejectLeaveRequest(
     ChangeRequestLeaveStatus body,
   );
-  Future<ApiResult<void>> deleteLeaveRequest(int id);
+  Future<ApiResult<void>> deleteLeaveRequest(dynamic id);
 
   Future<ApiResult<List<LeaveTypeModel>>> getLeaveTypes();
   Future<ApiResult<void>> addLeaveType(AddLeaveTypeRequestBody body);

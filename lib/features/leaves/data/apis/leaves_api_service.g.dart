@@ -18,33 +18,78 @@ class _LeavesApiService implements LeavesApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<List<LeaveTypeModel>> getLeaveTypes() async {
+  Future<LeaveTypesResponseModel> getBackendLeaveTypes() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<LeaveTypeModel>>(
+    final _options = _setStreamType<LeaveTypesResponseModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/leaves/types',
+            '/api/LeaveType',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<LeaveTypeModel> _value;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late LeaveTypesResponseModel _value;
     try {
-      _value = _result.data!
-          .map(
-            (dynamic i) => LeaveTypeModel.fromJson(i as Map<String, dynamic>),
-          )
-          .toList();
+      _value = LeaveTypesResponseModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
     }
+    return _value;
+  }
+
+  @override
+  Future<LeaveRequestsResponseModel> getBackendLeaveRequests() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<LeaveRequestsResponseModel>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/LeaveRequest',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late LeaveRequestsResponseModel _value;
+    try {
+      _value = LeaveRequestsResponseModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<dynamic> submitBackendLeaveRequest(Map<String, dynamic> body) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _options = _setStreamType<dynamic>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/LeaveRequest',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
     return _value;
   }
 
@@ -114,66 +159,7 @@ class _LeavesApiService implements LeavesApiService {
   }
 
   @override
-  Future<List<LeaveRequestModel>> getLeaveRequests() async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<LeaveRequestModel>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/api/v1/leaves/requests',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<LeaveRequestModel> _value;
-    try {
-      _value = _result.data!
-          .map(
-            (dynamic i) =>
-                LeaveRequestModel.fromJson(i as Map<String, dynamic>),
-          )
-          .toList();
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<LeaveRequestModel> submitLeaveRequest(LeaveRequestBody body) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = body;
-    final _options = _setStreamType<LeaveRequestModel>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/api/v1/leaves/request',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late LeaveRequestModel _value;
-    try {
-      _value = LeaveRequestModel.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<LeaveRequestModel> updateLeaveStatus(
+  Future<dynamic> updateLeaveStatus(
     String id,
     Map<String, dynamic> body,
   ) async {
@@ -182,7 +168,7 @@ class _LeavesApiService implements LeavesApiService {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body);
-    final _options = _setStreamType<LeaveRequestModel>(
+    final _options = _setStreamType<dynamic>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -192,14 +178,8 @@ class _LeavesApiService implements LeavesApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late LeaveRequestModel _value;
-    try {
-      _value = LeaveRequestModel.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
     return _value;
   }
 
@@ -214,6 +194,27 @@ class _LeavesApiService implements LeavesApiService {
           .compose(
             _dio.options,
             '/api/v2/leave-requests/${id}/cancel',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> deleteLeaveRequest(dynamic id) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<dynamic>(
+      Options(method: 'DELETE', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/LeaveRequest/${id}',
             queryParameters: queryParameters,
             data: _data,
           )

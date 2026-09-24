@@ -61,6 +61,7 @@ class AdminLeaveRequestsListWidget extends StatelessWidget {
               : isRejected
               ? AppColors.softRedBackground
               : AppColors.softYellowBackground,
+          attachmentUrl: item.attachmentUrl,
         );
 
         return AdminLeaveRequestCardWidget(
@@ -74,6 +75,25 @@ class AdminLeaveRequestsListWidget extends StatelessWidget {
             if (item.id != null) {
               cubit.updateStatus(requestId: item.id!, status: 'Rejected');
             }
+          },
+          onDelete: () {
+            final reqId = item.id ?? item.ulid;
+            if (reqId == null) return;
+            showDialog<bool>(
+              context: context,
+              builder: (dialogCtx) => AppDeleteConfirmationDialogWidget(
+                title: 'admin.leaveManagement.deleteTitle'.tr(context: dialogCtx),
+                message: 'admin.leaveManagement.deleteMessage'.tr(context: dialogCtx),
+                confirmLabel: 'admin.leaveManagement.deleteConfirm'.tr(context: dialogCtx),
+                onConfirm: () async {
+                  Navigator.of(dialogCtx).pop(true);
+                },
+              ),
+            ).then((confirmed) {
+              if (confirmed == true) {
+                cubit.deleteRequest(reqId);
+              }
+            });
           },
         );
       },

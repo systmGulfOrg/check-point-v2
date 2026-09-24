@@ -6,6 +6,12 @@ class EmployeeLeaveData {
     required this.dateRange,
     this.reason,
     required this.appliedDate,
+    this.managerName,
+    this.managerActionAt,
+    this.managerRejectionReason,
+    this.hrName,
+    this.hrActionAt,
+    this.hrRejectionReason,
   });
 
   final String id;
@@ -14,4 +20,10 @@ class EmployeeLeaveData {
   final String dateRange;
   final String? reason;
   final String appliedDate;
+  final String? managerName;
+  final String? managerActionAt;
+  final String? managerRejectionReason;
+  final String? hrName;
+  final String? hrActionAt;
+  final String? hrRejectionReason;
 }

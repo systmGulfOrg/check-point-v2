@@ -121,6 +121,7 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
     required String reason,
     required String remark,
     required String leaveRequestType,
+    String? attachmentUrl,
   }) async {
     emit(const EmployeeLeaveRequestsState.loading());
     final result = await leaveRequestsUseCase.submitLeaveRequest(
@@ -129,6 +130,7 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
       reason: reason,
       remark: remark,
       leaveRequestType: leaveRequestType,
+      attachmentUrl: attachmentUrl,
     );
     switch (result) {
       case Success():
@@ -159,7 +161,7 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
     }
   }
 
-  Future<void> deleteLeaveRequest(int id) async {
+  Future<void> deleteLeaveRequest(dynamic id) async {
     emit(const EmployeeLeaveRequestsState.loading());
     final result = await actionRepo.deleteLeaveRequest(id);
     switch (result) {

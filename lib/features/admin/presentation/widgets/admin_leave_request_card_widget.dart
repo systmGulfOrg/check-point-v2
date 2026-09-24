@@ -11,12 +11,14 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
     required this.request,
     required this.onApprove,
     required this.onReject,
+    this.onDelete,
     super.key,
   });
 
   final AdminLeaveRequestData request;
   final VoidCallback onApprove;
   final VoidCallback onReject;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +51,28 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        request.nameKey.tr(context: context),
-                        style: AppTextStyles.font14SemiBold,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              request.nameKey.tr(context: context),
+                              style: AppTextStyles.font14SemiBold,
+                            ),
+                          ),
+                          if (onDelete != null)
+                            InkWell(
+                              onTap: onDelete,
+                              borderRadius: BorderRadius.circular(8.r),
+                              child: Padding(
+                                padding: EdgeInsets.all(4.r),
+                                child: Icon(
+                                  Icons.delete_outline_rounded,
+                                  size: 18.r,
+                                  color: AppColors.error,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                       hSpace(3),
                       Row(
@@ -115,6 +136,38 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
                         ),
                         style: AppTextStyles.font12Regular,
                       ),
+                      if (request.attachmentUrl != null &&
+                          request.attachmentUrl!.isNotEmpty) ...[
+                        hSpace(4),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.brandPrimary.withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.attach_file_rounded,
+                                size: 12.r,
+                                color: AppColors.brandPrimary,
+                              ),
+                              wSpace(3),
+                              Text(
+                                'leaves.request.hasAttachment'.tr(context: context),
+                                style: AppTextStyles.font11Regular.copyWith(
+                                  color: AppColors.brandPrimary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

@@ -108,7 +108,7 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
     }
   }
 
-  Future<bool> deleteRequest(int requestId) async {
+  Future<bool> deleteRequest(dynamic requestId) async {
     emit(const AdminLeaveRequestsState.loading());
     final result = await leaveRequestsRepo.deleteLeaveRequest(requestId);
     switch (result) {

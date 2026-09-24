@@ -29,14 +29,9 @@ class LeavesCubit extends Cubit<LeavesState> {
   Future<void> loadLeavesData() async {
     emit(const LeavesState.loading());
 
-    final balancesResult = await leavesRepo.getLeaveBalances();
     final typesResult = await leavesRepo.getLeaveTypes();
     final requestsResult = await leavesRepo.getLeaveRequests();
 
-    final balances = balancesResult.when(
-      success: (data) => data,
-      failure: (_) => const <LeaveBalanceModel>[],
-    );
     final types = typesResult.when(
       success: (data) {
         leaveTypes = data;
@@ -47,6 +42,15 @@ class LeavesCubit extends Cubit<LeavesState> {
     final requests = requestsResult.when(
       success: (data) => data,
       failure: (_) => const <LeaveRequestModel>[],
+    );
+
+    final balancesResult = await leavesRepo.getLeaveBalances(
+      types: types,
+      requests: requests,
+    );
+    final balances = balancesResult.when(
+      success: (data) => data,
+      failure: (_) => const <LeaveBalanceModel>[],
     );
 
     emit(LeavesState.success(balances, types, requests));
@@ -72,6 +76,22 @@ class LeavesCubit extends Cubit<LeavesState> {
         emit(
           const LeavesState.actionSuccess(
             'Leave request cancelled successfully',
+          ),
+        );
+        unawaited(loadLeavesData());
+      },
+      failure: (f) => emit(LeavesState.error(f.messageKey)),
+    );
+  }
+
+  Future<void> deleteLeaveRequest(dynamic id) async {
+    emit(const LeavesState.loading());
+    final result = await leavesRepo.deleteLeaveRequest(id);
+    result.when(
+      success: (_) {
+        emit(
+          const LeavesState.actionSuccess(
+            'Leave request deleted successfully',
           ),
         );
         unawaited(loadLeavesData());
