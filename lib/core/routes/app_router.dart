@@ -165,9 +165,16 @@ class AppRouter {
         }
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminEmployeeProfile),
-          child: BlocProvider<AdminEmployeeProfileCubit>(
-            create: (_) => sl<AdminEmployeeProfileCubit>()
-              ..load(employee.id ?? '', initialEmployee: employee),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AdminEmployeeProfileCubit>(
+                create: (_) => sl<AdminEmployeeProfileCubit>()
+                  ..load(employee.id ?? '', initialEmployee: employee),
+              ),
+              BlocProvider<AuthProfileCubit>(
+                create: (_) => sl<AuthProfileCubit>()..loadProfile(),
+              ),
+            ],
             child: AdminEmployeeProfileScreen(employee: employee),
           ),
         );

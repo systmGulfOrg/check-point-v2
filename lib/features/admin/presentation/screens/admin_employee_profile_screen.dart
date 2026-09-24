@@ -34,7 +34,7 @@ class AdminEmployeeProfileScreen extends StatelessWidget {
       builder: (_) => MultiBlocProvider(
         providers: [
           BlocProvider<AdminEmployeesCubit>(
-            create: (_) => sl<AdminEmployeesCubit>(),
+            create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
           ),
           BlocProvider<AdminDepartmentsCubit>(
             create: (_) => sl<AdminDepartmentsCubit>()..load(),
