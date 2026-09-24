@@ -19,6 +19,9 @@ import 'package:check_point_v2/features/admin/presentation/screens/admin_create_
 import 'package:check_point_v2/features/admin/presentation/screens/admin_departments_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_leave_management_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_locations_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/screens/admin_employee_profile_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee_profile/admin_employee_profile_cubit.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_main_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_permission_details_screen.dart';
 import 'package:check_point_v2/features/admin/data/models/permissions/admin_permission_employee_model.dart';
@@ -147,6 +150,25 @@ class AppRouter {
             create: (_) =>
                 sl<AdminEmployeeAuditCubit>()..loadAuditLogs(employeeId),
             child: const AdminEmployeeAuditScreen(),
+          ),
+        );
+
+      case AppRoutes.adminEmployeeProfile:
+        final employee = settings.arguments;
+        if (employee is! EmployeeModel) {
+          return _fadeRoute(
+            settings: settings,
+            child: const Scaffold(
+              body: Center(child: Text('Invalid employee details')),
+            ),
+          );
+        }
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.adminEmployeeProfile),
+          child: BlocProvider<AdminEmployeeProfileCubit>(
+            create: (_) => sl<AdminEmployeeProfileCubit>()
+              ..load(employee.id ?? '', initialEmployee: employee),
+            child: AdminEmployeeProfileScreen(employee: employee),
           ),
         );
       case AppRoutes.login:
