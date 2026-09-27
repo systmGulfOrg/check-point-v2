@@ -73,6 +73,9 @@ class AppDeleteConfirmationDialogWidget extends StatelessWidget {
                   onTap: () => Navigator.pop(context),
                   backgroundColor: AppColors.pageBackground,
                   textColor: AppColors.textPrimary,
+                  textStyle: AppTextStyles.font14Bold.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
                   height: 44,
                 ),
               ),
@@ -85,6 +88,9 @@ class AppDeleteConfirmationDialogWidget extends StatelessWidget {
                   onTap: onConfirm,
                   backgroundColor: AppColors.error,
                   textColor: AppColors.white,
+                  textStyle: AppTextStyles.font14Bold.copyWith(
+                    color: AppColors.white,
+                  ),
                   height: 44,
                 ),
               ),

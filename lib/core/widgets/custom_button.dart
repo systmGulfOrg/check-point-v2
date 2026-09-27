@@ -14,6 +14,8 @@ class CustomButton extends StatelessWidget {
     this.backgroundColor = AppColors.brandPrimary,
     this.textColor = AppColors.white,
     this.height = 48,
+    this.padding,
+    this.textStyle,
     this.gradient,
     this.icon,
   });
@@ -25,6 +27,8 @@ class CustomButton extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
   final double height;
+  final EdgeInsetsGeometry? padding;
+  final TextStyle? textStyle;
   final Gradient? gradient;
   final IconData? icon;
 
@@ -39,6 +43,7 @@ class CustomButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(14.r),
         child: Container(
           height: height.h,
+          padding: padding ?? EdgeInsets.symmetric(horizontal: 10.w),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: gradient == null && enabled
@@ -53,9 +58,9 @@ class CustomButton extends StatelessWidget {
               ? SizedBox(
                   width: 20.w,
                   height: 20.w,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.w,
-                    valueColor: const AlwaysStoppedAnimation<Color>(
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(
                       AppColors.white,
                     ),
                   ),
@@ -68,10 +73,18 @@ class CustomButton extends StatelessWidget {
                       Icon(icon, color: textColor, size: 18.r),
                       SizedBox(width: 6.w),
                     ],
-                    Text(
-                      text,
-                      style: AppTextStyles.font16Bold.copyWith(
-                        color: textColor,
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          text,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textStyle ??
+                              AppTextStyles.font16Bold.copyWith(
+                                color: textColor,
+                              ),
+                        ),
                       ),
                     ),
                   ],

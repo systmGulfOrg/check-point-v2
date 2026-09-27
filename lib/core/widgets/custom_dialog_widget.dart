@@ -83,6 +83,9 @@ class CustomDialogWidget extends StatelessWidget {
                   onTap: () => Navigator.pop(context),
                   backgroundColor: AppColors.pageBackground,
                   textColor: AppColors.textPrimary,
+                  textStyle: AppTextStyles.font14Bold.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
                   height: 44,
                 ),
               ),
@@ -93,6 +96,9 @@ class CustomDialogWidget extends StatelessWidget {
                   onTap: onConfirm,
                   backgroundColor: confirmButtonColor ?? AppColors.brandPrimary,
                   textColor: confirmButtonTextColor ?? AppColors.white,
+                  textStyle: AppTextStyles.font14Bold.copyWith(
+                    color: confirmButtonTextColor ?? AppColors.white,
+                  ),
                   height: 44,
                 ),
               ),
