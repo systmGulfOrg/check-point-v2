@@ -41,6 +41,8 @@ import 'package:check_point_v2/features/auth/presentation/cubit/request_account/
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account_status/request_account_status_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/screens/login_screen.dart';
 import 'package:check_point_v2/features/auth/presentation/screens/request_access_screen.dart';
+import 'package:check_point_v2/features/tenant/presentation/cubit/tenant_lookup_cubit.dart';
+import 'package:check_point_v2/features/tenant/presentation/screens/tenant_lookup_screen.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/leave_requests/employee_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/odoo_dashboard/employee_odoo_dashboard_cubit.dart';
@@ -201,6 +203,15 @@ class AppRouter {
             child: AdminEmployeeProfileScreen(employee: employee),
           ),
         );
+      case AppRoutes.tenantLookup:
+        return _fadeRoute(
+          settings: const RouteSettings(name: AppRoutes.tenantLookup),
+          child: BlocProvider<TenantLookupCubit>(
+            create: (_) => sl<TenantLookupCubit>(),
+            child: const TenantLookupScreen(),
+          ),
+        );
+
       case AppRoutes.login:
         return _fadeRoute(
           settings: const RouteSettings(name: AppRoutes.login),

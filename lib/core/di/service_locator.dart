@@ -5,6 +5,11 @@ import 'package:get_it/get_it.dart';
 import 'package:local_auth/local_auth.dart';
 
 import 'package:check_point_v2/core/services/attendance_verification_service.dart';
+import 'package:check_point_v2/core/tenant/tenant_storage.dart';
+import 'package:check_point_v2/features/tenant/data/apis/tenant_api_service.dart';
+import 'package:check_point_v2/features/tenant/data/repos/tenant_repo.dart';
+import 'package:check_point_v2/features/tenant/data/repos/tenant_repo_impl.dart';
+import 'package:check_point_v2/features/tenant/presentation/cubit/tenant_lookup_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo.dart';
@@ -109,8 +114,14 @@ final sl = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<FlutterSecureStorage>(FlutterSecureStorage.new);
+  sl.registerLazySingleton<TenantStorage>(
+    () => TenantStorage(secureStorage: sl<FlutterSecureStorage>()),
+  );
   sl.registerLazySingleton<Dio>(
-    () => DioFactory.create(secureStorage: sl<FlutterSecureStorage>()),
+    () => DioFactory.create(
+      secureStorage: sl<FlutterSecureStorage>(),
+      tenantStorage: sl<TenantStorage>(),
+    ),
   );
   sl.registerLazySingleton<AuthSessionStorage>(
     () => AuthSessionStorage(secureStorage: sl<FlutterSecureStorage>()),
@@ -153,6 +164,9 @@ Future<void> setupServiceLocator() async {
   );
 
   // API Services
+  sl.registerLazySingleton<TenantApiService>(
+    () => TenantApiService(sl<Dio>()),
+  );
   sl.registerLazySingleton<AuthApiService>(() => AuthApiService(sl<Dio>()));
   sl.registerLazySingleton<AdminApiService>(() => AdminApiService(sl<Dio>()));
   sl.registerLazySingleton<SupervisorApiService>(
@@ -173,6 +187,12 @@ Future<void> setupServiceLocator() async {
   );
 
   // Repositories
+  sl.registerLazySingleton<TenantRepo>(
+    () => TenantRepoImpl(
+      api: sl<TenantApiService>(),
+      tenantStorage: sl<TenantStorage>(),
+    ),
+  );
   sl.registerLazySingleton<AuthRepo>(
     () => AuthRepoImpl(api: sl<AuthApiService>()),
   );
@@ -285,6 +305,9 @@ Future<void> setupServiceLocator() async {
   );
 
   // Cubits
+  sl.registerFactory<TenantLookupCubit>(
+    () => TenantLookupCubit(tenantRepo: sl<TenantRepo>()),
+  );
   sl.registerFactory<LoginCubit>(
     () => LoginCubit(
       loginUseCase: sl<LoginUseCase>(),

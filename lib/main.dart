@@ -2,12 +2,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'app/app.dart';
+import 'core/core.dart';
 import 'core/di/service_locator.dart';
+import 'core/tenant/tenant_storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await setupServiceLocator();
+
+  final hasTenant = await sl<TenantStorage>().hasTenant();
+  final initialRoute = hasTenant ? AppRoutes.login : AppRoutes.tenantLookup;
 
   runApp(
     EasyLocalization(
@@ -15,7 +20,7 @@ Future<void> main() async {
       path: 'assets/translations',
       startLocale: const Locale('ar'),
       fallbackLocale: const Locale('ar'),
-      child: const CheckPointApp(),
+      child: CheckPointApp(initialRoute: initialRoute),
     ),
   );
 }

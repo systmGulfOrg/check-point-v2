@@ -5,7 +5,12 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 
 class CheckPointApp extends StatelessWidget {
-  const CheckPointApp({super.key});
+  const CheckPointApp({
+    this.initialRoute = AppRoutes.login,
+    super.key,
+  });
+
+  final String initialRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,7 @@ class CheckPointApp extends StatelessWidget {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          initialRoute: AppRoutes.login,
+          initialRoute: initialRoute,
           onGenerateRoute: AppRouter.onGenerateRoute,
         );
       },
