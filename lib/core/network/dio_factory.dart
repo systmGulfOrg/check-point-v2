@@ -4,14 +4,23 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'package:check_point_v2/core/app/app_config.dart';
+import 'package:check_point_v2/core/tenant/tenant_storage.dart';
 import 'auth_token_interceptor.dart';
 
 class DioFactory {
   const DioFactory._();
 
-  static Dio create({required FlutterSecureStorage secureStorage}) {
+  static Dio create({
+    required FlutterSecureStorage secureStorage,
+    TenantStorage? tenantStorage,
+  }) {
     return Dio(BaseOptions(baseUrl: AppConfig.baseUrl))
-      ..interceptors.add(AuthTokenInterceptor(secureStorage: secureStorage))
+      ..interceptors.add(
+        AuthTokenInterceptor(
+          secureStorage: secureStorage,
+          tenantStorage: tenantStorage,
+        ),
+      )
       ..interceptors.add(
         PrettyDioLogger(
           enabled: kDebugMode,
