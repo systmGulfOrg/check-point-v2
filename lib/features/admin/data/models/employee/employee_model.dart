@@ -82,6 +82,7 @@ class EmployeeModel {
     this.socialInsuranceNumber,
     this.documents,
     this.customFields,
+    this.deletedAt,
   });
 
   final String? id;
@@ -160,6 +161,7 @@ class EmployeeModel {
   final String? socialInsuranceNumber;
   final List<dynamic>? documents;
   final Map<String, dynamic>? customFields;
+  final String? deletedAt;
 
   String? get resolvedDirectManagerId => directManagerId ?? managerId;
   String? get resolvedDirectManagerName => directManagerName ?? managerName;

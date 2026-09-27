@@ -49,6 +49,20 @@ class _AdminEmployeesScreenState extends State<AdminEmployeesScreen> {
                       ),
                     ),
                   ),
+                  IconButton(
+                    onPressed: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.adminDeletedEmployees,
+                    ),
+                    tooltip: 'admin.deletedEmployees.title'.tr(
+                      context: context,
+                    ),
+                    icon: Icon(
+                      Icons.delete_sweep_rounded,
+                      color: AppColors.textSecondary,
+                      size: 24.r,
+                    ),
+                  ),
                   Image.asset(
                     AppAssets.logo,
                     height: 32.h,

@@ -71,6 +71,8 @@ import 'package:check_point_v2/features/projects/presentation/screens/projects_s
 import 'package:check_point_v2/features/remote_work/presentation/screens/remote_work_screen.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/core/styles/app_motion.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/deleted_employees/admin_deleted_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/screens/admin_deleted_employees_screen.dart';
 import 'routes.dart';
 
 class AppRouter {
@@ -150,6 +152,15 @@ class AppRouter {
             create: (_) =>
                 sl<AdminEmployeeAuditCubit>()..loadAuditLogs(employeeId),
             child: const AdminEmployeeAuditScreen(),
+          ),
+        );
+
+      case AppRoutes.adminDeletedEmployees:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => BlocProvider<AdminDeletedEmployeesCubit>(
+            create: (_) => sl<AdminDeletedEmployeesCubit>()..load(),
+            child: const AdminDeletedEmployeesScreen(),
           ),
         );
 

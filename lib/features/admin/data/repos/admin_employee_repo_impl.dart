@@ -83,6 +83,40 @@ class AdminEmployeeRepoImpl implements AdminEmployeeRepo {
   }
 
   @override
+  Future<ApiResult<List<EmployeeModel>>> getDeletedEmployees() async {
+    try {
+      final response = await api.getDeletedEmployees();
+      final rawList = (response is Map ? response['value'] : response) as List?;
+      final list = (rawList ?? [])
+          .map((e) => EmployeeModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return ApiResult.success(list);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<void>> restoreEmployee({required String id}) async {
+    try {
+      await api.restoreEmployee(id);
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<void>> permanentDeleteEmployee({required String id}) async {
+    try {
+      await api.permanentDeleteEmployee(id);
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
   Future<ApiResult<void>> setAttendancePermission({
     required String supervisorId,
     required bool permission,

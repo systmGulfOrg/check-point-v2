@@ -123,6 +123,18 @@ class _FakeAdminEmployeeRepo implements AdminEmployeeRepo {
   Future<ApiResult<void>> deleteAccountRequest({required int id}) async {
     return const ApiResult.success(null);
   }
+
+  @override
+  Future<ApiResult<List<EmployeeModel>>> getDeletedEmployees() async =>
+      const ApiResult.success([]);
+
+  @override
+  Future<ApiResult<void>> restoreEmployee({required String id}) async =>
+      const ApiResult.success(null);
+
+  @override
+  Future<ApiResult<void>> permanentDeleteEmployee({required String id}) async =>
+      const ApiResult.success(null);
 }
 
 void main() {

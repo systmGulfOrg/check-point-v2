@@ -98,6 +98,15 @@ abstract class AdminApiService {
   @DELETE('${ApiConstants.deleteEmployee}/{userId}')
   Future<ResultModel> deleteEmployee(@Path('userId') String userId);
 
+  @GET('/api/Employee/deleted')
+  Future<dynamic> getDeletedEmployees();
+
+  @POST('/api/Employee/{id}/restore')
+  Future<ResultModel> restoreEmployee(@Path('id') String id);
+
+  @DELETE('/api/Employee/{id}/permanent')
+  Future<ResultModel> permanentDeleteEmployee(@Path('id') String id);
+
   @POST(
     '${ApiConstants.employees}/employeeId/{supervisorId}/attendancePermission/{permission}',
   )

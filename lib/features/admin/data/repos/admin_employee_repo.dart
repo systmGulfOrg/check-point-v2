@@ -28,6 +28,12 @@ abstract class AdminEmployeeRepo {
 
   Future<ApiResult<void>> deleteEmployee({required String userId});
 
+  Future<ApiResult<List<EmployeeModel>>> getDeletedEmployees();
+
+  Future<ApiResult<void>> restoreEmployee({required String id});
+
+  Future<ApiResult<void>> permanentDeleteEmployee({required String id});
+
   Future<ApiResult<void>> setAttendancePermission({
     required String supervisorId,
     required bool permission,
