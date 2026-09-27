@@ -171,16 +171,17 @@ class AdminEmployeeEditPersonalCardWidget extends StatelessWidget {
           children: [
             Expanded(
               child: DropdownButtonFormField<String>(
+                isExpanded: true,
                 value: selectedGender,
                 decoration: InputDecoration(
                   labelText: 'employee.profile.gender'.tr(context: context),
                   prefixIcon: const Icon(Icons.wc_outlined, color: AppColors.brandPrimary),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
                 ),
                 items: const [
-                  DropdownMenuItem(value: 'male', child: Text('Male (ذكر)')),
-                  DropdownMenuItem(value: 'female', child: Text('Female (أنثى)')),
+                  DropdownMenuItem(value: 'male', child: Text('Male (ذكر)', overflow: TextOverflow.ellipsis)),
+                  DropdownMenuItem(value: 'female', child: Text('Female (أنثى)', overflow: TextOverflow.ellipsis)),
                 ],
                 onChanged: onGenderChanged,
               ),
@@ -188,16 +189,17 @@ class AdminEmployeeEditPersonalCardWidget extends StatelessWidget {
             wSpace(10),
             Expanded(
               child: DropdownButtonFormField<String>(
+                isExpanded: true,
                 value: selectedMaritalStatus,
                 decoration: InputDecoration(
                   labelText: 'employee.profile.maritalStatus'.tr(context: context),
                   prefixIcon: const Icon(Icons.people_outline_rounded, color: AppColors.brandPrimary),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
                 ),
                 items: const [
-                  DropdownMenuItem(value: 'single', child: Text('Single (أعزب)')),
-                  DropdownMenuItem(value: 'married', child: Text('Married (متزوج)')),
+                  DropdownMenuItem(value: 'single', child: Text('Single (أعزب)', overflow: TextOverflow.ellipsis)),
+                  DropdownMenuItem(value: 'married', child: Text('Married (متزوج)', overflow: TextOverflow.ellipsis)),
                 ],
                 onChanged: onMaritalStatusChanged,
               ),

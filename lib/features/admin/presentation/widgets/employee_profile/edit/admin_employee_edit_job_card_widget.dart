@@ -93,6 +93,7 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
                 .map((d) => DropdownMenuItem<int>(value: d.id!, child: Text(d.departmentName ?? '-')))
                 .toList();
             return DropdownButtonFormField<int>(
+              isExpanded: true,
               value: departments.any((d) => d.id == selectedDepartmentId)
                   ? selectedDepartmentId
                   : null,
@@ -122,9 +123,10 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
             );
             final items = branches
                 .where((b) => b.id != null)
-                .map((b) => DropdownMenuItem<int>(value: b.id!, child: Text(b.name ?? '-')))
+                .map((b) => DropdownMenuItem<int>(value: b.id!, child: Text(b.name ?? '-', overflow: TextOverflow.ellipsis)))
                 .toList();
             return DropdownButtonFormField<int>(
+              isExpanded: true,
               value: branches.any((b) => b.id == selectedBranchId) ? selectedBranchId : null,
               decoration: InputDecoration(
                 labelText: 'employee.profile.branch'.tr(context: context),
@@ -139,6 +141,7 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
         ),
         hSpace(10),
         DropdownButtonFormField<String>(
+          isExpanded: true,
           value: selectedWorkSystem,
           decoration: InputDecoration(
             labelText: 'employee.profile.workSystem'.tr(context: context),
@@ -147,9 +150,9 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
           ),
           items: const [
-            DropdownMenuItem(value: 'onsite', child: Text('Onsite (حضوري)')),
-            DropdownMenuItem(value: 'remote', child: Text('Remote (عن بعد)')),
-            DropdownMenuItem(value: 'hybrid', child: Text('Hybrid (هجين)')),
+            DropdownMenuItem(value: 'onsite', child: Text('Onsite (حضوري)', overflow: TextOverflow.ellipsis)),
+            DropdownMenuItem(value: 'remote', child: Text('Remote (عن بعد)', overflow: TextOverflow.ellipsis)),
+            DropdownMenuItem(value: 'hybrid', child: Text('Hybrid (هجين)', overflow: TextOverflow.ellipsis)),
           ],
           onChanged: (val) {
             if (val != null) onWorkSystemChanged(val);
@@ -164,6 +167,7 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
               orElse: () => const <EmployeeModel>[],
             );
             return DropdownButtonFormField<String>(
+              isExpanded: true,
               value: employees.any((e) => e.id == selectedDirectManagerId)
                   ? selectedDirectManagerId
                   : null,
@@ -176,12 +180,12 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
               items: [
                 DropdownMenuItem<String>(
                   value: null,
-                  child: Text('employee.profile.noManager'.tr(context: context)),
+                  child: Text('employee.profile.noManager'.tr(context: context), overflow: TextOverflow.ellipsis),
                 ),
                 ...employees.map(
                   (e) => DropdownMenuItem<String>(
                     value: e.id,
-                    child: Text(e.name ?? e.userName ?? '-'),
+                    child: Text(e.name ?? e.userName ?? '-', overflow: TextOverflow.ellipsis),
                   ),
                 ),
               ],
