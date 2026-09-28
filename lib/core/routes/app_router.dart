@@ -19,6 +19,7 @@ import 'package:check_point_v2/features/admin/presentation/screens/admin_create_
 import 'package:check_point_v2/features/admin/presentation/screens/admin_departments_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_leave_management_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_locations_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/screens/admin_samco_sites_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_employee_profile_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_profile/admin_employee_profile_cubit.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
@@ -75,6 +76,14 @@ import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/core/styles/app_motion.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/deleted_employees/admin_deleted_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_deleted_employees_screen.dart';
+import 'package:check_point_v2/features/contractor/presentation/screens/contractor_main_screen.dart';
+import 'package:check_point_v2/features/contractor/presentation/screens/contractor_add_worker_screen.dart';
+import 'package:check_point_v2/features/contractor/presentation/screens/contractor_requests_screen.dart';
+import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_site_map_screen.dart';
+import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_site_contractors_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/screens/admin_contractors_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/screens/admin_worker_assignments_screen.dart';
 import 'routes.dart';
 
 class AppRouter {
@@ -181,8 +190,9 @@ class AppRouter {
           child: MultiBlocProvider(
             providers: [
               BlocProvider<AdminEmployeeProfileCubit>(
-                create: (_) => sl<AdminEmployeeProfileCubit>()
-                  ..load(employee.id ?? '', initialEmployee: employee),
+                create: (_) =>
+                    sl<AdminEmployeeProfileCubit>()
+                      ..load(employee.id ?? '', initialEmployee: employee),
               ),
               BlocProvider<AuthProfileCubit>(
                 create: (_) => sl<AuthProfileCubit>()..loadProfile(),
@@ -353,6 +363,15 @@ class AppRouter {
           child: BlocProvider<AdminShiftsPoliciesCubit>(
             create: (_) => sl<AdminShiftsPoliciesCubit>()..load(),
             child: const AdminShiftsPoliciesScreen(),
+          ),
+        );
+
+      case AppRoutes.adminSamcoSites:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.adminSamcoSites),
+          child: BlocProvider<ContractorCubit>(
+            create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+            child: const AdminSamcoSitesScreen(),
           ),
         );
 
@@ -553,6 +572,9 @@ class AppRouter {
               BlocProvider<SupervisorTeamCubit>(
                 create: (_) => sl<SupervisorTeamCubit>()..loadTeam(),
               ),
+              BlocProvider<ContractorCubit>(
+                create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+              ),
               BlocProvider<UpcomingHolidayCubit>(
                 create: (_) =>
                     sl<UpcomingHolidayCubit>()..loadUpcomingHoliday(),
@@ -669,6 +691,58 @@ class AppRouter {
           child: BlocProvider.value(
             value: sl<LeavesCubit>(),
             child: const RequestLeaveScreen(),
+          ),
+        );
+      case AppRoutes.contractor:
+        return _fadeRoute(
+          settings: const RouteSettings(name: AppRoutes.contractor),
+          child: BlocProvider<ContractorCubit>(
+            create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+            child: const ContractorMainScreen(),
+          ),
+        );
+      case AppRoutes.contractorAddWorker:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.contractorAddWorker),
+          child: const ContractorAddWorkerScreen(),
+        );
+      case AppRoutes.contractorCorrectionRequest:
+        return _slideRoute(
+          settings: const RouteSettings(
+            name: AppRoutes.contractorCorrectionRequest,
+          ),
+          child: const ContractorRequestsScreen(),
+        );
+      case AppRoutes.supervisorSiteMap:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.supervisorSiteMap),
+          child: BlocProvider<ContractorCubit>(
+            create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+            child: const SupervisorSiteMapScreen(),
+          ),
+        );
+      case AppRoutes.supervisorContractors:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.supervisorContractors),
+          child: BlocProvider<ContractorCubit>(
+            create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+            child: const SupervisorSiteContractorsScreen(),
+          ),
+        );
+      case AppRoutes.adminContractors:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.adminContractors),
+          child: BlocProvider<ContractorCubit>(
+            create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+            child: const AdminContractorsScreen(),
+          ),
+        );
+      case AppRoutes.adminWorkerAssignments:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.adminWorkerAssignments),
+          child: BlocProvider<ContractorCubit>(
+            create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+            child: const AdminWorkerAssignmentsScreen(),
           ),
         );
       default:

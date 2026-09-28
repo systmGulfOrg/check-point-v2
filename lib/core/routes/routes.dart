@@ -18,6 +18,7 @@ class AppRoutes {
   static const String supervisorPlans = '/supervisor/plans';
   static const String adminDepartments = '/admin/departments';
   static const String adminLocations = '/admin/locations';
+  static const String adminSamcoSites = '/admin/samco-sites';
   static const String adminShiftsPolicies = '/admin/shifts-policies';
   static const String adminPermissions = '/admin/permissions';
   static const String adminPermissionDetails = '/admin/permissions/details';
@@ -33,5 +34,13 @@ class AppRoutes {
   static const String projects = '/projects';
   static const String employeeSettings = '/employee/settings';
   static const String adminDeletedEmployees = '/admin/employees/deleted';
+  static const String contractor = '/contractor';
+  static const String contractorAddWorker = '/contractor/workers/add';
+  static const String contractorWorkerDetails = '/contractor/workers/details';
+  static const String contractorCorrectionRequest =
+      '/contractor/requests/create';
+  static const String supervisorSiteMap = '/supervisor/site-map';
+  static const String supervisorContractors = '/supervisor/contractors';
+  static const String adminContractors = '/admin/contractors';
+  static const String adminWorkerAssignments = '/admin/worker-assignments';
 }
-

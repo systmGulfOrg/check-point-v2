@@ -7,10 +7,7 @@ import 'package:check_point_v2/features/tenant/data/models/tenant_model.dart';
 import 'package:check_point_v2/features/tenant/data/repos/tenant_repo.dart';
 
 class TenantRepoImpl implements TenantRepo {
-  TenantRepoImpl({
-    required this.api,
-    required this.tenantStorage,
-  });
+  TenantRepoImpl({required this.api, required this.tenantStorage});
 
   final TenantApiService api;
   final TenantStorage tenantStorage;
@@ -38,38 +35,8 @@ class TenantRepoImpl implements TenantRepo {
         return ApiResult.success(tenant);
       }
 
-      // If response is successful but value is null, construct tenant from code
-      if (response.isSuccess) {
-        final tenant = TenantModel(
-          tenantId: sanitizedCode,
-          tenantCode: sanitizedCode,
-          companyName: response.successMessage ?? sanitizedCode.toUpperCase(),
-        );
-        await tenantStorage.saveTenant(tenant);
-        return ApiResult.success(tenant);
-      }
-
-      return const ApiResult.failure(
-        ApiFailure(messageKey: 'errors.notFound'),
-      );
+      return const ApiResult.failure(ApiFailure(messageKey: 'errors.notFound'));
     } catch (e) {
-      // Special handling for local/demo test tenants if server has not deployed /api/Tenant endpoint yet
-      if (sanitizedCode == 'demo' ||
-          sanitizedCode == 'systm-gulf' ||
-          sanitizedCode == 'demo-tenant-000000000000') {
-        final demoTenant = TenantModel(
-          tenantId: sanitizedCode == 'demo-tenant-000000000000'
-              ? sanitizedCode
-              : 'demo-tenant-000000000000',
-          tenantCode: sanitizedCode,
-          companyName:
-              sanitizedCode == 'systm-gulf' ? 'Systm Gulf' : 'Demo Company',
-          isActive: true,
-        );
-        await tenantStorage.saveTenant(demoTenant);
-        return ApiResult.success(demoTenant);
-      }
-
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
   }

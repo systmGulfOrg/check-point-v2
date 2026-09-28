@@ -32,6 +32,8 @@ class LoginBlocListenerWidget extends StatelessWidget {
             context.pushReplacementNamed(AppRoutes.admin);
           } else if (role == 'supervisor') {
             context.pushReplacementNamed(AppRoutes.supervisor);
+          } else if (role == 'contractor') {
+            context.pushReplacementNamed(AppRoutes.contractor);
           } else {
             context.pushReplacementNamed(AppRoutes.employee);
           }

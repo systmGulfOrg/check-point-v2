@@ -40,6 +40,21 @@ class AppPermissions {
   static const tenantSettings = 'tenant.settings';
   static const tenantUserManage = 'tenant.user_manage';
   static const auditView = 'audit.view';
+  static const projectView = 'project.view';
+  static const projectManage = 'project.manage';
+  static const siteView = 'site.view';
+  static const siteManage = 'site.manage';
+  static const contractorView = 'contractor.view';
+  static const contractorManage = 'contractor.manage';
+  static const workerView = 'worker.view';
+  static const workerManage = 'worker.manage';
+  static const assignmentView = 'assignment.view';
+  static const assignmentManage = 'assignment.manage';
+  static const attendanceCheckIn = 'attendance.check_in';
+  static const attendanceCheckOut = 'attendance.check_out';
+  static const attendanceCorrectionRequest = 'attendance.correction_request';
+  static const trackingView = 'tracking.view';
+  static const deviceManage = 'device.manage';
 
   static bool has(Iterable<String> permissions, String permission) =>
       permissions.any(
@@ -51,20 +66,87 @@ class AppPermissions {
       case 'admin':
       case 'hr':
         return [
-          attendanceViewOwn, attendanceViewTeam, attendanceViewAll,
-          attendanceEdit, attendanceDelete, employeeView, employeeEdit,
-          employeeDelete, taskView, taskAssign, taskManage, remoteRequest,
-          remoteApprove, remotePolicyManage, leaveRequest, leaveApprove,
-          leaveManagerApprove, leaveHrApprove, permitApprove, planManage,
+          attendanceViewOwn,
+          attendanceViewTeam,
+          attendanceViewAll,
+          attendanceEdit,
+          attendanceDelete,
+          employeeView,
+          employeeEdit,
+          employeeDelete,
+          taskView,
+          taskAssign,
+          taskManage,
+          remoteRequest,
+          remoteApprove,
+          remotePolicyManage,
+          leaveRequest,
+          leaveApprove,
+          leaveManagerApprove,
+          leaveHrApprove,
+          permitApprove,
+          planManage,
+          projectView,
+          projectManage,
+          siteView,
+          siteManage,
+          contractorView,
+          contractorManage,
+          workerView,
+          workerManage,
+          assignmentView,
+          assignmentManage,
+          attendanceCheckIn,
+          attendanceCheckOut,
+          attendanceCorrectionRequest,
+          trackingView,
+          deviceManage,
         ];
       case 'supervisor':
         return [
-          attendanceViewOwn, attendanceViewTeam, employeeView, taskView,
-          taskAssign, leaveRequest, leaveManagerApprove, permitApprove,
-          remoteRequest, remoteApprove, reportView,
+          attendanceViewOwn,
+          attendanceViewTeam,
+          employeeView,
+          taskView,
+          taskAssign,
+          leaveRequest,
+          leaveManagerApprove,
+          permitApprove,
+          remoteRequest,
+          remoteApprove,
+          reportView,
+          projectView,
+          siteView,
+          contractorView,
+          workerView,
+          assignmentView,
+          attendanceCheckIn,
+          attendanceCheckOut,
+          attendanceCorrectionRequest,
+          trackingView,
+        ];
+      case 'contractor':
+        return [
+          attendanceViewOwn,
+          attendanceCheckIn,
+          attendanceCheckOut,
+          attendanceCorrectionRequest,
+          contractorView,
+          workerView,
+          workerManage,
+          assignmentView,
+          assignmentManage,
+          reportView,
         ];
       default:
-        return [attendanceViewOwn, taskView, leaveRequest, remoteRequest];
+        return [
+          attendanceViewOwn,
+          taskView,
+          leaveRequest,
+          remoteRequest,
+          attendanceCheckIn,
+          attendanceCheckOut,
+        ];
     }
   }
 }

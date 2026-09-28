@@ -27,7 +27,8 @@ class AdminManageScreen extends StatelessWidget {
               iconBackgroundColor: AppColors.softBlueBackground,
               titleKey: 'admin.manage.devices',
               subtitleKey: 'admin.manage.devicesSub',
-              onTap: () => Navigator.pushNamed(context, AppRoutes.adminPendingDevices),
+              onTap: () =>
+                  Navigator.pushNamed(context, AppRoutes.adminPendingDevices),
             ),
             hSpace(10),
             AdminManageCardWidget(
@@ -41,6 +42,28 @@ class AdminManageScreen extends StatelessWidget {
             ),
             hSpace(10),
             AdminManageCardWidget(
+              icon: Icons.engineering_rounded,
+              iconColor: AppColors.brandPrimary,
+              iconBackgroundColor: AppColors.softBrandBackground,
+              titleKey: 'admin.manage.contractors',
+              subtitleKey: 'admin.manage.contractorsSub',
+              onTap: () =>
+                  Navigator.pushNamed(context, AppRoutes.adminContractors),
+            ),
+            hSpace(10),
+            AdminManageCardWidget(
+              icon: Icons.badge_outlined,
+              iconColor: AppColors.success,
+              iconBackgroundColor: AppColors.softGreenBackground,
+              titleKey: 'admin.manage.workerAssignments',
+              subtitleKey: 'admin.manage.workerAssignmentsSub',
+              onTap: () => Navigator.pushNamed(
+                context,
+                AppRoutes.adminWorkerAssignments,
+              ),
+            ),
+            hSpace(10),
+            AdminManageCardWidget(
               icon: Icons.home_work_outlined,
               iconColor: AppColors.info,
               iconBackgroundColor: AppColors.softBlueBackground,
@@ -48,6 +71,16 @@ class AdminManageScreen extends StatelessWidget {
               subtitleKey: 'admin.manage.locationsSub',
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.adminLocations),
+            ),
+            hSpace(10),
+            AdminManageCardWidget(
+              icon: Icons.fence_outlined,
+              iconColor: AppColors.error,
+              iconBackgroundColor: AppColors.softBrandBackground,
+              titleKey: 'admin.manage.samcoSites',
+              subtitleKey: 'admin.manage.samcoSitesSub',
+              onTap: () =>
+                  Navigator.pushNamed(context, AppRoutes.adminSamcoSites),
             ),
             hSpace(10),
             AdminManageCardWidget(

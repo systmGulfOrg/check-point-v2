@@ -10,6 +10,11 @@ import 'package:check_point_v2/features/tenant/data/apis/tenant_api_service.dart
 import 'package:check_point_v2/features/tenant/data/repos/tenant_repo.dart';
 import 'package:check_point_v2/features/tenant/data/repos/tenant_repo_impl.dart';
 import 'package:check_point_v2/features/tenant/presentation/cubit/tenant_lookup_cubit.dart';
+import 'package:check_point_v2/features/contractor/data/apis/contractor_api_service.dart';
+import 'package:check_point_v2/features/contractor/data/repos/contractor_repo.dart';
+import 'package:check_point_v2/features/contractor/data/repos/contractor_repo_impl.dart';
+import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
+import 'package:check_point_v2/core/services/offline_attendance_sync_service.dart';
 
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo.dart';
@@ -164,9 +169,7 @@ Future<void> setupServiceLocator() async {
   );
 
   // API Services
-  sl.registerLazySingleton<TenantApiService>(
-    () => TenantApiService(sl<Dio>()),
-  );
+  sl.registerLazySingleton<TenantApiService>(() => TenantApiService(sl<Dio>()));
   sl.registerLazySingleton<AuthApiService>(() => AuthApiService(sl<Dio>()));
   sl.registerLazySingleton<AdminApiService>(() => AdminApiService(sl<Dio>()));
   sl.registerLazySingleton<SupervisorApiService>(
@@ -476,5 +479,24 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory(() => AdminEmployeeAuditCubit(api: sl()));
   sl.registerFactory<AdminPermissionsCubit>(
     () => AdminPermissionsCubit(permissionsRepo: sl<AdminPermissionsRepo>()),
+  );
+
+  // SAMCO Contractor & Workforce Registrations
+  sl.registerLazySingleton<ContractorApiService>(
+    () => ContractorApiService(sl<Dio>()),
+  );
+  sl.registerLazySingleton<ContractorRepo>(
+    () => ContractorRepoImpl(api: sl<ContractorApiService>()),
+  );
+  sl.registerLazySingleton<OfflineAttendanceSyncService>(
+    () =>
+        OfflineAttendanceSyncService(contractorRepo: sl<ContractorRepo>())
+          ..startAutoSync(),
+  );
+  sl.registerFactory<ContractorCubit>(
+    () => ContractorCubit(
+      contractorRepo: sl<ContractorRepo>(),
+      offlineSyncService: sl<OfflineAttendanceSyncService>(),
+    ),
   );
 }

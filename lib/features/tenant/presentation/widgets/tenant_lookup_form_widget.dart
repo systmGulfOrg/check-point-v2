@@ -60,6 +60,20 @@ class _TenantLookupFormWidgetState extends State<TenantLookupFormWidget> {
             runSpacing: 6.h,
             children: [
               ActionChip(
+                backgroundColor: AppColors.selectedBackground,
+                side: BorderSide.none,
+                label: Text(
+                  'samco',
+                  style: AppTextStyles.font12Medium.copyWith(
+                    color: AppColors.brandPrimaryDark,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                onPressed: () {
+                  _companyCodeController.text = 'samco';
+                },
+              ),
+              ActionChip(
                 backgroundColor: AppColors.softBrandBackground,
                 side: BorderSide.none,
                 label: Text(

@@ -1,0 +1,129 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:check_point_v2/core/styles/app_colors.dart';
+import 'package:check_point_v2/core/styles/app_text_styles.dart';
+import 'package:check_point_v2/features/contractor/data/models/contractor_correction_model.dart';
+
+class ContractorCorrectionCardWidget extends StatelessWidget {
+  const ContractorCorrectionCardWidget({
+    super.key,
+    required this.correction,
+  });
+
+  final ContractorCorrectionModel correction;
+
+  Color get statusColor {
+    switch (correction.status.toLowerCase()) {
+      case 'approved':
+        return AppColors.success;
+      case 'rejected':
+        return AppColors.error;
+      default:
+        return AppColors.warning;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.all(14.r),
+      decoration: BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                correction.workerName,
+                style: AppTextStyles.font14Bold,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Text(
+                  correction.status,
+                  style: AppTextStyles.font11Medium.copyWith(
+                    color: statusColor,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 6.h),
+          Text(
+            '${correction.date} • ${correction.workerCode}',
+            style: AppTextStyles.font12Regular.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Container(
+            padding: EdgeInsets.all(10.r),
+            decoration: BoxDecoration(
+              color: AppColors.pageBackground,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      'Req Check-In',
+                      style: AppTextStyles.font11Regular.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      correction.requestedCheckIn,
+                      style: AppTextStyles.font14Bold.copyWith(
+                        color: AppColors.brandPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(width: 1.w, height: 24.h, color: AppColors.border),
+                Column(
+                  children: [
+                    Text(
+                      'Req Check-Out',
+                      style: AppTextStyles.font11Regular.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      correction.requestedCheckOut,
+                      style: AppTextStyles.font14Bold.copyWith(
+                        color: AppColors.brandPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Reason: ${correction.reason}',
+            style: AppTextStyles.font12Regular.copyWith(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -32,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   static const _roles = <String>[
     'auth.role.admin',
     'auth.role.supervisor',
+    'auth.role.contractor',
     'auth.role.employee',
   ];
 
@@ -289,6 +290,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             role: switch (_selectedRole) {
                               'auth.role.admin' => 'Admin',
                               'auth.role.supervisor' => 'Supervisor',
+                              'auth.role.contractor' => 'Contractor',
                               _ => 'Employee',
                             },
                             enableBiometricLogin: _enableBiometricLogin,
