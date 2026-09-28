@@ -19,28 +19,45 @@ class AdminEmployeeAuditScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
-        title: Text('admin.employees.activityLog'.tr(context: context), style: AppTextStyles.font18Bold),
+        title: Text(
+          'admin.employees.activityLog'.tr(context: context),
+          style: AppTextStyles.font18Bold,
+        ),
       ),
       body: SafeArea(
         child: BlocConsumer<AdminEmployeeAuditCubit, AdminEmployeeAuditState>(
           listener: (context, state) {
             state.maybeMap(
               error: (state) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message.tr(context: context))),
+                );
               },
               orElse: () {},
             );
           },
           builder: (context, state) {
             return state.map(
-              initial: (_) => const Center(child: CircularProgressIndicator(color: AppColors.brandPrimary)),
-              loading: (_) => const Center(child: CircularProgressIndicator(color: AppColors.brandPrimary)),
-              error: (state) => Center(child: Text(state.message, style: const TextStyle(color: AppColors.error))),
+              initial: (_) => const Center(
+                child: CircularProgressIndicator(color: AppColors.brandPrimary),
+              ),
+              loading: (_) => const Center(
+                child: CircularProgressIndicator(color: AppColors.brandPrimary),
+              ),
+              error: (state) => Center(
+                child: Text(
+                  state.message.tr(context: context),
+                  style: const TextStyle(color: AppColors.error),
+                ),
+              ),
               success: (state) {
                 final logs = state.logs;
                 if (logs.isEmpty) {
                   return Center(
-                    child: Text('admin.requests.empty'.tr(context: context), style: AppTextStyles.font14Regular),
+                    child: Text(
+                      'admin.requests.empty'.tr(context: context),
+                      style: AppTextStyles.font14Regular,
+                    ),
                   );
                 }
                 return ListView.builder(

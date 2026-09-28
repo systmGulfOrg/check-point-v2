@@ -10,8 +10,17 @@ import 'package:check_point_v2/features/contractor/presentation/cubit/contractor
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_state.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_report_export_button_widget.dart';
 
-class ContractorReportsScreen extends StatelessWidget {
+class ContractorReportsScreen extends StatefulWidget {
   const ContractorReportsScreen({super.key});
+
+  @override
+  State<ContractorReportsScreen> createState() =>
+      _ContractorReportsScreenState();
+}
+
+class _ContractorReportsScreenState extends State<ContractorReportsScreen> {
+  DateTime? from;
+  DateTime? to;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +40,10 @@ class ContractorReportsScreen extends StatelessWidget {
         builder: (context, state) {
           final data = state.mapOrNull(success: (value) => value);
           final workers = data?.workers.length ?? 0;
-          final attendance = data?.attendanceLogs ?? const [];
+          final attendance = context.read<ContractorCubit>().attendanceForRange(
+            from: from,
+            to: to,
+          );
           final present = attendance
               .where((item) => item.status.toLowerCase() == 'present')
               .length;
@@ -41,6 +53,33 @@ class ContractorReportsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: TextButton.icon(
+                    onPressed: () async {
+                      final picked = await showDateRangePicker(
+                        context: context,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime.now(),
+                        initialDateRange: from != null && to != null
+                            ? DateTimeRange(start: from!, end: to!)
+                            : null,
+                      );
+                      if (!context.mounted || picked == null) return;
+                      setState(() {
+                        from = picked.start;
+                        to = picked.end;
+                      });
+                    },
+                    icon: const Icon(Icons.date_range_outlined),
+                    label: Text(
+                      from == null || to == null
+                          ? 'contractor.reports.selectDateRange'.tr()
+                          : '${DateFormat.yMd(context.locale.toString()).format(from!)} - ${DateFormat.yMd(context.locale.toString()).format(to!)}',
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
                 Row(
                   children: [
                     Expanded(
@@ -92,9 +131,9 @@ class ContractorReportsScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 24.h),
                 ContractorReportExportButtonWidget(
-                  csvBuilder: context
+                  csvBuilder: () => context
                       .read<ContractorCubit>()
-                      .buildAttendanceCsv,
+                      .buildAttendanceCsv(from: from, to: to),
                 ),
               ],
             ),

@@ -82,6 +82,7 @@ import 'package:check_point_v2/features/contractor/presentation/screens/contract
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_site_map_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_site_contractors_screen.dart';
+import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_corrections_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_contractors_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_worker_assignments_screen.dart';
 import 'routes.dart';
@@ -625,6 +626,15 @@ class AppRouter {
           child: BlocProvider<NotificationsCubit>(
             create: (_) => sl<NotificationsCubit>()..load(),
             child: const SupervisorNotificationsScreen(),
+          ),
+        );
+
+      case AppRoutes.supervisorCorrections:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.supervisorCorrections),
+          child: BlocProvider<ContractorCubit>(
+            create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+            child: const SupervisorCorrectionsScreen(),
           ),
         );
 

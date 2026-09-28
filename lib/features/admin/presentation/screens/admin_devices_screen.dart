@@ -115,17 +115,20 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                     children: [
                       Row(
                         children: [
-                          CircleAvatar(radius: 20.r, child: const Text('O')),
+                          CircleAvatar(
+                            radius: 20.r,
+                            child: Icon(Icons.person_outline, size: 20.r),
+                          ),
                           wSpace(12),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Employee Name Placeholder',
+                                'admin.devices.loadingName'.tr(),
                                 style: AppTextStyles.font16Bold,
                               ),
                               Text(
-                                'Model: Placeholder Phone',
+                                'admin.devices.loadingModel'.tr(),
                                 style: AppTextStyles.font12Regular,
                               ),
                             ],

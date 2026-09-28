@@ -10,6 +10,7 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
     required this.onLeavesTap,
     required this.onPlansTap,
     required this.onNotificationsTap,
+    required this.onCorrectionsTap,
     required this.onProfileTap,
     required this.onRemoteWorkTap,
     super.key,
@@ -18,6 +19,7 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
   final VoidCallback onLeavesTap;
   final VoidCallback onPlansTap;
   final VoidCallback onNotificationsTap;
+  final VoidCallback onCorrectionsTap;
   final VoidCallback onProfileTap;
   final VoidCallback onRemoteWorkTap;
 
@@ -61,6 +63,16 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                   onTap: () {
                     Navigator.pop(context);
                     onLeavesTap();
+                  },
+                ),
+                SupervisorMoreOptionWidget(
+                  icon: Icons.fact_check_outlined,
+                  labelKey: 'supervisor.more.corrections',
+                  backgroundColor: AppColors.softYellowBackground,
+                  iconColor: AppColors.warning,
+                  onTap: () {
+                    Navigator.pop(context);
+                    onCorrectionsTap();
                   },
                 ),
                 SupervisorMoreOptionWidget(

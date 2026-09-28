@@ -98,6 +98,10 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
                   context,
                   AppRoutes.supervisorNotifications,
                 ),
+                onCorrectionsTap: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.supervisorCorrections,
+                ),
                 onProfileTap: () {
                   setState(() {
                     _selectedIndex = 5;

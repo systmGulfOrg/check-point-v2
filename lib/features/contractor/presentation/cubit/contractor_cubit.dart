@@ -20,10 +20,30 @@ class ContractorCubit extends Cubit<ContractorState> {
   final ContractorRepo contractorRepo;
   final OfflineAttendanceSyncService offlineSyncService;
 
-  String buildAttendanceCsv() {
+  List<ContractorAttendanceModel> attendanceForRange({
+    DateTime? from,
+    DateTime? to,
+  }) {
     final attendance =
         state.mapOrNull(success: (value) => value.attendanceLogs) ??
         const <ContractorAttendanceModel>[];
+    return attendance.where((item) {
+      final parsed = DateTime.tryParse(item.date);
+      if (parsed == null) return false;
+      final day = DateTime(parsed.year, parsed.month, parsed.day);
+      final start = from == null
+          ? null
+          : DateTime(from.year, from.month, from.day);
+      final end = to == null
+          ? null
+          : DateTime(to.year, to.month, to.day, 23, 59, 59);
+      return (start == null || !day.isBefore(start)) &&
+          (end == null || !day.isAfter(end));
+    }).toList();
+  }
+
+  String buildAttendanceCsv({DateTime? from, DateTime? to}) {
+    final attendance = attendanceForRange(from: from, to: to);
     final rows = <List<String>>[
       [
         'Date',
