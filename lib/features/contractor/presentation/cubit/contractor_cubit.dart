@@ -20,6 +20,39 @@ class ContractorCubit extends Cubit<ContractorState> {
   final ContractorRepo contractorRepo;
   final OfflineAttendanceSyncService offlineSyncService;
 
+  String buildAttendanceCsv() {
+    final attendance =
+        state.mapOrNull(success: (value) => value.attendanceLogs) ??
+        const <ContractorAttendanceModel>[];
+    final rows = <List<String>>[
+      [
+        'Date',
+        'Worker',
+        'Worker Code',
+        'Site',
+        'Status',
+        'Check In',
+        'Check Out',
+        'Worked Hours',
+      ],
+      ...attendance.map(
+        (item) => [
+          item.date,
+          item.workerName,
+          item.workerCode,
+          item.siteName,
+          item.status,
+          item.checkInTime ?? '',
+          item.checkOutTime ?? '',
+          item.workedHours ?? '',
+        ],
+      ),
+    ];
+    return rows.map((row) => row.map(_escapeCsv).join(',')).join('\n');
+  }
+
+  String _escapeCsv(String value) => '"${value.replaceAll('"', '""')}"';
+
   Future<void> loadDashboardData({String? contractorId}) async {
     emit(const ContractorState.loading());
     final contractorsResult = await contractorRepo.getContractors();

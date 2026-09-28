@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_correction_model.dart';
 
 class ContractorCorrectionCardWidget extends StatelessWidget {
-  const ContractorCorrectionCardWidget({
-    super.key,
-    required this.correction,
-  });
+  const ContractorCorrectionCardWidget({super.key, required this.correction});
 
   final ContractorCorrectionModel correction;
 
@@ -39,10 +37,7 @@ class ContractorCorrectionCardWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                correction.workerName,
-                style: AppTextStyles.font14Bold,
-              ),
+              Text(correction.workerName, style: AppTextStyles.font14Bold),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
@@ -50,7 +45,8 @@ class ContractorCorrectionCardWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
-                  correction.status,
+                  'contractor.requests.status.${correction.status.toLowerCase()}'
+                      .tr(),
                   style: AppTextStyles.font11Medium.copyWith(
                     color: statusColor,
                     fontWeight: FontWeight.w700,
@@ -79,7 +75,7 @@ class ContractorCorrectionCardWidget extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      'Req Check-In',
+                      'contractor.requests.requestedCheckIn'.tr(),
                       style: AppTextStyles.font11Regular.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -97,7 +93,7 @@ class ContractorCorrectionCardWidget extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      'Req Check-Out',
+                      'contractor.requests.requestedCheckOut'.tr(),
                       style: AppTextStyles.font11Regular.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -116,7 +112,7 @@ class ContractorCorrectionCardWidget extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           Text(
-            'Reason: ${correction.reason}',
+            '${'contractor.requests.reason'.tr()}: ${correction.reason}',
             style: AppTextStyles.font12Regular.copyWith(
               color: AppColors.textPrimary,
               fontWeight: FontWeight.w500,

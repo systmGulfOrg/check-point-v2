@@ -4,11 +4,11 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
-import 'package:check_point_v2/core/widgets/custom_button.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_kpi_card_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_report_summary_row_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_state.dart';
+import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_report_export_button_widget.dart';
 
 class ContractorReportsScreen extends StatelessWidget {
   const ContractorReportsScreen({super.key});
@@ -91,16 +91,10 @@ class ContractorReportsScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 24.h),
-                CustomButton(
-                  text: 'contractor.reports.exportPdf'.tr(),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('contractor.reports.exportQueued'.tr()),
-                        backgroundColor: AppColors.brandPrimary,
-                      ),
-                    );
-                  },
+                ContractorReportExportButtonWidget(
+                  csvBuilder: context
+                      .read<ContractorCubit>()
+                      .buildAttendanceCsv,
                 ),
               ],
             ),
