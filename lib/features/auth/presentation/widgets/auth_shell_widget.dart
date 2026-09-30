@@ -17,7 +17,7 @@ class AuthShellWidget extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFFFFF7F0),
+              AppColors.authShellGradientStart,
               AppColors.pageBackground,
               AppColors.white,
             ],

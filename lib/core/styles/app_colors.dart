@@ -56,6 +56,8 @@ class AppColors {
   static const Color softYellowBackground = Color(0xFFFEF3C7);
   static const Color softBlueBackground = Color(0xFFDBEAFE);
   static const Color softRedBackground = Color(0xFFFEE2E2);
+  static const Color softPurpleBackground = Color(0xFFF3E8FF);
+  static const Color purple = Color(0xFF7E22CE);
   static const Color authShellGradientStart = Color(0xFFFFF7F0);
 
   // Employee dark theme badges & tiles

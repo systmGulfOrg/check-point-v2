@@ -10,6 +10,7 @@ import 'package:check_point_v2/features/admin/data/models/attendance/admin_atten
 import 'package:check_point_v2/features/employee/presentation/cubit/details/employee_details_cubit.dart';
 import 'package:flutter/services.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/details/employee_details_state.dart';
+import 'employee_detail_info_item_widget.dart';
 import 'employee_details_chart_widget.dart';
 
 class EmployeeDetailsSheetWidget extends StatelessWidget {
@@ -164,7 +165,7 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                             color: switch (role.toLowerCase()) {
                               'admin' => AppColors.softBrandBackground,
                               'supervisor' => AppColors.softYellowBackground,
-                              'hr' => const Color(0xFFF3E8FF),
+                              'hr' => AppColors.softPurpleBackground,
                               _ => AppColors.softGreenBackground,
                             },
                             borderRadius: BorderRadius.circular(8.r),
@@ -180,7 +181,7 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                               color: switch (role.toLowerCase()) {
                                 'admin' => AppColors.brandPrimary,
                                 'supervisor' => AppColors.warningOrange,
-                                'hr' => const Color(0xFF7E22CE),
+                                'hr' => AppColors.purple,
                                 _ => AppColors.success,
                               },
                               fontWeight: FontWeight.w700,
@@ -212,17 +213,15 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: _infoItem(
-                        context,
-                        'admin.employees.code'.tr(context: context),
-                        employee.employeeCode ?? employee.id ?? '-',
+                      child: EmployeeDetailInfoItemWidget(
+                        label: 'admin.employees.code'.tr(context: context),
+                        value: employee.employeeCode ?? employee.id ?? '-',
                       ),
                     ),
                     Expanded(
-                      child: _infoItem(
-                        context,
-                        'admin.employees.department'.tr(context: context),
-                        employee.departmentName ?? '-',
+                      child: EmployeeDetailInfoItemWidget(
+                        label: 'admin.employees.department'.tr(context: context),
+                        value: employee.departmentName ?? '-',
                       ),
                     ),
                   ],
@@ -231,17 +230,15 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: _infoItem(
-                        context,
-                        'admin.employees.branch'.tr(context: context),
-                        employee.branchName ?? '-',
+                      child: EmployeeDetailInfoItemWidget(
+                        label: 'admin.employees.branch'.tr(context: context),
+                        value: employee.branchName ?? '-',
                       ),
                     ),
                     Expanded(
-                      child: _infoItem(
-                        context,
-                        'admin.employees.shift'.tr(context: context),
-                        employee.shiftName ?? '-',
+                      child: EmployeeDetailInfoItemWidget(
+                        label: 'admin.employees.shift'.tr(context: context),
+                        value: employee.shiftName ?? '-',
                       ),
                     ),
                   ],
@@ -252,10 +249,9 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: _infoItem(
-                          context,
-                          'admin.employees.directManager'.tr(context: context),
-                          employee.resolvedDirectManagerName!,
+                        child: EmployeeDetailInfoItemWidget(
+                          label: 'admin.employees.directManager'.tr(context: context),
+                          value: employee.resolvedDirectManagerName!,
                         ),
                       ),
                     ],
@@ -266,17 +262,15 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: _infoItem(
-                          context,
-                          'admin.employees.phone'.tr(context: context),
-                          employee.phone!,
+                        child: EmployeeDetailInfoItemWidget(
+                          label: 'admin.employees.phone'.tr(context: context),
+                          value: employee.phone!,
                         ),
                       ),
                       Expanded(
-                        child: _infoItem(
-                          context,
-                          'admin.employees.mobileId'.tr(context: context),
-                          employee.mobileId ?? '-',
+                        child: EmployeeDetailInfoItemWidget(
+                          label: 'admin.employees.mobileId'.tr(context: context),
+                          value: employee.mobileId ?? '-',
                         ),
                       ),
                     ],
@@ -467,29 +461,6 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
           ]
         ],
       ),
-    );
-  }
-
-  Widget _infoItem(BuildContext context, String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppTextStyles.font11Medium.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-        hSpace(2),
-        Text(
-          value,
-          style: AppTextStyles.font13SemiBold.copyWith(
-            color: AppColors.textPrimary,
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
     );
   }
 }
