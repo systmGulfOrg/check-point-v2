@@ -19,6 +19,7 @@ class CustomTextFormField extends StatelessWidget {
     this.onChanged,
     this.onTap,
     this.maxLines = 1,
+    this.maxLength,
     this.inputFormatters,
   });
 
@@ -34,6 +35,7 @@ class CustomTextFormField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onTap;
   final int? maxLines;
+  final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
 
   @override
@@ -51,6 +53,7 @@ class CustomTextFormField extends StatelessWidget {
       onChanged: onChanged,
       onTap: onTap,
       maxLines: maxLines,
+      maxLength: maxLength,
 
       inputFormatters: inputFormatters,
       style: AppTextStyles.font14Regular.copyWith(

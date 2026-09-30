@@ -4,6 +4,10 @@
 <dict>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Use Face ID to sign in securely.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Use the camera to scan an employee national ID.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Choose an employee national ID image from the photo library.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Check Point needs access to location to display maps and set geofence areas.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
