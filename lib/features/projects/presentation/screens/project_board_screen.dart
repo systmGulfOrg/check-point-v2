@@ -8,17 +8,10 @@ import '../../data/models/project_models.dart';
 import '../cubit/projects_cubit.dart';
 import '../cubit/projects_state.dart';
 import '../widgets/project_add_status_sheet_widget.dart';
-import '../widgets/project_task_card_widget.dart';
+import '../widgets/project_board_kanban_view_widget.dart';
+import '../widgets/project_board_list_view_widget.dart';
 import '../widgets/project_task_detail_sheet_widget.dart';
 import '../widgets/project_task_editor_sheet_widget.dart';
-
-class ProjectDragData {
-  const ProjectDragData({this.taskId, this.sourceStatusId, this.statusId});
-
-  final String? taskId;
-  final String? sourceStatusId;
-  final String? statusId;
-}
 
 class ProjectBoardScreen extends StatefulWidget {
   const ProjectBoardScreen({
@@ -188,250 +181,58 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
               // Board Content
               Expanded(
                 child: isListView
-                    ? _buildListView(context, cubit, boardProject, tasks, allTasks)
-                    : _buildKanbanView(context, cubit, boardProject, tasks),
+                    ? ProjectBoardListViewWidget(
+                        boardProject: boardProject,
+                        tasks: tasks,
+                        canManage: canManage,
+                        onTaskTap: (task) => _showTaskDetails(context, cubit, task),
+                        onMoveStatus: (task, statusId) =>
+                            cubit.moveTask(task.id, statusId),
+                        onEditTask: (task) => _editTask(context, cubit, task),
+                        onDeleteTask: (task) =>
+                            _confirmDeleteTask(context, cubit, task),
+                      )
+                    : ProjectBoardKanbanViewWidget(
+                        boardProject: boardProject,
+                        tasks: tasks,
+                        canManage: canManage,
+                        hoveredStatusId: hoveredStatusId,
+                        onHoveredStatusChanged: (val) =>
+                            setState(() => hoveredStatusId = val),
+                        onAcceptDrag: (data, targetStatusId, statusIndex) {
+                          setState(() {
+                            hoveredStatusId = null;
+                            draggingTaskId = null;
+                            draggingStatusId = null;
+                          });
+                          if (data.taskId != null &&
+                              data.sourceStatusId != targetStatusId) {
+                            cubit.moveTask(data.taskId!, targetStatusId);
+                          } else if (data.statusId != null &&
+                              data.statusId != targetStatusId) {
+                            final ids = boardProject.statuses
+                                .map((item) => item.id)
+                                .toList();
+                            final fromIndex = ids.indexOf(data.statusId!);
+                            if (fromIndex >= 0) {
+                              ids.removeAt(fromIndex);
+                              ids.insert(statusIndex, data.statusId!);
+                              cubit.reorderStatuses(project.id, ids);
+                            }
+                          }
+                        },
+                        onTaskTap: (task) => _showTaskDetails(context, cubit, task),
+                        onMoveStatus: (task, statusId) =>
+                            cubit.moveTask(task.id, statusId),
+                        onEditTask: (task) => _editTask(context, cubit, task),
+                        onDeleteTask: (task) =>
+                            _confirmDeleteTask(context, cubit, task),
+                      ),
               ),
             ],
           );
         },
       ),
-    );
-  }
-
-  Widget _buildListView(
-    BuildContext context,
-    ProjectsCubit cubit,
-    ProjectModel boardProject,
-    List<ProjectTaskModel> tasks,
-    List<ProjectTaskModel> allTasks,
-  ) {
-    final statuses = boardProject.statuses;
-    if (statuses.isEmpty) {
-      return Center(
-        child: Text('projects.empty'.tr(context: context)),
-      );
-    }
-
-    final allTabLabel = 'common.all'.tr(context: context);
-
-    return DefaultTabController(
-      key: ValueKey('${boardProject.id}_${statuses.length}'),
-      length: statuses.length + 1,
-      child: Column(
-        children: [
-          TabBar(
-            isScrollable: true,
-            labelColor: AppColors.brandPrimary,
-            unselectedLabelColor: AppColors.textSecondary,
-            indicatorColor: AppColors.brandPrimary,
-            tabs: [
-              Tab(text: '$allTabLabel (${tasks.length})'),
-              ...statuses.map((status) {
-                final count =
-                    tasks.where((t) => t.statusId == status.id).length;
-                return Tab(text: '${status.name} ($count)');
-              }),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
-              children: [
-                _buildTasksList(context, cubit, boardProject, tasks),
-                ...statuses.map((status) {
-                  final filtered =
-                      tasks.where((t) => t.statusId == status.id).toList();
-                  return _buildTasksList(
-                    context,
-                    cubit,
-                    boardProject,
-                    filtered,
-                  );
-                }),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTasksList(
-    BuildContext context,
-    ProjectsCubit cubit,
-    ProjectModel boardProject,
-    List<ProjectTaskModel> tasksList,
-  ) {
-    if (tasksList.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(24.r),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.assignment_outlined,
-                size: 48.r,
-                color: AppColors.placeholder,
-              ),
-              hSpace(10),
-              Text(
-                'projects.noTasks'.tr(context: context),
-                style: AppTextStyles.font14Regular.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    return ListView.builder(
-      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
-      itemCount: tasksList.length,
-      itemBuilder: (context, index) {
-        final task = tasksList[index];
-        return ProjectTaskCardWidget(
-          task: task,
-          boardProject: boardProject,
-          canManage: canManage,
-          onTap: () => _showTaskDetails(context, cubit, task),
-          onMoveStatus: (statusId) => cubit.moveTask(task.id, statusId),
-          onEdit: () => _editTask(context, cubit, task),
-          onDelete: () => _confirmDeleteTask(context, cubit, task),
-        );
-      },
-    );
-  }
-
-  Widget _buildKanbanView(
-    BuildContext context,
-    ProjectsCubit cubit,
-    ProjectModel boardProject,
-    List<ProjectTaskModel> tasks,
-  ) {
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 24.h),
-      itemCount: boardProject.statuses.length,
-      itemBuilder: (context, statusIndex) {
-        final status = boardProject.statuses[statusIndex];
-        final columnTasks =
-            tasks.where((task) => task.statusId == status.id).toList();
-        final isHovered = hoveredStatusId == status.id;
-
-        return DragTarget<ProjectDragData>(
-          onWillAcceptWithDetails: (details) {
-            if (!canManage) return false;
-            setState(() => hoveredStatusId = status.id);
-            return details.data.taskId != null ||
-                details.data.statusId != status.id;
-          },
-          onLeave: (_) => setState(() => hoveredStatusId = null),
-          onAcceptWithDetails: (details) {
-            setState(() {
-              hoveredStatusId = null;
-              draggingTaskId = null;
-              draggingStatusId = null;
-            });
-            final data = details.data;
-            if (data.taskId != null && data.sourceStatusId != status.id) {
-              cubit.moveTask(data.taskId!, status.id);
-            } else if (data.statusId != null && data.statusId != status.id) {
-              final ids = boardProject.statuses.map((item) => item.id).toList();
-              final fromIndex = ids.indexOf(data.statusId!);
-              if (fromIndex >= 0) {
-                ids.removeAt(fromIndex);
-                ids.insert(statusIndex, data.statusId!);
-                cubit.reorderStatuses(project.id, ids);
-              }
-            }
-          },
-          builder: (context, candidates, rejected) => AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            curve: Curves.easeOut,
-            width: 280.w,
-            margin: EdgeInsetsDirectional.only(end: 12.w),
-            padding: EdgeInsets.all(12.r),
-            decoration: BoxDecoration(
-              color: isHovered
-                  ? AppColors.softBrandBackground
-                  : AppColors.pageBackground,
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(
-                color: isHovered ? AppColors.brandPrimary : AppColors.border,
-                width: isHovered ? 1.5 : 1,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 10.w,
-                      height: 10.w,
-                      decoration: const BoxDecoration(
-                        color: AppColors.brandPrimary,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    wSpace(8),
-                    Expanded(
-                      child: Text(
-                        status.name,
-                        style: AppTextStyles.font14Bold,
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 2.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Text(
-                        '${columnTasks.length}',
-                        style: AppTextStyles.font12Bold,
-                      ),
-                    ),
-                  ],
-                ),
-                hSpace(12),
-                Expanded(
-                  child: columnTasks.isEmpty
-                      ? Center(
-                          child: Text(
-                            'projects.noTasks'.tr(context: context),
-                            style: AppTextStyles.font12Regular.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        )
-                      : ListView.builder(
-                          itemCount: columnTasks.length,
-                          itemBuilder: (context, index) {
-                            final task = columnTasks[index];
-                            return ProjectTaskCardWidget(
-                              task: task,
-                              boardProject: boardProject,
-                              canManage: canManage,
-                              onTap: () => _showTaskDetails(context, cubit, task),
-                              onMoveStatus: (statusId) =>
-                                  cubit.moveTask(task.id, statusId),
-                              onEdit: () => _editTask(context, cubit, task),
-                              onDelete: () =>
-                                  _confirmDeleteTask(context, cubit, task),
-                            );
-                          },
-                        ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 

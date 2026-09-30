@@ -9,8 +9,12 @@ import 'package:check_point_v2/features/admin/data/models/employee/employee_mode
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
 import 'package:check_point_v2/features/projects/data/models/project_models.dart';
 import 'package:check_point_v2/features/projects/presentation/cubit/projects_cubit.dart';
-import 'package:check_point_v2/features/projects/presentation/cubit/projects_state.dart';
-import 'package:check_point_v2/features/projects/presentation/widgets/assignee_multi_select_widget.dart';
+import 'assignee_multi_select_widget.dart';
+import 'project_task_detail_activity_log_list_widget.dart';
+import 'project_task_detail_assignees_list_widget.dart';
+import 'project_task_detail_attachments_list_widget.dart';
+import 'project_task_detail_chip_widget.dart';
+import 'project_task_detail_section_header_widget.dart';
 
 class ProjectTaskDetailSheetWidget extends StatefulWidget {
   const ProjectTaskDetailSheetWidget({
@@ -60,39 +64,6 @@ class _ProjectTaskDetailSheetWidgetState
     } catch (_) {}
   }
 
-  EmployeeModel? _findEmployee(String id) {
-    return _employees.firstWhere(
-      (e) => e.id == id || e.userName == id || e.name == id,
-      orElse: () => EmployeeModel(id: id, name: id),
-    );
-  }
-
-  String _getAssigneeName(String id) {
-    final direct = widget.task.assignees.firstWhere(
-      (a) => a.employeeId == id || a.employeeName == id,
-      orElse: () => const TaskAssigneeModel(),
-    );
-    if (direct.employeeName?.isNotEmpty == true) {
-      return direct.employeeName!;
-    }
-    final emp = _findEmployee(id);
-    return emp?.name?.isNotEmpty == true
-        ? emp!.name!
-        : (emp?.userName?.isNotEmpty == true ? emp!.userName! : id);
-  }
-
-  String? _getAssigneeImageUrl(String id) {
-    final direct = widget.task.assignees.firstWhere(
-      (a) => a.employeeId == id || a.employeeName == id,
-      orElse: () => const TaskAssigneeModel(),
-    );
-    if (direct.employeeImageUrl?.isNotEmpty == true) {
-      return direct.employeeImageUrl!;
-    }
-    final emp = _findEmployee(id);
-    return emp?.imageUrl;
-  }
-
   Color _priorityColor(String? priority) {
     return switch (priority?.toUpperCase()) {
       'URGENT' || 'CRITICAL' => AppColors.error,
@@ -110,20 +81,6 @@ class _ProjectTaskDetailSheetWidgetState
       'NORMAL' => AppColors.softBlueBackground,
       'LOW' => AppColors.pageBackground,
       _ => AppColors.softBlueBackground,
-    };
-  }
-
-  String _formatAuditAction(String? action) {
-    if (action == null || action.isEmpty) return 'projects.activity'.tr();
-    return switch (action) {
-      'task.status_updated' => 'projects.statusUpdated'.tr(context: context),
-      'task.assignees_updated' => 'projects.assigneesUpdated'.tr(
-        context: context,
-      ),
-      'task.tags_updated' => 'projects.tagsUpdated'.tr(context: context),
-      'task.created' => 'projects.taskCreated'.tr(context: context),
-      'task.updated' => 'projects.taskUpdated'.tr(context: context),
-      _ => action.replaceAll('task.', '').replaceAll('_', ' ').toUpperCase(),
     };
   }
 
@@ -268,27 +225,27 @@ class _ProjectTaskDetailSheetWidgetState
                       spacing: 8.w,
                       runSpacing: 8.h,
                       children: [
-                        _buildChip(
+                        ProjectTaskDetailChipWidget(
                           icon: Icons.flag_rounded,
                           label: statusName,
                           bg: AppColors.pageBackground,
                           textColor: AppColors.textPrimary,
                         ),
-                        _buildChip(
+                        ProjectTaskDetailChipWidget(
                           icon: Icons.bolt_rounded,
                           label: widget.task.priority ?? 'NORMAL',
                           bg: _priorityBackground(widget.task.priority),
                           textColor: _priorityColor(widget.task.priority),
                         ),
                         if ((widget.task.estimatedMinutes ?? 0) > 0)
-                          _buildChip(
+                          ProjectTaskDetailChipWidget(
                             icon: Icons.timer_outlined,
                             label: '${widget.task.estimatedMinutes} min',
                             bg: AppColors.pageBackground,
                             textColor: AppColors.textSecondary,
                           ),
                         if (widget.task.startDate?.isNotEmpty == true)
-                          _buildChip(
+                          ProjectTaskDetailChipWidget(
                             icon: Icons.calendar_today_rounded,
                             label: AppDateFormatter.formatDateString(
                               widget.task.startDate,
@@ -297,7 +254,7 @@ class _ProjectTaskDetailSheetWidgetState
                             textColor: AppColors.textSecondary,
                           ),
                         if (widget.task.dueDate?.isNotEmpty == true)
-                          _buildChip(
+                          ProjectTaskDetailChipWidget(
                             icon: Icons.event_rounded,
                             label: AppDateFormatter.formatDateString(
                               widget.task.dueDate,
@@ -308,7 +265,7 @@ class _ProjectTaskDetailSheetWidgetState
                       ],
                     ),
                     SizedBox(height: 20.h),
-                    _buildSectionHeader(
+                    ProjectTaskDetailSectionHeaderWidget(
                       title: 'projects.description'.tr(context: context),
                       icon: Icons.subject_rounded,
                     ),
@@ -338,7 +295,7 @@ class _ProjectTaskDetailSheetWidgetState
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    _buildSectionHeader(
+                    ProjectTaskDetailSectionHeaderWidget(
                       title: 'projects.assignees'.tr(context: context),
                       icon: Icons.people_alt_rounded,
                       action: widget.canManage
@@ -350,21 +307,26 @@ class _ProjectTaskDetailSheetWidgetState
                           : null,
                     ),
                     SizedBox(height: 8.h),
-                    _buildAssigneesList(),
+                    ProjectTaskDetailAssigneesListWidget(
+                      assigneeIds: _currentAssigneeIds,
+                      employees: _employees,
+                    ),
                     SizedBox(height: 20.h),
-                    _buildSectionHeader(
+                    ProjectTaskDetailSectionHeaderWidget(
                       title: 'projects.attachments'.tr(context: context),
                       icon: Icons.attach_file_rounded,
                     ),
                     SizedBox(height: 8.h),
-                    _buildAttachmentsList(),
+                    ProjectTaskDetailAttachmentsListWidget(
+                      attachments: widget.task.attachments,
+                    ),
                     SizedBox(height: 20.h),
-                    _buildSectionHeader(
+                    ProjectTaskDetailSectionHeaderWidget(
                       title: 'projects.activity'.tr(context: context),
                       icon: Icons.history_rounded,
                     ),
                     SizedBox(height: 8.h),
-                    _buildActivityLogList(),
+                    const ProjectTaskDetailActivityLogListWidget(),
                     SizedBox(height: 24.h),
                   ],
                 ),
@@ -373,253 +335,6 @@ class _ProjectTaskDetailSheetWidgetState
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildChip({
-    required IconData icon,
-    required String label,
-    required Color bg,
-    required Color textColor,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14.r, color: textColor),
-          SizedBox(width: 5.w),
-          Text(
-            label,
-            style: AppTextStyles.font12Bold.copyWith(color: textColor),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader({
-    required String title,
-    required IconData icon,
-    Widget? action,
-  }) {
-    return Row(
-      children: [
-        Icon(icon, size: 20.r, color: AppColors.brandPrimary),
-        SizedBox(width: 8.w),
-        Text(title, style: AppTextStyles.font16Bold),
-        const Spacer(),
-        ?action,
-      ],
-    );
-  }
-
-  Widget _buildAssigneesList() {
-    if (_currentAssigneeIds.isEmpty) {
-      return Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(16.r),
-        decoration: BoxDecoration(
-          color: AppColors.pageBackground,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Text(
-          'projects.noAssignees'.tr(context: context),
-          style: AppTextStyles.font13Regular.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-      );
-    }
-
-    return Column(
-      children: _currentAssigneeIds.map((id) {
-        final displayName = _getAssigneeName(id);
-        final imageUrl = _getAssigneeImageUrl(id);
-        final emp = _findEmployee(id);
-        final initial = displayName.trim().isNotEmpty
-            ? displayName.trim()[0].toUpperCase()
-            : '?';
-        final subtitle =
-            emp?.position ?? emp?.email ?? emp?.departmentName ?? id;
-
-        return Container(
-          margin: EdgeInsets.only(bottom: 8.h),
-          decoration: BoxDecoration(
-            color: AppColors.pageBackground,
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: ListTile(
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 14.w,
-              vertical: 4.h,
-            ),
-            leading: CircleAvatar(
-              radius: 20.r,
-              backgroundColor: AppColors.softBrandBackground,
-              backgroundImage: imageUrl?.isNotEmpty == true
-                  ? NetworkImage(imageUrl!)
-                  : null,
-              child: imageUrl?.isNotEmpty == true
-                  ? null
-                  : Text(
-                      initial,
-                      style: AppTextStyles.font16Bold.copyWith(
-                        color: AppColors.brandPrimary,
-                      ),
-                    ),
-            ),
-            title: Text(displayName, style: AppTextStyles.font14Bold),
-            subtitle: subtitle != displayName
-                ? Text(
-                    subtitle,
-                    style: AppTextStyles.font12Regular.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  )
-                : null,
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildAttachmentsList() {
-    if (widget.task.attachments.isEmpty) {
-      return Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(16.r),
-        decoration: BoxDecoration(
-          color: AppColors.pageBackground,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Text(
-          'projects.noAttachments'.tr(context: context),
-          style: AppTextStyles.font13Regular.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-      );
-    }
-
-    return Column(
-      children: widget.task.attachments.map((file) {
-        return Container(
-          margin: EdgeInsets.only(bottom: 8.h),
-          decoration: BoxDecoration(
-            color: AppColors.pageBackground,
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: ListTile(
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 14.w,
-              vertical: 4.h,
-            ),
-            leading: Icon(
-              Icons.insert_drive_file_outlined,
-              color: AppColors.brandPrimary,
-            ),
-            title: Text(
-              file.fileName ?? 'File',
-              style: AppTextStyles.font14Bold,
-            ),
-            subtitle: file.fileSize != null
-                ? Text(
-                    '${(file.fileSize! / 1024).toStringAsFixed(1)} KB',
-                    style: AppTextStyles.font12Regular.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  )
-                : null,
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildActivityLogList() {
-    return BlocBuilder<ProjectsCubit, ProjectsState>(
-      builder: (context, state) {
-        final audit = state is ProjectsStateSuccess
-            ? state.audit
-            : const <TaskAuditModel>[];
-
-        if (audit.isEmpty) {
-          return Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(16.r),
-            decoration: BoxDecoration(
-              color: AppColors.pageBackground,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Text(
-              'projects.noActivity'.tr(context: context),
-              style: AppTextStyles.font13Regular.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          );
-        }
-
-        return Column(
-          children: audit.map((item) {
-            final formattedAction = _formatAuditAction(item.action);
-            final dateStr = item.createdAt != null
-                ? AppDateFormatter.formatDateString(item.createdAt)
-                : '';
-            final actor = item.actorName ?? '';
-
-            return Container(
-              margin: EdgeInsets.only(bottom: 8.h),
-              padding: EdgeInsets.all(12.r),
-              decoration: BoxDecoration(
-                color: AppColors.pageBackground,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(8.r),
-                    decoration: BoxDecoration(
-                      color: AppColors.softBrandBackground,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.history_toggle_off_rounded,
-                      size: 16.r,
-                      color: AppColors.brandPrimary,
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(formattedAction, style: AppTextStyles.font13Bold),
-                        if (actor.isNotEmpty || dateStr.isNotEmpty)
-                          SizedBox(height: 2.h),
-                        if (actor.isNotEmpty || dateStr.isNotEmpty)
-                          Text(
-                            '$actor  •  $dateStr',
-                            style: AppTextStyles.font12Regular.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-        );
-      },
     );
   }
 }
