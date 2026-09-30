@@ -18,6 +18,7 @@ import 'package:check_point_v2/features/admin/presentation/screens/admin_create_
 import 'package:check_point_v2/features/admin/presentation/screens/admin_departments_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_leave_management_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_locations_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/screens/admin_site_members_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_employee_profile_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_profile/admin_employee_profile_cubit.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
@@ -384,6 +385,24 @@ class AppRouter {
               ),
             ],
             child: const AdminLocationsScreen(),
+          ),
+        );
+
+      case AppRoutes.adminSiteMembers:
+        final args = settings.arguments;
+        if (args is! AdminSiteMembersArgs) {
+          return _fadeRoute(
+            settings: settings,
+            child: const Scaffold(
+              body: Center(child: Text('Invalid site arguments')),
+            ),
+          );
+        }
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.adminSiteMembers),
+          child: BlocProvider<ContractorCubit>(
+            create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+            child: AdminSiteMembersScreen(args: args),
           ),
         );
 

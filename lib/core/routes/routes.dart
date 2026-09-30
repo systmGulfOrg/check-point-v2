@@ -43,5 +43,6 @@ class AppRoutes {
   static const String supervisorContractors = '/supervisor/contractors';
   static const String adminContractors = '/admin/contractors';
   static const String adminWorkerAssignments = '/admin/worker-assignments';
+  static const String adminSiteMembers = '/admin/locations/site-members';
   static const String attendancePoints = '/attendance-points';
 }
