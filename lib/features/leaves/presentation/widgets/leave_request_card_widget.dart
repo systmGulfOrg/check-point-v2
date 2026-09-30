@@ -82,7 +82,7 @@ class LeaveRequestCardWidget extends StatelessWidget {
                       request.leaveTypeName ?? 'Leave Request',
                       style: AppTextStyles.font16Bold,
                     ),
-                    SizedBox(height: 4.h),
+                    hSpace(4),
                     Text(
                       '${AppDateFormatter.formatDate(request.startDate)} - ${AppDateFormatter.formatDate(request.endDate)} (${request.totalDays} ${'leaves.dashboard.days'.tr()})',
                       style: AppTextStyles.font13Regular.copyWith(
@@ -92,7 +92,7 @@ class LeaveRequestCardWidget extends StatelessWidget {
                     ),
                     if (request.reason != null &&
                         request.reason!.isNotEmpty) ...[
-                      SizedBox(height: 4.h),
+                      hSpace(4),
                       Text(
                         request.reason!,
                         style: AppTextStyles.font13Regular.copyWith(
@@ -105,7 +105,7 @@ class LeaveRequestCardWidget extends StatelessWidget {
                     ],
                     if (request.attachmentUrl != null &&
                         request.attachmentUrl!.isNotEmpty) ...[
-                      SizedBox(height: 6.h),
+                      hSpace(6),
                       Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 8.w,
@@ -123,7 +123,7 @@ class LeaveRequestCardWidget extends StatelessWidget {
                               size: 13.r,
                               color: AppColors.brandPrimary,
                             ),
-                            SizedBox(width: 4.w),
+                            wSpace(4),
                             Text(
                               'leaves.request.hasAttachment'.tr(),
                               style: AppTextStyles.font11Regular.copyWith(
@@ -159,7 +159,7 @@ class LeaveRequestCardWidget extends StatelessWidget {
                             shape: BoxShape.circle,
                           ),
                         ),
-                        SizedBox(width: 6.w),
+                        wSpace(6),
                         Text(
                           statusKey.tr(),
                           style: AppTextStyles.font12Medium.copyWith(
@@ -171,7 +171,7 @@ class LeaveRequestCardWidget extends StatelessWidget {
                     ),
                   ),
                   if (onDelete != null) ...[
-                    SizedBox(width: 8.w),
+                    wSpace(8),
                     InkWell(
                       onTap: onDelete,
                       borderRadius: BorderRadius.circular(8.r),

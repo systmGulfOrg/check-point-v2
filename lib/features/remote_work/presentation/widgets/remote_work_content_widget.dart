@@ -63,7 +63,7 @@ class RemoteWorkContentWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.add_rounded, size: 15.r, color: AppColors.brandPrimary),
-                        SizedBox(width: 3.w),
+                        wSpace(3),
                         Text(
                           addLabelKey.tr(),
                           style: AppTextStyles.font13SemiBold.copyWith(

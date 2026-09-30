@@ -55,12 +55,12 @@ class _ProjectAddStatusSheetWidgetState
               'projects.addStatus'.tr(context: context),
               style: AppTextStyles.font20Bold,
             ),
-            SizedBox(height: 16.h),
+            hSpace(16),
             CustomTextFormField(
               hintText: 'projects.statusName'.tr(context: context),
               controller: _controller,
             ),
-            SizedBox(height: 16.h),
+            hSpace(16),
             Row(
               children: [
                 Expanded(
@@ -81,7 +81,7 @@ class _ProjectAddStatusSheetWidgetState
                     ),
                   ),
                 ),
-                SizedBox(width: 12.w),
+                wSpace(12),
                 Expanded(
                   child: CustomButton(
                     text: 'common.save'.tr(context: context),

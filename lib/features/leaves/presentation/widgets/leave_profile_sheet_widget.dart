@@ -11,6 +11,7 @@ import '../cubit/leaves_state.dart';
 import 'leave_balance_summary_widget.dart';
 import 'leave_policy_dialog_widget.dart';
 import 'leave_request_card_widget.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class LeaveProfileSheetWidget extends StatelessWidget {
   const LeaveProfileSheetWidget({super.key});
@@ -34,7 +35,7 @@ class LeaveProfileSheetWidget extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 14.h),
+            hSpace(14),
             Row(
               children: [
                 Expanded(
@@ -49,7 +50,7 @@ class LeaveProfileSheetWidget extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 10.h),
+            hSpace(10),
             Flexible(
               child: BlocBuilder<LeavesCubit, LeavesState>(
                 builder: (context, state) {
@@ -77,7 +78,7 @@ class LeaveProfileSheetWidget extends StatelessWidget {
                       shrinkWrap: true,
                       children: [
                         LeaveBalanceSummaryWidget(balances: balances),
-                        SizedBox(height: 16.h),
+                        hSpace(16),
                         Row(
                           children: [
                             Expanded(
@@ -108,7 +109,7 @@ class LeaveProfileSheetWidget extends StatelessWidget {
                         else
                           for (final request in requests) ...[
                             LeaveRequestCardWidget(request: request),
-                            SizedBox(height: 10.h),
+                            hSpace(10),
                           ],
                       ],
                     ),
@@ -120,7 +121,7 @@ class LeaveProfileSheetWidget extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: 12.h),
+            hSpace(12),
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(

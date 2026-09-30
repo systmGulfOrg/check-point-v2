@@ -5,6 +5,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/styles/app_motion.dart';
 import '../../../../core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 Future<void> showLeavePolicyDialog(BuildContext context) async {
   await showGeneralDialog<void>(
@@ -69,7 +70,7 @@ class LeavePolicyDialogWidget extends StatelessWidget {
                     size: 24.r,
                   ),
                 ),
-                SizedBox(width: 12.w),
+                wSpace(12),
                 Expanded(
                   child: Text(
                     'leaves.policy.title'.tr(context: context),
@@ -82,14 +83,14 @@ class LeavePolicyDialogWidget extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16.h),
+            hSpace(16),
             Text(
               'leaves.policy.subtitle'.tr(context: context),
               style: AppTextStyles.font13Regular,
             ),
-            SizedBox(height: 16.h),
+            hSpace(16),
             for (var index = 0; index < policies.length; index++) ...[
-              if (index > 0) SizedBox(height: 12.h),
+              if (index > 0) hSpace(12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -106,7 +107,7 @@ class LeavePolicyDialogWidget extends StatelessWidget {
                       size: 16.r,
                     ),
                   ),
-                  SizedBox(width: 10.w),
+                  wSpace(10),
                   Expanded(
                     child: Text(
                       policies[index].tr(context: context),
@@ -119,7 +120,7 @@ class LeavePolicyDialogWidget extends StatelessWidget {
                 ],
               ),
             ],
-            SizedBox(height: 20.h),
+            hSpace(20),
             SizedBox(
               width: double.infinity,
               child: FilledButton(

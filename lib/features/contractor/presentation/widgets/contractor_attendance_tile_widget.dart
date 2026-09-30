@@ -3,6 +3,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_attendance_model.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorAttendanceTileWidget extends StatelessWidget {
   const ContractorAttendanceTileWidget({
@@ -51,7 +52,7 @@ class ContractorAttendanceTileWidget extends StatelessWidget {
               size: 20.r,
             ),
           ),
-          SizedBox(width: 12.w),
+          wSpace(12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +61,7 @@ class ContractorAttendanceTileWidget extends StatelessWidget {
                   attendance.workerName,
                   style: AppTextStyles.font14Bold,
                 ),
-                SizedBox(height: 2.h),
+                hSpace(2),
                 Text(
                   '${attendance.siteName} • ${attendance.jobTitle}',
                   style: AppTextStyles.font12Regular.copyWith(
@@ -79,7 +80,7 @@ class ContractorAttendanceTileWidget extends StatelessWidget {
                   color: AppColors.textPrimary,
                 ),
               ),
-              SizedBox(height: 2.h),
+              hSpace(2),
               Text(
                 attendance.status,
                 style: AppTextStyles.font11Medium.copyWith(

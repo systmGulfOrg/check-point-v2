@@ -12,6 +12,7 @@ import 'package:check_point_v2/features/contractor/presentation/widgets/contract
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_attendance_tile_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_offline_sync_banner_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_punch_sheet_widget.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorHomeScreen extends StatelessWidget {
   const ContractorHomeScreen({
@@ -103,7 +104,7 @@ class ContractorHomeScreen extends StatelessWidget {
                         onTap: onViewWorkersTap,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    wSpace(12),
                     Expanded(
                       child: ContractorKpiCardWidget(
                         title: 'contractor.dashboard.presentToday'.tr(),
@@ -115,7 +116,7 @@ class ContractorHomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 12.h),
+                hSpace(12),
                 Row(
                   children: [
                     Expanded(
@@ -126,7 +127,7 @@ class ContractorHomeScreen extends StatelessWidget {
                         color: AppColors.error,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    wSpace(12),
                     Expanded(
                       child: ContractorKpiCardWidget(
                         title: 'contractor.dashboard.late'.tr(),
@@ -135,7 +136,7 @@ class ContractorHomeScreen extends StatelessWidget {
                         color: AppColors.warning,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    wSpace(12),
                     Expanded(
                       child: ContractorKpiCardWidget(
                         title: 'contractor.dashboard.notCheckedIn'.tr(),
@@ -147,7 +148,7 @@ class ContractorHomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
+                hSpace(20),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -161,7 +162,7 @@ class ContractorHomeScreen extends StatelessWidget {
                           AppRoutes.contractorAddWorker,
                         ),
                       ),
-                      SizedBox(width: 10.w),
+                      wSpace(10),
                       ContractorQuickActionWidget(
                         title: 'contractor.dashboard.requestCorrection'.tr(),
                         icon: Icons.edit_calendar_rounded,
@@ -171,7 +172,7 @@ class ContractorHomeScreen extends StatelessWidget {
                           AppRoutes.contractorCorrectionRequest,
                         ),
                       ),
-                      SizedBox(width: 10.w),
+                      wSpace(10),
                       ContractorQuickActionWidget(
                         title: 'attendancePoints.title'.tr(),
                         icon: Icons.stars_rounded,
@@ -181,7 +182,7 @@ class ContractorHomeScreen extends StatelessWidget {
                           AppRoutes.attendancePoints,
                         ),
                       ),
-                      SizedBox(width: 10.w),
+                      wSpace(10),
                       ContractorQuickActionWidget(
                         title: 'contractor.punch.title'.tr(),
                         icon: Icons.location_on_outlined,
@@ -211,7 +212,7 @@ class ContractorHomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 24.h),
+                hSpace(24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -232,7 +233,7 @@ class ContractorHomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 8.h),
+                hSpace(8),
                 ...attendance
                     .take(5)
                     .map(

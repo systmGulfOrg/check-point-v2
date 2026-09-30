@@ -29,7 +29,7 @@ class ProjectTaskDetailChipWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14.r, color: textColor),
-          SizedBox(width: 5.w),
+          wSpace(5),
           Text(
             label,
             style: AppTextStyles.font12Bold.copyWith(color: textColor),

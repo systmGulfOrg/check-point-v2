@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_correction_model.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorCorrectionCardWidget extends StatelessWidget {
   const ContractorCorrectionCardWidget({super.key, required this.correction});
@@ -55,14 +56,14 @@ class ContractorCorrectionCardWidget extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 6.h),
+          hSpace(6),
           Text(
             '${correction.date} • ${correction.workerCode}',
             style: AppTextStyles.font12Regular.copyWith(
               color: AppColors.textSecondary,
             ),
           ),
-          SizedBox(height: 8.h),
+          hSpace(8),
           Container(
             padding: EdgeInsets.all(10.r),
             decoration: BoxDecoration(
@@ -80,7 +81,7 @@ class ContractorCorrectionCardWidget extends StatelessWidget {
                         color: AppColors.textSecondary,
                       ),
                     ),
-                    SizedBox(height: 2.h),
+                    hSpace(2),
                     Text(
                       correction.requestedCheckIn,
                       style: AppTextStyles.font14Bold.copyWith(
@@ -98,7 +99,7 @@ class ContractorCorrectionCardWidget extends StatelessWidget {
                         color: AppColors.textSecondary,
                       ),
                     ),
-                    SizedBox(height: 2.h),
+                    hSpace(2),
                     Text(
                       correction.requestedCheckOut,
                       style: AppTextStyles.font14Bold.copyWith(
@@ -110,7 +111,7 @@ class ContractorCorrectionCardWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 8.h),
+          hSpace(8),
           Text(
             '${'contractor.requests.reason'.tr()}: ${correction.reason}',
             style: AppTextStyles.font12Regular.copyWith(

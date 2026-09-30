@@ -3,6 +3,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../styles/app_colors.dart';
 import '../styles/app_text_styles.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class CustomSnackBar {
   static void show(
@@ -27,7 +28,7 @@ class CustomSnackBar {
           children: [
             if (icon != null) ...[
               Icon(icon, color: textColor ?? AppColors.white, size: 20.r),
-              SizedBox(width: 10.w),
+              wSpace(10),
             ],
             Expanded(
               child: Text(

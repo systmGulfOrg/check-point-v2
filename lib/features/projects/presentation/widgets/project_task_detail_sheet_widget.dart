@@ -107,14 +107,14 @@ class _ProjectTaskDetailSheetWidgetState
                   'projects.assignees'.tr(context: innerCtx),
                   style: AppTextStyles.font18Bold,
                 ),
-                SizedBox(height: 16.h),
+                hSpace(16),
                 AssigneeMultiSelectWidget(
                   selectedIds: localIds,
                   fallbackOptions: widget.task.assigneeIds,
                   onChanged: (updated) =>
                       setInnerState(() => localIds = updated),
                 ),
-                SizedBox(height: 20.h),
+                hSpace(20),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -170,7 +170,7 @@ class _ProjectTaskDetailSheetWidgetState
       child: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: 12.h),
+            hSpace(12),
             Center(
               child: Container(
                 width: 40.w,
@@ -181,7 +181,7 @@ class _ProjectTaskDetailSheetWidgetState
                 ),
               ),
             ),
-            SizedBox(height: 16.h),
+            hSpace(16),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Row(
@@ -214,7 +214,7 @@ class _ProjectTaskDetailSheetWidgetState
                 ],
               ),
             ),
-            SizedBox(height: 12.h),
+            hSpace(12),
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
@@ -264,12 +264,12 @@ class _ProjectTaskDetailSheetWidgetState
                           ),
                       ],
                     ),
-                    SizedBox(height: 20.h),
+                    hSpace(20),
                     ProjectTaskDetailSectionHeaderWidget(
                       title: 'projects.description'.tr(context: context),
                       icon: Icons.subject_rounded,
                     ),
-                    SizedBox(height: 8.h),
+                    hSpace(8),
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.all(16.r),
@@ -294,7 +294,7 @@ class _ProjectTaskDetailSheetWidgetState
                         ),
                       ),
                     ),
-                    SizedBox(height: 20.h),
+                    hSpace(20),
                     ProjectTaskDetailSectionHeaderWidget(
                       title: 'projects.assignees'.tr(context: context),
                       icon: Icons.people_alt_rounded,
@@ -306,28 +306,28 @@ class _ProjectTaskDetailSheetWidgetState
                             )
                           : null,
                     ),
-                    SizedBox(height: 8.h),
+                    hSpace(8),
                     ProjectTaskDetailAssigneesListWidget(
                       assigneeIds: _currentAssigneeIds,
                       employees: _employees,
                     ),
-                    SizedBox(height: 20.h),
+                    hSpace(20),
                     ProjectTaskDetailSectionHeaderWidget(
                       title: 'projects.attachments'.tr(context: context),
                       icon: Icons.attach_file_rounded,
                     ),
-                    SizedBox(height: 8.h),
+                    hSpace(8),
                     ProjectTaskDetailAttachmentsListWidget(
                       attachments: widget.task.attachments,
                     ),
-                    SizedBox(height: 20.h),
+                    hSpace(20),
                     ProjectTaskDetailSectionHeaderWidget(
                       title: 'projects.activity'.tr(context: context),
                       icon: Icons.history_rounded,
                     ),
-                    SizedBox(height: 8.h),
+                    hSpace(8),
                     const ProjectTaskDetailActivityLogListWidget(),
-                    SizedBox(height: 24.h),
+                    hSpace(24),
                   ],
                 ),
               ),

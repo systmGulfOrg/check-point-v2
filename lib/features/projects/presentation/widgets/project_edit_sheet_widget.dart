@@ -89,25 +89,25 @@ class _ProjectEditSheetWidgetState extends State<ProjectEditSheetWidget> {
                       .tr(context: context),
                   style: AppTextStyles.font20Bold,
                 ),
-                SizedBox(height: 18.h),
+                hSpace(18),
                 CustomTextFormField(
                   hintText: 'projects.name'.tr(context: context),
                   controller: _nameController,
                   validator: (v) =>
                       (v == null || v.trim().isEmpty) ? 'validation.required'.tr() : null,
                 ),
-                SizedBox(height: 10.h),
+                hSpace(10),
                 CustomTextFormField(
                   hintText: 'projects.code'.tr(context: context),
                   controller: _codeController,
                 ),
-                SizedBox(height: 10.h),
+                hSpace(10),
                 CustomTextFormField(
                   hintText: 'projects.description'.tr(context: context),
                   controller: _descriptionController,
                   maxLines: 3,
                 ),
-                SizedBox(height: 10.h),
+                hSpace(10),
                 DropdownButtonFormField<String?>(
                   initialValue: (_selectedDepartmentId != null &&
                           widget.departments.any(
@@ -134,7 +134,7 @@ class _ProjectEditSheetWidgetState extends State<ProjectEditSheetWidget> {
                   onChanged: (val) =>
                       setState(() => _selectedDepartmentId = val),
                 ),
-                SizedBox(height: 10.h),
+                hSpace(10),
                 DropdownButtonFormField<String?>(
                   initialValue: (_selectedManagerId != null &&
                           widget.employees.any((e) => e.id == _selectedManagerId))
@@ -163,7 +163,7 @@ class _ProjectEditSheetWidgetState extends State<ProjectEditSheetWidget> {
                   onChanged: (val) =>
                       setState(() => _selectedManagerId = val),
                 ),
-                SizedBox(height: 20.h),
+                hSpace(20),
                 Row(
                   children: [
                     Expanded(
@@ -184,7 +184,7 @@ class _ProjectEditSheetWidgetState extends State<ProjectEditSheetWidget> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    wSpace(12),
                     Expanded(
                       child: CustomButton(
                         text: 'common.save'.tr(context: context),

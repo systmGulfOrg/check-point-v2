@@ -3,6 +3,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton({
@@ -71,7 +72,7 @@ class CustomButton extends StatelessWidget {
                   children: [
                     if (icon != null) ...[
                       Icon(icon, color: textColor, size: 18.r),
-                      SizedBox(width: 6.w),
+                      wSpace(6),
                     ],
                     Flexible(
                       child: FittedBox(

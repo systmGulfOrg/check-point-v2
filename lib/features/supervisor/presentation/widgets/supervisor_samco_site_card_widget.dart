@@ -8,6 +8,7 @@ import 'package:check_point_v2/core/routes/routes.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_state.dart';
 import 'supervisor_samco_kpi_card_widget.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class SupervisorSamcoSiteCardWidget extends StatelessWidget {
   const SupervisorSamcoSiteCardWidget({super.key});
@@ -64,7 +65,7 @@ class SupervisorSamcoSiteCardWidget extends StatelessWidget {
                         size: 22.r,
                       ),
                     ),
-                    SizedBox(width: 10.w),
+                    wSpace(10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +77,7 @@ class SupervisorSamcoSiteCardWidget extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(height: 2.h),
+                          hSpace(2),
                           Text(
                             site?.projectName ??
                                 'supervisor.samco.siteSummaryUnavailable'.tr(),
@@ -104,7 +105,7 @@ class SupervisorSamcoSiteCardWidget extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 14.h),
+          hSpace(14),
           Row(
             children: [
               Expanded(
@@ -115,7 +116,7 @@ class SupervisorSamcoSiteCardWidget extends StatelessWidget {
                   color: AppColors.info,
                 ),
               ),
-              SizedBox(width: 10.w),
+              wSpace(10),
               Expanded(
                 child: SupervisorSamcoKpiCardWidget(
                   title: 'contractor.dashboard.presentToday'.tr(),
@@ -124,7 +125,7 @@ class SupervisorSamcoSiteCardWidget extends StatelessWidget {
                   color: AppColors.success,
                 ),
               ),
-              SizedBox(width: 10.w),
+              wSpace(10),
               Expanded(
                 child: SupervisorSamcoKpiCardWidget(
                   title: 'supervisor.samco.outsideGeofence'.tr(),
@@ -137,7 +138,7 @@ class SupervisorSamcoSiteCardWidget extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 10.h),
+          hSpace(10),
           Row(
             children: [
               Expanded(
@@ -148,7 +149,7 @@ class SupervisorSamcoSiteCardWidget extends StatelessWidget {
                   color: AppColors.error,
                 ),
               ),
-              SizedBox(width: 10.w),
+              wSpace(10),
               Expanded(
                 child: SupervisorSamcoKpiCardWidget(
                   title: 'contractor.dashboard.late'.tr(),
@@ -158,7 +159,7 @@ class SupervisorSamcoSiteCardWidget extends StatelessWidget {
                   color: AppColors.warning,
                 ),
               ),
-              SizedBox(width: 10.w),
+              wSpace(10),
               Expanded(
                 child: SupervisorSamcoKpiCardWidget(
                   title: 'supervisor.samco.contractorsCount'.tr(),

@@ -5,6 +5,7 @@ import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/core/widgets/custom_button.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_attendance_model.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorNewRequestSheetWidget extends StatefulWidget {
   const ContractorNewRequestSheetWidget({
@@ -68,12 +69,12 @@ class _ContractorNewRequestSheetWidgetState
                 ),
               ],
             ),
-            SizedBox(height: 14.h),
+            hSpace(14),
             Text(
               'contractor.requests.workerName'.tr(),
               style: AppTextStyles.font13SemiBold,
             ),
-            SizedBox(height: 6.h),
+            hSpace(6),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               decoration: BoxDecoration(
@@ -104,12 +105,12 @@ class _ContractorNewRequestSheetWidgetState
                 ),
               ),
             ),
-            SizedBox(height: 12.h),
+            hSpace(12),
             Text(
               'contractor.requests.reason'.tr(),
               style: AppTextStyles.font13SemiBold,
             ),
-            SizedBox(height: 6.h),
+            hSpace(6),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               decoration: BoxDecoration(
@@ -141,7 +142,7 @@ class _ContractorNewRequestSheetWidgetState
                 ),
               ),
             ),
-            SizedBox(height: 20.h),
+            hSpace(20),
             CustomButton(
               text: 'contractor.requests.submit'.tr(),
               onTap: () async {

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 enum LeaveStepStatus {
   completed,
@@ -111,7 +112,7 @@ class LeaveTimelineStepWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 10.w),
+          wSpace(10),
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(bottom: isLast ? 0 : 16.h),
@@ -140,7 +141,7 @@ class LeaveTimelineStepWidget extends StatelessWidget {
                     ],
                   ),
                   if (actor != null && actor!.isNotEmpty) ...[
-                    SizedBox(height: 3.h),
+                    hSpace(3),
                     Text(
                       actor!,
                       style: AppTextStyles.font12Regular.copyWith(
@@ -152,7 +153,7 @@ class LeaveTimelineStepWidget extends StatelessWidget {
                     ),
                   ],
                   if (reason != null && reason!.isNotEmpty) ...[
-                    SizedBox(height: 6.h),
+                    hSpace(6),
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.symmetric(

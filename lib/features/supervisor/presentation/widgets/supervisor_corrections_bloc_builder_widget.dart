@@ -6,6 +6,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_state.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_correction_card_widget.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class SupervisorCorrectionsBlocBuilderWidget extends StatelessWidget {
   const SupervisorCorrectionsBlocBuilderWidget({super.key});
@@ -44,7 +45,7 @@ class SupervisorCorrectionsBlocBuilderWidget extends StatelessWidget {
                           child: Text('supervisor.corrections.reject'.tr()),
                         ),
                       ),
-                      SizedBox(width: 10.w),
+                      wSpace(10),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () => context
@@ -58,7 +59,7 @@ class SupervisorCorrectionsBlocBuilderWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                SizedBox(height: 12.h),
+                hSpace(12),
               ],
             );
           },

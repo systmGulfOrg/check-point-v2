@@ -33,7 +33,7 @@ class AttendancePointsScreen extends StatelessWidget {
                     color: AppColors.success,
                   ),
                 ),
-                SizedBox(width: 8.w),
+                wSpace(8),
                 Expanded(
                   child: AttendancePointsCardWidget(
                     label: 'attendancePoints.red'.tr(context: context),
@@ -41,7 +41,7 @@ class AttendancePointsScreen extends StatelessWidget {
                     color: AppColors.error,
                   ),
                 ),
-                SizedBox(width: 8.w),
+                wSpace(8),
                 Expanded(
                   child: AttendancePointsCardWidget(
                     label: 'attendancePoints.black'.tr(context: context),

@@ -11,6 +11,7 @@ import '../../../../core/styles/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_form_field.dart';
 import '../../../../core/utils/app_date_formatter.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class RequestPermissionScreen extends StatefulWidget {
   const RequestPermissionScreen({super.key});
@@ -164,7 +165,7 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
                 'leaves.request.type'.tr(),
                 style: AppTextStyles.font14Medium,
               ),
-              SizedBox(height: 8.h),
+              hSpace(8),
               DropdownButtonFormField<String>(
                 initialValue: _selectedPermitType,
                 decoration: InputDecoration(
@@ -188,12 +189,12 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
                 },
               ),
 
-              SizedBox(height: 16.h),
+              hSpace(16),
               Text(
                 'employee.leaves.startDate'.tr(),
                 style: AppTextStyles.font14Medium,
               ),
-              SizedBox(height: 8.h),
+              hSpace(8),
               InkWell(
                 onTap: _selectDate,
                 child: Container(
@@ -225,7 +226,7 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
                 ),
               ),
 
-              SizedBox(height: 16.h),
+              hSpace(16),
               Row(
                 children: [
                   Expanded(
@@ -233,7 +234,7 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('permissions.request.fromTime'.tr(), style: AppTextStyles.font14Medium),
-                        SizedBox(height: 8.h),
+                        hSpace(8),
                         InkWell(
                           onTap: () => _selectTime(true),
                           child: Container(
@@ -267,13 +268,13 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(width: 16.w),
+                  wSpace(16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('permissions.request.toTime'.tr(), style: AppTextStyles.font14Medium),
-                        SizedBox(height: 8.h),
+                        hSpace(8),
                         InkWell(
                           onTap: () => _selectTime(false),
                           child: Container(
@@ -310,12 +311,12 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
                 ],
               ),
 
-              SizedBox(height: 16.h),
+              hSpace(16),
               Text(
                 'leaves.request.reason'.tr(),
                 style: AppTextStyles.font14Medium,
               ),
-              SizedBox(height: 8.h),
+              hSpace(8),
               CustomTextFormField(
                 controller: _reasonController,
                 hintText: 'employee.leaves.reasonHint'.tr(),
@@ -328,7 +329,7 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
                 },
               ),
 
-              SizedBox(height: 32.h),
+              hSpace(32),
               CustomButton(
                 onTap: _isSubmitting ? () {} : _submit,
                 text: 'leaves.request.submit'.tr(),

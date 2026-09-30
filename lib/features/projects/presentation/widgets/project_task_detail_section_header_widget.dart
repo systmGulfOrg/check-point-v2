@@ -20,7 +20,7 @@ class ProjectTaskDetailSectionHeaderWidget extends StatelessWidget {
     return Row(
       children: [
         Icon(icon, size: 20.r, color: AppColors.brandPrimary),
-        SizedBox(width: 8.w),
+        wSpace(8),
         Text(title, style: AppTextStyles.font16Bold),
         const Spacer(),
         ?action,

@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_worker_model.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorWorkerQrSheetWidget extends StatelessWidget {
   const ContractorWorkerQrSheetWidget({
@@ -24,12 +25,12 @@ class ContractorWorkerQrSheetWidget extends StatelessWidget {
             worker.fullName,
             style: AppTextStyles.font16Bold,
           ),
-          SizedBox(height: 4.h),
+          hSpace(4),
           Text(
             '${worker.jobTitle} • ${worker.workerCode}',
             style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary),
           ),
-          SizedBox(height: 20.h),
+          hSpace(20),
           Container(
             padding: EdgeInsets.all(16.r),
             decoration: BoxDecoration(
@@ -39,7 +40,7 @@ class ContractorWorkerQrSheetWidget extends StatelessWidget {
             ),
             child: Icon(Icons.qr_code_2_rounded, size: 140.r, color: AppColors.textPrimary),
           ),
-          SizedBox(height: 16.h),
+          hSpace(16),
           Text(
             'contractor.workers.qrCode'.tr(),
             style: AppTextStyles.font13Medium.copyWith(color: AppColors.textSecondary),

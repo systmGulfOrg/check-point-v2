@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/styles/app_text_styles.dart';
 import '../../data/models/audit/audit_log_model.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class AdminEmployeeAuditItemWidget extends StatelessWidget {
   final AuditLogModel log;
@@ -48,7 +49,7 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
                   key,
                   style: AppTextStyles.font14Bold.copyWith(color: AppColors.textPrimary),
                 ),
-                SizedBox(height: 6.h),
+                hSpace(6),
                 Row(
                   children: [
                     Expanded(
@@ -56,19 +57,19 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('admin.employees.before'.tr(context: context), style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary)),
-                          SizedBox(height: 2.h),
+                          hSpace(2),
                           Text(bVal?.toString() ?? 'admin.employees.emptyValue'.tr(context: context), style: AppTextStyles.font14Regular.copyWith(color: AppColors.error)),
                         ],
                       ),
                     ),
                     Icon(context.locale.languageCode == 'ar' ? Icons.arrow_back : Icons.arrow_forward, size: 16.sp, color: AppColors.textSecondary),
-                    SizedBox(width: 8.w),
+                    wSpace(8),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('admin.employees.after'.tr(context: context), style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary)),
-                          SizedBox(height: 2.h),
+                          hSpace(2),
                           Text(aVal?.toString() ?? 'admin.employees.emptyValue'.tr(context: context), style: AppTextStyles.font14Regular.copyWith(color: AppColors.success)),
                         ],
                       ),
@@ -119,7 +120,7 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8.h),
+          hSpace(8),
           Text(
             '${"admin.employees.by".tr(context: context)} ${log.actorName ?? "admin.employees.unknown".tr(context: context)}',
             style: AppTextStyles.font14Regular,

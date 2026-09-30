@@ -162,14 +162,14 @@ class _AssigneeMultiSelectWidgetState
                           ),
                         ],
                       ),
-                      SizedBox(height: 8.h),
+                      hSpace(8),
                       CustomTextFormField(
                         hintText: 'common.search'.tr(context: context),
                         controller: searchController,
                         prefixIcon: const Icon(Icons.search_rounded),
                         onChanged: (_) => setSheetState(() {}),
                       ),
-                      SizedBox(height: 12.h),
+                      hSpace(12),
                       Expanded(
                         child: _isLoading
                             ? Skeletonizer(
@@ -230,7 +230,7 @@ class _AssigneeMultiSelectWidgetState
                                     },
                                   ),
                       ),
-                      SizedBox(height: 12.h),
+                      hSpace(12),
                       SizedBox(
                         width: double.infinity,
                         child: CustomButton(
@@ -279,7 +279,7 @@ class _AssigneeMultiSelectWidgetState
             ),
           ],
         ),
-        SizedBox(height: 4.h),
+        hSpace(4),
         InkWell(
           onTap: _openSelectionSheet,
           borderRadius: BorderRadius.circular(12.r),

@@ -6,6 +6,7 @@ import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_state.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorProfileScreen extends StatelessWidget {
   const ContractorProfileScreen({super.key});
@@ -49,13 +50,13 @@ class ContractorProfileScreen extends StatelessWidget {
                           size: 36.r,
                         ),
                       ),
-                      SizedBox(height: 12.h),
+                      hSpace(12),
                       Text(
                         contractor?.name ??
                             'contractor.profile.companyUnavailable'.tr(),
                         style: AppTextStyles.font16Bold,
                       ),
-                      SizedBox(height: 4.h),
+                      hSpace(4),
                       Text(
                         '${'contractor.profile.code'.tr()}: ${contractor?.code ?? '-'}',
                         style: AppTextStyles.font12Regular.copyWith(
@@ -65,7 +66,7 @@ class ContractorProfileScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 24.h),
+                hSpace(24),
                 Container(
                   padding: EdgeInsets.all(16.r),
                   decoration: BoxDecoration(
@@ -80,7 +81,7 @@ class ContractorProfileScreen extends StatelessWidget {
                         'contractor.profile.assignedSites'.tr(),
                         style: AppTextStyles.font14Bold,
                       ),
-                      SizedBox(height: 12.h),
+                      hSpace(12),
                       Row(
                         children: [
                           const Icon(
@@ -88,7 +89,7 @@ class ContractorProfileScreen extends StatelessWidget {
                             color: AppColors.brandPrimary,
                             size: 20,
                           ),
-                          SizedBox(width: 8.w),
+                          wSpace(8),
                           Text(
                             sites
                                 .map((site) => site.projectName)
@@ -99,7 +100,7 @@ class ContractorProfileScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 6.h),
+                      hSpace(6),
                       Padding(
                         padding: EdgeInsetsDirectional.only(start: 28.w),
                         child: Text(
@@ -112,7 +113,7 @@ class ContractorProfileScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 16.h),
+                hSpace(16),
                 Container(
                   padding: EdgeInsets.all(16.r),
                   decoration: BoxDecoration(
@@ -127,7 +128,7 @@ class ContractorProfileScreen extends StatelessWidget {
                         'contractor.profile.deviceSecurity'.tr(),
                         style: AppTextStyles.font14Bold,
                       ),
-                      SizedBox(height: 10.h),
+                      hSpace(10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -143,7 +144,7 @@ class ContractorProfileScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8.h),
+                      hSpace(8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

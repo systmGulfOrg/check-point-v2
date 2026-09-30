@@ -6,6 +6,7 @@ import '../../../../core/styles/app_colors.dart';
 import '../../../../core/styles/app_text_styles.dart';
 import '../../data/models/leave_balance_model.dart';
 import 'leave_balance_value_widget.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class LeaveBalanceSummaryWidget extends StatelessWidget {
   const LeaveBalanceSummaryWidget({required this.balances, super.key});
@@ -41,7 +42,7 @@ class LeaveBalanceSummaryWidget extends StatelessWidget {
                       color: AppColors.brandPrimary,
                       size: 22.r,
                     ),
-                    SizedBox(width: 8.w),
+                    wSpace(8),
                     Expanded(
                       child: Text(
                         balance.leaveTypeName,
@@ -56,7 +57,7 @@ class LeaveBalanceSummaryWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 12.h),
+                hSpace(12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

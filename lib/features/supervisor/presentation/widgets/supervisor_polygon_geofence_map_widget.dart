@@ -3,6 +3,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'geofence_boundary_painter.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class SupervisorPolygonGeofenceMapWidget extends StatelessWidget {
   const SupervisorPolygonGeofenceMapWidget({
@@ -63,7 +64,7 @@ class SupervisorPolygonGeofenceMapWidget extends StatelessWidget {
                         color: AppColors.brandPrimary,
                         size: 16.r,
                       ),
-                      SizedBox(width: 6.w),
+                      wSpace(6),
                       Text(
                         isPolygonMode ? 'Polygon Plot Boundary (P1..P4)' : 'Circle Geofence (300m)',
                         style: AppTextStyles.font11Medium.copyWith(
@@ -104,7 +105,7 @@ class SupervisorPolygonGeofenceMapWidget extends StatelessWidget {
                   Row(
                     children: [
                       Container(width: 8.r, height: 8.r, decoration: const BoxDecoration(color: AppColors.success, shape: BoxShape.circle)),
-                      SizedBox(width: 6.w),
+                      wSpace(6),
                       Text('$insideCount Inside Boundary', style: AppTextStyles.font11Medium.copyWith(color: AppColors.darkTextPrimary)),
                     ],
                   ),
@@ -112,7 +113,7 @@ class SupervisorPolygonGeofenceMapWidget extends StatelessWidget {
                   Row(
                     children: [
                       Container(width: 8.r, height: 8.r, decoration: const BoxDecoration(color: AppColors.error, shape: BoxShape.circle)),
-                      SizedBox(width: 6.w),
+                      wSpace(6),
                       Text('$outsideCount Outside Geofence', style: AppTextStyles.font11Medium.copyWith(color: AppColors.error)),
                     ],
                   ),

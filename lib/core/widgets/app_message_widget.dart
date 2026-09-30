@@ -4,6 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../styles/app_colors.dart';
 import '../styles/app_text_styles.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class AppMessageWidget extends StatelessWidget {
   const AppMessageWidget({
@@ -44,7 +45,7 @@ class AppMessageWidget extends StatelessWidget {
               child: Icon(icon, color: resolvedIconColor, size: 34.r),
             ),
             if (titleKey != null) ...[
-              SizedBox(height: 16.h),
+              hSpace(16),
               Text(
                 titleKey!.tr(context: context),
                 textAlign: TextAlign.center,

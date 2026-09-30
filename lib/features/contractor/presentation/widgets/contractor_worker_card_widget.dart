@@ -3,6 +3,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_worker_model.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorWorkerCardWidget extends StatelessWidget {
   const ContractorWorkerCardWidget({
@@ -89,14 +90,14 @@ class ContractorWorkerCardWidget extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 4.h),
+            hSpace(4),
             Text(
               '${worker.jobTitle} • ${worker.workerCode}',
               style: AppTextStyles.font12Regular.copyWith(
                 color: AppColors.textSecondary,
               ),
             ),
-            SizedBox(height: 4.h),
+            hSpace(4),
             Row(
               children: [
                 Icon(
@@ -104,7 +105,7 @@ class ContractorWorkerCardWidget extends StatelessWidget {
                   size: 14.r,
                   color: AppColors.brandPrimary,
                 ),
-                SizedBox(width: 4.w),
+                wSpace(4),
                 Expanded(
                   child: Text(
                     '${worker.projectName} - ${worker.siteName}',

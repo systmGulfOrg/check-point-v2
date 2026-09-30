@@ -4,6 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class LeaveStatusFilterWidget extends StatelessWidget {
   const LeaveStatusFilterWidget({
@@ -59,7 +60,7 @@ class LeaveStatusFilterWidget extends StatelessWidget {
                         ),
                       ),
                       if (index == 1 && pendingCount > 0) ...[
-                        SizedBox(width: 4.w),
+                        wSpace(4),
                         Container(
                           padding: EdgeInsets.all(4.r),
                           constraints: BoxConstraints(

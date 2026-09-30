@@ -81,14 +81,14 @@ class ProjectTaskDetailActivityLogListWidget extends StatelessWidget {
                       color: AppColors.brandPrimary,
                     ),
                   ),
-                  SizedBox(width: 12.w),
+                  wSpace(12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(formattedAction, style: AppTextStyles.font13Bold),
                         if (actor.isNotEmpty || dateStr.isNotEmpty)
-                          SizedBox(height: 2.h),
+                          hSpace(2),
                         if (actor.isNotEmpty || dateStr.isNotEmpty)
                           Text(
                             '$actor  •  $dateStr',

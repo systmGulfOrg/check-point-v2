@@ -9,6 +9,7 @@ import 'package:check_point_v2/features/contractor/presentation/widgets/contract
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_state.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_report_export_button_widget.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorReportsScreen extends StatefulWidget {
   const ContractorReportsScreen({super.key});
@@ -79,7 +80,7 @@ class _ContractorReportsScreenState extends State<ContractorReportsScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 8.h),
+                hSpace(8),
                 Row(
                   children: [
                     Expanded(
@@ -90,7 +91,7 @@ class _ContractorReportsScreenState extends State<ContractorReportsScreen> {
                         color: AppColors.info,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    wSpace(12),
                     Expanded(
                       child: ContractorKpiCardWidget(
                         title: 'contractor.reports.attendanceRate'.tr(),
@@ -101,7 +102,7 @@ class _ContractorReportsScreenState extends State<ContractorReportsScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
+                hSpace(20),
                 Container(
                   padding: EdgeInsets.all(16.r),
                   decoration: BoxDecoration(
@@ -116,7 +117,7 @@ class _ContractorReportsScreenState extends State<ContractorReportsScreen> {
                         'contractor.reports.monthlySummary'.tr(),
                         style: AppTextStyles.font14Bold,
                       ),
-                      SizedBox(height: 12.h),
+                      hSpace(12),
                       ContractorReportSummaryRowWidget(
                         month: DateTime.now().toIso8601String().substring(0, 7),
                         present:
@@ -129,7 +130,7 @@ class _ContractorReportsScreenState extends State<ContractorReportsScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 24.h),
+                hSpace(24),
                 ContractorReportExportButtonWidget(
                   csvBuilder: () => context
                       .read<ContractorCubit>()

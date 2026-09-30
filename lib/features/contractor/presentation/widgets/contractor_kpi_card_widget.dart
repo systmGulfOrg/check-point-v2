@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorKpiCardWidget extends StatelessWidget {
   const ContractorKpiCardWidget({
@@ -65,7 +66,7 @@ class ContractorKpiCardWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 8.h),
+              hSpace(8),
               Text(
                 title,
                 maxLines: 1,

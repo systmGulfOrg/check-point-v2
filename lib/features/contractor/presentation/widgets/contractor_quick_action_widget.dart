@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorQuickActionWidget extends StatelessWidget {
   const ContractorQuickActionWidget({
@@ -34,7 +35,7 @@ class ContractorQuickActionWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, color: color, size: 20.r),
-              SizedBox(width: 8.w),
+              wSpace(8),
               Text(
                 title,
                 style: AppTextStyles.font14Bold.copyWith(

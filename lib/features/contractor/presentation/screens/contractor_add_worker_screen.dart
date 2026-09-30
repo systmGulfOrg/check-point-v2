@@ -10,6 +10,7 @@ import 'package:check_point_v2/features/contractor/data/models/site_boundary_mod
 import '../cubit/contractor_cubit.dart';
 import 'package:check_point_v2/features/identity/presentation/widgets/national_id_capture_widget.dart';
 import 'package:check_point_v2/features/identity/presentation/widgets/national_id_ocr_listener_widget.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorAddWorkerScreen extends StatefulWidget {
   const ContractorAddWorkerScreen({super.key});
@@ -100,54 +101,54 @@ class _ContractorAddWorkerScreenState extends State<ContractorAddWorkerScreen> {
                 'contractor.workers.fullName'.tr(),
                 style: AppTextStyles.font13SemiBold,
               ),
-              SizedBox(height: 6.h),
+              hSpace(6),
               CustomTextFormField(
                 controller: fullNameController,
                 hintText: 'contractor.workers.fullName'.tr(),
                 prefixIcon: const Icon(Icons.person_outline_rounded),
               ),
-              SizedBox(height: 14.h),
+              hSpace(14),
               NationalIdCaptureWidget(controller: nationalIdController),
-              SizedBox(height: 14.h),
+              hSpace(14),
               Text(
                 'contractor.workers.phone'.tr(),
                 style: AppTextStyles.font13SemiBold,
               ),
-              SizedBox(height: 6.h),
+              hSpace(6),
               CustomTextFormField(
                 controller: phoneController,
                 hintText: 'contractor.workers.phone'.tr(),
                 prefixIcon: const Icon(Icons.phone_outlined),
                 keyboardType: TextInputType.phone,
               ),
-              SizedBox(height: 14.h),
+              hSpace(14),
               Text(
                 'contractor.workers.jobTitle'.tr(),
                 style: AppTextStyles.font13SemiBold,
               ),
-              SizedBox(height: 6.h),
+              hSpace(6),
               CustomTextFormField(
                 controller: jobTitleController,
                 hintText: 'contractor.workers.jobTitle'.tr(),
                 prefixIcon: const Icon(Icons.engineering_outlined),
               ),
-              SizedBox(height: 14.h),
+              hSpace(14),
               Text(
                 'contractor.workers.workerCode'.tr(),
                 style: AppTextStyles.font13SemiBold,
               ),
-              SizedBox(height: 6.h),
+              hSpace(6),
               CustomTextFormField(
                 controller: workerCodeController,
                 hintText: 'contractor.workers.workerCode'.tr(),
                 prefixIcon: const Icon(Icons.qr_code_rounded),
               ),
-              SizedBox(height: 14.h),
+              hSpace(14),
               Text(
                 'contractor.workers.assignedSite'.tr(),
                 style: AppTextStyles.font13SemiBold,
               ),
-              SizedBox(height: 6.h),
+              hSpace(6),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
                 decoration: BoxDecoration(
@@ -173,7 +174,7 @@ class _ContractorAddWorkerScreenState extends State<ContractorAddWorkerScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 30.h),
+              hSpace(30),
               CustomButton(
                 text: 'contractor.workers.saveWorker'.tr(),
                 enabled: contractorId != null,

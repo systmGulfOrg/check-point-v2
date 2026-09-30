@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class SupervisorViolationTileWidget extends StatelessWidget {
   const SupervisorViolationTileWidget({
@@ -37,13 +38,13 @@ class SupervisorViolationTileWidget extends StatelessWidget {
             ),
             child: Icon(Icons.location_off_rounded, color: AppColors.error, size: 20.r),
           ),
-          SizedBox(width: 12.w),
+          wSpace(12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(name, style: AppTextStyles.font14Bold),
-                SizedBox(height: 2.h),
+                hSpace(2),
                 Text(
                   '$trade • $contractor',
                   style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary),

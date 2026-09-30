@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class SupervisorContractorHeadcountCardWidget extends StatelessWidget {
   const SupervisorContractorHeadcountCardWidget({
@@ -57,7 +58,7 @@ class SupervisorContractorHeadcountCardWidget extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 2.h),
+                    hSpace(2),
                     Text(
                       'Code: $code',
                       style: AppTextStyles.font11Regular.copyWith(
@@ -69,7 +70,7 @@ class SupervisorContractorHeadcountCardWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(width: 8.w),
+              wSpace(8),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
@@ -86,7 +87,7 @@ class SupervisorContractorHeadcountCardWidget extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 10.h),
+          hSpace(10),
           ClipRRect(
             borderRadius: BorderRadius.circular(6.r),
             child: LinearProgressIndicator(
@@ -96,7 +97,7 @@ class SupervisorContractorHeadcountCardWidget extends StatelessWidget {
               valueColor: const AlwaysStoppedAnimation<Color>(AppColors.brandPrimary),
             ),
           ),
-          SizedBox(height: 10.h),
+          hSpace(10),
           Wrap(
             spacing: 12.w,
             runSpacing: 4.h,
@@ -106,7 +107,7 @@ class SupervisorContractorHeadcountCardWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.access_time_filled_rounded, size: 14.r, color: AppColors.warning),
-                    SizedBox(width: 4.w),
+                    wSpace(4),
                     Text(
                       '$lateCount Late',
                       style: AppTextStyles.font11Medium.copyWith(color: AppColors.warning),
@@ -118,7 +119,7 @@ class SupervisorContractorHeadcountCardWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.location_off_rounded, size: 14.r, color: AppColors.error),
-                    SizedBox(width: 4.w),
+                    wSpace(4),
                     Text(
                       '$outsideGeofenceCount Outside Geofence',
                       style: AppTextStyles.font11Medium.copyWith(color: AppColors.error),

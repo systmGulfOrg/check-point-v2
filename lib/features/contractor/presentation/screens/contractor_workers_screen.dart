@@ -11,6 +11,7 @@ import 'package:check_point_v2/features/contractor/presentation/widgets/contract
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_site_filter_chip_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_worker_qr_sheet_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorWorkersScreen extends StatefulWidget {
   const ContractorWorkersScreen({super.key});
@@ -103,7 +104,7 @@ class _ContractorWorkersScreenState extends State<ContractorWorkersScreen> {
                     color: AppColors.textSecondary,
                   ),
                 ),
-                SizedBox(height: 10.h),
+                hSpace(10),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -114,7 +115,7 @@ class _ContractorWorkersScreenState extends State<ContractorWorkersScreen> {
                         onSelected: (_) =>
                             setState(() => _selectedSiteFilter = 'All'),
                       ),
-                      SizedBox(width: 8.w),
+                      wSpace(8),
                       ...sites.map(
                         (site) => Padding(
                           padding: EdgeInsetsDirectional.only(end: 8.w),

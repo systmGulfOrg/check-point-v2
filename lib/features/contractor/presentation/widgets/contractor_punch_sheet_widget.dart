@@ -6,6 +6,7 @@ import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_worker_model.dart';
 import 'package:check_point_v2/features/contractor/data/models/worker_site_assignment_model.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorPunchSheetWidget extends StatefulWidget {
   const ContractorPunchSheetWidget({
@@ -44,7 +45,7 @@ class _ContractorPunchSheetWidgetState extends State<ContractorPunchSheetWidget>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text('contractor.punch.title'.tr(), style: AppTextStyles.font18Bold),
-            SizedBox(height: 16.h),
+            hSpace(16),
             DropdownButtonFormField<String>(
               initialValue: workerId,
               decoration: InputDecoration(
@@ -63,7 +64,7 @@ class _ContractorPunchSheetWidgetState extends State<ContractorPunchSheetWidget>
                   .toList(),
               onChanged: (value) => setState(() => selectedWorkerId = value),
             ),
-            SizedBox(height: 12.h),
+            hSpace(12),
             if (assignment == null)
               Text(
                 'contractor.punch.noAssignment'.tr(),
@@ -76,7 +77,7 @@ class _ContractorPunchSheetWidgetState extends State<ContractorPunchSheetWidget>
                 '${'contractor.punch.site'.tr()}: ${assignment.siteName}',
                 style: AppTextStyles.font13Medium,
               ),
-            SizedBox(height: 18.h),
+            hSpace(18),
             ElevatedButton.icon(
               onPressed: assignment == null || workerId == null
                   ? null

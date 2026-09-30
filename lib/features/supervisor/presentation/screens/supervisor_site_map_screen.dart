@@ -8,6 +8,7 @@ import 'package:check_point_v2/features/supervisor/presentation/widgets/supervis
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_violation_tile_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_state.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class SupervisorSiteMapScreen extends StatefulWidget {
   const SupervisorSiteMapScreen({super.key});
@@ -67,12 +68,12 @@ class _SupervisorSiteMapScreenState extends State<SupervisorSiteMapScreen> {
                   insideCount: logs.length - outside.length,
                   outsideCount: outside.length,
                 ),
-                SizedBox(height: 18.h),
+                hSpace(18),
                 Text(
                   'supervisor.samco.geofenceViolations'.tr(),
                   style: AppTextStyles.font14Bold,
                 ),
-                SizedBox(height: 10.h),
+                hSpace(10),
                 ...outside.map(
                   (item) => SupervisorViolationTileWidget(
                     name: item.workerName,

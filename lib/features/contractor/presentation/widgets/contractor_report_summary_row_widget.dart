@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorReportSummaryRowWidget extends StatelessWidget {
   const ContractorReportSummaryRowWidget({
@@ -26,9 +26,9 @@ class ContractorReportSummaryRowWidget extends StatelessWidget {
         Row(
           children: [
             Text(present, style: AppTextStyles.font11Medium.copyWith(color: AppColors.success)),
-            SizedBox(width: 8.w),
+            wSpace(8),
             Text(late, style: AppTextStyles.font11Medium.copyWith(color: AppColors.warning)),
-            SizedBox(width: 8.w),
+            wSpace(8),
             Text(absent, style: AppTextStyles.font11Medium.copyWith(color: AppColors.error)),
           ],
         ),

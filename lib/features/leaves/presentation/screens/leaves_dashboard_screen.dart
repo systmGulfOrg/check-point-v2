@@ -173,7 +173,7 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
             icon: const Icon(Icons.timer),
             label: Text('leaves.dashboard.requestPermission'.tr()),
           ),
-          SizedBox(height: 12.h),
+          hSpace(12),
           FloatingActionButton.extended(
             heroTag: 'employeeLeaveBtn',
             onPressed: () => _showApplyLeaveSheet(context),

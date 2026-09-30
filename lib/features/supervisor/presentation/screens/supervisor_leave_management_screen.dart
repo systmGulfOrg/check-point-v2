@@ -136,7 +136,7 @@ class _SupervisorLeaveManagementScreenState
             icon: const Icon(Icons.timer),
             label: Text('leaves.dashboard.requestPermission'.tr()),
           ),
-          SizedBox(height: 12.h),
+          hSpace(12),
           FloatingActionButton.extended(
             heroTag: 'supervisorLeaveBtn',
             onPressed: () => _showApplyLeaveSheet(context),

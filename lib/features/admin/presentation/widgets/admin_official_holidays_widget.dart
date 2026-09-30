@@ -5,6 +5,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/features/leaves/data/models/official_holiday_model.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class AdminOfficialHolidaysWidget extends StatelessWidget {
   const AdminOfficialHolidaysWidget({required this.holidays, super.key});
@@ -27,7 +28,7 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
     return ListView.separated(
       padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h),
       itemCount: holidays.length,
-      separatorBuilder: (_, _) => SizedBox(height: 10.h),
+      separatorBuilder: (_, _) => hSpace(10),
       itemBuilder: (context, index) {
         final holiday = holidays[index];
         return Container(
@@ -50,13 +51,13 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
                   color: AppColors.brandPrimary,
                 ),
               ),
-              SizedBox(width: 12.w),
+              wSpace(12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(holiday.name, style: AppTextStyles.font14SemiBold),
-                    SizedBox(height: 4.h),
+                    hSpace(4),
                     Text(
                       DateFormat.yMMMMd(
                         context.locale.languageCode,

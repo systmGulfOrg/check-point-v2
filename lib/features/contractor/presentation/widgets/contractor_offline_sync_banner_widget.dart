@@ -3,6 +3,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
 
 class ContractorOfflineSyncBannerWidget extends StatelessWidget {
   const ContractorOfflineSyncBannerWidget({
@@ -29,7 +30,7 @@ class ContractorOfflineSyncBannerWidget extends StatelessWidget {
       child: Row(
         children: [
           Icon(Icons.cloud_off_rounded, color: AppColors.warning, size: 22.r),
-          SizedBox(width: 10.w),
+          wSpace(10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +41,7 @@ class ContractorOfflineSyncBannerWidget extends StatelessWidget {
                     color: AppColors.brandInk,
                   ),
                 ),
-                SizedBox(height: 2.h),
+                hSpace(2),
                 Text(
                   'contractor.offline.savedLocally'.tr(),
                   style: AppTextStyles.font11Regular.copyWith(
