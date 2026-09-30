@@ -9,6 +9,8 @@ import 'package:check_point_v2/features/employee/presentation/widgets/employee_d
 import 'package:check_point_v2/features/leaves/data/models/leave_balance_model.dart';
 import 'package:check_point_v2/features/leaves/data/models/short_leave_model.dart';
 import 'admin_employee_profile_info_card_widget.dart';
+import 'admin_employee_profile_stat_badge_widget.dart';
+import 'admin_employee_profile_stat_pill_widget.dart';
 
 class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
   const AdminEmployeeProfileAttendanceTabWidget({
@@ -106,8 +108,7 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _statPill(
-                      context,
+                    child: AdminEmployeeProfileStatPillWidget(
                       label: 'employee.profile.leaveRequests'.tr(context: context),
                       value: '${leaveRequests.length}',
                       icon: Icons.flight_takeoff_rounded,
@@ -116,8 +117,7 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
                   ),
                   wSpace(10),
                   Expanded(
-                    child: _statPill(
-                      context,
+                    child: AdminEmployeeProfileStatPillWidget(
                       label: 'employee.profile.permissionsCount'.tr(context: context),
                       value: '${permissions.length}',
                       icon: Icons.timer_outlined,
@@ -163,8 +163,7 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _statBadge(
-                      context,
+                    child: AdminEmployeeProfileStatBadgeWidget(
                       label: 'employee.details.attended'.tr(context: context),
                       value: attendedDays.toString(),
                       color: AppColors.success,
@@ -172,8 +171,7 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
                   ),
                   wSpace(8),
                   Expanded(
-                    child: _statBadge(
-                      context,
+                    child: AdminEmployeeProfileStatBadgeWidget(
                       label: 'employee.details.absent'.tr(context: context),
                       value: absentDays.toString(),
                       color: AppColors.error,
@@ -181,8 +179,7 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
                   ),
                   wSpace(8),
                   Expanded(
-                    child: _statBadge(
-                      context,
+                    child: AdminEmployeeProfileStatBadgeWidget(
                       label: 'employee.details.late'.tr(context: context),
                       value: lateDays.toString(),
                       color: AppColors.warningOrange,
@@ -194,8 +191,7 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _statBadge(
-                      context,
+                    child: AdminEmployeeProfileStatBadgeWidget(
                       label: 'employee.details.earlyLeave'.tr(context: context),
                       value: earlyLeaveDays.toString(),
                       color: AppColors.info,
@@ -203,8 +199,7 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
                   ),
                   wSpace(8),
                   Expanded(
-                    child: _statBadge(
-                      context,
+                    child: AdminEmployeeProfileStatBadgeWidget(
                       label: 'employee.details.totalHours'.tr(context: context),
                       value: totalHours,
                       color: AppColors.brandPrimary,
@@ -303,77 +298,6 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
                   },
                 ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _statBadge(
-    BuildContext context, {
-    required String label,
-    required String value,
-    required Color color,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
-      ),
-      child: Column(
-        children: [
-          Text(
-            label,
-            style: AppTextStyles.font11Medium.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-          hSpace(4),
-          Text(
-            value,
-            style: AppTextStyles.font14Bold.copyWith(color: color),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _statPill(
-    BuildContext context, {
-    required String label,
-    required String value,
-    required IconData icon,
-    required Color color,
-  }) {
-    return Container(
-      padding: EdgeInsets.all(12.r),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 24.r, color: color),
-          wSpace(10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: AppTextStyles.font11Medium.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                hSpace(2),
-                Text(
-                  value,
-                  style: AppTextStyles.font18Bold.copyWith(color: color),
-                ),
-              ],
-            ),
           ),
         ],
       ),

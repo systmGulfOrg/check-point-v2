@@ -1,14 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import '../../data/models/permissions/admin_permission_employee_model.dart';
 import '../../data/models/permissions/admin_permissions_catalogue_model.dart';
-import '../cubit/permissions/admin_permissions_cubit.dart';
-import 'admin_permission_badge_widget.dart';
-import 'admin_permissions_permission_row_widget.dart';
+import 'admin_permissions_admin_banner_widget.dart';
+import 'admin_permissions_role_permissions_list_widget.dart';
 
 class AdminPermissionsDetailsContentWidget extends StatelessWidget {
   const AdminPermissionsDetailsContentWidget({
@@ -23,106 +21,6 @@ class AdminPermissionsDetailsContentWidget extends StatelessWidget {
   final AdminPermissionsCatalogueModel catalogue;
   final List<String> selectedPermissions;
   final bool saving;
-
-  Widget _buildAdminBanner(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: AppColors.softBrandBackground,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: AppColors.brandPrimary.withValues(alpha: 0.25),
-        ),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            Icons.verified_user_outlined,
-            color: AppColors.brandPrimary,
-            size: 42.r,
-          ),
-          hSpace(10),
-          Text(
-            'admin.permissions.adminAccess'.tr(context: context),
-            style: AppTextStyles.font16Bold,
-          ),
-          hSpace(4),
-          Text(
-            'admin.permissions.adminDescription'.tr(context: context),
-            textAlign: TextAlign.center,
-            style: AppTextStyles.font12Regular.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRolePermissionsList(
-    BuildContext context,
-    String role,
-  ) {
-    final cubit = context.read<AdminPermissionsCubit>();
-    final grouped = cubit.groupedPermissions(catalogue);
-
-    return ListView(
-      padding: EdgeInsets.only(top: 14.h, bottom: 24.h),
-      children: [
-        ...grouped.entries.map(
-          (entry) => Padding(
-            padding: EdgeInsets.only(bottom: 14.h),
-            child: Container(
-              padding: EdgeInsets.all(12.r),
-              decoration: BoxDecoration(
-                color: AppColors.pageBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: AppColors.border),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(entry.key, style: AppTextStyles.font14Bold),
-                      AdminPermissionBadgeWidget(
-                        label: '${entry.value.length}',
-                        color: AppColors.info,
-                        background: AppColors.softBlueBackground,
-                      ),
-                    ],
-                  ),
-                  hSpace(8),
-                  ...entry.value.map(
-                    (permission) {
-                      final isBase = cubit.isBasePermission(permission);
-                      final isSelected = selectedPermissions.contains(permission);
-                      return AdminPermissionsPermissionRowWidget(
-                        permission: permission,
-                        enabled: isSelected || isBase,
-                        baseRole: isBase,
-                        onChanged: () => cubit.togglePermission(permission),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        CustomButton(
-          text: 'admin.permissions.save'.tr(context: context),
-          onTap: () async {
-            final saved = await cubit.saveSelected();
-            if (saved && context.mounted) Navigator.pop(context);
-          },
-          isLoading: saving,
-        ),
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +65,11 @@ class AdminPermissionsDetailsContentWidget extends StatelessWidget {
         ),
         hSpace(14),
         if (isPureAdmin)
-          Expanded(child: SingleChildScrollView(child: _buildAdminBanner(context)))
+          const Expanded(
+            child: SingleChildScrollView(
+              child: AdminPermissionsAdminBannerWidget(),
+            ),
+          )
         else if (hasMultipleRoles)
           Expanded(
             child: DefaultTabController(
@@ -186,14 +88,19 @@ class AdminPermissionsDetailsContentWidget extends StatelessWidget {
                     child: TabBarView(
                       children: roles.map((r) {
                         if (r == 'Admin') {
-                          return Padding(
-                            padding: EdgeInsets.only(top: 16.h),
+                          return const Padding(
+                            padding: EdgeInsets.only(top: 16),
                             child: SingleChildScrollView(
-                              child: _buildAdminBanner(context),
+                              child: AdminPermissionsAdminBannerWidget(),
                             ),
                           );
                         }
-                        return _buildRolePermissionsList(context, r);
+                        return AdminPermissionsRolePermissionsListWidget(
+                          catalogue: catalogue,
+                          selectedPermissions: selectedPermissions,
+                          saving: saving,
+                          role: r,
+                        );
                       }).toList(),
                     ),
                   ),
@@ -202,7 +109,14 @@ class AdminPermissionsDetailsContentWidget extends StatelessWidget {
             ),
           )
         else
-          Expanded(child: _buildRolePermissionsList(context, roles.first)),
+          Expanded(
+            child: AdminPermissionsRolePermissionsListWidget(
+              catalogue: catalogue,
+              selectedPermissions: selectedPermissions,
+              saving: saving,
+              role: roles.first,
+            ),
+          ),
       ],
     );
   }

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'admin_employee_profile_quick_action_widget.dart';
 
 class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
   const AdminEmployeeProfileHeaderWidget({
@@ -205,8 +206,7 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildQuickAction(
-                context,
+              AdminEmployeeProfileQuickActionWidget(
                 icon: Icons.phone_outlined,
                 label: 'employee.profile.call'.tr(context: context),
                 color: AppColors.success,
@@ -219,8 +219,7 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                       }
                     : null,
               ),
-              _buildQuickAction(
-                context,
+              AdminEmployeeProfileQuickActionWidget(
                 icon: Icons.email_outlined,
                 label: 'employee.profile.emailAction'.tr(context: context),
                 color: AppColors.brandPrimary,
@@ -233,8 +232,7 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                       }
                     : null,
               ),
-              _buildQuickAction(
-                context,
+              AdminEmployeeProfileQuickActionWidget(
                 icon: Icons.shield_outlined,
                 label: employee.role ?? 'Employee',
                 color: AppColors.brandSecondary,
@@ -243,36 +241,6 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildQuickAction(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required Color color,
-    VoidCallback? onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10.r),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 16.r, color: color),
-            wSpace(6),
-            Text(
-              label,
-              style: AppTextStyles.font12Medium.copyWith(
-                color: color,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
