@@ -137,6 +137,60 @@ class _AdminFullMapPickerDialogWidgetState
     }
   }
 
+  Future<void> _handleGoPressed() async {
+    final lang = context.locale.languageCode;
+    final query = _searchController.text.trim();
+    if (query.isEmpty) return;
+    setState(() => _isSearching = true);
+
+    final parsed = await LocationLinkParser.parseLocation(query);
+    if (parsed != null && mounted) {
+      setState(() {
+        _suggestions = [];
+        _isSearching = false;
+        _points.add(parsed);
+      });
+      await _mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: parsed, zoom: 16),
+        ),
+      );
+      _resolveAddressForPoint(parsed);
+      return;
+    }
+
+    final results = await _placesService.autocomplete(
+      query,
+      language: lang,
+    );
+    if (!mounted) return;
+
+    if (results.isNotEmpty) {
+      await _selectSuggestion(results.first);
+      setState(() => _isSearching = false);
+      return;
+    }
+
+    // Geocoding device fallback
+    final coords = await _locationService.getCoordinatesFromAddress(query);
+    if (!mounted) return;
+    setState(() => _isSearching = false);
+
+    if (coords != null) {
+      setState(() {
+        _suggestions = [];
+        _points.add(coords);
+        _selectedAddress = query;
+      });
+      await _mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: coords, zoom: 15),
+        ),
+      );
+      _resolveAddressForPoint(coords);
+    }
+  }
+
   void _onSearchChanged(String query) {
     _debounce?.cancel();
     if (query.trim().isEmpty) {
@@ -172,6 +226,25 @@ class _AdminFullMapPickerDialogWidgetState
         language: context.locale.languageCode,
       );
       if (!mounted) return;
+
+      if (results.isEmpty) {
+        // Try fallback coordinates check
+        final coords = await _locationService.getCoordinatesFromAddress(query);
+        if (!mounted) return;
+        if (coords != null) {
+          setState(() {
+            _suggestions = [
+              GooglePlaceSuggestion(
+                placeId: 'geo:${coords.latitude},${coords.longitude}',
+                description: query,
+              ),
+            ];
+            _isSearching = false;
+          });
+          return;
+        }
+      }
+
       setState(() {
         _suggestions = results;
         _isSearching = false;
@@ -180,22 +253,41 @@ class _AdminFullMapPickerDialogWidgetState
   }
 
   Future<void> _selectSuggestion(GooglePlaceSuggestion suggestion) async {
-    final location = await _placesService.getPlaceLocation(
-      suggestion.placeId,
-      language: context.locale.languageCode,
-    );
-    if (!mounted || location == null) return;
+    LatLng? point;
+    String address = suggestion.description;
+
+    if (suggestion.placeId.startsWith('geo:')) {
+      final raw = suggestion.placeId.substring(4).split(',');
+      if (raw.length == 2) {
+        final lat = double.tryParse(raw[0]);
+        final lng = double.tryParse(raw[1]);
+        if (lat != null && lng != null) {
+          point = LatLng(lat, lng);
+        }
+      }
+    } else {
+      final location = await _placesService.getPlaceLocation(
+        suggestion.placeId,
+        language: context.locale.languageCode,
+      );
+      if (location != null) {
+        point = location.latLng;
+        address = location.address.isNotEmpty ? location.address : address;
+      }
+    }
+
+    if (!mounted || point == null) return;
 
     _searchController.text = suggestion.description;
     setState(() {
       _suggestions = [];
-      _points.add(location.latLng);
-      _selectedAddress = location.address;
+      _points.add(point!);
+      _selectedAddress = address;
     });
 
     await _mapController?.animateCamera(
       CameraUpdate.newCameraPosition(
-        CameraPosition(target: location.latLng, zoom: 16),
+        CameraPosition(target: point, zoom: 16),
       ),
     );
   }
@@ -304,7 +396,7 @@ class _AdminFullMapPickerDialogWidgetState
                   isSearching: _isSearching,
                   isLocating: _isLocating,
                   onSearchChanged: _onSearchChanged,
-                  onGoPressed: () => _onSearchChanged(_searchController.text),
+                  onGoPressed: _handleGoPressed,
                   onPasteLinkPressed: _pasteAndParseLink,
                   onCurrentLocationPressed: _fetchCurrentLocation,
                 ),

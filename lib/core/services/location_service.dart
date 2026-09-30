@@ -78,4 +78,16 @@ class LocationService {
       return null;
     }
   }
+
+  Future<LatLng?> getCoordinatesFromAddress(String address) async {
+    try {
+      final geocoding = Geocoding();
+      final locations = await geocoding.locationFromAddress(address);
+      if (locations.isEmpty) return null;
+      final loc = locations.first;
+      return LatLng(loc.latitude, loc.longitude);
+    } catch (_) {
+      return null;
+    }
+  }
 }
