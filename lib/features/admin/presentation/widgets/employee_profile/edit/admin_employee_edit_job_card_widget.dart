@@ -94,10 +94,20 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
         hSpace(10),
         CustomTextFormField(
           controller: employeeCodeController,
-          hintText: 'employee.profile.code'.tr(context: context),
+          hintText: 'EMP-23211',
           prefixIcon: const Icon(
             Icons.tag_rounded,
             color: AppColors.brandPrimary,
+          ),
+          suffixIcon: IconButton(
+            icon: const Icon(
+              Icons.refresh_rounded,
+              color: AppColors.brandPrimary,
+            ),
+            onPressed: () {
+              employeeCodeController.text =
+                  CodeGeneratorHelper.generateEmployeeCode();
+            },
           ),
         ),
         hSpace(10),

@@ -88,7 +88,9 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
     phoneController = TextEditingController(text: widget.accountRequest?.phone);
     emailController = TextEditingController();
     nationalIdController = TextEditingController();
-    employeeCodeController = TextEditingController();
+    employeeCodeController = TextEditingController(
+      text: CodeGeneratorHelper.generateEmployeeCode(),
+    );
     positionController = TextEditingController();
   }
 
@@ -112,11 +114,13 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
     bool readOnly = false,
     bool obscureText = false,
     bool isRequired = true,
+    Widget? suffixIcon,
   }) => CustomTextFormField(
     hintText: hint,
     controller: controller,
     readOnly: readOnly,
     obscureText: obscureText,
+    suffixIcon: suffixIcon,
     validator: isRequired
         ? (value) => value == null || value.trim().isEmpty
               ? 'admin.employeeWizard.requiredField'.tr(context: context)
@@ -334,6 +338,18 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                               ),
                               controller: employeeCodeController,
                               isRequired: false,
+                              suffixIcon: IconButton(
+                                icon: const Icon(
+                                  Icons.refresh_rounded,
+                                  color: AppColors.brandPrimary,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    employeeCodeController.text =
+                                        CodeGeneratorHelper.generateEmployeeCode();
+                                  });
+                                },
+                              ),
                             ),
                           ),
                         ],

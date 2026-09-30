@@ -11,6 +11,7 @@ import '../cubit/contractor_cubit.dart';
 import 'package:check_point_v2/features/identity/presentation/widgets/national_id_capture_widget.dart';
 import 'package:check_point_v2/features/identity/presentation/widgets/national_id_ocr_listener_widget.dart';
 import 'package:check_point_v2/core/app/app_spaces.dart';
+import 'package:check_point_v2/core/utils/code_generator_helper.dart';
 
 class ContractorAddWorkerScreen extends StatefulWidget {
   const ContractorAddWorkerScreen({super.key});
@@ -34,7 +35,9 @@ class _ContractorAddWorkerScreenState extends State<ContractorAddWorkerScreen> {
     nationalIdController = TextEditingController();
     phoneController = TextEditingController();
     jobTitleController = TextEditingController();
-    workerCodeController = TextEditingController();
+    workerCodeController = TextEditingController(
+      text: CodeGeneratorHelper.generateWorkerCode(),
+    );
   }
 
   @override
@@ -142,6 +145,18 @@ class _ContractorAddWorkerScreenState extends State<ContractorAddWorkerScreen> {
                 controller: workerCodeController,
                 hintText: 'contractor.workers.workerCode'.tr(),
                 prefixIcon: const Icon(Icons.qr_code_rounded),
+                suffixIcon: IconButton(
+                  icon: const Icon(
+                    Icons.refresh_rounded,
+                    color: AppColors.brandPrimary,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      workerCodeController.text =
+                          CodeGeneratorHelper.generateWorkerCode();
+                    });
+                  },
+                ),
               ),
               hSpace(14),
               Text(

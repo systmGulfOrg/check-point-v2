@@ -74,7 +74,10 @@ class _AdminEditEmployeeSheetWidgetState
     _phoneController = TextEditingController(text: widget.employee.phone ?? '');
     _emailController = TextEditingController(text: widget.employee.email ?? '');
     _employeeCodeController = TextEditingController(
-      text: widget.employee.employeeCode ?? '',
+      text: (widget.employee.employeeCode != null &&
+              widget.employee.employeeCode!.isNotEmpty)
+          ? widget.employee.employeeCode!
+          : CodeGeneratorHelper.generateEmployeeCode(),
     );
     _leaveBalanceController = TextEditingController(
       text: '${widget.employee.leaveBalance ?? 21}',
@@ -259,7 +262,19 @@ class _AdminEditEmployeeSheetWidgetState
                       hSpace(6),
                       CustomTextFormField(
                         controller: _employeeCodeController,
-                        hintText: 'EMP-001',
+                        hintText: 'EMP-23211',
+                        suffixIcon: IconButton(
+                          icon: const Icon(
+                            Icons.refresh_rounded,
+                            color: AppColors.brandPrimary,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _employeeCodeController.text =
+                                  CodeGeneratorHelper.generateEmployeeCode();
+                            });
+                          },
+                        ),
                       ),
                     ],
                   ),

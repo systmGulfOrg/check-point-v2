@@ -97,7 +97,9 @@ class _AdminEmployeeProfileEditFormWidgetState
     // Job
     _positionController = TextEditingController(text: emp.position ?? '');
     _employeeCodeController = TextEditingController(
-      text: emp.employeeCode ?? '',
+      text: (emp.employeeCode != null && emp.employeeCode!.isNotEmpty)
+          ? emp.employeeCode!
+          : CodeGeneratorHelper.generateEmployeeCode(),
     );
     _gradeController = TextEditingController(text: emp.grade ?? '');
     _divisionController = TextEditingController(text: emp.division ?? '');
