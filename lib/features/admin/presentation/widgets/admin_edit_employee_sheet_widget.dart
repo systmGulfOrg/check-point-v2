@@ -389,13 +389,13 @@ class _AdminEditEmployeeSheetWidgetState
                     ),
                   ),
                   onSelected: (selected) {
-                    if (selected) {
-                      setState(() {
-                        _selectedRoles
-                          ..clear()
-                          ..add(role);
-                      });
-                    }
+                    setState(() {
+                      if (selected) {
+                        _selectedRoles.add(role);
+                      } else {
+                        _selectedRoles.remove(role);
+                      }
+                    });
                   },
                 );
               }).toList(),

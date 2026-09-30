@@ -23,7 +23,7 @@ class AdminWizardFieldWidget extends StatelessWidget {
       children: [
         Text(
           required ? '$label *' : label,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
           style: AppTextStyles.font13SemiBold,
         ),
         hSpace(7),

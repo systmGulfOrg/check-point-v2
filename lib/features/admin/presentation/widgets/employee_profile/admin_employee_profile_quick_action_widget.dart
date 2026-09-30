@@ -19,6 +19,8 @@ class AdminEmployeeProfileQuickActionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveColor = onTap != null ? color : AppColors.placeholder;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(10.r),
@@ -27,12 +29,12 @@ class AdminEmployeeProfileQuickActionWidget extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 16.r, color: color),
+            Icon(icon, size: 16.r, color: effectiveColor),
             wSpace(6),
             Text(
               label,
               style: AppTextStyles.font12Medium.copyWith(
-                color: color,
+                color: effectiveColor,
                 fontWeight: FontWeight.w600,
               ),
             ),

@@ -209,10 +209,12 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
               AdminEmployeeProfileQuickActionWidget(
                 icon: Icons.phone_outlined,
                 label: 'employee.profile.call'.tr(context: context),
-                color: AppColors.success,
-                onTap: employee.phone != null && employee.phone!.isNotEmpty
+                color: (employee.phone != null && employee.phone!.trim().isNotEmpty)
+                    ? AppColors.success
+                    : AppColors.placeholder,
+                onTap: (employee.phone != null && employee.phone!.trim().isNotEmpty)
                     ? () {
-                        Clipboard.setData(ClipboardData(text: employee.phone!));
+                        Clipboard.setData(ClipboardData(text: employee.phone!.trim()));
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('employee.profile.phoneCopied'.tr(context: context))),
                         );
@@ -222,10 +224,12 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
               AdminEmployeeProfileQuickActionWidget(
                 icon: Icons.email_outlined,
                 label: 'employee.profile.emailAction'.tr(context: context),
-                color: AppColors.brandPrimary,
-                onTap: employee.email != null && employee.email!.isNotEmpty
+                color: (employee.email != null && employee.email!.trim().isNotEmpty)
+                    ? AppColors.brandPrimary
+                    : AppColors.placeholder,
+                onTap: (employee.email != null && employee.email!.trim().isNotEmpty)
                     ? () {
-                        Clipboard.setData(ClipboardData(text: employee.email!));
+                        Clipboard.setData(ClipboardData(text: employee.email!.trim()));
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('employee.profile.emailCopied'.tr(context: context))),
                         );

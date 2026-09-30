@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/styles/app_motion.dart';
-import 'package:check_point_v2/features/admin/presentation/widgets/admin_nav_bar_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/pending_devices/admin_pending_devices_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_desktop_sidebar_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_nav_bar_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'admin_employees_screen.dart';
 import 'admin_home_screen.dart';
 import 'admin_manage_screen.dart';
@@ -20,13 +28,44 @@ class AdminMainScreen extends StatefulWidget {
 class _AdminMainScreenState extends State<AdminMainScreen> {
   int _selectedIndex = 0;
 
-  static const _screens = <Widget>[
-    AdminHomeScreen(),
-    AdminRequestsScreen(),
-    AdminEmployeesScreen(),
-    AdminManageScreen(),
-    AdminSettingsScreen(),
+  List<Widget> get _screens => [
+    AdminHomeScreen(
+      onNavigateToEmployees: () => _onTabSelected(2),
+      onNavigateToRequests: () => _onTabSelected(1),
+    ),
+    const AdminRequestsScreen(),
+    const AdminEmployeesScreen(),
+    const AdminManageScreen(),
+    const AdminSettingsScreen(),
   ];
+
+  void _onTabSelected(int index) {
+    setState(() => _selectedIndex = index);
+    switch (index) {
+      case 0:
+        context.read<AuthProfileCubit>().loadProfile();
+        context.read<AdminAttendanceCubit>().loadAttendance();
+        context.read<AdminTasksCubit>().loadTasks();
+        context.read<AdminLeaveRequestsCubit>().loadRequests();
+        context.read<AdminAccountRequestsCubit>().loadRequests();
+        context.read<AdminEmployeesCubit>().loadEmployees();
+        break;
+      case 1:
+        context.read<AdminAccountRequestsCubit>().loadRequests();
+        context.read<AdminLeaveRequestsCubit>().loadRequests();
+        context.read<AdminPendingDevicesCubit>().loadDevices();
+        break;
+      case 2:
+        context.read<AdminEmployeesCubit>().loadEmployees();
+        break;
+      case 3:
+        context.read<AuthProfileCubit>().loadProfile();
+        break;
+      case 4:
+        context.read<AuthProfileCubit>().loadProfile();
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +98,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
               children: [
                 AdminDesktopSidebarWidget(
                   selectedIndex: _selectedIndex,
-                  onTabSelected: (index) =>
-                      setState(() => _selectedIndex = index),
+                  onTabSelected: _onTabSelected,
                 ),
                 Expanded(child: content),
               ],
@@ -72,7 +110,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       bottomNavigationBar: MediaQuery.sizeOf(context).width < 800
           ? AdminNavBarWidget(
               selectedIndex: _selectedIndex,
-              onTabSelected: (index) => setState(() => _selectedIndex = index),
+              onTabSelected: _onTabSelected,
             )
           : null,
     );

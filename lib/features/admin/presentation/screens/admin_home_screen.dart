@@ -14,7 +14,14 @@ import 'package:check_point_v2/features/admin/presentation/widgets/admin_top_bar
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_weekly_attendance_chart_widget.dart';
 
 class AdminHomeScreen extends StatelessWidget {
-  const AdminHomeScreen({super.key});
+  const AdminHomeScreen({
+    this.onNavigateToEmployees,
+    this.onNavigateToRequests,
+    super.key,
+  });
+
+  final VoidCallback? onNavigateToEmployees;
+  final VoidCallback? onNavigateToRequests;
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +110,17 @@ class AdminHomeScreen extends StatelessWidget {
                 isAttendanceLoading: isAttendanceLoading,
                 isLeaveLoading: isLeaveLoading,
                 isTasksLoading: isTasksLoading,
+                onTapStaff: () {
+                  if (onNavigateToEmployees != null) {
+                    onNavigateToEmployees!();
+                  }
+                },
+                onTapAttendance: () =>
+                    Navigator.pushNamed(context, AppRoutes.adminAttendance),
+                onTapLeaves: () =>
+                    Navigator.pushNamed(context, AppRoutes.adminLeaveManagement),
+                onTapTasks: () =>
+                    Navigator.pushNamed(context, AppRoutes.adminTasks),
               ),
               hSpace(16),
               const AdminWeeklyAttendanceChartWidget(),

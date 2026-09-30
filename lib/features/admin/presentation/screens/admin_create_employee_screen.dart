@@ -443,13 +443,13 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                                   ),
                                 ),
                                 onSelected: (selected) {
-                                  if (selected) {
-                                    setState(() {
-                                      selectedRoles
-                                        ..clear()
-                                        ..add(r);
-                                    });
-                                  }
+                                  setState(() {
+                                    if (selected) {
+                                      selectedRoles.add(r);
+                                    } else {
+                                      selectedRoles.remove(r);
+                                    }
+                                  });
                                 },
                               );
                             }).toList(),
@@ -646,6 +646,21 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                                       success: (value) => value.sites,
                                     ) ??
                                     const [];
+                                if (sites.isEmpty) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 8.h,
+                                    ),
+                                    child: Text(
+                                      'admin.employeeWizard.noSitesAvailable'
+                                          .tr(context: context),
+                                      style: AppTextStyles.font13Medium
+                                          .copyWith(
+                                            color: AppColors.textSecondary,
+                                          ),
+                                    ),
+                                  );
+                                }
                                 return Wrap(
                                   spacing: 8.w,
                                   runSpacing: 6.h,

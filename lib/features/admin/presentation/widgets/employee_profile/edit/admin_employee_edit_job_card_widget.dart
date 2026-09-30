@@ -243,6 +243,18 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
               final sites =
                   state.mapOrNull(success: (value) => value.sites) ??
                   const <SiteBoundaryModel>[];
+              if (sites.isEmpty) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.h),
+                  child: Text(
+                    'admin.employeeWizard.noSitesAvailable'
+                        .tr(context: context),
+                    style: AppTextStyles.font13Medium.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                );
+              }
               return Wrap(
                 spacing: 8.w,
                 runSpacing: 6.h,
