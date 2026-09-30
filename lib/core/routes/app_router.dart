@@ -217,8 +217,8 @@ class AppRouter {
               BlocProvider<AdminBranchesCubit>(
                 create: (_) => sl<AdminBranchesCubit>()..load(),
               ),
-              BlocProvider<ContractorCubit>(
-                create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+              BlocProvider<AdminShiftsPoliciesCubit>(
+                create: (_) => sl<AdminShiftsPoliciesCubit>()..load(),
               ),
               BlocProvider<ContractorCubit>(
                 create: (_) => sl<ContractorCubit>()..loadDashboardData(),
