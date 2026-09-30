@@ -23,7 +23,7 @@ class EmployeeLeaveRequestsUseCase {
 
   Future<ApiResult<List<AdminLeaveRequestModel>>>
   getNativeLeaveRequests() async {
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     return actionRepo.getAllLeaveRequests(employeeId);
   }
 
@@ -35,7 +35,7 @@ class EmployeeLeaveRequestsUseCase {
     required String leaveRequestType,
     String? attachmentUrl,
   }) async {
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     return actionRepo.createLeaveRequest(
       EmployeeLeaveRequestBody(
         employeeId: employeeId,
@@ -52,7 +52,7 @@ class EmployeeLeaveRequestsUseCase {
   Future<List<OdooLeaveRequest>> getOdooLeaveRequests({
     String? stateFilter,
   }) async {
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     return odooTimeOffService.getMyLeaveRequests(
       employeeId: employeeId,
       state: stateFilter,
@@ -65,7 +65,7 @@ class EmployeeLeaveRequestsUseCase {
     required String dateTo,
     String? reason,
   }) async {
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     await odooTimeOffService.submitLeaveRequest(
       employeeId: employeeId,
       leaveTypeId: leaveTypeId,

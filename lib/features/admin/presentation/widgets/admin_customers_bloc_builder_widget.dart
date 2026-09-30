@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_state.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -72,13 +73,19 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
           // message before the API response arrives.
           AdminCustomersInitial() => const AdminLocationsSkeletonWidget(),
           AdminCustomersLoading() => const AdminLocationsSkeletonWidget(),
-          AdminCustomersError(:final messageKey) => Padding(
-            padding: const EdgeInsets.all(24),
-            child: Text(
-              messageKey.tr(context: context),
-              style: AppTextStyles.font14Regular,
-            ),
-          ),
+          AdminCustomersError(:final messageKey) =>
+            context.read<AdminCustomersCubit>().customers.isNotEmpty
+                ? _buildList(
+                    context,
+                    context.read<AdminCustomersCubit>().customers,
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(
+                      messageKey.tr(context: context),
+                      style: AppTextStyles.font14Regular,
+                    ),
+                  ),
           AdminCustomersSuccess(:final customers) =>
             customers.isEmpty
                 ? Padding(
@@ -88,47 +95,51 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
                       style: AppTextStyles.font14Regular,
                     ),
                   )
-                : Column(
-                    children: [
-                      for (final customer in customers) ...[
-                        AdminLocationCardWidget(
-                          location: AdminLocationData(
-                            nameKey: customer.name ?? '-',
-                            descriptionKey: customer.workesAs ?? '-',
-                            addressKey: customer.location ?? '-',
-                            statusKey: 'admin.locations.status.active',
-                            icon: type == 'site'
-                                ? Icons.map_outlined
-                                : Icons.people_outline_rounded,
-                            iconColor: AppColors.info,
-                            iconBackgroundColor: AppColors.softBlueBackground,
-                          ),
-                          onEdit: () {
-                            if (customer.id != null) {
-                              final points = (customer.coordinates ?? [])
-                                  .map((c) => LatLng(c.latitude, c.longitude))
-                                  .toList();
-                              _showEditSheet(
-                                context,
-                                customer.id!,
-                                customer.name ?? '',
-                                customer.location ?? '',
-                                customer.workesAs,
-                                points,
-                              );
-                            }
-                          },
-                          onDelete: () {
-                            if (customer.id != null) {
-                              _showDeleteDialog(context, customer.id!);
-                            }
-                          },
-                        ),
-                        hSpace(10),
-                      ],
-                    ],
-                  ),
+                : _buildList(context, customers),
           _ => const SizedBox.shrink(),
         },
       );
+
+  Widget _buildList(BuildContext context, List<CustomerModel> customers) {
+    return Column(
+      children: [
+        for (final customer in customers) ...[
+          AdminLocationCardWidget(
+            location: AdminLocationData(
+              nameKey: customer.name ?? '-',
+              descriptionKey: customer.workesAs ?? '-',
+              addressKey: customer.location ?? '-',
+              statusKey: 'admin.locations.status.active',
+              icon: type == 'site'
+                  ? Icons.map_outlined
+                  : Icons.people_outline_rounded,
+              iconColor: AppColors.info,
+              iconBackgroundColor: AppColors.softBlueBackground,
+            ),
+            onEdit: () {
+              if (customer.id != null) {
+                final points = (customer.coordinates ?? [])
+                    .map((c) => LatLng(c.latitude, c.longitude))
+                    .toList();
+                _showEditSheet(
+                  context,
+                  customer.id!,
+                  customer.name ?? '',
+                  customer.location ?? '',
+                  customer.workesAs,
+                  points,
+                );
+              }
+            },
+            onDelete: () {
+              if (customer.id != null) {
+                _showDeleteDialog(context, customer.id!);
+              }
+            },
+          ),
+          hSpace(10),
+        ],
+      ],
+    );
+  }
 }

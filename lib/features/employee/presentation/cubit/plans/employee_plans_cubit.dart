@@ -17,15 +17,18 @@ class EmployeePlansCubit extends Cubit<EmployeePlansState> {
   final EmployeeAttendanceRepo attendanceRepo;
   final AuthSessionStorage sessionStorage;
 
+  List<AdminPlanModel> myPlans = const [];
+
   Future<void> loadMyPlans() async {
     emit(const EmployeePlansState.loading());
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     final result = await attendanceRepo.getCustomerPlansForEmployee(employeeId);
     switch (result) {
       case Success(:final data):
+        myPlans = data;
         emit(EmployeePlansState.success(data));
-      case Failure():
-        emit(const EmployeePlansState.success([]));
+      case Failure(:final failure):
+        emit(EmployeePlansState.error(failure.messageKey));
     }
   }
 
@@ -62,7 +65,7 @@ class EmployeePlansCubit extends Cubit<EmployeePlansState> {
     required String startDate,
     required String endDate,
   }) async {
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     final result = await attendanceRepo.createPlan(
       CreatePlanRequestBody(
         title: title,
@@ -86,7 +89,7 @@ class EmployeePlansCubit extends Cubit<EmployeePlansState> {
 
   Future<void> removeAssignCustomerPlan(int customerPlanId) async {
     emit(const EmployeePlansState.loading());
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     final requestBody = EmployeeRemovePlanRequestBody(
       customerPlanId: customerPlanId,
       employeeId: employeeId,

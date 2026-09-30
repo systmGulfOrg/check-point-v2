@@ -14,9 +14,11 @@ class LoginResponseModel {
     this.token,
     this.branchId,
     this.branchName,
+    this.employeeId,
   });
 
   final String? id;
+  final String? employeeId;
   final String? userName;
   final String? name;
   final String? role;

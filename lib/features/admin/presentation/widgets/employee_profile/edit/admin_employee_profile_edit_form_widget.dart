@@ -43,7 +43,6 @@ class _AdminEmployeeProfileEditFormWidgetState
   String? _selectedSiteId;
   late String _selectedWorkSystem;
   String? _selectedRemoteWorkPolicyId;
-  int? _selectedShiftId;
   String? _selectedDirectManagerId;
 
   // Personal Controllers
@@ -107,7 +106,6 @@ class _AdminEmployeeProfileEditFormWidgetState
     _selectedSiteId = _selectedSiteIds.isEmpty ? null : _selectedSiteIds.first;
     _selectedWorkSystem = emp.workSystem ?? 'onsite';
     _selectedRemoteWorkPolicyId = emp.remoteWorkPolicyId;
-    _selectedShiftId = emp.shiftId;
     _selectedDirectManagerId = emp.resolvedDirectManagerId;
 
     // Personal
@@ -154,10 +152,10 @@ class _AdminEmployeeProfileEditFormWidgetState
       text: '${emp.leaveBalance ?? 21}',
     );
     _selectedRoles = emp.allRoles
+        .map((role) => role.toLowerCase() == 'employee' ? 'Contractor' : role)
         .where(
           (role) => const {'HR', 'Supervisor', 'Contractor'}.contains(role),
         )
-        .take(1)
         .toSet();
     if (_selectedRoles.isEmpty) _selectedRoles.add('Contractor');
     _canAddAttendance = emp.canAddAttendance ?? true;
@@ -245,7 +243,6 @@ class _AdminEmployeeProfileEditFormWidgetState
         siteIds: _selectedLocationType == 'site'
             ? _selectedSiteIds.toList()
             : const [],
-        shiftId: _selectedShiftId,
         workSystem: _selectedWorkSystem,
         remoteWorkPolicyId: _selectedRemoteWorkPolicyId,
         directManagerId: _selectedDirectManagerId,
@@ -292,8 +289,10 @@ class _AdminEmployeeProfileEditFormWidgetState
             ? 'HR'
             : _selectedRoles.contains('Supervisor')
             ? 'Supervisor'
-            : 'Contractor',
-        roles: _selectedRoles.toList(),
+            : 'Employee',
+        roles: _selectedRoles
+            .map((r) => r == 'Contractor' ? 'Employee' : r)
+            .toList(),
         canAddAttendance: _canAddAttendance,
         canAddPlan: _canAddPlan,
         leaveBalance: int.tryParse(_leaveBalanceController.text.trim()),
@@ -322,7 +321,6 @@ class _AdminEmployeeProfileEditFormWidgetState
             selectedSiteId: _selectedSiteId,
             selectedWorkSystem: _selectedWorkSystem,
             selectedRemoteWorkPolicyId: _selectedRemoteWorkPolicyId,
-            selectedShiftId: _selectedShiftId,
             selectedDirectManagerId: _selectedDirectManagerId,
             onDepartmentChanged: (val) => setState(() {
               _selectedDepartmentId = val;
@@ -361,7 +359,6 @@ class _AdminEmployeeProfileEditFormWidgetState
             }),
             onRemoteWorkPolicyChanged: (val) =>
                 setState(() => _selectedRemoteWorkPolicyId = val),
-            onShiftChanged: (val) => setState(() => _selectedShiftId = val),
             onManagerChanged: (val) =>
                 setState(() => _selectedDirectManagerId = val),
           ),

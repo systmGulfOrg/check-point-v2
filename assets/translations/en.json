@@ -605,6 +605,7 @@
   "admin.employeeWizard.usernameHint": "Enter username",
   "admin.employeeWizard.password": "Password",
   "admin.employeeWizard.passwordHint": "Enter password",
+  "admin.employeeWizard.defaultPasswordNote": "Default password: User123! — the user can change it later after login.",
   "admin.employeeWizard.departmentBranchRequired": "Please select department, branch, and shift.",
   "admin.employeeWizard.shiftRequired": "A shift must be selected for the employee.",
   "admin.employeeWizard.rolesRequired": "At least one role must be selected.",

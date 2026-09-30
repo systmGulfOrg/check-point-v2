@@ -37,6 +37,10 @@ mixin _$TenantModel {
   bool get isActive => throw _privateConstructorUsedError;
   @JsonKey(name: 'description')
   String? get description => throw _privateConstructorUsedError;
+  @JsonKey(name: 'roles')
+  List<String>? get roles => throw _privateConstructorUsedError;
+  @JsonKey(name: 'orgModel')
+  String? get orgModel => throw _privateConstructorUsedError;
 
   /// Serializes this TenantModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -64,6 +68,8 @@ abstract class $TenantModelCopyWith<$Res> {
     @JsonKey(name: 'status') String? status,
     @JsonKey(name: 'isActive') bool isActive,
     @JsonKey(name: 'description') String? description,
+    @JsonKey(name: 'roles') List<String>? roles,
+    @JsonKey(name: 'orgModel') String? orgModel,
   });
 }
 
@@ -90,6 +96,8 @@ class _$TenantModelCopyWithImpl<$Res, $Val extends TenantModel>
     Object? status = freezed,
     Object? isActive = null,
     Object? description = freezed,
+    Object? roles = freezed,
+    Object? orgModel = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -125,6 +133,14 @@ class _$TenantModelCopyWithImpl<$Res, $Val extends TenantModel>
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
                       as String?,
+            roles: freezed == roles
+                ? _value.roles
+                : roles // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+            orgModel: freezed == orgModel
+                ? _value.orgModel
+                : orgModel // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -149,6 +165,8 @@ abstract class _$$TenantModelImplCopyWith<$Res>
     @JsonKey(name: 'status') String? status,
     @JsonKey(name: 'isActive') bool isActive,
     @JsonKey(name: 'description') String? description,
+    @JsonKey(name: 'roles') List<String>? roles,
+    @JsonKey(name: 'orgModel') String? orgModel,
   });
 }
 
@@ -174,6 +192,8 @@ class __$$TenantModelImplCopyWithImpl<$Res>
     Object? status = freezed,
     Object? isActive = null,
     Object? description = freezed,
+    Object? roles = freezed,
+    Object? orgModel = freezed,
   }) {
     return _then(
       _$TenantModelImpl(
@@ -209,6 +229,14 @@ class __$$TenantModelImplCopyWithImpl<$Res>
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
                   as String?,
+        roles: freezed == roles
+            ? _value._roles
+            : roles // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+        orgModel: freezed == orgModel
+            ? _value.orgModel
+            : orgModel // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -226,7 +254,9 @@ class _$TenantModelImpl implements _TenantModel {
     @JsonKey(name: 'status') this.status,
     @JsonKey(name: 'isActive') this.isActive = true,
     @JsonKey(name: 'description') this.description,
-  });
+    @JsonKey(name: 'roles') final List<String>? roles,
+    @JsonKey(name: 'orgModel') this.orgModel,
+  }) : _roles = roles;
 
   factory _$TenantModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$TenantModelImplFromJson(json);
@@ -255,10 +285,24 @@ class _$TenantModelImpl implements _TenantModel {
   @override
   @JsonKey(name: 'description')
   final String? description;
+  final List<String>? _roles;
+  @override
+  @JsonKey(name: 'roles')
+  List<String>? get roles {
+    final value = _roles;
+    if (value == null) return null;
+    if (_roles is EqualUnmodifiableListView) return _roles;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  @JsonKey(name: 'orgModel')
+  final String? orgModel;
 
   @override
   String toString() {
-    return 'TenantModel(tenantId: $tenantId, tenantCode: $tenantCode, companyName: $companyName, logoUrl: $logoUrl, baseUrl: $baseUrl, status: $status, isActive: $isActive, description: $description)';
+    return 'TenantModel(tenantId: $tenantId, tenantCode: $tenantCode, companyName: $companyName, logoUrl: $logoUrl, baseUrl: $baseUrl, status: $status, isActive: $isActive, description: $description, roles: $roles, orgModel: $orgModel)';
   }
 
   @override
@@ -278,7 +322,10 @@ class _$TenantModelImpl implements _TenantModel {
             (identical(other.isActive, isActive) ||
                 other.isActive == isActive) &&
             (identical(other.description, description) ||
-                other.description == description));
+                other.description == description) &&
+            const DeepCollectionEquality().equals(other._roles, _roles) &&
+            (identical(other.orgModel, orgModel) ||
+                other.orgModel == orgModel));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -293,6 +340,8 @@ class _$TenantModelImpl implements _TenantModel {
     status,
     isActive,
     description,
+    const DeepCollectionEquality().hash(_roles),
+    orgModel,
   );
 
   /// Create a copy of TenantModel
@@ -319,6 +368,8 @@ abstract class _TenantModel implements TenantModel {
     @JsonKey(name: 'status') final String? status,
     @JsonKey(name: 'isActive') final bool isActive,
     @JsonKey(name: 'description') final String? description,
+    @JsonKey(name: 'roles') final List<String>? roles,
+    @JsonKey(name: 'orgModel') final String? orgModel,
   }) = _$TenantModelImpl;
 
   factory _TenantModel.fromJson(Map<String, dynamic> json) =
@@ -348,6 +399,12 @@ abstract class _TenantModel implements TenantModel {
   @override
   @JsonKey(name: 'description')
   String? get description;
+  @override
+  @JsonKey(name: 'roles')
+  List<String>? get roles;
+  @override
+  @JsonKey(name: 'orgModel')
+  String? get orgModel;
 
   /// Create a copy of TenantModel
   /// with the given fields replaced by the non-null parameter values.

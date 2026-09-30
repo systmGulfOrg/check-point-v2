@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/deleted_employees/admin_deleted_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/deleted_employees/admin_deleted_employees_state.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_requests_empty_state_widget.dart';
@@ -67,36 +68,45 @@ class AdminDeletedEmployeesBlocBuilderWidget extends StatelessWidget {
           AdminDeletedEmployeesStateLoading() =>
             const Center(child: CircularProgressIndicator()),
           AdminDeletedEmployeesStateError(:final messageKey) =>
-            AdminRequestsEmptyStateWidget(messageKey: messageKey),
+            context.read<AdminDeletedEmployeesCubit>().deletedEmployees.isNotEmpty
+                ? _buildList(
+                    context,
+                    context.read<AdminDeletedEmployeesCubit>().deletedEmployees,
+                  )
+                : AdminRequestsEmptyStateWidget(messageKey: messageKey),
           AdminDeletedEmployeesStateSuccess(:final employees) ||
           AdminDeletedEmployeesStateActionSuccess(:final employees) =>
             employees.isEmpty
                 ? const AdminRequestsEmptyStateWidget(
                     messageKey: 'admin.deletedEmployees.empty',
                   )
-                : ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: employees.length,
-                    separatorBuilder: (_, _) => hSpace(10),
-                    itemBuilder: (_, i) {
-                      final emp = employees[i];
-                      return AdminDeletedEmployeeCardWidget(
-                        employee: emp,
-                        onRestore: () => _showRestoreDialog(
-                          context,
-                          emp.id!,
-                          emp.name ?? '-',
-                        ),
-                        onPermanentDelete: () => _showPermanentDeleteDialog(
-                          context,
-                          emp.id!,
-                          emp.name ?? '-',
-                        ),
-                      );
-                    },
-                  ),
+                : _buildList(context, employees),
           _ => const SizedBox.shrink(),
         },
       );
+
+  Widget _buildList(BuildContext context, List<EmployeeModel> employees) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: employees.length,
+      separatorBuilder: (_, _) => hSpace(10),
+      itemBuilder: (_, i) {
+        final emp = employees[i];
+        return AdminDeletedEmployeeCardWidget(
+          employee: emp,
+          onRestore: () => _showRestoreDialog(
+            context,
+            emp.id!,
+            emp.name ?? '-',
+          ),
+          onPermanentDelete: () => _showPermanentDeleteDialog(
+            context,
+            emp.id!,
+            emp.name ?? '-',
+          ),
+        );
+      },
+    );
+  }
 }

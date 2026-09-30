@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_profile_card_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/edit_profile_sheet_widget.dart';
@@ -25,6 +27,14 @@ class AdminSettingsScreen extends StatelessWidget {
       ('ar', 'EG') => 'العامية المصرية',
       _ => 'العربية',
     };
+
+    final userName = context.select<AuthProfileCubit, String>(
+      (cubit) => cubit.state.maybeWhen(
+        success: (name, userId, role, username, permissions) =>
+            name.isNotEmpty ? name : username,
+        orElse: () => '',
+      ),
+    );
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -53,7 +63,9 @@ class AdminSettingsScreen extends StatelessWidget {
                 AdminSettingsTileWidget(
                   icon: Icons.person_outline_rounded,
                   titleKey: 'admin.settings.profileInfo',
-                  valueKey: 'admin.settings.userName',
+                  valueKey: userName.isNotEmpty
+                      ? userName
+                      : 'admin.settings.userName',
                   onTap: () => showEditProfileSheet(context),
                 ),
                 AdminSettingsTileWidget(

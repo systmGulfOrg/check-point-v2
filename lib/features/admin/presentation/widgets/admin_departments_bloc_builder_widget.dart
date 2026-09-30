@@ -5,6 +5,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/department_response_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_department_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
@@ -81,16 +82,22 @@ class AdminDepartmentsBlocBuilderWidget extends StatelessWidget {
         builder: (context, state) => switch (state) {
           AdminDepartmentsInitial() ||
           AdminDepartmentsLoading() => const AdminLocationsSkeletonWidget(),
-          AdminDepartmentsError(:final messageKey) => Padding(
-            padding: EdgeInsets.all(24.r),
-            child: Text(
-              messageKey.tr(context: context),
-              style: AppTextStyles.font14Regular.copyWith(
-                color: AppColors.error,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          AdminDepartmentsError(:final messageKey) =>
+            context.read<AdminDepartmentsCubit>().departments.isNotEmpty
+                ? _buildList(
+                    context,
+                    context.read<AdminDepartmentsCubit>().departments,
+                  )
+                : Padding(
+                    padding: EdgeInsets.all(24.r),
+                    child: Text(
+                      messageKey.tr(context: context),
+                      style: AppTextStyles.font14Regular.copyWith(
+                        color: AppColors.error,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
           AdminDepartmentsSuccess(:final departments) =>
             departments.isEmpty
                 ? Padding(
@@ -104,40 +111,44 @@ class AdminDepartmentsBlocBuilderWidget extends StatelessWidget {
                       ),
                     ),
                   )
-                : Column(
-                    children: [
-                      for (final dept in departments) ...[
-                        AdminDepartmentCardWidget(
-                          department: dept,
-                          onViewEmployees: () {
-                            if (dept.id != null) {
-                              _showEmployeesSheet(
-                                context,
-                                dept.id!,
-                                dept.departmentName ?? '',
-                              );
-                            }
-                          },
-                          onEdit: () {
-                            if (dept.id != null) {
-                              _showEditSheet(
-                                context,
-                                dept.id!,
-                                dept.departmentName ?? '',
-                              );
-                            }
-                          },
-                          onDelete: () {
-                            if (dept.id != null) {
-                              _showDeleteDialog(context, dept.id!);
-                            }
-                          },
-                        ),
-                        hSpace(10),
-                      ],
-                    ],
-                  ),
+                : _buildList(context, departments),
           _ => const SizedBox.shrink(),
         },
       );
+
+  Widget _buildList(BuildContext context, List<DepartmentModel> departments) {
+    return Column(
+      children: [
+        for (final dept in departments) ...[
+          AdminDepartmentCardWidget(
+            department: dept,
+            onViewEmployees: () {
+              if (dept.id != null) {
+                _showEmployeesSheet(
+                  context,
+                  dept.id!,
+                  dept.departmentName ?? '',
+                );
+              }
+            },
+            onEdit: () {
+              if (dept.id != null) {
+                _showEditSheet(
+                  context,
+                  dept.id!,
+                  dept.departmentName ?? '',
+                );
+              }
+            },
+            onDelete: () {
+              if (dept.id != null) {
+                _showDeleteDialog(context, dept.id!);
+              }
+            },
+          ),
+          hSpace(10),
+        ],
+      ],
+    );
+  }
 }

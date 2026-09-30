@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
 import 'admin_deleted_employees_state.dart';
 
@@ -9,12 +10,14 @@ class AdminDeletedEmployeesCubit extends Cubit<AdminDeletedEmployeesState> {
       : super(const AdminDeletedEmployeesState.initial());
 
   final AdminEmployeeRepo employeeRepo;
+  List<EmployeeModel> deletedEmployees = const [];
 
   Future<void> load() async {
     emit(const AdminDeletedEmployeesState.loading());
     final result = await employeeRepo.getDeletedEmployees();
     switch (result) {
       case Success(:final data):
+        deletedEmployees = data;
         emit(AdminDeletedEmployeesState.success(employees: data));
       case Failure(:final failure):
         emit(AdminDeletedEmployeesState.error(failure.messageKey));

@@ -10,12 +10,14 @@ class AdminPlansCubit extends Cubit<AdminPlansState> {
     : super(const AdminPlansState.initial());
 
   final AdminPlansRepo plansRepo;
+  List<AdminPlanModel> allPlans = const [];
 
   Future<void> loadPlans() async {
     emit(const AdminPlansState.loading());
     final result = await plansRepo.getPlans();
     switch (result) {
       case Success(:final data):
+        allPlans = data;
         emit(AdminPlansState.success(data));
       case Failure(:final failure):
         emit(AdminPlansState.error(failure.messageKey));

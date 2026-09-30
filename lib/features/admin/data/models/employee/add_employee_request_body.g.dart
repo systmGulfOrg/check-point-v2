@@ -18,7 +18,6 @@ AddEmployeeRequestBody _$AddEmployeeRequestBodyFromJson(
   departmentId: (json['departmentId'] as num?)?.toInt(),
   branchId: (json['branchId'] as num?)?.toInt(),
   siteId: json['siteId'] as String?,
-  shiftId: (json['shiftId'] as num?)?.toInt(),
   attendanceLocationType: json['attendanceLocationType'] as String?,
   branchIds: (json['branchIds'] as List<dynamic>?)
       ?.map((e) => (e as num).toInt())
@@ -56,7 +55,6 @@ Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
   'departmentId': instance.departmentId,
   'branchId': instance.branchId,
   'siteId': instance.siteId,
-  'shiftId': instance.shiftId,
   'attendanceLocationType': instance.attendanceLocationType,
   'branchIds': instance.branchIds,
   'siteIds': instance.siteIds,

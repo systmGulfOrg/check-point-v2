@@ -15,6 +15,8 @@ class TenantModel with _$TenantModel {
     @JsonKey(name: 'status') String? status,
     @JsonKey(name: 'isActive') @Default(true) bool isActive,
     @JsonKey(name: 'description') String? description,
+    @JsonKey(name: 'roles') List<String>? roles,
+    @JsonKey(name: 'orgModel') String? orgModel,
   }) = _TenantModel;
 
   factory TenantModel.fromJson(Map<String, dynamic> json) =>

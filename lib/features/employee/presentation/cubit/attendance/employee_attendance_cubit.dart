@@ -33,7 +33,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
   EmployeeModel? employeeProfile;
 
   Future<EmployeeModel?> loadEmployeeProfile() async {
-    final employeeId = await sessionStorage.readUserId();
+    final employeeId = await sessionStorage.readEmployeeId();
     if (employeeId == null || employeeId.isEmpty) return null;
     final result = await attendanceRepo.getEmployeeById(employeeId);
     return result.when(
@@ -61,7 +61,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
 
   Future<void> loadBranches() async {
     emit(const EmployeeAttendanceState.loading());
-    final employeeId = await sessionStorage.readUserId();
+    final employeeId = await sessionStorage.readEmployeeId();
     var branchId = await sessionStorage.readBranchId();
     if (employeeId != null && employeeId.isNotEmpty) {
       final employeeResult = await attendanceRepo.getEmployeeById(employeeId);
@@ -73,30 +73,33 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
         }
       }
     }
-    final ApiResult<List<BranchModel>> result;
-    if (branchId != null) {
-      final branchResult = await attendanceRepo.getBranchById(branchId);
-      result = await branchResult.when(
-        success: (data) async => ApiResult.success([data]),
-        failure: (_) => attendanceRepo.getBranches(),
-      );
-    } else {
-      result = await attendanceRepo.getBranches();
-    }
-    switch (result) {
+    final branchesResult = await attendanceRepo.getBranches();
+    switch (branchesResult) {
       case Success(:final data):
-        final assignedBranchIds = employeeProfile?.assignedBranchIds;
-        final branches = assignedBranchIds == null || assignedBranchIds.isEmpty
+        final allowedBranchIds = <int>{
+          if (employeeProfile?.branchId != null) employeeProfile!.branchId!,
+          ...?employeeProfile?.assignedBranchIds,
+        };
+        var branches = allowedBranchIds.isEmpty
             ? data
             : data
-                  .where(
-                    (branch) =>
-                        branch.id != null &&
-                        assignedBranchIds.contains(branch.id),
-                  )
-                  .toList();
+                .where((b) => b.id != null && allowedBranchIds.contains(b.id))
+                .toList();
+        if (branches.isEmpty && branchId != null) {
+          final singleBranch = await attendanceRepo.getBranchById(branchId);
+          if (singleBranch case Success(:final data)) {
+            branches = [data];
+          }
+        }
         emit(EmployeeAttendanceState.branchesLoaded(branches));
       case Failure(:final failure):
+        if (branchId != null) {
+          final singleBranch = await attendanceRepo.getBranchById(branchId);
+          if (singleBranch case Success(:final data)) {
+            emit(EmployeeAttendanceState.branchesLoaded([data]));
+            return;
+          }
+        }
         emit(EmployeeAttendanceState.error(failure.messageKey));
     }
   }
@@ -201,7 +204,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
 
   Future<void> loadAttendanceHistory() async {
     emit(const EmployeeAttendanceState.loading());
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     if (employeeId.isNotEmpty) {
       final profileResult = await attendanceRepo.getEmployeeById(employeeId);
       if (profileResult case Success(:final data)) {

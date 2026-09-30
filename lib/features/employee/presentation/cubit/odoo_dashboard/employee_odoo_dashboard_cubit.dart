@@ -17,7 +17,7 @@ class EmployeeOdooDashboardCubit extends Cubit<EmployeeOdooDashboardState> {
 
   Future<void> fetchDashboardData() async {
     emit(const EmployeeOdooDashboardState.loading());
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     try {
       final results = await Future.wait([
         odooTimeOffService.getAttendanceStatus(employeeId: employeeId),

@@ -34,73 +34,104 @@ class SupervisorLeaveRequestsBlocBuilderWidget extends StatelessWidget {
     ),
   ];
 
+  Widget _buildRequestsList(
+    BuildContext context,
+    SupervisorLeaveRequestsCubit cubit,
+    List<AdminLeaveRequestModel> requests,
+  ) {
+    return SupervisorLeaveRequestsListWidget(
+      requests: switch (selectedFilterIndex) {
+        1 =>
+          requests
+              .where(
+                (r) =>
+                    r.status?.toLowerCase() == 'pending' ||
+                    r.status?.toLowerCase() == 'pendinghr',
+              )
+              .toList(),
+        2 =>
+          requests
+              .where((r) => r.status?.toLowerCase() == 'approved')
+              .toList(),
+        3 =>
+          requests
+              .where((r) => r.status?.toLowerCase() == 'rejected')
+              .toList(),
+        _ => requests,
+      },
+      userRole: cubit.userRole,
+      onApprove: (req) {
+        if (req.ulid != null) {
+          cubit.approveRequest(
+            req.ulid!,
+            cubit.userRole,
+            currentStatus: req.status,
+          );
+        }
+      },
+      onReject: (req) {
+        if (req.ulid != null) {
+          _showRejectReasonDialog(
+            context,
+            cubit,
+            req.ulid!,
+            currentStatus: req.status,
+          );
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<SupervisorLeaveRequestsCubit>();
 
-    return BlocBuilder<
+    return BlocListener<
       SupervisorLeaveRequestsCubit,
       SupervisorLeaveRequestsState
     >(
-      builder: (context, state) {
-        return switch (state) {
-          SupervisorLeaveRequestsLoading() => const Skeletonizer(
-            enabled: true,
-            child: SupervisorLeaveRequestsListWidget(requests: _dummyRequests),
-          ),
-          SupervisorLeaveRequestsSuccess(:final requests) =>
-            SupervisorLeaveRequestsListWidget(
-              requests: switch (selectedFilterIndex) {
-                1 =>
-                  requests
-                      .where(
-                        (r) =>
-                            r.status?.toLowerCase() == 'pending' ||
-                            r.status?.toLowerCase() == 'pendinghr',
-                      )
-                      .toList(),
-                2 =>
-                  requests
-                      .where((r) => r.status?.toLowerCase() == 'approved')
-                      .toList(),
-                3 =>
-                  requests
-                      .where((r) => r.status?.toLowerCase() == 'rejected')
-                      .toList(),
-                _ => requests,
-              },
-              userRole: cubit.userRole,
-              onApprove: (req) {
-                if (req.ulid != null) {
-                  cubit.approveRequest(
-                    req.ulid!,
-                    cubit.userRole,
-                    currentStatus: req.status,
-                  );
-                }
-              },
-              onReject: (req) {
-                if (req.ulid != null) {
-                  _showRejectReasonDialog(
-                    context,
-                    cubit,
-                    req.ulid!,
-                    currentStatus: req.status,
-                  );
-                }
-              },
+      listener: (context, state) {
+        if (state is SupervisorLeaveRequestsError &&
+            cubit.allRequests.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.messageKey.tr(context: context)),
+              backgroundColor: AppColors.error,
             ),
-          SupervisorLeaveRequestsError(:final messageKey) => Center(
-            child: Text(
-              messageKey.tr(context: context),
-              style: AppTextStyles.font14Regular.copyWith(
-                color: AppColors.error,
-              ),
-            ),
-          ),
-          _ => const SupervisorLeaveRequestsListWidget(requests: []),
-        };
+          );
+        }
       },
+      child: BlocBuilder<
+        SupervisorLeaveRequestsCubit,
+        SupervisorLeaveRequestsState
+      >(
+        builder: (context, state) {
+          return switch (state) {
+            SupervisorLeaveRequestsLoading() => cubit.allRequests.isNotEmpty
+                ? _buildRequestsList(context, cubit, cubit.allRequests)
+                : const Skeletonizer(
+                    enabled: true,
+                    child: SupervisorLeaveRequestsListWidget(
+                      requests: _dummyRequests,
+                    ),
+                  ),
+            SupervisorLeaveRequestsSuccess(:final requests) =>
+              _buildRequestsList(context, cubit, requests),
+            SupervisorLeaveRequestsError(:final messageKey) =>
+              cubit.allRequests.isNotEmpty
+                  ? _buildRequestsList(context, cubit, cubit.allRequests)
+                  : Center(
+                      child: Text(
+                        messageKey.tr(context: context),
+                        style: AppTextStyles.font14Regular.copyWith(
+                          color: AppColors.error,
+                        ),
+                      ),
+                    ),
+            _ => const SupervisorLeaveRequestsListWidget(requests: []),
+          };
+        },
+      ),
     );
   }
 

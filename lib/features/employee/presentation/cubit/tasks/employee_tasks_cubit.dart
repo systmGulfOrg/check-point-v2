@@ -16,14 +16,16 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
   final EmployeeActionRepo actionRepo;
   final AuthSessionStorage sessionStorage;
 
+  List<AdminTaskModel> myTasks = const [];
   List<EmployeeModel> teamMembers = const [];
 
   Future<void> loadMyTasks() async {
     emit(const EmployeeTasksState.loading());
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     final result = await actionRepo.getEmployeeTasks(employeeId);
     switch (result) {
       case Success(:final data):
+        myTasks = data;
         emit(EmployeeTasksState.success(data));
       case Failure(:final failure):
         emit(EmployeeTasksState.error(failure.messageKey));
@@ -31,7 +33,7 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
   }
 
   Future<void> loadTeamMembers() async {
-    final employeeId = await sessionStorage.readUserId();
+    final employeeId = await sessionStorage.readEmployeeId();
     if (employeeId == null || employeeId.isEmpty) return;
     var departmentId = await sessionStorage.readDepartmentId();
     if (departmentId == null) {
@@ -112,7 +114,7 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
 
   Future<void> removeTask(int taskId) async {
     emit(const EmployeeTasksState.loading());
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     final requestBody = EmployeeRemoveTaskRequestBody(
       taskId: taskId,
       employeeId: employeeId,

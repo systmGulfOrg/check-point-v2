@@ -14,7 +14,6 @@ class AddEmployeeRequestBody {
     required this.departmentId,
     this.branchId,
     this.siteId,
-    required this.shiftId,
     this.attendanceLocationType,
     this.branchIds,
     this.siteIds,
@@ -43,7 +42,6 @@ class AddEmployeeRequestBody {
   final int? departmentId;
   final int? branchId;
   final String? siteId;
-  final int? shiftId;
   final String? attendanceLocationType;
   final List<int>? branchIds;
   final List<String>? siteIds;

@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
 class BiometricAuthService {
@@ -5,14 +6,24 @@ class BiometricAuthService {
 
   final LocalAuthentication localAuthentication;
 
+  static const Set<String> _bypassErrorCodes = {
+    'NotEnrolled',
+    'notEnrolled',
+    'NotAvailable',
+    'notAvailable',
+    'PasscodeNotSet',
+    'passcodeNotSet',
+    'OtherOperatingSystem',
+    'otherOperatingSystem',
+  };
+
   Future<bool> isAvailable() async {
     try {
       final canCheckBiometrics = await localAuthentication.canCheckBiometrics;
-      final isDeviceSupported = await localAuthentication.isDeviceSupported();
-      // `biometricOnly: false` also permits the device credential (PIN,
-      // pattern, or password). Do not reject supported devices just because
-      // they do not report an enrolled biometric sensor.
-      return canCheckBiometrics || isDeviceSupported;
+      if (!canCheckBiometrics) return false;
+      final availableBiometrics =
+          await localAuthentication.getAvailableBiometrics();
+      return availableBiometrics.isNotEmpty;
     } catch (_) {
       return false;
     }
@@ -21,12 +32,17 @@ class BiometricAuthService {
   Future<bool> authenticate({required String localizedReason}) async {
     try {
       final available = await isAvailable();
-      if (!available) return false;
+      if (!available) return true;
 
       return await localAuthentication.authenticate(
         localizedReason: localizedReason,
         biometricOnly: false,
       );
+    } on PlatformException catch (e) {
+      if (_bypassErrorCodes.contains(e.code)) {
+        return true;
+      }
+      return false;
     } catch (_) {
       return false;
     }

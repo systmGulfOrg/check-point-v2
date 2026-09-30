@@ -16,7 +16,7 @@ class EmployeeWorkAccessCubit extends Cubit<EmployeeWorkAccessState> {
 
   Future<void> load() async {
     emit(const EmployeeWorkAccessState.loading());
-    final employeeId = await sessionStorage.readUserId();
+    final employeeId = await sessionStorage.readEmployeeId();
     if (employeeId == null || employeeId.isEmpty) {
       emit(const EmployeeWorkAccessState.denied('remoteWork.accessDenied'));
       return;

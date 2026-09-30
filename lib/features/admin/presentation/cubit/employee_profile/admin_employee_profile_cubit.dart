@@ -23,6 +23,13 @@ class AdminEmployeeProfileCubit extends Cubit<AdminEmployeeProfileState> {
   final AdminApiService adminApiService;
   final LeavesApiService leavesApiService;
 
+  @override
+  void emit(AdminEmployeeProfileState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   EmployeeModel? employee;
   List<AdminAttendanceModel> allAttendance = const [];
   DateTime selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);

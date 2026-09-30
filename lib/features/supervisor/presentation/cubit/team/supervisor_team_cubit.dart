@@ -11,6 +11,7 @@ class SupervisorTeamCubit extends Cubit<SupervisorTeamState> {
 
   final SupervisorTeamRepo teamRepo;
   List<EmployeeModel> _allMembers = const [];
+  List<EmployeeModel> get allMembers => _allMembers;
 
   Future<void> loadTeam({int? departmentId}) async {
     emit(const SupervisorTeamState.loading());

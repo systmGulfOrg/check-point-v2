@@ -59,8 +59,6 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<ProjectsCubit>();
-
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -83,15 +81,19 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
       ),
       body: BlocBuilder<ProjectsCubit, ProjectsState>(
         builder: (context, state) {
+          final cubit = context.read<ProjectsCubit>();
           final allTasks = state is ProjectsStateSuccess
               ? state.tasks
-              : const <ProjectTaskModel>[];
+              : (cubit.cachedTasks.isNotEmpty ? cubit.cachedTasks : const <ProjectTaskModel>[]);
           final boardProject = state is ProjectsStateSuccess
               ? state.projects.firstWhere(
                   (item) => item.id == project.id,
                   orElse: () => project,
                 )
-              : project;
+              : cubit.cachedProjects.firstWhere(
+                  (item) => item.id == project.id,
+                  orElse: () => project,
+                );
 
           final tasks = _filterTasks(allTasks);
 

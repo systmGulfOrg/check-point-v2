@@ -21,11 +21,13 @@ LoginResponseModel _$LoginResponseModelFromJson(Map<String, dynamic> json) =>
       token: json['token'] as String?,
       branchId: (json['branchId'] as num?)?.toInt(),
       branchName: json['branchName'] as String?,
+      employeeId: json['employeeId'] as String?,
     );
 
 Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'employeeId': instance.employeeId,
       'userName': instance.userName,
       'name': instance.name,
       'role': instance.role,

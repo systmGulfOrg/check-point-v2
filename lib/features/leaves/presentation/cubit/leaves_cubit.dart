@@ -25,6 +25,8 @@ class LeavesCubit extends Cubit<LeavesState> {
   }
 
   List<LeaveTypeModel> leaveTypes = [];
+  List<LeaveBalanceModel> cachedBalances = const [];
+  List<LeaveRequestModel> cachedRequests = const [];
 
   Future<void> loadLeavesData() async {
     emit(const LeavesState.loading());
@@ -41,7 +43,7 @@ class LeavesCubit extends Cubit<LeavesState> {
     );
     final requests = requestsResult.when(
       success: (data) => data,
-      failure: (_) => const <LeaveRequestModel>[],
+      failure: (_) => cachedRequests,
     );
 
     final balancesResult = await leavesRepo.getLeaveBalances(
@@ -50,9 +52,11 @@ class LeavesCubit extends Cubit<LeavesState> {
     );
     final balances = balancesResult.when(
       success: (data) => data,
-      failure: (_) => const <LeaveBalanceModel>[],
+      failure: (_) => cachedBalances,
     );
 
+    cachedBalances = balances;
+    cachedRequests = requests;
     emit(LeavesState.success(balances, types, requests));
   }
 

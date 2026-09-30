@@ -96,62 +96,78 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
         AdminEmployeesStateInitial() => const SizedBox.shrink(),
         AdminEmployeesStateLoading() => const AdminEmployeesSkeletonWidget(),
         AdminEmployeesStateError(:final messageKey) =>
-          AdminRequestsEmptyStateWidget(messageKey: messageKey),
+          context.read<AdminEmployeesCubit>().allEmployees.isNotEmpty
+              ? _buildEmployeeList(
+                  context,
+                  context.read<AdminEmployeesCubit>().allEmployees,
+                  canEdit,
+                  canDelete,
+                )
+              : AdminRequestsEmptyStateWidget(messageKey: messageKey),
         AdminEmployeesStateSuccess(:final employees) ||
         AdminEmployeesStateActionSuccess(:final employees) =>
           employees.isEmpty
               ? AdminRequestsEmptyStateWidget(
                   messageKey: 'admin.employees.empty',
                 )
-              : Column(
-                  children: [
-                    Text(
-                      'admin.employees.countHeader'.tr(
-                        context: context,
-                        args: [employees.length.toString()],
-                      ),
-                      style: AppTextStyles.font13Regular.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    hSpace(12),
-                    for (final employee in employees) ...[
-                      AdminEmployeeCardWidget(
-                        initials: _initials(employee.name),
-                        name: employee.name ?? employee.userName ?? '-',
-                        roles: employee.allRoles,
-                        email:
-                            (employee.email != null &&
-                                employee.email!.isNotEmpty)
-                            ? employee.email!
-                            : (employee.userName ?? '-'),
-                        empCode: employee.employeeCode ?? employee.id ?? '-',
-                        department: employee.departmentName,
-                        isOnline: employee.canAddAttendance ?? false,
-                        onEdit: canEdit
-                            ? () => _showEditSheet(context, employee)
-                            : null,
-                        onDelete: canDelete
-                            ? () {
-                                if (employee.id != null) {
-                                  _showDeleteDialog(context, employee.id!);
-                                }
-                              }
-                            : null,
-                        onTap: () => Navigator.pushNamed(
-                          context,
-                          AppRoutes.adminEmployeeProfile,
-                          arguments: employee,
-                        ),
-                      ),
-                      hSpace(10),
-                    ],
-                  ],
-                ),
+              : _buildEmployeeList(context, employees, canEdit, canDelete),
         _ => const SizedBox.shrink(),
       };
     },
   );
+
+  Widget _buildEmployeeList(
+    BuildContext context,
+    List<EmployeeModel> employees,
+    bool canEdit,
+    bool canDelete,
+  ) {
+    return Column(
+      children: [
+        Text(
+          'admin.employees.countHeader'.tr(
+            context: context,
+            args: [employees.length.toString()],
+          ),
+          style: AppTextStyles.font13Regular.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+        hSpace(12),
+        for (final employee in employees) ...[
+          AdminEmployeeCardWidget(
+            initials: _initials(employee.name),
+            name: employee.name ?? employee.userName ?? '-',
+            roles: employee.allRoles,
+            email:
+                (employee.email != null &&
+                    employee.email!.isNotEmpty)
+                ? employee.email!
+                : (employee.userName ?? '-'),
+            empCode: employee.employeeCode ?? employee.id ?? '-',
+            department: employee.departmentName,
+            isOnline: employee.canAddAttendance ?? false,
+            onEdit: canEdit
+                ? () => _showEditSheet(context, employee)
+                : null,
+            onDelete: canDelete
+                ? () {
+                    if (employee.id != null) {
+                      _showDeleteDialog(context, employee.id!);
+                    }
+                  }
+                : null,
+            onTap: () => Navigator.pushNamed(
+              context,
+              AppRoutes.adminEmployeeProfile,
+              arguments: employee,
+            ),
+          ),
+          hSpace(10),
+        ],
+      ],
+    );
+  }
 
   static String _initials(String? name) {
     final parts = (name ?? '').trim().split(RegExp(r'\s+'));

@@ -54,54 +54,7 @@ class _TenantLookupFormWidgetState extends State<TenantLookupFormWidget> {
               return null;
             },
           ),
-          hSpace(12),
-          Wrap(
-            spacing: 8.w,
-            runSpacing: 6.h,
-            children: [
-              ActionChip(
-                backgroundColor: AppColors.selectedBackground,
-                side: BorderSide.none,
-                label: Text(
-                  'samco',
-                  style: AppTextStyles.font12Medium.copyWith(
-                    color: AppColors.brandPrimaryDark,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                onPressed: () {
-                  _companyCodeController.text = 'samco';
-                },
-              ),
-              ActionChip(
-                backgroundColor: AppColors.softBrandBackground,
-                side: BorderSide.none,
-                label: Text(
-                  'demo',
-                  style: AppTextStyles.font12Medium.copyWith(
-                    color: AppColors.brandPrimaryDark,
-                  ),
-                ),
-                onPressed: () {
-                  _companyCodeController.text = 'demo';
-                },
-              ),
-              ActionChip(
-                backgroundColor: AppColors.softBrandBackground,
-                side: BorderSide.none,
-                label: Text(
-                  'systm-gulf',
-                  style: AppTextStyles.font12Medium.copyWith(
-                    color: AppColors.brandPrimaryDark,
-                  ),
-                ),
-                onPressed: () {
-                  _companyCodeController.text = 'systm-gulf';
-                },
-              ),
-            ],
-          ),
-          hSpace(18),
+          hSpace(20),
           TenantLookupSubmitButtonWidget(onSubmit: _submit),
           hSpace(16),
           Container(

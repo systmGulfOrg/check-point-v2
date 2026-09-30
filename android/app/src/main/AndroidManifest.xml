@@ -9,10 +9,11 @@
     <application
         android:label="check_point_v2"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+        android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBmhmNVQufGCy8Iruka77zE4C0Uq2YpDDI" />
+            android:value="AIzaSyCOKj0u3xqiP3nIXKN5LI7u4mwHHR9degE" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

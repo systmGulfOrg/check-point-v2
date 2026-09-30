@@ -245,9 +245,145 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 ],
               ),
             ),
-          ProjectsStateError() => Center(
-              child: Text('errors.server'.tr(context: context)),
-            ),
+          ProjectsStateError(:final messageKey) =>
+            context.read<ProjectsCubit>().cachedProjects.isNotEmpty
+                ? RefreshIndicator(
+                    color: AppColors.brandPrimary,
+                    onRefresh: context.read<ProjectsCubit>().loadProjects,
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 12.h),
+                            child: Column(
+                              children: [
+                                // Search Box
+                                CustomTextFormField(
+                                  hintText: 'projects.searchProjectsHint'
+                                      .tr(context: context),
+                                  controller: _searchController,
+                                  prefixIcon: const Icon(
+                                    Icons.search_rounded,
+                                    color: AppColors.textSecondary,
+                                    size: 20,
+                                  ),
+                                  suffixIcon: _searchQuery.isNotEmpty
+                                      ? IconButton(
+                                          icon: const Icon(
+                                            Icons.close_rounded,
+                                            size: 18,
+                                            color: AppColors.textSecondary,
+                                          ),
+                                          onPressed: () {
+                                            _searchController.clear();
+                                            setState(() => _searchQuery = '');
+                                          },
+                                        )
+                                      : null,
+                                  onChanged: (val) =>
+                                      setState(() => _searchQuery = val),
+                                ),
+                                hSpace(12),
+                                // Count & Create Project Header
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${context.read<ProjectsCubit>().cachedProjects.length} ${'projects.title'.tr(context: context)}',
+                                      style: AppTextStyles.font13Regular
+                                          .copyWith(
+                                            color: AppColors.textSecondary,
+                                          ),
+                                    ),
+                                    if (canManage)
+                                      TextButton.icon(
+                                        onPressed: () =>
+                                            _createOrEditProject(context),
+                                        icon: const Icon(
+                                          Icons.add_rounded,
+                                          size: 18,
+                                          color: AppColors.brandPrimary,
+                                        ),
+                                        label: Text(
+                                          'projects.createProject'
+                                              .tr(context: context),
+                                          style: AppTextStyles.font13SemiBold
+                                              .copyWith(
+                                                color:
+                                                    AppColors.brandPrimary,
+                                              ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (_filterProjects(context.read<ProjectsCubit>().cachedProjects).isEmpty)
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.folder_open_rounded,
+                                    size: 56.r,
+                                    color: AppColors.placeholder,
+                                  ),
+                                  hSpace(12),
+                                  Text(
+                                    'projects.empty'.tr(context: context),
+                                    style: AppTextStyles.font14Regular.copyWith(
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        else
+                          SliverPadding(
+                            padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
+                            sliver: SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  final filtered = _filterProjects(
+                                    context.read<ProjectsCubit>().cachedProjects,
+                                  );
+                                  final project = filtered[index];
+                                  return ProjectCardWidget(
+                                    project: project,
+                                    onTap: () => _openBoard(project),
+                                    onEdit: canManage
+                                        ? () => _createOrEditProject(
+                                              context,
+                                              project: project,
+                                            )
+                                        : null,
+                                    onDelete: canManage
+                                        ? () => _confirmDeleteProject(
+                                              context,
+                                              project,
+                                            )
+                                        : null,
+                                  );
+                                },
+                                childCount: _filterProjects(
+                                  context.read<ProjectsCubit>().cachedProjects,
+                                ).length,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  )
+                : Center(
+                    child: Text(messageKey.tr(context: context)),
+                  ),
           ProjectsStateInitial() => const SizedBox.shrink(),
           _ => const SizedBox.shrink(),
         },

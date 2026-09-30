@@ -10,17 +10,13 @@ import 'package:check_point_v2/features/admin/data/models/account_requests/appro
 import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/department_response_model.dart';
-import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
-import 'package:check_point_v2/features/admin/presentation/widgets/admin_new_shift_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_wizard_field_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_wizard_stepper_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_employee_work_system_widget.dart';
@@ -57,7 +53,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
   final Set<int> selectedBranchIds = {};
   final Set<String> selectedSiteIds = {};
   String attendanceLocationType = 'branch';
-  int? selectedShiftId;
   String? selectedDirectManagerId;
   bool canAddAttendance = true;
   bool canAddPlan = true;
@@ -66,6 +61,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
   String? saveErrorMessage;
   String selectedWorkSystem = 'onsite';
   String? selectedRemoteWorkPolicyId;
+  bool obscurePassword = false;
 
   static const List<String> availableRoles = ['HR', 'Supervisor', 'Contractor'];
 
@@ -82,7 +78,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
             )
           : '',
     );
-    passwordController = TextEditingController();
+    passwordController = TextEditingController(text: 'User123!');
     mobileController = TextEditingController(
       text: widget.accountRequest?.mobileId,
     );
@@ -128,27 +124,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
               : null
         : null,
   );
-
-  void _openAddShiftSheet() async {
-    final shiftsCubit = context.read<AdminShiftsPoliciesCubit>();
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppColors.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-      ),
-      builder: (_) => BlocProvider.value(
-        value: shiftsCubit,
-        child: const AdminNewShiftSheetWidget(),
-      ),
-    );
-    if (mounted && shiftsCubit.shifts.isNotEmpty) {
-      setState(() {
-        selectedShiftId = shiftsCubit.shifts.last.id;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -282,12 +257,94 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                             label: 'admin.employeeWizard.password'.tr(
                               context: context,
                             ),
-                            child: textField(
-                              'admin.employeeWizard.passwordHint'.tr(
-                                context: context,
-                              ),
-                              controller: passwordController,
-                              obscureText: true,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                textField(
+                                  'admin.employeeWizard.passwordHint'.tr(
+                                    context: context,
+                                  ),
+                                  controller: passwordController,
+                                  obscureText: obscurePassword,
+                                  suffixIcon: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if (passwordController.text != 'User123!')
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                            padding:
+                                                EdgeInsetsDirectional.symmetric(
+                                                  horizontal: 8.w,
+                                                ),
+                                            minimumSize: Size.zero,
+                                            tapTargetSize: MaterialTapTargetSize
+                                                .shrinkWrap,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              passwordController.text =
+                                                  'User123!';
+                                            });
+                                          },
+                                          child: Text(
+                                            'User123!',
+                                            style: AppTextStyles.font12Medium
+                                                .copyWith(
+                                                  color: AppColors.brandPrimary,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                          ),
+                                        ),
+                                      IconButton(
+                                        icon: Icon(
+                                          obscurePassword
+                                              ? Icons.visibility_outlined
+                                              : Icons.visibility_off_outlined,
+                                          color: AppColors.placeholder,
+                                          size: 20.r,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            obscurePassword = !obscurePassword;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                hSpace(6),
+                                Container(
+                                  padding: EdgeInsetsDirectional.symmetric(
+                                    horizontal: 10.w,
+                                    vertical: 6.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.softBrandBackground,
+                                    borderRadius: BorderRadius.circular(8.r),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.info_outline_rounded,
+                                        size: 14.r,
+                                        color: AppColors.brandPrimary,
+                                      ),
+                                      wSpace(6),
+                                      Expanded(
+                                        child: Text(
+                                          'admin.employeeWizard.defaultPasswordNote'
+                                              .tr(context: context),
+                                          style: AppTextStyles.font11Regular
+                                              .copyWith(
+                                                color:
+                                                    AppColors.brandPrimaryDark,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           AdminWizardFieldWidget(
@@ -314,10 +371,8 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                                     );
                                     CustomSnackBar.showSuccess(
                                       context,
-                                      message:
-                                          'admin.requests.copiedMobileId'.tr(
-                                        context: context,
-                                      ),
+                                      message: 'admin.requests.copiedMobileId'
+                                          .tr(context: context),
                                     );
                                   }
                                 },
@@ -689,96 +744,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                                 );
                               },
                             ),
-                          BlocBuilder<
-                            AdminShiftsPoliciesCubit,
-                            AdminShiftsPoliciesState
-                          >(
-                            builder: (context, shiftState) {
-                              final rawShifts = shiftState.maybeWhen(
-                                success: (shifts, _) => shifts,
-                                orElse: () => context
-                                    .read<AdminShiftsPoliciesCubit>()
-                                    .shifts,
-                              );
-                              final shifts = <ShiftModel>[];
-                              final seenIds = <int>{};
-                              for (final s in rawShifts) {
-                                final id = s.id;
-                                if (id != null && seenIds.add(id)) {
-                                  shifts.add(s);
-                                }
-                              }
-                              final hasSelected = shifts.any(
-                                (s) => s.id == selectedShiftId,
-                              );
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'admin.employeeWizard.shift'.tr(
-                                          context: context,
-                                        ),
-                                        style: AppTextStyles.font13SemiBold,
-                                      ),
-                                      TextButton.icon(
-                                        onPressed: _openAddShiftSheet,
-                                        icon: Icon(
-                                          Icons.add_rounded,
-                                          size: 16.r,
-                                        ),
-                                        label: Text(
-                                          'admin.employeeWizard.addShift'.tr(
-                                            context: context,
-                                          ),
-                                          style: AppTextStyles.font12Bold
-                                              .copyWith(
-                                                color: AppColors.brandPrimary,
-                                              ),
-                                        ),
-                                        style: TextButton.styleFrom(
-                                          padding: EdgeInsets.zero,
-                                          visualDensity: VisualDensity.compact,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  hSpace(4),
-                                  DropdownButtonFormField<int>(
-                                    key: ValueKey(
-                                      'shift_${hasSelected ? selectedShiftId : 'none'}',
-                                    ),
-                                    initialValue: hasSelected
-                                        ? selectedShiftId
-                                        : null,
-                                    isExpanded: true,
-                                    hint: Text(
-                                      'admin.employeeWizard.selectShift'.tr(
-                                        context: context,
-                                      ),
-                                    ),
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: AppColors.fieldBackground,
-                                    ),
-                                    items: shifts
-                                        .map(
-                                          (s) => DropdownMenuItem<int>(
-                                            value: s.id,
-                                            child: Text(s.name ?? '-'),
-                                          ),
-                                        )
-                                        .toList(),
-                                    onChanged: (val) =>
-                                        setState(() => selectedShiftId = val),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
                           BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
                             builder: (context, empState) {
                               final employees = context
@@ -880,7 +845,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                               ),
                             ('Department ID', '${selectedDepartmentId ?? '-'}'),
                             ('Branch ID', '${selectedBranchId ?? '-'}'),
-                            ('Shift ID', '${selectedShiftId ?? '-'}'),
                           ])
                             Padding(
                               padding: EdgeInsets.only(bottom: 13.h),
@@ -979,12 +943,10 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                               if (selectedDepartmentId == null ||
                                   (attendanceLocationType == 'branch'
                                       ? selectedBranchId == null
-                                      : selectedSiteIds.isEmpty) ||
-                                  selectedShiftId == null) {
+                                      : selectedSiteIds.isEmpty)) {
                                 setState(() {
-                                  saveErrorMessage = selectedShiftId == null
-                                      ? 'admin.employeeWizard.shiftRequired'
-                                      : 'admin.employeeWizard.departmentBranchRequired';
+                                  saveErrorMessage =
+                                      'admin.employeeWizard.departmentBranchRequired';
                                 });
                                 return;
                               }
@@ -999,12 +961,10 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           if (selectedDepartmentId == null ||
                               (attendanceLocationType == 'branch'
                                   ? selectedBranchId == null
-                                  : selectedSiteIds.isEmpty) ||
-                              selectedShiftId == null) {
+                                  : selectedSiteIds.isEmpty)) {
                             setState(() {
-                              saveErrorMessage = selectedShiftId == null
-                                  ? 'admin.employeeWizard.shiftRequired'
-                                  : 'admin.employeeWizard.departmentBranchRequired';
+                              saveErrorMessage =
+                                  'admin.employeeWizard.departmentBranchRequired';
                             });
                             return;
                           }
@@ -1022,11 +982,16 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                             final approveBody = ApproveAccountRequestBody(
                               userName: usernameController.text.trim(),
                               password: passwordController.text.trim(),
-                              role: selectedRoles.first,
-                              roles: selectedRoles.toList(),
+                              role: selectedRoles.contains('HR')
+                                  ? 'HR'
+                                  : selectedRoles.contains('Supervisor')
+                                  ? 'Supervisor'
+                                  : 'Employee',
+                              roles: selectedRoles
+                                  .map((r) => r == 'Contractor' ? 'Employee' : r)
+                                  .toList(),
                               departmentId: selectedDepartmentId,
                               branchId: selectedBranchId,
-                              shiftId: selectedShiftId,
                               workSystem: selectedWorkSystem,
                               remoteWorkPolicyId: selectedRemoteWorkPolicyId,
                               position: positionController.text.trim(),
@@ -1070,8 +1035,14 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                               password: passwordController.text.trim(),
                               position: positionController.text.trim(),
                               mobileId: mobileController.text.trim(),
-                              role: selectedRoles.first,
-                              roles: selectedRoles.toList(),
+                              role: selectedRoles.contains('HR')
+                                  ? 'HR'
+                                  : selectedRoles.contains('Supervisor')
+                                  ? 'Supervisor'
+                                  : 'Employee',
+                              roles: selectedRoles
+                                  .map((r) => r == 'Contractor' ? 'Employee' : r)
+                                  .toList(),
                               departmentId: selectedDepartmentId!,
                               branchId: attendanceLocationType == 'branch'
                                   ? selectedBranchId
@@ -1081,7 +1052,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                                         ? null
                                         : selectedSiteIds.first
                                   : null,
-                              shiftId: selectedShiftId!,
                               attendanceLocationType: attendanceLocationType,
                               branchIds: attendanceLocationType == 'branch'
                                   ? {

@@ -118,6 +118,11 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                   }
                 },
                 builder: (context, state) {
+                  final cubit = context.read<EmployeeLeaveRequestsCubit>();
+                  final bool hasCachedLeaves =
+                      cubit.leaveRequests.isNotEmpty ||
+                      cubit.odooLeaveRequests.isNotEmpty;
+
                   final allLeaves = switch (state) {
                     EmployeeLeaveRequestsStateSuccess(:final leaveRequests) =>
                       leaveRequests
@@ -156,7 +161,43 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                             ),
                           )
                           .toList(),
-                    _ => const <EmployeeLeaveData>[],
+                    _ => cubit.leaveRequests.isNotEmpty
+                        ? cubit.leaveRequests
+                            .map(
+                              (l) => EmployeeLeaveData(
+                                id: '${l.id ?? 0}',
+                                leaveType: l.leaveType ?? 'Leave',
+                                status: l.status ?? 'Pending',
+                                dateRange:
+                                    '${l.startDate ?? ''} – ${l.endDate ?? ''}',
+                                reason:
+                                    l.reason != null ? '"${l.reason}"' : null,
+                                appliedDate: 'Request #${l.id ?? 0}',
+                                managerName: l.managerName,
+                                managerActionAt: l.managerActionAt,
+                                managerRejectionReason:
+                                    l.managerRejectionReason,
+                                hrName: l.hrName,
+                                hrActionAt: l.hrActionAt,
+                                hrRejectionReason: l.hrRejectionReason,
+                              ),
+                            )
+                            .toList()
+                        : cubit.odooLeaveRequests
+                            .map(
+                              (l) => EmployeeLeaveData(
+                                id: '${l.id}',
+                                leaveType: l.leaveTypeName,
+                                status:
+                                    l.state.isNotEmpty ? l.state : 'Pending',
+                                dateRange: '${l.dateFrom} – ${l.dateTo}',
+                                reason: l.reason.isNotEmpty
+                                    ? '"${l.reason}"'
+                                    : null,
+                                appliedDate: 'Odoo #${l.id}',
+                              ),
+                            )
+                            .toList(),
                   };
 
                   final pendingCount = allLeaves
@@ -184,7 +225,7 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                     _ => false,
                   };
 
-                  if (isLoading) {
+                  if (isLoading && !hasCachedLeaves) {
                     return Expanded(
                       child: Skeletonizer(
                         child: RefreshIndicator(
@@ -215,11 +256,13 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                   if (state case EmployeeLeaveRequestsStateError(
                     :final messageKey,
                   )) {
-                    return Expanded(
-                      child: Center(
-                        child: Text(messageKey.tr(context: context)),
-                      ),
-                    );
+                    if (!hasCachedLeaves) {
+                      return Expanded(
+                        child: Center(
+                          child: Text(messageKey.tr(context: context)),
+                        ),
+                      );
+                    }
                   }
 
                   return Expanded(

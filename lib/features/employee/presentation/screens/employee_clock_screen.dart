@@ -143,6 +143,7 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(messageKey.tr(context: context)),
+                            backgroundColor: AppColors.error,
                           ),
                         );
                       default:
@@ -153,14 +154,25 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                     final cubit = context.read<EmployeeAttendanceCubit>();
                     final attendance = cubit.todayAttendance;
                     final profile = cubit.employeeProfile;
+                    final clockIn =
+                        profile?.todayWorkStart ??
+                        profile?.workPolicy?.workingHoursStart ??
+                        profile?.clockInTime;
+                    final clockOut =
+                        profile?.todayWorkEnd ??
+                        profile?.workPolicy?.workingHoursEnd ??
+                        profile?.clockOutTime;
+                    final policyName =
+                        profile?.workPolicy?.name ??
+                        profile?.shiftName ??
+                        'employee.home.defaultPolicy'.tr(context: context);
                     final isCheckedIn =
                         cubit.hasClockIn(attendance) &&
                         !cubit.hasClockOut(attendance);
                     final hasCheckedOut = cubit.hasClockOut(attendance);
                     return EmployeeClockCardWidget(
                       policyText:
-                          '${profile?.shiftName ?? 'employee.home.defaultPolicy'.tr(context: context)} — '
-                          '${AppDateFormatter.formatTimeString(profile?.clockInTime)}–${AppDateFormatter.formatTimeString(profile?.clockOutTime)}',
+                          '$policyName — ${AppDateFormatter.formatTimeString(clockIn)} – ${AppDateFormatter.formatTimeString(clockOut)}',
                       checkInTime: AppDateFormatter.formatTimeString(
                         attendance?.clockInTime,
                       ),

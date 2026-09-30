@@ -12,7 +12,6 @@ class ApproveAccountRequestBody {
     this.roles,
     this.departmentId,
     this.branchId,
-    this.shiftId,
     this.position,
     this.employeeCode,
     this.email,
@@ -28,7 +27,6 @@ class ApproveAccountRequestBody {
   final List<String>? roles;
   final int? departmentId;
   final int? branchId;
-  final int? shiftId;
   final String? position;
   final String? employeeCode;
   final String? email;

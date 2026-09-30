@@ -10,6 +10,7 @@ class AdminTasksCubit extends Cubit<AdminTasksState> {
     : super(const AdminTasksState.initial());
 
   final AdminTasksRepo tasksRepo;
+  List<AdminTaskModel> allTasks = const [];
 
   Future<void> loadTasks({int? departmentId, String? employeeId}) async {
     emit(const AdminTasksState.loading());
@@ -19,6 +20,7 @@ class AdminTasksCubit extends Cubit<AdminTasksState> {
     );
     switch (result) {
       case Success(:final data):
+        allTasks = data;
         emit(AdminTasksState.success(data));
       case Failure(:final failure):
         emit(AdminTasksState.error(failure.messageKey));

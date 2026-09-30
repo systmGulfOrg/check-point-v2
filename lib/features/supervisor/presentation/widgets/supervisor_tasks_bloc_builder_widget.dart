@@ -56,38 +56,33 @@ class SupervisorTasksBlocBuilderWidget extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final cubit = context.read<SupervisorTasksCubit>();
-
-    return BlocBuilder<SupervisorTasksCubit, SupervisorTasksState>(
-      builder: (context, state) {
-        return switch (state) {
-          SupervisorTasksLoading() => const Skeletonizer(
-            enabled: true,
-            child: SupervisorTasksListWidget(tasks: _dummyTasks),
-          ),
-          SupervisorTasksSuccess(:final tasks) => SupervisorTasksListWidget(
-            tasks: switch (selectedFilterIndex) {
-              0 =>
-                tasks
-                    .where(
-                      (t) =>
-                          t.status?.toLowerCase() != 'completed' &&
-                          t.status?.toLowerCase() != 'done',
-                    )
-                    .toList(),
-              1 =>
-                tasks
-                    .where(
-                      (t) =>
-                          t.status?.toLowerCase() == 'completed' ||
-                          t.status?.toLowerCase() == 'done',
-                    )
-                    .toList(),
-              _ => tasks,
-            },
-            onEdit: canManageTasks ? (task) {
+  Widget _buildTasksList(
+    BuildContext context,
+    SupervisorTasksCubit cubit,
+    List<AdminTaskModel> tasks,
+  ) {
+    return SupervisorTasksListWidget(
+      tasks: switch (selectedFilterIndex) {
+        0 =>
+          tasks
+              .where(
+                (t) =>
+                    t.status?.toLowerCase() != 'completed' &&
+                    t.status?.toLowerCase() != 'done',
+              )
+              .toList(),
+        1 =>
+          tasks
+              .where(
+                (t) =>
+                    t.status?.toLowerCase() == 'completed' ||
+                    t.status?.toLowerCase() == 'done',
+              )
+              .toList(),
+        _ => tasks,
+      },
+      onEdit: canManageTasks
+          ? (task) {
               showModalBottomSheet<void>(
                 context: context,
                 isScrollControlled: true,
@@ -105,37 +100,71 @@ class SupervisorTasksBlocBuilderWidget extends StatelessWidget {
                   child: SupervisorEditTaskSheetWidget(task: task),
                 ),
               );
-            } : null,
-            onStatusToggle: (task) {
-              if (task.id != null) {
-                final isDone =
-                    task.status?.toLowerCase() == 'completed' ||
-                    task.status?.toLowerCase() == 'done';
-                cubit.updateTaskStatus(
-                  SupervisorUpdateTaskStatusRequestBody(
-                    id: task.id!,
-                    status: isDone ? 'In Progress' : 'Completed',
-                  ),
-                );
-              }
-            },
-            onDelete: canManageTasks ? (task) {
+            }
+          : null,
+      onStatusToggle: (task) {
+        if (task.id != null) {
+          final isDone =
+              task.status?.toLowerCase() == 'completed' ||
+              task.status?.toLowerCase() == 'done';
+          cubit.updateTaskStatus(
+            SupervisorUpdateTaskStatusRequestBody(
+              id: task.id!,
+              status: isDone ? 'In Progress' : 'Completed',
+            ),
+          );
+        }
+      },
+      onDelete: canManageTasks
+          ? (task) {
               if (task.id != null) {
                 _showDeleteDialog(context, cubit, task.id!);
               }
-            } : null,
-          ),
-          SupervisorTasksError(:final messageKey) => Center(
-            child: Text(
-              messageKey.tr(context: context),
-              style: AppTextStyles.font14Regular.copyWith(
-                color: AppColors.error,
-              ),
+            }
+          : null,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.read<SupervisorTasksCubit>();
+
+    return BlocListener<SupervisorTasksCubit, SupervisorTasksState>(
+      listener: (context, state) {
+        if (state is SupervisorTasksError && cubit.allTasks.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.messageKey.tr(context: context)),
+              backgroundColor: AppColors.error,
             ),
-          ),
-          _ => const SupervisorTasksListWidget(tasks: []),
-        };
+          );
+        }
       },
+      child: BlocBuilder<SupervisorTasksCubit, SupervisorTasksState>(
+        builder: (context, state) {
+          return switch (state) {
+            SupervisorTasksLoading() => cubit.allTasks.isNotEmpty
+                ? _buildTasksList(context, cubit, cubit.allTasks)
+                : const Skeletonizer(
+                    enabled: true,
+                    child: SupervisorTasksListWidget(tasks: _dummyTasks),
+                  ),
+            SupervisorTasksSuccess(:final tasks) =>
+              _buildTasksList(context, cubit, tasks),
+            SupervisorTasksError(:final messageKey) => cubit.allTasks.isNotEmpty
+                ? _buildTasksList(context, cubit, cubit.allTasks)
+                : Center(
+                    child: Text(
+                      messageKey.tr(context: context),
+                      style: AppTextStyles.font14Regular.copyWith(
+                        color: AppColors.error,
+                      ),
+                    ),
+                  ),
+            _ => const SupervisorTasksListWidget(tasks: []),
+          };
+        },
+      ),
     );
   }
 }

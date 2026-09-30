@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_request_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_locations_repo.dart';
 import 'admin_customers_state.dart';
 
@@ -10,6 +11,7 @@ class AdminCustomersCubit extends Cubit<AdminCustomersState> {
     : super(const AdminCustomersState.initial());
   final AdminLocationsRepo locationsRepo;
   String currentType = 'Customer';
+  List<CustomerModel> customers = const [];
 
   Future<void> load({required String type}) async {
     currentType = type.toLowerCase() == 'site' ? 'Site' : 'Customer';
@@ -17,6 +19,7 @@ class AdminCustomersCubit extends Cubit<AdminCustomersState> {
     final result = await locationsRepo.getCustomersByType(currentType);
     switch (result) {
       case Success(:final data):
+        customers = data;
         emit(AdminCustomersState.success(data));
       case Failure(:final failure):
         emit(AdminCustomersState.error(failure.messageKey));

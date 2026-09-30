@@ -19,7 +19,7 @@ class EmployeeCheckOutUseCase {
     String? selectedImageBase64,
     LatLng? currentLocation,
   }) async {
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     final requestBody = EmployeeCheckOutRequestBody(
       employeeId: employeeId,
       employeeImage: selectedImageBase64,

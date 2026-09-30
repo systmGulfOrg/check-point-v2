@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_action_repo.dart';
 import 'package:check_point_v2/features/employee/data/services/odoo_timeoff_service.dart';
@@ -22,12 +23,15 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
   List<OdooLeaveType> leaveTypes = [];
   OdooLeaveType? selectedLeaveType;
   List<OdooPublicHoliday> publicHolidays = [];
+  List<AdminLeaveRequestModel> leaveRequests = const [];
+  List<OdooLeaveRequest> odooLeaveRequests = const [];
 
   Future<void> loadLeaveRequests() async {
     emit(const EmployeeLeaveRequestsState.loading());
     final result = await leaveRequestsUseCase.getNativeLeaveRequests();
     switch (result) {
       case Success(:final data):
+        leaveRequests = data;
         emit(EmployeeLeaveRequestsState.success(data));
       case Failure(:final failure):
         emit(EmployeeLeaveRequestsState.error(failure.messageKey));
@@ -151,6 +155,7 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
       final reqs = await leaveRequestsUseCase.getOdooLeaveRequests(
         stateFilter: stateFilter,
       );
+      odooLeaveRequests = reqs;
       emit(EmployeeLeaveRequestsState.odooSuccess(reqs));
     } catch (e) {
       emit(

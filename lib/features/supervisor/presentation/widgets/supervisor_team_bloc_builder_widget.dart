@@ -33,49 +33,74 @@ class SupervisorTeamBlocBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SupervisorTeamCubit, SupervisorTeamState>(
-      builder: (context, state) {
-        return switch (state) {
-          SupervisorTeamLoading() => Skeletonizer(
-            enabled: true,
-            child: ListView.separated(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.only(bottom: 24.h),
-              itemCount: _dummyEmployees.length,
-              separatorBuilder: (_, _) => hSpace(10),
-              itemBuilder: (context, index) => SupervisorTeamMemberCardWidget(
-                employee: _dummyEmployees[index],
-              ),
+    final cubit = context.read<SupervisorTeamCubit>();
+
+    return BlocListener<SupervisorTeamCubit, SupervisorTeamState>(
+      listener: (context, state) {
+        if (state is SupervisorTeamError && cubit.allMembers.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.messageKey.tr(context: context)),
+              backgroundColor: AppColors.error,
             ),
-          ),
-          SupervisorTeamSuccess(:final members) => SupervisorTeamListWidget(
-            team: members,
-            searchQuery: searchQuery,
-          ),
-          SupervisorTeamError(:final messageKey) => Center(
-            child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 40.h),
-                  child: Center(
-                    child: Text(
-                      messageKey.tr(context: context),
-                      style: AppTextStyles.font14Regular.copyWith(
-                        color: AppColors.error,
-                      ),
+          );
+        }
+      },
+      child: BlocBuilder<SupervisorTeamCubit, SupervisorTeamState>(
+        builder: (context, state) {
+          return switch (state) {
+            SupervisorTeamLoading() => cubit.allMembers.isNotEmpty
+                ? SupervisorTeamListWidget(
+                    team: cubit.allMembers,
+                    searchQuery: searchQuery,
+                  )
+                : Skeletonizer(
+                    enabled: true,
+                    child: ListView.separated(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.only(bottom: 24.h),
+                      itemCount: _dummyEmployees.length,
+                      separatorBuilder: (_, _) => hSpace(10),
+                      itemBuilder: (context, index) =>
+                          SupervisorTeamMemberCardWidget(
+                            employee: _dummyEmployees[index],
+                          ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          _ => ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            children: [hSpace(1)],
-          ),
-        };
-      },
+            SupervisorTeamSuccess(:final members) => SupervisorTeamListWidget(
+                team: members,
+                searchQuery: searchQuery,
+              ),
+            SupervisorTeamError(:final messageKey) => cubit.allMembers.isNotEmpty
+                ? SupervisorTeamListWidget(
+                    team: cubit.allMembers,
+                    searchQuery: searchQuery,
+                  )
+                : Center(
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 40.h),
+                          child: Center(
+                            child: Text(
+                              messageKey.tr(context: context),
+                              style: AppTextStyles.font14Regular.copyWith(
+                                color: AppColors.error,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+            _ => ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [hSpace(1)],
+              ),
+          };
+        },
+      ),
     );
   }
 }

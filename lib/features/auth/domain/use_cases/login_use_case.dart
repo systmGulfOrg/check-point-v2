@@ -50,6 +50,7 @@ class LoginUseCase {
         await authSessionStorage.saveUserSession(
           token: data.token ?? '',
           userId: data.id,
+          employeeId: data.employeeId,
           userName: data.userName ?? data.name,
           role: role,
           branchId: data.branchId,

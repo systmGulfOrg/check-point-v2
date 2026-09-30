@@ -21,6 +21,11 @@ class SupervisorAttendanceCubit extends Cubit<SupervisorAttendanceState> {
   List<AdminAttendanceModel> _earlyLeavers = const [];
   int _selectedFilterIndex = 0;
 
+  List<AdminAttendanceModel> get allAttendance => _allAttendance;
+  List<AdminAttendanceModel> get lateComers => _lateComers;
+  List<AdminAttendanceModel> get earlyLeavers => _earlyLeavers;
+  int get selectedFilterIndex => _selectedFilterIndex;
+
   Future<void> loadAttendance({int? departmentId, String? date}) async {
     emit(const SupervisorAttendanceState.loading());
     final day = date ?? DateTime.now().toIso8601String().substring(0, 10);
@@ -34,17 +39,17 @@ class SupervisorAttendanceCubit extends Cubit<SupervisorAttendanceState> {
 
     _allAttendance = attResult.when(
       success: (data) => data,
-      failure: (_) => const [],
+      failure: (_) => _allAttendance,
     );
 
     _lateComers = lateResult.when(
       success: (data) => data,
-      failure: (_) => const [],
+      failure: (_) => _lateComers,
     );
 
     _earlyLeavers = earlyResult.when(
       success: (data) => data,
-      failure: (_) => const [],
+      failure: (_) => _earlyLeavers,
     );
 
     emit(

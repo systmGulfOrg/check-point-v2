@@ -85,6 +85,7 @@ class _AdminEditEmployeeSheetWidgetState
     );
 
     _selectedRoles = widget.employee.allRoles
+        .map((role) => role.toLowerCase() == 'employee' ? 'Contractor' : role)
         .where(
           (role) => const {'HR', 'Supervisor', 'Contractor'}.contains(role),
         )
@@ -155,8 +156,14 @@ class _AdminEditEmployeeSheetWidgetState
         employeeCode: _employeeCodeController.text.trim().isNotEmpty
             ? _employeeCodeController.text.trim()
             : null,
-        role: _selectedRoles.first,
-        roles: _selectedRoles.toList(),
+        role: _selectedRoles.contains('HR')
+            ? 'HR'
+            : _selectedRoles.contains('Supervisor')
+            ? 'Supervisor'
+            : 'Employee',
+        roles: _selectedRoles
+            .map((r) => r == 'Contractor' ? 'Employee' : r)
+            .toList(),
         departmentId: _selectedDepartmentId,
         branchId: _selectedBranchId,
         directManagerId: _selectedDirectManagerId,

@@ -166,9 +166,12 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                             ),
                           );
                         case EmployeeAttendanceStateError(:final messageKey):
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(SnackBar(content: Text(messageKey)));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(messageKey.tr(context: context)),
+                              backgroundColor: AppColors.error,
+                            ),
+                          );
                         default:
                           break;
                       }
@@ -213,12 +216,17 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                       final holidayGreeting = profile?.todayHoliday?.greeting ??
                           profile?.holidayMessage;
 
+                      final policyName =
+                          profile?.workPolicy?.name ??
+                          profile?.shiftName ??
+                          'employee.home.defaultPolicy'.tr(context: context);
+
                       return Skeletonizer(
                         enabled: state is EmployeeAttendanceStateLoading,
                         child: EmployeeTodayCardWidget(
                           policyText:
-                              '${profile?.shiftName ?? 'employee.home.defaultPolicy'.tr(context: context)} — '
-                              '${AppDateFormatter.formatTimeString(clockIn)}–${AppDateFormatter.formatTimeString(clockOut)}',
+                              '$policyName — '
+                              '${AppDateFormatter.formatTimeString(clockIn)} – ${AppDateFormatter.formatTimeString(clockOut)}',
                           isOnTime: attendance?.isLate != true,
                           checkInTime: AppDateFormatter.formatTimeString(
                             attendance?.clockInTime,

@@ -12,13 +12,17 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   await setupServiceLocator();
 
-  await sl<TenantStorage>().saveTenant(
-    const TenantModel(
-      tenantId: AppConfig.tenantId,
-      tenantCode: AppConfig.tenantCode,
-      companyName: AppConfig.tenantCompanyName,
-    ),
-  );
+  final tenantStorage = sl<TenantStorage>();
+  final savedTenant = await tenantStorage.readTenant();
+  if (savedTenant == null) {
+    await tenantStorage.saveTenant(
+      const TenantModel(
+        tenantId: AppConfig.tenantId,
+        tenantCode: AppConfig.tenantCode,
+        companyName: AppConfig.tenantCompanyName,
+      ),
+    );
+  }
 
   runApp(
     EasyLocalization(

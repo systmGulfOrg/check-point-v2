@@ -5,6 +5,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/edit_profile_sheet_widget.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
@@ -24,11 +25,19 @@ class SupervisorProfileOptionsWidget extends StatelessWidget {
       _ => 'العربية',
     };
 
+    final userName = context.select<AuthProfileCubit, String>(
+      (cubit) => cubit.state.maybeWhen(
+        success: (name, userId, role, username, permissions) =>
+            name.isNotEmpty ? name : username,
+        orElse: () => '',
+      ),
+    );
+
     final options = <(IconData, String, String?, VoidCallback?)>[
       (
         Icons.person_outline_rounded,
         'supervisor.profile.profileInformation',
-        null,
+        userName.isNotEmpty ? userName : null,
         () => showEditProfileSheet(context),
       ),
       (

@@ -16,6 +16,9 @@ import 'package:check_point_v2/features/auth/presentation/widgets/brand_header_w
 import 'package:check_point_v2/features/auth/presentation/widgets/login_bloc_listener_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/login_submit_button_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/login_account_request_status_bloc_builder_widget.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/core/tenant/tenant_storage.dart';
+import 'package:check_point_v2/features/tenant/data/models/tenant_model.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/role_switcher_widget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,11 +29,35 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  static const _roles = <String>[
-    'auth.role.hr',
-    'auth.role.supervisor',
-    'auth.role.contractor',
-  ];
+  TenantModel? _currentTenant;
+
+  List<String> get _roles {
+    final tenant = _currentTenant;
+    if (tenant?.roles != null && tenant!.roles!.isNotEmpty) {
+      final mapped = tenant.roles!.map((r) => switch (r.toLowerCase()) {
+        'admin' || 'hr' => 'auth.role.hr',
+        'supervisor' || 'site supervisor' => 'auth.role.supervisor',
+        'contractor' => 'auth.role.contractor',
+        'employee' || 'worker' => 'auth.role.employee',
+        _ => 'auth.role.hr',
+      }).toSet().toList();
+      if (mapped.isNotEmpty) return mapped;
+    }
+    final isContractorOrg = tenant?.orgModel == 'contractor_worker' ||
+        (tenant?.tenantCode?.toLowerCase().contains('samco') ?? true);
+    if (isContractorOrg) {
+      return const [
+        'auth.role.hr',
+        'auth.role.supervisor',
+        'auth.role.contractor',
+      ];
+    }
+    return const [
+      'auth.role.hr',
+      'auth.role.supervisor',
+      'auth.role.employee',
+    ];
+  }
 
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -44,12 +71,25 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _biometricLoginAttempted = false;
   bool _hasSavedBiometric = false;
   bool _isBiometricSupported = false;
-  String _selectedRole = _roles.first;
+  late String _selectedRole;
 
   @override
   void initState() {
     super.initState();
+    _selectedRole = _roles.first;
+    _loadTenant();
     _checkBiometricSupport();
+  }
+
+  Future<void> _loadTenant() async {
+    final tenant = await sl<TenantStorage>().readTenant();
+    if (!mounted) return;
+    setState(() {
+      _currentTenant = tenant;
+      if (!_roles.contains(_selectedRole)) {
+        _selectedRole = _roles.first;
+      }
+    });
   }
 
   Future<void> _checkBiometricSupport() async {
@@ -275,8 +315,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             password: _passwordController.text,
                             role: switch (_selectedRole) {
                               'auth.role.hr' => 'HR',
+                              'auth.role.admin' => 'Admin',
                               'auth.role.supervisor' => 'Supervisor',
                               'auth.role.contractor' => 'Contractor',
+                              'auth.role.employee' => 'Employee',
                               _ => 'HR',
                             },
                             enableBiometricLogin: _enableBiometricLogin,

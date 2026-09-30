@@ -49,33 +49,35 @@ class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
                     case EmployeePlansStateError(:final messageKey):
                       ScaffoldMessenger.of(
                         context,
-                      ).showSnackBar(SnackBar(content: Text(messageKey)));
+                      ).showSnackBar(SnackBar(content: Text(messageKey.tr(context: context))));
                     default:
                       break;
                   }
                 },
                 builder: (context, state) {
-                  final plans = switch (state) {
-                    EmployeePlansStateSuccess(:final plans) =>
-                      plans
-                          .map(
-                            (p) => EmployeePlanData(
-                              id: '${p.id ?? 0}',
-                              title: p.title ?? 'Plan #${p.id ?? 0}',
-                              dateTime: p.planDate ?? DateTime.now().toString(),
-                              planType: p.planType ?? 'Mission',
-                              description: p.notes ?? '',
-                              status: p.status ?? 'planned',
-                              assignees: const ['EM'],
-                            ),
-                          )
-                          .toList(),
-                    _ => const <EmployeePlanData>[],
+                  final cubit = context.read<EmployeePlansCubit>();
+                  final rawPlans = switch (state) {
+                    EmployeePlansStateSuccess(:final plans) => plans,
+                    _ => cubit.myPlans,
                   };
+                  final plans = rawPlans
+                      .map(
+                        (p) => EmployeePlanData(
+                          id: '${p.id ?? 0}',
+                          title: p.title ?? 'Plan #${p.id ?? 0}',
+                          dateTime: p.planDate ?? DateTime.now().toString(),
+                          planType: p.planType ?? 'Mission',
+                          description: p.notes ?? '',
+                          status: p.status ?? 'planned',
+                          assignees: const ['EM'],
+                        ),
+                      )
+                      .toList();
 
                   return Expanded(
                     child: switch (state) {
-                      EmployeePlansStateLoading() => Skeletonizer(
+                      EmployeePlansStateLoading() when cubit.myPlans.isEmpty =>
+                        Skeletonizer(
                           child: RefreshIndicator(
                             color: AppColors.brandPrimary,
                             onRefresh: context

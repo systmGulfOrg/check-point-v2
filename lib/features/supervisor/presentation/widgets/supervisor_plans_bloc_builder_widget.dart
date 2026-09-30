@@ -51,32 +51,62 @@ class SupervisorPlansBlocBuilderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<SupervisorPlansCubit>();
 
-    return BlocBuilder<SupervisorPlansCubit, SupervisorPlansState>(
-      builder: (context, state) {
-        return switch (state) {
-          SupervisorPlansLoading() => const Skeletonizer(
-            enabled: true,
-            child: SupervisorPlansListWidget(plans: _dummyPlans),
-          ),
-          SupervisorPlansSuccess(:final plans) => SupervisorPlansListWidget(
-            plans: plans,
-            onDelete: (plan) {
-              if (plan.id != null) {
-                _showDeleteDialog(context, cubit, plan.id!);
-              }
-            },
-          ),
-          SupervisorPlansError(:final messageKey) => Center(
-            child: Text(
-              messageKey.tr(context: context),
-              style: AppTextStyles.font14Regular.copyWith(
-                color: AppColors.error,
-              ),
+    return BlocListener<SupervisorPlansCubit, SupervisorPlansState>(
+      listener: (context, state) {
+        if (state is SupervisorPlansError && cubit.allPlans.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.messageKey.tr(context: context)),
+              backgroundColor: AppColors.error,
             ),
-          ),
-          _ => const SupervisorPlansListWidget(plans: []),
-        };
+          );
+        }
       },
+      child: BlocBuilder<SupervisorPlansCubit, SupervisorPlansState>(
+        builder: (context, state) {
+          return switch (state) {
+            SupervisorPlansLoading() => cubit.allPlans.isNotEmpty
+                ? SupervisorPlansListWidget(
+                    plans: cubit.allPlans,
+                    onDelete: (plan) {
+                      if (plan.id != null) {
+                        _showDeleteDialog(context, cubit, plan.id!);
+                      }
+                    },
+                  )
+                : const Skeletonizer(
+                    enabled: true,
+                    child: SupervisorPlansListWidget(plans: _dummyPlans),
+                  ),
+            SupervisorPlansSuccess(:final plans) => SupervisorPlansListWidget(
+                plans: plans,
+                onDelete: (plan) {
+                  if (plan.id != null) {
+                    _showDeleteDialog(context, cubit, plan.id!);
+                  }
+                },
+              ),
+            SupervisorPlansError(:final messageKey) => cubit.allPlans.isNotEmpty
+                ? SupervisorPlansListWidget(
+                    plans: cubit.allPlans,
+                    onDelete: (plan) {
+                      if (plan.id != null) {
+                        _showDeleteDialog(context, cubit, plan.id!);
+                      }
+                    },
+                  )
+                : Center(
+                    child: Text(
+                      messageKey.tr(context: context),
+                      style: AppTextStyles.font14Regular.copyWith(
+                        color: AppColors.error,
+                      ),
+                    ),
+                  ),
+            _ => const SupervisorPlansListWidget(plans: []),
+          };
+        },
+      ),
     );
   }
 }

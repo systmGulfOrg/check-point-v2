@@ -8,13 +8,33 @@ import 'projects_state.dart';
 class ProjectsCubit extends Cubit<ProjectsState> {
   ProjectsCubit({required this.repo}) : super(const ProjectsState.initial());
   final ProjectsRepo repo;
+  List<ProjectModel> _cachedProjects = const [];
+  List<ProjectTaskModel> _cachedTasks = const [];
+  String? _selectedProjectId;
+
+  List<ProjectModel> get cachedProjects => _cachedProjects;
+  List<ProjectTaskModel> get cachedTasks => _cachedTasks;
+  String? get selectedProjectId => _selectedProjectId;
 
   Future<void> loadProjects() async {
-    emit(const ProjectsState.loading());
+    if (_cachedProjects.isEmpty) {
+      emit(const ProjectsState.loading());
+    }
     final result = await repo.getProjects();
     result.when(
-      success: (projects) => emit(ProjectsState.success(projects: projects)),
-      failure: (failure) => emit(ProjectsState.error(failure.messageKey)),
+      success: (projects) {
+        _cachedProjects = projects;
+        emit(
+          ProjectsState.success(
+            projects: projects,
+            selectedProjectId: _selectedProjectId,
+            tasks: _cachedTasks,
+          ),
+        );
+      },
+      failure: (failure) {
+        emit(ProjectsState.error(failure.messageKey));
+      },
     );
   }
 
@@ -43,24 +63,30 @@ class ProjectsCubit extends Cubit<ProjectsState> {
   }
 
   Future<void> openProject(ProjectModel project) async {
+    _selectedProjectId = project.id;
     final current = state;
-    if (current is! ProjectsStateSuccess) return;
+    final projects = current is ProjectsStateSuccess
+        ? current.projects
+        : _cachedProjects;
     emit(
       ProjectsState.success(
-        projects: current.projects,
+        projects: projects,
         selectedProjectId: project.id,
-        tasks: current.tasks,
+        tasks: _cachedTasks,
       ),
     );
     final result = await repo.getTasks(project.id);
     result.when(
-      success: (tasks) => emit(
-        ProjectsState.success(
-          projects: current.projects,
-          selectedProjectId: project.id,
-          tasks: tasks,
-        ),
-      ),
+      success: (tasks) {
+        _cachedTasks = tasks;
+        emit(
+          ProjectsState.success(
+            projects: projects,
+            selectedProjectId: project.id,
+            tasks: tasks,
+          ),
+        );
+      },
       failure: (failure) => emit(ProjectsState.error(failure.messageKey)),
     );
   }
@@ -199,15 +225,18 @@ class ProjectsCubit extends Cubit<ProjectsState> {
   ProjectModel _project(String id) {
     final current = state;
     if (current is ProjectsStateSuccess) {
-      return current.projects.firstWhere((p) => p.id == id);
+      final project = current.projects.where((p) => p.id == id).firstOrNull;
+      if (project != null) return project;
     }
-    throw StateError('Project is not loaded');
+    final cached = _cachedProjects.where((p) => p.id == id).firstOrNull;
+    if (cached != null) return cached;
+    return ProjectModel(id: id, name: '', code: '');
   }
 
   Future<void> _reloadSelected() async {
-    final current = state;
-    if (current is ProjectsStateSuccess && current.selectedProjectId != null) {
-      await openProject(_project(current.selectedProjectId!));
+    final selectedId = _selectedProjectId;
+    if (selectedId != null) {
+      await openProject(_project(selectedId));
     }
   }
 }

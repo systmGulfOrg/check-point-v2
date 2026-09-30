@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
 import 'admin_branch_card_widget.dart';
@@ -68,43 +69,53 @@ class AdminBranchesBlocBuilderWidget extends StatelessWidget {
           // starts and the API response is available.
           AdminBranchesInitial() => const AdminLocationsSkeletonWidget(),
           AdminBranchesLoading() => const AdminLocationsSkeletonWidget(),
-          AdminBranchesError(:final messageKey) => Text(
-            messageKey.tr(context: context),
-          ),
+          AdminBranchesError(:final messageKey) =>
+            context.read<AdminBranchesCubit>().branches.isNotEmpty
+                ? _buildList(
+                    context,
+                    context.read<AdminBranchesCubit>().branches,
+                  )
+                : Text(
+                    messageKey.tr(context: context),
+                  ),
           AdminBranchesSuccess(:final branches) =>
             branches.isEmpty
                 ? Text('admin.locations.empty'.tr(context: context))
-                : Column(
-                    children: [
-                      for (final branch in branches) ...[
-                        AdminBranchCardWidget(
-                          branch: branch,
-                          onEdit: () {
-                            if (branch.id != null) {
-                              final points = (branch.coordinates ?? [])
-                                  .map((c) => LatLng(c.latitude, c.longitude))
-                                  .toList();
-                              _showEditSheet(
-                                context,
-                                branch.id!,
-                                branch.name ?? '',
-                                branch.location ?? '',
-                                branch.description ?? '',
-                                points,
-                              );
-                            }
-                          },
-                          onDelete: () {
-                            if (branch.id != null) {
-                              _showDeleteDialog(context, branch.id!);
-                            }
-                          },
-                        ),
-                        hSpace(10),
-                      ],
-                    ],
-                  ),
+                : _buildList(context, branches),
           _ => const SizedBox.shrink(),
         },
       );
+
+  Widget _buildList(BuildContext context, List<BranchModel> branches) {
+    return Column(
+      children: [
+        for (final branch in branches) ...[
+          AdminBranchCardWidget(
+            branch: branch,
+            onEdit: () {
+              if (branch.id != null) {
+                final points = (branch.coordinates ?? [])
+                    .map((c) => LatLng(c.latitude, c.longitude))
+                    .toList();
+                _showEditSheet(
+                  context,
+                  branch.id!,
+                  branch.name ?? '',
+                  branch.location ?? '',
+                  branch.description ?? '',
+                  points,
+                );
+              }
+            },
+            onDelete: () {
+              if (branch.id != null) {
+                _showDeleteDialog(context, branch.id!);
+              }
+            },
+          ),
+          hSpace(10),
+        ],
+      ],
+    );
+  }
 }

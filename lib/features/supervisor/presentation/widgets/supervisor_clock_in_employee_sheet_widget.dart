@@ -90,11 +90,14 @@ class _SupervisorClockInEmployeeSheetWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 16.h),
-        child: SingleChildScrollView(
-          child: Column(
+    return ScaffoldMessenger(
+      child: Scaffold(
+        backgroundColor: AppColors.cardBackground,
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 16.h),
+            child: SingleChildScrollView(
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -229,6 +232,8 @@ class _SupervisorClockInEmployeeSheetWidgetState
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 }

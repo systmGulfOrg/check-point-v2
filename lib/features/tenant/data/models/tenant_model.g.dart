@@ -16,6 +16,10 @@ _$TenantModelImpl _$$TenantModelImplFromJson(Map<String, dynamic> json) =>
       status: json['status'] as String?,
       isActive: json['isActive'] as bool? ?? true,
       description: json['description'] as String?,
+      roles: (json['roles'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      orgModel: json['orgModel'] as String?,
     );
 
 Map<String, dynamic> _$$TenantModelImplToJson(_$TenantModelImpl instance) =>
@@ -28,6 +32,8 @@ Map<String, dynamic> _$$TenantModelImplToJson(_$TenantModelImpl instance) =>
       'status': instance.status,
       'isActive': instance.isActive,
       'description': instance.description,
+      'roles': instance.roles,
+      'orgModel': instance.orgModel,
     };
 
 _$TenantLookupResponseModelImpl _$$TenantLookupResponseModelImplFromJson(

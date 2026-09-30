@@ -536,6 +536,7 @@
   "admin.employeeWizard.usernameHint": "أدخل اسم المستخدم",
   "admin.employeeWizard.password": "كلمة المرور",
   "admin.employeeWizard.passwordHint": "أدخل كلمة المرور",
+  "admin.employeeWizard.defaultPasswordNote": "كلمة المرور الافتراضية: User123! — يمكن للمستخدم تغييرها بعد تسجيل الدخول.",
   "admin.employeeWizard.departmentBranchRequired": "من فضلك اختر القسم والفرع والوردية.",
   "admin.employeeWizard.shiftRequired": "يجب اختيار وردية للموظف.",
   "admin.employeeWizard.rolesRequired": "يجب اختيار دور واحد على الأقل.",

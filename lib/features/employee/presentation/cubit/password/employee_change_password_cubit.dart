@@ -20,7 +20,7 @@ class EmployeeChangePasswordCubit extends Cubit<EmployeeChangePasswordState> {
     required String newPassword,
   }) async {
     emit(const EmployeeChangePasswordState.loading());
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     final requestBody = EmployeeChangePasswordRequestBody(
       employeeId: employeeId,
       oldPassword: oldPassword,

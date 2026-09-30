@@ -280,24 +280,27 @@ class _EmployeeAttendanceLocationSheetWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<EmployeeAttendanceCubit, EmployeeAttendanceState>(
-      listener: (context, state) {
-        switch (state) {
-          case EmployeeAttendanceStateError(:final messageKey):
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(messageKey.tr(context: context)),
-                backgroundColor: AppColors.error,
-              ),
-            );
-          default:
-            break;
-        }
-      },
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 12.h),
-          child: SingleChildScrollView(
+    return ScaffoldMessenger(
+      child: Scaffold(
+        backgroundColor: AppColors.cardBackground,
+        body: BlocListener<EmployeeAttendanceCubit, EmployeeAttendanceState>(
+          listener: (context, state) {
+            switch (state) {
+              case EmployeeAttendanceStateError(:final messageKey):
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(messageKey.tr(context: context)),
+                    backgroundColor: AppColors.error,
+                  ),
+                );
+              default:
+                break;
+            }
+          },
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 12.h),
+              child: SingleChildScrollView(
             child: BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
               builder: (context, state) {
                 final branches = switch (state) {
@@ -341,7 +344,14 @@ class _EmployeeAttendanceLocationSheetWidgetState
                 if (type == 'Branch' &&
                     branch == null &&
                     branchOptions.isNotEmpty) {
-                  branch = branchOptions.first;
+                  final primaryBranchId = context
+                      .read<EmployeeAttendanceCubit>()
+                      .employeeProfile
+                      ?.branchId;
+                  branch = branchOptions.firstWhere(
+                    (b) => b.id == primaryBranchId,
+                    orElse: () => branchOptions.first,
+                  );
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     _focusTarget();
                     _loadTargetAddress();
@@ -602,6 +612,8 @@ class _EmployeeAttendanceLocationSheetWidgetState
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 }

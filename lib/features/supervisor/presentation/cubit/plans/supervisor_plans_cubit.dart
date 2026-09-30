@@ -9,12 +9,16 @@ class SupervisorPlansCubit extends Cubit<SupervisorPlansState> {
     : super(const SupervisorPlansState.initial());
 
   final SupervisorPlansRepo plansRepo;
+  List<AdminPlanModel> allPlans = const [];
 
   Future<void> loadPlans({int? departmentId}) async {
     emit(const SupervisorPlansState.loading());
     final result = await plansRepo.getPlans(departmentId: departmentId);
     result.when(
-      success: (data) => emit(SupervisorPlansState.success(data)),
+      success: (data) {
+        allPlans = data;
+        emit(SupervisorPlansState.success(data));
+      },
       failure: (failure) =>
           emit(SupervisorPlansState.error(failure.messageKey)),
     );

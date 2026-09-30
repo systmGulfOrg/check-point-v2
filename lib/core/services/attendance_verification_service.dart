@@ -53,14 +53,17 @@ class AttendanceVerificationService {
       );
     }
 
-    final authenticated = await biometricAuthService.authenticate(
-      localizedReason: biometricReason,
-    );
-    if (!authenticated) {
-      return const AttendanceVerificationResult(
-        isAllowed: false,
-        messageKey: 'errors.biometricRequired',
+    final isBiometricAvailable = await biometricAuthService.isAvailable();
+    if (isBiometricAvailable) {
+      final authenticated = await biometricAuthService.authenticate(
+        localizedReason: biometricReason,
       );
+      if (!authenticated) {
+        return const AttendanceVerificationResult(
+          isAllowed: false,
+          messageKey: 'errors.biometricRequired',
+        );
+      }
     }
 
     return AttendanceVerificationResult(isAllowed: true, location: location);

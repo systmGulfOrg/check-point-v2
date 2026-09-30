@@ -171,7 +171,6 @@ void main() {
           userName: 'ahmed',
           password: 'Password123!',
           roles: ['Employee', 'Supervisor'],
-          shiftId: 1,
         ),
       );
 

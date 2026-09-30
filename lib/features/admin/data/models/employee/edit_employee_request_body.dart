@@ -18,7 +18,6 @@ class EditEmployeeRequestBody {
     this.attendanceLocationType,
     this.branchIds,
     this.siteIds,
-    this.shiftId,
     this.phone,
     this.email,
     this.employeeCode,
@@ -76,7 +75,6 @@ class EditEmployeeRequestBody {
   final String? attendanceLocationType;
   final List<int>? branchIds;
   final List<String>? siteIds;
-  final int? shiftId;
   final String? phone;
   final String? email;
   final String? employeeCode;

@@ -87,6 +87,7 @@ import 'package:check_point_v2/features/supervisor/presentation/screens/supervis
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_corrections_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_contractors_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_worker_assignments_screen.dart';
+import 'package:check_point_v2/core/features/tenant_features_cubit.dart';
 import 'routes.dart';
 
 class AppRouter {
@@ -323,6 +324,9 @@ class AppRouter {
           settings: const RouteSettings(name: AppRoutes.admin),
           child: MultiBlocProvider(
             providers: [
+              BlocProvider<TenantFeaturesCubit>(
+                create: (_) => sl<TenantFeaturesCubit>()..loadFeatures(),
+              ),
               BlocProvider<AuthSessionCubit>(
                 create: (_) => sl<AuthSessionCubit>(),
               ),
@@ -555,6 +559,9 @@ class AppRouter {
           settings: const RouteSettings(name: AppRoutes.supervisor),
           child: MultiBlocProvider(
             providers: [
+              BlocProvider<TenantFeaturesCubit>(
+                create: (_) => sl<TenantFeaturesCubit>()..loadFeatures(),
+              ),
               BlocProvider<AuthSessionCubit>(
                 create: (_) => sl<AuthSessionCubit>(),
               ),
@@ -656,6 +663,9 @@ class AppRouter {
           settings: const RouteSettings(name: AppRoutes.employee),
           child: MultiBlocProvider(
             providers: [
+              BlocProvider<TenantFeaturesCubit>(
+                create: (_) => sl<TenantFeaturesCubit>()..loadFeatures(),
+              ),
               BlocProvider<AuthSessionCubit>(
                 create: (_) => sl<AuthSessionCubit>(),
               ),

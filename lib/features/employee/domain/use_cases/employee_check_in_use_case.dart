@@ -22,7 +22,7 @@ class EmployeeCheckInUseCase {
     LatLng? currentLocation,
     String? selectedImageBase64,
   }) async {
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ?? '';
     final apiArea = switch (area) {
       'Branch' => 'Office',
       'Customer' => 'Customer',

@@ -91,6 +91,10 @@ import 'package:check_point_v2/features/projects/data/apis/projects_api_service.
 import 'package:check_point_v2/features/projects/data/repos/projects_repo.dart';
 import 'package:check_point_v2/features/projects/data/repos/projects_repo_impl.dart';
 import 'package:check_point_v2/features/projects/presentation/cubit/projects_cubit.dart';
+import 'package:check_point_v2/core/features/tenant_config_api_service.dart';
+import 'package:check_point_v2/core/features/tenant_features_cubit.dart';
+import 'package:check_point_v2/core/features/tenant_features_repo.dart';
+import 'package:check_point_v2/core/features/tenant_features_repo_impl.dart';
 import 'package:check_point_v2/features/attendance_points/data/apis/attendance_points_api_service.dart';
 import 'package:check_point_v2/features/attendance_points/data/repos/attendance_points_repo.dart';
 import 'package:check_point_v2/features/attendance_points/data/repos/attendance_points_repo_impl.dart';
@@ -202,6 +206,11 @@ Future<void> setupServiceLocator() async {
     () => AttendancePointsApiService(sl<Dio>()),
   );
 
+  // Tenant features (feature flags)
+  sl.registerLazySingleton<TenantConfigApiService>(
+    () => TenantConfigApiService(sl<Dio>()),
+  );
+
   // Repositories
   sl.registerLazySingleton<TenantRepo>(
     () => TenantRepoImpl(
@@ -293,6 +302,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<AttendancePointsRepo>(
     () => AttendancePointsRepoImpl(api: sl<AttendancePointsApiService>()),
   );
+  sl.registerLazySingleton<TenantFeaturesRepo>(
+    () => TenantFeaturesRepoImpl(api: sl<TenantConfigApiService>()),
+  );
 
   // UseCases
   sl.registerLazySingleton<LoginUseCase>(
@@ -326,6 +338,9 @@ Future<void> setupServiceLocator() async {
   // Cubits
   sl.registerFactory<TenantLookupCubit>(
     () => TenantLookupCubit(tenantRepo: sl<TenantRepo>()),
+  );
+  sl.registerFactory<TenantFeaturesCubit>(
+    () => TenantFeaturesCubit(tenantFeaturesRepo: sl<TenantFeaturesRepo>()),
   );
   sl.registerFactory<NationalIdOcrCubit>(
     () => NationalIdOcrCubit(ocr: sl<NationalIdOcr>()),

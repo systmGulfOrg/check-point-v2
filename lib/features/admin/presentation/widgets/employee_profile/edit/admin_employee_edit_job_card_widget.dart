@@ -13,8 +13,6 @@ import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_state.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_employee_work_system_widget.dart';
 import 'package:check_point_v2/features/contractor/data/models/site_boundary_model.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
@@ -33,7 +31,6 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
     required this.selectedSiteId,
     required this.selectedWorkSystem,
     required this.selectedRemoteWorkPolicyId,
-    required this.selectedShiftId,
     required this.selectedDirectManagerId,
     required this.onDepartmentChanged,
     required this.onBranchChanged,
@@ -43,7 +40,6 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
     required this.onSiteChanged,
     required this.onWorkSystemChanged,
     required this.onRemoteWorkPolicyChanged,
-    required this.onShiftChanged,
     required this.onManagerChanged,
     super.key,
   });
@@ -58,7 +54,6 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
   final String? selectedSiteId;
   final String selectedWorkSystem;
   final String? selectedRemoteWorkPolicyId;
-  final int? selectedShiftId;
   final String? selectedDirectManagerId;
   final ValueChanged<int?> onDepartmentChanged;
   final ValueChanged<int?> onBranchChanged;
@@ -68,7 +63,6 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
   final ValueChanged<String?> onSiteChanged;
   final ValueChanged<String> onWorkSystemChanged;
   final ValueChanged<String?> onRemoteWorkPolicyChanged;
-  final ValueChanged<int?> onShiftChanged;
   final ValueChanged<String?> onManagerChanged;
 
   @override
@@ -223,8 +217,9 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.h),
                   child: Text(
-                    'admin.employeeWizard.noSitesAvailable'
-                        .tr(context: context),
+                    'admin.employeeWizard.noSitesAvailable'.tr(
+                      context: context,
+                    ),
                     style: AppTextStyles.font13Medium.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -260,45 +255,6 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
           selectedPolicyId: selectedRemoteWorkPolicyId,
           onSystemChanged: onWorkSystemChanged,
           onPolicyChanged: onRemoteWorkPolicyChanged,
-        ),
-        hSpace(10),
-        BlocBuilder<AdminShiftsPoliciesCubit, AdminShiftsPoliciesState>(
-          builder: (context, shiftState) {
-            final shifts = shiftState.maybeWhen(
-              success: (list, _) => list,
-              orElse: () => context.read<AdminShiftsPoliciesCubit>().shifts,
-            );
-            final validShifts = shifts.where((s) => s.id != null).toList();
-            return DropdownButtonFormField<int>(
-              isExpanded: true,
-              initialValue: validShifts.any((s) => s.id == selectedShiftId)
-                  ? selectedShiftId
-                  : null,
-              decoration: InputDecoration(
-                labelText: 'admin.employeeWizard.shift'.tr(context: context),
-                prefixIcon: const Icon(
-                  Icons.schedule_outlined,
-                  color: AppColors.brandPrimary,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 12.w,
-                  vertical: 12.h,
-                ),
-              ),
-              items: validShifts
-                  .map(
-                    (s) => DropdownMenuItem<int>(
-                      value: s.id!,
-                      child: Text(s.name ?? '-'),
-                    ),
-                  )
-                  .toList(),
-              onChanged: onShiftChanged,
-            );
-          },
         ),
         hSpace(10),
         BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(

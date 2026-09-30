@@ -26,7 +26,6 @@ EditEmployeeRequestBody _$EditEmployeeRequestBodyFromJson(
   siteIds: (json['siteIds'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
-  shiftId: (json['shiftId'] as num?)?.toInt(),
   phone: json['phone'] as String?,
   email: json['email'] as String?,
   employeeCode: json['employeeCode'] as String?,
@@ -91,7 +90,6 @@ Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
     'attendanceLocationType': value,
   if (instance.branchIds case final value?) 'branchIds': value,
   if (instance.siteIds case final value?) 'siteIds': value,
-  if (instance.shiftId case final value?) 'shiftId': value,
   if (instance.phone case final value?) 'phone': value,
   if (instance.email case final value?) 'email': value,
   if (instance.employeeCode case final value?) 'employeeCode': value,

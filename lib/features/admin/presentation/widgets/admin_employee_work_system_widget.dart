@@ -78,50 +78,50 @@ class AdminEmployeeWorkSystemWidget extends StatelessWidget {
                 if (value != null) onSystemChanged(value);
               },
             ),
-            if (selectedSystem != 'onsite') ...[
-              hSpace(12),
-              Text(
-                'admin.employeeWizard.workPolicy'.tr(context: context),
-                style: AppTextStyles.font13SemiBold,
+            hSpace(12),
+            Text(
+              'admin.employeeWizard.workPolicy'.tr(context: context),
+              style: AppTextStyles.font13SemiBold,
+            ),
+            hSpace(8),
+            DropdownButtonFormField<String>(
+              key: ValueKey(
+                'work_policy_${selectedSystem}_${hasSelectedPolicy ? selectedPolicyId : 'none'}',
               ),
-              hSpace(8),
-              DropdownButtonFormField<String>(
-                key: ValueKey(
-                  'work_policy_${selectedSystem}_${hasSelectedPolicy ? selectedPolicyId : 'none'}',
-                ),
-                initialValue: hasSelectedPolicy ? selectedPolicyId : null,
-                isExpanded: true,
-                hint: Text(
-                  systemPolicies.isEmpty
-                      ? 'admin.employeeWizard.noWorkPolicies'.tr(
-                          context: context,
-                        )
-                      : 'admin.employeeWizard.selectWorkPolicy'.tr(
-                          context: context,
-                        ),
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppColors.fieldBackground,
-                  prefixIcon: Icon(
-                    selectedSystem == 'hybrid'
-                        ? Icons.swap_horiz_rounded
-                        : Icons.home_work_outlined,
-                    color: AppColors.info,
-                    size: 20.r,
-                  ),
-                ),
-                items: systemPolicies
-                    .map(
-                      (policy) => DropdownMenuItem<String>(
-                        value: policy.id,
-                        child: Text(policy.name),
+              initialValue: hasSelectedPolicy ? selectedPolicyId : null,
+              isExpanded: true,
+              hint: Text(
+                systemPolicies.isEmpty
+                    ? 'admin.employeeWizard.noWorkPolicies'.tr(
+                        context: context,
+                      )
+                    : 'admin.employeeWizard.selectWorkPolicy'.tr(
+                        context: context,
                       ),
-                    )
-                    .toList(),
-                onChanged: systemPolicies.isEmpty ? null : onPolicyChanged,
               ),
-            ],
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: AppColors.fieldBackground,
+                prefixIcon: Icon(
+                  selectedSystem == 'hybrid'
+                      ? Icons.swap_horiz_rounded
+                      : selectedSystem == 'remote'
+                          ? Icons.home_work_outlined
+                          : Icons.business_rounded,
+                  color: AppColors.info,
+                  size: 20.r,
+                ),
+              ),
+              items: systemPolicies
+                  .map(
+                    (policy) => DropdownMenuItem<String>(
+                      value: policy.id,
+                      child: Text(policy.name),
+                    ),
+                  )
+                  .toList(),
+              onChanged: systemPolicies.isEmpty ? null : onPolicyChanged,
+            ),
           ],
         );
       },

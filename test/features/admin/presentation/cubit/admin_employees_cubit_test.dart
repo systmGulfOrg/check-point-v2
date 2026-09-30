@@ -172,7 +172,6 @@ void main() {
         role: 'Employee',
         departmentId: 1,
         branchId: 1,
-        shiftId: 1,
       );
 
       final error = await cubit.addEmployee(body);

@@ -113,29 +113,30 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                   }
                 },
                 builder: (context, state) {
-                  final allTasks = switch (state) {
-                    EmployeeTasksStateSuccess(:final tasks) =>
-                      tasks
-                          .map(
-                            (t) => EmployeeTaskData(
-                              id: '${t.id ?? 0}',
-                              title: t.title ?? '',
-                              dueDate: t.dueDate == null
-                                  ? 'tasks.noDueDate'.tr(context: context)
-                                  : AppDateFormatter.formatDateString(
-                                      t.dueDate,
-                                      pattern: 'dd MMM yyyy',
-                                    ),
-                              status: t.status ?? 'Active',
-                              priority: t.priorityStatus,
-                              description: t.description ?? '',
-                              progressPercentage: 50,
-                              assignees: const ['EM'],
-                            ),
-                          )
-                          .toList(),
-                    _ => const <EmployeeTaskData>[],
+                  final cubit = context.read<EmployeeTasksCubit>();
+                  final rawTasks = switch (state) {
+                    EmployeeTasksStateSuccess(:final tasks) => tasks,
+                    _ => cubit.myTasks,
                   };
+                  final allTasks = rawTasks
+                      .map(
+                        (t) => EmployeeTaskData(
+                          id: '${t.id ?? 0}',
+                          title: t.title ?? '',
+                          dueDate: t.dueDate == null
+                              ? 'tasks.noDueDate'.tr(context: context)
+                              : AppDateFormatter.formatDateString(
+                                  t.dueDate,
+                                  pattern: 'dd MMM yyyy',
+                                ),
+                          status: t.status ?? 'Active',
+                          priority: t.priorityStatus,
+                          description: t.description ?? '',
+                          progressPercentage: 50,
+                          assignees: const ['EM'],
+                        ),
+                      )
+                      .toList();
 
                   final filteredTasks = switch (_selectedFilterIndex) {
                     0 =>
@@ -157,7 +158,8 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
 
                   return Expanded(
                     child: switch (state) {
-                      EmployeeTasksStateLoading() => Skeletonizer(
+                      EmployeeTasksStateLoading() when cubit.myTasks.isEmpty =>
+                        Skeletonizer(
                           child: RefreshIndicator(
                             color: AppColors.brandPrimary,
                             onRefresh: context
