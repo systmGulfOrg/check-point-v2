@@ -4,6 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import '../../data/models/leave_balance_model.dart';
+import 'leave_balance_stat_column_widget.dart';
 
 class LeaveBalanceCardWidget extends StatelessWidget {
   const LeaveBalanceCardWidget({super.key, required this.balance});
@@ -111,33 +112,30 @@ class LeaveBalanceCardWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildStatColumn(
-                context,
-                'leaves.dashboard.total'.tr(context: context),
-                '${balance.totalAllocated}',
-                AppColors.textPrimary,
+              LeaveBalanceStatColumnWidget(
+                label: 'leaves.dashboard.total'.tr(context: context),
+                value: '${balance.totalAllocated}',
+                color: AppColors.textPrimary,
               ),
               Container(
                 width: 1,
                 height: 28.h,
                 color: AppColors.border,
               ),
-              _buildStatColumn(
-                context,
-                'leaves.dashboard.used'.tr(context: context),
-                '${balance.usedBalance}',
-                AppColors.warning,
+              LeaveBalanceStatColumnWidget(
+                label: 'leaves.dashboard.used'.tr(context: context),
+                value: '${balance.usedBalance}',
+                color: AppColors.warning,
               ),
               Container(
                 width: 1,
                 height: 28.h,
                 color: AppColors.border,
               ),
-              _buildStatColumn(
-                context,
-                'leaves.dashboard.remaining'.tr(context: context),
-                '${balance.remainingBalance}',
-                color,
+              LeaveBalanceStatColumnWidget(
+                label: 'leaves.dashboard.remaining'.tr(context: context),
+                value: '${balance.remainingBalance}',
+                color: color,
               ),
             ],
           ),
@@ -172,32 +170,6 @@ class LeaveBalanceCardWidget extends StatelessWidget {
             ),
         ],
       ),
-    );
-  }
-
-  Widget _buildStatColumn(
-    BuildContext context,
-    String label,
-    String value,
-    Color color,
-  ) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          value,
-          style: AppTextStyles.font18Bold.copyWith(
-            color: color,
-          ),
-        ),
-        hSpace(2),
-        Text(
-          label,
-          style: AppTextStyles.font11Regular.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-      ],
     );
   }
 }
