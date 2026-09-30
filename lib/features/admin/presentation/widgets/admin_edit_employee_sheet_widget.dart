@@ -331,7 +331,7 @@ class _AdminEditEmployeeSheetWidgetState
             ),
             hSpace(14),
             Text(
-              'admin.employees.roles'.tr(context: context),
+              'admin.employeeWizard.role'.tr(context: context),
               style: AppTextStyles.font12Medium,
             ),
             hSpace(8),
@@ -369,15 +369,13 @@ class _AdminEditEmployeeSheetWidgetState
                     ),
                   ),
                   onSelected: (selected) {
-                    setState(() {
-                      if (selected) {
-                        _selectedRoles.add(role);
-                      } else {
-                        if (_selectedRoles.length > 1) {
-                          _selectedRoles.remove(role);
-                        }
-                      }
-                    });
+                    if (selected) {
+                      setState(() {
+                        _selectedRoles
+                          ..clear()
+                          ..add(role);
+                      });
+                    }
                   },
                 );
               }).toList(),
@@ -558,25 +556,6 @@ class _AdminEditEmployeeSheetWidgetState
                   setState(() => _selectedRemoteWorkPolicyId = value),
             ),
             hSpace(14),
-            SwitchListTile.adaptive(
-              value: _canAddAttendance,
-              onChanged: (v) => setState(() => _canAddAttendance = v),
-              title: Text(
-                'admin.employees.canAddAttendance'.tr(context: context),
-                style: AppTextStyles.font14Medium,
-              ),
-              contentPadding: EdgeInsets.zero,
-            ),
-            SwitchListTile.adaptive(
-              value: _canAddPlan,
-              onChanged: (v) => setState(() => _canAddPlan = v),
-              title: Text(
-                'admin.employees.canAddPlan'.tr(context: context),
-                style: AppTextStyles.font14Medium,
-              ),
-              contentPadding: EdgeInsets.zero,
-            ),
-            hSpace(12),
             Text(
               'admin.employees.leaveBalance'.tr(context: context),
               style: AppTextStyles.font12Medium,

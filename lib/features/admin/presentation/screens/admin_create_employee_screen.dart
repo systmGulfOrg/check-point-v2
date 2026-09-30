@@ -377,7 +377,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           ),
                           hSpace(10),
                           Text(
-                            'admin.employeeWizard.roles'.tr(context: context),
+                            'admin.employeeWizard.role'.tr(context: context),
                             style: AppTextStyles.font13SemiBold,
                           ),
                           hSpace(10),
@@ -419,18 +419,13 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                                   ),
                                 ),
                                 onSelected: (selected) {
-                                  setState(() {
-                                    if (selected) {
+                                  if (selected) {
+                                    setState(() {
                                       selectedRoles
                                         ..clear()
                                         ..add(r);
-                                    } else {
-                                      selectedRoles.remove(r);
-                                      if (selectedRoles.isEmpty) {
-                                        selectedRoles.add('HR');
-                                      }
-                                    }
-                                  });
+                                    });
+                                  }
                                 },
                               );
                             }).toList(),
@@ -795,30 +790,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                               );
                             },
                           ),
-                          hSpace(16),
-                          SwitchListTile.adaptive(
-                            value: canAddAttendance,
-                            onChanged: (v) =>
-                                setState(() => canAddAttendance = v),
-                            title: Text(
-                              'admin.employeeWizard.canAddAttendance'.tr(
-                                context: context,
-                              ),
-                              style: AppTextStyles.font14Medium,
-                            ),
-                            contentPadding: EdgeInsets.zero,
-                          ),
-                          SwitchListTile.adaptive(
-                            value: canAddPlan,
-                            onChanged: (v) => setState(() => canAddPlan = v),
-                            title: Text(
-                              'admin.employeeWizard.canAddPlan'.tr(
-                                context: context,
-                              ),
-                              style: AppTextStyles.font14Medium,
-                            ),
-                            contentPadding: EdgeInsets.zero,
-                          ),
                         ],
                       ),
                       _ => Column(
@@ -861,7 +832,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                                   ? employeeCodeController.text
                                   : '-',
                             ),
-                            ('Roles', selectedRoles.join(', ')),
+                            ('Role', selectedRoles.firstOrNull ?? '-'),
                             ('Work System', selectedWorkSystem),
                             if (selectedWorkSystem != 'onsite')
                               (

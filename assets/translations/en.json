@@ -622,7 +622,7 @@
   "admin.employeeWizard.position": "Job Title",
   "admin.employeeWizard.positionHint": "Enter job title",
   "admin.employeeWizard.role": "Employee Role",
-  "admin.employeeWizard.roles": "Roles & Permissions (Multiple selectable)",
+  "admin.employeeWizard.roles": "Employee Role",
   "admin.employeeWizard.workSystem": "Work system",
   "admin.employeeWizard.workSystemOnsite": "On-site work",
   "admin.employeeWizard.workPolicy": "Work policy",

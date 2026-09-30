@@ -507,8 +507,6 @@ class _AdminEmployeeProfileEditFormWidgetState
             passwordController: _passwordController,
             leaveBalanceController: _leaveBalanceController,
             selectedRoles: _selectedRoles,
-            canAddAttendance: _canAddAttendance,
-            canAddPlan: _canAddPlan,
             onRoleToggled: (role) {
               setState(() {
                 _selectedRoles
@@ -516,9 +514,6 @@ class _AdminEmployeeProfileEditFormWidgetState
                   ..add(role);
               });
             },
-            onCanAddAttendanceChanged: (val) =>
-                setState(() => _canAddAttendance = val),
-            onCanAddPlanChanged: (val) => setState(() => _canAddPlan = val),
           ),
           hSpace(20),
           Row(
