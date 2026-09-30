@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/core/services/offline_attendance_sync_service.dart';
+import 'package:check_point_v2/core/services/location_service.dart';
 import 'package:check_point_v2/features/contractor/data/repos/contractor_repo.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_company_model.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_attendance_model.dart';
@@ -15,10 +16,45 @@ class ContractorCubit extends Cubit<ContractorState> {
   ContractorCubit({
     required this.contractorRepo,
     required this.offlineSyncService,
+    required this.locationService,
   }) : super(const ContractorState.initial());
 
   final ContractorRepo contractorRepo;
   final OfflineAttendanceSyncService offlineSyncService;
+  final LocationService locationService;
+
+  Future<void> punchWorkerAtCurrentLocation({
+    required String workerId,
+    required String siteId,
+  }) async {
+    final data = state.mapOrNull(success: (value) => value);
+    final matchingWorkers = data?.workers.where((item) => item.id == workerId).toList() ?? const [];
+    final worker = matchingWorkers.isEmpty ? null : matchingWorkers.first;
+    if (worker == null) {
+      emit(const ContractorState.error('errors.workerNotFound'));
+      return;
+    }
+
+    final activeAttendance = data?.attendanceLogs.any(
+          (item) => item.workerId == workerId && item.checkOutTime == null,
+        ) ??
+        false;
+    final position = await locationService.getCurrentPosition();
+    if (position == null) {
+      emit(const ContractorState.error('errors.locationUnavailable'));
+      return;
+    }
+
+    await punchAttendance(
+      workerId: workerId,
+      punchType: activeAttendance ? 'check-out' : 'check-in',
+      lat: position.latitude,
+      lng: position.longitude,
+      siteId: siteId,
+      contractorId: worker.contractorId,
+      deviceUuid: worker.deviceUuid,
+    );
+  }
 
   List<ContractorAttendanceModel> attendanceForRange({
     DateTime? from,

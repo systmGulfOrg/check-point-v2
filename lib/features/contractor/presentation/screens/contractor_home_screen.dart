@@ -11,6 +11,7 @@ import 'package:check_point_v2/features/contractor/presentation/widgets/contract
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_quick_action_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_attendance_tile_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_offline_sync_banner_widget.dart';
+import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_punch_sheet_widget.dart';
 
 class ContractorHomeScreen extends StatelessWidget {
   const ContractorHomeScreen({
@@ -61,6 +62,16 @@ class ContractorHomeScreen extends StatelessWidget {
             backgroundColor: AppColors.cardBackground,
             elevation: 0,
             actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.notifications_none_rounded,
+                  color: AppColors.brandPrimary,
+                ),
+                onPressed: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.supervisorNotifications,
+                ),
+              ),
               IconButton(
                 icon: const Icon(
                   Icons.refresh_rounded,
@@ -159,6 +170,43 @@ class ContractorHomeScreen extends StatelessWidget {
                           context,
                           AppRoutes.contractorCorrectionRequest,
                         ),
+                      ),
+                      SizedBox(width: 10.w),
+                      ContractorQuickActionWidget(
+                        title: 'attendancePoints.title'.tr(),
+                        icon: Icons.stars_rounded,
+                        color: AppColors.warning,
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          AppRoutes.attendancePoints,
+                        ),
+                      ),
+                      SizedBox(width: 10.w),
+                      ContractorQuickActionWidget(
+                        title: 'contractor.punch.title'.tr(),
+                        icon: Icons.location_on_outlined,
+                        color: AppColors.success,
+                        onTap: () {
+                          final current = context
+                              .read<ContractorCubit>()
+                              .state
+                              .mapOrNull(success: (value) => value);
+                          showModalBottomSheet<void>(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: AppColors.cardBackground,
+                            builder: (_) => ContractorPunchSheetWidget(
+                              workers: current?.workers ?? const [],
+                              assignments: current?.assignments ?? const [],
+                              onPunch: (workerId, siteId) => context
+                                  .read<ContractorCubit>()
+                                  .punchWorkerAtCurrentLocation(
+                                    workerId: workerId,
+                                    siteId: siteId,
+                                  ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
