@@ -321,6 +321,20 @@ class _EmployeeAttendanceLocationSheetWidgetState
                 final customerOptions = availableCustomers.isNotEmpty
                     ? availableCustomers
                     : customers;
+                final assignedSiteIds = context
+                    .read<EmployeeAttendanceCubit>()
+                    .employeeProfile
+                    ?.assignedSiteIds;
+                final filteredCustomerOptions =
+                    assignedSiteIds == null || assignedSiteIds.isEmpty
+                    ? customerOptions
+                    : customerOptions
+                          .where(
+                            (customer) =>
+                                customer.id != null &&
+                                assignedSiteIds.contains(customer.id),
+                          )
+                          .toList();
                 if (type == 'Branch' &&
                     branch == null &&
                     branchOptions.isNotEmpty) {
@@ -332,8 +346,8 @@ class _EmployeeAttendanceLocationSheetWidgetState
                 }
                 if (type != 'Branch' &&
                     customer == null &&
-                    customerOptions.isNotEmpty) {
-                  customer = customerOptions.first;
+                    filteredCustomerOptions.isNotEmpty) {
+                  customer = filteredCustomerOptions.first;
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     _focusTarget();
                     _loadTargetAddress();
@@ -480,7 +494,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
                       EmployeeAttendanceTargetDropdownWidget(
                         type: type,
                         branches: branchOptions,
-                        customers: customerOptions,
+                        customers: filteredCustomerOptions,
                         selectedBranch: branch,
                         selectedCustomer: customer,
                         onBranchChanged: (selected) {

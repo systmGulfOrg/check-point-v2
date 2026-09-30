@@ -63,9 +63,10 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     emit(const EmployeeAttendanceState.loading());
     final employeeId = await sessionStorage.readUserId();
     var branchId = await sessionStorage.readBranchId();
-    if (branchId == null && employeeId != null && employeeId.isNotEmpty) {
+    if (employeeId != null && employeeId.isNotEmpty) {
       final employeeResult = await attendanceRepo.getEmployeeById(employeeId);
       if (employeeResult case Success(:final data)) {
+        employeeProfile = data;
         branchId = data.branchId;
         if (branchId != null) {
           await sessionStorage.saveBranchId(branchId);
@@ -84,7 +85,17 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     }
     switch (result) {
       case Success(:final data):
-        emit(EmployeeAttendanceState.branchesLoaded(data));
+        final assignedBranchIds = employeeProfile?.assignedBranchIds;
+        final branches = assignedBranchIds == null || assignedBranchIds.isEmpty
+            ? data
+            : data
+                  .where(
+                    (branch) =>
+                        branch.id != null &&
+                        assignedBranchIds.contains(branch.id),
+                  )
+                  .toList();
+        emit(EmployeeAttendanceState.branchesLoaded(branches));
       case Failure(:final failure):
         emit(EmployeeAttendanceState.error(failure.messageKey));
     }
