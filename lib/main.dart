@@ -5,14 +5,20 @@ import 'app/app.dart';
 import 'core/core.dart';
 import 'core/di/service_locator.dart';
 import 'core/tenant/tenant_storage.dart';
+import 'features/tenant/data/models/tenant_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await setupServiceLocator();
 
-  final hasTenant = await sl<TenantStorage>().hasTenant();
-  final initialRoute = hasTenant ? AppRoutes.login : AppRoutes.tenantLookup;
+  await sl<TenantStorage>().saveTenant(
+    const TenantModel(
+      tenantId: AppConfig.tenantId,
+      tenantCode: AppConfig.tenantCode,
+      companyName: AppConfig.tenantCompanyName,
+    ),
+  );
 
   runApp(
     EasyLocalization(
@@ -20,7 +26,7 @@ Future<void> main() async {
       path: 'assets/translations',
       startLocale: const Locale('ar'),
       fallbackLocale: const Locale('ar'),
-      child: CheckPointApp(initialRoute: initialRoute),
+      child: const CheckPointApp(initialRoute: AppRoutes.login),
     ),
   );
 }

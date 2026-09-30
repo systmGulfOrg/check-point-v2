@@ -7,8 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
-import 'package:check_point_v2/core/tenant/tenant_storage.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_card_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_labeled_field_widget.dart';
@@ -18,7 +16,6 @@ import 'package:check_point_v2/features/auth/presentation/widgets/brand_header_w
 import 'package:check_point_v2/features/auth/presentation/widgets/login_bloc_listener_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/login_submit_button_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/login_account_request_status_bloc_builder_widget.dart';
-import 'package:check_point_v2/features/auth/presentation/widgets/login_tenant_badge_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/role_switcher_widget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -30,10 +27,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   static const _roles = <String>[
-    'auth.role.admin',
+    'auth.role.hr',
     'auth.role.supervisor',
     'auth.role.contractor',
-    'auth.role.employee',
   ];
 
   final _usernameController = TextEditingController();
@@ -177,16 +173,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         subtitleKey: 'auth.login.subtitle',
                       ),
                       hSpace(20),
-                      LoginTenantBadgeWidget(
-                        onChangeCompany: () {
-                          context.read<LoginCubit>().authSessionStorage.clear();
-                          sl<TenantStorage>().clearTenant();
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                            AppRoutes.tenantLookup,
-                            (route) => false,
-                          );
-                        },
-                      ),
                       RoleSwitcherWidget(
                         roles: _roles,
                         selectedRole: _selectedRole,
@@ -288,10 +274,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             userName: _usernameController.text.trim(),
                             password: _passwordController.text,
                             role: switch (_selectedRole) {
-                              'auth.role.admin' => 'Admin',
+                              'auth.role.hr' => 'HR',
                               'auth.role.supervisor' => 'Supervisor',
                               'auth.role.contractor' => 'Contractor',
-                              _ => 'Employee',
+                              _ => 'HR',
                             },
                             enableBiometricLogin: _enableBiometricLogin,
                           );
