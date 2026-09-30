@@ -36,10 +36,6 @@ class _AdminEmployeeProfileEditFormWidgetState
   // Job Controllers
   late final TextEditingController _positionController;
   late final TextEditingController _employeeCodeController;
-  late final TextEditingController _gradeController;
-  late final TextEditingController _divisionController;
-  late final TextEditingController _contractTypeController;
-  late final TextEditingController _contractStatusController;
   int? _selectedDepartmentId;
   int? _selectedBranchId;
   late final Set<int> _selectedBranchIds;
@@ -47,9 +43,9 @@ class _AdminEmployeeProfileEditFormWidgetState
   String _selectedLocationType = 'branch';
   String? _selectedSiteId;
   late String _selectedWorkSystem;
+  String? _selectedRemoteWorkPolicyId;
+  int? _selectedShiftId;
   String? _selectedDirectManagerId;
-  DateTime? _joinDate;
-  DateTime? _contractEndDate;
 
   // Personal Controllers
   late final TextEditingController _nameArController;
@@ -101,14 +97,6 @@ class _AdminEmployeeProfileEditFormWidgetState
           ? emp.employeeCode!
           : CodeGeneratorHelper.generateEmployeeCode(),
     );
-    _gradeController = TextEditingController(text: emp.grade ?? '');
-    _divisionController = TextEditingController(text: emp.division ?? '');
-    _contractTypeController = TextEditingController(
-      text: emp.contractType ?? '',
-    );
-    _contractStatusController = TextEditingController(
-      text: emp.contractStatus ?? '',
-    );
     _selectedDepartmentId = emp.departmentId;
     _selectedBranchIds = {
       ...?emp.assignedBranchIds,
@@ -128,9 +116,9 @@ class _AdminEmployeeProfileEditFormWidgetState
         (_selectedBranchIds.isEmpty ? null : _selectedBranchIds.first);
     _selectedSiteId = _selectedSiteIds.isEmpty ? null : _selectedSiteIds.first;
     _selectedWorkSystem = emp.workSystem ?? 'onsite';
+    _selectedRemoteWorkPolicyId = emp.remoteWorkPolicyId;
+    _selectedShiftId = emp.shiftId;
     _selectedDirectManagerId = emp.resolvedDirectManagerId;
-    _joinDate = _parseDate(emp.joinDate ?? emp.hireDate);
-    _contractEndDate = _parseDate(emp.contractEndDate);
 
     // Personal
     _nameArController = TextEditingController(text: emp.nameAr ?? '');
@@ -212,10 +200,6 @@ class _AdminEmployeeProfileEditFormWidgetState
   void dispose() {
     _positionController.dispose();
     _employeeCodeController.dispose();
-    _gradeController.dispose();
-    _divisionController.dispose();
-    _contractTypeController.dispose();
-    _contractStatusController.dispose();
     _nameArController.dispose();
     _nameEnController.dispose();
     _emailController.dispose();
@@ -285,13 +269,7 @@ class _AdminEmployeeProfileEditFormWidgetState
         employeeCode: _employeeCodeController.text.trim().isNotEmpty
             ? _employeeCodeController.text.trim()
             : null,
-        grade: _gradeController.text.trim().isNotEmpty
-            ? _gradeController.text.trim()
-            : null,
         departmentId: _selectedDepartmentId,
-        division: _divisionController.text.trim().isNotEmpty
-            ? _divisionController.text.trim()
-            : null,
         branchId: _selectedBranchId,
         siteId: _selectedLocationType == 'site' ? _selectedSiteId : null,
         attendanceLocationType: _selectedLocationType,
@@ -301,18 +279,11 @@ class _AdminEmployeeProfileEditFormWidgetState
         siteIds: _selectedLocationType == 'site'
             ? _selectedSiteIds.toList()
             : const [],
+        shiftId: _selectedShiftId,
         workSystem: _selectedWorkSystem,
+        remoteWorkPolicyId: _selectedRemoteWorkPolicyId,
         directManagerId: _selectedDirectManagerId,
         managerId: _selectedDirectManagerId,
-        contractType: _contractTypeController.text.trim().isNotEmpty
-            ? _contractTypeController.text.trim()
-            : null,
-        contractStatus: _contractStatusController.text.trim().isNotEmpty
-            ? _contractStatusController.text.trim()
-            : null,
-        joinDate: _joinDate?.toIso8601String(),
-        hireDate: _joinDate?.toIso8601String(),
-        contractEndDate: _contractEndDate?.toIso8601String(),
         email: _emailController.text.trim().isNotEmpty
             ? _emailController.text.trim()
             : null,
@@ -395,10 +366,6 @@ class _AdminEmployeeProfileEditFormWidgetState
           AdminEmployeeEditJobCardWidget(
             positionController: _positionController,
             employeeCodeController: _employeeCodeController,
-            gradeController: _gradeController,
-            divisionController: _divisionController,
-            contractTypeController: _contractTypeController,
-            contractStatusController: _contractStatusController,
             selectedDepartmentId: _selectedDepartmentId,
             selectedBranchId: _selectedBranchId,
             selectedBranchIds: _selectedBranchIds,
@@ -406,9 +373,9 @@ class _AdminEmployeeProfileEditFormWidgetState
             selectedLocationType: _selectedLocationType,
             selectedSiteId: _selectedSiteId,
             selectedWorkSystem: _selectedWorkSystem,
+            selectedRemoteWorkPolicyId: _selectedRemoteWorkPolicyId,
+            selectedShiftId: _selectedShiftId,
             selectedDirectManagerId: _selectedDirectManagerId,
-            joinDate: _joinDate,
-            contractEndDate: _contractEndDate,
             onDepartmentChanged: (val) => setState(() {
               _selectedDepartmentId = val;
             }),
@@ -440,20 +407,15 @@ class _AdminEmployeeProfileEditFormWidgetState
               }
             }),
             onSiteChanged: (val) => setState(() => _selectedSiteId = val),
-            onWorkSystemChanged: (val) =>
-                setState(() => _selectedWorkSystem = val),
+            onWorkSystemChanged: (val) => setState(() {
+              _selectedWorkSystem = val;
+              _selectedRemoteWorkPolicyId = null;
+            }),
+            onRemoteWorkPolicyChanged: (val) =>
+                setState(() => _selectedRemoteWorkPolicyId = val),
+            onShiftChanged: (val) => setState(() => _selectedShiftId = val),
             onManagerChanged: (val) =>
                 setState(() => _selectedDirectManagerId = val),
-            onSelectJoinDate: () => _pickDate(
-              context: context,
-              initial: _joinDate,
-              onPicked: (d) => setState(() => _joinDate = d),
-            ),
-            onSelectContractEndDate: () => _pickDate(
-              context: context,
-              initial: _contractEndDate,
-              onPicked: (d) => setState(() => _contractEndDate = d),
-            ),
           ),
           hSpace(16),
           AdminEmployeeEditPersonalCardWidget(

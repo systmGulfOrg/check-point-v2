@@ -13,6 +13,9 @@ import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_employee_work_system_widget.dart';
 import 'package:check_point_v2/features/contractor/data/models/site_boundary_model.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_state.dart';
@@ -22,10 +25,6 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
   const AdminEmployeeEditJobCardWidget({
     required this.positionController,
     required this.employeeCodeController,
-    required this.gradeController,
-    required this.divisionController,
-    required this.contractTypeController,
-    required this.contractStatusController,
     required this.selectedDepartmentId,
     required this.selectedBranchId,
     required this.selectedBranchIds,
@@ -33,9 +32,9 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
     required this.selectedLocationType,
     required this.selectedSiteId,
     required this.selectedWorkSystem,
+    required this.selectedRemoteWorkPolicyId,
+    required this.selectedShiftId,
     required this.selectedDirectManagerId,
-    required this.joinDate,
-    required this.contractEndDate,
     required this.onDepartmentChanged,
     required this.onBranchChanged,
     required this.onBranchIdsChanged,
@@ -43,18 +42,14 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
     required this.onLocationTypeChanged,
     required this.onSiteChanged,
     required this.onWorkSystemChanged,
+    required this.onRemoteWorkPolicyChanged,
+    required this.onShiftChanged,
     required this.onManagerChanged,
-    required this.onSelectJoinDate,
-    required this.onSelectContractEndDate,
     super.key,
   });
 
   final TextEditingController positionController;
   final TextEditingController employeeCodeController;
-  final TextEditingController gradeController;
-  final TextEditingController divisionController;
-  final TextEditingController contractTypeController;
-  final TextEditingController contractStatusController;
   final int? selectedDepartmentId;
   final int? selectedBranchId;
   final Set<int> selectedBranchIds;
@@ -62,9 +57,9 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
   final String selectedLocationType;
   final String? selectedSiteId;
   final String selectedWorkSystem;
+  final String? selectedRemoteWorkPolicyId;
+  final int? selectedShiftId;
   final String? selectedDirectManagerId;
-  final DateTime? joinDate;
-  final DateTime? contractEndDate;
   final ValueChanged<int?> onDepartmentChanged;
   final ValueChanged<int?> onBranchChanged;
   final ValueChanged<Set<int>> onBranchIdsChanged;
@@ -72,13 +67,12 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
   final ValueChanged<String> onLocationTypeChanged;
   final ValueChanged<String?> onSiteChanged;
   final ValueChanged<String> onWorkSystemChanged;
+  final ValueChanged<String?> onRemoteWorkPolicyChanged;
+  final ValueChanged<int?> onShiftChanged;
   final ValueChanged<String?> onManagerChanged;
-  final VoidCallback onSelectJoinDate;
-  final VoidCallback onSelectContractEndDate;
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('yyyy-MM-dd');
     return AdminEmployeeProfileInfoCardWidget(
       title: 'employee.profile.sectionJob'.tr(context: context),
       icon: Icons.work_outline_rounded,
@@ -108,15 +102,6 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
               employeeCodeController.text =
                   CodeGeneratorHelper.generateEmployeeCode();
             },
-          ),
-        ),
-        hSpace(10),
-        CustomTextFormField(
-          controller: gradeController,
-          hintText: 'employee.profile.grade'.tr(context: context),
-          prefixIcon: const Icon(
-            Icons.military_tech_outlined,
-            color: AppColors.brandPrimary,
           ),
         ),
         hSpace(10),
@@ -158,15 +143,6 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
               onChanged: onDepartmentChanged,
             );
           },
-        ),
-        hSpace(10),
-        CustomTextFormField(
-          controller: divisionController,
-          hintText: 'employee.profile.division'.tr(context: context),
-          prefixIcon: const Icon(
-            Icons.hub_outlined,
-            color: AppColors.brandPrimary,
-          ),
         ),
         hSpace(10),
         DropdownButtonFormField<String>(
@@ -279,39 +255,49 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
             },
           ),
         hSpace(10),
-        DropdownButtonFormField<String>(
-          isExpanded: true,
-          initialValue: selectedWorkSystem,
-          decoration: InputDecoration(
-            labelText: 'employee.profile.workSystem'.tr(context: context),
-            prefixIcon: const Icon(
-              Icons.devices_other_rounded,
-              color: AppColors.brandPrimary,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 12.w,
-              vertical: 12.h,
-            ),
-          ),
-          items: const [
-            DropdownMenuItem(
-              value: 'onsite',
-              child: Text('Onsite (حضوري)', overflow: TextOverflow.ellipsis),
-            ),
-            DropdownMenuItem(
-              value: 'remote',
-              child: Text('Remote (عن بعد)', overflow: TextOverflow.ellipsis),
-            ),
-            DropdownMenuItem(
-              value: 'hybrid',
-              child: Text('Hybrid (هجين)', overflow: TextOverflow.ellipsis),
-            ),
-          ],
-          onChanged: (val) {
-            if (val != null) onWorkSystemChanged(val);
+        AdminEmployeeWorkSystemWidget(
+          selectedSystem: selectedWorkSystem,
+          selectedPolicyId: selectedRemoteWorkPolicyId,
+          onSystemChanged: onWorkSystemChanged,
+          onPolicyChanged: onRemoteWorkPolicyChanged,
+        ),
+        hSpace(10),
+        BlocBuilder<AdminShiftsPoliciesCubit, AdminShiftsPoliciesState>(
+          builder: (context, shiftState) {
+            final shifts = shiftState.maybeWhen(
+              success: (list, _) => list,
+              orElse: () => context.read<AdminShiftsPoliciesCubit>().shifts,
+            );
+            final validShifts = shifts.where((s) => s.id != null).toList();
+            return DropdownButtonFormField<int>(
+              isExpanded: true,
+              initialValue: validShifts.any((s) => s.id == selectedShiftId)
+                  ? selectedShiftId
+                  : null,
+              decoration: InputDecoration(
+                labelText: 'admin.employeeWizard.shift'.tr(context: context),
+                prefixIcon: const Icon(
+                  Icons.schedule_outlined,
+                  color: AppColors.brandPrimary,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12.w,
+                  vertical: 12.h,
+                ),
+              ),
+              items: validShifts
+                  .map(
+                    (s) => DropdownMenuItem<int>(
+                      value: s.id!,
+                      child: Text(s.name ?? '-'),
+                    ),
+                  )
+                  .toList(),
+              onChanged: onShiftChanged,
+            );
           },
         ),
         hSpace(10),
@@ -365,96 +351,6 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
               onChanged: onManagerChanged,
             );
           },
-        ),
-        hSpace(10),
-        CustomTextFormField(
-          controller: contractTypeController,
-          hintText: 'employee.profile.contractType'.tr(context: context),
-          prefixIcon: const Icon(
-            Icons.description_outlined,
-            color: AppColors.brandPrimary,
-          ),
-        ),
-        hSpace(10),
-        CustomTextFormField(
-          controller: contractStatusController,
-          hintText: 'Status (نشط / فترة تجربة / موقوف)',
-          prefixIcon: const Icon(
-            Icons.verified_user_outlined,
-            color: AppColors.brandPrimary,
-          ),
-        ),
-        hSpace(10),
-        Row(
-          children: [
-            Expanded(
-              child: InkWell(
-                onTap: onSelectJoinDate,
-                borderRadius: BorderRadius.circular(10.r),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 14.h,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.border),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'employee.profile.joinDate'.tr(context: context),
-                        style: AppTextStyles.font11Regular,
-                      ),
-                      hSpace(2),
-                      Text(
-                        joinDate != null ? dateFormat.format(joinDate!) : '-',
-                        style: AppTextStyles.font14Regular.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            wSpace(10),
-            Expanded(
-              child: InkWell(
-                onTap: onSelectContractEndDate,
-                borderRadius: BorderRadius.circular(10.r),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 14.h,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.border),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'employee.profile.contractEndDate'.tr(context: context),
-                        style: AppTextStyles.font11Regular,
-                      ),
-                      hSpace(2),
-                      Text(
-                        contractEndDate != null
-                            ? dateFormat.format(contractEndDate!)
-                            : '-',
-                        style: AppTextStyles.font14Regular.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ],
     );

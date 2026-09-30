@@ -14,11 +14,13 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locationType =
+        (employee.attendanceLocationType ?? 'branch').toLowerCase();
+
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: Column(
         children: [
-          // Section 1: Employment Details
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.sectionJob'.tr(context: context),
             icon: Icons.work_outline_rounded,
@@ -35,25 +37,28 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
                 icon: Icons.badge_outlined,
               ),
               AdminEmployeeProfileInfoRowWidget(
-                label: 'employee.profile.grade'.tr(context: context),
-                value: employee.resolvedGrade,
-                icon: Icons.military_tech_outlined,
-              ),
-              AdminEmployeeProfileInfoRowWidget(
                 label: 'employee.profile.department'.tr(context: context),
                 value: employee.departmentName ?? '-',
                 icon: Icons.business_outlined,
               ),
               AdminEmployeeProfileInfoRowWidget(
-                label: 'employee.profile.division'.tr(context: context),
-                value: employee.resolvedDivision,
-                icon: Icons.account_tree_outlined,
+                label: 'employee.profile.locationType'.tr(context: context),
+                value: locationType.toUpperCase(),
+                icon: Icons.place_outlined,
               ),
-              AdminEmployeeProfileInfoRowWidget(
-                label: 'employee.profile.branch'.tr(context: context),
-                value: employee.branchName ?? '-',
-                icon: Icons.location_on_outlined,
-              ),
+              if (locationType == 'branch')
+                AdminEmployeeProfileInfoRowWidget(
+                  label: 'employee.profile.branch'.tr(context: context),
+                  value: employee.branchName ?? '-',
+                  icon: Icons.location_on_outlined,
+                )
+              else if (employee.assignedSiteIds != null &&
+                  employee.assignedSiteIds!.isNotEmpty)
+                AdminEmployeeProfileInfoRowWidget(
+                  label: 'employee.profile.site'.tr(context: context),
+                  value: employee.assignedSiteIds!.join(', '),
+                  icon: Icons.location_city_outlined,
+                ),
               AdminEmployeeProfileInfoRowWidget(
                 label: 'employee.profile.shift'.tr(context: context),
                 value: employee.shiftName ?? '-',
@@ -65,6 +70,14 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
                 icon: Icons.devices_other_outlined,
                 valueColor: AppColors.brandPrimary,
               ),
+              if (employee.remoteWorkPolicyId != null)
+                AdminEmployeeProfileInfoRowWidget(
+                  label: 'Work Policy',
+                  value:
+                      employee.workPolicy?.name ??
+                      employee.remoteWorkPolicyId!,
+                  icon: Icons.policy_outlined,
+                ),
               AdminEmployeeProfileInfoRowWidget(
                 label: 'employee.profile.directManager'.tr(context: context),
                 value:
@@ -72,24 +85,6 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
                     'employee.profile.noManager'.tr(context: context),
                 icon: Icons.supervisor_account_outlined,
               ),
-              AdminEmployeeProfileInfoRowWidget(
-                label: 'employee.profile.contractType'.tr(context: context),
-                value: employee.resolvedContractType,
-                icon: Icons.assignment_outlined,
-              ),
-              AdminEmployeeProfileInfoRowWidget(
-                label: 'employee.profile.joinDate'.tr(context: context),
-                value: employee.resolvedJoinDate,
-                icon: Icons.event_available_outlined,
-              ),
-              if (employee.contractEndDate != null)
-                AdminEmployeeProfileInfoRowWidget(
-                  label: 'employee.profile.contractEndDate'.tr(
-                    context: context,
-                  ),
-                  value: employee.contractEndDate!,
-                  icon: Icons.event_busy_outlined,
-                ),
             ],
           ),
         ],
