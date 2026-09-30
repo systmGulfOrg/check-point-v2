@@ -50,11 +50,9 @@ class _AdminAssignWorkerSheetWidgetState
   Future<void> _handleSave() async {
     if (!_formKey.currentState!.validate() || _selectedWorker == null) {
       if (_selectedWorker == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('admin.assignments.worker'.tr()),
-            backgroundColor: AppColors.error,
-          ),
+        CustomSnackBar.showError(
+          context,
+          message: 'admin.assignments.worker'.tr(),
         );
       }
       return;
@@ -76,11 +74,9 @@ class _AdminAssignWorkerSheetWidgetState
         setState(() => _isLoading = false);
         if (success) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('admin.assignments.saveSuccess'.tr()),
-              backgroundColor: AppColors.success,
-            ),
+          CustomSnackBar.showSuccess(
+            context,
+            message: 'admin.assignments.saveSuccess'.tr(),
           );
         }
       }

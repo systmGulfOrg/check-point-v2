@@ -73,11 +73,9 @@ class _AdminAddContractorSheetWidgetState
         setState(() => _isLoading = false);
         if (success) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('admin.contractors.saveSuccess'.tr()),
-              backgroundColor: AppColors.success,
-            ),
+          CustomSnackBar.showSuccess(
+            context,
+            message: 'admin.contractors.saveSuccess'.tr(),
           );
         }
       }

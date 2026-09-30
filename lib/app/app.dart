@@ -19,6 +19,7 @@ class CheckPointApp extends StatelessWidget {
       minTextAdapt: true,
       builder: (_, child) {
         return MaterialApp(
+          navigatorKey: AppRouter.navigatorKey,
           title: 'Check-Point HRM',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.light,

@@ -47,11 +47,9 @@ class _SupervisorClockInEmployeeSheetWidgetState
 
   Future<void> _submit() async {
     if (selectedEmployeeId == null || selectedEmployeeId!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('supervisor.attendance.selectEmployee'.tr()),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: 'supervisor.attendance.selectEmployee'.tr(),
       );
       return;
     }
@@ -79,11 +77,9 @@ class _SupervisorClockInEmployeeSheetWidgetState
 
     if (success) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('supervisor.attendance.recordSuccess'.tr()),
-          backgroundColor: AppColors.success,
-        ),
+      CustomSnackBar.showSuccess(
+        context,
+        message: 'supervisor.attendance.recordSuccess'.tr(),
       );
     }
   }

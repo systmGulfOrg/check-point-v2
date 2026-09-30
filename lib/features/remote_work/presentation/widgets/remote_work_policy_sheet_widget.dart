@@ -305,24 +305,18 @@ class _RemoteWorkPolicySheetWidgetState
                       isLoading: isSubmitting,
                       onTap: () async {
                         if (!isOnsite && remoteDays.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
+                          CustomSnackBar.showError(
+                            context,
+                            message:
                                 'remoteWork.daysRequired'.tr(context: context),
-                              ),
-                              backgroundColor: AppColors.error,
-                            ),
                           );
                           return;
                         }
                         if (isHybrid && onsiteDays.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
+                          CustomSnackBar.showError(
+                            context,
+                            message:
                                 'remoteWork.daysRequired'.tr(context: context),
-                              ),
-                              backgroundColor: AppColors.error,
-                            ),
                           );
                           return;
                         }

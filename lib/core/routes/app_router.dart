@@ -93,6 +93,9 @@ import 'routes.dart';
 class AppRouter {
   const AppRouter._();
 
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
   static Route<void> _fadeRoute({
     required Widget child,
     required RouteSettings settings,

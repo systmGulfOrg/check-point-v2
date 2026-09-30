@@ -62,13 +62,9 @@ class _AdminCreateDepartmentSheetWidgetState
 
     if (success) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'admin.locations.create.successMessage'.tr(context: context),
-          ),
-          backgroundColor: AppColors.success,
-        ),
+      CustomSnackBar.showSuccess(
+        context,
+        message: 'admin.locations.create.successMessage'.tr(context: context),
       );
     }
   }

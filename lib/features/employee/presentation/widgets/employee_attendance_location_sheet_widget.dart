@@ -98,9 +98,10 @@ class _EmployeeAttendanceLocationSheetWidgetState
       'onsite' => 'attendance.onsiteWorkDayLocationMessage',
       _ => 'attendance.unscheduledWorkDayLocationMessage',
     };
-    ScaffoldMessenger.of(
+    CustomSnackBar.show(
       context,
-    ).showSnackBar(SnackBar(content: Text(messageKey.tr(context: context))));
+      message: messageKey.tr(context: context),
+    );
   }
 
   @override

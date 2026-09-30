@@ -54,11 +54,9 @@ class _SupervisorCreatePlanSheetWidgetState
   Future<void> _submit() async {
     final title = nameController.text.trim();
     if (title.isEmpty || selectedEmployeeId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('supervisor.plans.create.requiredFields'.tr()),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: 'supervisor.plans.create.requiredFields'.tr(),
       );
       return;
     }
@@ -81,11 +79,9 @@ class _SupervisorCreatePlanSheetWidgetState
 
     if (success) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('supervisor.plans.create.success'.tr()),
-          backgroundColor: AppColors.success,
-        ),
+      CustomSnackBar.showSuccess(
+        context,
+        message: 'supervisor.plans.create.success'.tr(),
       );
     }
   }

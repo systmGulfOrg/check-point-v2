@@ -47,11 +47,9 @@ class _SupervisorCreateTaskSheetWidgetState
   Future<void> _submit() async {
     final title = titleController.text.trim();
     if (title.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('supervisor.tasks.create.titleRequired'.tr()),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: 'supervisor.tasks.create.titleRequired'.tr(),
       );
       return;
     }
@@ -79,11 +77,9 @@ class _SupervisorCreateTaskSheetWidgetState
 
     if (success) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('supervisor.tasks.create.success'.tr()),
-          backgroundColor: AppColors.success,
-        ),
+      CustomSnackBar.showSuccess(
+        context,
+        message: 'supervisor.tasks.create.success'.tr(),
       );
     }
   }
