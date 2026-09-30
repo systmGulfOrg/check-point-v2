@@ -22,6 +22,7 @@ import 'package:check_point_v2/features/admin/presentation/screens/admin_employe
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_profile/admin_employee_profile_cubit.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_main_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/screens/admin_tasks_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_permission_details_screen.dart';
 import 'package:check_point_v2/features/admin/data/models/permissions/admin_permission_employee_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/permissions/admin_permissions_cubit.dart';
@@ -238,6 +239,7 @@ class AppRouter {
           ),
         );
 
+      case '/':
       case AppRoutes.login:
         return _fadeRoute(
           settings: const RouteSettings(name: AppRoutes.login),
@@ -457,7 +459,7 @@ class AppRouter {
               ),
               BlocProvider<ProjectsCubit>(create: (_) => sl<ProjectsCubit>()),
             ],
-            child: const ProjectsScreen(),
+            child: const AdminTasksScreen(),
           ),
         );
 

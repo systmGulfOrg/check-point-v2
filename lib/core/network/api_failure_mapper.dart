@@ -27,6 +27,20 @@ class ApiFailureMapper {
               normalizedMessage.contains('lock'))) {
         return const ApiFailure(messageKey: 'errors.accountLocked');
       }
+      if (normalizedMessage.contains('invalid credential') ||
+          normalizedMessage.contains('invalid username') ||
+          normalizedMessage.contains('invalid password') ||
+          normalizedMessage.contains('wrong password') ||
+          normalizedMessage.contains('incorrect username') ||
+          normalizedMessage.contains('incorrect password') ||
+          normalizedMessage.contains('user not found') ||
+          normalizedMessage.contains('password is incorrect')) {
+        return const ApiFailure(messageKey: 'errors.invalidCredentials');
+      }
+    }
+    final firstMessage = (messages ?? const []).firstOrNull;
+    if (firstMessage != null && firstMessage.trim().isNotEmpty) {
+      return ApiFailure(messageKey: firstMessage.trim());
     }
     return ApiFailure(messageKey: fallbackMessageKey);
   }
@@ -39,6 +53,12 @@ class ApiFailureMapper {
       final messages = <String>[
         if (payload is Map && payload['errors'] is List)
           ...(payload['errors'] as List).whereType<String>(),
+        if (payload is Map && payload['messages'] is List)
+          ...(payload['messages'] as List).whereType<String>(),
+        if (payload is Map &&
+            payload['message'] is String &&
+            (payload['message'] as String).isNotEmpty)
+          payload['message'] as String,
         if (payload is Map && payload['validationErrors'] is List)
           for (final item in (payload['validationErrors'] as List))
             if (item is Map && item['errorMessage'] is String)
@@ -56,6 +76,16 @@ class ApiFailureMapper {
               (message.contains('lock') || message.contains('try again')))) {
         return const ApiFailure(messageKey: 'errors.accountLocked');
       }
+      if (message.contains('invalid credential') ||
+          message.contains('invalid username') ||
+          message.contains('invalid password') ||
+          message.contains('wrong password') ||
+          message.contains('incorrect username') ||
+          message.contains('incorrect password') ||
+          message.contains('user not found') ||
+          message.contains('password is incorrect')) {
+        return const ApiFailure(messageKey: 'errors.invalidCredentials');
+      }
       return switch (error.type) {
         DioExceptionType.connectionError ||
         DioExceptionType.connectionTimeout ||
@@ -63,9 +93,9 @@ class ApiFailureMapper {
         DioExceptionType.sendTimeout => const ApiFailure(
           messageKey: 'errors.network',
         ),
-        _ when status == 401 => const ApiFailure(
-          messageKey: 'errors.unauthorized',
-        ),
+        _ when status == 401 => messages.isNotEmpty
+            ? ApiFailure(messageKey: messages.join(' '))
+            : const ApiFailure(messageKey: 'errors.unauthorized'),
         _ when status == 403 => ApiFailure(
           messageKey:
               messages.any(
@@ -75,9 +105,15 @@ class ApiFailureMapper {
               : (message.contains('locked') ||
                     (message.contains('failed') && message.contains('login')))
               ? 'errors.accountLocked'
+              : messages.isNotEmpty
+              ? messages.join(' ')
               : 'errors.forbidden',
         ),
-        _ when status == 404 => const ApiFailure(messageKey: 'errors.notFound'),
+        _ when status == 404 => ApiFailure(
+          messageKey: messages.isNotEmpty
+              ? messages.join(' ')
+              : 'errors.notFound',
+        ),
         _ when status == 409 => ApiFailure(
           messageKey: messages.isNotEmpty
               ? messages.join(' ')
@@ -93,10 +129,14 @@ class ApiFailureMapper {
               ? messages.join(' ')
               : 'errors.rateLimit',
         ),
-        _ when status != null && status >= 500 => const ApiFailure(
-          messageKey: 'errors.server',
+        _ when status != null && status >= 500 => ApiFailure(
+          messageKey: messages.isNotEmpty
+              ? messages.join(' ')
+              : 'errors.server',
         ),
-        _ => const ApiFailure(messageKey: 'errors.unknown'),
+        _ => messages.isNotEmpty
+            ? ApiFailure(messageKey: messages.join(' '))
+            : const ApiFailure(messageKey: 'errors.unknown'),
       };
     }
     return const ApiFailure(messageKey: 'errors.unknown');

@@ -69,50 +69,58 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final content = AnimatedSwitcher(
-            duration: AppMotion.tabSwitch,
-            switchInCurve: AppMotion.enterCurve,
-            switchOutCurve: AppMotion.exitCurve,
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: ScaleTransition(
-                scale: Tween<double>(
-                  begin: AppMotion.routeScaleBegin,
-                  end: 1,
-                ).animate(animation),
-                child: child,
-              ),
-            ),
-            child: IndexedStack(
-              key: ValueKey<int>(_selectedIndex),
-              index: _selectedIndex,
-              children: _screens,
-            ),
-          );
-          if (constraints.maxWidth >= 800) {
-            return Row(
-              children: [
-                AdminDesktopSidebarWidget(
-                  selectedIndex: _selectedIndex,
-                  onTabSelected: _onTabSelected,
+    return PopScope(
+      canPop: _selectedIndex == 0,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop && _selectedIndex != 0) {
+          _onTabSelected(0);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            final content = AnimatedSwitcher(
+              duration: AppMotion.tabSwitch,
+              switchInCurve: AppMotion.enterCurve,
+              switchOutCurve: AppMotion.exitCurve,
+              transitionBuilder: (child, animation) => FadeTransition(
+                opacity: animation,
+                child: ScaleTransition(
+                  scale: Tween<double>(
+                    begin: AppMotion.routeScaleBegin,
+                    end: 1,
+                  ).animate(animation),
+                  child: child,
                 ),
-                Expanded(child: content),
-              ],
+              ),
+              child: IndexedStack(
+                key: ValueKey<int>(_selectedIndex),
+                index: _selectedIndex,
+                children: _screens,
+              ),
             );
-          }
-          return content;
-        },
+            if (constraints.maxWidth >= 800) {
+              return Row(
+                children: [
+                  AdminDesktopSidebarWidget(
+                    selectedIndex: _selectedIndex,
+                    onTabSelected: _onTabSelected,
+                  ),
+                  Expanded(child: content),
+                ],
+              );
+            }
+            return content;
+          },
+        ),
+        bottomNavigationBar: MediaQuery.sizeOf(context).width < 800
+            ? AdminNavBarWidget(
+                selectedIndex: _selectedIndex,
+                onTabSelected: _onTabSelected,
+              )
+            : null,
       ),
-      bottomNavigationBar: MediaQuery.sizeOf(context).width < 800
-          ? AdminNavBarWidget(
-              selectedIndex: _selectedIndex,
-              onTabSelected: _onTabSelected,
-            )
-          : null,
     );
   }
 }
