@@ -8,7 +8,6 @@ import 'package:check_point_v2/features/admin/data/models/employee/employee_mode
 import 'admin_employee_edit_account_card_widget.dart';
 import 'admin_employee_edit_emergency_card_widget.dart';
 import 'admin_employee_edit_job_card_widget.dart';
-import 'admin_employee_edit_payroll_card_widget.dart';
 import 'admin_employee_edit_personal_card_widget.dart';
 
 class AdminEmployeeProfileEditFormWidget extends StatefulWidget {
@@ -67,15 +66,6 @@ class _AdminEmployeeProfileEditFormWidgetState
   late final TextEditingController _emergencyNameController;
   late final TextEditingController _emergencyRelationController;
   late final TextEditingController _emergencyPhoneController;
-
-  // Payroll Controllers
-  late final TextEditingController _basicSalaryController;
-  late final TextEditingController _allowancesController;
-  late final TextEditingController _currencyController;
-  late final TextEditingController _bankNameController;
-  late final TextEditingController _bankAccountNumberController;
-  late final TextEditingController _ibanController;
-  late final TextEditingController _socialInsuranceNumberController;
 
   // Account Controllers
   late final TextEditingController _userNameController;
@@ -157,23 +147,6 @@ class _AdminEmployeeProfileEditFormWidgetState
       text: emp.emergencyContactPhone ?? '',
     );
 
-    // Payroll
-    _basicSalaryController = TextEditingController(
-      text: emp.basicSalary != null ? '${emp.basicSalary}' : '',
-    );
-    _allowancesController = TextEditingController(
-      text: emp.allowances != null ? '${emp.allowances}' : '',
-    );
-    _currencyController = TextEditingController(text: emp.currency ?? 'EGP');
-    _bankNameController = TextEditingController(text: emp.bankName ?? '');
-    _bankAccountNumberController = TextEditingController(
-      text: emp.bankAccountNumber ?? '',
-    );
-    _ibanController = TextEditingController(text: emp.iban ?? '');
-    _socialInsuranceNumberController = TextEditingController(
-      text: emp.socialInsuranceNumber ?? '',
-    );
-
     // Account
     _userNameController = TextEditingController(text: emp.userName ?? '');
     _passwordController = TextEditingController();
@@ -213,13 +186,6 @@ class _AdminEmployeeProfileEditFormWidgetState
     _emergencyNameController.dispose();
     _emergencyRelationController.dispose();
     _emergencyPhoneController.dispose();
-    _basicSalaryController.dispose();
-    _allowancesController.dispose();
-    _currencyController.dispose();
-    _bankNameController.dispose();
-    _bankAccountNumberController.dispose();
-    _ibanController.dispose();
-    _socialInsuranceNumberController.dispose();
     _userNameController.dispose();
     _passwordController.dispose();
     _leaveBalanceController.dispose();
@@ -321,24 +287,6 @@ class _AdminEmployeeProfileEditFormWidgetState
             : null,
         emergencyContactPhone: _emergencyPhoneController.text.trim().isNotEmpty
             ? _emergencyPhoneController.text.trim()
-            : null,
-        basicSalary: num.tryParse(_basicSalaryController.text.trim()),
-        allowances: num.tryParse(_allowancesController.text.trim()),
-        currency: _currencyController.text.trim().isNotEmpty
-            ? _currencyController.text.trim()
-            : 'EGP',
-        bankName: _bankNameController.text.trim().isNotEmpty
-            ? _bankNameController.text.trim()
-            : null,
-        bankAccountNumber: _bankAccountNumberController.text.trim().isNotEmpty
-            ? _bankAccountNumberController.text.trim()
-            : null,
-        iban: _ibanController.text.trim().isNotEmpty
-            ? _ibanController.text.trim()
-            : null,
-        socialInsuranceNumber:
-            _socialInsuranceNumberController.text.trim().isNotEmpty
-            ? _socialInsuranceNumberController.text.trim()
             : null,
         role: _selectedRoles.contains('HR')
             ? 'HR'
@@ -452,16 +400,6 @@ class _AdminEmployeeProfileEditFormWidgetState
             emergencyNameController: _emergencyNameController,
             emergencyRelationController: _emergencyRelationController,
             emergencyPhoneController: _emergencyPhoneController,
-          ),
-          hSpace(16),
-          AdminEmployeeEditPayrollCardWidget(
-            basicSalaryController: _basicSalaryController,
-            allowancesController: _allowancesController,
-            currencyController: _currencyController,
-            bankNameController: _bankNameController,
-            bankAccountNumberController: _bankAccountNumberController,
-            ibanController: _ibanController,
-            socialInsuranceNumberController: _socialInsuranceNumberController,
           ),
           hSpace(16),
           AdminEmployeeEditAccountCardWidget(
