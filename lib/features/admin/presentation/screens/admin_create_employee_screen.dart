@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -298,6 +299,29 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                                 context: context,
                               ),
                               controller: mobileController,
+                              readOnly: true,
+                              suffixIcon: IconButton(
+                                icon: const Icon(
+                                  Icons.copy_rounded,
+                                  color: AppColors.brandPrimary,
+                                ),
+                                onPressed: () {
+                                  if (mobileController.text.isNotEmpty) {
+                                    Clipboard.setData(
+                                      ClipboardData(
+                                        text: mobileController.text,
+                                      ),
+                                    );
+                                    CustomSnackBar.showSuccess(
+                                      context,
+                                      message:
+                                          'admin.requests.copiedMobileId'.tr(
+                                        context: context,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
                             ),
                           ),
                           AdminWizardFieldWidget(

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -328,6 +329,25 @@ class _AdminEditEmployeeSheetWidgetState
             CustomTextFormField(
               controller: _mobileIdController,
               hintText: 'admin.employees.mobileId'.tr(context: context),
+              readOnly: true,
+              suffixIcon: IconButton(
+                icon: const Icon(
+                  Icons.copy_rounded,
+                  color: AppColors.brandPrimary,
+                ),
+                onPressed: () {
+                  if (_mobileIdController.text.isNotEmpty) {
+                    Clipboard.setData(
+                      ClipboardData(text: _mobileIdController.text),
+                    );
+                    CustomSnackBar.showSuccess(
+                      context,
+                      message:
+                          'admin.requests.copiedMobileId'.tr(context: context),
+                    );
+                  }
+                },
+              ),
             ),
             hSpace(14),
             Text(
