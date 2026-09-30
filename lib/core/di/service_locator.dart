@@ -91,6 +91,10 @@ import 'package:check_point_v2/features/projects/data/apis/projects_api_service.
 import 'package:check_point_v2/features/projects/data/repos/projects_repo.dart';
 import 'package:check_point_v2/features/projects/data/repos/projects_repo_impl.dart';
 import 'package:check_point_v2/features/projects/presentation/cubit/projects_cubit.dart';
+import 'package:check_point_v2/features/attendance_points/data/apis/attendance_points_api_service.dart';
+import 'package:check_point_v2/features/attendance_points/data/repos/attendance_points_repo.dart';
+import 'package:check_point_v2/features/attendance_points/data/repos/attendance_points_repo_impl.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/cubit/attendance_points_cubit.dart';
 
 import 'package:check_point_v2/features/supervisor/data/apis/supervisor_api_service.dart';
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_attendance_repo.dart';
@@ -114,6 +118,9 @@ import 'package:check_point_v2/core/network/dio_factory.dart';
 import 'package:check_point_v2/core/network/device_identity_provider.dart';
 import 'package:check_point_v2/core/services/google_places_service.dart';
 import 'package:check_point_v2/core/services/location_service.dart';
+import 'package:check_point_v2/core/services/national_id_ocr.dart';
+import 'package:check_point_v2/features/identity/presentation/cubit/national_id_ocr_cubit.dart';
+import 'package:image_picker/image_picker.dart';
 
 final sl = GetIt.instance;
 
@@ -152,6 +159,9 @@ Future<void> setupServiceLocator() async {
     instanceName: 'external',
   );
   sl.registerLazySingleton<LocationService>(LocationService.new);
+  sl.registerLazySingleton<NationalIdOcr>(
+    () => NationalIdOcr(imagePicker: ImagePicker()),
+  );
   sl.registerLazySingleton<AttendanceVerificationService>(
     () => AttendanceVerificationService(
       locationService: sl<LocationService>(),
@@ -187,6 +197,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<ProjectsApiService>(
     () => ProjectsApiService(sl<Dio>()),
+  );
+  sl.registerLazySingleton<AttendancePointsApiService>(
+    () => AttendancePointsApiService(sl<Dio>()),
   );
 
   // Repositories
@@ -277,6 +290,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<RemoteWorkRepo>(
     () => RemoteWorkRepoImpl(api: sl<RemoteWorkApiService>()),
   );
+  sl.registerLazySingleton<AttendancePointsRepo>(
+    () => AttendancePointsRepoImpl(api: sl<AttendancePointsApiService>()),
+  );
 
   // UseCases
   sl.registerLazySingleton<LoginUseCase>(
@@ -311,6 +327,9 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<TenantLookupCubit>(
     () => TenantLookupCubit(tenantRepo: sl<TenantRepo>()),
   );
+  sl.registerFactory<NationalIdOcrCubit>(
+    () => NationalIdOcrCubit(ocr: sl<NationalIdOcr>()),
+  );
   sl.registerFactory<LoginCubit>(
     () => LoginCubit(
       loginUseCase: sl<LoginUseCase>(),
@@ -343,6 +362,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<ProjectsCubit>(
     () => ProjectsCubit(repo: sl<ProjectsRepo>()),
+  );
+  sl.registerFactory<AttendancePointsCubit>(
+    () => AttendancePointsCubit(repo: sl<AttendancePointsRepo>()),
   );
   sl.registerFactory<AdminEmployeesCubit>(
     () => AdminEmployeesCubit(employeeRepo: sl<AdminEmployeeRepo>()),
@@ -497,6 +519,7 @@ Future<void> setupServiceLocator() async {
     () => ContractorCubit(
       contractorRepo: sl<ContractorRepo>(),
       offlineSyncService: sl<OfflineAttendanceSyncService>(),
+      locationService: sl<LocationService>(),
     ),
   );
 }

@@ -7,7 +7,6 @@ import 'package:check_point_v2/features/admin/data/models/account_requests/accou
 import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
@@ -19,7 +18,6 @@ import 'package:check_point_v2/features/admin/presentation/screens/admin_create_
 import 'package:check_point_v2/features/admin/presentation/screens/admin_departments_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_leave_management_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_locations_screen.dart';
-import 'package:check_point_v2/features/admin/presentation/screens/admin_samco_sites_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_employee_profile_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_profile/admin_employee_profile_cubit.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
@@ -70,6 +68,9 @@ import 'package:check_point_v2/features/supervisor/presentation/screens/supervis
 import 'package:check_point_v2/features/remote_work/presentation/cubit/remote_work_cubit.dart';
 import 'package:check_point_v2/features/remote_work/presentation/cubit/employee_work_access_cubit.dart';
 import 'package:check_point_v2/features/projects/presentation/cubit/projects_cubit.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/cubit/attendance_points_cubit.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/screens/attendance_points_screen.dart';
+import 'package:check_point_v2/features/identity/presentation/cubit/national_id_ocr_cubit.dart';
 import 'package:check_point_v2/features/projects/presentation/screens/projects_screen.dart';
 import 'package:check_point_v2/features/remote_work/presentation/screens/remote_work_screen.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
@@ -156,6 +157,14 @@ class AppRouter {
 
   static Route<void> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case AppRoutes.attendancePoints:
+        return MaterialPageRoute(
+          settings: const RouteSettings(name: AppRoutes.attendancePoints),
+          builder: (_) => BlocProvider<AttendancePointsCubit>(
+            create: (_) => sl<AttendancePointsCubit>()..load(),
+            child: const AttendancePointsScreen(),
+          ),
+        );
       case AppRoutes.adminEmployeeAudit:
         final employeeId = settings.arguments as String;
         return MaterialPageRoute(
@@ -206,6 +215,12 @@ class AppRouter {
               ),
               BlocProvider<AdminBranchesCubit>(
                 create: (_) => sl<AdminBranchesCubit>()..load(),
+              ),
+              BlocProvider<ContractorCubit>(
+                create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+              ),
+              BlocProvider<ContractorCubit>(
+                create: (_) => sl<ContractorCubit>()..loadDashboardData(),
               ),
               BlocProvider<RemoteWorkCubit>(
                 create: (_) => sl<RemoteWorkCubit>()..load(),
@@ -279,6 +294,9 @@ class AppRouter {
               BlocProvider<AdminBranchesCubit>(
                 create: (_) => sl<AdminBranchesCubit>()..load(),
               ),
+              BlocProvider<ContractorCubit>(
+                create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+              ),
               BlocProvider<AdminDepartmentsCubit>(
                 create: (_) => sl<AdminDepartmentsCubit>()..load(),
               ),
@@ -287,6 +305,9 @@ class AppRouter {
               ),
               BlocProvider<RemoteWorkCubit>(
                 create: (_) => sl<RemoteWorkCubit>()..load(),
+              ),
+              BlocProvider<NationalIdOcrCubit>(
+                create: (_) => sl<NationalIdOcrCubit>(),
               ),
             ],
             child: AdminCreateEmployeeScreen(
@@ -349,9 +370,8 @@ class AppRouter {
               BlocProvider<AdminDepartmentsCubit>(
                 create: (_) => sl<AdminDepartmentsCubit>()..load(),
               ),
-              BlocProvider<AdminCustomersCubit>(
-                create: (_) =>
-                    sl<AdminCustomersCubit>()..load(type: 'Customer'),
+              BlocProvider<ContractorCubit>(
+                create: (_) => sl<ContractorCubit>()..loadDashboardData(),
               ),
             ],
             child: const AdminLocationsScreen(),
@@ -364,15 +384,6 @@ class AppRouter {
           child: BlocProvider<AdminShiftsPoliciesCubit>(
             create: (_) => sl<AdminShiftsPoliciesCubit>()..load(),
             child: const AdminShiftsPoliciesScreen(),
-          ),
-        );
-
-      case AppRoutes.adminSamcoSites:
-        return _slideRoute(
-          settings: const RouteSettings(name: AppRoutes.adminSamcoSites),
-          child: BlocProvider<ContractorCubit>(
-            create: (_) => sl<ContractorCubit>()..loadDashboardData(),
-            child: const AdminSamcoSitesScreen(),
           ),
         );
 
@@ -714,7 +725,10 @@ class AppRouter {
       case AppRoutes.contractorAddWorker:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.contractorAddWorker),
-          child: const ContractorAddWorkerScreen(),
+          child: BlocProvider<NationalIdOcrCubit>(
+            create: (_) => sl<NationalIdOcrCubit>(),
+            child: const ContractorAddWorkerScreen(),
+          ),
         );
       case AppRoutes.contractorCorrectionRequest:
         return _slideRoute(

@@ -18,7 +18,6 @@ class AppRoutes {
   static const String supervisorPlans = '/supervisor/plans';
   static const String adminDepartments = '/admin/departments';
   static const String adminLocations = '/admin/locations';
-  static const String adminSamcoSites = '/admin/samco-sites';
   static const String adminShiftsPolicies = '/admin/shifts-policies';
   static const String adminPermissions = '/admin/permissions';
   static const String adminPermissionDetails = '/admin/permissions/details';
@@ -44,4 +43,5 @@ class AppRoutes {
   static const String supervisorContractors = '/supervisor/contractors';
   static const String adminContractors = '/admin/contractors';
   static const String adminWorkerAssignments = '/admin/worker-assignments';
+  static const String attendancePoints = '/attendance-points';
 }
