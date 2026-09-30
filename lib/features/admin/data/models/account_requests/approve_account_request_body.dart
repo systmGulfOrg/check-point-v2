@@ -16,6 +16,7 @@ class ApproveAccountRequestBody {
     this.position,
     this.employeeCode,
     this.email,
+    this.nationalId,
     this.workSystem,
     this.remoteWorkPolicyId,
   });
@@ -31,6 +32,7 @@ class ApproveAccountRequestBody {
   final String? position;
   final String? employeeCode;
   final String? email;
+  final String? nationalId;
   final String? workSystem;
   final String? remoteWorkPolicyId;
 

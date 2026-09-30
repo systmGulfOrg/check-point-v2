@@ -14,6 +14,10 @@ class EditEmployeeRequestBody {
     this.roles,
     this.departmentId,
     this.branchId,
+    this.siteId,
+    this.attendanceLocationType,
+    this.branchIds,
+    this.siteIds,
     this.shiftId,
     this.phone,
     this.email,
@@ -68,6 +72,10 @@ class EditEmployeeRequestBody {
   final List<String>? roles;
   final int? departmentId;
   final int? branchId;
+  final String? siteId;
+  final String? attendanceLocationType;
+  final List<int>? branchIds;
+  final List<String>? siteIds;
   final int? shiftId;
   final String? phone;
   final String? email;

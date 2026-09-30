@@ -29,7 +29,7 @@ class AdminEmployeeEditAccountCardWidget extends StatelessWidget {
   final ValueChanged<bool> onCanAddAttendanceChanged;
   final ValueChanged<bool> onCanAddPlanChanged;
 
-  static const List<String> _roles = ['Employee', 'Supervisor', 'HR', 'Admin'];
+  static const List<String> _roles = ['HR', 'Supervisor', 'Contractor'];
 
   @override
   Widget build(BuildContext context) {
@@ -40,26 +40,37 @@ class AdminEmployeeEditAccountCardWidget extends StatelessWidget {
         CustomTextFormField(
           controller: userNameController,
           hintText: 'Username (اسم المستخدم)',
-          prefixIcon: const Icon(Icons.account_circle_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.account_circle_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: passwordController,
           hintText: 'New Password - Optional (كلمة مرور جديدة)',
           obscureText: true,
-          prefixIcon: const Icon(Icons.lock_outline_rounded, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.lock_outline_rounded,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: leaveBalanceController,
           hintText: 'Annual Leave Balance (رصيد الإجازات السنوي)',
           keyboardType: TextInputType.number,
-          prefixIcon: const Icon(Icons.calendar_month_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.calendar_month_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(14),
         Text(
           'employee.profile.assignedRoles'.tr(context: context),
-          style: AppTextStyles.font13Medium.copyWith(fontWeight: FontWeight.w600),
+          style: AppTextStyles.font13Medium.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
         hSpace(8),
         Wrap(
@@ -68,19 +79,28 @@ class AdminEmployeeEditAccountCardWidget extends StatelessWidget {
           children: _roles.map((role) {
             final isSelected = selectedRoles.contains(role);
             return FilterChip(
-              label: Text(role),
+              label: Text(
+                switch (role) {
+                  'HR' => 'admin.roles.hr'.tr(context: context),
+                  'Supervisor' => 'admin.roles.supervisor'.tr(context: context),
+                  'Contractor' => 'admin.roles.contractor'.tr(context: context),
+                  _ => role,
+                },
+                style: AppTextStyles.font12Medium.copyWith(
+                  color: isSelected ? AppColors.white : AppColors.brandInk,
+                ),
+              ),
               selected: isSelected,
               onSelected: (_) => onRoleToggled(role),
-              selectedColor: AppColors.brandPrimary.withValues(alpha: 0.15),
-              checkmarkColor: AppColors.brandPrimary,
-              labelStyle: AppTextStyles.font13Medium.copyWith(
-                color: isSelected ? AppColors.brandPrimary : AppColors.textPrimary,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-              ),
+              selectedColor: AppColors.brandPrimary,
+              backgroundColor: AppColors.pageBackground,
+              checkmarkColor: AppColors.white,
               side: BorderSide(
                 color: isSelected ? AppColors.brandPrimary : AppColors.border,
               ),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.r),
+              ),
             );
           }).toList(),
         ),

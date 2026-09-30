@@ -13,6 +13,9 @@ import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
+import 'package:check_point_v2/features/contractor/data/models/site_boundary_model.dart';
+import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
+import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_state.dart';
 import '../admin_employee_profile_info_card_widget.dart';
 
 class AdminEmployeeEditJobCardWidget extends StatelessWidget {
@@ -25,12 +28,20 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
     required this.contractStatusController,
     required this.selectedDepartmentId,
     required this.selectedBranchId,
+    required this.selectedBranchIds,
+    required this.selectedSiteIds,
+    required this.selectedLocationType,
+    required this.selectedSiteId,
     required this.selectedWorkSystem,
     required this.selectedDirectManagerId,
     required this.joinDate,
     required this.contractEndDate,
     required this.onDepartmentChanged,
     required this.onBranchChanged,
+    required this.onBranchIdsChanged,
+    required this.onSiteIdsChanged,
+    required this.onLocationTypeChanged,
+    required this.onSiteChanged,
     required this.onWorkSystemChanged,
     required this.onManagerChanged,
     required this.onSelectJoinDate,
@@ -46,12 +57,20 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
   final TextEditingController contractStatusController;
   final int? selectedDepartmentId;
   final int? selectedBranchId;
+  final Set<int> selectedBranchIds;
+  final Set<String> selectedSiteIds;
+  final String selectedLocationType;
+  final String? selectedSiteId;
   final String selectedWorkSystem;
   final String? selectedDirectManagerId;
   final DateTime? joinDate;
   final DateTime? contractEndDate;
   final ValueChanged<int?> onDepartmentChanged;
   final ValueChanged<int?> onBranchChanged;
+  final ValueChanged<Set<int>> onBranchIdsChanged;
+  final ValueChanged<Set<String>> onSiteIdsChanged;
+  final ValueChanged<String> onLocationTypeChanged;
+  final ValueChanged<String?> onSiteChanged;
   final ValueChanged<String> onWorkSystemChanged;
   final ValueChanged<String?> onManagerChanged;
   final VoidCallback onSelectJoinDate;
@@ -67,19 +86,28 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
         CustomTextFormField(
           controller: positionController,
           hintText: 'employee.profile.position'.tr(context: context),
-          prefixIcon: const Icon(Icons.badge_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.badge_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: employeeCodeController,
           hintText: 'employee.profile.code'.tr(context: context),
-          prefixIcon: const Icon(Icons.tag_rounded, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.tag_rounded,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: gradeController,
           hintText: 'employee.profile.grade'.tr(context: context),
-          prefixIcon: const Icon(Icons.military_tech_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.military_tech_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         BlocBuilder<AdminDepartmentsCubit, AdminDepartmentsState>(
@@ -90,18 +118,31 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
             );
             final items = departments
                 .where((d) => d.id != null)
-                .map((d) => DropdownMenuItem<int>(value: d.id!, child: Text(d.departmentName ?? '-')))
+                .map(
+                  (d) => DropdownMenuItem<int>(
+                    value: d.id!,
+                    child: Text(d.departmentName ?? '-'),
+                  ),
+                )
                 .toList();
             return DropdownButtonFormField<int>(
               isExpanded: true,
-              value: departments.any((d) => d.id == selectedDepartmentId)
+              initialValue: departments.any((d) => d.id == selectedDepartmentId)
                   ? selectedDepartmentId
                   : null,
               decoration: InputDecoration(
                 labelText: 'employee.profile.department'.tr(context: context),
-                prefixIcon: const Icon(Icons.business_outlined, color: AppColors.brandPrimary),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                prefixIcon: const Icon(
+                  Icons.business_outlined,
+                  color: AppColors.brandPrimary,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12.w,
+                  vertical: 12.h,
+                ),
               ),
               items: items,
               onChanged: onDepartmentChanged,
@@ -112,47 +153,140 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
         CustomTextFormField(
           controller: divisionController,
           hintText: 'employee.profile.division'.tr(context: context),
-          prefixIcon: const Icon(Icons.hub_outlined, color: AppColors.brandPrimary),
-        ),
-        hSpace(10),
-        BlocBuilder<AdminBranchesCubit, AdminBranchesState>(
-          builder: (context, state) {
-            final branches = state.maybeWhen(
-              success: (brs) => brs,
-              orElse: () => const <BranchModel>[],
-            );
-            final items = branches
-                .where((b) => b.id != null)
-                .map((b) => DropdownMenuItem<int>(value: b.id!, child: Text(b.name ?? '-', overflow: TextOverflow.ellipsis)))
-                .toList();
-            return DropdownButtonFormField<int>(
-              isExpanded: true,
-              value: branches.any((b) => b.id == selectedBranchId) ? selectedBranchId : null,
-              decoration: InputDecoration(
-                labelText: 'employee.profile.branch'.tr(context: context),
-                prefixIcon: const Icon(Icons.location_on_outlined, color: AppColors.brandPrimary),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-              ),
-              items: items,
-              onChanged: onBranchChanged,
-            );
-          },
+          prefixIcon: const Icon(
+            Icons.hub_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         DropdownButtonFormField<String>(
           isExpanded: true,
-          value: selectedWorkSystem,
+          initialValue: selectedLocationType,
+          decoration: InputDecoration(
+            labelText: 'employee.profile.locationType'.tr(context: context),
+            prefixIcon: const Icon(
+              Icons.location_on_outlined,
+              color: AppColors.brandPrimary,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 12.w,
+              vertical: 12.h,
+            ),
+          ),
+          items: [
+            DropdownMenuItem(
+              value: 'branch',
+              child: Text('employee.profile.branch'.tr(context: context)),
+            ),
+            DropdownMenuItem(
+              value: 'site',
+              child: Text('employee.profile.site'.tr(context: context)),
+            ),
+          ],
+          onChanged: (value) {
+            if (value != null) onLocationTypeChanged(value);
+          },
+        ),
+        hSpace(10),
+        Text(
+          'employee.profile.attendanceLocation'.tr(context: context),
+          style: AppTextStyles.font13Medium,
+        ),
+        hSpace(6),
+        if (selectedLocationType == 'branch')
+          BlocBuilder<AdminBranchesCubit, AdminBranchesState>(
+            builder: (context, state) {
+              final branches = state.maybeWhen(
+                success: (value) => value,
+                orElse: () => const <BranchModel>[],
+              );
+              return Wrap(
+                spacing: 8.w,
+                runSpacing: 6.h,
+                children: branches
+                    .where((branch) => branch.id != null)
+                    .map(
+                      (branch) => FilterChip(
+                        label: Text(branch.name ?? '-'),
+                        selected: selectedBranchIds.contains(branch.id),
+                        onSelected: (selected) {
+                          final values = {...selectedBranchIds};
+                          if (selected) {
+                            values.add(branch.id!);
+                          } else {
+                            values.remove(branch.id);
+                          }
+                          onBranchIdsChanged(values);
+                        },
+                      ),
+                    )
+                    .toList(),
+              );
+            },
+          ),
+        if (selectedLocationType == 'site')
+          BlocBuilder<ContractorCubit, ContractorState>(
+            builder: (context, state) {
+              final sites =
+                  state.mapOrNull(success: (value) => value.sites) ??
+                  const <SiteBoundaryModel>[];
+              return Wrap(
+                spacing: 8.w,
+                runSpacing: 6.h,
+                children: sites
+                    .map(
+                      (site) => FilterChip(
+                        label: Text(site.siteName),
+                        selected: selectedSiteIds.contains(site.siteId),
+                        onSelected: (selected) {
+                          final values = {...selectedSiteIds};
+                          if (selected) {
+                            values.add(site.siteId);
+                          } else {
+                            values.remove(site.siteId);
+                          }
+                          onSiteIdsChanged(values);
+                        },
+                      ),
+                    )
+                    .toList(),
+              );
+            },
+          ),
+        hSpace(10),
+        DropdownButtonFormField<String>(
+          isExpanded: true,
+          initialValue: selectedWorkSystem,
           decoration: InputDecoration(
             labelText: 'employee.profile.workSystem'.tr(context: context),
-            prefixIcon: const Icon(Icons.devices_other_rounded, color: AppColors.brandPrimary),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+            prefixIcon: const Icon(
+              Icons.devices_other_rounded,
+              color: AppColors.brandPrimary,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 12.w,
+              vertical: 12.h,
+            ),
           ),
           items: const [
-            DropdownMenuItem(value: 'onsite', child: Text('Onsite (حضوري)', overflow: TextOverflow.ellipsis)),
-            DropdownMenuItem(value: 'remote', child: Text('Remote (عن بعد)', overflow: TextOverflow.ellipsis)),
-            DropdownMenuItem(value: 'hybrid', child: Text('Hybrid (هجين)', overflow: TextOverflow.ellipsis)),
+            DropdownMenuItem(
+              value: 'onsite',
+              child: Text('Onsite (حضوري)', overflow: TextOverflow.ellipsis),
+            ),
+            DropdownMenuItem(
+              value: 'remote',
+              child: Text('Remote (عن بعد)', overflow: TextOverflow.ellipsis),
+            ),
+            DropdownMenuItem(
+              value: 'hybrid',
+              child: Text('Hybrid (هجين)', overflow: TextOverflow.ellipsis),
+            ),
           ],
           onChanged: (val) {
             if (val != null) onWorkSystemChanged(val);
@@ -168,24 +302,41 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
             );
             return DropdownButtonFormField<String>(
               isExpanded: true,
-              value: employees.any((e) => e.id == selectedDirectManagerId)
+              initialValue:
+                  employees.any((e) => e.id == selectedDirectManagerId)
                   ? selectedDirectManagerId
                   : null,
               decoration: InputDecoration(
-                labelText: 'employee.profile.directManager'.tr(context: context),
-                prefixIcon: const Icon(Icons.supervisor_account_outlined, color: AppColors.brandPrimary),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                labelText: 'employee.profile.directManager'.tr(
+                  context: context,
+                ),
+                prefixIcon: const Icon(
+                  Icons.supervisor_account_outlined,
+                  color: AppColors.brandPrimary,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12.w,
+                  vertical: 12.h,
+                ),
               ),
               items: [
                 DropdownMenuItem<String>(
                   value: null,
-                  child: Text('employee.profile.noManager'.tr(context: context), overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    'employee.profile.noManager'.tr(context: context),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 ...employees.map(
                   (e) => DropdownMenuItem<String>(
                     value: e.id,
-                    child: Text(e.name ?? e.userName ?? '-', overflow: TextOverflow.ellipsis),
+                    child: Text(
+                      e.name ?? e.userName ?? '-',
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
               ],
@@ -197,13 +348,19 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
         CustomTextFormField(
           controller: contractTypeController,
           hintText: 'employee.profile.contractType'.tr(context: context),
-          prefixIcon: const Icon(Icons.description_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.description_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: contractStatusController,
           hintText: 'Status (نشط / فترة تجربة / موقوف)',
-          prefixIcon: const Icon(Icons.verified_user_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.verified_user_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         Row(
@@ -213,7 +370,10 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
                 onTap: onSelectJoinDate,
                 borderRadius: BorderRadius.circular(10.r),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 14.h,
+                  ),
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.border),
                     borderRadius: BorderRadius.circular(10.r),
@@ -228,7 +388,9 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
                       hSpace(2),
                       Text(
                         joinDate != null ? dateFormat.format(joinDate!) : '-',
-                        style: AppTextStyles.font14Regular.copyWith(fontWeight: FontWeight.w600),
+                        style: AppTextStyles.font14Regular.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ],
                   ),
@@ -241,7 +403,10 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
                 onTap: onSelectContractEndDate,
                 borderRadius: BorderRadius.circular(10.r),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 14.h,
+                  ),
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.border),
                     borderRadius: BorderRadius.circular(10.r),
@@ -255,8 +420,12 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
                       ),
                       hSpace(2),
                       Text(
-                        contractEndDate != null ? dateFormat.format(contractEndDate!) : '-',
-                        style: AppTextStyles.font14Regular.copyWith(fontWeight: FontWeight.w600),
+                        contractEndDate != null
+                            ? dateFormat.format(contractEndDate!)
+                            : '-',
+                        style: AppTextStyles.font14Regular.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ],
                   ),

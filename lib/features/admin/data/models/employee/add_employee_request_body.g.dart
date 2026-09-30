@@ -15,15 +15,24 @@ AddEmployeeRequestBody _$AddEmployeeRequestBodyFromJson(
   position: json['position'] as String,
   mobileId: json['mobileId'] as String,
   role: json['role'] as String,
-  departmentId: (json['departmentId'] as num).toInt(),
-  branchId: (json['branchId'] as num).toInt(),
-  shiftId: (json['shiftId'] as num).toInt(),
+  departmentId: (json['departmentId'] as num?)?.toInt(),
+  branchId: (json['branchId'] as num?)?.toInt(),
+  siteId: json['siteId'] as String?,
+  shiftId: (json['shiftId'] as num?)?.toInt(),
+  attendanceLocationType: json['attendanceLocationType'] as String?,
+  branchIds: (json['branchIds'] as List<dynamic>?)
+      ?.map((e) => (e as num).toInt())
+      .toList(),
+  siteIds: (json['siteIds'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
   roles: (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
   deviceToken: (json['deviceToken'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
   phone: json['phone'] as String?,
   email: json['email'] as String?,
+  nationalId: json['nationalId'] as String?,
   employeeCode: json['employeeCode'] as String?,
   canAddAttendance: json['canAddAttendance'] as bool?,
   canAddPlan: json['canAddPlan'] as bool?,
@@ -46,10 +55,15 @@ Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
   'roles': instance.roles,
   'departmentId': instance.departmentId,
   'branchId': instance.branchId,
+  'siteId': instance.siteId,
   'shiftId': instance.shiftId,
+  'attendanceLocationType': instance.attendanceLocationType,
+  'branchIds': instance.branchIds,
+  'siteIds': instance.siteIds,
   'deviceToken': instance.deviceToken,
   'phone': instance.phone,
   'email': instance.email,
+  'nationalId': instance.nationalId,
   'employeeCode': instance.employeeCode,
   'canAddAttendance': instance.canAddAttendance,
   'canAddPlan': instance.canAddPlan,

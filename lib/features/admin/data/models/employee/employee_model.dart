@@ -30,6 +30,9 @@ class EmployeeModel {
     this.canAddPlan,
     this.shiftName,
     this.shiftId,
+    this.attendanceLocationType,
+    this.assignedBranchIds,
+    this.assignedSiteIds,
     this.workSystem,
     this.remoteWorkPolicyId,
     this.workPolicy,
@@ -107,6 +110,9 @@ class EmployeeModel {
   final bool? canAddPlan;
   final String? shiftName;
   final int? shiftId;
+  final String? attendanceLocationType;
+  final List<int>? assignedBranchIds;
+  final List<String>? assignedSiteIds;
   final String? workSystem;
   final String? remoteWorkPolicyId;
   final EmployeeWorkPolicyModel? workPolicy;
@@ -170,7 +176,8 @@ class EmployeeModel {
   String get resolvedGrade => grade ?? 'Grade 4 (Senior)';
   String get resolvedDivision => division ?? departmentName ?? '-';
   String get resolvedContractType => contractType ?? 'Full-Time';
-  String get resolvedContractStatus => contractStatus ?? (canAddAttendance == true ? 'Active' : 'Probation');
+  String get resolvedContractStatus =>
+      contractStatus ?? (canAddAttendance == true ? 'Active' : 'Probation');
   String get resolvedJoinDate => joinDate ?? hireDate ?? '-';
   String get resolvedNationalId => nationalId ?? passportNumber ?? '-';
   String get resolvedEmergencyName => emergencyContactName ?? '-';

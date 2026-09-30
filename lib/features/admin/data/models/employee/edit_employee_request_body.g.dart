@@ -18,6 +18,14 @@ EditEmployeeRequestBody _$EditEmployeeRequestBodyFromJson(
   roles: (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
   departmentId: (json['departmentId'] as num?)?.toInt(),
   branchId: (json['branchId'] as num?)?.toInt(),
+  siteId: json['siteId'] as String?,
+  attendanceLocationType: json['attendanceLocationType'] as String?,
+  branchIds: (json['branchIds'] as List<dynamic>?)
+      ?.map((e) => (e as num).toInt())
+      .toList(),
+  siteIds: (json['siteIds'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
   shiftId: (json['shiftId'] as num?)?.toInt(),
   phone: json['phone'] as String?,
   email: json['email'] as String?,
@@ -78,6 +86,11 @@ Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
   if (instance.roles case final value?) 'roles': value,
   if (instance.departmentId case final value?) 'departmentId': value,
   if (instance.branchId case final value?) 'branchId': value,
+  if (instance.siteId case final value?) 'siteId': value,
+  if (instance.attendanceLocationType case final value?)
+    'attendanceLocationType': value,
+  if (instance.branchIds case final value?) 'branchIds': value,
+  if (instance.siteIds case final value?) 'siteIds': value,
   if (instance.shiftId case final value?) 'shiftId': value,
   if (instance.phone case final value?) 'phone': value,
   if (instance.email case final value?) 'email': value,

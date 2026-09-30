@@ -172,7 +172,7 @@ class AdminEmployeeEditPersonalCardWidget extends StatelessWidget {
             Expanded(
               child: DropdownButtonFormField<String>(
                 isExpanded: true,
-                value: selectedGender,
+                initialValue: selectedGender,
                 decoration: InputDecoration(
                   labelText: 'employee.profile.gender'.tr(context: context),
                   prefixIcon: const Icon(Icons.wc_outlined, color: AppColors.brandPrimary),
@@ -190,7 +190,7 @@ class AdminEmployeeEditPersonalCardWidget extends StatelessWidget {
             Expanded(
               child: DropdownButtonFormField<String>(
                 isExpanded: true,
-                value: selectedMaritalStatus,
+                initialValue: selectedMaritalStatus,
                 decoration: InputDecoration(
                   labelText: 'employee.profile.maritalStatus'.tr(context: context),
                   prefixIcon: const Icon(Icons.people_outline_rounded, color: AppColors.brandPrimary),

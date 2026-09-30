@@ -52,10 +52,9 @@ class _AdminEditEmployeeSheetWidgetState
   late bool _canAddPlan;
 
   static const List<String> _availableRoles = [
-    'Employee',
-    'Supervisor',
     'HR',
-    'Admin',
+    'Supervisor',
+    'Contractor',
   ];
 
   @override
@@ -81,8 +80,12 @@ class _AdminEditEmployeeSheetWidgetState
       text: '${widget.employee.leaveBalance ?? 21}',
     );
 
-    _selectedRoles = widget.employee.allRoles.toSet();
-    if (_selectedRoles.isEmpty) _selectedRoles.add('Employee');
+    _selectedRoles = widget.employee.allRoles
+        .where(
+          (role) => const {'HR', 'Supervisor', 'Contractor'}.contains(role),
+        )
+        .toSet();
+    if (_selectedRoles.isEmpty) _selectedRoles.add('Contractor');
 
     _selectedDepartmentId = widget.employee.departmentId;
     _selectedBranchId = widget.employee.branchId;
@@ -325,12 +328,14 @@ class _AdminEditEmployeeSheetWidgetState
                 return FilterChip(
                   label: Text(
                     switch (role) {
+                      'HR' => 'admin.roles.hr'.tr(context: context),
                       'Supervisor' => 'admin.roles.supervisor'.tr(
                         context: context,
                       ),
-                      'Admin' => 'admin.roles.admin'.tr(context: context),
-                      'HR' => 'admin.roles.hr'.tr(context: context),
-                      _ => 'admin.roles.employee'.tr(context: context),
+                      'Contractor' => 'admin.roles.contractor'.tr(
+                        context: context,
+                      ),
+                      _ => role,
                     },
                     style: AppTextStyles.font12Medium.copyWith(
                       color: isSelected ? AppColors.white : AppColors.brandInk,
@@ -488,7 +493,9 @@ class _AdminEditEmployeeSheetWidgetState
                       key: ValueKey(
                         'manager_${hasSelected ? _selectedDirectManagerId : 'none'}',
                       ),
-                      initialValue: hasSelected ? _selectedDirectManagerId : null,
+                      initialValue: hasSelected
+                          ? _selectedDirectManagerId
+                          : null,
                       isExpanded: true,
                       hint: Text(
                         'admin.employeeWizard.selectDirectManager'.tr(

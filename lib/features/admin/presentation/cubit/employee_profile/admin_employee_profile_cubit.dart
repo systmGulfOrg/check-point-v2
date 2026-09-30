@@ -31,27 +31,31 @@ class AdminEmployeeProfileCubit extends Cubit<AdminEmployeeProfileState> {
   List<LeaveBalanceModel> leaveBalances = [];
   List<ShortLeaveModel> permissions = [];
 
-  Future<void> load(String employeeId, {EmployeeModel? initialEmployee}) async {
+  Future<bool> load(String employeeId, {EmployeeModel? initialEmployee}) async {
     if (initialEmployee != null) {
       employee = initialEmployee;
     }
     emit(const AdminEmployeeProfileState.loading());
 
     final profileResult = await attendanceRepo.getEmployeeById(employeeId);
+    var loadedFromApi = false;
     if (profileResult is Success<EmployeeModel>) {
       employee = profileResult.data;
+      loadedFromApi = true;
     }
 
     if (employee == null) {
       if (profileResult case Failure(:final failure)) {
         emit(AdminEmployeeProfileState.error(failure.messageKey));
-        return;
+        return false;
       }
     }
 
     // Load Devices
     try {
-      final devicesResponse = await adminApiService.getEmployeeDevices(employeeId);
+      final devicesResponse = await adminApiService.getEmployeeDevices(
+        employeeId,
+      );
       if (devicesResponse.isSuccess) {
         devicesHistory = devicesResponse.value;
       }
@@ -65,7 +69,8 @@ class AdminEmployeeProfileCubit extends Cubit<AdminEmployeeProfileState> {
         final empName = employee?.name?.trim().toLowerCase();
         leaveRequests = allLeaves.where((r) {
           final matchesId = r.employeeId == employeeId;
-          final matchesName = empName != null &&
+          final matchesName =
+              empName != null &&
               r.employeeName?.trim().toLowerCase() == empName;
           return matchesId || matchesName;
         }).toList();
@@ -89,6 +94,7 @@ class AdminEmployeeProfileCubit extends Cubit<AdminEmployeeProfileState> {
     }
 
     _computeAndEmit();
+    return loadedFromApi;
   }
 
   void setMonth(DateTime month) {
@@ -123,28 +129,34 @@ class AdminEmployeeProfileCubit extends Cubit<AdminEmployeeProfileState> {
 
     final daysInScope =
         selectedMonth.year == now.year && selectedMonth.month == now.month
-            ? now.day
-            : DateTime(selectedMonth.year, selectedMonth.month + 1, 0).day;
+        ? now.day
+        : DateTime(selectedMonth.year, selectedMonth.month + 1, 0).day;
 
     // Build Default Leave Balances
     final totalAnnual = currentEmp.leaveBalance ?? 21;
     final usedAnnual = leaveRequests
-        .where((r) =>
-            r.status?.toLowerCase() == 'approved' &&
-            (r.leaveType?.toLowerCase().contains('annual') == true ||
-                r.leaveType?.toLowerCase().contains('سنوي') == true))
+        .where(
+          (r) =>
+              r.status?.toLowerCase() == 'approved' &&
+              (r.leaveType?.toLowerCase().contains('annual') == true ||
+                  r.leaveType?.toLowerCase().contains('سنوي') == true),
+        )
         .length;
     final usedCasual = leaveRequests
-        .where((r) =>
-            r.status?.toLowerCase() == 'approved' &&
-            (r.leaveType?.toLowerCase().contains('casual') == true ||
-                r.leaveType?.toLowerCase().contains('عارض') == true))
+        .where(
+          (r) =>
+              r.status?.toLowerCase() == 'approved' &&
+              (r.leaveType?.toLowerCase().contains('casual') == true ||
+                  r.leaveType?.toLowerCase().contains('عارض') == true),
+        )
         .length;
     final usedSick = leaveRequests
-        .where((r) =>
-            r.status?.toLowerCase() == 'approved' &&
-            (r.leaveType?.toLowerCase().contains('sick') == true ||
-                r.leaveType?.toLowerCase().contains('مرض') == true))
+        .where(
+          (r) =>
+              r.status?.toLowerCase() == 'approved' &&
+              (r.leaveType?.toLowerCase().contains('sick') == true ||
+                  r.leaveType?.toLowerCase().contains('مرض') == true),
+        )
         .length;
 
     final currentYear = DateTime.now().year;
@@ -189,8 +201,9 @@ class AdminEmployeeProfileCubit extends Cubit<AdminEmployeeProfileState> {
         attendedDays: attendedDates.length,
         absentDays: (daysInScope - attendedDates.length).clamp(0, daysInScope),
         lateDays: monthlyRecords.where((item) => item.isLate == true).length,
-        earlyLeaveDays:
-            monthlyRecords.where((item) => item.isEarly == true).length,
+        earlyLeaveDays: monthlyRecords
+            .where((item) => item.isEarly == true)
+            .length,
         totalHours: _totalHours(monthlyRecords),
         devicesHistory: devicesHistory,
         leaveRequests: leaveRequests,

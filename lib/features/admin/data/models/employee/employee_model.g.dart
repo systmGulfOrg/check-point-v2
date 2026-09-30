@@ -38,6 +38,13 @@ EmployeeModel _$EmployeeModelFromJson(Map<String, dynamic> json) =>
       canAddPlan: json['canAddPlan'] as bool?,
       shiftName: json['shiftName'] as String?,
       shiftId: (json['shiftId'] as num?)?.toInt(),
+      attendanceLocationType: json['attendanceLocationType'] as String?,
+      assignedBranchIds: (json['assignedBranchIds'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList(),
+      assignedSiteIds: (json['assignedSiteIds'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       workSystem: json['workSystem'] as String?,
       remoteWorkPolicyId: json['remoteWorkPolicyId'] as String?,
       workPolicy: json['workPolicy'] == null
@@ -129,6 +136,9 @@ Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
       'canAddPlan': instance.canAddPlan,
       'shiftName': instance.shiftName,
       'shiftId': instance.shiftId,
+      'attendanceLocationType': instance.attendanceLocationType,
+      'assignedBranchIds': instance.assignedBranchIds,
+      'assignedSiteIds': instance.assignedSiteIds,
       'workSystem': instance.workSystem,
       'remoteWorkPolicyId': instance.remoteWorkPolicyId,
       'workPolicy': instance.workPolicy,

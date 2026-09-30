@@ -12,12 +12,17 @@ class AddEmployeeRequestBody {
     required this.mobileId,
     required this.role,
     required this.departmentId,
-    required this.branchId,
+    this.branchId,
+    this.siteId,
     required this.shiftId,
+    this.attendanceLocationType,
+    this.branchIds,
+    this.siteIds,
     this.roles,
     this.deviceToken,
     this.phone,
     this.email,
+    this.nationalId,
     this.employeeCode,
     this.canAddAttendance,
     this.canAddPlan,
@@ -35,12 +40,17 @@ class AddEmployeeRequestBody {
   final String mobileId;
   final String role;
   final List<String>? roles;
-  final int departmentId;
-  final int branchId;
-  final int shiftId;
+  final int? departmentId;
+  final int? branchId;
+  final String? siteId;
+  final int? shiftId;
+  final String? attendanceLocationType;
+  final List<int>? branchIds;
+  final List<String>? siteIds;
   final List<String>? deviceToken;
   final String? phone;
   final String? email;
+  final String? nationalId;
   final String? employeeCode;
   final bool? canAddAttendance;
   final bool? canAddPlan;
