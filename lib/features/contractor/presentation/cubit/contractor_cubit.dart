@@ -119,69 +119,63 @@ class ContractorCubit extends Cubit<ContractorState> {
     final correctionsResult = await contractorRepo.getCorrections();
     final pendingPunches = await offlineSyncService.getPendingPunches();
 
-    contractorsResult.when(
-      success: (contractors) async {
-        final targetContractors = contractorId == null
-            ? contractors
-            : contractors.where((item) => item.id == contractorId).toList();
-        if (targetContractors.isEmpty) {
-          emit(const ContractorState.error('errors.contractorNotFound'));
-          return;
-        }
-        var workersFailed = false;
-        final workers = <ContractorWorkerModel>[];
-        for (final contractor in targetContractors) {
-          final workersResult = await contractorRepo.getContractorWorkers(
-            contractor.id,
-          );
-          workersResult.when(
-            success: workers.addAll,
-            failure: (failure) {
-              workersFailed = true;
-              emit(ContractorState.error(failure.messageKey));
-            },
-          );
-          if (workersFailed) break;
-        }
-        if (workersFailed) return;
+    final contractors = contractorsResult.when(
+      success: (c) => c,
+      failure: (_) => <ContractorCompanyModel>[],
+    );
 
-        final customization = customizationResult.when(
-          success: (c) => c,
-          failure: (_) => null,
-        );
-        final sites = sitesResult.when(
-          success: (value) => value,
-          failure: (_) => <SiteBoundaryModel>[],
-        );
-        final assignments = assignmentsResult.when(
-          success: (value) => value,
-          failure: (_) => <WorkerSiteAssignmentModel>[],
-        );
-        final attendanceLogs = attendanceResult.when(
-          success: (value) => value,
-          failure: (_) => <ContractorAttendanceModel>[],
-        );
-        final corrections = correctionsResult.when(
-          success: (value) => value,
-          failure: (_) => <ContractorCorrectionModel>[],
-        );
+    final targetContractors = contractorId == null
+        ? contractors
+        : contractors.where((item) => item.id == contractorId).toList();
 
-        emit(
-          ContractorState.success(
-            contractors: contractors,
-            workers: workers,
-            customization: customization,
-            sites: sites,
-            assignments: assignments,
-            attendanceLogs: attendanceLogs,
-            corrections: corrections,
-            pendingOfflineCount: pendingPunches.length,
-          ),
-        );
-      },
-      failure: (failure) {
-        emit(ContractorState.error(failure.messageKey));
-      },
+    if (contractorId != null && targetContractors.isEmpty) {
+      emit(const ContractorState.error('errors.contractorNotFound'));
+      return;
+    }
+
+    final workers = <ContractorWorkerModel>[];
+    for (final contractor in targetContractors) {
+      final workersResult = await contractorRepo.getContractorWorkers(
+        contractor.id,
+      );
+      workersResult.when(
+        success: workers.addAll,
+        failure: (_) {},
+      );
+    }
+
+    final customization = customizationResult.when(
+      success: (c) => c,
+      failure: (_) => null,
+    );
+    final sites = sitesResult.when(
+      success: (value) => value,
+      failure: (_) => <SiteBoundaryModel>[],
+    );
+    final assignments = assignmentsResult.when(
+      success: (value) => value,
+      failure: (_) => <WorkerSiteAssignmentModel>[],
+    );
+    final attendanceLogs = attendanceResult.when(
+      success: (value) => value,
+      failure: (_) => <ContractorAttendanceModel>[],
+    );
+    final corrections = correctionsResult.when(
+      success: (value) => value,
+      failure: (_) => <ContractorCorrectionModel>[],
+    );
+
+    emit(
+      ContractorState.success(
+        contractors: contractors,
+        workers: workers,
+        customization: customization,
+        sites: sites,
+        assignments: assignments,
+        attendanceLogs: attendanceLogs,
+        corrections: corrections,
+        pendingOfflineCount: pendingPunches.length,
+      ),
     );
   }
 

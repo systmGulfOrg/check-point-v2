@@ -76,25 +76,46 @@ class ContractorRepoImpl implements ContractorRepo {
   SiteBoundaryModel _siteFromJson(Map<String, dynamic> json) {
     final project = json['project'];
     final count = json['_count'];
+    final rawCoords = json['boundaryCoordinates'] ??
+        json['boundary_coordinates'] ??
+        json['coordinates'];
+    final normalizedCoords = (rawCoords is List ? rawCoords : const [])
+        .map((c) {
+          if (c is Map) {
+            final lat = (c['lat'] ?? c['latitude'] as num?)?.toDouble() ?? 0.0;
+            final lng = (c['lng'] ?? c['longitude'] as num?)?.toDouble() ?? 0.0;
+            return {'lat': lat, 'lng': lng};
+          }
+          return null;
+        })
+        .whereType<Map<String, dynamic>>()
+        .toList();
+
     return SiteBoundaryModel.fromJson({
       ...json,
-      'siteId': json['siteId'] ?? json['id'],
-      'siteName': json['siteName'] ?? json['name'] ?? '',
-      'boundaryType': json['boundaryType'] ?? json['boundary_type'] ?? 'circle',
-      'centerLat': json['centerLat'] ?? json['latitude'],
-      'centerLng': json['centerLng'] ?? json['longitude'],
-      'radiusMeters': json['radiusMeters'] ?? json['geofenceRadiusM'] ?? 150,
-      'boundaryCoordinates':
-          json['boundaryCoordinates'] ??
-          json['boundary_coordinates'] ??
-          json['coordinates'] ??
-          const [],
+      'siteId': (json['siteId'] ?? json['id'] ?? '').toString(),
+      'siteName': (json['siteName'] ?? json['name'] ?? '').toString(),
+      'boundaryType':
+          (json['boundaryType'] ?? json['boundary_type'] ?? 'circle')
+              .toString(),
+      'centerLat': (json['centerLat'] ?? json['latitude'] as num?)?.toDouble(),
+      'centerLng':
+          (json['centerLng'] ?? json['longitude'] as num?)?.toDouble(),
+      'radiusMeters':
+          (json['radiusMeters'] ?? json['geofenceRadiusM'] as num?)
+              ?.toDouble() ??
+          150.0,
+      'boundaryCoordinates': normalizedCoords,
       'projectId': json['projectId'] ?? project?['id'],
       'projectName': json['projectName'] ?? project?['name'],
       'status':
-          json['status'] ?? (json['isActive'] == false ? 'archived' : 'active'),
-      'workerCount': count is Map ? count['employees'] ?? 0 : 0,
-      'assignmentCount': count is Map ? count['siteAssignments'] ?? 0 : 0,
+          (json['status'] ??
+                  (json['isActive'] == false ? 'archived' : 'active'))
+              .toString(),
+      'workerCount':
+          count is Map ? (count['employees'] as num?)?.toInt() ?? 0 : 0,
+      'assignmentCount':
+          count is Map ? (count['siteAssignments'] as num?)?.toInt() ?? 0 : 0,
     });
   }
 
