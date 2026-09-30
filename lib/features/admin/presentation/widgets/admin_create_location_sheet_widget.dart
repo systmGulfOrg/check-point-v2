@@ -10,6 +10,7 @@ import 'package:check_point_v2/features/admin/data/models/locations/branch_reque
 import 'package:check_point_v2/features/admin/data/models/locations/customer_request_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
+import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
 import 'admin_location_form_fields_widget.dart';
 import 'admin_location_map_picker_widget.dart';
 import 'admin_location_sheet_actions_widget.dart';
@@ -123,28 +124,56 @@ class _AdminCreateLocationSheetWidgetState
             saved = await context.read<AdminBranchesCubit>().add(request);
           }
         case AdminLocationCategory.sites:
-          final coordinates = _points
-              .map(
-                (p) => CustomerCoordinateModel(
-                  latitude: p.latitude,
-                  longitude: p.longitude,
-                ),
-              )
-              .toList();
-          final request = CustomerRequestModel(
-            name: name,
-            location: address,
-            workesAs: description,
-            customerType: 'Site',
-            coordinates: coordinates,
-          );
-          if (widget.editCustomerId != null) {
-            saved = await context.read<AdminCustomersCubit>().edit(
-              widget.editCustomerId!,
-              request,
-            );
+          ContractorCubit? contractorCubit;
+          try {
+            contractorCubit = context.read<ContractorCubit>();
+          } catch (_) {}
+
+          if (contractorCubit != null && widget.editCustomerId == null) {
+            final firstPoint = _points.isNotEmpty ? _points.first : null;
+            final coordinates = _points
+                .map(
+                  (p) => {
+                    'latitude': p.latitude,
+                    'longitude': p.longitude,
+                  },
+                )
+                .toList();
+            saved = await contractorCubit.createSite({
+              'name': name,
+              'location': address,
+              'projectName': description.isNotEmpty ? description : null,
+              'boundaryType': _points.length > 2 ? 'polygon' : 'circle',
+              'center_lat': firstPoint?.latitude ?? 0.0,
+              'center_lng': firstPoint?.longitude ?? 0.0,
+              'geofenceRadiusM': 150,
+              'coordinates': coordinates,
+              'boundaryCoordinates': coordinates,
+            });
           } else {
-            saved = await context.read<AdminCustomersCubit>().add(request);
+            final coordinates = _points
+                .map(
+                  (p) => CustomerCoordinateModel(
+                    latitude: p.latitude,
+                    longitude: p.longitude,
+                  ),
+                )
+                .toList();
+            final request = CustomerRequestModel(
+              name: name,
+              location: address,
+              workesAs: description,
+              customerType: 'Site',
+              coordinates: coordinates,
+            );
+            if (widget.editCustomerId != null) {
+              saved = await context.read<AdminCustomersCubit>().edit(
+                widget.editCustomerId!,
+                request,
+              );
+            } else {
+              saved = await context.read<AdminCustomersCubit>().add(request);
+            }
           }
       }
 
