@@ -155,38 +155,35 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                     _ => allTasks,
                   };
 
-                  if (state is EmployeeTasksStateLoading) {
-                    return Expanded(
-                      child: Skeletonizer(
-                        child: RefreshIndicator(
-                          color: AppColors.brandPrimary,
-                          onRefresh: context
-                              .read<EmployeeTasksCubit>()
-                              .loadMyTasks,
-                          child: ListView.separated(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemCount: 3,
-                            separatorBuilder: (_, _) => hSpace(12),
-                            itemBuilder: (_, _) => EmployeeTaskDetailCardWidget(
-                              task: const EmployeeTaskData(
-                                id: '000',
-                                title: 'Loading task title',
-                                dueDate: 'Loading date',
-                                status: 'Active',
-                                priority: 'Normal',
-                                description: 'Loading task description',
-                                progressPercentage: 50,
-                                assignees: ['EM'],
+                  return Expanded(
+                    child: switch (state) {
+                      EmployeeTasksStateLoading() => Skeletonizer(
+                          child: RefreshIndicator(
+                            color: AppColors.brandPrimary,
+                            onRefresh: context
+                                .read<EmployeeTasksCubit>()
+                                .loadMyTasks,
+                            child: ListView.separated(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              itemCount: 3,
+                              separatorBuilder: (_, _) => hSpace(12),
+                              itemBuilder: (_, _) =>
+                                  const EmployeeTaskDetailCardWidget(
+                                task: EmployeeTaskData(
+                                  id: '000',
+                                  title: 'Loading task title',
+                                  dueDate: 'Loading date',
+                                  status: 'Active',
+                                  priority: 'Normal',
+                                  description: 'Loading task description',
+                                  progressPercentage: 50,
+                                  assignees: ['EM'],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  }
-
-                  return Expanded(
-                    child: Column(
+                      _ => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -253,8 +250,9 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                         ),
                       ],
                     ),
-                  );
-                },
+                  },
+                );
+              },
               ),
             ],
           ),

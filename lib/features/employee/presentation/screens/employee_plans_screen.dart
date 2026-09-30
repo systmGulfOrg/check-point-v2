@@ -73,37 +73,34 @@ class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
                     _ => const <EmployeePlanData>[],
                   };
 
-                  if (state is EmployeePlansStateLoading) {
-                    return Expanded(
-                      child: Skeletonizer(
-                        child: RefreshIndicator(
-                          color: AppColors.brandPrimary,
-                          onRefresh: context
-                              .read<EmployeePlansCubit>()
-                              .loadMyPlans,
-                          child: ListView.separated(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemCount: 3,
-                            separatorBuilder: (_, _) => hSpace(12),
-                            itemBuilder: (_, _) => EmployeePlanDetailCardWidget(
-                              plan: const EmployeePlanData(
-                                id: '000',
-                                title: 'Loading plan title',
-                                dateTime: 'Loading date',
-                                planType: 'Mission',
-                                description: 'Loading plan description',
-                                status: 'planned',
-                                assignees: ['EM'],
+                  return Expanded(
+                    child: switch (state) {
+                      EmployeePlansStateLoading() => Skeletonizer(
+                          child: RefreshIndicator(
+                            color: AppColors.brandPrimary,
+                            onRefresh: context
+                                .read<EmployeePlansCubit>()
+                                .loadMyPlans,
+                            child: ListView.separated(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              itemCount: 3,
+                              separatorBuilder: (_, _) => hSpace(12),
+                              itemBuilder: (_, _) =>
+                                  const EmployeePlanDetailCardWidget(
+                                plan: EmployeePlanData(
+                                  id: '000',
+                                  title: 'Loading plan title',
+                                  dateTime: 'Loading date',
+                                  planType: 'Mission',
+                                  description: 'Loading plan description',
+                                  status: 'planned',
+                                  assignees: ['EM'],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  }
-
-                  return Expanded(
-                    child: Column(
+                      _ => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -136,8 +133,9 @@ class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
                         ),
                       ],
                     ),
-                  );
-                },
+                  },
+                );
+              },
               ),
             ],
           ),

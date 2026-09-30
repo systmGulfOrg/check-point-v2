@@ -268,9 +268,12 @@ class _EmployeeAttendanceLocationSheetWidgetState
       );
     }
     if (!mounted) return;
-    final state = cubit.state;
-    if (state is EmployeeAttendanceStateCheckInSuccess ||
-        state is EmployeeAttendanceStateCheckOutSuccess) {
+    final shouldClose = switch (cubit.state) {
+      EmployeeAttendanceStateCheckInSuccess() ||
+      EmployeeAttendanceStateCheckOutSuccess() => true,
+      _ => false,
+    };
+    if (shouldClose) {
       Navigator.pop(context);
     }
   }
