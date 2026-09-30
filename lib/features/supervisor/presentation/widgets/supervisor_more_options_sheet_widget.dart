@@ -57,7 +57,6 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                 SupervisorMoreOptionWidget(
                   icon: Icons.calendar_month_outlined,
                   labelKey: 'supervisor.more.leaves',
-                  badge: '1',
                   backgroundColor: AppColors.softGreenBackground,
                   iconColor: AppColors.success,
                   onTap: () {
@@ -88,7 +87,6 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                 SupervisorMoreOptionWidget(
                   icon: Icons.notifications_none_rounded,
                   labelKey: 'supervisor.more.notifications',
-                  badge: '2',
                   backgroundColor: AppColors.softBrandBackground,
                   iconColor: AppColors.brandPrimary,
                   onTap: () {
