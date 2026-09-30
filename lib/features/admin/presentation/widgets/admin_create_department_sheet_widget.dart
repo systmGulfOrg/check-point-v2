@@ -26,6 +26,7 @@ class _AdminCreateDepartmentSheetWidgetState
     extends State<AdminCreateDepartmentSheetWidget> {
   late final TextEditingController _nameController;
   final _formKey = GlobalKey<FormState>();
+  bool _isSaving = false;
 
   bool get _isEditing => widget.departmentId != null;
 
@@ -41,20 +42,35 @@ class _AdminCreateDepartmentSheetWidgetState
     super.dispose();
   }
 
-  void _onSave() {
+  Future<void> _onSave() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
+    setState(() => _isSaving = true);
+
     final name = _nameController.text.trim();
     final request = DepartmentRequestModel(departmentName: name);
+    final cubit = context.read<AdminDepartmentsCubit>();
 
-    if (_isEditing) {
-      context.read<AdminDepartmentsCubit>().editDepartment(
-        widget.departmentId!,
-        request,
+    final success = _isEditing
+        ? await cubit.editDepartment(
+            widget.departmentId!,
+            request,
+          )
+        : await cubit.addDepartment(request);
+
+    if (!mounted) return;
+    setState(() => _isSaving = false);
+
+    if (success) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'admin.locations.create.successMessage'.tr(context: context),
+          ),
+          backgroundColor: AppColors.success,
+        ),
       );
-    } else {
-      context.read<AdminDepartmentsCubit>().addDepartment(request);
     }
-    Navigator.pop(context);
   }
 
   @override
@@ -143,7 +159,7 @@ class _AdminCreateDepartmentSheetWidgetState
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: _isSaving ? null : () => Navigator.pop(context),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.textSecondary,
                       side: const BorderSide(color: AppColors.border),
@@ -165,6 +181,7 @@ class _AdminCreateDepartmentSheetWidgetState
                   flex: 2,
                   child: CustomButton(
                     text: 'admin.departments.save'.tr(context: context),
+                    isLoading: _isSaving,
                     onTap: _onSave,
                   ),
                 ),

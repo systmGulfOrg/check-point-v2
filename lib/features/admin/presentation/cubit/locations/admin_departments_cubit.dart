@@ -36,33 +36,45 @@ class AdminDepartmentsCubit extends Cubit<AdminDepartmentsState> {
     }
   }
 
-  Future<void> addDepartment(DepartmentRequestModel request) async {
+  Future<bool> addDepartment(DepartmentRequestModel request) async {
     final result = await locationsRepo.addDepartment(request);
     switch (result) {
       case Success():
         await load();
+        return true;
       case Failure(:final failure):
         emit(AdminDepartmentsState.error(failure.messageKey));
+        return false;
+      default:
+        return false;
     }
   }
 
-  Future<void> editDepartment(int id, DepartmentRequestModel request) async {
+  Future<bool> editDepartment(int id, DepartmentRequestModel request) async {
     final result = await locationsRepo.editDepartment(id, request);
     switch (result) {
       case Success():
         await load();
+        return true;
       case Failure(:final failure):
         emit(AdminDepartmentsState.error(failure.messageKey));
+        return false;
+      default:
+        return false;
     }
   }
 
-  Future<void> deleteDepartment(int id) async {
+  Future<bool> deleteDepartment(int id) async {
     final result = await locationsRepo.deleteDepartment(id);
     switch (result) {
       case Success():
         await load();
+        return true;
       case Failure(:final failure):
         emit(AdminDepartmentsState.error(failure.messageKey));
+        return false;
+      default:
+        return false;
     }
   }
 }

@@ -40,18 +40,7 @@ class AdminManageScreen extends StatelessWidget {
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.adminDepartments),
             ),
-            hSpace(10),
-            AdminManageCardWidget(
-              icon: Icons.badge_outlined,
-              iconColor: AppColors.success,
-              iconBackgroundColor: AppColors.softGreenBackground,
-              titleKey: 'admin.manage.workerAssignments',
-              subtitleKey: 'admin.manage.workerAssignmentsSub',
-              onTap: () => Navigator.pushNamed(
-                context,
-                AppRoutes.adminWorkerAssignments,
-              ),
-            ),
+
             hSpace(10),
             AdminManageCardWidget(
               icon: Icons.home_work_outlined,
