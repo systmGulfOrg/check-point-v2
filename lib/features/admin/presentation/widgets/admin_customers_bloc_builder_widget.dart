@@ -41,10 +41,6 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
     String? currentWorkesAs,
     List<LatLng> initialPoints,
   ) {
-    final category = type == 'site'
-        ? AdminLocationCategory.sites
-        : AdminLocationCategory.customers;
-
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -55,7 +51,7 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
       builder: (_) => BlocProvider.value(
         value: context.read<AdminCustomersCubit>(),
         child: AdminCreateLocationSheetWidget(
-          category: category,
+          category: AdminLocationCategory.sites,
           editCustomerId: id,
           initialName: currentName,
           initialAddress: currentLocation,

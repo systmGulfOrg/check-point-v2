@@ -5,12 +5,12 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_branches_bloc_builder_widget.dart';
-import 'package:check_point_v2/features/admin/presentation/widgets/admin_customers_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_locations_add_button_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_locations_filter_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_sites_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_locations_tab_widget.dart';
+import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
 
 class AdminLocationsScreen extends StatefulWidget {
   const AdminLocationsScreen({super.key});
@@ -43,9 +43,7 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
             AdminLocationCategory.branches =>
               context.read<AdminBranchesCubit>().load(),
             AdminLocationCategory.sites =>
-              context.read<AdminCustomersCubit>().load(type: 'Site'),
-            AdminLocationCategory.customers =>
-              context.read<AdminCustomersCubit>().load(type: 'Customer'),
+              context.read<ContractorCubit>().loadDashboardData(),
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -57,10 +55,8 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
                   selectedIndex: selectedIndex,
                   onSelected: (index) {
                     setState(() => selectedIndex = index);
-                    if (index == 1 || index == 2) {
-                      context.read<AdminCustomersCubit>().load(
-                        type: index == 1 ? 'Site' : 'Customer',
-                      );
+                    if (index == 1) {
+                      context.read<ContractorCubit>().loadDashboardData();
                     }
                   },
                 ),
@@ -80,9 +76,7 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
                   AdminLocationCategory.branches =>
                     const AdminBranchesBlocBuilderWidget(),
                   AdminLocationCategory.sites =>
-                    const AdminCustomersBlocBuilderWidget(type: 'site'),
-                  AdminLocationCategory.customers =>
-                    const AdminCustomersBlocBuilderWidget(type: 'customer'),
+                    const AdminSitesBlocBuilderWidget(),
                 },
               ],
             ),

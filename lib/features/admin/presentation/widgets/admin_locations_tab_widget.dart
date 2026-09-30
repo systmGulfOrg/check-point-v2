@@ -4,7 +4,7 @@ import 'package:check_point_v2/core/core.dart';
 import 'admin_location_card_widget.dart';
 import 'admin_location_data.dart';
 
-enum AdminLocationCategory { branches, sites, customers }
+enum AdminLocationCategory { branches, sites }
 
 class AdminLocationsTabWidget extends StatelessWidget {
   const AdminLocationsTabWidget({required this.category, super.key});
@@ -37,25 +37,11 @@ class AdminLocationsTabWidget extends StatelessWidget {
     ),
   ];
 
-  static const _customers = <AdminLocationData>[
-    AdminLocationData(
-      nameKey: 'admin.locations.customers.futtaim.name',
-      descriptionKey: 'admin.locations.customers.futtaim.description',
-      addressKey: 'admin.locations.customers.futtaim.address',
-      statusKey: 'admin.locations.status.active',
-      icon: Icons.people_outline_rounded,
-      iconColor: AppColors.info,
-      iconBackgroundColor: AppColors.softBlueBackground,
-      isGeofenced: true,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final locations = switch (category) {
       AdminLocationCategory.branches => _branches,
       AdminLocationCategory.sites => _sites,
-      AdminLocationCategory.customers => _customers,
     };
     return ListView.separated(
       shrinkWrap: true,

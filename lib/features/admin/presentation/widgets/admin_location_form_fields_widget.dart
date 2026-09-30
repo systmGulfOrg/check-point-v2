@@ -20,9 +20,7 @@ class AdminLocationFormFieldsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSiteOrCustomer =
-        category == AdminLocationCategory.sites ||
-        category == AdminLocationCategory.customers;
+    final isSiteOrCustomer = category == AdminLocationCategory.sites;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
