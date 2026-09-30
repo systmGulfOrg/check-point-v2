@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/core/routes/routes.dart';
+import 'package:check_point_v2/core/widgets/custom_text_form_field.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_worker_model.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_worker_card_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_site_filter_chip_widget.dart';
@@ -93,25 +94,13 @@ class _ContractorWorkersScreenState extends State<ContractorWorkersScreen> {
             color: AppColors.cardBackground,
             child: Column(
               children: [
-                TextField(
+                CustomTextFormField(
                   controller: _searchController,
                   onChanged: (_) => setState(() {}),
-                  decoration: InputDecoration(
-                    hintText: 'contractor.workers.searchHint'.tr(),
-                    prefixIcon: const Icon(
-                      Icons.search_rounded,
-                      color: AppColors.textSecondary,
-                    ),
-                    filled: true,
-                    fillColor: AppColors.pageBackground,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 10.h,
-                    ),
+                  hintText: 'contractor.workers.searchHint'.tr(),
+                  prefixIcon: const Icon(
+                    Icons.search_rounded,
+                    color: AppColors.textSecondary,
                   ),
                 ),
                 SizedBox(height: 10.h),
