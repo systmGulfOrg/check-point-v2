@@ -46,6 +46,20 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
   late final TextEditingController employeeCodeController;
   late final TextEditingController positionController;
 
+  late final FocusNode nameFocusNode;
+  late final FocusNode usernameFocusNode;
+  late final FocusNode passwordFocusNode;
+  late final FocusNode phoneFocusNode;
+  late final FocusNode emailFocusNode;
+  late final FocusNode positionFocusNode;
+
+  String? nameErrorText;
+  String? usernameErrorText;
+  String? passwordErrorText;
+  String? phoneErrorText;
+  String? emailErrorText;
+  String? positionErrorText;
+
   int currentStep = 0;
   final Set<String> selectedRoles = {'Employee'};
   final Set<String> selectedPermissions = {};
@@ -70,6 +84,13 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
     super.initState();
     context.read<AdminEmployeesCubit>().loadEmployees();
 
+    nameFocusNode = FocusNode();
+    usernameFocusNode = FocusNode();
+    passwordFocusNode = FocusNode();
+    phoneFocusNode = FocusNode();
+    emailFocusNode = FocusNode();
+    positionFocusNode = FocusNode();
+
     final req = widget.accountRequest;
     nameController = TextEditingController(text: req?.name);
     usernameController = TextEditingController(
@@ -92,6 +113,13 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
 
   @override
   void dispose() {
+    nameFocusNode.dispose();
+    usernameFocusNode.dispose();
+    passwordFocusNode.dispose();
+    phoneFocusNode.dispose();
+    emailFocusNode.dispose();
+    positionFocusNode.dispose();
+
     nameController.dispose();
     usernameController.dispose();
     passwordController.dispose();
@@ -101,6 +129,122 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
     employeeCodeController.dispose();
     positionController.dispose();
     super.dispose();
+  }
+
+  void _navigateToErrorField(String? rawError) {
+    if (rawError == null || rawError.isEmpty) return;
+    final lower = rawError.toLowerCase();
+
+    if (lower.contains('password') ||
+        lower.contains('كلمة المرور') ||
+        lower.contains('كلمه المرور') ||
+        lower.contains('باسورد') ||
+        rawError == 'errors.passwordPolicy') {
+      setState(() {
+        currentStep = 0;
+        passwordErrorText = rawError.tr(context: context);
+        saveErrorMessage = null;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        passwordFocusNode.requestFocus();
+      });
+      return;
+    }
+
+    if (lower.contains('user') ||
+        lower.contains('اسم المستخدم') ||
+        rawError == 'errors.usernameExists') {
+      setState(() {
+        currentStep = 0;
+        usernameErrorText = rawError.tr(context: context);
+        saveErrorMessage = null;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        usernameFocusNode.requestFocus();
+      });
+      return;
+    }
+
+    if (lower.contains('email') ||
+        lower.contains('بريد') ||
+        rawError == 'errors.emailExists') {
+      setState(() {
+        currentStep = 0;
+        emailErrorText = rawError.tr(context: context);
+        saveErrorMessage = null;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        emailFocusNode.requestFocus();
+      });
+      return;
+    }
+
+    if (lower.contains('phone') ||
+        lower.contains('mobile') ||
+        lower.contains('هاتف') ||
+        lower.contains('موبايل') ||
+        lower.contains('جوال')) {
+      setState(() {
+        currentStep = 0;
+        phoneErrorText = rawError.tr(context: context);
+        saveErrorMessage = null;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        phoneFocusNode.requestFocus();
+      });
+      return;
+    }
+
+    if (lower.contains('name') || lower.contains('الاسم')) {
+      setState(() {
+        currentStep = 0;
+        nameErrorText = rawError.tr(context: context);
+        saveErrorMessage = null;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        nameFocusNode.requestFocus();
+      });
+      return;
+    }
+
+    if (lower.contains('position') ||
+        lower.contains('مسمى') ||
+        lower.contains('وظيفة')) {
+      setState(() {
+        currentStep = 1;
+        positionErrorText = rawError.tr(context: context);
+        saveErrorMessage = null;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        positionFocusNode.requestFocus();
+      });
+      return;
+    }
+
+    if (lower.contains('role') ||
+        lower.contains('دور') ||
+        lower.contains('صلاحية')) {
+      setState(() {
+        currentStep = 1;
+        saveErrorMessage = rawError;
+      });
+      return;
+    }
+
+    if (lower.contains('department') ||
+        lower.contains('branch') ||
+        lower.contains('قسم') ||
+        lower.contains('فرع')) {
+      setState(() {
+        currentStep = 2;
+        saveErrorMessage = rawError;
+      });
+      return;
+    }
+
+    setState(() {
+      saveErrorMessage = rawError;
+    });
   }
 
   Future<void> _openPermissionsDialog() async {
@@ -147,11 +291,31 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
         );
         return false;
       }
+      if (nameController.text.trim().isEmpty) {
+        nameFocusNode.requestFocus();
+        formKey.currentState?.validate();
+        return false;
+      }
+      if (usernameController.text.trim().isEmpty) {
+        usernameFocusNode.requestFocus();
+        formKey.currentState?.validate();
+        return false;
+      }
+      if (passwordController.text.length < 6) {
+        passwordFocusNode.requestFocus();
+        formKey.currentState?.validate();
+        return false;
+      }
       if (!(formKey.currentState?.validate() ?? false)) {
         return false;
       }
     }
     if (step == 1) {
+      if (positionController.text.trim().isEmpty) {
+        positionFocusNode.requestFocus();
+        formKey.currentState?.validate();
+        return false;
+      }
       if (!(formKey.currentState?.validate() ?? false)) {
         return false;
       }
@@ -182,7 +346,15 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
         return false;
       }
     }
-    setState(() => saveErrorMessage = null);
+    setState(() {
+      saveErrorMessage = null;
+      nameErrorText = null;
+      usernameErrorText = null;
+      passwordErrorText = null;
+      phoneErrorText = null;
+      emailErrorText = null;
+      positionErrorText = null;
+    });
     return true;
   }
 
@@ -190,6 +362,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
     if (selectedDepartmentId == null || selectedBranchId == null) {
       setState(() {
         saveErrorMessage = 'admin.employeeWizard.departmentBranchRequired';
+        currentStep = 2;
       });
       return;
     }
@@ -197,6 +370,12 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
     setState(() {
       isSaving = true;
       saveErrorMessage = null;
+      nameErrorText = null;
+      usernameErrorText = null;
+      passwordErrorText = null;
+      phoneErrorText = null;
+      emailErrorText = null;
+      positionErrorText = null;
     });
 
     final isFromRequest =
@@ -235,10 +414,8 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
           isCreated = true;
         });
       } else {
-        setState(() {
-          isSaving = false;
-          saveErrorMessage = errorMessage;
-        });
+        setState(() => isSaving = false);
+        _navigateToErrorField(errorMessage);
       }
     } else {
       final addBody = AddEmployeeRequestBody(
@@ -276,10 +453,8 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
           isCreated = true;
         });
       } else {
-        setState(() {
-          isSaving = false;
-          saveErrorMessage = errorMessage;
-        });
+        setState(() => isSaving = false);
+        _navigateToErrorField(errorMessage);
       }
     }
   }
@@ -371,11 +546,35 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                         employeeCodeController: employeeCodeController,
                         selectedPhotoPath: selectedPhotoPath,
                         initialPhotoUrl: widget.accountRequest?.photoPath,
+                        nameFocusNode: nameFocusNode,
+                        usernameFocusNode: usernameFocusNode,
+                        passwordFocusNode: passwordFocusNode,
+                        phoneFocusNode: phoneFocusNode,
+                        emailFocusNode: emailFocusNode,
+                        nameErrorText: nameErrorText,
+                        usernameErrorText: usernameErrorText,
+                        passwordErrorText: passwordErrorText,
+                        phoneErrorText: phoneErrorText,
+                        emailErrorText: emailErrorText,
+                        onNameChanged: (_) =>
+                            setState(() => nameErrorText = null),
+                        onUsernameChanged: (_) =>
+                            setState(() => usernameErrorText = null),
+                        onPasswordChanged: (_) =>
+                            setState(() => passwordErrorText = null),
+                        onPhoneChanged: (_) =>
+                            setState(() => phoneErrorText = null),
+                        onEmailChanged: (_) =>
+                            setState(() => emailErrorText = null),
                         onPhotoSelected: (path) =>
                             setState(() => selectedPhotoPath = path),
                       ),
                     1 => AdminCreateEmployeeWorkStepWidget(
                         positionController: positionController,
+                        positionFocusNode: positionFocusNode,
+                        positionErrorText: positionErrorText,
+                        onPositionChanged: (_) =>
+                            setState(() => positionErrorText = null),
                         selectedRoles: selectedRoles,
                         availableRoles: availableRoles,
                         onRoleToggled: (role) => setState(() {

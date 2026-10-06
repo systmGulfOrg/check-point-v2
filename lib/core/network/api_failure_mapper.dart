@@ -46,6 +46,19 @@ class ApiFailureMapper {
           message.contains('login')) {
         return const ApiFailure(messageKey: 'errors.deviceLoginAccess');
       }
+      if (message.contains('password') &&
+          (message.contains('policy') ||
+              message.contains('weak') ||
+              message.contains('meet') ||
+              message.contains('character'))) {
+        return const ApiFailure(messageKey: 'errors.passwordPolicy');
+      }
+      if (message.contains('username') &&
+          (message.contains('already') ||
+              message.contains('exist') ||
+              message.contains('taken'))) {
+        return const ApiFailure(messageKey: 'errors.usernameExists');
+      }
       if (message.contains('locked') ||
           (message.contains('failed') &&
               message.contains('login') &&

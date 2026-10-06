@@ -18,6 +18,21 @@ class AdminCreateEmployeePersonalStepWidget extends StatefulWidget {
     required this.employeeCodeController,
     required this.selectedPhotoPath,
     required this.onPhotoSelected,
+    this.nameFocusNode,
+    this.usernameFocusNode,
+    this.passwordFocusNode,
+    this.phoneFocusNode,
+    this.emailFocusNode,
+    this.nameErrorText,
+    this.usernameErrorText,
+    this.passwordErrorText,
+    this.phoneErrorText,
+    this.emailErrorText,
+    this.onNameChanged,
+    this.onUsernameChanged,
+    this.onPasswordChanged,
+    this.onPhoneChanged,
+    this.onEmailChanged,
     this.initialPhotoUrl,
     super.key,
   });
@@ -32,6 +47,21 @@ class AdminCreateEmployeePersonalStepWidget extends StatefulWidget {
   final String? selectedPhotoPath;
   final String? initialPhotoUrl;
   final ValueChanged<String?> onPhotoSelected;
+  final FocusNode? nameFocusNode;
+  final FocusNode? usernameFocusNode;
+  final FocusNode? passwordFocusNode;
+  final FocusNode? phoneFocusNode;
+  final FocusNode? emailFocusNode;
+  final String? nameErrorText;
+  final String? usernameErrorText;
+  final String? passwordErrorText;
+  final String? phoneErrorText;
+  final String? emailErrorText;
+  final ValueChanged<String>? onNameChanged;
+  final ValueChanged<String>? onUsernameChanged;
+  final ValueChanged<String>? onPasswordChanged;
+  final ValueChanged<String>? onPhoneChanged;
+  final ValueChanged<String>? onEmailChanged;
 
   @override
   State<AdminCreateEmployeePersonalStepWidget> createState() =>
@@ -146,6 +176,9 @@ class _AdminCreateEmployeePersonalStepWidgetState
           child: CustomTextFormField(
             hintText: 'admin.employeeWizard.fullNameHint'.tr(context: context),
             controller: widget.nameController,
+            focusNode: widget.nameFocusNode,
+            errorText: widget.nameErrorText,
+            onChanged: widget.onNameChanged,
             prefixIcon: Icon(
               Icons.person_outline_rounded,
               size: 20.r,
@@ -166,6 +199,9 @@ class _AdminCreateEmployeePersonalStepWidgetState
           child: CustomTextFormField(
             hintText: 'admin.employeeWizard.usernameHint'.tr(context: context),
             controller: widget.usernameController,
+            focusNode: widget.usernameFocusNode,
+            errorText: widget.usernameErrorText,
+            onChanged: widget.onUsernameChanged,
             prefixIcon: Icon(
               Icons.alternate_email_rounded,
               size: 20.r,
@@ -190,6 +226,9 @@ class _AdminCreateEmployeePersonalStepWidgetState
                 hintText:
                     'admin.employeeWizard.passwordHint'.tr(context: context),
                 controller: widget.passwordController,
+                focusNode: widget.passwordFocusNode,
+                errorText: widget.passwordErrorText,
+                onChanged: widget.onPasswordChanged,
                 obscureText: obscurePassword,
                 prefixIcon: Icon(
                   Icons.lock_outline_rounded,
@@ -292,6 +331,9 @@ class _AdminCreateEmployeePersonalStepWidgetState
           child: CustomTextFormField(
             hintText: 'admin.employeeWizard.phoneHint'.tr(context: context),
             controller: widget.phoneController,
+            focusNode: widget.phoneFocusNode,
+            errorText: widget.phoneErrorText,
+            onChanged: widget.onPhoneChanged,
             keyboardType: TextInputType.phone,
             prefixIcon: Icon(
               Icons.phone_outlined,
@@ -308,6 +350,9 @@ class _AdminCreateEmployeePersonalStepWidgetState
           child: CustomTextFormField(
             hintText: 'admin.employeeWizard.emailHint'.tr(context: context),
             controller: widget.emailController,
+            focusNode: widget.emailFocusNode,
+            errorText: widget.emailErrorText,
+            onChanged: widget.onEmailChanged,
             keyboardType: TextInputType.emailAddress,
             prefixIcon: Icon(
               Icons.email_outlined,

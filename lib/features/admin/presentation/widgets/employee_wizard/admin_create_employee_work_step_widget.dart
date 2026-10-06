@@ -18,6 +18,9 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
     required this.onWorkPolicyChanged,
     required this.selectedPermissionsCount,
     required this.onManagePermissionsPressed,
+    this.positionFocusNode,
+    this.positionErrorText,
+    this.onPositionChanged,
     super.key,
   });
 
@@ -31,6 +34,9 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
   final ValueChanged<String?> onWorkPolicyChanged;
   final int selectedPermissionsCount;
   final VoidCallback onManagePermissionsPressed;
+  final FocusNode? positionFocusNode;
+  final String? positionErrorText;
+  final ValueChanged<String>? onPositionChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +55,9 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
           child: CustomTextFormField(
             hintText: 'admin.employeeWizard.positionHint'.tr(context: context),
             controller: positionController,
+            focusNode: positionFocusNode,
+            errorText: positionErrorText,
+            onChanged: onPositionChanged,
             prefixIcon: Icon(
               Icons.work_outline_rounded,
               size: 20.r,

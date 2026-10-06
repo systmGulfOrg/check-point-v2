@@ -10,6 +10,8 @@ class CustomTextFormField extends StatelessWidget {
     super.key,
     this.controller,
     this.validator,
+    this.focusNode,
+    this.errorText,
     this.keyboardType,
     this.obscureText = false,
     this.prefixIcon,
@@ -25,6 +27,8 @@ class CustomTextFormField extends StatelessWidget {
   final String hintText;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final FocusNode? focusNode;
+  final String? errorText;
   final TextInputType? keyboardType;
   final bool obscureText;
   final Widget? prefixIcon;
@@ -43,6 +47,7 @@ class CustomTextFormField extends StatelessWidget {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       controller: controller,
+      focusNode: focusNode,
       initialValue: controller == null ? initialValue : null,
       validator: validator,
       keyboardType: keyboardType,
@@ -51,7 +56,6 @@ class CustomTextFormField extends StatelessWidget {
       onChanged: onChanged,
       onTap: onTap,
       maxLines: maxLines,
-
       inputFormatters: inputFormatters,
       style: AppTextStyles.font14Regular.copyWith(
         color: AppColors.textPrimary,
@@ -59,6 +63,7 @@ class CustomTextFormField extends StatelessWidget {
       ),
       decoration: InputDecoration(
         hintText: hintText,
+        errorText: errorText,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
       ),
