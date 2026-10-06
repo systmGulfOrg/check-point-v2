@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -17,7 +18,7 @@ class ApplyForLeaveSheetWidget extends StatefulWidget {
   });
 
   final List<LeaveTypeModel> leaveTypes;
-  final void Function({
+  final FutureOr<void> Function({
     required String startDate,
     required String endDate,
     required String reason,
@@ -39,6 +40,7 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
   final _reasonController = TextEditingController();
   final _remarkController = TextEditingController();
 
+  bool _isLoading = false;
   DateTime? _startDate;
   DateTime? _endDate;
   late String _selectedLeaveRequestType;
@@ -208,9 +210,11 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'employee.leaves.applyTitle'.tr(context: context),
-                    style: AppTextStyles.font18Bold,
+                  Expanded(
+                    child: Text(
+                      'employee.leaves.applyTitle'.tr(context: context),
+                      style: AppTextStyles.font18Bold,
+                    ),
                   ),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
@@ -614,7 +618,8 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                   Expanded(
                     child: CustomButton(
                       text: 'employee.leaves.submit'.tr(context: context),
-                      onTap: () {
+                      isLoading: _isLoading,
+                      onTap: () async {
                         if (!(_formKey.currentState?.validate() ?? false)) {
                           return;
                         }
@@ -632,19 +637,30 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                           );
                           return;
                         }
-                        widget.onSubmit(
-                          leaveRequestType: _selectedLeaveRequestType,
-                          startDate: AppDateFormatter.formatYearMonthDay(
-                            _startDate!,
-                          ),
-                          endDate: AppDateFormatter.formatYearMonthDay(
-                            _endDate!,
-                          ),
-                          reason: _reasonController.text.trim(),
-                          remark: _remarkController.text.trim(),
-                          attachmentUrl: _attachedFileBase64,
-                        );
-                        Navigator.pop(context);
+
+                        final navigator = Navigator.of(context);
+                        setState(() => _isLoading = true);
+                        try {
+                          await widget.onSubmit(
+                            leaveRequestType: _selectedLeaveRequestType,
+                            startDate: AppDateFormatter.formatYearMonthDay(
+                              _startDate!,
+                            ),
+                            endDate: AppDateFormatter.formatYearMonthDay(
+                              _endDate!,
+                            ),
+                            reason: _reasonController.text.trim(),
+                            remark: _remarkController.text.trim(),
+                            attachmentUrl: _attachedFileBase64,
+                          );
+                          if (mounted) {
+                            navigator.pop();
+                          }
+                        } catch (_) {
+                          if (mounted) {
+                            setState(() => _isLoading = false);
+                          }
+                        }
                       },
                     ),
                   ),

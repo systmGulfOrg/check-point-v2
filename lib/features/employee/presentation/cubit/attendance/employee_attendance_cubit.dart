@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -9,6 +10,7 @@ import 'package:check_point_v2/features/admin/data/models/attendance/admin_atten
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
+import 'package:check_point_v2/features/employee/data/models/attendance/track_user_request_body.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_check_in_use_case.dart';
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_check_out_use_case.dart';
@@ -133,6 +135,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     switch (result) {
       case Success(:final data):
         todayAttendance = data;
+        startShiftTracking();
         emit(EmployeeAttendanceState.checkInSuccess(data));
       case Failure(:final failure):
         emit(EmployeeAttendanceState.error(failure.messageKey));
@@ -178,6 +181,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     switch (result) {
       case Success(:final data):
         todayAttendance = data;
+        stopShiftTracking();
         emit(EmployeeAttendanceState.checkOutSuccess(data));
       case Failure(:final failure):
         emit(EmployeeAttendanceState.error(failure.messageKey));
@@ -380,5 +384,42 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
         ),
       );
     }
+  }
+
+  Timer? _trackingTimer;
+  bool isTrackingActive = false;
+
+  void startShiftTracking({Duration interval = const Duration(minutes: 5)}) {
+    _trackingTimer?.cancel();
+    isTrackingActive = true;
+    emit(const EmployeeAttendanceState.trackingStatusChanged(true));
+
+    _trackingTimer = Timer.periodic(interval, (_) async {
+      final employeeId = await sessionStorage.readEmployeeId();
+      if (employeeId == null || employeeId.isEmpty) return;
+      final pos = await attendanceVerificationService.locationService
+          .getCurrentPositionDetails();
+      if (pos == null) return;
+      await attendanceRepo.trackEmployeeLocation(
+        TrackUserRequestBody(
+          employeeId: employeeId,
+          latitude: pos.latitude,
+          longitude: pos.longitude,
+        ),
+      );
+    });
+  }
+
+  void stopShiftTracking() {
+    _trackingTimer?.cancel();
+    _trackingTimer = null;
+    isTrackingActive = false;
+    emit(const EmployeeAttendanceState.trackingStatusChanged(false));
+  }
+
+  @override
+  Future<void> close() {
+    _trackingTimer?.cancel();
+    return super.close();
   }
 }

@@ -10,6 +10,7 @@ EmployeeCheckInRequestBody _$EmployeeCheckInRequestBodyFromJson(
   Map<String, dynamic> json,
 ) => EmployeeCheckInRequestBody(
   employeeIdd: json['employeeId'] as String,
+  siteId: json['siteId'] as String?,
   customerId: json['customerId'] as String?,
   area: json['area'] as String?,
   location: json['location'] as String?,
@@ -24,6 +25,7 @@ Map<String, dynamic> _$EmployeeCheckInRequestBodyToJson(
   EmployeeCheckInRequestBody instance,
 ) => <String, dynamic>{
   'employeeId': instance.employeeIdd,
+  'siteId': instance.siteId,
   'customerId': instance.customerId,
   'area': instance.area,
   'location': instance.location,

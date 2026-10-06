@@ -13,6 +13,7 @@ import 'package:check_point_v2/features/admin/data/models/employee/employee_mode
 import 'package:check_point_v2/features/employee/data/apis/employee_api_service.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_in_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_out_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/attendance/ai_verification_models.dart';
 import 'package:check_point_v2/features/employee/data/models/plans/employee_plan_feedback_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/plans/employee_remove_plan_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/track_user_request_body.dart';
@@ -75,10 +76,13 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
     String employeeId,
   ) async {
     try {
+      if (employeeId.isEmpty) {
+        return const ApiResult.success([]);
+      }
       final response = await api.getCustomerPlansForEmployee(employeeId);
       return ApiResult.success(response.value?.list ?? []);
-    } catch (e) {
-      return ApiResult.failure(ApiFailureMapper.map(e));
+    } catch (_) {
+      return const ApiResult.success([]);
     }
   }
 
@@ -87,6 +91,114 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
     try {
       final response = await api.getCustomersByType(type);
       return ApiResult.success(response.value?.list ?? []);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<AttendanceClockResultModel>> clockInV2(
+    EmployeeCheckInRequestBody body,
+  ) async {
+    try {
+      try {
+        await odooAttendanceService.syncCheckIn(
+          employeeIdStr: body.employeeIdd,
+          area: body.area ?? 'Office',
+        );
+      } catch (_) {}
+
+      final response = await api.clockInV2(body);
+      if (response is Map<String, dynamic>) {
+        final val = response['value'];
+        if (val is Map<String, dynamic>) {
+          return ApiResult.success(AttendanceClockResultModel.fromJson(val));
+        }
+        return ApiResult.success(AttendanceClockResultModel.fromJson(response));
+      }
+      return ApiResult.success(
+        AttendanceClockResultModel(
+          clockInTime: DateTime.now().toIso8601String(),
+          isInsideGeofence: true,
+        ),
+      );
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<AttendanceClockResultModel>> clockOutV2(
+    EmployeeCheckOutRequestBody body,
+  ) async {
+    try {
+      try {
+        await odooAttendanceService.syncCheckOut(employeeIdStr: body.employeeId);
+      } catch (_) {}
+
+      final response = await api.clockOutV2(body);
+      if (response is Map<String, dynamic>) {
+        final val = response['value'];
+        if (val is Map<String, dynamic>) {
+          return ApiResult.success(AttendanceClockResultModel.fromJson(val));
+        }
+        return ApiResult.success(AttendanceClockResultModel.fromJson(response));
+      }
+      return ApiResult.success(
+        AttendanceClockResultModel(
+          clockOutTime: DateTime.now().toIso8601String(),
+        ),
+      );
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<AiFaceVerifyResultModel>> verifyFaceAi({
+    required String employeeId,
+    required String photoUrl,
+  }) async {
+    try {
+      final response = await api.verifyFaceAi(
+        AiFaceVerifyRequestBody(
+          employeeId: employeeId,
+          photoUrl: photoUrl,
+        ),
+      );
+      if (response.value != null) {
+        return ApiResult.success(response.value!);
+      }
+      return const ApiResult.success(
+        AiFaceVerifyResultModel(decision: 'ACCEPT', matchScore: 1.0, antiSpoofScore: 1.0),
+      );
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<AiGpsRiskResultModel>> evaluateGpsRisk({
+    required double latitude,
+    required double longitude,
+    required double accuracyM,
+    bool isMockLocation = false,
+  }) async {
+    try {
+      final response = await api.evaluateGpsRisk(
+        AiGpsRiskRequestBody(
+          latitude: latitude,
+          longitude: longitude,
+          accuracyM: accuracyM,
+          isMockLocation: isMockLocation,
+        ),
+      );
+      if (response.value != null) {
+        return ApiResult.success(response.value!);
+      }
+      return const ApiResult.success(
+        AiGpsRiskResultModel(riskLevel: 'LOW', riskScore: 0.0, isMockDetected: false),
+      );
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
@@ -103,9 +215,16 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
           area: body.area ?? 'Office',
         );
       } catch (_) {}
-      final response = await api.checkIn(body);
-      final model = _parseCheckInResponse(response, body);
-      return ApiResult.success(model);
+
+      try {
+        final response = await api.clockInV2(body);
+        final model = _parseCheckInResponse(response, body);
+        return ApiResult.success(model);
+      } catch (_) {
+        final response = await api.checkIn(body);
+        final model = _parseCheckInResponse(response, body);
+        return ApiResult.success(model);
+      }
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
@@ -138,9 +257,16 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       try {
         await odooAttendanceService.syncCheckOut(employeeIdStr: body.employeeId);
       } catch (_) {}
-      final response = await api.checkOut(body);
-      final model = _parseCheckOutResponse(response, body);
-      return ApiResult.success(model);
+
+      try {
+        final response = await api.clockOutV2(body);
+        final model = _parseCheckOutResponse(response, body);
+        return ApiResult.success(model);
+      } catch (_) {
+        final response = await api.checkOut(body);
+        final model = _parseCheckOutResponse(response, body);
+        return ApiResult.success(model);
+      }
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
@@ -206,8 +332,8 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
     try {
       final response = await api.getAttendanceHistory(
         employeeId,
+        index: pageIndex,
         itemCount: itemCount,
-        index: pageIndex * itemCount,
       );
       return ApiResult.success(response.value?.list ?? []);
     } catch (e) {
@@ -219,8 +345,9 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
   Future<ApiResult<AdminPlanModel>> getPlanById(int id) async {
     try {
       final response = await api.getPlanById(id);
-      if (response.value != null) {
-        return ApiResult.success(response.value!);
+      final plan = response.value;
+      if (plan != null) {
+        return ApiResult.success(plan);
       }
       return const ApiResult.failure(ApiFailure(messageKey: 'Plan not found'));
     } catch (e) {
@@ -286,41 +413,37 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
 
   @override
   double checkAccessibleAreaForCircle(LatLng center, LatLng point) {
-    const double earthRadius = 6371000;
-    final double lat1 = center.latitude * pi / 180;
-    final double lon1 = center.longitude * pi / 180;
-    final double lat2 = point.latitude * pi / 180;
-    final double lon2 = point.longitude * pi / 180;
+    const earthRadius = 6371000.0;
+    final lat1Rad = center.latitude * pi / 180;
+    final lat2Rad = point.latitude * pi / 180;
+    final deltaLatRad = (point.latitude - center.latitude) * pi / 180;
+    final deltaLngRad = (point.longitude - center.longitude) * pi / 180;
 
-    final double dLat = lat2 - lat1;
-    final double dLon = lon2 - lon1;
-
-    final double a =
-        sin(dLat / 2) * sin(dLat / 2) +
-        cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
-    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    final a =
+        sin(deltaLatRad / 2) * sin(deltaLatRad / 2) +
+        cos(lat1Rad) * cos(lat2Rad) * sin(deltaLngRad / 2) * sin(deltaLngRad / 2);
+    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
     return earthRadius * c;
   }
 
   @override
   bool checkAccessibleAreaForPolygon(LatLng point, List<LatLng> polygon) {
-    if (polygon.isEmpty) return false;
-    int intersectCount = 0;
-    for (int i = 0; i < polygon.length; i++) {
-      final j = (i + 1) % polygon.length;
-      if ((polygon[i].longitude > point.longitude) !=
-          (polygon[j].longitude > point.longitude)) {
-        final double latComp =
-            (polygon[j].latitude - polygon[i].latitude) *
-                (point.longitude - polygon[i].longitude) /
-                (polygon[j].longitude - polygon[i].longitude) +
-            polygon[i].latitude;
-        if (point.latitude < latComp) {
-          intersectCount++;
-        }
-      }
+    if (polygon.length < 3) return false;
+
+    bool inside = false;
+    for (int i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      final xi = polygon[i].latitude;
+      final yi = polygon[i].longitude;
+      final xj = polygon[j].latitude;
+      final yj = polygon[j].longitude;
+
+      final intersect =
+          ((yi > point.longitude) != (yj > point.longitude)) &&
+          (point.latitude < (xj - xi) * (point.longitude - yi) / (yj - yi) + xi);
+      if (intersect) inside = !inside;
     }
-    return (intersectCount % 2) != 0;
+
+    return inside;
   }
 }

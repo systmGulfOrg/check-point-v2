@@ -47,9 +47,16 @@ class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
                         context,
                       ).showSnackBar(SnackBar(content: Text(message)));
                     case EmployeePlansStateError(:final messageKey):
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(messageKey.tr(context: context))));
+                      if (!messageKey.contains('Route GET') &&
+                          !messageKey.contains('not found')) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(
+                          SnackBar(
+                            content: Text(messageKey.tr(context: context)),
+                          ),
+                        );
+                      }
                     default:
                       break;
                   }

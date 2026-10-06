@@ -14,6 +14,7 @@ import 'package:check_point_v2/features/auth/data/models/login/result_model.dart
 import 'package:check_point_v2/features/employee/data/models/password/employee_change_password_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_in_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_out_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/attendance/ai_verification_models.dart';
 import 'package:check_point_v2/features/employee/data/models/leave_requests/employee_leave_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/plans/employee_plan_feedback_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/plans/employee_remove_plan_request_body.dart';
@@ -29,7 +30,25 @@ part 'employee_api_service.g.dart';
 abstract class EmployeeApiService {
   factory EmployeeApiService(Dio dio, {String? baseUrl}) = _EmployeeApiService;
 
-  // Attendance
+  // Attendance v2
+  @POST(ApiConstants.attendanceClockIn)
+  Future<dynamic> clockInV2(@Body() EmployeeCheckInRequestBody body);
+
+  @POST(ApiConstants.attendanceClockOut)
+  Future<dynamic> clockOutV2(@Body() EmployeeCheckOutRequestBody body);
+
+  // AI Gateway v2
+  @POST(ApiConstants.aiFaceVerify)
+  Future<AiFaceVerifyResponseModel> verifyFaceAi(
+    @Body() AiFaceVerifyRequestBody body,
+  );
+
+  @POST(ApiConstants.aiGpsRisk)
+  Future<AiGpsRiskResponseModel> evaluateGpsRisk(
+    @Body() AiGpsRiskRequestBody body,
+  );
+
+  // Legacy Attendance
   @POST(ApiConstants.employeeCheckIn)
   Future<dynamic> checkIn(@Body() EmployeeCheckInRequestBody body);
 

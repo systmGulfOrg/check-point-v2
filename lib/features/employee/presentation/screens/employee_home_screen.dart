@@ -11,14 +11,10 @@ import 'package:check_point_v2/features/employee/presentation/cubit/attendance/e
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_state.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/plans/employee_plans_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/plans/employee_plans_state.dart';
-import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_cubit.dart';
-import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_state.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_header_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_plan_data.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_plans_section_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_stats_row_widget.dart';
-import 'package:check_point_v2/features/employee/presentation/widgets/employee_task_data.dart';
-import 'package:check_point_v2/features/employee/presentation/widgets/employee_tasks_section_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_today_card_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_location_sheet_widget.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
@@ -27,13 +23,13 @@ import 'package:check_point_v2/features/leaves/presentation/widgets/upcoming_hol
 
 class EmployeeHomeScreen extends StatefulWidget {
   const EmployeeHomeScreen({
-    this.onViewAllTasks,
     this.onViewAllPlans,
+    this.onViewLeaves,
     super.key,
   });
 
-  final VoidCallback? onViewAllTasks;
   final VoidCallback? onViewAllPlans;
+  final VoidCallback? onViewLeaves;
 
   @override
   State<EmployeeHomeScreen> createState() => _EmployeeHomeScreenState();
@@ -44,7 +40,6 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
   void initState() {
     super.initState();
     context.read<EmployeeAttendanceCubit>().loadAttendanceHistory();
-    context.read<EmployeeTasksCubit>().loadMyTasks();
     context.read<EmployeePlansCubit>().loadMyPlans();
   }
 
@@ -114,7 +109,6 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
           onRefresh: () async {
             await Future.wait([
               context.read<EmployeeAttendanceCubit>().loadAttendanceHistory(),
-              context.read<EmployeeTasksCubit>().loadMyTasks(),
               context.read<EmployeePlansCubit>().loadMyPlans(),
               context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
             ]);
@@ -125,14 +119,22 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const EmployeeHomeHeaderBlocBuilderWidget(),
+                  const AnimatedListItemWidget(
+                    index: 0,
+                    child: EmployeeHomeHeaderBlocBuilderWidget(),
+                  ),
                   hSpace(16),
-                  const UpcomingHolidayCardBlocBuilderWidget(),
+                  const AnimatedListItemWidget(
+                    index: 1,
+                    child: UpcomingHolidayCardBlocBuilderWidget(),
+                  ),
                   hSpace(16),
-                  BlocConsumer<
-                    EmployeeAttendanceCubit,
-                    EmployeeAttendanceState
-                  >(
+                  AnimatedListItemWidget(
+                    index: 2,
+                    child: BlocConsumer<
+                      EmployeeAttendanceCubit,
+                      EmployeeAttendanceState
+                    >(
                     listener: (context, state) {
                       switch (state) {
                         case EmployeeAttendanceStateCheckInSuccess():
@@ -241,6 +243,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                           workModeText: workMode.tr(context: context),
                           workSystemText: workSystem.tr(context: context),
                           onToggleCheckInOut: _toggleCheckInOut,
+                          onLeaveBalanceTap: widget.onViewLeaves,
                           isTodayHoliday: isTodayHoliday,
                           holidayGreeting: holidayGreeting,
                           holidayName: holidayName,
@@ -248,105 +251,65 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                       );
                     },
                   ),
-                  hSpace(20),
-                  BlocBuilder<EmployeeTasksCubit, EmployeeTasksState>(
-                    builder: (context, tasksState) {
-                      final activeCount = switch (tasksState) {
-                        EmployeeTasksStateSuccess(:final tasks) =>
-                          tasks
-                              .where(
-                                (t) =>
-                                    t.status != 'Completed' &&
-                                    t.status != 'Done',
-                              )
-                              .length,
-                        _ => 0,
-                      };
-                      return BlocBuilder<
-                        EmployeePlansCubit,
-                        EmployeePlansState
-                      >(
-                        builder: (context, plansState) {
-                          final upcomingPlans = switch (plansState) {
-                            EmployeePlansStateSuccess(:final plans) =>
-                              plans.length,
-                            _ => 0,
-                          };
-                          return Skeletonizer(
-                            enabled:
-                                tasksState is EmployeeTasksStateLoading ||
-                                plansState is EmployeePlansStateLoading,
-                            child: EmployeeStatsRowWidget(
-                              activeTasksCount: activeCount,
-                              upcomingPlansCount: upcomingPlans,
-                              pendingLeavesCount: 0,
-                            ),
-                          );
-                        },
-                      );
-                    },
+                ),
+                hSpace(20),
+                  AnimatedListItemWidget(
+                    index: 3,
+                    child: BlocBuilder<
+                      EmployeePlansCubit,
+                      EmployeePlansState
+                    >(
+                      builder: (context, plansState) {
+                        final upcomingPlans = switch (plansState) {
+                          EmployeePlansStateSuccess(:final plans) =>
+                            plans.length,
+                          _ => 0,
+                        };
+                        return Skeletonizer(
+                          enabled: plansState is EmployeePlansStateLoading,
+                          child: EmployeeStatsRowWidget(
+                            upcomingPlansCount: upcomingPlans,
+                            pendingLeavesCount: 0,
+                            onUpcomingPlansTap: widget.onViewAllPlans,
+                            onPendingLeavesTap: widget.onViewLeaves,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                   hSpace(20),
-                  BlocBuilder<EmployeeTasksCubit, EmployeeTasksState>(
-                    builder: (context, state) {
-                      final tasksList = switch (state) {
-                        EmployeeTasksStateSuccess(:final tasks) =>
-                          tasks
-                              .take(3)
-                              .map(
-                                (t) => EmployeeTaskData(
-                                  id: '${t.id ?? 0}',
-                                  title: t.title ?? '',
-                                  dueDate: 'Task #${t.id ?? 0}',
-                                  status: t.status ?? 'Pending',
-                                  priority: 'Normal',
-                                  description: t.description ?? '',
-                                  progressPercentage: 50,
-                                  assignees: const ['EM'],
-                                ),
-                              )
-                              .toList(),
-                        _ => const <EmployeeTaskData>[],
-                      };
-                      return Skeletonizer(
-                        enabled: state is EmployeeTasksStateLoading,
-                        child: EmployeeTasksSectionWidget(
-                          tasks: tasksList,
-                          onViewAllTap: widget.onViewAllTasks ?? () {},
-                        ),
-                      );
-                    },
-                  ),
-                  hSpace(20),
-                  BlocBuilder<EmployeePlansCubit, EmployeePlansState>(
-                    builder: (context, state) {
-                      final plansList = switch (state) {
-                        EmployeePlansStateSuccess(:final plans) =>
-                          plans
-                              .take(3)
-                              .map(
-                                (p) => EmployeePlanData(
-                                  id: '${p.id ?? 0}',
-                                  title: p.title ?? 'Plan #${p.id ?? 0}',
-                                  dateTime:
-                                      p.planDate ?? DateTime.now().toString(),
-                                  planType: p.planType ?? 'Mission',
-                                  description: p.notes ?? '',
-                                  status: p.status ?? 'planned',
-                                  assignees: const ['EM'],
-                                ),
-                              )
-                              .toList(),
-                        _ => const <EmployeePlanData>[],
-                      };
-                      return Skeletonizer(
-                        enabled: state is EmployeePlansStateLoading,
-                        child: EmployeePlansSectionWidget(
-                          plans: plansList,
-                          onViewAllTap: widget.onViewAllPlans ?? () {},
-                        ),
-                      );
-                    },
+                  AnimatedListItemWidget(
+                    index: 4,
+                    child: BlocBuilder<EmployeePlansCubit, EmployeePlansState>(
+                      builder: (context, state) {
+                        final plansList = switch (state) {
+                          EmployeePlansStateSuccess(:final plans) =>
+                            plans
+                                .take(3)
+                                .map(
+                                  (p) => EmployeePlanData(
+                                    id: '${p.id ?? 0}',
+                                    title: p.title ?? 'Plan #${p.id ?? 0}',
+                                    dateTime:
+                                        p.planDate ?? DateTime.now().toString(),
+                                    planType: p.planType ?? 'Mission',
+                                    description: p.notes ?? '',
+                                    status: p.status ?? 'planned',
+                                    assignees: const ['EM'],
+                                  ),
+                                )
+                                .toList(),
+                          _ => const <EmployeePlanData>[],
+                        };
+                        return Skeletonizer(
+                          enabled: state is EmployeePlansStateLoading,
+                          child: EmployeePlansSectionWidget(
+                            plans: plansList,
+                            onViewAllTap: widget.onViewAllPlans ?? () {},
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),

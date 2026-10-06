@@ -28,11 +28,6 @@ class EmployeeNavBarBlocBuilder extends StatelessWidget {
               icon: Icons.access_time_rounded,
               labelKey: 'employee.nav.clock',
             ),
-          if (cubit.isEnabled(AppFeatureKeys.tasks))
-            const NavBarItemData(
-              icon: Icons.assignment_outlined,
-              labelKey: 'employee.nav.tasks',
-            ),
           const NavBarItemData(
             icon: Icons.map_outlined,
             labelKey: 'employee.nav.plans',

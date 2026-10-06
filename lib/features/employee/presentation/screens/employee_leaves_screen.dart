@@ -50,8 +50,8 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                 required remark,
                 required leaveRequestType,
                 attachmentUrl,
-              }) {
-                cubit.submitLeaveRequest(
+              }) async {
+                await cubit.submitLeaveRequest(
                   startDate: startDate,
                   endDate: endDate,
                   reason: reason,

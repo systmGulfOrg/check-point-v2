@@ -8,6 +8,7 @@ import 'package:check_point_v2/features/admin/data/models/locations/customer_res
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_in_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_out_request_body.dart';
+import 'package:check_point_v2/features/employee/data/models/attendance/ai_verification_models.dart';
 import 'package:check_point_v2/features/employee/data/models/plans/employee_plan_feedback_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/plans/employee_remove_plan_request_body.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/track_user_request_body.dart';
@@ -32,6 +33,22 @@ abstract class EmployeeAttendanceRepo {
   Future<ApiResult<AdminAttendanceModel>> checkOutWithoutPlan(
     EmployeeCheckOutRequestBody body,
   );
+  Future<ApiResult<AttendanceClockResultModel>> clockInV2(
+    EmployeeCheckInRequestBody body,
+  );
+  Future<ApiResult<AttendanceClockResultModel>> clockOutV2(
+    EmployeeCheckOutRequestBody body,
+  );
+  Future<ApiResult<AiFaceVerifyResultModel>> verifyFaceAi({
+    required String employeeId,
+    required String photoUrl,
+  });
+  Future<ApiResult<AiGpsRiskResultModel>> evaluateGpsRisk({
+    required double latitude,
+    required double longitude,
+    required double accuracyM,
+    bool isMockLocation = false,
+  });
   Future<ApiResult<List<AdminAttendanceModel>>> getAttendanceHistory({
     required String employeeId,
     int pageIndex = 0,

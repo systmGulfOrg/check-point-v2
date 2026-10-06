@@ -9,7 +9,6 @@ import 'employee_home_screen.dart';
 import 'package:check_point_v2/features/leaves/presentation/screens/leaves_dashboard_screen.dart';
 import 'employee_plans_screen.dart';
 import 'employee_settings_screen.dart';
-import 'package:check_point_v2/features/projects/presentation/screens/projects_screen.dart';
 
 class EmployeeMainScreen extends StatefulWidget {
   const EmployeeMainScreen({super.key});
@@ -22,25 +21,32 @@ class _EmployeeMainScreenState extends State<EmployeeMainScreen> {
   int _selectedIndex = 0;
 
   List<Widget> _buildScreens(TenantFeaturesCubit cubit) {
-    int plansIndex = 1;
+    int currentIdx = 1;
+    final hasAttendance = cubit.isEnabled(AppFeatureKeys.attendance);
+    if (hasAttendance) {
+      currentIdx++;
+    }
 
-    if (cubit.isEnabled(AppFeatureKeys.attendance)) plansIndex++;
-    if (cubit.isEnabled(AppFeatureKeys.tasks)) plansIndex++;
+    final int plansIdx = currentIdx++;
+
+    final hasLeaves = cubit.isEnabled(AppFeatureKeys.leave);
+    final int? leavesIdx = hasLeaves ? currentIdx++ : null;
 
     return <Widget>[
       EmployeeHomeScreen(
-        onViewAllTasks: () => setState(
-          () => _selectedIndex =
-              cubit.isEnabled(AppFeatureKeys.attendance) ? 2 : 1,
-        ),
-        onViewAllPlans: () => setState(() => _selectedIndex = plansIndex),
+        onViewAllPlans: () => setState(() => _selectedIndex = plansIdx),
+        onViewLeaves: leavesIdx != null
+            ? () => setState(() => _selectedIndex = leavesIdx)
+            : () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const LeavesDashboardScreen(),
+                ),
+              ),
       ),
-      if (cubit.isEnabled(AppFeatureKeys.attendance))
-        const EmployeeClockScreen(),
-      if (cubit.isEnabled(AppFeatureKeys.tasks)) const ProjectsScreen(),
+      if (hasAttendance) const EmployeeClockScreen(),
       const EmployeePlansScreen(),
-      if (cubit.isEnabled(AppFeatureKeys.leave))
-        const LeavesDashboardScreen(),
+      if (hasLeaves) const LeavesDashboardScreen(),
       const EmployeeSettingsScreen(),
     ];
   }

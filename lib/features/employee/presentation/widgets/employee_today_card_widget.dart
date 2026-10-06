@@ -18,6 +18,7 @@ class EmployeeTodayCardWidget extends StatelessWidget {
     required this.workModeText,
     required this.workSystemText,
     required this.onToggleCheckInOut,
+    this.onLeaveBalanceTap,
     this.isTodayHoliday = false,
     this.holidayGreeting,
     this.holidayName,
@@ -35,6 +36,7 @@ class EmployeeTodayCardWidget extends StatelessWidget {
   final String workModeText;
   final String workSystemText;
   final VoidCallback onToggleCheckInOut;
+  final VoidCallback? onLeaveBalanceTap;
   final bool isTodayHoliday;
   final String? holidayGreeting;
   final String? holidayName;
@@ -106,37 +108,50 @@ class EmployeeTodayCardWidget extends StatelessWidget {
                       color: AppColors.info,
                     ),
                     wSpace(5),
-                    Text(
-                      '$workSystemText • $workModeText',
-                      style: AppTextStyles.font11Medium.copyWith(
-                        color: AppColors.info,
+                    Flexible(
+                      child: Text(
+                        '$workSystemText • $workModeText',
+                        style: AppTextStyles.font11Medium.copyWith(
+                          color: AppColors.info,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 7.h),
-                decoration: BoxDecoration(
-                  color: AppColors.softGreenBackground,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.beach_access_outlined,
-                      size: 16.r,
-                      color: AppColors.success,
-                    ),
-                    wSpace(5),
-                    Text(
-                      '${leaveBalance ?? '--'} ${'employee.home.leaveBalance'.tr(context: context)}',
-                      style: AppTextStyles.font11Medium.copyWith(
+              InkWell(
+                onTap: onLeaveBalanceTap,
+                borderRadius: BorderRadius.circular(10.r),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 7.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.softGreenBackground,
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.beach_access_outlined,
+                        size: 16.r,
                         color: AppColors.success,
                       ),
-                    ),
-                  ],
+                      wSpace(5),
+                      Flexible(
+                        child: Text(
+                          '${leaveBalance ?? '--'} ${'employee.home.leaveBalance'.tr(context: context)}',
+                          style: AppTextStyles.font11Medium.copyWith(
+                            color: AppColors.success,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
