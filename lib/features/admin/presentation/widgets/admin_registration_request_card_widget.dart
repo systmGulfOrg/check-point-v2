@@ -34,10 +34,12 @@ class AdminRegistrationRequestCardWidget extends StatelessWidget {
   }
 
   String _getStatusText(BuildContext context) {
-    if (request.isApproved)
+    if (request.isApproved) {
       return 'admin.requests.filterApproved'.tr(context: context);
-    if (request.isRejected)
+    }
+    if (request.isRejected) {
       return 'admin.requests.filterRejected'.tr(context: context);
+    }
     return 'admin.requests.filterPending'.tr(context: context);
   }
 

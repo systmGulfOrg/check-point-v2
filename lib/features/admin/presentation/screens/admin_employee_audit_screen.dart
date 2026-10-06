@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../core/styles/app_colors.dart';
-import '../../../../core/styles/app_text_styles.dart';
 import '../cubit/employee_audit/admin_employee_audit_cubit.dart';
 import '../cubit/employee_audit/admin_employee_audit_state.dart';
 import '../widgets/admin_employee_audit_item_widget.dart';

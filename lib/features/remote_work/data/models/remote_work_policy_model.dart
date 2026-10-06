@@ -38,12 +38,14 @@ class RemoteWorkPolicyModel {
     final type = policyType.toLowerCase();
     if (type == 'hybrid' || type == 'onsite' || type == 'remote') return type;
     final normalizedName = name.toLowerCase();
-    if (normalizedName.contains('hybrid') || normalizedName.contains('هجين'))
+    if (normalizedName.contains('hybrid') || normalizedName.contains('هجين')) {
       return 'hybrid';
+    }
     if (normalizedName.contains('onsite') ||
         normalizedName.contains('موقع') ||
-        normalizedName.contains('حضوري'))
+        normalizedName.contains('حضوري')) {
       return 'onsite';
+    }
     return 'remote';
   }
 

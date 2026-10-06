@@ -108,7 +108,7 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
                 .toList();
             return DropdownButtonFormField<int>(
               isExpanded: true,
-              value: departments.any((d) => d.id == selectedDepartmentId)
+              initialValue: departments.any((d) => d.id == selectedDepartmentId)
                   ? selectedDepartmentId
                   : null,
               decoration: InputDecoration(
@@ -157,7 +157,7 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
                 .toList();
             return DropdownButtonFormField<int>(
               isExpanded: true,
-              value: branches.any((b) => b.id == selectedBranchId)
+              initialValue: branches.any((b) => b.id == selectedBranchId)
                   ? selectedBranchId
                   : null,
               decoration: InputDecoration(
@@ -182,7 +182,7 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
         hSpace(10),
         DropdownButtonFormField<String>(
           isExpanded: true,
-          value: selectedWorkSystem,
+          initialValue: selectedWorkSystem,
           decoration: InputDecoration(
             labelText: 'employee.profile.workSystem'.tr(context: context),
             prefixIcon: const Icon(
@@ -225,7 +225,7 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
             );
             return DropdownButtonFormField<String>(
               isExpanded: true,
-              value: employees.any((e) => e.id == selectedDirectManagerId)
+              initialValue: employees.any((e) => e.id == selectedDirectManagerId)
                   ? selectedDirectManagerId
                   : null,
               decoration: InputDecoration(
