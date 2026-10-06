@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -67,14 +69,67 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'auth.requestAccess.cardTitle'.tr(context: context),
-          style: AppTextStyles.font18Bold.copyWith(color: AppColors.brandInk),
+        // Avatar Photo Picker at Top
+        Center(
+          child: GestureDetector(
+            onTap: _pickPhoto,
+            child: Stack(
+              children: [
+                Container(
+                  width: 90.r,
+                  height: 90.r,
+                  decoration: BoxDecoration(
+                    color: AppColors.softBrandBackground,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.brandPrimary, width: 2),
+                    image: _selectedPhotoPath != null
+                        ? DecorationImage(
+                            image: FileImage(File(_selectedPhotoPath!)),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
+                  ),
+                  child: _selectedPhotoPath == null
+                      ? Icon(
+                          Icons.person_rounded,
+                          size: 48.r,
+                          color: AppColors.brandPrimary,
+                        )
+                      : null,
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    padding: EdgeInsets.all(6.r),
+                    decoration: BoxDecoration(
+                      color: AppColors.brandPrimary,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.white, width: 2),
+                    ),
+                    child: Icon(
+                      Icons.camera_alt_rounded,
+                      size: 16.r,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         hSpace(6),
-        Text(
-          'auth.requestAccess.cardDescription'.tr(context: context),
-          style: AppTextStyles.font13Regular.copyWith(height: 1.5),
+        Center(
+          child: Text(
+            _selectedPhotoPath != null
+                ? 'تم إرفاق الصورة الشخصية'
+                : 'اضغط لالتقاط أو اختيار الصورة الشخصية',
+            style: AppTextStyles.font12Medium.copyWith(
+              color: _selectedPhotoPath != null
+                  ? AppColors.success
+                  : AppColors.textSecondary,
+            ),
+          ),
         ),
         hSpace(18),
 
@@ -242,60 +297,6 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
             Icons.phone_outlined,
             size: 21.r,
             color: AppColors.placeholder,
-          ),
-        ),
-
-        // Photo Attachment Section
-        hSpace(16),
-        Text(
-          'إرفاق الصورة الشخصية / صورة البطاقة',
-          textAlign: TextAlign.start,
-          style: AppTextStyles.font14SemiBold,
-        ),
-        hSpace(8),
-        InkWell(
-          onTap: _pickPhoto,
-          borderRadius: BorderRadius.circular(12.r),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-            decoration: BoxDecoration(
-              color: AppColors.pageBackground,
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: AppColors.border),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  _selectedPhotoPath != null
-                      ? Icons.check_circle_rounded
-                      : Icons.add_a_photo_outlined,
-                  color: _selectedPhotoPath != null
-                      ? AppColors.success
-                      : AppColors.brandPrimary,
-                  size: 22.r,
-                ),
-                wSpace(12),
-                Expanded(
-                  child: Text(
-                    _selectedPhotoPath != null
-                        ? 'تم اختيار الصورة: ${_selectedPhotoPath!.split('/').last}'
-                        : 'اضغط هنا لالتقاط أو اختيار صورة',
-                    style: AppTextStyles.font13Medium.copyWith(
-                      color: _selectedPhotoPath != null
-                          ? AppColors.brandInk
-                          : AppColors.placeholder,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                if (_selectedPhotoPath != null)
-                  IconButton(
-                    icon: Icon(Icons.close, size: 18.r, color: AppColors.error),
-                    onPressed: () => setState(() => _selectedPhotoPath = null),
-                  ),
-              ],
-            ),
           ),
         ),
 

@@ -27,15 +27,39 @@ class _RequestAccessScreenState extends State<RequestAccessScreen> {
         backgroundColor: AppColors.white,
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsetsDirectional.fromSTEB(20.w, 24.h, 20.w, 16.h),
+            padding: EdgeInsetsDirectional.fromSTEB(20.w, 16.h, 20.w, 16.h),
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: 460.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const RequestAccessBrandWidget(),
-                    hSpace(34),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () => context.pushNamedAndRemoveUntil(AppRoutes.login),
+                          borderRadius: BorderRadius.circular(12.r),
+                          child: Container(
+                            width: 40.r,
+                            height: 40.r,
+                            decoration: BoxDecoration(
+                              color: AppColors.cardBackground,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: AppColors.border),
+                            ),
+                            child: Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                              size: 18.r,
+                              color: AppColors.brandInk,
+                            ),
+                          ),
+                        ),
+                        const RequestAccessBrandWidget(),
+                        wSpace(40), // Spacer for centering brand logo
+                      ],
+                    ),
+                    hSpace(24),
                     if (requestSent)
                       Card(
                         elevation: 0,
@@ -55,7 +79,7 @@ class _RequestAccessScreenState extends State<RequestAccessScreen> {
                       )
                     else ...[
                       const RequestAccessWelcomeWidget(),
-                      hSpace(22),
+                      hSpace(20),
                       Card(
                         elevation: 0,
                         margin: EdgeInsets.zero,
@@ -69,7 +93,7 @@ class _RequestAccessScreenState extends State<RequestAccessScreen> {
                         ),
                       ),
                     ],
-                    hSpace(28),
+                    hSpace(24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
