@@ -8,6 +8,8 @@ import 'package:check_point_v2/core/routes/routes.dart';
 import 'package:check_point_v2/core/widgets/custom_text_form_field.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_worker_model.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_worker_card_widget.dart';
+import 'package:check_point_v2/features/contractor/data/models/site_boundary_model.dart';
+import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_batch_attendance_sheet_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_site_filter_chip_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_worker_qr_sheet_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
@@ -45,20 +47,23 @@ class _ContractorWorkersScreenState extends State<ContractorWorkersScreen> {
               cubit.state.mapOrNull(success: (value) => value.workers) ??
               const [],
         );
-    final sites = context.select<ContractorCubit, List<String>>(
+    final siteModels = context.select<ContractorCubit, List<SiteBoundaryModel>>(
       (cubit) =>
-          cubit.state.mapOrNull(
-            success: (value) =>
-                value.sites.map((site) => site.siteName).toList(),
-          ) ??
-          const [],
+          cubit.state.mapOrNull(success: (value) => value.sites) ?? const [],
     );
+    final contractorId = context.select<ContractorCubit, String?>(
+      (cubit) => cubit.state.mapOrNull(
+        success: (value) =>
+            value.contractors.isNotEmpty ? value.contractors.first.id : null,
+      ),
+    );
+    final sites = siteModels.map((site) => site.siteName).toList();
     final filtered = workers.where((w) {
       final matchesSearch =
-          w.fullName.toLowerCase().contains(
+          w.displayName.toLowerCase().contains(
             _searchController.text.toLowerCase(),
           ) ||
-          w.workerCode.toLowerCase().contains(
+          w.displayCode.toLowerCase().contains(
             _searchController.text.toLowerCase(),
           );
       final matchesSite =
@@ -78,6 +83,30 @@ class _ContractorWorkersScreenState extends State<ContractorWorkersScreen> {
         backgroundColor: AppColors.cardBackground,
         elevation: 0,
         actions: [
+          if (workers.isNotEmpty && contractorId != null)
+            IconButton(
+              icon: const Icon(
+                Icons.checklist_rtl_rounded,
+                color: AppColors.brandPrimary,
+              ),
+              tooltip: 'تسجيل الحضور الجماعي',
+              onPressed: () {
+                final contractorCubit = context.read<ContractorCubit>();
+                showModalBottomSheet<void>(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => BlocProvider.value(
+                    value: contractorCubit,
+                    child: ContractorBatchAttendanceSheetWidget(
+                      workers: workers,
+                      sites: siteModels,
+                      contractorId: contractorId,
+                    ),
+                  ),
+                );
+              },
+            ),
           IconButton(
             icon: const Icon(
               Icons.person_add_rounded,

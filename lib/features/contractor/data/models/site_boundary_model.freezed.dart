@@ -21,12 +21,23 @@ SiteBoundaryModel _$SiteBoundaryModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SiteBoundaryModel {
-  String get siteId => throw _privateConstructorUsedError;
-  String get siteName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'site_id')
+  String? get siteIdUnderscore => throw _privateConstructorUsedError;
+  @JsonKey(name: 'siteId')
+  String? get siteIdCamel => throw _privateConstructorUsedError;
+  @JsonKey(name: 'site_name')
+  String? get siteNameUnderscore => throw _privateConstructorUsedError;
+  @JsonKey(name: 'siteName')
+  String? get siteNameCamel => throw _privateConstructorUsedError;
+  @JsonKey(name: 'boundary_type')
   String get boundaryType => throw _privateConstructorUsedError;
+  @JsonKey(name: 'center_lat')
   double? get centerLat => throw _privateConstructorUsedError;
+  @JsonKey(name: 'center_lng')
   double? get centerLng => throw _privateConstructorUsedError;
+  @JsonKey(name: 'radius_meters')
   double get radiusMeters => throw _privateConstructorUsedError;
+  @JsonKey(name: 'boundary_coordinates')
   List<LatLngPointModel> get boundaryCoordinates =>
       throw _privateConstructorUsedError;
   String? get projectId => throw _privateConstructorUsedError;
@@ -53,12 +64,15 @@ abstract class $SiteBoundaryModelCopyWith<$Res> {
   ) = _$SiteBoundaryModelCopyWithImpl<$Res, SiteBoundaryModel>;
   @useResult
   $Res call({
-    String siteId,
-    String siteName,
-    String boundaryType,
-    double? centerLat,
-    double? centerLng,
-    double radiusMeters,
+    @JsonKey(name: 'site_id') String? siteIdUnderscore,
+    @JsonKey(name: 'siteId') String? siteIdCamel,
+    @JsonKey(name: 'site_name') String? siteNameUnderscore,
+    @JsonKey(name: 'siteName') String? siteNameCamel,
+    @JsonKey(name: 'boundary_type') String boundaryType,
+    @JsonKey(name: 'center_lat') double? centerLat,
+    @JsonKey(name: 'center_lng') double? centerLng,
+    @JsonKey(name: 'radius_meters') double radiusMeters,
+    @JsonKey(name: 'boundary_coordinates')
     List<LatLngPointModel> boundaryCoordinates,
     String? projectId,
     String? projectName,
@@ -83,8 +97,10 @@ class _$SiteBoundaryModelCopyWithImpl<$Res, $Val extends SiteBoundaryModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? siteId = null,
-    Object? siteName = null,
+    Object? siteIdUnderscore = freezed,
+    Object? siteIdCamel = freezed,
+    Object? siteNameUnderscore = freezed,
+    Object? siteNameCamel = freezed,
     Object? boundaryType = null,
     Object? centerLat = freezed,
     Object? centerLng = freezed,
@@ -98,14 +114,22 @@ class _$SiteBoundaryModelCopyWithImpl<$Res, $Val extends SiteBoundaryModel>
   }) {
     return _then(
       _value.copyWith(
-            siteId: null == siteId
-                ? _value.siteId
-                : siteId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            siteName: null == siteName
-                ? _value.siteName
-                : siteName // ignore: cast_nullable_to_non_nullable
-                      as String,
+            siteIdUnderscore: freezed == siteIdUnderscore
+                ? _value.siteIdUnderscore
+                : siteIdUnderscore // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            siteIdCamel: freezed == siteIdCamel
+                ? _value.siteIdCamel
+                : siteIdCamel // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            siteNameUnderscore: freezed == siteNameUnderscore
+                ? _value.siteNameUnderscore
+                : siteNameUnderscore // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            siteNameCamel: freezed == siteNameCamel
+                ? _value.siteNameCamel
+                : siteNameCamel // ignore: cast_nullable_to_non_nullable
+                      as String?,
             boundaryType: null == boundaryType
                 ? _value.boundaryType
                 : boundaryType // ignore: cast_nullable_to_non_nullable
@@ -162,12 +186,15 @@ abstract class _$$SiteBoundaryModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    String siteId,
-    String siteName,
-    String boundaryType,
-    double? centerLat,
-    double? centerLng,
-    double radiusMeters,
+    @JsonKey(name: 'site_id') String? siteIdUnderscore,
+    @JsonKey(name: 'siteId') String? siteIdCamel,
+    @JsonKey(name: 'site_name') String? siteNameUnderscore,
+    @JsonKey(name: 'siteName') String? siteNameCamel,
+    @JsonKey(name: 'boundary_type') String boundaryType,
+    @JsonKey(name: 'center_lat') double? centerLat,
+    @JsonKey(name: 'center_lng') double? centerLng,
+    @JsonKey(name: 'radius_meters') double radiusMeters,
+    @JsonKey(name: 'boundary_coordinates')
     List<LatLngPointModel> boundaryCoordinates,
     String? projectId,
     String? projectName,
@@ -191,8 +218,10 @@ class __$$SiteBoundaryModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? siteId = null,
-    Object? siteName = null,
+    Object? siteIdUnderscore = freezed,
+    Object? siteIdCamel = freezed,
+    Object? siteNameUnderscore = freezed,
+    Object? siteNameCamel = freezed,
     Object? boundaryType = null,
     Object? centerLat = freezed,
     Object? centerLng = freezed,
@@ -206,14 +235,22 @@ class __$$SiteBoundaryModelImplCopyWithImpl<$Res>
   }) {
     return _then(
       _$SiteBoundaryModelImpl(
-        siteId: null == siteId
-            ? _value.siteId
-            : siteId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        siteName: null == siteName
-            ? _value.siteName
-            : siteName // ignore: cast_nullable_to_non_nullable
-                  as String,
+        siteIdUnderscore: freezed == siteIdUnderscore
+            ? _value.siteIdUnderscore
+            : siteIdUnderscore // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        siteIdCamel: freezed == siteIdCamel
+            ? _value.siteIdCamel
+            : siteIdCamel // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        siteNameUnderscore: freezed == siteNameUnderscore
+            ? _value.siteNameUnderscore
+            : siteNameUnderscore // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        siteNameCamel: freezed == siteNameCamel
+            ? _value.siteNameCamel
+            : siteNameCamel // ignore: cast_nullable_to_non_nullable
+                  as String?,
         boundaryType: null == boundaryType
             ? _value.boundaryType
             : boundaryType // ignore: cast_nullable_to_non_nullable
@@ -261,42 +298,56 @@ class __$$SiteBoundaryModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SiteBoundaryModelImpl implements _SiteBoundaryModel {
+class _$SiteBoundaryModelImpl extends _SiteBoundaryModel {
   const _$SiteBoundaryModelImpl({
-    required this.siteId,
-    required this.siteName,
-    this.boundaryType = 'circle',
-    this.centerLat,
-    this.centerLng,
-    this.radiusMeters = 150.0,
+    @JsonKey(name: 'site_id') this.siteIdUnderscore,
+    @JsonKey(name: 'siteId') this.siteIdCamel,
+    @JsonKey(name: 'site_name') this.siteNameUnderscore,
+    @JsonKey(name: 'siteName') this.siteNameCamel,
+    @JsonKey(name: 'boundary_type') this.boundaryType = 'polygon',
+    @JsonKey(name: 'center_lat') this.centerLat,
+    @JsonKey(name: 'center_lng') this.centerLng,
+    @JsonKey(name: 'radius_meters') this.radiusMeters = 250.0,
+    @JsonKey(name: 'boundary_coordinates')
     final List<LatLngPointModel> boundaryCoordinates = const [],
     this.projectId,
     this.projectName,
     this.status = 'active',
     this.workerCount = 0,
     this.assignmentCount = 0,
-  }) : _boundaryCoordinates = boundaryCoordinates;
+  }) : _boundaryCoordinates = boundaryCoordinates,
+       super._();
 
   factory _$SiteBoundaryModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$SiteBoundaryModelImplFromJson(json);
 
   @override
-  final String siteId;
+  @JsonKey(name: 'site_id')
+  final String? siteIdUnderscore;
   @override
-  final String siteName;
+  @JsonKey(name: 'siteId')
+  final String? siteIdCamel;
   @override
-  @JsonKey()
+  @JsonKey(name: 'site_name')
+  final String? siteNameUnderscore;
+  @override
+  @JsonKey(name: 'siteName')
+  final String? siteNameCamel;
+  @override
+  @JsonKey(name: 'boundary_type')
   final String boundaryType;
   @override
+  @JsonKey(name: 'center_lat')
   final double? centerLat;
   @override
+  @JsonKey(name: 'center_lng')
   final double? centerLng;
   @override
-  @JsonKey()
+  @JsonKey(name: 'radius_meters')
   final double radiusMeters;
   final List<LatLngPointModel> _boundaryCoordinates;
   @override
-  @JsonKey()
+  @JsonKey(name: 'boundary_coordinates')
   List<LatLngPointModel> get boundaryCoordinates {
     if (_boundaryCoordinates is EqualUnmodifiableListView)
       return _boundaryCoordinates;
@@ -320,7 +371,7 @@ class _$SiteBoundaryModelImpl implements _SiteBoundaryModel {
 
   @override
   String toString() {
-    return 'SiteBoundaryModel(siteId: $siteId, siteName: $siteName, boundaryType: $boundaryType, centerLat: $centerLat, centerLng: $centerLng, radiusMeters: $radiusMeters, boundaryCoordinates: $boundaryCoordinates, projectId: $projectId, projectName: $projectName, status: $status, workerCount: $workerCount, assignmentCount: $assignmentCount)';
+    return 'SiteBoundaryModel(siteIdUnderscore: $siteIdUnderscore, siteIdCamel: $siteIdCamel, siteNameUnderscore: $siteNameUnderscore, siteNameCamel: $siteNameCamel, boundaryType: $boundaryType, centerLat: $centerLat, centerLng: $centerLng, radiusMeters: $radiusMeters, boundaryCoordinates: $boundaryCoordinates, projectId: $projectId, projectName: $projectName, status: $status, workerCount: $workerCount, assignmentCount: $assignmentCount)';
   }
 
   @override
@@ -328,9 +379,14 @@ class _$SiteBoundaryModelImpl implements _SiteBoundaryModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SiteBoundaryModelImpl &&
-            (identical(other.siteId, siteId) || other.siteId == siteId) &&
-            (identical(other.siteName, siteName) ||
-                other.siteName == siteName) &&
+            (identical(other.siteIdUnderscore, siteIdUnderscore) ||
+                other.siteIdUnderscore == siteIdUnderscore) &&
+            (identical(other.siteIdCamel, siteIdCamel) ||
+                other.siteIdCamel == siteIdCamel) &&
+            (identical(other.siteNameUnderscore, siteNameUnderscore) ||
+                other.siteNameUnderscore == siteNameUnderscore) &&
+            (identical(other.siteNameCamel, siteNameCamel) ||
+                other.siteNameCamel == siteNameCamel) &&
             (identical(other.boundaryType, boundaryType) ||
                 other.boundaryType == boundaryType) &&
             (identical(other.centerLat, centerLat) ||
@@ -358,8 +414,10 @@ class _$SiteBoundaryModelImpl implements _SiteBoundaryModel {
   @override
   int get hashCode => Object.hash(
     runtimeType,
-    siteId,
-    siteName,
+    siteIdUnderscore,
+    siteIdCamel,
+    siteNameUnderscore,
+    siteNameCamel,
     boundaryType,
     centerLat,
     centerLng,
@@ -389,14 +447,17 @@ class _$SiteBoundaryModelImpl implements _SiteBoundaryModel {
   }
 }
 
-abstract class _SiteBoundaryModel implements SiteBoundaryModel {
+abstract class _SiteBoundaryModel extends SiteBoundaryModel {
   const factory _SiteBoundaryModel({
-    required final String siteId,
-    required final String siteName,
-    final String boundaryType,
-    final double? centerLat,
-    final double? centerLng,
-    final double radiusMeters,
+    @JsonKey(name: 'site_id') final String? siteIdUnderscore,
+    @JsonKey(name: 'siteId') final String? siteIdCamel,
+    @JsonKey(name: 'site_name') final String? siteNameUnderscore,
+    @JsonKey(name: 'siteName') final String? siteNameCamel,
+    @JsonKey(name: 'boundary_type') final String boundaryType,
+    @JsonKey(name: 'center_lat') final double? centerLat,
+    @JsonKey(name: 'center_lng') final double? centerLng,
+    @JsonKey(name: 'radius_meters') final double radiusMeters,
+    @JsonKey(name: 'boundary_coordinates')
     final List<LatLngPointModel> boundaryCoordinates,
     final String? projectId,
     final String? projectName,
@@ -404,23 +465,37 @@ abstract class _SiteBoundaryModel implements SiteBoundaryModel {
     final int workerCount,
     final int assignmentCount,
   }) = _$SiteBoundaryModelImpl;
+  const _SiteBoundaryModel._() : super._();
 
   factory _SiteBoundaryModel.fromJson(Map<String, dynamic> json) =
       _$SiteBoundaryModelImpl.fromJson;
 
   @override
-  String get siteId;
+  @JsonKey(name: 'site_id')
+  String? get siteIdUnderscore;
   @override
-  String get siteName;
+  @JsonKey(name: 'siteId')
+  String? get siteIdCamel;
   @override
+  @JsonKey(name: 'site_name')
+  String? get siteNameUnderscore;
+  @override
+  @JsonKey(name: 'siteName')
+  String? get siteNameCamel;
+  @override
+  @JsonKey(name: 'boundary_type')
   String get boundaryType;
   @override
+  @JsonKey(name: 'center_lat')
   double? get centerLat;
   @override
+  @JsonKey(name: 'center_lng')
   double? get centerLng;
   @override
+  @JsonKey(name: 'radius_meters')
   double get radiusMeters;
   @override
+  @JsonKey(name: 'boundary_coordinates')
   List<LatLngPointModel> get boundaryCoordinates;
   @override
   String? get projectId;

@@ -10,6 +10,7 @@ import 'package:check_point_v2/features/contractor/data/models/contractor_worker
 import 'package:check_point_v2/features/contractor/data/models/offline_attendance_log_model.dart';
 import 'package:check_point_v2/features/contractor/data/models/site_boundary_model.dart';
 import 'package:check_point_v2/features/contractor/data/models/worker_site_assignment_model.dart';
+import 'package:check_point_v2/features/contractor/data/models/contractor_batch_models.dart';
 import 'contractor_state.dart';
 
 class ContractorCubit extends Cubit<ContractorState> {
@@ -341,5 +342,76 @@ class ContractorCubit extends Cubit<ContractorState> {
     if (syncedCount > 0) {
       await loadDashboardData();
     }
+  }
+
+  Future<void> loadSamcoSiteBoundary(String siteId) async {
+    final result = await contractorRepo.getSamcoSiteBoundary(siteId);
+    result.when(
+      success: (boundary) {
+        final current = state.mapOrNull(success: (value) => value);
+        if (current != null) {
+          emit(current.copyWith(selectedSiteBoundary: boundary));
+        }
+      },
+      failure: (failure) => emit(ContractorState.error(failure.messageKey)),
+    );
+  }
+
+  Future<bool> recordSamcoContractorAttendance({
+    required String contractorId,
+    required String siteId,
+    required String date,
+    String status = 'Present',
+    String? notes,
+  }) async {
+    emit(const ContractorState.loading());
+    final body = ContractorDailyAttendanceRequestBody(
+      contractorId: contractorId,
+      siteId: siteId,
+      date: date,
+      status: status,
+      notes: notes,
+    );
+    final result = await contractorRepo.recordSamcoContractorAttendance(body);
+    return result.when(
+      success: (_) {
+        loadDashboardData(contractorId: contractorId);
+        return true;
+      },
+      failure: (failure) {
+        emit(ContractorState.error(failure.messageKey));
+        return false;
+      },
+    );
+  }
+
+  Future<BatchWorkerAttendanceSummaryModel?> recordSamcoBatchWorkerAttendance({
+    required String siteId,
+    required String contractorId,
+    required String date,
+    required List<String> workerIds,
+    double? latitude,
+    double? longitude,
+  }) async {
+    emit(const ContractorState.loading());
+    final body = BatchWorkerAttendanceRequestBody(
+      siteId: siteId,
+      contractorId: contractorId,
+      date: date,
+      workerIds: workerIds,
+      latitude: latitude,
+      longitude: longitude,
+    );
+    final result = await contractorRepo.recordSamcoBatchWorkerAttendance(body);
+    return result.when(
+      success: (summary) {
+        loadDashboardData(contractorId: contractorId);
+        return summary;
+      },
+      failure: (failure) {
+        emit(ContractorState.error(failure.messageKey));
+        return null;
+      },
+    );
   }
 }

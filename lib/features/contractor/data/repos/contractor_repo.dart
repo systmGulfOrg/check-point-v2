@@ -1,6 +1,7 @@
 import 'package:check_point_v2/core/network/api_result.dart';
 import '../models/contractor_company_model.dart';
 import '../models/contractor_worker_model.dart';
+import '../models/contractor_batch_models.dart';
 import '../models/site_boundary_model.dart';
 import '../models/worker_site_assignment_model.dart';
 import '../models/contractor_attendance_model.dart';
@@ -9,6 +10,26 @@ import '../models/offline_attendance_log_model.dart';
 import '../models/samco_customization_model.dart';
 
 abstract class ContractorRepo {
+  // SAMCO Workforce v2
+  Future<ApiResult<SiteBoundaryModel>> getSamcoSiteBoundary(String siteId);
+
+  Future<ApiResult<void>> recordSamcoContractorAttendance(
+    ContractorDailyAttendanceRequestBody body,
+  );
+
+  Future<ApiResult<BatchWorkerAttendanceSummaryModel>> recordSamcoBatchWorkerAttendance(
+    BatchWorkerAttendanceRequestBody body,
+  );
+
+  Future<ApiResult<List<ContractorWorkerModel>>> getSamcoWorkers({
+    String? contractorId,
+  });
+
+  Future<ApiResult<dynamic>> syncSamcoAttendanceOffline(
+    Map<String, dynamic> body,
+  );
+
+  // Existing methods
   Future<ApiResult<List<ContractorCompanyModel>>> getContractors();
 
   Future<ApiResult<ContractorCompanyModel>> createContractor(

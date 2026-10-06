@@ -22,12 +22,12 @@ class ContractorWorkerQrSheetWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            worker.fullName,
+            worker.displayName,
             style: AppTextStyles.font16Bold,
           ),
           hSpace(4),
           Text(
-            '${worker.jobTitle} • ${worker.workerCode}',
+            '${worker.displayJob.isNotEmpty ? worker.displayJob : "عامل"} • ${worker.displayCode}',
             style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary),
           ),
           hSpace(20),

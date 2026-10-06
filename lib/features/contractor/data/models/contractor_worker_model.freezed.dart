@@ -24,20 +24,47 @@ ContractorWorkerModel _$ContractorWorkerModelFromJson(
 /// @nodoc
 mixin _$ContractorWorkerModel {
   String get id => throw _privateConstructorUsedError;
-  String get fullName => throw _privateConstructorUsedError;
-  String get workerCode => throw _privateConstructorUsedError;
+  @JsonKey(name: 'name')
+  String? get name => throw _privateConstructorUsedError;
+  @JsonKey(name: 'fullName')
+  String? get fullName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'employeeCode')
+  String? get employeeCode => throw _privateConstructorUsedError;
+  @JsonKey(name: 'workerCode')
+  String? get workerCode => throw _privateConstructorUsedError;
+  @JsonKey(name: 'nationalId')
   String get nationalId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'phone')
   String get phone => throw _privateConstructorUsedError;
-  String get jobTitle => throw _privateConstructorUsedError;
-  String get projectName => throw _privateConstructorUsedError;
-  String get siteName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'position')
+  String? get position => throw _privateConstructorUsedError;
+  @JsonKey(name: 'jobTitle')
+  String? get jobTitle => throw _privateConstructorUsedError;
+  @JsonKey(name: 'projectName')
+  String? get projectName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'siteName')
+  String? get siteName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'status')
   String get status => throw _privateConstructorUsedError;
+  @JsonKey(name: 'startDate')
   String get startDate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'imageUrl')
+  String? get imageUrl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'photoUrl')
   String? get photoUrl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'lastCheckIn')
   String? get lastCheckIn => throw _privateConstructorUsedError;
+  @JsonKey(name: 'contractorId')
   String? get contractorId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'contractorName')
   String? get contractorName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'deviceUuid')
   String? get deviceUuid => throw _privateConstructorUsedError;
+  @JsonKey(name: 'contractor')
+  ContractorCompanyModel? get contractor => throw _privateConstructorUsedError;
+  @JsonKey(name: 'nationalIdDetails')
+  NationalIdDetailsModel? get nationalIdDetails =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this ContractorWorkerModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -58,21 +85,31 @@ abstract class $ContractorWorkerModelCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
-    String fullName,
-    String workerCode,
-    String nationalId,
-    String phone,
-    String jobTitle,
-    String projectName,
-    String siteName,
-    String status,
-    String startDate,
-    String? photoUrl,
-    String? lastCheckIn,
-    String? contractorId,
-    String? contractorName,
-    String? deviceUuid,
+    @JsonKey(name: 'name') String? name,
+    @JsonKey(name: 'fullName') String? fullName,
+    @JsonKey(name: 'employeeCode') String? employeeCode,
+    @JsonKey(name: 'workerCode') String? workerCode,
+    @JsonKey(name: 'nationalId') String nationalId,
+    @JsonKey(name: 'phone') String phone,
+    @JsonKey(name: 'position') String? position,
+    @JsonKey(name: 'jobTitle') String? jobTitle,
+    @JsonKey(name: 'projectName') String? projectName,
+    @JsonKey(name: 'siteName') String? siteName,
+    @JsonKey(name: 'status') String status,
+    @JsonKey(name: 'startDate') String startDate,
+    @JsonKey(name: 'imageUrl') String? imageUrl,
+    @JsonKey(name: 'photoUrl') String? photoUrl,
+    @JsonKey(name: 'lastCheckIn') String? lastCheckIn,
+    @JsonKey(name: 'contractorId') String? contractorId,
+    @JsonKey(name: 'contractorName') String? contractorName,
+    @JsonKey(name: 'deviceUuid') String? deviceUuid,
+    @JsonKey(name: 'contractor') ContractorCompanyModel? contractor,
+    @JsonKey(name: 'nationalIdDetails')
+    NationalIdDetailsModel? nationalIdDetails,
   });
+
+  $ContractorCompanyModelCopyWith<$Res>? get contractor;
+  $NationalIdDetailsModelCopyWith<$Res>? get nationalIdDetails;
 }
 
 /// @nodoc
@@ -94,20 +131,26 @@ class _$ContractorWorkerModelCopyWithImpl<
   @override
   $Res call({
     Object? id = null,
-    Object? fullName = null,
-    Object? workerCode = null,
+    Object? name = freezed,
+    Object? fullName = freezed,
+    Object? employeeCode = freezed,
+    Object? workerCode = freezed,
     Object? nationalId = null,
     Object? phone = null,
-    Object? jobTitle = null,
-    Object? projectName = null,
-    Object? siteName = null,
+    Object? position = freezed,
+    Object? jobTitle = freezed,
+    Object? projectName = freezed,
+    Object? siteName = freezed,
     Object? status = null,
     Object? startDate = null,
+    Object? imageUrl = freezed,
     Object? photoUrl = freezed,
     Object? lastCheckIn = freezed,
     Object? contractorId = freezed,
     Object? contractorName = freezed,
     Object? deviceUuid = freezed,
+    Object? contractor = freezed,
+    Object? nationalIdDetails = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -115,14 +158,22 @@ class _$ContractorWorkerModelCopyWithImpl<
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
                       as String,
-            fullName: null == fullName
+            name: freezed == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            fullName: freezed == fullName
                 ? _value.fullName
                 : fullName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            workerCode: null == workerCode
+                      as String?,
+            employeeCode: freezed == employeeCode
+                ? _value.employeeCode
+                : employeeCode // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            workerCode: freezed == workerCode
                 ? _value.workerCode
                 : workerCode // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             nationalId: null == nationalId
                 ? _value.nationalId
                 : nationalId // ignore: cast_nullable_to_non_nullable
@@ -131,18 +182,22 @@ class _$ContractorWorkerModelCopyWithImpl<
                 ? _value.phone
                 : phone // ignore: cast_nullable_to_non_nullable
                       as String,
-            jobTitle: null == jobTitle
+            position: freezed == position
+                ? _value.position
+                : position // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            jobTitle: freezed == jobTitle
                 ? _value.jobTitle
                 : jobTitle // ignore: cast_nullable_to_non_nullable
-                      as String,
-            projectName: null == projectName
+                      as String?,
+            projectName: freezed == projectName
                 ? _value.projectName
                 : projectName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            siteName: null == siteName
+                      as String?,
+            siteName: freezed == siteName
                 ? _value.siteName
                 : siteName // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             status: null == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
@@ -151,6 +206,10 @@ class _$ContractorWorkerModelCopyWithImpl<
                 ? _value.startDate
                 : startDate // ignore: cast_nullable_to_non_nullable
                       as String,
+            imageUrl: freezed == imageUrl
+                ? _value.imageUrl
+                : imageUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
             photoUrl: freezed == photoUrl
                 ? _value.photoUrl
                 : photoUrl // ignore: cast_nullable_to_non_nullable
@@ -171,9 +230,47 @@ class _$ContractorWorkerModelCopyWithImpl<
                 ? _value.deviceUuid
                 : deviceUuid // ignore: cast_nullable_to_non_nullable
                       as String?,
+            contractor: freezed == contractor
+                ? _value.contractor
+                : contractor // ignore: cast_nullable_to_non_nullable
+                      as ContractorCompanyModel?,
+            nationalIdDetails: freezed == nationalIdDetails
+                ? _value.nationalIdDetails
+                : nationalIdDetails // ignore: cast_nullable_to_non_nullable
+                      as NationalIdDetailsModel?,
           )
           as $Val,
     );
+  }
+
+  /// Create a copy of ContractorWorkerModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ContractorCompanyModelCopyWith<$Res>? get contractor {
+    if (_value.contractor == null) {
+      return null;
+    }
+
+    return $ContractorCompanyModelCopyWith<$Res>(_value.contractor!, (value) {
+      return _then(_value.copyWith(contractor: value) as $Val);
+    });
+  }
+
+  /// Create a copy of ContractorWorkerModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $NationalIdDetailsModelCopyWith<$Res>? get nationalIdDetails {
+    if (_value.nationalIdDetails == null) {
+      return null;
+    }
+
+    return $NationalIdDetailsModelCopyWith<$Res>(_value.nationalIdDetails!, (
+      value,
+    ) {
+      return _then(_value.copyWith(nationalIdDetails: value) as $Val);
+    });
   }
 }
 
@@ -188,21 +285,33 @@ abstract class _$$ContractorWorkerModelImplCopyWith<$Res>
   @useResult
   $Res call({
     String id,
-    String fullName,
-    String workerCode,
-    String nationalId,
-    String phone,
-    String jobTitle,
-    String projectName,
-    String siteName,
-    String status,
-    String startDate,
-    String? photoUrl,
-    String? lastCheckIn,
-    String? contractorId,
-    String? contractorName,
-    String? deviceUuid,
+    @JsonKey(name: 'name') String? name,
+    @JsonKey(name: 'fullName') String? fullName,
+    @JsonKey(name: 'employeeCode') String? employeeCode,
+    @JsonKey(name: 'workerCode') String? workerCode,
+    @JsonKey(name: 'nationalId') String nationalId,
+    @JsonKey(name: 'phone') String phone,
+    @JsonKey(name: 'position') String? position,
+    @JsonKey(name: 'jobTitle') String? jobTitle,
+    @JsonKey(name: 'projectName') String? projectName,
+    @JsonKey(name: 'siteName') String? siteName,
+    @JsonKey(name: 'status') String status,
+    @JsonKey(name: 'startDate') String startDate,
+    @JsonKey(name: 'imageUrl') String? imageUrl,
+    @JsonKey(name: 'photoUrl') String? photoUrl,
+    @JsonKey(name: 'lastCheckIn') String? lastCheckIn,
+    @JsonKey(name: 'contractorId') String? contractorId,
+    @JsonKey(name: 'contractorName') String? contractorName,
+    @JsonKey(name: 'deviceUuid') String? deviceUuid,
+    @JsonKey(name: 'contractor') ContractorCompanyModel? contractor,
+    @JsonKey(name: 'nationalIdDetails')
+    NationalIdDetailsModel? nationalIdDetails,
   });
+
+  @override
+  $ContractorCompanyModelCopyWith<$Res>? get contractor;
+  @override
+  $NationalIdDetailsModelCopyWith<$Res>? get nationalIdDetails;
 }
 
 /// @nodoc
@@ -221,20 +330,26 @@ class __$$ContractorWorkerModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? fullName = null,
-    Object? workerCode = null,
+    Object? name = freezed,
+    Object? fullName = freezed,
+    Object? employeeCode = freezed,
+    Object? workerCode = freezed,
     Object? nationalId = null,
     Object? phone = null,
-    Object? jobTitle = null,
-    Object? projectName = null,
-    Object? siteName = null,
+    Object? position = freezed,
+    Object? jobTitle = freezed,
+    Object? projectName = freezed,
+    Object? siteName = freezed,
     Object? status = null,
     Object? startDate = null,
+    Object? imageUrl = freezed,
     Object? photoUrl = freezed,
     Object? lastCheckIn = freezed,
     Object? contractorId = freezed,
     Object? contractorName = freezed,
     Object? deviceUuid = freezed,
+    Object? contractor = freezed,
+    Object? nationalIdDetails = freezed,
   }) {
     return _then(
       _$ContractorWorkerModelImpl(
@@ -242,14 +357,22 @@ class __$$ContractorWorkerModelImplCopyWithImpl<$Res>
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
                   as String,
-        fullName: null == fullName
+        name: freezed == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        fullName: freezed == fullName
             ? _value.fullName
             : fullName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        workerCode: null == workerCode
+                  as String?,
+        employeeCode: freezed == employeeCode
+            ? _value.employeeCode
+            : employeeCode // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        workerCode: freezed == workerCode
             ? _value.workerCode
             : workerCode // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         nationalId: null == nationalId
             ? _value.nationalId
             : nationalId // ignore: cast_nullable_to_non_nullable
@@ -258,18 +381,22 @@ class __$$ContractorWorkerModelImplCopyWithImpl<$Res>
             ? _value.phone
             : phone // ignore: cast_nullable_to_non_nullable
                   as String,
-        jobTitle: null == jobTitle
+        position: freezed == position
+            ? _value.position
+            : position // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        jobTitle: freezed == jobTitle
             ? _value.jobTitle
             : jobTitle // ignore: cast_nullable_to_non_nullable
-                  as String,
-        projectName: null == projectName
+                  as String?,
+        projectName: freezed == projectName
             ? _value.projectName
             : projectName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        siteName: null == siteName
+                  as String?,
+        siteName: freezed == siteName
             ? _value.siteName
             : siteName // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         status: null == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
@@ -278,6 +405,10 @@ class __$$ContractorWorkerModelImplCopyWithImpl<$Res>
             ? _value.startDate
             : startDate // ignore: cast_nullable_to_non_nullable
                   as String,
+        imageUrl: freezed == imageUrl
+            ? _value.imageUrl
+            : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
         photoUrl: freezed == photoUrl
             ? _value.photoUrl
             : photoUrl // ignore: cast_nullable_to_non_nullable
@@ -298,6 +429,14 @@ class __$$ContractorWorkerModelImplCopyWithImpl<$Res>
             ? _value.deviceUuid
             : deviceUuid // ignore: cast_nullable_to_non_nullable
                   as String?,
+        contractor: freezed == contractor
+            ? _value.contractor
+            : contractor // ignore: cast_nullable_to_non_nullable
+                  as ContractorCompanyModel?,
+        nationalIdDetails: freezed == nationalIdDetails
+            ? _value.nationalIdDetails
+            : nationalIdDetails // ignore: cast_nullable_to_non_nullable
+                  as NationalIdDetailsModel?,
       ),
     );
   }
@@ -305,24 +444,30 @@ class __$$ContractorWorkerModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ContractorWorkerModelImpl implements _ContractorWorkerModel {
+class _$ContractorWorkerModelImpl extends _ContractorWorkerModel {
   const _$ContractorWorkerModelImpl({
     required this.id,
-    required this.fullName,
-    required this.workerCode,
-    required this.nationalId,
-    required this.phone,
-    required this.jobTitle,
-    required this.projectName,
-    required this.siteName,
-    this.status = 'active',
-    this.startDate = '',
-    this.photoUrl,
-    this.lastCheckIn,
-    this.contractorId,
-    this.contractorName,
-    this.deviceUuid,
-  });
+    @JsonKey(name: 'name') this.name,
+    @JsonKey(name: 'fullName') this.fullName,
+    @JsonKey(name: 'employeeCode') this.employeeCode,
+    @JsonKey(name: 'workerCode') this.workerCode,
+    @JsonKey(name: 'nationalId') this.nationalId = '',
+    @JsonKey(name: 'phone') this.phone = '',
+    @JsonKey(name: 'position') this.position,
+    @JsonKey(name: 'jobTitle') this.jobTitle,
+    @JsonKey(name: 'projectName') this.projectName,
+    @JsonKey(name: 'siteName') this.siteName,
+    @JsonKey(name: 'status') this.status = 'active',
+    @JsonKey(name: 'startDate') this.startDate = '',
+    @JsonKey(name: 'imageUrl') this.imageUrl,
+    @JsonKey(name: 'photoUrl') this.photoUrl,
+    @JsonKey(name: 'lastCheckIn') this.lastCheckIn,
+    @JsonKey(name: 'contractorId') this.contractorId,
+    @JsonKey(name: 'contractorName') this.contractorName,
+    @JsonKey(name: 'deviceUuid') this.deviceUuid,
+    @JsonKey(name: 'contractor') this.contractor,
+    @JsonKey(name: 'nationalIdDetails') this.nationalIdDetails,
+  }) : super._();
 
   factory _$ContractorWorkerModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ContractorWorkerModelImplFromJson(json);
@@ -330,39 +475,69 @@ class _$ContractorWorkerModelImpl implements _ContractorWorkerModel {
   @override
   final String id;
   @override
-  final String fullName;
+  @JsonKey(name: 'name')
+  final String? name;
   @override
-  final String workerCode;
+  @JsonKey(name: 'fullName')
+  final String? fullName;
   @override
+  @JsonKey(name: 'employeeCode')
+  final String? employeeCode;
+  @override
+  @JsonKey(name: 'workerCode')
+  final String? workerCode;
+  @override
+  @JsonKey(name: 'nationalId')
   final String nationalId;
   @override
+  @JsonKey(name: 'phone')
   final String phone;
   @override
-  final String jobTitle;
+  @JsonKey(name: 'position')
+  final String? position;
   @override
-  final String projectName;
+  @JsonKey(name: 'jobTitle')
+  final String? jobTitle;
   @override
-  final String siteName;
+  @JsonKey(name: 'projectName')
+  final String? projectName;
   @override
-  @JsonKey()
+  @JsonKey(name: 'siteName')
+  final String? siteName;
+  @override
+  @JsonKey(name: 'status')
   final String status;
   @override
-  @JsonKey()
+  @JsonKey(name: 'startDate')
   final String startDate;
   @override
+  @JsonKey(name: 'imageUrl')
+  final String? imageUrl;
+  @override
+  @JsonKey(name: 'photoUrl')
   final String? photoUrl;
   @override
+  @JsonKey(name: 'lastCheckIn')
   final String? lastCheckIn;
   @override
+  @JsonKey(name: 'contractorId')
   final String? contractorId;
   @override
+  @JsonKey(name: 'contractorName')
   final String? contractorName;
   @override
+  @JsonKey(name: 'deviceUuid')
   final String? deviceUuid;
+  @override
+  @JsonKey(name: 'contractor')
+  final ContractorCompanyModel? contractor;
+  @override
+  @JsonKey(name: 'nationalIdDetails')
+  final NationalIdDetailsModel? nationalIdDetails;
 
   @override
   String toString() {
-    return 'ContractorWorkerModel(id: $id, fullName: $fullName, workerCode: $workerCode, nationalId: $nationalId, phone: $phone, jobTitle: $jobTitle, projectName: $projectName, siteName: $siteName, status: $status, startDate: $startDate, photoUrl: $photoUrl, lastCheckIn: $lastCheckIn, contractorId: $contractorId, contractorName: $contractorName, deviceUuid: $deviceUuid)';
+    return 'ContractorWorkerModel(id: $id, name: $name, fullName: $fullName, employeeCode: $employeeCode, workerCode: $workerCode, nationalId: $nationalId, phone: $phone, position: $position, jobTitle: $jobTitle, projectName: $projectName, siteName: $siteName, status: $status, startDate: $startDate, imageUrl: $imageUrl, photoUrl: $photoUrl, lastCheckIn: $lastCheckIn, contractorId: $contractorId, contractorName: $contractorName, deviceUuid: $deviceUuid, contractor: $contractor, nationalIdDetails: $nationalIdDetails)';
   }
 
   @override
@@ -371,13 +546,18 @@ class _$ContractorWorkerModelImpl implements _ContractorWorkerModel {
         (other.runtimeType == runtimeType &&
             other is _$ContractorWorkerModelImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.fullName, fullName) ||
                 other.fullName == fullName) &&
+            (identical(other.employeeCode, employeeCode) ||
+                other.employeeCode == employeeCode) &&
             (identical(other.workerCode, workerCode) ||
                 other.workerCode == workerCode) &&
             (identical(other.nationalId, nationalId) ||
                 other.nationalId == nationalId) &&
             (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.position, position) ||
+                other.position == position) &&
             (identical(other.jobTitle, jobTitle) ||
                 other.jobTitle == jobTitle) &&
             (identical(other.projectName, projectName) ||
@@ -387,6 +567,8 @@ class _$ContractorWorkerModelImpl implements _ContractorWorkerModel {
             (identical(other.status, status) || other.status == status) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
             (identical(other.photoUrl, photoUrl) ||
                 other.photoUrl == photoUrl) &&
             (identical(other.lastCheckIn, lastCheckIn) ||
@@ -396,29 +578,39 @@ class _$ContractorWorkerModelImpl implements _ContractorWorkerModel {
             (identical(other.contractorName, contractorName) ||
                 other.contractorName == contractorName) &&
             (identical(other.deviceUuid, deviceUuid) ||
-                other.deviceUuid == deviceUuid));
+                other.deviceUuid == deviceUuid) &&
+            (identical(other.contractor, contractor) ||
+                other.contractor == contractor) &&
+            (identical(other.nationalIdDetails, nationalIdDetails) ||
+                other.nationalIdDetails == nationalIdDetails));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     runtimeType,
     id,
+    name,
     fullName,
+    employeeCode,
     workerCode,
     nationalId,
     phone,
+    position,
     jobTitle,
     projectName,
     siteName,
     status,
     startDate,
+    imageUrl,
     photoUrl,
     lastCheckIn,
     contractorId,
     contractorName,
     deviceUuid,
-  );
+    contractor,
+    nationalIdDetails,
+  ]);
 
   /// Create a copy of ContractorWorkerModel
   /// with the given fields replaced by the non-null parameter values.
@@ -438,24 +630,32 @@ class _$ContractorWorkerModelImpl implements _ContractorWorkerModel {
   }
 }
 
-abstract class _ContractorWorkerModel implements ContractorWorkerModel {
+abstract class _ContractorWorkerModel extends ContractorWorkerModel {
   const factory _ContractorWorkerModel({
     required final String id,
-    required final String fullName,
-    required final String workerCode,
-    required final String nationalId,
-    required final String phone,
-    required final String jobTitle,
-    required final String projectName,
-    required final String siteName,
-    final String status,
-    final String startDate,
-    final String? photoUrl,
-    final String? lastCheckIn,
-    final String? contractorId,
-    final String? contractorName,
-    final String? deviceUuid,
+    @JsonKey(name: 'name') final String? name,
+    @JsonKey(name: 'fullName') final String? fullName,
+    @JsonKey(name: 'employeeCode') final String? employeeCode,
+    @JsonKey(name: 'workerCode') final String? workerCode,
+    @JsonKey(name: 'nationalId') final String nationalId,
+    @JsonKey(name: 'phone') final String phone,
+    @JsonKey(name: 'position') final String? position,
+    @JsonKey(name: 'jobTitle') final String? jobTitle,
+    @JsonKey(name: 'projectName') final String? projectName,
+    @JsonKey(name: 'siteName') final String? siteName,
+    @JsonKey(name: 'status') final String status,
+    @JsonKey(name: 'startDate') final String startDate,
+    @JsonKey(name: 'imageUrl') final String? imageUrl,
+    @JsonKey(name: 'photoUrl') final String? photoUrl,
+    @JsonKey(name: 'lastCheckIn') final String? lastCheckIn,
+    @JsonKey(name: 'contractorId') final String? contractorId,
+    @JsonKey(name: 'contractorName') final String? contractorName,
+    @JsonKey(name: 'deviceUuid') final String? deviceUuid,
+    @JsonKey(name: 'contractor') final ContractorCompanyModel? contractor,
+    @JsonKey(name: 'nationalIdDetails')
+    final NationalIdDetailsModel? nationalIdDetails,
   }) = _$ContractorWorkerModelImpl;
+  const _ContractorWorkerModel._() : super._();
 
   factory _ContractorWorkerModel.fromJson(Map<String, dynamic> json) =
       _$ContractorWorkerModelImpl.fromJson;
@@ -463,33 +663,65 @@ abstract class _ContractorWorkerModel implements ContractorWorkerModel {
   @override
   String get id;
   @override
-  String get fullName;
+  @JsonKey(name: 'name')
+  String? get name;
   @override
-  String get workerCode;
+  @JsonKey(name: 'fullName')
+  String? get fullName;
   @override
+  @JsonKey(name: 'employeeCode')
+  String? get employeeCode;
+  @override
+  @JsonKey(name: 'workerCode')
+  String? get workerCode;
+  @override
+  @JsonKey(name: 'nationalId')
   String get nationalId;
   @override
+  @JsonKey(name: 'phone')
   String get phone;
   @override
-  String get jobTitle;
+  @JsonKey(name: 'position')
+  String? get position;
   @override
-  String get projectName;
+  @JsonKey(name: 'jobTitle')
+  String? get jobTitle;
   @override
-  String get siteName;
+  @JsonKey(name: 'projectName')
+  String? get projectName;
   @override
+  @JsonKey(name: 'siteName')
+  String? get siteName;
+  @override
+  @JsonKey(name: 'status')
   String get status;
   @override
+  @JsonKey(name: 'startDate')
   String get startDate;
   @override
+  @JsonKey(name: 'imageUrl')
+  String? get imageUrl;
+  @override
+  @JsonKey(name: 'photoUrl')
   String? get photoUrl;
   @override
+  @JsonKey(name: 'lastCheckIn')
   String? get lastCheckIn;
   @override
+  @JsonKey(name: 'contractorId')
   String? get contractorId;
   @override
+  @JsonKey(name: 'contractorName')
   String? get contractorName;
   @override
+  @JsonKey(name: 'deviceUuid')
   String? get deviceUuid;
+  @override
+  @JsonKey(name: 'contractor')
+  ContractorCompanyModel? get contractor;
+  @override
+  @JsonKey(name: 'nationalIdDetails')
+  NationalIdDetailsModel? get nationalIdDetails;
 
   /// Create a copy of ContractorWorkerModel
   /// with the given fields replaced by the non-null parameter values.

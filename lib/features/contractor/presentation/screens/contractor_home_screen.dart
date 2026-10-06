@@ -11,6 +11,7 @@ import 'package:check_point_v2/features/contractor/presentation/widgets/contract
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_quick_action_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_attendance_tile_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_offline_sync_banner_widget.dart';
+import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_batch_attendance_sheet_widget.dart';
 import 'package:check_point_v2/features/contractor/presentation/widgets/contractor_punch_sheet_widget.dart';
 import 'package:check_point_v2/core/app/app_spaces.dart';
 
@@ -181,6 +182,28 @@ class ContractorHomeScreen extends StatelessWidget {
                           context,
                           AppRoutes.attendancePoints,
                         ),
+                      ),
+                      wSpace(10),
+                      ContractorQuickActionWidget(
+                        title: 'contractor.workers.batchAttendance'.tr(),
+                        icon: Icons.qr_code_scanner_rounded,
+                        color: AppColors.brandPrimary,
+                        onTap: () {
+                          final current = context
+                              .read<ContractorCubit>()
+                              .state
+                              .mapOrNull(success: (value) => value);
+                          showModalBottomSheet<void>(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: AppColors.cardBackground,
+                            builder: (_) => ContractorBatchAttendanceSheetWidget(
+                              workers: current?.workers ?? const [],
+                              sites: current?.sites ?? const [],
+                              contractorId: current?.contractors.firstOrNull?.id ?? '',
+                            ),
+                          );
+                        },
                       ),
                       wSpace(10),
                       ContractorQuickActionWidget(

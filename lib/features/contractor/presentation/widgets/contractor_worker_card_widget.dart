@@ -53,7 +53,9 @@ class ContractorWorkerCardWidget extends StatelessWidget {
           radius: 22.r,
           backgroundColor: AppColors.brandPrimary.withValues(alpha: 0.12),
           child: Text(
-            worker.fullName.isNotEmpty ? worker.fullName[0].toUpperCase() : 'W',
+            worker.displayName.isNotEmpty
+                ? worker.displayName[0].toUpperCase()
+                : 'W',
             style: AppTextStyles.font16Bold.copyWith(
               color: AppColors.brandPrimary,
             ),
@@ -63,7 +65,7 @@ class ContractorWorkerCardWidget extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                worker.fullName,
+                worker.displayName,
                 style: AppTextStyles.font14Bold.copyWith(
                   color: AppColors.textPrimary,
                 ),
@@ -92,7 +94,7 @@ class ContractorWorkerCardWidget extends StatelessWidget {
           children: [
             hSpace(4),
             Text(
-              '${worker.jobTitle} • ${worker.workerCode}',
+              '${worker.displayJob.isNotEmpty ? worker.displayJob : "عامل"} • ${worker.displayCode}',
               style: AppTextStyles.font12Regular.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -108,7 +110,7 @@ class ContractorWorkerCardWidget extends StatelessWidget {
                 wSpace(4),
                 Expanded(
                   child: Text(
-                    '${worker.projectName} - ${worker.siteName}',
+                    '${worker.projectName ?? ""} ${worker.siteName != null ? "- ${worker.siteName}" : ""}'.trim(),
                     style: AppTextStyles.font11Regular.copyWith(
                       color: AppColors.textSecondary,
                     ),

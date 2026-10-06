@@ -9,14 +9,16 @@ part of 'site_boundary_model.dart';
 _$SiteBoundaryModelImpl _$$SiteBoundaryModelImplFromJson(
   Map<String, dynamic> json,
 ) => _$SiteBoundaryModelImpl(
-  siteId: json['siteId'] as String,
-  siteName: json['siteName'] as String,
-  boundaryType: json['boundaryType'] as String? ?? 'circle',
-  centerLat: (json['centerLat'] as num?)?.toDouble(),
-  centerLng: (json['centerLng'] as num?)?.toDouble(),
-  radiusMeters: (json['radiusMeters'] as num?)?.toDouble() ?? 150.0,
+  siteIdUnderscore: json['site_id'] as String?,
+  siteIdCamel: json['siteId'] as String?,
+  siteNameUnderscore: json['site_name'] as String?,
+  siteNameCamel: json['siteName'] as String?,
+  boundaryType: json['boundary_type'] as String? ?? 'polygon',
+  centerLat: (json['center_lat'] as num?)?.toDouble(),
+  centerLng: (json['center_lng'] as num?)?.toDouble(),
+  radiusMeters: (json['radius_meters'] as num?)?.toDouble() ?? 250.0,
   boundaryCoordinates:
-      (json['boundaryCoordinates'] as List<dynamic>?)
+      (json['boundary_coordinates'] as List<dynamic>?)
           ?.map((e) => LatLngPointModel.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
@@ -30,13 +32,15 @@ _$SiteBoundaryModelImpl _$$SiteBoundaryModelImplFromJson(
 Map<String, dynamic> _$$SiteBoundaryModelImplToJson(
   _$SiteBoundaryModelImpl instance,
 ) => <String, dynamic>{
-  'siteId': instance.siteId,
-  'siteName': instance.siteName,
-  'boundaryType': instance.boundaryType,
-  'centerLat': instance.centerLat,
-  'centerLng': instance.centerLng,
-  'radiusMeters': instance.radiusMeters,
-  'boundaryCoordinates': instance.boundaryCoordinates,
+  'site_id': instance.siteIdUnderscore,
+  'siteId': instance.siteIdCamel,
+  'site_name': instance.siteNameUnderscore,
+  'siteName': instance.siteNameCamel,
+  'boundary_type': instance.boundaryType,
+  'center_lat': instance.centerLat,
+  'center_lng': instance.centerLng,
+  'radius_meters': instance.radiusMeters,
+  'boundary_coordinates': instance.boundaryCoordinates,
   'projectId': instance.projectId,
   'projectName': instance.projectName,
   'status': instance.status,

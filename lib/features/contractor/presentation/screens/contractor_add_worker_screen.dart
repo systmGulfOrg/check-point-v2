@@ -8,6 +8,7 @@ import 'package:check_point_v2/core/widgets/custom_button.dart';
 import 'package:check_point_v2/core/widgets/custom_text_form_field.dart';
 import 'package:check_point_v2/features/contractor/data/models/site_boundary_model.dart';
 import '../cubit/contractor_cubit.dart';
+import 'package:check_point_v2/core/utils/egyptian_national_id_parser.dart';
 import 'package:check_point_v2/features/identity/presentation/widgets/national_id_capture_widget.dart';
 import 'package:check_point_v2/features/identity/presentation/widgets/national_id_ocr_listener_widget.dart';
 import 'package:check_point_v2/core/app/app_spaces.dart';
@@ -112,6 +113,51 @@ class _ContractorAddWorkerScreenState extends State<ContractorAddWorkerScreen> {
               ),
               hSpace(14),
               NationalIdCaptureWidget(controller: nationalIdController),
+              Builder(
+                builder: (context) {
+                  final info = EgyptianNationalIdParser.parse(
+                    nationalIdController.text,
+                  );
+                  if (!info.isValid) return const SizedBox.shrink();
+                  return Container(
+                    margin: EdgeInsets.only(top: 8.h),
+                    padding: EdgeInsets.all(10.r),
+                    decoration: BoxDecoration(
+                      color: AppColors.softBlueBackground,
+                      borderRadius: BorderRadius.circular(8.r),
+                      border: Border.all(
+                        color: AppColors.brandPrimary.withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        if (info.birthDate != null)
+                          Text(
+                            'الميلاد: ${info.birthDate}',
+                            style: AppTextStyles.font11Regular.copyWith(
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        if (info.governorate != null)
+                          Text(
+                            'المحافظة: ${info.governorate}',
+                            style: AppTextStyles.font11Regular.copyWith(
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        if (info.gender != null)
+                          Text(
+                            'النوع: ${info.gender == "Male" ? "ذكر" : "أنثى"}',
+                            style: AppTextStyles.font11Regular.copyWith(
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                },
+              ),
               hSpace(14),
               Text(
                 'contractor.workers.phone'.tr(),

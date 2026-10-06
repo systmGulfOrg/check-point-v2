@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
+import 'package:check_point_v2/features/contractor/data/models/contractor_batch_models.dart';
+
 part 'contractor_api_service.g.dart';
 
 @RestApi()
@@ -8,6 +10,31 @@ abstract class ContractorApiService {
   factory ContractorApiService(Dio dio, {String? baseUrl}) =
       _ContractorApiService;
 
+  // SAMCO Workforce v2
+  @GET('/api/v2/workforce/samco/sites/{siteId}/boundary')
+  Future<dynamic> getSamcoSiteBoundary(@Path('siteId') String siteId);
+
+  @POST('/api/v2/workforce/samco/attendance/contractors')
+  Future<dynamic> recordSamcoContractorAttendance(
+    @Body() ContractorDailyAttendanceRequestBody body,
+  );
+
+  @POST('/api/v2/workforce/samco/attendance/workers/batch')
+  Future<BatchWorkerAttendanceResponseModel> recordSamcoBatchWorkerAttendance(
+    @Body() BatchWorkerAttendanceRequestBody body,
+  );
+
+  @GET('/api/v2/workforce/samco/workers')
+  Future<dynamic> getSamcoWorkers(
+    @Query('contractor_id') String? contractorId,
+  );
+
+  @POST('/api/v2/workforce/samco/attendance/sync')
+  Future<dynamic> syncSamcoAttendanceOffline(
+    @Body() Map<String, dynamic> body,
+  );
+
+  // Existing / v1 endpoints
   @GET('/api/v1/contractors')
   Future<dynamic> getContractors();
 

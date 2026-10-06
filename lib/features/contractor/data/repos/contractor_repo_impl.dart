@@ -9,12 +9,85 @@ import '../models/contractor_attendance_model.dart';
 import '../models/contractor_correction_model.dart';
 import '../models/offline_attendance_log_model.dart';
 import '../models/samco_customization_model.dart';
+import '../models/contractor_batch_models.dart';
 import 'contractor_repo.dart';
 
 class ContractorRepoImpl implements ContractorRepo {
   ContractorRepoImpl({required this.api});
 
   final ContractorApiService api;
+
+  @override
+  Future<ApiResult<SiteBoundaryModel>> getSamcoSiteBoundary(
+    String siteId,
+  ) async {
+    try {
+      final response = await api.getSamcoSiteBoundary(siteId);
+      final value = _mapValue(response);
+      return ApiResult.success(_siteFromJson(value));
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<void>> recordSamcoContractorAttendance(
+    ContractorDailyAttendanceRequestBody body,
+  ) async {
+    try {
+      await api.recordSamcoContractorAttendance(body);
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<BatchWorkerAttendanceSummaryModel>> recordSamcoBatchWorkerAttendance(
+    BatchWorkerAttendanceRequestBody body,
+  ) async {
+    try {
+      final response = await api.recordSamcoBatchWorkerAttendance(body);
+      if (response.value != null) {
+        return ApiResult.success(response.value!);
+      }
+      return const ApiResult.success(
+        BatchWorkerAttendanceSummaryModel(
+          totalSubmitted: 0,
+          successfulCount: 0,
+          failedCount: 0,
+          results: [],
+        ),
+      );
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<List<ContractorWorkerModel>>> getSamcoWorkers({
+    String? contractorId,
+  }) async {
+    try {
+      final response = await api.getSamcoWorkers(contractorId);
+      final list = _listValue(response);
+      return ApiResult.success(list.map(_workerFromJson).toList());
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<dynamic>> syncSamcoAttendanceOffline(
+    Map<String, dynamic> body,
+  ) async {
+    try {
+      final response = await api.syncSamcoAttendanceOffline(body);
+      return ApiResult.success(response);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
 
   Map<String, dynamic> _envelope(dynamic response) =>
       response is Map<String, dynamic>
