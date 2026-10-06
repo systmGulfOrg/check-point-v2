@@ -119,18 +119,22 @@ class _EditProfileSheetWidgetState extends State<EditProfileSheetWidget> {
                   controller: nameController,
                   hintText: 'profile.edit.nameHint'.tr(context: context),
                   prefixIcon: Icon(Icons.person_outline_rounded, size: 19.r),
-                  validator: (value) => value == null || value.trim().isEmpty
-                      ? 'profile.edit.nameRequired'.tr(context: context)
-                      : null,
+                  validator: AppValidators.name(
+                    message: 'profile.edit.nameRequired'.tr(context: context),
+                    context: context,
+                  ),
                 ),
                 hSpace(12),
                 CustomTextFormField(
                   controller: usernameController,
                   hintText: 'profile.edit.usernameHint'.tr(context: context),
                   prefixIcon: Icon(Icons.alternate_email_rounded, size: 19.r),
-                  validator: (value) => value == null || value.trim().isEmpty
-                      ? 'profile.edit.usernameRequired'.tr(context: context)
-                      : null,
+                  validator: AppValidators.required(
+                    message: 'profile.edit.usernameRequired'.tr(
+                      context: context,
+                    ),
+                    context: context,
+                  ),
                 ),
                 hSpace(20),
                 SizedBox(

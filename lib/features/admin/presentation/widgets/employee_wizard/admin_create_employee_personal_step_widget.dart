@@ -151,9 +151,12 @@ class _AdminCreateEmployeePersonalStepWidgetState
               size: 20.r,
               color: AppColors.placeholder,
             ),
-            validator: (value) => value == null || value.trim().isEmpty
-                ? 'admin.employeeWizard.requiredField'.tr(context: context)
-                : null,
+            validator: AppValidators.name(
+              message: 'admin.employeeWizard.requiredField'.tr(
+                context: context,
+              ),
+              context: context,
+            ),
           ),
         ),
 
@@ -168,9 +171,12 @@ class _AdminCreateEmployeePersonalStepWidgetState
               size: 20.r,
               color: AppColors.placeholder,
             ),
-            validator: (value) => value == null || value.trim().isEmpty
-                ? 'admin.employeeWizard.requiredField'.tr(context: context)
-                : null,
+            validator: AppValidators.required(
+              message: 'admin.employeeWizard.requiredField'.tr(
+                context: context,
+              ),
+              context: context,
+            ),
           ),
         ),
 
@@ -201,9 +207,13 @@ class _AdminCreateEmployeePersonalStepWidgetState
                   onPressed: () =>
                       setState(() => obscurePassword = !obscurePassword),
                 ),
-                validator: (value) => value == null || value.trim().isEmpty
-                    ? 'admin.employeeWizard.requiredField'.tr(context: context)
-                    : null,
+                validator: AppValidators.password(
+                  minLength: 6,
+                  message: 'admin.employeeWizard.requiredField'.tr(
+                    context: context,
+                  ),
+                  context: context,
+                ),
               ),
               hSpace(6),
               Row(
@@ -267,9 +277,12 @@ class _AdminCreateEmployeePersonalStepWidgetState
                 );
               },
             ),
-            validator: (value) => value == null || value.trim().isEmpty
-                ? 'admin.employeeWizard.requiredField'.tr(context: context)
-                : null,
+            validator: AppValidators.required(
+              message: 'admin.employeeWizard.requiredField'.tr(
+                context: context,
+              ),
+              context: context,
+            ),
           ),
         ),
 
@@ -285,6 +298,7 @@ class _AdminCreateEmployeePersonalStepWidgetState
               size: 20.r,
               color: AppColors.placeholder,
             ),
+            validator: AppValidators.phone(isRequired: false, context: context),
           ),
         ),
 
@@ -300,6 +314,7 @@ class _AdminCreateEmployeePersonalStepWidgetState
               size: 20.r,
               color: AppColors.placeholder,
             ),
+            validator: AppValidators.email(isRequired: false, context: context),
           ),
         ),
 

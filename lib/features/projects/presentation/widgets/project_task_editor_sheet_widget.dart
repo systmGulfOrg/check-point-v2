@@ -202,9 +202,7 @@ class _ProjectTaskEditorSheetWidgetState
                         CustomTextFormField(
                           hintText: 'projects.taskTitle'.tr(context: context),
                           controller: _titleController,
-                          validator: (v) => (v == null || v.trim().isEmpty)
-                              ? 'validation.required'.tr()
-                              : null,
+                          validator: AppValidators.required(context: context),
                         ),
                         hSpace(14),
 

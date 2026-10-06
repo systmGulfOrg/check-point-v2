@@ -186,10 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         hintKey: 'auth.login.usernameHint',
                         controller: _usernameController,
                         keyboardType: TextInputType.text,
-                        validator: (value) =>
-                            value == null || value.trim().isEmpty
-                            ? 'auth.login.required'.tr(context: context)
-                            : null,
+                        validator: AppValidators.required(context: context),
                         prefixIcon: Icon(
                           Icons.mail_outline_rounded,
                           size: 20.r,
@@ -202,9 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         hintKey: 'auth.login.passwordHint',
                         controller: _passwordController,
                         obscureText: _obscurePassword,
-                        validator: (value) => value == null || value.isEmpty
-                            ? 'auth.login.required'.tr(context: context)
-                            : null,
+                        validator: AppValidators.required(context: context),
                         prefixIcon: Icon(
                           Icons.lock_outline_rounded,
                           size: 20.r,

@@ -94,9 +94,7 @@ class _ProjectEditSheetWidgetState extends State<ProjectEditSheetWidget> {
                 CustomTextFormField(
                   hintText: 'projects.name'.tr(context: context),
                   controller: _nameController,
-                  validator: (v) => (v == null || v.trim().isEmpty)
-                      ? 'validation.required'.tr()
-                      : null,
+                  validator: AppValidators.required(context: context),
                 ),
                 SizedBox(height: 10.h),
                 CustomTextFormField(

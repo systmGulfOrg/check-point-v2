@@ -33,12 +33,10 @@ class AdminLocationFormFieldsWidget extends StatelessWidget {
         CustomTextFormField(
           controller: nameController,
           hintText: 'admin.locations.create.nameHint'.tr(context: context),
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'admin.locations.create.nameRequired'.tr(context: context);
-            }
-            return null;
-          },
+          validator: AppValidators.required(
+            message: 'admin.locations.create.nameRequired'.tr(context: context),
+            context: context,
+          ),
         ),
         hSpace(16),
         Text(
@@ -49,14 +47,12 @@ class AdminLocationFormFieldsWidget extends StatelessWidget {
         CustomTextFormField(
           controller: addressController,
           hintText: 'admin.locations.create.addressHint'.tr(context: context),
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'admin.locations.create.addressRequired'.tr(
-                context: context,
-              );
-            }
-            return null;
-          },
+          validator: AppValidators.required(
+            message: 'admin.locations.create.addressRequired'.tr(
+              context: context,
+            ),
+            context: context,
+          ),
         ),
         hSpace(16),
         Text(

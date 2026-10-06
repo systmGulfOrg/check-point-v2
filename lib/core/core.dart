@@ -35,3 +35,4 @@ export 'widgets/app_avatar_widget.dart';
 export 'widgets/app_image_preview_dialog_widget.dart';
 export 'utils/app_date_formatter.dart';
 export 'utils/app_image_provider.dart';
+export 'utils/app_validators.dart';

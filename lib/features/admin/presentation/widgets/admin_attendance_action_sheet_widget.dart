@@ -189,14 +189,12 @@ class _AdminAttendanceActionSheetWidgetState
                         context: context,
                       ),
                       maxLines: 3,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'admin.attendance.deleteReasonValidation'.tr(
-                            context: context,
-                          );
-                        }
-                        return null;
-                      },
+                      validator: AppValidators.required(
+                        message: 'admin.attendance.deleteReasonValidation'.tr(
+                          context: context,
+                        ),
+                        context: context,
+                      ),
                     ),
                   ] else ...[
                     hSpace(14),
@@ -276,14 +274,12 @@ class _AdminAttendanceActionSheetWidgetState
                             ),
                           ),
                       ],
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'admin.attendance.statusRequired'.tr(
-                            context: context,
-                          );
-                        }
-                        return null;
-                      },
+                      validator: AppValidators.required(
+                        message: 'admin.attendance.statusRequired'.tr(
+                          context: context,
+                        ),
+                        context: context,
+                      ),
                       onChanged: (value) => setState(
                         () => selectedStatus = value ?? selectedStatus,
                       ),
@@ -300,14 +296,12 @@ class _AdminAttendanceActionSheetWidgetState
                         context: context,
                       ),
                       maxLines: 3,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'admin.attendance.editReasonValidation'.tr(
-                            context: context,
-                          );
-                        }
-                        return null;
-                      },
+                      validator: AppValidators.required(
+                        message: 'admin.attendance.editReasonValidation'.tr(
+                          context: context,
+                        ),
+                        context: context,
+                      ),
                     ),
                   ],
                   hSpace(16),

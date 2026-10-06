@@ -154,12 +154,10 @@ class _AdminNewLeaveTypeSheetWidgetState
                     borderSide: BorderSide(color: AppColors.border),
                   ),
                 ),
-                validator: (val) {
-                  if (val == null || val.trim().isEmpty) {
-                    return 'validation.required'.tr(context: context);
-                  }
-                  return null;
-                },
+                validator: AppValidators.required(
+                  message: 'validation.required'.tr(context: context),
+                  context: context,
+                ),
               ),
               hSpace(14),
               Text(
@@ -191,6 +189,9 @@ class _AdminNewLeaveTypeSheetWidgetState
                     borderRadius: BorderRadius.circular(8.r),
                     borderSide: BorderSide(color: AppColors.border),
                   ),
+                ),
+                validator: AppValidators.positiveNumber(
+                  context: context,
                 ),
               ),
               hSpace(14),

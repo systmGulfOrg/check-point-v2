@@ -538,11 +538,12 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                             context: context,
                           ),
                           readOnly: true,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'employee.leaves.dateRequired'.tr(
-                                  context: context,
-                                )
-                              : null,
+                          validator: AppValidators.required(
+                            message: 'employee.leaves.dateRequired'.tr(
+                              context: context,
+                            ),
+                            context: context,
+                          ),
                           onTap: () => _selectDate(isStartDate: false),
                           suffixIcon: Icon(
                             Icons.calendar_today_outlined,
@@ -565,9 +566,12 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                 controller: _reasonController,
                 hintText: 'employee.leaves.reasonHint'.tr(context: context),
                 maxLines: 3,
-                validator: (value) => value == null || value.trim().isEmpty
-                    ? 'employee.leaves.reasonRequired'.tr(context: context)
-                    : null,
+                validator: AppValidators.required(
+                  message: 'employee.leaves.reasonRequired'.tr(
+                    context: context,
+                  ),
+                  context: context,
+                ),
               ),
               hSpace(14),
               Text(
@@ -579,9 +583,12 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                 controller: _remarkController,
                 hintText: 'employee.leaves.remarkHint'.tr(context: context),
                 maxLines: 3,
-                validator: (value) => value == null || value.trim().isEmpty
-                    ? 'employee.leaves.remarkRequired'.tr(context: context)
-                    : null,
+                validator: AppValidators.required(
+                  message: 'employee.leaves.remarkRequired'.tr(
+                    context: context,
+                  ),
+                  context: context,
+                ),
               ),
               hSpace(20),
               Row(

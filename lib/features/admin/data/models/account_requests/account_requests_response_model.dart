@@ -68,8 +68,8 @@ class AccountRequestModel {
   String? get photo => (imageUrl != null && imageUrl!.isNotEmpty)
       ? imageUrl
       : (photoPath != null && photoPath!.isNotEmpty)
-          ? photoPath
-          : null;
+      ? photoPath
+      : null;
 
   bool get isPending => status == null || status == 'Pending';
   bool get isApproved => status == 'Approved';

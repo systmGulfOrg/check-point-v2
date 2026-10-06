@@ -102,14 +102,12 @@ class _AdminRejectRequestDialogWidgetState
                   context: context,
                 ),
                 maxLines: 3,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'admin.requests.rejectReasonRequired'.tr(
-                      context: context,
-                    );
-                  }
-                  return null;
-                },
+                validator: AppValidators.required(
+                  message: 'admin.requests.rejectReasonRequired'.tr(
+                    context: context,
+                  ),
+                  context: context,
+                ),
               ),
               hSpace(20),
               Row(

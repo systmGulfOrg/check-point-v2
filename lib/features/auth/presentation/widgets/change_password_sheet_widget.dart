@@ -105,11 +105,12 @@ class _ChangePasswordSheetWidgetState extends State<ChangePasswordSheetWidget> {
                     ),
                     obscureText: true,
                     prefixIcon: Icon(Icons.lock_outline_rounded, size: 19.r),
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'profile.password.currentRequired'.tr(
-                            context: context,
-                          )
-                        : null,
+                    validator: AppValidators.required(
+                      message: 'profile.password.currentRequired'.tr(
+                        context: context,
+                      ),
+                      context: context,
+                    ),
                   ),
                   hSpace(12),
                   CustomTextFormField(
@@ -117,9 +118,13 @@ class _ChangePasswordSheetWidgetState extends State<ChangePasswordSheetWidget> {
                     hintText: 'profile.password.newHint'.tr(context: context),
                     obscureText: true,
                     prefixIcon: Icon(Icons.key_outlined, size: 19.r),
-                    validator: (value) => value == null || value.length < 6
-                        ? 'profile.password.minimumLength'.tr(context: context)
-                        : null,
+                    validator: AppValidators.password(
+                      minLength: 6,
+                      message: 'profile.password.minimumLength'.tr(
+                        context: context,
+                      ),
+                      context: context,
+                    ),
                   ),
                   hSpace(12),
                   CustomTextFormField(
@@ -129,11 +134,13 @@ class _ChangePasswordSheetWidgetState extends State<ChangePasswordSheetWidget> {
                     ),
                     obscureText: true,
                     prefixIcon: Icon(Icons.verified_user_outlined, size: 19.r),
-                    validator: (value) => value != newPasswordController.text
-                        ? 'profile.password.confirmMismatch'.tr(
-                            context: context,
-                          )
-                        : null,
+                    validator: AppValidators.confirmPassword(
+                      passwordGetter: () => newPasswordController.text,
+                      message: 'profile.password.confirmMismatch'.tr(
+                        context: context,
+                      ),
+                      context: context,
+                    ),
                   ),
                   hSpace(20),
                   SizedBox(

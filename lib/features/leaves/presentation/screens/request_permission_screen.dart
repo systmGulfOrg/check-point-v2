@@ -316,12 +316,9 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
                 controller: _reasonController,
                 hintText: 'employee.leaves.reasonHint'.tr(),
                 maxLines: 3,
-                validator: (val) {
-                  if (val == null || val.trim().isEmpty) {
-                    return 'employee.leaves.reasonRequired'.tr();
-                  }
-                  return null;
-                },
+                validator: AppValidators.required(
+                  message: 'employee.leaves.reasonRequired'.tr(),
+                ),
               ),
 
               SizedBox(height: 32.h),

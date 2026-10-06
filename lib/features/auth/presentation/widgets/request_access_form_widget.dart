@@ -21,27 +21,19 @@ class RequestAccessFormWidget extends StatefulWidget {
 class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
   final formKey = GlobalKey<FormState>();
   late final TextEditingController fullNameController;
-  late final TextEditingController nationalIdController;
-  late final TextEditingController phoneController;
-  late final TextEditingController notesController;
 
   String? _selectedPhotoPath;
+  bool _photoError = false;
 
   @override
   void initState() {
     super.initState();
     fullNameController = TextEditingController();
-    nationalIdController = TextEditingController();
-    phoneController = TextEditingController();
-    notesController = TextEditingController();
   }
 
   @override
   void dispose() {
     fullNameController.dispose();
-    nationalIdController.dispose();
-    phoneController.dispose();
-    notesController.dispose();
     super.dispose();
   }
 
@@ -54,6 +46,7 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
       if (result != null && result.files.single.path != null) {
         setState(() {
           _selectedPhotoPath = result.files.single.path;
+          _photoError = false;
         });
       }
     } catch (_) {}
@@ -65,23 +58,25 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Avatar Photo Picker at Top
+        // Avatar Photo Picker at Top (Mandatory)
         Center(
           child: GestureDetector(
             onTap: _pickPhoto,
             child: Stack(
               children: [
                 Container(
-                  width: 90.r,
-                  height: 90.r,
+                  width: 100.r,
+                  height: 100.r,
                   decoration: BoxDecoration(
-                    color: AppColors.softBrandBackground,
+                    color: _photoError
+                        ? AppColors.error.withValues(alpha: 0.1)
+                        : AppColors.softBrandBackground,
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: _selectedPhotoPath != null
                           ? AppColors.brandPrimary
-                          : AppColors.border,
-                      width: 2,
+                          : (_photoError ? AppColors.error : AppColors.border),
+                      width: _photoError ? 2.5 : 2,
                     ),
                     image: _selectedPhotoPath != null
                         ? DecorationImage(
@@ -93,8 +88,10 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
                   child: _selectedPhotoPath == null
                       ? Icon(
                           Icons.person_rounded,
-                          size: 48.r,
-                          color: AppColors.placeholder,
+                          size: 52.r,
+                          color: _photoError
+                              ? AppColors.error
+                              : AppColors.placeholder,
                         )
                       : null,
                 ),
@@ -102,9 +99,11 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
                   bottom: 0,
                   right: 0,
                   child: Container(
-                    padding: EdgeInsets.all(6.r),
+                    padding: EdgeInsets.all(7.r),
                     decoration: BoxDecoration(
-                      color: AppColors.brandPrimary,
+                      color: _photoError
+                          ? AppColors.error
+                          : AppColors.brandPrimary,
                       shape: BoxShape.circle,
                       border: Border.all(color: AppColors.white, width: 2),
                     ),
@@ -119,7 +118,7 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
             ),
           ),
         ),
-        hSpace(6),
+        hSpace(8),
         Center(
           child: Text(
             _selectedPhotoPath != null
@@ -128,11 +127,12 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
             style: AppTextStyles.font12Medium.copyWith(
               color: _selectedPhotoPath != null
                   ? AppColors.success
-                  : AppColors.brandPrimary,
+                  : (_photoError ? AppColors.error : AppColors.brandPrimary),
+              fontWeight: _photoError ? FontWeight.w600 : FontWeight.normal,
             ),
           ),
         ),
-        hSpace(18),
+        hSpace(24),
 
         // Full Name
         Text(
@@ -149,79 +149,21 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
             size: 21.r,
             color: AppColors.placeholder,
           ),
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'auth.requestAccess.fullNameRequired'.tr(context: context);
-            }
-            return null;
-          },
+          validator: AppValidators.name(context: context),
         ),
 
-        // National ID
-        hSpace(16),
-        Text(
-          'الرقم القومي',
-          textAlign: TextAlign.start,
-          style: AppTextStyles.font14SemiBold,
-        ),
-        hSpace(8),
-        CustomTextFormField(
-          hintText: 'أدخل 14 رقم البطاقة الشخصية',
-          controller: nationalIdController,
-          keyboardType: TextInputType.number,
-          prefixIcon: Icon(
-            Icons.badge_outlined,
-            size: 21.r,
-            color: AppColors.placeholder,
-          ),
-        ),
-
-        // Phone Number
-        hSpace(16),
-        Text(
-          'رقم الهاتف',
-          textAlign: TextAlign.start,
-          style: AppTextStyles.font14SemiBold,
-        ),
-        hSpace(8),
-        CustomTextFormField(
-          hintText: 'أدخل رقم الموبايل',
-          controller: phoneController,
-          keyboardType: TextInputType.phone,
-          prefixIcon: Icon(
-            Icons.phone_outlined,
-            size: 21.r,
-            color: AppColors.placeholder,
-          ),
-        ),
-
-        // Notes
-        hSpace(16),
-        Text(
-          'ملاحظات إضافية',
-          textAlign: TextAlign.start,
-          style: AppTextStyles.font14SemiBold,
-        ),
-        hSpace(8),
-        CustomTextFormField(
-          hintText: 'أي تفاصيل أو ملاحظات للإدارة',
-          controller: notesController,
-          prefixIcon: Icon(
-            Icons.note_alt_outlined,
-            size: 21.r,
-            color: AppColors.placeholder,
-          ),
-        ),
-
-        hSpace(22),
+        hSpace(32),
         RequestAccountSubmitButtonWidget(
           onSubmit: () {
             FocusScope.of(context).unfocus();
             if (_selectedPhotoPath == null || _selectedPhotoPath!.isEmpty) {
+              setState(() {
+                _photoError = true;
+              });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    'auth.requestAccess.photoRequired'.tr(context: context),
+                    'validation.photoRequired'.tr(context: context),
                   ),
                   backgroundColor: AppColors.error,
                 ),
@@ -233,15 +175,6 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
               name: fullNameController.text.trim(),
               accountType: 'Personal',
               siteId: null,
-              nationalId: nationalIdController.text.trim().isNotEmpty
-                  ? nationalIdController.text.trim()
-                  : null,
-              phone: phoneController.text.trim().isNotEmpty
-                  ? phoneController.text.trim()
-                  : null,
-              notes: notesController.text.trim().isNotEmpty
-                  ? notesController.text.trim()
-                  : null,
               photoPath: _selectedPhotoPath,
             );
           },

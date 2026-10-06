@@ -131,12 +131,10 @@ class _AdminCreateDepartmentSheetWidgetState
                 Icons.corporate_fare_outlined,
                 color: AppColors.textSecondary,
               ),
-              validator: (val) {
-                if (val == null || val.trim().isEmpty) {
-                  return 'admin.departments.nameRequired'.tr(context: context);
-                }
-                return null;
-              },
+              validator: AppValidators.name(
+                message: 'admin.departments.nameRequired'.tr(context: context),
+                context: context,
+              ),
             ),
             hSpace(20),
             Row(
