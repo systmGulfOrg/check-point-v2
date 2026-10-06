@@ -8,7 +8,6 @@ import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admi
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/pending_devices/admin_pending_devices_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_desktop_sidebar_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_nav_bar_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
@@ -45,7 +44,6 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       case 0:
         context.read<AuthProfileCubit>().loadProfile();
         context.read<AdminAttendanceCubit>().loadAttendance();
-        context.read<AdminTasksCubit>().loadTasks();
         context.read<AdminLeaveRequestsCubit>().loadRequests();
         context.read<AdminAccountRequestsCubit>().loadRequests();
         context.read<AdminEmployeesCubit>().loadEmployees();

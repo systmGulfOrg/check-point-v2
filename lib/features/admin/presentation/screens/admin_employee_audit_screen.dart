@@ -6,6 +6,8 @@ import '../../../../core/styles/app_colors.dart';
 import '../../../../core/styles/app_text_styles.dart';
 import '../cubit/employee_audit/admin_employee_audit_cubit.dart';
 import '../cubit/employee_audit/admin_employee_audit_state.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import '../../data/models/audit/audit_log_model.dart';
 import '../widgets/admin_employee_audit_item_widget.dart';
 
 class AdminEmployeeAuditScreen extends StatelessWidget {
@@ -38,11 +40,35 @@ class AdminEmployeeAuditScreen extends StatelessWidget {
           },
           builder: (context, state) {
             return state.map(
-              initial: (_) => const Center(
-                child: CircularProgressIndicator(color: AppColors.brandPrimary),
+              initial: (_) => Skeletonizer(
+                enabled: true,
+                child: ListView.builder(
+                  padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+                  itemCount: 5,
+                  itemBuilder: (context, index) => AdminEmployeeAuditItemWidget(
+                    log: AuditLogModel(
+                      id: 'sk-$index',
+                      action: 'UPDATE',
+                      createdAt: DateTime.now(),
+                      actorName: 'Admin User',
+                    ),
+                  ),
+                ),
               ),
-              loading: (_) => const Center(
-                child: CircularProgressIndicator(color: AppColors.brandPrimary),
+              loading: (_) => Skeletonizer(
+                enabled: true,
+                child: ListView.builder(
+                  padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+                  itemCount: 5,
+                  itemBuilder: (context, index) => AdminEmployeeAuditItemWidget(
+                    log: AuditLogModel(
+                      id: 'sk-$index',
+                      action: 'UPDATE',
+                      createdAt: DateTime.now(),
+                      actorName: 'Admin User',
+                    ),
+                  ),
+                ),
               ),
               error: (state) => Center(
                 child: Text(

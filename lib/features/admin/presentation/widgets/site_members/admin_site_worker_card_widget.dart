@@ -35,8 +35,8 @@ class AdminSiteWorkerCardWidget extends StatelessWidget {
               radius: 20.r,
               backgroundColor: AppColors.softBlueBackground,
               child: Text(
-                worker.fullName.isNotEmpty
-                    ? worker.fullName.characters.first.toUpperCase()
+                worker.displayName.isNotEmpty
+                    ? worker.displayName.characters.first.toUpperCase()
                     : 'W',
                 style: AppTextStyles.font14Bold.copyWith(
                   color: AppColors.brandPrimary,
@@ -52,7 +52,7 @@ class AdminSiteWorkerCardWidget extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          worker.fullName,
+                          worker.displayName,
                           style: AppTextStyles.font14SemiBold,
                         ),
                       ),
@@ -88,12 +88,12 @@ class AdminSiteWorkerCardWidget extends StatelessWidget {
                       ),
                       vSpace(4),
                       Text(
-                        worker.workerCode,
+                        worker.displayCode,
                         style: AppTextStyles.font12Medium.copyWith(
                           color: AppColors.brandPrimary,
                         ),
                       ),
-                      if (worker.jobTitle.isNotEmpty) ...[
+                      if (worker.displayJob.isNotEmpty) ...[
                         Text(
                           ' • ',
                           style: AppTextStyles.font12Regular.copyWith(
@@ -102,7 +102,7 @@ class AdminSiteWorkerCardWidget extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            worker.jobTitle,
+                            worker.displayJob,
                             style: AppTextStyles.font12Regular.copyWith(
                               color: AppColors.textSecondary,
                             ),

@@ -48,7 +48,7 @@ class _AdminSiteMembersScreenState extends State<AdminSiteMembersScreen> {
     final site = widget.args.site;
 
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.white,
         foregroundColor: AppColors.textPrimary,
@@ -72,7 +72,7 @@ class _AdminSiteMembersScreenState extends State<AdminSiteMembersScreen> {
               final siteIdLower = site.siteId.trim().toLowerCase();
 
               final siteWorkers = (data?.workers ?? const []).where((worker) {
-                final wSite = worker.siteName.trim().toLowerCase();
+                final wSite = (worker.siteName ?? '').trim().toLowerCase();
                 final directMatch =
                     wSite == siteNameLower ||
                     wSite == siteIdLower && wSite.isNotEmpty;

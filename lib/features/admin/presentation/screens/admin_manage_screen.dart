@@ -43,6 +43,38 @@ class AdminManageScreen extends StatelessWidget {
 
             hSpace(10),
             AdminManageCardWidget(
+              icon: Icons.engineering_outlined,
+              iconColor: AppColors.brandPrimary,
+              iconBackgroundColor: AppColors.softBrandBackground,
+              titleKey: 'admin.manage.contractors',
+              subtitleKey: 'admin.manage.contractorsSub',
+              onTap: () =>
+                  Navigator.pushNamed(context, AppRoutes.adminContractors),
+            ),
+            hSpace(10),
+            AdminManageCardWidget(
+              icon: Icons.assignment_ind_outlined,
+              iconColor: AppColors.info,
+              iconBackgroundColor: AppColors.softBlueBackground,
+              titleKey: 'admin.manage.workerAssignments',
+              subtitleKey: 'admin.manage.workerAssignmentsSub',
+              onTap: () => Navigator.pushNamed(
+                context,
+                AppRoutes.adminWorkerAssignments,
+              ),
+            ),
+            hSpace(10),
+            AdminManageCardWidget(
+              icon: Icons.timer_outlined,
+              iconColor: AppColors.brandPrimary,
+              iconBackgroundColor: AppColors.softYellowBackground,
+              titleKey: 'admin.manage.shiftsPolicies',
+              subtitleKey: 'admin.manage.shiftsPoliciesSub',
+              onTap: () =>
+                  Navigator.pushNamed(context, AppRoutes.adminShiftsPolicies),
+            ),
+            hSpace(10),
+            AdminManageCardWidget(
               icon: Icons.home_work_outlined,
               iconColor: AppColors.info,
               iconBackgroundColor: AppColors.softBlueBackground,
@@ -79,15 +111,6 @@ class AdminManageScreen extends StatelessWidget {
               subtitleKey: 'admin.manage.leaveManagementSub',
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.adminLeaveManagement),
-            ),
-            hSpace(10),
-            AdminManageCardWidget(
-              icon: Icons.assignment_outlined,
-              iconColor: AppColors.warningOrange,
-              iconBackgroundColor: AppColors.softYellowBackground,
-              titleKey: 'admin.manage.tasks',
-              subtitleKey: 'admin.manage.tasksSub',
-              onTap: () => Navigator.pushNamed(context, AppRoutes.adminTasks),
             ),
             hSpace(10),
             AdminManageCardWidget(

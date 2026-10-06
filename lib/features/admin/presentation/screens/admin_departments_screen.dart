@@ -106,7 +106,7 @@ class _AdminDepartmentsScreenState extends State<AdminDepartmentsScreen> {
                               size: 16.r,
                               color: AppColors.brandPrimary,
                             ),
-                            vSpace(4),
+                            wSpace(4),
                             Text(
                               'admin.departments.add'.tr(context: context),
                               style: AppTextStyles.font12SemiBold.copyWith(

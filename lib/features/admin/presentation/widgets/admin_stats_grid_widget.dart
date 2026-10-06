@@ -10,30 +10,26 @@ class AdminStatsGridWidget extends StatelessWidget {
     required this.totalStaff,
     required this.presentToday,
     required this.pendingLeaves,
-    required this.openTasks,
     this.isStaffLoading = false,
     this.isAttendanceLoading = false,
     this.isLeaveLoading = false,
-    this.isTasksLoading = false,
     this.onTapStaff,
     this.onTapAttendance,
     this.onTapLeaves,
-    this.onTapTasks,
+    this.onTapLocations,
     super.key,
   });
 
   final int totalStaff;
   final int presentToday;
   final int pendingLeaves;
-  final int openTasks;
   final bool isStaffLoading;
   final bool isAttendanceLoading;
   final bool isLeaveLoading;
-  final bool isTasksLoading;
   final VoidCallback? onTapStaff;
   final VoidCallback? onTapAttendance;
   final VoidCallback? onTapLeaves;
-  final VoidCallback? onTapTasks;
+  final VoidCallback? onTapLocations;
 
   @override
   Widget build(BuildContext context) {
@@ -89,16 +85,13 @@ class AdminStatsGridWidget extends StatelessWidget {
         ),
         AnimatedListItemWidget(
           index: 3,
-          child: Skeletonizer(
-            enabled: isTasksLoading,
-            child: AdminStatCardWidget(
-              icon: Icons.assignment_outlined,
-              iconColor: AppColors.info,
-              iconBackgroundColor: AppColors.softBlueBackground,
-              value: '$openTasks',
-              labelKey: 'admin.dashboard.openTasks',
-              onTap: onTapTasks,
-            ),
+          child: AdminStatCardWidget(
+            icon: Icons.location_on_outlined,
+            iconColor: AppColors.info,
+            iconBackgroundColor: AppColors.softBlueBackground,
+            value: '📍',
+            labelKey: 'admin.manage.locations',
+            onTap: onTapLocations,
           ),
         ),
       ],

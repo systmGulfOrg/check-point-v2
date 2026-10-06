@@ -75,7 +75,7 @@ class AdminSiteMembersBlocBuilderWidget extends StatelessWidget {
 
     // 1. Resolve site workers
     final siteWorkers = workers.where((worker) {
-      final wSite = worker.siteName.trim().toLowerCase();
+      final wSite = (worker.siteName ?? '').trim().toLowerCase();
       final directMatch =
           wSite == siteNameLower || wSite == siteIdLower && wSite.isNotEmpty;
       final assignmentMatch = assignments.any((a) {
@@ -118,9 +118,9 @@ class AdminSiteMembersBlocBuilderWidget extends StatelessWidget {
 
     final filteredWorkers = siteWorkers.where((w) {
       if (query.isEmpty) return true;
-      final name = w.fullName.toLowerCase();
-      final code = w.workerCode.toLowerCase();
-      final title = w.jobTitle.toLowerCase();
+      final name = w.displayName.toLowerCase();
+      final code = w.displayCode.toLowerCase();
+      final title = w.displayJob.toLowerCase();
       final contractor = (w.contractorName ?? '').toLowerCase();
       return name.contains(query) ||
           code.contains(query) ||

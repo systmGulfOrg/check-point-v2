@@ -2,8 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/contractor/data/models/contractor_company_model.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_state.dart';
 import '../widgets/admin_add_contractor_sheet_widget.dart';
@@ -48,11 +50,11 @@ class _AdminContractorsScreenState extends State<AdminContractorsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text(
-          'admin.contractors.title'.tr(),
-          style: AppTextStyles.font16Bold.copyWith(
+          'admin.contractors.title'.tr(context: context),
+          style: AppTextStyles.font18Bold.copyWith(
             color: AppColors.textPrimary,
           ),
         ),
@@ -65,69 +67,149 @@ class _AdminContractorsScreenState extends State<AdminContractorsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _openAddSheet,
-        backgroundColor: AppColors.brandPrimary,
-        icon: const Icon(Icons.add_rounded, color: AppColors.white),
-        label: Text(
-          'admin.contractors.addContractor'.tr(),
-          style: AppTextStyles.font14Medium.copyWith(color: AppColors.white),
-        ),
-      ),
-      body: Column(
-        children: [
-          Container(
-            color: AppColors.white,
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-            child: CustomTextFormField(
-              hintText: 'admin.contractors.search'.tr(),
-              controller: _searchController,
-              prefixIcon: const Icon(
-                Icons.search_rounded,
-                color: AppColors.textSecondary,
-              ),
-              onChanged: (val) => setState(() => _searchQuery = val.trim().toLowerCase()),
-            ),
-          ),
-          Expanded(
-            child: BlocBuilder<ContractorCubit, ContractorState>(
-              builder: (context, state) {
-                final contractors = state.mapOrNull(
-                      success: (s) => s.contractors,
-                    ) ??
-                    const [];
-
-                final filtered = contractors.where((c) {
-                  if (_searchQuery.isEmpty) return true;
-                  final matchName = c.name.toLowerCase().contains(_searchQuery);
-                  final matchCode = c.code.toLowerCase().contains(_searchQuery);
-                  return matchName || matchCode;
-                }).toList();
-
-                if (filtered.isEmpty) {
-                  return Center(
-                    child: Text(
-                      'no_data'.tr(),
-                      style: AppTextStyles.font14Regular.copyWith(
-                        color: AppColors.textSecondary,
+      body: SafeArea(
+        child: RefreshIndicator(
+          color: AppColors.brandPrimary,
+          onRefresh: () => context.read<ContractorCubit>().loadDashboardData(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomTextFormField(
+                  hintText: 'admin.contractors.search'.tr(context: context),
+                  controller: _searchController,
+                  prefixIcon: const Icon(
+                    Icons.search_rounded,
+                    color: AppColors.textSecondary,
+                  ),
+                  onChanged: (val) =>
+                      setState(() => _searchQuery = val.trim().toLowerCase()),
+                ),
+                hSpace(14),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'admin.contractors.title'.tr(context: context),
+                      style: AppTextStyles.font14SemiBold.copyWith(
+                        color: AppColors.textPrimary,
                       ),
                     ),
-                  );
-                }
+                    InkWell(
+                      onTap: _openAddSheet,
+                      borderRadius: BorderRadius.circular(8.r),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 6.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.softBrandBackground,
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.add,
+                              size: 16.r,
+                              color: AppColors.brandPrimary,
+                            ),
+                            wSpace(4),
+                            Text(
+                              'admin.contractors.addContractor'.tr(
+                                context: context,
+                              ),
+                              style: AppTextStyles.font12SemiBold.copyWith(
+                                color: AppColors.brandPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                hSpace(12),
+                BlocBuilder<ContractorCubit, ContractorState>(
+                  builder: (context, state) {
+                    final isLoading = state.maybeMap(
+                      loading: (_) => true,
+                      initial: (_) => true,
+                      orElse: () => false,
+                    );
 
-                return ListView.separated(
-                  padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 80.h),
-                  itemCount: filtered.length,
-                  separatorBuilder: (context, index) => hSpace(12),
-                  itemBuilder: (context, index) {
-                    final item = filtered[index];
-                    return AdminContractorCardWidget(contractor: item);
+                    if (isLoading) {
+                      return Skeletonizer(
+                        enabled: true,
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: 4,
+                          separatorBuilder: (_, _) => hSpace(12),
+                          itemBuilder: (_, index) =>
+                              const AdminContractorCardWidget(
+                            contractor: ContractorCompanyModel(
+                              id: 'skeleton-id',
+                              name: 'Loading Company Name...',
+                              code: 'CTR-LOADING',
+                              contactPhone: '01000000000',
+                              contactEmail: 'info@contractor.com',
+                              status: 'active',
+                              workerCount: 0,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    final contractors = state.mapOrNull(
+                          success: (s) => s.contractors,
+                        ) ??
+                        const [];
+
+                    final filtered = contractors.where((c) {
+                      if (_searchQuery.isEmpty) return true;
+                      final matchName = c.name.toLowerCase().contains(
+                            _searchQuery,
+                          );
+                      final matchCode = c.code.toLowerCase().contains(
+                            _searchQuery,
+                          );
+                      return matchName || matchCode;
+                    }).toList();
+
+                    if (filtered.isEmpty) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 40.h),
+                        child: Center(
+                          child: Text(
+                            'no_data'.tr(context: context),
+                            style: AppTextStyles.font14Regular.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: filtered.length,
+                      separatorBuilder: (context, index) => hSpace(12),
+                      itemBuilder: (context, index) {
+                        final item = filtered[index];
+                        return AdminContractorCardWidget(contractor: item);
+                      },
+                    );
                   },
-                );
-              },
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

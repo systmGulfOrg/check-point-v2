@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
@@ -20,8 +21,8 @@ class AdminLocationsAddButtonWidget extends StatelessWidget {
         context: context,
         isScrollControlled: true,
         backgroundColor: AppColors.cardBackground,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
         ),
         builder: (_) => MultiBlocProvider(
           providers: [
@@ -31,10 +32,29 @@ class AdminLocationsAddButtonWidget extends StatelessWidget {
           child: AdminCreateLocationSheetWidget(category: category),
         ),
       ),
-      child: Text(
-        'admin.locations.add'.tr(context: context),
-        style: AppTextStyles.font13SemiBold.copyWith(
-          color: AppColors.brandPrimary,
+      borderRadius: BorderRadius.circular(8.r),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+        decoration: BoxDecoration(
+          color: AppColors.softBrandBackground,
+          borderRadius: BorderRadius.circular(8.r),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.add,
+              size: 16.r,
+              color: AppColors.brandPrimary,
+            ),
+            wSpace(4),
+            Text(
+              'admin.locations.add'.tr(context: context).replaceAll('+ ', '').replaceAll('+', '').trim(),
+              style: AppTextStyles.font12SemiBold.copyWith(
+                color: AppColors.brandPrimary,
+              ),
+            ),
+          ],
         ),
       ),
     );

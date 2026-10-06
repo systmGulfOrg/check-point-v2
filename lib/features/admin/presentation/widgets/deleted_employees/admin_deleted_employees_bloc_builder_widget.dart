@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/deleted_employees/admin_deleted_employees_cubit.dart';
@@ -65,8 +66,24 @@ class AdminDeletedEmployeesBlocBuilderWidget extends StatelessWidget {
       BlocBuilder<AdminDeletedEmployeesCubit, AdminDeletedEmployeesState>(
         builder: (context, state) => switch (state) {
           AdminDeletedEmployeesStateInitial() => const SizedBox.shrink(),
-          AdminDeletedEmployeesStateLoading() =>
-            const Center(child: CircularProgressIndicator()),
+          AdminDeletedEmployeesStateLoading() => Skeletonizer(
+              enabled: true,
+              child: ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 4,
+                separatorBuilder: (_, _) => hSpace(10),
+                itemBuilder: (_, _) => AdminDeletedEmployeeCardWidget(
+                  employee: const EmployeeModel(
+                    id: '1',
+                    name: 'Employee Name Placeholder',
+                    email: 'employee@placeholder.com',
+                  ),
+                  onRestore: () {},
+                  onPermanentDelete: () {},
+                ),
+              ),
+            ),
           AdminDeletedEmployeesStateError(:final messageKey) =>
             context.read<AdminDeletedEmployeesCubit>().deletedEmployees.isNotEmpty
                 ? _buildList(
