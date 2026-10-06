@@ -124,12 +124,22 @@ import 'package:check_point_v2/core/services/google_places_service.dart';
 import 'package:check_point_v2/core/services/location_service.dart';
 import 'package:check_point_v2/core/services/national_id_ocr.dart';
 import 'package:check_point_v2/features/identity/presentation/cubit/national_id_ocr_cubit.dart';
+import 'package:check_point_v2/core/services/secure_file_upload_service.dart';
+import 'package:check_point_v2/features/ai_assistant/data/apis/ai_assistant_api_service.dart';
+import 'package:check_point_v2/features/ai_assistant/data/repos/ai_assistant_repo.dart';
+import 'package:check_point_v2/features/ai_assistant/data/repos/ai_assistant_repo_impl.dart';
+import 'package:check_point_v2/features/ai_assistant/presentation/cubit/ai_chat_cubit.dart';
 import 'package:image_picker/image_picker.dart';
 
 final sl = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<FlutterSecureStorage>(FlutterSecureStorage.new);
+  sl.registerLazySingleton<DeviceIdentityProvider>(
+    () => DeviceIdentityProvider(secureStorage: sl<FlutterSecureStorage>()),
+  );
+  await sl<DeviceIdentityProvider>().initialize();
+
   sl.registerLazySingleton<TenantStorage>(
     () => TenantStorage(secureStorage: sl<FlutterSecureStorage>()),
   );
@@ -137,6 +147,7 @@ Future<void> setupServiceLocator() async {
     () => DioFactory.create(
       secureStorage: sl<FlutterSecureStorage>(),
       tenantStorage: sl<TenantStorage>(),
+      deviceIdentityProvider: sl<DeviceIdentityProvider>(),
     ),
   );
   sl.registerLazySingleton<AuthSessionStorage>(
@@ -145,10 +156,6 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<BiometricAuthService>(
     () => BiometricAuthService(localAuthentication: LocalAuthentication()),
   );
-  sl.registerLazySingleton<DeviceIdentityProvider>(
-    () => DeviceIdentityProvider(secureStorage: sl<FlutterSecureStorage>()),
-  );
-  await sl<DeviceIdentityProvider>().initialize();
 
   // Services
   // External services must never receive the app's bearer token or log keys.
@@ -313,6 +320,8 @@ Future<void> setupServiceLocator() async {
       deviceIdentityProvider: sl<DeviceIdentityProvider>(),
       authSessionStorage: sl<AuthSessionStorage>(),
       biometricAuthService: sl<BiometricAuthService>(),
+      tenantStorage: sl<TenantStorage>(),
+      locationService: sl<LocationService>(),
     ),
   );
   sl.registerLazySingleton<EmployeeCheckInUseCase>(
@@ -363,6 +372,7 @@ Future<void> setupServiceLocator() async {
       authRepo: sl<AuthRepo>(),
       deviceIdentityProvider: sl<DeviceIdentityProvider>(),
       authSessionStorage: sl<AuthSessionStorage>(),
+      tenantStorage: sl<TenantStorage>(),
     ),
   );
   sl.registerFactory<RequestAccountStatusCubit>(
@@ -536,5 +546,19 @@ Future<void> setupServiceLocator() async {
       offlineSyncService: sl<OfflineAttendanceSyncService>(),
       locationService: sl<LocationService>(),
     ),
+  );
+
+  // Storage & AI Assistant Registrations
+  sl.registerLazySingleton<SecureFileUploadService>(
+    () => SecureFileUploadService(dio: sl<Dio>()),
+  );
+  sl.registerLazySingleton<AiAssistantApiService>(
+    () => AiAssistantApiService(sl<Dio>()),
+  );
+  sl.registerLazySingleton<AiAssistantRepo>(
+    () => AiAssistantRepoImpl(api: sl<AiAssistantApiService>()),
+  );
+  sl.registerFactory<AiChatCubit>(
+    () => AiChatCubit(aiRepo: sl<AiAssistantRepo>()),
   );
 }

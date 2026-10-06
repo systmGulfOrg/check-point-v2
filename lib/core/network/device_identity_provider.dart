@@ -24,6 +24,21 @@ class DeviceIdentityProvider {
     _storedMobileId = generatedMobileId;
   }
 
+  Future<String> getOrGenerateMobileId() async {
+    if (_storedMobileId != null && _storedMobileId!.isNotEmpty) {
+      return _storedMobileId!;
+    }
+    final storedMobileId = await secureStorage.read(key: _mobileIdKey);
+    if (storedMobileId != null && storedMobileId.isNotEmpty) {
+      _storedMobileId = storedMobileId;
+      return storedMobileId;
+    }
+    final generatedMobileId = _generateUuidV4();
+    await secureStorage.write(key: _mobileIdKey, value: generatedMobileId);
+    _storedMobileId = generatedMobileId;
+    return generatedMobileId;
+  }
+
   String get mobileId {
     final mobileId = _storedMobileId;
     if (mobileId == null) {

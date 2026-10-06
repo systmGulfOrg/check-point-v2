@@ -15,7 +15,7 @@ class AppColors {
     colors: [brandGradientStart, brandGradientEnd],
   );
 
-  static const Color pageBackground = Color(0xFFF7F2EB);
+  static const Color pageBackground = Color(0xFFFFFFFF);
   static const Color cardBackground = Color(0xFFFFFFFF);
   static const Color fieldBackground = Color(0xFFFFFFFF);
   static const Color softBrandBackground = Color(0xFFFFF1E3);
@@ -58,7 +58,7 @@ class AppColors {
   static const Color softRedBackground = Color(0xFFFEE2E2);
   static const Color softPurpleBackground = Color(0xFFF3E8FF);
   static const Color purple = Color(0xFF7E22CE);
-  static const Color authShellGradientStart = Color(0xFFFFF7F0);
+  static const Color authShellGradientStart = Color(0xFFFFFFFF);
 
   // Employee dark theme badges & tiles
   static const Color darkStatusGreenBg = Color(0xFF0B2E25);

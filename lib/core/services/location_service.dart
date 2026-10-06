@@ -45,6 +45,22 @@ class LocationService {
     }
   }
 
+  Future<Position?> getCurrentPositionDetails() async {
+    try {
+      final hasPermission = await handleLocationPermission();
+      if (!hasPermission) return null;
+
+      return await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 10),
+        ),
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<String?> getAddressFromCoordinates(
     double latitude,
     double longitude, {

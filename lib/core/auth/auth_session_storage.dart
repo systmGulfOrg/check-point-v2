@@ -7,6 +7,7 @@ class AuthSessionStorage {
   AuthSessionStorage({required this.secureStorage});
 
   static String get tokenKey => AppConfig.authTokenKey;
+  static const refreshTokenKey = 'refresh_token';
   static const userIdKey = 'user_id';
   static const employeeIdKey = 'employee_id';
   static const departmentIdKey = 'department_id';
@@ -38,6 +39,7 @@ class AuthSessionStorage {
 
   Future<void> saveUserSession({
     required String token,
+    String? refreshToken,
     String? userId,
     String? employeeId,
     int? departmentId,
@@ -47,6 +49,9 @@ class AuthSessionStorage {
     List<String> permissions = const [],
   }) async {
     await secureStorage.write(key: tokenKey, value: token);
+    if (refreshToken != null && refreshToken.isNotEmpty) {
+      await secureStorage.write(key: refreshTokenKey, value: refreshToken);
+    }
     final payload = decodeJwtPayload(token);
     final resolvedEmployeeId = employeeId ??
         payload?['employeeId'] as String? ??
@@ -78,7 +83,12 @@ class AuthSessionStorage {
     );
   }
 
+  Future<void> saveRefreshToken(String token) =>
+      secureStorage.write(key: refreshTokenKey, value: token);
+
   Future<String?> readToken() => secureStorage.read(key: tokenKey);
+
+  Future<String?> readRefreshToken() => secureStorage.read(key: refreshTokenKey);
 
   Future<String?> readUserId() => secureStorage.read(key: userIdKey);
 
@@ -198,6 +208,7 @@ class AuthSessionStorage {
 
   Future<void> clear() async {
     await secureStorage.delete(key: tokenKey);
+    await secureStorage.delete(key: refreshTokenKey);
     await secureStorage.delete(key: userIdKey);
     await secureStorage.delete(key: departmentIdKey);
     await secureStorage.delete(key: branchIdKey);

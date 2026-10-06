@@ -9,11 +9,15 @@ class AttendanceVerificationResult {
   const AttendanceVerificationResult({
     required this.isAllowed,
     this.location,
+    this.position,
+    this.accuracyM,
     this.messageKey,
   });
 
   final bool isAllowed;
   final LatLng? location;
+  final dynamic position;
+  final double? accuracyM;
   final String? messageKey;
 }
 
@@ -31,14 +35,32 @@ class AttendanceVerificationService {
     LatLng? center,
     double radiusMeters = 150,
     List<LatLng> polygon = const [],
+    double maxAccuracyMeters = 50.0,
   }) async {
-    final location = await locationService.getCurrentPosition();
-    if (location == null) {
+    final pos = await locationService.getCurrentPositionDetails();
+    if (pos == null) {
       return const AttendanceVerificationResult(
         isAllowed: false,
         messageKey: 'errors.locationUnavailable',
       );
     }
+
+    if (pos.isMocked) {
+      return const AttendanceVerificationResult(
+        isAllowed: false,
+        messageKey: 'errors.fakeGpsDetected',
+      );
+    }
+
+    if (pos.accuracy > maxAccuracyMeters) {
+      return AttendanceVerificationResult(
+        isAllowed: false,
+        accuracyM: pos.accuracy,
+        messageKey: 'errors.gpsAccuracyTooLow',
+      );
+    }
+
+    final location = LatLng(pos.latitude, pos.longitude);
 
     if (!isWithinArea(
       point: location,
@@ -66,7 +88,12 @@ class AttendanceVerificationService {
       }
     }
 
-    return AttendanceVerificationResult(isAllowed: true, location: location);
+    return AttendanceVerificationResult(
+      isAllowed: true,
+      location: location,
+      position: pos,
+      accuracyM: pos.accuracy,
+    );
   }
 
   bool isWithinArea({

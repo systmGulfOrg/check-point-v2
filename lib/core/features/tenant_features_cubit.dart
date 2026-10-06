@@ -14,7 +14,12 @@ class TenantFeaturesCubit extends Cubit<TenantFeaturesState> {
     _ => const [],
   };
 
-  bool isEnabled(String featureKey) => enabledFeatures.contains(featureKey);
+  bool isEnabled(String featureKey) {
+    if (enabledFeatures.isEmpty) {
+      return true;
+    }
+    return enabledFeatures.contains(featureKey);
+  }
 
   Future<void> loadFeatures() async {
     emit(const TenantFeaturesState.loading());

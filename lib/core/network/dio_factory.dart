@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'package:check_point_v2/core/app/app_config.dart';
+import 'package:check_point_v2/core/network/device_identity_provider.dart';
 import 'package:check_point_v2/core/tenant/tenant_storage.dart';
 import 'auth_token_interceptor.dart';
 import 'retry_interceptor.dart';
@@ -14,6 +15,7 @@ class DioFactory {
   static Dio create({
     required FlutterSecureStorage secureStorage,
     TenantStorage? tenantStorage,
+    DeviceIdentityProvider? deviceIdentityProvider,
   }) {
     final dio = Dio(
       BaseOptions(
@@ -21,6 +23,10 @@ class DioFactory {
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         sendTimeout: const Duration(seconds: 30),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
       ),
     );
 
@@ -29,6 +35,7 @@ class DioFactory {
         AuthTokenInterceptor(
           secureStorage: secureStorage,
           tenantStorage: tenantStorage,
+          deviceIdentityProvider: deviceIdentityProvider,
         ),
       )
       ..interceptors.add(

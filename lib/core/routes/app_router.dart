@@ -759,8 +759,15 @@ class AppRouter {
       case AppRoutes.contractorAddWorker:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.contractorAddWorker),
-          child: BlocProvider<NationalIdOcrCubit>(
-            create: (_) => sl<NationalIdOcrCubit>(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<ContractorCubit>(
+                create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+              ),
+              BlocProvider<NationalIdOcrCubit>(
+                create: (_) => sl<NationalIdOcrCubit>(),
+              ),
+            ],
             child: const ContractorAddWorkerScreen(),
           ),
         );
