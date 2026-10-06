@@ -47,4 +47,5 @@ AccountRequestModel _$AccountRequestModelFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['createdDate'] as String),
       createdEmployeeId: json['createdEmployeeId'] as String?,
+      photoPath: json['photoPath'] as String?,
     );
