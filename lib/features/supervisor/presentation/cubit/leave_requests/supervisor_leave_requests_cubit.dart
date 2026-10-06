@@ -21,6 +21,9 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
   String? statusFilter;
   String userRole = 'Employee';
   String currentUserId = '';
+  String currentEmployeeId = '';
+  String currentUserName = '';
+  Set<String> currentTargetIds = {};
 
   int get pendingCount => allRequests
       .where((request) => request.status?.toLowerCase() == 'pending')
@@ -29,6 +32,34 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
   Future<void> initRole() async {
     userRole = await sessionStorage.readUserRole() ?? 'Employee';
     currentUserId = await sessionStorage.readUserId() ?? '';
+    currentEmployeeId = await sessionStorage.readEmployeeId() ?? '';
+    currentUserName = await sessionStorage.readUserName() ?? '';
+    final token = await sessionStorage.readToken();
+    final tokenPayload =
+        token != null ? AuthSessionStorage.decodeJwtPayload(token) : null;
+    final tokenEmpId = tokenPayload?['employeeId'] as String? ??
+        tokenPayload?['EmployeeId'] as String?;
+
+    currentTargetIds = {
+      if (currentEmployeeId.isNotEmpty) currentEmployeeId,
+      if (tokenEmpId != null && tokenEmpId.isNotEmpty) tokenEmpId,
+      if (currentUserId.isNotEmpty) currentUserId,
+    };
+  }
+
+  bool isOwnRequest(AdminLeaveRequestModel request) {
+    if (request.employeeId != null &&
+        request.employeeId!.isNotEmpty &&
+        currentTargetIds.contains(request.employeeId)) {
+      return true;
+    }
+    if (currentUserName.isNotEmpty &&
+        request.employeeName != null &&
+        request.employeeName!.trim().toLowerCase() ==
+            currentUserName.trim().toLowerCase()) {
+      return true;
+    }
+    return false;
   }
 
   Future<List<LeaveTypeModel>> loadLeaveTypes() async {
@@ -51,7 +82,9 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
     String? attachmentUrl,
   }) async {
     emit(const SupervisorLeaveRequestsState.loading());
-    final employeeId = await sessionStorage.readUserId() ?? '';
+    final employeeId = await sessionStorage.readEmployeeId() ??
+        await sessionStorage.readUserId() ??
+        '';
     final result = await leaveRequestsRepo.createLeaveRequest(
       EmployeeLeaveRequestBody(
         employeeId: employeeId,
@@ -77,17 +110,14 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
 
   Future<void> loadRequests({int? departmentId, String? type}) async {
     emit(const SupervisorLeaveRequestsState.loading());
-    if (userRole == 'Employee' || currentUserId.isEmpty) {
-      await initRole();
-    }
+    await initRole();
     final result = await leaveRequestsRepo.getLeaveRequests(
       departmentId: departmentId,
       type: type,
     );
     switch (result) {
       case Success(:final data):
-        // Hide supervisor's own requests
-        allRequests = data.where((r) => r.employeeId != currentUserId).toList();
+        allRequests = data;
         emit(
           SupervisorLeaveRequestsState.success(
             requests: _filteredRequests,

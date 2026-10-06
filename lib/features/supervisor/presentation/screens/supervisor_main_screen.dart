@@ -5,10 +5,9 @@ import 'package:check_point_v2/core/styles/app_motion.dart';
 import 'supervisor_attendance_screen.dart';
 import 'supervisor_home_screen.dart';
 import 'supervisor_profile_screen.dart';
-import 'supervisor_team_screen.dart';
-import 'package:check_point_v2/features/employee/presentation/screens/employee_clock_screen.dart';
+import 'supervisor_site_contractors_screen.dart';
+import 'supervisor_site_map_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_more_options_sheet_widget.dart';
-import 'package:check_point_v2/features/projects/presentation/screens/projects_screen.dart';
 
 class SupervisorMainScreen extends StatefulWidget {
   const SupervisorMainScreen({super.key});
@@ -24,17 +23,16 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
   static const _items = <NavBarItemData>[
     NavBarItemData(icon: Icons.home_outlined, labelKey: 'supervisor.nav.home'),
     NavBarItemData(
-      icon: Icons.person_pin_circle_outlined,
-      labelKey: 'supervisor.nav.myAttendance',
+      icon: Icons.engineering_outlined,
+      labelKey: 'supervisor.nav.contractors',
     ),
-    NavBarItemData(icon: Icons.group_outlined, labelKey: 'supervisor.nav.team'),
+    NavBarItemData(
+      icon: Icons.map_outlined,
+      labelKey: 'supervisor.nav.siteMap',
+    ),
     NavBarItemData(
       icon: Icons.access_time_rounded,
       labelKey: 'supervisor.nav.attendance',
-    ),
-    NavBarItemData(
-      icon: Icons.assignment_outlined,
-      labelKey: 'supervisor.nav.tasks',
     ),
     NavBarItemData(
       icon: Icons.grid_view_rounded,
@@ -44,10 +42,9 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
 
   static const _screens = <Widget>[
     SupervisorHomeScreen(),
-    EmployeeClockScreen(),
-    SupervisorTeamScreen(),
+    SupervisorSiteContractorsScreen(),
+    SupervisorSiteMapScreen(),
     SupervisorAttendanceScreen(),
-    ProjectsScreen(),
     SupervisorProfileScreen(),
   ];
 
@@ -79,7 +76,7 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
         items: _items,
         selectedIndex: _selectedNavIndex,
         onTabSelected: (index) {
-          if (index == 5) {
+          if (index == 4) {
             setState(() => _selectedNavIndex = index);
             showModalBottomSheet<void>(
               context: context,
@@ -102,10 +99,18 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
                   context,
                   AppRoutes.supervisorCorrections,
                 ),
-                onProfileTap: () {
+                onMyAttendanceTap: () {
+                  Navigator.pop(context);
                   setState(() {
-                    _selectedIndex = 5;
-                    _selectedNavIndex = 5;
+                    _selectedIndex = 3;
+                    _selectedNavIndex = 3;
+                  });
+                },
+                onProfileTap: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    _selectedIndex = 4;
+                    _selectedNavIndex = 4;
                   });
                 },
                 onRemoteWorkTap: () =>

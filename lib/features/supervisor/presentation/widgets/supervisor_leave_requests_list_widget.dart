@@ -11,12 +11,14 @@ class SupervisorLeaveRequestsListWidget extends StatelessWidget {
     required this.requests,
     super.key,
     this.userRole = 'Employee',
+    this.isOwnRequest,
     this.onApprove,
     this.onReject,
   });
 
   final List<AdminLeaveRequestModel> requests;
   final String userRole;
+  final bool Function(AdminLeaveRequestModel request)? isOwnRequest;
   final ValueChanged<AdminLeaveRequestModel>? onApprove;
   final ValueChanged<AdminLeaveRequestModel>? onReject;
 
@@ -43,11 +45,13 @@ class SupervisorLeaveRequestsListWidget extends StatelessWidget {
       separatorBuilder: (_, _) => hSpace(10),
       itemBuilder: (context, index) {
         final request = requests[index];
+        final isOwn = isOwnRequest?.call(request) ?? false;
         return AnimatedListItemWidget(
           index: index,
           child: SupervisorLeaveRequestCardWidget(
             request: request,
             userRole: userRole,
+            isOwnRequest: isOwn,
             onApprove: onApprove != null ? () => onApprove!(request) : null,
             onReject: onReject != null ? () => onReject!(request) : null,
           ),

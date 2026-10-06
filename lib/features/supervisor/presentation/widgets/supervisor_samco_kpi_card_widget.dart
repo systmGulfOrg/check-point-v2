@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
-import 'package:check_point_v2/core/styles/app_colors.dart';
-import 'package:check_point_v2/core/styles/app_text_styles.dart';
-import 'package:check_point_v2/core/app/app_spaces.dart';
+import 'package:check_point_v2/core/core.dart';
 
 class SupervisorSamcoKpiCardWidget extends StatelessWidget {
   const SupervisorSamcoKpiCardWidget({
@@ -22,20 +20,20 @@ class SupervisorSamcoKpiCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16.r),
+    return AppInteractiveScaleWidget(
+      onTap: onTap,
+      scaleDown: 0.94,
+      child: Material(
+        color: Colors.transparent,
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
           decoration: BoxDecoration(
             color: AppColors.cardBackground,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+            border: Border.all(color: AppColors.border.withValues(alpha: 0.65)),
             boxShadow: [
               BoxShadow(
-                color: AppColors.shadow.withValues(alpha: 0.03),
+                color: AppColors.shadow.withValues(alpha: 0.04),
                 blurRadius: 8.r,
                 offset: const Offset(0, 3),
               ),
@@ -49,29 +47,35 @@ class SupervisorSamcoKpiCardWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(7.r),
+                    padding: EdgeInsets.all(6.r),
                     decoration: BoxDecoration(
                       color: color.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(8.r),
                     ),
-                    child: Icon(icon, color: color, size: 18.r),
+                    child: Icon(icon, color: color, size: 17.r),
                   ),
                   Text(
                     value,
-                    style: AppTextStyles.font18Bold.copyWith(
+                    style: AppTextStyles.font16Bold.copyWith(
                       color: AppColors.textPrimary,
                     ),
                   ),
                 ],
               ),
               hSpace(8),
-              Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.font11Medium.copyWith(
-                  color: AppColors.textSecondary,
-                  fontWeight: FontWeight.w600,
+              SizedBox(
+                width: double.infinity,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    style: AppTextStyles.font11Medium.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
             ],

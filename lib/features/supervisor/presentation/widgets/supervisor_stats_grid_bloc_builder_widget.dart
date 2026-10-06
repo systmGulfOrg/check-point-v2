@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_stats_grid_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_state.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_state.dart';
-import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
-import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_state.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_state.dart';
 
@@ -54,34 +53,17 @@ class SupervisorStatsGridBlocBuilderWidget extends StatelessWidget {
                   _ => (0, false),
                 };
 
-                return BlocBuilder<SupervisorTasksCubit, SupervisorTasksState>(
-                  builder: (context, taskState) {
-                    final (openTasks, isTasksLoading) = switch (taskState) {
-                      SupervisorTasksLoading() => (0, true),
-                      SupervisorTasksSuccess(:final tasks) => (
-                        tasks
-                            .where(
-                              (t) =>
-                                  t.status?.toLowerCase() != 'completed' &&
-                                  t.status?.toLowerCase() != 'done',
-                            )
-                            .length,
-                        false,
-                      ),
-                      _ => (0, false),
-                    };
-
-                    return AdminStatsGridWidget(
-                      totalStaff: totalStaff,
-                      presentToday: presentToday,
-                      pendingLeaves: pendingLeaves,
-                      openTasks: openTasks,
-                      isStaffLoading: isStaffLoading,
-                      isAttendanceLoading: isAttendanceLoading,
-                      isLeaveLoading: isLeaveLoading,
-                      isTasksLoading: isTasksLoading,
-                    );
-                  },
+                return AdminStatsGridWidget(
+                  totalStaff: totalStaff,
+                  presentToday: presentToday,
+                  pendingLeaves: pendingLeaves,
+                  isStaffLoading: isStaffLoading,
+                  isAttendanceLoading: isAttendanceLoading,
+                  isLeaveLoading: isLeaveLoading,
+                  onTapLocations: () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.supervisorSiteMap,
+                  ),
                 );
               },
             );

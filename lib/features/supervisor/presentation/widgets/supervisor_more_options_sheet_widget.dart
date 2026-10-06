@@ -13,6 +13,7 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
     required this.onCorrectionsTap,
     required this.onProfileTap,
     required this.onRemoteWorkTap,
+    required this.onMyAttendanceTap,
     super.key,
   });
 
@@ -22,6 +23,7 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
   final VoidCallback onCorrectionsTap;
   final VoidCallback onProfileTap;
   final VoidCallback onRemoteWorkTap;
+  final VoidCallback onMyAttendanceTap;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,16 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
               crossAxisSpacing: 12.w,
               childAspectRatio: 1.2,
               children: [
+                SupervisorMoreOptionWidget(
+                  icon: Icons.fingerprint_rounded,
+                  labelKey: 'supervisor.nav.myAttendance',
+                  backgroundColor: AppColors.softBrandBackground,
+                  iconColor: AppColors.brandPrimary,
+                  onTap: () {
+                    Navigator.pop(context);
+                    onMyAttendanceTap();
+                  },
+                ),
                 SupervisorMoreOptionWidget(
                   icon: Icons.calendar_month_outlined,
                   labelKey: 'supervisor.more.leaves',

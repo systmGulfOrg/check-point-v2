@@ -11,12 +11,14 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
     required this.request,
     super.key,
     this.userRole = 'Employee',
+    this.isOwnRequest = false,
     this.onApprove,
     this.onReject,
   });
 
   final AdminLeaveRequestModel request;
   final String userRole;
+  final bool isOwnRequest;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
 
@@ -73,7 +75,8 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
       ),
     };
 
-    final bool canApprove = (isPending || isPendingHR) &&
+    final bool canApprove = !isOwnRequest &&
+        (isPending || isPendingHR) &&
         (userRole == 'Admin' || userRole == 'HR' || userRole == 'Supervisor');
     final String approveLabel = (isPendingHR || userRole == 'Admin')
         ? 'leaves.approval.approveAsHR'
@@ -192,23 +195,25 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
               ],
             ),
           ),
-          if (canApprove)
+          if (canApprove && (onApprove != null || onReject != null))
             Row(
               children: [
-                Expanded(
-                  child: SupervisorLeaveRequestActionWidget(
-                    labelKey: 'supervisor.leave.reject',
-                    color: AppColors.error,
-                    onTap: onReject,
+                if (onReject != null)
+                  Expanded(
+                    child: SupervisorLeaveRequestActionWidget(
+                      labelKey: 'supervisor.leave.reject',
+                      color: AppColors.error,
+                      onTap: onReject,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: SupervisorLeaveRequestActionWidget(
-                    labelKey: approveLabel,
-                    color: AppColors.success,
-                    onTap: onApprove,
+                if (onApprove != null)
+                  Expanded(
+                    child: SupervisorLeaveRequestActionWidget(
+                      labelKey: approveLabel,
+                      color: AppColors.success,
+                      onTap: onApprove,
+                    ),
                   ),
-                ),
               ],
             ),
         ],

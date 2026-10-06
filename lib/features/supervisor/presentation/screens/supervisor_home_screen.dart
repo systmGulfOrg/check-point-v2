@@ -7,11 +7,9 @@ import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holid
 import 'package:check_point_v2/features/leaves/presentation/widgets/upcoming_holiday_card_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/plans/supervisor_plans_cubit.dart';
-import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_top_bar_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_personal_dashboard_bloc_builder_widget.dart';
-import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_active_tasks_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_alert_banner_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_samco_site_card_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_stats_grid_bloc_builder_widget.dart';
@@ -28,7 +26,6 @@ class SupervisorHomeScreen extends StatelessWidget {
         onRefresh: () => Future.wait([
           context.read<SupervisorAttendanceCubit>().loadAttendance(),
           context.read<SupervisorPlansCubit>().loadPlans(),
-          context.read<SupervisorTasksCubit>().loadTasks(),
           context.read<SupervisorTeamCubit>().loadTeam(),
           context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
         ]),
@@ -38,19 +35,39 @@ class SupervisorHomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SupervisorTopBarWidget(),
+              const AnimatedListItemWidget(
+                index: 0,
+                child: SupervisorTopBarWidget(),
+              ),
               hSpace(16),
-              const SupervisorSamcoSiteCardWidget(),
-              const UpcomingHolidayCardBlocBuilderWidget(),
+              const AnimatedListItemWidget(
+                index: 1,
+                child: SupervisorPersonalDashboardBlocBuilderWidget(),
+              ),
               hSpace(16),
-              const SupervisorPersonalDashboardBlocBuilderWidget(),
-              const SupervisorAlertBannerBlocBuilderWidget(),
+              const AnimatedListItemWidget(
+                index: 2,
+                child: SupervisorSamcoSiteCardWidget(),
+              ),
+              const AnimatedListItemWidget(
+                index: 3,
+                child: UpcomingHolidayCardBlocBuilderWidget(),
+              ),
+              hSpace(16),
+              const AnimatedListItemWidget(
+                index: 4,
+                child: SupervisorAlertBannerBlocBuilderWidget(),
+              ),
               hSpace(20),
-              const SupervisorStatsGridBlocBuilderWidget(),
+              const AnimatedListItemWidget(
+                index: 5,
+                child: SupervisorStatsGridBlocBuilderWidget(),
+              ),
               hSpace(20),
-              const SupervisorTeamTodayBlocBuilderWidget(),
-              hSpace(20),
-              const SupervisorActiveTasksBlocBuilderWidget(),
+              const AnimatedListItemWidget(
+                index: 6,
+                child: SupervisorTeamTodayBlocBuilderWidget(),
+              ),
             ],
           ),
         ),
