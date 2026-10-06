@@ -42,8 +42,6 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
           onRefresh: () => switch (category) {
             AdminLocationCategory.branches =>
               context.read<AdminBranchesCubit>().load(),
-            AdminLocationCategory.sites =>
-              context.read<AdminCustomersCubit>().load(type: 'Site'),
             AdminLocationCategory.customers =>
               context.read<AdminCustomersCubit>().load(type: 'Customer'),
           },
@@ -57,10 +55,8 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
                   selectedIndex: selectedIndex,
                   onSelected: (index) {
                     setState(() => selectedIndex = index);
-                    if (index == 1 || index == 2) {
-                      context.read<AdminCustomersCubit>().load(
-                        type: index == 1 ? 'Site' : 'Customer',
-                      );
+                    if (index == 1) {
+                      context.read<AdminCustomersCubit>().load(type: 'Customer');
                     }
                   },
                 ),
@@ -79,8 +75,6 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
                 switch (category) {
                   AdminLocationCategory.branches =>
                     const AdminBranchesBlocBuilderWidget(),
-                  AdminLocationCategory.sites =>
-                    const AdminCustomersBlocBuilderWidget(type: 'site'),
                   AdminLocationCategory.customers =>
                     const AdminCustomersBlocBuilderWidget(type: 'customer'),
                 },

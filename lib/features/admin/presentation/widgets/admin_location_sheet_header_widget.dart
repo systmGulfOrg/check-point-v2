@@ -22,10 +22,6 @@ class AdminLocationSheetHeaderWidget extends StatelessWidget {
       isEdit
           ? 'admin.locations.create.editBranchTitle'
           : 'admin.locations.create.branchTitle',
-    AdminLocationCategory.sites =>
-      isEdit
-          ? 'admin.locations.create.editSiteTitle'
-          : 'admin.locations.create.siteTitle',
     AdminLocationCategory.customers =>
       isEdit
           ? 'admin.locations.create.editCustomerTitle'

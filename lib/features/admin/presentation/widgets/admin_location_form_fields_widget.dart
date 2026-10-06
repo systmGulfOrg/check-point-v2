@@ -20,9 +20,7 @@ class AdminLocationFormFieldsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSiteOrCustomer =
-        category == AdminLocationCategory.sites ||
-        category == AdminLocationCategory.customers;
+    final isCustomer = category == AdminLocationCategory.customers;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +60,7 @@ class AdminLocationFormFieldsWidget extends StatelessWidget {
         ),
         hSpace(16),
         Text(
-          isSiteOrCustomer
+          isCustomer
               ? 'admin.locations.create.workedAsLabel'.tr(context: context)
               : 'admin.locations.create.descriptionLabel'.tr(context: context),
           style: AppTextStyles.font12Medium,
@@ -70,7 +68,7 @@ class AdminLocationFormFieldsWidget extends StatelessWidget {
         hSpace(8),
         CustomTextFormField(
           controller: descriptionController,
-          hintText: isSiteOrCustomer
+          hintText: isCustomer
               ? 'admin.locations.create.workedAsHint'.tr(context: context)
               : 'admin.locations.create.descriptionHint'.tr(context: context),
           maxLines: 2,

@@ -122,30 +122,6 @@ class _AdminCreateLocationSheetWidgetState
           } else {
             saved = await context.read<AdminBranchesCubit>().add(request);
           }
-        case AdminLocationCategory.sites:
-          final coordinates = _points
-              .map(
-                (p) => CustomerCoordinateModel(
-                  latitude: p.latitude,
-                  longitude: p.longitude,
-                ),
-              )
-              .toList();
-          final request = CustomerRequestModel(
-            name: name,
-            location: address,
-            workesAs: description,
-            customerType: 'Site',
-            coordinates: coordinates,
-          );
-          if (widget.editCustomerId != null) {
-            saved = await context.read<AdminCustomersCubit>().edit(
-              widget.editCustomerId!,
-              request,
-            );
-          } else {
-            saved = await context.read<AdminCustomersCubit>().add(request);
-          }
         case AdminLocationCategory.customers:
           final coordinates = _points
               .map(

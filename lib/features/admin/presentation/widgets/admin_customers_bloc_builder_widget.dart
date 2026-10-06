@@ -41,9 +41,7 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
     String? currentWorkesAs,
     List<LatLng> initialPoints,
   ) {
-    final category = type == 'site'
-        ? AdminLocationCategory.sites
-        : AdminLocationCategory.customers;
+    const category = AdminLocationCategory.customers;
 
     showModalBottomSheet<void>(
       context: context,
