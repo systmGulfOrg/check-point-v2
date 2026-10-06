@@ -160,7 +160,7 @@
   "admin.employeeWizard.createAccount": "إنشاء الحساب",
   "admin.employeeWizard.createFailed": "تعذر إنشاء حساب الموظف.",
   "admin.employeeWizard.customerAttendance": "حضور العميل",
-  "admin.employeeWizard.defaultPasswordNote": "كلمة المرور الافتراضية (Def123!) ويمكن للموظف تغييرها لاحقاً",
+  "admin.employeeWizard.defaultPasswordNote": "كلمة المرور الافتراضية (Systm123!) ويمكن للموظف تغييرها لاحقاً",
   "admin.employeeWizard.department": "القسم",
   "admin.employeeWizard.departmentBranchRequired": "من فضلك اختر القسم والفرع.",
   "admin.employeeWizard.deselectAll": "إلغاء تحديد الكل",

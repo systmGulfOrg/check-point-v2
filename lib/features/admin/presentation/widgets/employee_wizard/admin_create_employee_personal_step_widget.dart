@@ -216,7 +216,7 @@ class _AdminCreateEmployeePersonalStepWidgetState
           ),
         ),
 
-        // Password with Default Def123! Note
+        // Password with Default Systm123! Note
         AdminWizardFieldWidget(
           label: 'admin.employeeWizard.password'.tr(context: context),
           child: Column(

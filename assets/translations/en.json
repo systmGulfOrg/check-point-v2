@@ -160,7 +160,7 @@
   "admin.employeeWizard.createAccount": "Create Account",
   "admin.employeeWizard.createFailed": "Failed to create employee.",
   "admin.employeeWizard.customerAttendance": "Customer Attendance",
-  "admin.employeeWizard.defaultPasswordNote": "Default password (Def123!), employee can change it later",
+  "admin.employeeWizard.defaultPasswordNote": "Default password (Systm123!), employee can change it later",
   "admin.employeeWizard.department": "Department",
   "admin.employeeWizard.departmentBranchRequired": "Please select department and branch.",
   "admin.employeeWizard.deselectAll": "Deselect All",

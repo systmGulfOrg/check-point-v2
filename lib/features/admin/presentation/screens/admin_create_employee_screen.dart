@@ -98,7 +98,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
           ? req!.name!.trim().toLowerCase().replaceAll(RegExp(r'\s+'), '.')
           : '',
     );
-    passwordController = TextEditingController(text: 'Def123!');
+    passwordController = TextEditingController(text: 'Systm123!');
     mobileController = TextEditingController(
       text: req?.mobileId ?? sl<DeviceIdentityProvider>().mobileId,
     );
