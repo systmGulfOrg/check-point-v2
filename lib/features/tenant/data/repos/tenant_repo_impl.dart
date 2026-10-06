@@ -24,9 +24,13 @@ class TenantRepoImpl implements TenantRepo {
     try {
       TenantLookupResponseModel response;
       try {
-        response = await api.lookupByPath(sanitizedCode);
+        response = await api.verifyTenant(sanitizedCode);
       } catch (_) {
-        response = await api.lookupByQuery(sanitizedCode);
+        try {
+          response = await api.lookupByPath(sanitizedCode);
+        } catch (_) {
+          response = await api.lookupByQuery(sanitizedCode);
+        }
       }
 
       if (response.value != null) {

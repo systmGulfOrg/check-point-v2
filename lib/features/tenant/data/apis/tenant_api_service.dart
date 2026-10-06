@@ -9,6 +9,11 @@ part 'tenant_api_service.g.dart';
 abstract class TenantApiService {
   factory TenantApiService(Dio dio, {String? baseUrl}) = _TenantApiService;
 
+  @GET('/api/v1/tenant/verify')
+  Future<TenantLookupResponseModel> verifyTenant(
+    @Query('tenantSlug') String tenantSlug,
+  );
+
   @GET('/api/Tenant/lookup/{companyCode}')
   Future<TenantLookupResponseModel> lookupByPath(
     @Path('companyCode') String companyCode,

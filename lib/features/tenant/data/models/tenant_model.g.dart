@@ -10,6 +10,8 @@ _$TenantModelImpl _$$TenantModelImplFromJson(Map<String, dynamic> json) =>
     _$TenantModelImpl(
       tenantId: json['tenantId'] as String?,
       tenantCode: json['tenantCode'] as String?,
+      slug: json['slug'] as String?,
+      name: json['name'] as String?,
       companyName: json['companyName'] as String?,
       logoUrl: json['logoUrl'] as String?,
       baseUrl: json['baseUrl'] as String?,
@@ -20,12 +22,15 @@ _$TenantModelImpl _$$TenantModelImplFromJson(Map<String, dynamic> json) =>
           ?.map((e) => e as String)
           .toList(),
       orgModel: json['orgModel'] as String?,
+      features: json['features'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$$TenantModelImplToJson(_$TenantModelImpl instance) =>
     <String, dynamic>{
       'tenantId': instance.tenantId,
       'tenantCode': instance.tenantCode,
+      'slug': instance.slug,
+      'name': instance.name,
       'companyName': instance.companyName,
       'logoUrl': instance.logoUrl,
       'baseUrl': instance.baseUrl,
@@ -34,6 +39,7 @@ Map<String, dynamic> _$$TenantModelImplToJson(_$TenantModelImpl instance) =>
       'description': instance.description,
       'roles': instance.roles,
       'orgModel': instance.orgModel,
+      'features': instance.features,
     };
 
 _$TenantLookupResponseModelImpl _$$TenantLookupResponseModelImplFromJson(

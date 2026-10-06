@@ -9,6 +9,8 @@ class TenantModel with _$TenantModel {
   const factory TenantModel({
     @JsonKey(name: 'tenantId') String? tenantId,
     @JsonKey(name: 'tenantCode') String? tenantCode,
+    @JsonKey(name: 'slug') String? slug,
+    @JsonKey(name: 'name') String? name,
     @JsonKey(name: 'companyName') String? companyName,
     @JsonKey(name: 'logoUrl') String? logoUrl,
     @JsonKey(name: 'baseUrl') String? baseUrl,
@@ -17,6 +19,7 @@ class TenantModel with _$TenantModel {
     @JsonKey(name: 'description') String? description,
     @JsonKey(name: 'roles') List<String>? roles,
     @JsonKey(name: 'orgModel') String? orgModel,
+    @JsonKey(name: 'features') Map<String, dynamic>? features,
   }) = _TenantModel;
 
   factory TenantModel.fromJson(Map<String, dynamic> json) =>

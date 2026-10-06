@@ -58,8 +58,8 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
           required remark,
           required leaveRequestType,
           attachmentUrl,
-        }) {
-          cubit.submitLeave(
+        }) async {
+          await cubit.submitLeave(
             LeaveRequestBody(
               leaveTypeId: leaveRequestType,
               startDate: DateTime.parse(startDate),
@@ -170,28 +170,6 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
           ),
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton.extended(
-            heroTag: 'employeePermissionBtn',
-            onPressed: () =>
-                Navigator.pushNamed(context, AppRoutes.permissionsRequest),
-            backgroundColor: AppColors.brandSecondary,
-            icon: const Icon(Icons.timer),
-            label: Text('leaves.dashboard.requestPermission'.tr()),
-          ),
-          hSpace(12),
-          FloatingActionButton.extended(
-            heroTag: 'employeeLeaveBtn',
-            onPressed: () => _showApplyLeaveSheet(context),
-            backgroundColor: AppColors.brandPrimary,
-            icon: const Icon(Icons.add),
-            label: Text('leaves.dashboard.requestLeave'.tr()),
-          ),
-        ],
-      ),
     );
   }
 
@@ -202,10 +180,101 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
   ) {
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 100.h),
+      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 32.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () => _showApplyLeaveSheet(context),
+                  borderRadius: BorderRadius.circular(10.r),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10.h,
+                      horizontal: 10.w,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.softBrandBackground,
+                      borderRadius: BorderRadius.circular(10.r),
+                      border: Border.all(
+                        color: AppColors.brandPrimary.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.add_rounded,
+                          size: 18.r,
+                          color: AppColors.brandPrimary,
+                        ),
+                        wSpace(4),
+                        Flexible(
+                          child: Text(
+                            'leaves.dashboard.requestLeave'.tr(
+                              context: context,
+                            ),
+                            style: AppTextStyles.font13SemiBold.copyWith(
+                              color: AppColors.brandPrimary,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              wSpace(10),
+              Expanded(
+                child: InkWell(
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.permissionsRequest,
+                  ),
+                  borderRadius: BorderRadius.circular(10.r),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10.h,
+                      horizontal: 10.w,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.softBlueBackground,
+                      borderRadius: BorderRadius.circular(10.r),
+                      border: Border.all(
+                        color: AppColors.info.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.timer_outlined,
+                          size: 18.r,
+                          color: AppColors.info,
+                        ),
+                        wSpace(4),
+                        Flexible(
+                          child: Text(
+                            'leaves.dashboard.requestPermission'.tr(
+                              context: context,
+                            ),
+                            style: AppTextStyles.font13SemiBold.copyWith(
+                              color: AppColors.info,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          hSpace(16),
           if (balances.isNotEmpty) ...[
             Text(
               'leaves.dashboard.balanceTitle'.tr(context: context),

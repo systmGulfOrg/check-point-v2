@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:check_point_v2/core/core.dart';
 import '../cubit/attendance_points_cubit.dart';
 import '../cubit/attendance_points_state.dart';
@@ -15,8 +16,56 @@ class AttendancePointsScreen extends StatelessWidget {
     appBar: AppBar(title: Text('attendancePoints.title'.tr(context: context))),
     body: BlocBuilder<AttendancePointsCubit, AttendancePointsState>(
       builder: (context, state) => switch (state) {
-        AttendancePointsInitial() || AttendancePointsLoading() => const Center(
-          child: CircularProgressIndicator(),
+        AttendancePointsInitial() || AttendancePointsLoading() => Skeletonizer(
+          enabled: true,
+          child: ListView(
+            padding: EdgeInsets.all(16.w),
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: AttendancePointsCardWidget(
+                      label: 'Green Points',
+                      value: 10,
+                      color: AppColors.success,
+                    ),
+                  ),
+                  wSpace(8),
+                  Expanded(
+                    child: AttendancePointsCardWidget(
+                      label: 'Red Points',
+                      value: 2,
+                      color: AppColors.error,
+                    ),
+                  ),
+                  wSpace(8),
+                  Expanded(
+                    child: AttendancePointsCardWidget(
+                      label: 'Black Points',
+                      value: 0,
+                      color: AppColors.brandInk,
+                    ),
+                  ),
+                ],
+              ),
+              hSpace(20),
+              Text(
+                'attendancePoints.history'.tr(context: context),
+                style: AppTextStyles.font16Bold,
+              ),
+              hSpace(8),
+              ...List.generate(
+                4,
+                (_) => const ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(),
+                  title: Text('Points Reason Placeholder Long'),
+                  subtitle: Text('GREEN • 2026-10-05'),
+                  trailing: Text('APPROVED'),
+                ),
+              ),
+            ],
+          ),
         ),
         AttendancePointsError(:final messageKey) => Center(
           child: Text(messageKey.tr(context: context)),

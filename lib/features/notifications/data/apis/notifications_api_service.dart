@@ -20,4 +20,7 @@ abstract class NotificationsApiService {
 
   @POST('/api/v2/notifications/read-all')
   Future<dynamic> markAllRead();
+
+  @POST('/api/v2/notifications/devices/register')
+  Future<dynamic> registerDeviceToken(@Body() Map<String, dynamic> body);
 }

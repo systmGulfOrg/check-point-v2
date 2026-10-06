@@ -25,6 +25,10 @@ mixin _$TenantModel {
   String? get tenantId => throw _privateConstructorUsedError;
   @JsonKey(name: 'tenantCode')
   String? get tenantCode => throw _privateConstructorUsedError;
+  @JsonKey(name: 'slug')
+  String? get slug => throw _privateConstructorUsedError;
+  @JsonKey(name: 'name')
+  String? get name => throw _privateConstructorUsedError;
   @JsonKey(name: 'companyName')
   String? get companyName => throw _privateConstructorUsedError;
   @JsonKey(name: 'logoUrl')
@@ -41,6 +45,8 @@ mixin _$TenantModel {
   List<String>? get roles => throw _privateConstructorUsedError;
   @JsonKey(name: 'orgModel')
   String? get orgModel => throw _privateConstructorUsedError;
+  @JsonKey(name: 'features')
+  Map<String, dynamic>? get features => throw _privateConstructorUsedError;
 
   /// Serializes this TenantModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -62,6 +68,8 @@ abstract class $TenantModelCopyWith<$Res> {
   $Res call({
     @JsonKey(name: 'tenantId') String? tenantId,
     @JsonKey(name: 'tenantCode') String? tenantCode,
+    @JsonKey(name: 'slug') String? slug,
+    @JsonKey(name: 'name') String? name,
     @JsonKey(name: 'companyName') String? companyName,
     @JsonKey(name: 'logoUrl') String? logoUrl,
     @JsonKey(name: 'baseUrl') String? baseUrl,
@@ -70,6 +78,7 @@ abstract class $TenantModelCopyWith<$Res> {
     @JsonKey(name: 'description') String? description,
     @JsonKey(name: 'roles') List<String>? roles,
     @JsonKey(name: 'orgModel') String? orgModel,
+    @JsonKey(name: 'features') Map<String, dynamic>? features,
   });
 }
 
@@ -90,6 +99,8 @@ class _$TenantModelCopyWithImpl<$Res, $Val extends TenantModel>
   $Res call({
     Object? tenantId = freezed,
     Object? tenantCode = freezed,
+    Object? slug = freezed,
+    Object? name = freezed,
     Object? companyName = freezed,
     Object? logoUrl = freezed,
     Object? baseUrl = freezed,
@@ -98,6 +109,7 @@ class _$TenantModelCopyWithImpl<$Res, $Val extends TenantModel>
     Object? description = freezed,
     Object? roles = freezed,
     Object? orgModel = freezed,
+    Object? features = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -108,6 +120,14 @@ class _$TenantModelCopyWithImpl<$Res, $Val extends TenantModel>
             tenantCode: freezed == tenantCode
                 ? _value.tenantCode
                 : tenantCode // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            slug: freezed == slug
+                ? _value.slug
+                : slug // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            name: freezed == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
                       as String?,
             companyName: freezed == companyName
                 ? _value.companyName
@@ -141,6 +161,10 @@ class _$TenantModelCopyWithImpl<$Res, $Val extends TenantModel>
                 ? _value.orgModel
                 : orgModel // ignore: cast_nullable_to_non_nullable
                       as String?,
+            features: freezed == features
+                ? _value.features
+                : features // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
           )
           as $Val,
     );
@@ -159,6 +183,8 @@ abstract class _$$TenantModelImplCopyWith<$Res>
   $Res call({
     @JsonKey(name: 'tenantId') String? tenantId,
     @JsonKey(name: 'tenantCode') String? tenantCode,
+    @JsonKey(name: 'slug') String? slug,
+    @JsonKey(name: 'name') String? name,
     @JsonKey(name: 'companyName') String? companyName,
     @JsonKey(name: 'logoUrl') String? logoUrl,
     @JsonKey(name: 'baseUrl') String? baseUrl,
@@ -167,6 +193,7 @@ abstract class _$$TenantModelImplCopyWith<$Res>
     @JsonKey(name: 'description') String? description,
     @JsonKey(name: 'roles') List<String>? roles,
     @JsonKey(name: 'orgModel') String? orgModel,
+    @JsonKey(name: 'features') Map<String, dynamic>? features,
   });
 }
 
@@ -186,6 +213,8 @@ class __$$TenantModelImplCopyWithImpl<$Res>
   $Res call({
     Object? tenantId = freezed,
     Object? tenantCode = freezed,
+    Object? slug = freezed,
+    Object? name = freezed,
     Object? companyName = freezed,
     Object? logoUrl = freezed,
     Object? baseUrl = freezed,
@@ -194,6 +223,7 @@ class __$$TenantModelImplCopyWithImpl<$Res>
     Object? description = freezed,
     Object? roles = freezed,
     Object? orgModel = freezed,
+    Object? features = freezed,
   }) {
     return _then(
       _$TenantModelImpl(
@@ -204,6 +234,14 @@ class __$$TenantModelImplCopyWithImpl<$Res>
         tenantCode: freezed == tenantCode
             ? _value.tenantCode
             : tenantCode // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        slug: freezed == slug
+            ? _value.slug
+            : slug // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        name: freezed == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
                   as String?,
         companyName: freezed == companyName
             ? _value.companyName
@@ -237,6 +275,10 @@ class __$$TenantModelImplCopyWithImpl<$Res>
             ? _value.orgModel
             : orgModel // ignore: cast_nullable_to_non_nullable
                   as String?,
+        features: freezed == features
+            ? _value._features
+            : features // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
       ),
     );
   }
@@ -248,6 +290,8 @@ class _$TenantModelImpl implements _TenantModel {
   const _$TenantModelImpl({
     @JsonKey(name: 'tenantId') this.tenantId,
     @JsonKey(name: 'tenantCode') this.tenantCode,
+    @JsonKey(name: 'slug') this.slug,
+    @JsonKey(name: 'name') this.name,
     @JsonKey(name: 'companyName') this.companyName,
     @JsonKey(name: 'logoUrl') this.logoUrl,
     @JsonKey(name: 'baseUrl') this.baseUrl,
@@ -256,7 +300,9 @@ class _$TenantModelImpl implements _TenantModel {
     @JsonKey(name: 'description') this.description,
     @JsonKey(name: 'roles') final List<String>? roles,
     @JsonKey(name: 'orgModel') this.orgModel,
-  }) : _roles = roles;
+    @JsonKey(name: 'features') final Map<String, dynamic>? features,
+  }) : _roles = roles,
+       _features = features;
 
   factory _$TenantModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$TenantModelImplFromJson(json);
@@ -267,6 +313,12 @@ class _$TenantModelImpl implements _TenantModel {
   @override
   @JsonKey(name: 'tenantCode')
   final String? tenantCode;
+  @override
+  @JsonKey(name: 'slug')
+  final String? slug;
+  @override
+  @JsonKey(name: 'name')
+  final String? name;
   @override
   @JsonKey(name: 'companyName')
   final String? companyName;
@@ -299,10 +351,20 @@ class _$TenantModelImpl implements _TenantModel {
   @override
   @JsonKey(name: 'orgModel')
   final String? orgModel;
+  final Map<String, dynamic>? _features;
+  @override
+  @JsonKey(name: 'features')
+  Map<String, dynamic>? get features {
+    final value = _features;
+    if (value == null) return null;
+    if (_features is EqualUnmodifiableMapView) return _features;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'TenantModel(tenantId: $tenantId, tenantCode: $tenantCode, companyName: $companyName, logoUrl: $logoUrl, baseUrl: $baseUrl, status: $status, isActive: $isActive, description: $description, roles: $roles, orgModel: $orgModel)';
+    return 'TenantModel(tenantId: $tenantId, tenantCode: $tenantCode, slug: $slug, name: $name, companyName: $companyName, logoUrl: $logoUrl, baseUrl: $baseUrl, status: $status, isActive: $isActive, description: $description, roles: $roles, orgModel: $orgModel, features: $features)';
   }
 
   @override
@@ -314,6 +376,8 @@ class _$TenantModelImpl implements _TenantModel {
                 other.tenantId == tenantId) &&
             (identical(other.tenantCode, tenantCode) ||
                 other.tenantCode == tenantCode) &&
+            (identical(other.slug, slug) || other.slug == slug) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.companyName, companyName) ||
                 other.companyName == companyName) &&
             (identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl) &&
@@ -325,7 +389,8 @@ class _$TenantModelImpl implements _TenantModel {
                 other.description == description) &&
             const DeepCollectionEquality().equals(other._roles, _roles) &&
             (identical(other.orgModel, orgModel) ||
-                other.orgModel == orgModel));
+                other.orgModel == orgModel) &&
+            const DeepCollectionEquality().equals(other._features, _features));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -334,6 +399,8 @@ class _$TenantModelImpl implements _TenantModel {
     runtimeType,
     tenantId,
     tenantCode,
+    slug,
+    name,
     companyName,
     logoUrl,
     baseUrl,
@@ -342,6 +409,7 @@ class _$TenantModelImpl implements _TenantModel {
     description,
     const DeepCollectionEquality().hash(_roles),
     orgModel,
+    const DeepCollectionEquality().hash(_features),
   );
 
   /// Create a copy of TenantModel
@@ -362,6 +430,8 @@ abstract class _TenantModel implements TenantModel {
   const factory _TenantModel({
     @JsonKey(name: 'tenantId') final String? tenantId,
     @JsonKey(name: 'tenantCode') final String? tenantCode,
+    @JsonKey(name: 'slug') final String? slug,
+    @JsonKey(name: 'name') final String? name,
     @JsonKey(name: 'companyName') final String? companyName,
     @JsonKey(name: 'logoUrl') final String? logoUrl,
     @JsonKey(name: 'baseUrl') final String? baseUrl,
@@ -370,6 +440,7 @@ abstract class _TenantModel implements TenantModel {
     @JsonKey(name: 'description') final String? description,
     @JsonKey(name: 'roles') final List<String>? roles,
     @JsonKey(name: 'orgModel') final String? orgModel,
+    @JsonKey(name: 'features') final Map<String, dynamic>? features,
   }) = _$TenantModelImpl;
 
   factory _TenantModel.fromJson(Map<String, dynamic> json) =
@@ -381,6 +452,12 @@ abstract class _TenantModel implements TenantModel {
   @override
   @JsonKey(name: 'tenantCode')
   String? get tenantCode;
+  @override
+  @JsonKey(name: 'slug')
+  String? get slug;
+  @override
+  @JsonKey(name: 'name')
+  String? get name;
   @override
   @JsonKey(name: 'companyName')
   String? get companyName;
@@ -405,6 +482,9 @@ abstract class _TenantModel implements TenantModel {
   @override
   @JsonKey(name: 'orgModel')
   String? get orgModel;
+  @override
+  @JsonKey(name: 'features')
+  Map<String, dynamic>? get features;
 
   /// Create a copy of TenantModel
   /// with the given fields replaced by the non-null parameter values.

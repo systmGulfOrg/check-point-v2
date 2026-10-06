@@ -49,4 +49,23 @@ class NotificationsRepoImpl {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
   }
+
+  Future<ApiResult<void>> registerDeviceToken({
+    required String fcmToken,
+    required String deviceId,
+    String platform = 'Android',
+    String? osVersion,
+  }) async {
+    try {
+      await api.registerDeviceToken({
+        'fcmToken': fcmToken,
+        'deviceId': deviceId,
+        'platform': platform,
+        'osVersion': ?osVersion,
+      });
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
 }
