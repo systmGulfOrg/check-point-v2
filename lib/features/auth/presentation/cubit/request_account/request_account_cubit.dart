@@ -17,12 +17,28 @@ class RequestAccountCubit extends Cubit<RequestAccountState> {
   final DeviceIdentityProvider deviceIdentityProvider;
   final AuthSessionStorage authSessionStorage;
 
-  Future<void> submit({required String name}) async {
+  Future<void> submit({
+    required String name,
+    String? nationalId,
+    String? phone,
+    String? accountType,
+    String? siteId,
+    String? notes,
+    String? photoPath,
+  }) async {
     emit(const RequestAccountState.loading());
     final request = AccountRequestModel(
       name: name,
+      fullName: name,
       mobileId: deviceIdentityProvider.mobileId,
+      deviceId: deviceIdentityProvider.mobileId,
       deviceToken: deviceIdentityProvider.deviceToken,
+      nationalId: nationalId,
+      phone: phone,
+      accountType: accountType,
+      siteId: siteId,
+      notes: notes,
+      photoPath: photoPath,
     );
     final result = await authRepo.requestAccount(request);
     result.when(

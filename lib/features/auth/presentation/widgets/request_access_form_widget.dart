@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -18,17 +19,46 @@ class RequestAccessFormWidget extends StatefulWidget {
 class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
   final formKey = GlobalKey<FormState>();
   late final TextEditingController fullNameController;
+  late final TextEditingController nationalIdController;
+  late final TextEditingController phoneController;
+  late final TextEditingController siteNameController;
+  late final TextEditingController notesController;
+
+  String _accountType = 'Personal';
+  String? _selectedPhotoPath;
 
   @override
   void initState() {
     super.initState();
     fullNameController = TextEditingController();
+    nationalIdController = TextEditingController();
+    phoneController = TextEditingController();
+    siteNameController = TextEditingController();
+    notesController = TextEditingController();
   }
 
   @override
   void dispose() {
     fullNameController.dispose();
+    nationalIdController.dispose();
+    phoneController.dispose();
+    siteNameController.dispose();
+    notesController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickPhoto() async {
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
+      if (result != null && result.files.single.path != null) {
+        setState(() {
+          _selectedPhotoPath = result.files.single.path;
+        });
+      }
+    } catch (_) {}
   }
 
   @override
@@ -46,7 +76,89 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
           'auth.requestAccess.cardDescription'.tr(context: context),
           style: AppTextStyles.font13Regular.copyWith(height: 1.5),
         ),
-        hSpace(22),
+        hSpace(18),
+
+        // Account Type Selector
+        Text(
+          'نوع الحساب',
+          textAlign: TextAlign.start,
+          style: AppTextStyles.font14SemiBold,
+        ),
+        hSpace(8),
+        Row(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () => setState(() => _accountType = 'Personal'),
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                  decoration: BoxDecoration(
+                    color: _accountType == 'Personal'
+                        ? AppColors.softBrandBackground
+                        : AppColors.white,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: _accountType == 'Personal'
+                          ? AppColors.brandPrimary
+                          : AppColors.border,
+                      width: _accountType == 'Personal' ? 1.5 : 1,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'حساب شخصي',
+                      style: AppTextStyles.font13Medium.copyWith(
+                        color: _accountType == 'Personal'
+                            ? AppColors.brandPrimaryDark
+                            : AppColors.textSecondary,
+                        fontWeight: _accountType == 'Personal'
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            wSpace(12),
+            Expanded(
+              child: GestureDetector(
+                onTap: () => setState(() => _accountType = 'Site'),
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                  decoration: BoxDecoration(
+                    color: _accountType == 'Site'
+                        ? AppColors.softBrandBackground
+                        : AppColors.white,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: _accountType == 'Site'
+                          ? AppColors.brandPrimary
+                          : AppColors.border,
+                      width: _accountType == 'Site' ? 1.5 : 1,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'حساب موقع / مشروع',
+                      style: AppTextStyles.font13Medium.copyWith(
+                        color: _accountType == 'Site'
+                            ? AppColors.brandPrimaryDark
+                            : AppColors.textSecondary,
+                        fontWeight: _accountType == 'Site'
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        hSpace(18),
+
+        // Full Name
         Text(
           'auth.requestAccess.fullName'.tr(context: context),
           textAlign: TextAlign.start,
@@ -68,6 +180,143 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
             return null;
           },
         ),
+
+        // If Site Account: Site / Project Name
+        if (_accountType == 'Site') ...[
+          hSpace(16),
+          Text(
+            'اسم الموقع أو المشروع',
+            textAlign: TextAlign.start,
+            style: AppTextStyles.font14SemiBold,
+          ),
+          hSpace(8),
+          CustomTextFormField(
+            hintText: 'أدخل اسم الموقع الخاص بك',
+            controller: siteNameController,
+            prefixIcon: Icon(
+              Icons.location_city_outlined,
+              size: 21.r,
+              color: AppColors.placeholder,
+            ),
+            validator: (value) {
+              if (_accountType == 'Site' && (value == null || value.trim().isEmpty)) {
+                return 'برجاء إدخال اسم الموقع';
+              }
+              return null;
+            },
+          ),
+        ],
+
+        // National ID
+        hSpace(16),
+        Text(
+          'الرقم القومي',
+          textAlign: TextAlign.start,
+          style: AppTextStyles.font14SemiBold,
+        ),
+        hSpace(8),
+        CustomTextFormField(
+          hintText: 'أدخل 14 رقم البطاقة الشخصية',
+          controller: nationalIdController,
+          keyboardType: TextInputType.number,
+          prefixIcon: Icon(
+            Icons.badge_outlined,
+            size: 21.r,
+            color: AppColors.placeholder,
+          ),
+        ),
+
+        // Phone Number
+        hSpace(16),
+        Text(
+          'رقم الهاتف',
+          textAlign: TextAlign.start,
+          style: AppTextStyles.font14SemiBold,
+        ),
+        hSpace(8),
+        CustomTextFormField(
+          hintText: 'أدخل رقم الموبايل',
+          controller: phoneController,
+          keyboardType: TextInputType.phone,
+          prefixIcon: Icon(
+            Icons.phone_outlined,
+            size: 21.r,
+            color: AppColors.placeholder,
+          ),
+        ),
+
+        // Photo Attachment Section
+        hSpace(16),
+        Text(
+          'إرفاق الصورة الشخصية / صورة البطاقة',
+          textAlign: TextAlign.start,
+          style: AppTextStyles.font14SemiBold,
+        ),
+        hSpace(8),
+        InkWell(
+          onTap: _pickPhoto,
+          borderRadius: BorderRadius.circular(12.r),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+            decoration: BoxDecoration(
+              color: AppColors.pageBackground,
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  _selectedPhotoPath != null
+                      ? Icons.check_circle_rounded
+                      : Icons.add_a_photo_outlined,
+                  color: _selectedPhotoPath != null
+                      ? AppColors.success
+                      : AppColors.brandPrimary,
+                  size: 22.r,
+                ),
+                wSpace(12),
+                Expanded(
+                  child: Text(
+                    _selectedPhotoPath != null
+                        ? 'تم اختيار الصورة: ${_selectedPhotoPath!.split('/').last}'
+                        : 'اضغط هنا لالتقاط أو اختيار صورة',
+                    style: AppTextStyles.font13Medium.copyWith(
+                      color: _selectedPhotoPath != null
+                          ? AppColors.brandInk
+                          : AppColors.placeholder,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (_selectedPhotoPath != null)
+                  IconButton(
+                    icon: Icon(Icons.close, size: 18.r, color: AppColors.error),
+                    onPressed: () => setState(() => _selectedPhotoPath = null),
+                  ),
+              ],
+            ),
+          ),
+        ),
+
+        // Notes
+        hSpace(16),
+        Text(
+          'ملاحظات إضافية',
+          textAlign: TextAlign.start,
+          style: AppTextStyles.font14SemiBold,
+        ),
+        hSpace(8),
+        CustomTextFormField(
+          hintText: 'أي تفاصيل أو ملاحظات للإدارة',
+          controller: notesController,
+          prefixIcon: Icon(
+            Icons.note_alt_outlined,
+            size: 21.r,
+            color: AppColors.placeholder,
+          ),
+        ),
+
         hSpace(22),
         RequestAccountSubmitButtonWidget(
           onSubmit: () {
@@ -75,6 +324,20 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
             if (!(formKey.currentState?.validate() ?? false)) return;
             context.read<RequestAccountCubit>().submit(
               name: fullNameController.text.trim(),
+              accountType: _accountType,
+              siteId: _accountType == 'Site'
+                  ? siteNameController.text.trim()
+                  : null,
+              nationalId: nationalIdController.text.trim().isNotEmpty
+                  ? nationalIdController.text.trim()
+                  : null,
+              phone: phoneController.text.trim().isNotEmpty
+                  ? phoneController.text.trim()
+                  : null,
+              notes: notesController.text.trim().isNotEmpty
+                  ? notesController.text.trim()
+                  : null,
+              photoPath: _selectedPhotoPath,
             );
           },
         ),

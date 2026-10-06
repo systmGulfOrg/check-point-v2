@@ -57,13 +57,24 @@ class AdminRegistrationRequestCardWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 24.r,
-                backgroundColor: AppColors.softBrandBackground,
-                child: Text(
-                  name.isEmpty ? '?' : name.substring(0, 1).toUpperCase(),
-                  style: AppTextStyles.font14SemiBold.copyWith(
-                    color: AppColors.brandPrimary,
+              GestureDetector(
+                onTap: () {
+                  if (request.photoPath != null && request.photoPath!.isNotEmpty) {
+                    AppImageViewerDialog.show(
+                      context,
+                      imageUrl: request.photoPath!,
+                      title: name,
+                    );
+                  }
+                },
+                child: CircleAvatar(
+                  radius: 24.r,
+                  backgroundColor: AppColors.softBrandBackground,
+                  child: Text(
+                    name.isEmpty ? '?' : name.substring(0, 1).toUpperCase(),
+                    style: AppTextStyles.font14SemiBold.copyWith(
+                      color: AppColors.brandPrimary,
+                    ),
                   ),
                 ),
               ),

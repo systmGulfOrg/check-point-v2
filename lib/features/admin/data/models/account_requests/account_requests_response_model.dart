@@ -47,6 +47,7 @@ class AccountRequestModel {
     this.reviewedAt,
     this.createdDate,
     this.createdEmployeeId,
+    this.photoPath,
   });
 
   final int? id;
@@ -60,6 +61,7 @@ class AccountRequestModel {
   final DateTime? reviewedAt;
   final DateTime? createdDate;
   final String? createdEmployeeId;
+  final String? photoPath;
 
   bool get isPending => status == null || status == 'Pending';
   bool get isApproved => status == 'Approved';
