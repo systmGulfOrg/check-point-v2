@@ -23,6 +23,12 @@ class ApiFailureMapper {
               normalizedMessage.contains('lock'))) {
         return const ApiFailure(messageKey: 'errors.accountLocked');
       }
+      if (normalizedMessage.contains('invalid credential') ||
+          normalizedMessage.contains('invalid user') ||
+          normalizedMessage.contains('invalid password') ||
+          normalizedMessage == 'invalid credentials') {
+        return const ApiFailure(messageKey: 'errors.invalidCredentials');
+      }
     }
     return ApiFailure(messageKey: fallbackMessageKey);
   }
@@ -65,6 +71,13 @@ class ApiFailureMapper {
               (message.contains('lock') || message.contains('try again')))) {
         return const ApiFailure(messageKey: 'errors.accountLocked');
       }
+      if (message.contains('invalid credential') ||
+          message.contains('invalid user') ||
+          message.contains('invalid password') ||
+          (message.contains('invalid') && status == 401) ||
+          (error.requestOptions.path.toLowerCase().contains('login') && status == 401)) {
+        return const ApiFailure(messageKey: 'errors.invalidCredentials');
+      }
       return switch (error.type) {
         DioExceptionType.connectionError ||
         DioExceptionType.connectionTimeout ||
@@ -73,7 +86,7 @@ class ApiFailureMapper {
           messageKey: 'errors.network',
         ),
         _ when status == 401 => const ApiFailure(
-          messageKey: 'errors.unauthorized',
+          messageKey: 'errors.invalidCredentials',
         ),
         _ when status == 403 => ApiFailure(
           messageKey:

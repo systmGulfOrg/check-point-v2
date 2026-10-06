@@ -993,7 +993,7 @@
   "errors.employeeNotFound": "Employee profile was not found.",
   "errors.employeeUnavailable": "Your employee profile could not be loaded.",
   "errors.forbidden": "You do not have permission to perform this action.",
-  "errors.invalidCredentials": "Invalid login details. Please try again.",
+  "errors.invalidCredentials": "Invalid username or password. Please try again.",
   "errors.locationUnavailable": "Location is unavailable. Enable GPS and try again.",
   "errors.logoutFailed": "Could not sign out. Please try again.",
   "errors.network": "Network connection failed. Please try again.",
