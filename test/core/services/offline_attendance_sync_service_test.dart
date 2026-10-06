@@ -9,6 +9,7 @@ import 'package:check_point_v2/features/contractor/data/models/offline_attendanc
 import 'package:check_point_v2/features/contractor/data/models/samco_customization_model.dart';
 import 'package:check_point_v2/features/contractor/data/models/site_boundary_model.dart';
 import 'package:check_point_v2/features/contractor/data/models/worker_site_assignment_model.dart';
+import 'package:check_point_v2/features/contractor/data/models/contractor_batch_models.dart';
 import 'package:check_point_v2/features/contractor/data/repos/contractor_repo.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -116,6 +117,30 @@ class _FakeContractorRepo implements ContractorRepo {
   @override
   Future<ApiResult<SamcoCustomizationModel>> getCustomization() async =>
       throw UnimplementedError();
+
+  @override
+  Future<ApiResult<SiteBoundaryModel>> getSamcoSiteBoundary(String siteId) async =>
+      throw UnimplementedError();
+
+  @override
+  Future<ApiResult<void>> recordSamcoContractorAttendance(
+    ContractorDailyAttendanceRequestBody body,
+  ) async => const ApiResult.success(null);
+
+  @override
+  Future<ApiResult<BatchWorkerAttendanceSummaryModel>> recordSamcoBatchWorkerAttendance(
+    BatchWorkerAttendanceRequestBody body,
+  ) async => throw UnimplementedError();
+
+  @override
+  Future<ApiResult<List<ContractorWorkerModel>>> getSamcoWorkers({
+    String? contractorId,
+  }) async => const ApiResult.success([]);
+
+  @override
+  Future<ApiResult<dynamic>> syncSamcoAttendanceOffline(
+    Map<String, dynamic> body,
+  ) async => const ApiResult.success(null);
 }
 
 OfflineAttendanceLogModel _log(String id) => OfflineAttendanceLogModel(
