@@ -7,7 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/request_access_device_id_widget.dart';
 import 'request_account_submit_button_widget.dart';
 
 class RequestAccessFormWidget extends StatefulWidget {
@@ -77,7 +79,12 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
                   decoration: BoxDecoration(
                     color: AppColors.softBrandBackground,
                     shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.brandPrimary, width: 2),
+                    border: Border.all(
+                      color: _selectedPhotoPath != null
+                          ? AppColors.brandPrimary
+                          : AppColors.border,
+                      width: 2,
+                    ),
                     image: _selectedPhotoPath != null
                         ? DecorationImage(
                             image: FileImage(File(_selectedPhotoPath!)),
@@ -89,7 +96,7 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
                       ? Icon(
                           Icons.person_rounded,
                           size: 48.r,
-                          color: AppColors.brandPrimary,
+                          color: AppColors.placeholder,
                         )
                       : null,
                 ),
@@ -119,11 +126,11 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
           child: Text(
             _selectedPhotoPath != null
                 ? 'تم إرفاق الصورة الشخصية'
-                : 'اضغط لالتقاط أو اختيار الصورة الشخصية',
+                : 'auth.requestAccess.photoRequired'.tr(context: context),
             style: AppTextStyles.font12Medium.copyWith(
               color: _selectedPhotoPath != null
                   ? AppColors.success
-                  : AppColors.textSecondary,
+                  : AppColors.brandPrimary,
             ),
           ),
         ),
@@ -150,6 +157,12 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
             }
             return null;
           },
+        ),
+
+        // Device ID (Read-only + Copyable)
+        hSpace(16),
+        RequestAccessDeviceIdWidget(
+          deviceId: sl<DeviceIdentityProvider>().mobileId,
         ),
 
         // National ID
@@ -212,6 +225,17 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
         RequestAccountSubmitButtonWidget(
           onSubmit: () {
             FocusScope.of(context).unfocus();
+            if (_selectedPhotoPath == null || _selectedPhotoPath!.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'auth.requestAccess.photoRequired'.tr(context: context),
+                  ),
+                  backgroundColor: AppColors.error,
+                ),
+              );
+              return;
+            }
             if (!(formKey.currentState?.validate() ?? false)) return;
             context.read<RequestAccountCubit>().submit(
               name: fullNameController.text.trim(),

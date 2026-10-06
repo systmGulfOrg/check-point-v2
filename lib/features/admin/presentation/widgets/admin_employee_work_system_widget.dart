@@ -78,48 +78,60 @@ class AdminEmployeeWorkSystemWidget extends StatelessWidget {
                 if (value != null) onSystemChanged(value);
               },
             ),
-            if (selectedSystem != 'onsite') ...[
-              hSpace(12),
-              Text(
-                'admin.employeeWizard.workPolicy'.tr(context: context),
-                style: AppTextStyles.font13SemiBold,
+            hSpace(12),
+            Text(
+              'admin.employeeWizard.workPolicy'.tr(context: context),
+              style: AppTextStyles.font13SemiBold,
+            ),
+            hSpace(8),
+            DropdownButtonFormField<String>(
+              key: ValueKey(
+                'work_policy_${selectedSystem}_${hasSelectedPolicy ? selectedPolicyId : 'none'}',
               ),
-              hSpace(8),
-              DropdownButtonFormField<String>(
-                key: ValueKey(
-                  'work_policy_${selectedSystem}_${hasSelectedPolicy ? selectedPolicyId : 'none'}',
+              initialValue: hasSelectedPolicy ? selectedPolicyId : null,
+              isExpanded: true,
+              hint: Text(
+                systemPolicies.isEmpty
+                    ? 'admin.employeeWizard.noWorkPolicies'.tr(context: context)
+                    : 'admin.employeeWizard.selectWorkPolicy'.tr(
+                        context: context,
+                      ),
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: AppColors.fieldBackground,
+                prefixIcon: Icon(
+                  selectedSystem == 'hybrid'
+                      ? Icons.swap_horiz_rounded
+                      : selectedSystem == 'onsite'
+                          ? Icons.business_rounded
+                          : Icons.home_work_outlined,
+                  color: systemPolicies.isEmpty
+                      ? AppColors.placeholder
+                      : AppColors.info,
+                  size: 20.r,
                 ),
-                initialValue: hasSelectedPolicy ? selectedPolicyId : null,
-                isExpanded: true,
-                hint: Text(
-                  systemPolicies.isEmpty
-                      ? 'admin.employeeWizard.noWorkPolicies'.tr(
-                          context: context,
-                        )
-                      : 'admin.employeeWizard.selectWorkPolicy'.tr(
-                          context: context,
-                        ),
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppColors.fieldBackground,
-                  prefixIcon: Icon(
-                    selectedSystem == 'hybrid'
-                        ? Icons.swap_horiz_rounded
-                        : Icons.home_work_outlined,
-                    color: AppColors.info,
-                    size: 20.r,
+              ),
+              items: systemPolicies
+                  .map(
+                    (policy) => DropdownMenuItem<String>(
+                      value: policy.id,
+                      child: Text(policy.name),
+                    ),
+                  )
+                  .toList(),
+              onChanged: systemPolicies.isEmpty ? null : onPolicyChanged,
+            ),
+            if (systemPolicies.isEmpty) ...[
+              hSpace(4),
+              Padding(
+                padding: EdgeInsetsDirectional.only(start: 4.w),
+                child: Text(
+                  'admin.employeeWizard.noWorkPolicies'.tr(context: context),
+                  style: AppTextStyles.font11Regular.copyWith(
+                    color: AppColors.textSecondary,
                   ),
                 ),
-                items: systemPolicies
-                    .map(
-                      (policy) => DropdownMenuItem<String>(
-                        value: policy.id,
-                        child: Text(policy.name),
-                      ),
-                    )
-                    .toList(),
-                onChanged: systemPolicies.isEmpty ? null : onPolicyChanged,
               ),
             ],
           ],

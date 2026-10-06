@@ -54,6 +54,14 @@ class RequestAccessDeviceIdWidget extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: deviceId));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'admin.employeeWizard.mobileCopied'.tr(context: context),
+                      ),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
                 },
                 icon: Icon(
                   Icons.content_copy_outlined,

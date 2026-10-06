@@ -17,7 +17,7 @@ AddEmployeeRequestBody _$AddEmployeeRequestBodyFromJson(
   role: json['role'] as String,
   departmentId: (json['departmentId'] as num).toInt(),
   branchId: (json['branchId'] as num).toInt(),
-  shiftId: (json['shiftId'] as num).toInt(),
+  shiftId: (json['shiftId'] as num?)?.toInt(),
   roles: (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
   deviceToken: (json['deviceToken'] as List<dynamic>?)
       ?.map((e) => e as String)
@@ -32,6 +32,9 @@ AddEmployeeRequestBody _$AddEmployeeRequestBodyFromJson(
   remoteWorkPolicyId: json['remoteWorkPolicyId'] as String?,
   directManagerId: json['directManagerId'] as String?,
   managerId: json['managerId'] as String?,
+  customPermissions: (json['customPermissions'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
 );
 
 Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
@@ -58,4 +61,5 @@ Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
   'remoteWorkPolicyId': instance.remoteWorkPolicyId,
   'directManagerId': instance.directManagerId,
   'managerId': instance.managerId,
+  'customPermissions': instance.customPermissions,
 };

@@ -22,6 +22,9 @@ ApproveAccountRequestBody _$ApproveAccountRequestBodyFromJson(
   email: json['email'] as String?,
   workSystem: json['workSystem'] as String?,
   remoteWorkPolicyId: json['remoteWorkPolicyId'] as String?,
+  customPermissions: (json['customPermissions'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
 );
 
 Map<String, dynamic> _$ApproveAccountRequestBodyToJson(
@@ -40,4 +43,5 @@ Map<String, dynamic> _$ApproveAccountRequestBodyToJson(
   'email': instance.email,
   'workSystem': instance.workSystem,
   'remoteWorkPolicyId': instance.remoteWorkPolicyId,
+  'customPermissions': instance.customPermissions,
 };

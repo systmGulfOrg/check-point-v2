@@ -13,7 +13,7 @@ class AddEmployeeRequestBody {
     required this.role,
     required this.departmentId,
     required this.branchId,
-    required this.shiftId,
+    this.shiftId,
     this.roles,
     this.deviceToken,
     this.phone,
@@ -26,6 +26,7 @@ class AddEmployeeRequestBody {
     this.remoteWorkPolicyId,
     this.directManagerId,
     this.managerId,
+    this.customPermissions,
   });
 
   final String name;
@@ -37,7 +38,7 @@ class AddEmployeeRequestBody {
   final List<String>? roles;
   final int departmentId;
   final int branchId;
-  final int shiftId;
+  final int? shiftId;
   final List<String>? deviceToken;
   final String? phone;
   final String? email;
@@ -49,6 +50,7 @@ class AddEmployeeRequestBody {
   final String? remoteWorkPolicyId;
   final String? directManagerId;
   final String? managerId;
+  final List<String>? customPermissions;
 
   factory AddEmployeeRequestBody.fromJson(Map<String, dynamic> json) =>
       _$AddEmployeeRequestBodyFromJson(json);
