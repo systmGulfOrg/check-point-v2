@@ -22,7 +22,7 @@ class AdminWizardFieldWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          required ? '$label *' : label,
+          required ? (label.endsWith('*') ? label : '$label *') : label.replaceAll('*', '').trim(),
           textAlign: TextAlign.right,
           style: AppTextStyles.font13SemiBold,
         ),

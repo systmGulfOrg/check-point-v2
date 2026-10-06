@@ -66,7 +66,6 @@ class AdminEmployeeCardWidget extends StatelessWidget {
     return switch (role.toLowerCase()) {
       'admin' => 'admin.roles.admin',
       'supervisor' => 'admin.roles.supervisor',
-      'hr' => 'admin.roles.hr',
       _ => 'admin.roles.employee',
     };
   }

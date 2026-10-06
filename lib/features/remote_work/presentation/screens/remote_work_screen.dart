@@ -12,7 +12,7 @@ class RemoteWorkScreen extends StatelessWidget {
     return FutureBuilder<String?>(
       future: sessionStorage.readUserRole(),
       builder: (context, snapshot) {
-        final isAdmin = snapshot.data == 'Admin' || snapshot.data == 'HR';
+        final isAdmin = snapshot.data == 'Admin';
         final canReview = isAdmin || snapshot.data == 'Supervisor';
         return DefaultTabController(
           length: 2,

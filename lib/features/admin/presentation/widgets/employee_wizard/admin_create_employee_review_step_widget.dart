@@ -49,7 +49,6 @@ class AdminCreateEmployeeReviewStepWidget extends StatelessWidget {
     final localizedRoles = roles.map((r) => switch (r) {
       'Supervisor' => 'admin.roles.supervisor'.tr(context: context),
       'Admin' => 'admin.roles.admin'.tr(context: context),
-      'HR' => 'admin.roles.hr'.tr(context: context),
       _ => 'admin.roles.employee'.tr(context: context),
     }).join(', ');
 

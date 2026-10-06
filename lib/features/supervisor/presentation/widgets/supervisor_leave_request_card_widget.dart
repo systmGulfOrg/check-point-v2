@@ -74,9 +74,9 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
 
     final bool canApprove =
         (isPending || isPendingHR) &&
-        (userRole == 'Admin' || userRole == 'HR' || userRole == 'Supervisor');
+        (userRole == 'Admin' || userRole == 'Supervisor');
     final String approveLabel = (isPendingHR || userRole == 'Admin')
-        ? 'leaves.approval.approveAsHR'
+        ? 'admin.requests.approve'
         : 'leaves.approval.approveAsManager';
 
     final start = AppDateFormatter.formatDateString(request.startDate);

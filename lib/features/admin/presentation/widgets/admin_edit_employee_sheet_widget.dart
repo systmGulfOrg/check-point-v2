@@ -54,7 +54,6 @@ class _AdminEditEmployeeSheetWidgetState
   static const List<String> _availableRoles = [
     'Employee',
     'Supervisor',
-    'HR',
     'Admin',
   ];
 
@@ -325,7 +324,6 @@ class _AdminEditEmployeeSheetWidgetState
                         context: context,
                       ),
                       'Admin' => 'admin.roles.admin'.tr(context: context),
-                      'HR' => 'admin.roles.hr'.tr(context: context),
                       _ => 'admin.roles.employee'.tr(context: context),
                     },
                     style: AppTextStyles.font12Medium.copyWith(

@@ -45,7 +45,7 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
 
         // Position
         AdminWizardFieldWidget(
-          label: '${'admin.employeeWizard.position'.tr(context: context)} *',
+          label: 'admin.employeeWizard.position'.tr(context: context),
           child: CustomTextFormField(
             hintText: 'admin.employeeWizard.positionHint'.tr(context: context),
             controller: positionController,
@@ -54,9 +54,12 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
               size: 20.r,
               color: AppColors.placeholder,
             ),
-            validator: (value) => value == null || value.trim().isEmpty
-                ? 'admin.employeeWizard.requiredField'.tr(context: context)
-                : null,
+            validator: AppValidators.required(
+              message: 'admin.employeeWizard.requiredField'.tr(
+                context: context,
+              ),
+              context: context,
+            ),
           ),
         ),
 
@@ -76,7 +79,6 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
                 switch (r) {
                   'Supervisor' => 'admin.roles.supervisor'.tr(context: context),
                   'Admin' => 'admin.roles.admin'.tr(context: context),
-                  'HR' => 'admin.roles.hr'.tr(context: context),
                   _ => 'admin.roles.employee'.tr(context: context),
                 },
                 style: AppTextStyles.font12Medium.copyWith(

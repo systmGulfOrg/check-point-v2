@@ -62,7 +62,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
   static const List<String> availableRoles = [
     'Employee',
     'Supervisor',
-    'HR',
     'Admin',
   ];
 
@@ -140,9 +139,12 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
           (widget.accountRequest?.photoPath != null &&
               widget.accountRequest!.photoPath!.isNotEmpty);
       if (!hasPhoto) {
-        setState(() {
-          saveErrorMessage = 'admin.employeeWizard.photoRequired';
-        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('validation.photoRequired'.tr(context: context)),
+            backgroundColor: AppColors.error,
+          ),
+        );
         return false;
       }
       if (!(formKey.currentState?.validate() ?? false)) {
@@ -150,24 +152,33 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
       }
     }
     if (step == 1) {
-      if (positionController.text.trim().isEmpty) {
-        setState(() {
-          saveErrorMessage = 'admin.employeeWizard.requiredField';
-        });
+      if (!(formKey.currentState?.validate() ?? false)) {
         return false;
       }
       if (selectedRoles.isEmpty) {
-        setState(() {
-          saveErrorMessage = 'admin.employeeWizard.rolesRequired';
-        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'admin.employeeWizard.rolesRequired'.tr(context: context),
+            ),
+            backgroundColor: AppColors.error,
+          ),
+        );
         return false;
       }
     }
     if (step == 2) {
       if (selectedDepartmentId == null || selectedBranchId == null) {
-        setState(() {
-          saveErrorMessage = 'admin.employeeWizard.departmentBranchRequired';
-        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'admin.employeeWizard.departmentBranchRequired'.tr(
+                context: context,
+              ),
+            ),
+            backgroundColor: AppColors.error,
+          ),
+        );
         return false;
       }
     }

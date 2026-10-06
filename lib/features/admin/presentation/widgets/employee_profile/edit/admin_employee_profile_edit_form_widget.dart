@@ -336,8 +336,6 @@ class _AdminEmployeeProfileEditFormWidgetState
             : null,
         role: _selectedRoles.contains('Admin')
             ? 'Admin'
-            : _selectedRoles.contains('HR')
-            ? 'HR'
             : _selectedRoles.contains('Supervisor')
             ? 'Supervisor'
             : 'Employee',

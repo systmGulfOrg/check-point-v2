@@ -142,7 +142,7 @@ class _AdminCreateEmployeePersonalStepWidgetState
 
         // Full Name
         AdminWizardFieldWidget(
-          label: '${'admin.employeeWizard.fullName'.tr(context: context)} *',
+          label: 'admin.employeeWizard.fullName'.tr(context: context),
           child: CustomTextFormField(
             hintText: 'admin.employeeWizard.fullNameHint'.tr(context: context),
             controller: widget.nameController,
@@ -162,7 +162,7 @@ class _AdminCreateEmployeePersonalStepWidgetState
 
         // Username
         AdminWizardFieldWidget(
-          label: '${'admin.employeeWizard.username'.tr(context: context)} *',
+          label: 'admin.employeeWizard.username'.tr(context: context),
           child: CustomTextFormField(
             hintText: 'admin.employeeWizard.usernameHint'.tr(context: context),
             controller: widget.usernameController,
@@ -182,7 +182,7 @@ class _AdminCreateEmployeePersonalStepWidgetState
 
         // Password with Default Def123! Note
         AdminWizardFieldWidget(
-          label: '${'admin.employeeWizard.password'.tr(context: context)} *',
+          label: 'admin.employeeWizard.password'.tr(context: context),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -247,7 +247,7 @@ class _AdminCreateEmployeePersonalStepWidgetState
 
         // Mobile ID (Read-only + Copyable)
         AdminWizardFieldWidget(
-          label: '${'admin.employeeWizard.mobile'.tr(context: context)} *',
+          label: 'admin.employeeWizard.mobile'.tr(context: context),
           child: CustomTextFormField(
             hintText: 'admin.employeeWizard.mobileHint'.tr(context: context),
             controller: widget.mobileController,

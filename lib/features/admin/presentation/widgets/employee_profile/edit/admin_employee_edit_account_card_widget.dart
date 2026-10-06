@@ -29,7 +29,7 @@ class AdminEmployeeEditAccountCardWidget extends StatelessWidget {
   final ValueChanged<bool> onCanAddAttendanceChanged;
   final ValueChanged<bool> onCanAddPlanChanged;
 
-  static const List<String> _roles = ['Employee', 'Supervisor', 'HR', 'Admin'];
+  static const List<String> _roles = ['Employee', 'Supervisor', 'Admin'];
 
   @override
   Widget build(BuildContext context) {
