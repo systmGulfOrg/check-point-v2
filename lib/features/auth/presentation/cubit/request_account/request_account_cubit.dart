@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/network/device_identity_provider.dart';
@@ -27,6 +30,23 @@ class RequestAccountCubit extends Cubit<RequestAccountState> {
     String? photoPath,
   }) async {
     emit(const RequestAccountState.loading());
+
+    String? effectivePhoto = photoPath;
+    if (photoPath != null &&
+        photoPath.isNotEmpty &&
+        !photoPath.startsWith('http') &&
+        !photoPath.startsWith('data:image')) {
+      try {
+        final file = File(photoPath);
+        if (await file.exists()) {
+          final bytes = await file.readAsBytes();
+          final ext = photoPath.split('.').last.toLowerCase();
+          final mime = ext == 'png' ? 'image/png' : 'image/jpeg';
+          effectivePhoto = 'data:$mime;base64,${base64Encode(bytes)}';
+        }
+      } catch (_) {}
+    }
+
     final request = AccountRequestModel(
       name: name,
       fullName: name,
@@ -38,7 +58,7 @@ class RequestAccountCubit extends Cubit<RequestAccountState> {
       accountType: accountType,
       siteId: siteId,
       notes: notes,
-      photoPath: photoPath,
+      photoPath: effectivePhoto,
     );
     final result = await authRepo.requestAccount(request);
     result.when(

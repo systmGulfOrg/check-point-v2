@@ -32,3 +32,4 @@ export 'widgets/app_reject_reason_dialog_widget.dart';
 export 'widgets/custom_snack_bar.dart';
 export 'widgets/app_image_viewer_dialog.dart';
 export 'utils/app_date_formatter.dart';
+export 'utils/app_image_provider.dart';

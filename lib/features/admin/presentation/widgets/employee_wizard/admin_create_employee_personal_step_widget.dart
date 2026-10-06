@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -88,18 +86,17 @@ class _AdminCreateEmployeePersonalStepWidgetState
                           : AppColors.border,
                       width: 2,
                     ),
-                    image: widget.selectedPhotoPath != null
-                        ? DecorationImage(
-                            image: FileImage(File(widget.selectedPhotoPath!)),
-                            fit: BoxFit.cover,
-                          )
-                        : (widget.initialPhotoUrl != null &&
-                                widget.initialPhotoUrl!.isNotEmpty)
-                            ? DecorationImage(
-                                image: NetworkImage(widget.initialPhotoUrl!),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
+                    image: () {
+                      final provider = AppImageProvider.resolve(
+                        widget.selectedPhotoPath ?? widget.initialPhotoUrl,
+                      );
+                      return provider != null
+                          ? DecorationImage(
+                              image: provider,
+                              fit: BoxFit.cover,
+                            )
+                          : null;
+                    }(),
                   ),
                   child: !hasPhoto
                       ? Icon(

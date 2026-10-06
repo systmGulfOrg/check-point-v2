@@ -7,9 +7,6 @@ class RequestAccessBrandWidget extends StatelessWidget {
   const RequestAccessBrandWidget({super.key});
 
   @override
-  Widget build(BuildContext context) => Image.asset(
-    AppAssets.logo,
-    height: 64.h,
-    fit: BoxFit.contain,
-  );
+  Widget build(BuildContext context) =>
+      Image.asset(AppAssets.logo, height: 64.h, fit: BoxFit.contain);
 }

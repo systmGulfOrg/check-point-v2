@@ -7,9 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
-import 'package:check_point_v2/features/auth/presentation/widgets/request_access_device_id_widget.dart';
 import 'request_account_submit_button_widget.dart';
 
 class RequestAccessFormWidget extends StatefulWidget {
@@ -157,12 +155,6 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
             }
             return null;
           },
-        ),
-
-        // Device ID (Read-only + Copyable)
-        hSpace(16),
-        RequestAccessDeviceIdWidget(
-          deviceId: sl<DeviceIdentityProvider>().mobileId,
         ),
 
         // National ID

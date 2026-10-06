@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,16 @@ class AppImageProvider {
 
       if (trimmed.startsWith('assets/')) {
         return AssetImage(trimmed);
+      }
+
+      if (trimmed.startsWith('/') || trimmed.startsWith('file://')) {
+        final path = trimmed.startsWith('file://')
+            ? trimmed.replaceFirst('file://', '')
+            : trimmed;
+        final file = File(path);
+        if (file.existsSync()) {
+          return FileImage(file);
+        }
       }
 
       if (trimmed.startsWith('data:image')) {

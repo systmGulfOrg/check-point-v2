@@ -72,12 +72,17 @@ class AdminRegistrationRequestCardWidget extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 24.r,
                   backgroundColor: AppColors.softBrandBackground,
-                  child: Text(
-                    name.isEmpty ? '?' : name.substring(0, 1).toUpperCase(),
-                    style: AppTextStyles.font14SemiBold.copyWith(
-                      color: AppColors.brandPrimary,
-                    ),
-                  ),
+                  backgroundImage: AppImageProvider.resolve(request.photoPath),
+                  child: AppImageProvider.resolve(request.photoPath) == null
+                      ? Text(
+                          name.isEmpty
+                              ? '?'
+                              : name.substring(0, 1).toUpperCase(),
+                          style: AppTextStyles.font14SemiBold.copyWith(
+                            color: AppColors.brandPrimary,
+                          ),
+                        )
+                      : null,
                 ),
               ),
               vSpace(12),
