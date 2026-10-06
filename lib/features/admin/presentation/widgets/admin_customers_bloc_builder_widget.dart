@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/customer_visits/admin_customer_details_sheet_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'admin_create_location_sheet_widget.dart';
@@ -64,14 +68,47 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
     );
   }
 
+  void _openCustomerDetailsSheet(
+    BuildContext context,
+    CustomerModel customer,
+  ) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.transparent,
+      builder: (_) => BlocProvider.value(
+        value: sl<AdminCustomerVisitsCubit>(),
+        child: AdminCustomerDetailsSheetWidget(
+          customer: customer,
+          onEdit: () {
+            if (customer.id != null) {
+              final points = (customer.coordinates ?? [])
+                  .map((c) => LatLng(c.latitude, c.longitude))
+                  .toList();
+              _showEditSheet(
+                context,
+                customer.id!,
+                customer.name ?? '',
+                customer.location ?? '',
+                customer.workesAs,
+                points,
+              );
+            }
+          },
+          onDelete: () {
+            if (customer.id != null) {
+              _showDeleteDialog(context, customer.id!);
+            }
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<AdminCustomersCubit, AdminCustomersState>(
         builder: (context, state) => switch (state) {
-          // The route starts loading immediately, but the first frame can
-          // still be rendered while the cubit is in its initial state. Keep
-          // the layout in a loading state instead of showing a false empty
-          // message before the API response arrives.
           AdminCustomersInitial() => const AdminLocationsSkeletonWidget(),
           AdminCustomersLoading() => const AdminLocationsSkeletonWidget(),
           AdminCustomersError(:final messageKey) => Padding(
@@ -105,6 +142,7 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
                             iconColor: AppColors.info,
                             iconBackgroundColor: AppColors.softBlueBackground,
                           ),
+                          onTap: () => _openCustomerDetailsSheet(context, customer),
                           onEdit: () {
                             if (customer.id != null) {
                               final points = (customer.coordinates ?? [])

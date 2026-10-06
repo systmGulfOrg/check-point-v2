@@ -91,8 +91,12 @@ class AppDateFormatter {
     return toEnglishDigits(DateFormat('HH:mm', 'en').format(date));
   }
 
-  /// Cleans raw time strings (e.g. "15:24:16.7019526" -> "03:24 PM" or "15:24").
-  static String formatTimeString(String? rawTime, {bool use12Hour = true}) {
+  /// Cleans raw time strings (e.g. "17:00:00" -> "05:00 م" or "05:00 PM").
+  static String formatTimeString(
+    String? rawTime, {
+    bool use12Hour = true,
+    bool isArabic = true,
+  }) {
     if (rawTime == null ||
         rawTime.trim().isEmpty ||
         rawTime.startsWith('00:00:00') ||
@@ -107,10 +111,11 @@ class AppDateFormatter {
       final minute = int.tryParse(parts[1]);
       if (hour != null && minute != null) {
         if (use12Hour) {
-          final period = hour >= 12 ? 'PM' : 'AM';
+          final isPm = hour >= 12;
           final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
           final mStr = minute.toString().padLeft(2, '0');
           final hStr = h12.toString().padLeft(2, '0');
+          final period = isArabic ? (isPm ? 'م' : 'ص') : (isPm ? 'PM' : 'AM');
           return '$hStr:$mStr $period';
         } else {
           final hStr = hour.toString().padLeft(2, '0');
@@ -137,8 +142,6 @@ class AppDateFormatter {
 
   /// Formats a raw 24-hour time string into 12-hour Arabic (ص / م). E.g. "14:30" -> "02:30 م"
   static String formatTime12HourArabic(String? rawTime) {
-    final str = formatTimeString(rawTime, use12Hour: true);
-    if (str == '--:--') return str;
-    return str.replaceAll('AM', 'ص').replaceAll('PM', 'م');
+    return formatTimeString(rawTime, use12Hour: true, isArabic: true);
   }
 }

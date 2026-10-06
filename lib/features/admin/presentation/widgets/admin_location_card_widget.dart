@@ -9,12 +9,14 @@ import 'admin_location_data.dart';
 class AdminLocationCardWidget extends StatelessWidget {
   const AdminLocationCardWidget({
     required this.location,
+    this.onTap,
     this.onEdit,
     this.onDelete,
     super.key,
   });
 
   final AdminLocationData location;
+  final VoidCallback? onTap;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
@@ -28,13 +30,17 @@ class AdminLocationCardWidget extends StatelessWidget {
         border: Border.all(color: AppColors.border),
       ),
       clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(14.r),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+      child: Material(
+        color: AppColors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(14.r),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                 CircleAvatar(
                   radius: 19.r,
                   backgroundColor: location.iconBackgroundColor,
@@ -112,25 +118,27 @@ class AdminLocationCardWidget extends StatelessWidget {
               ],
             ),
           ),
-          Row(
-            children: [
-              Expanded(
-                child: AdminLocationActionWidget(
-                  labelKey: 'admin.locations.edit',
-                  color: AppColors.textSecondary,
-                  onTap: onEdit,
-                ),
-              ),
-              Expanded(
-                child: AdminLocationActionWidget(
-                  labelKey: 'admin.locations.delete',
-                  color: AppColors.error,
-                  onTap: onDelete,
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: AdminLocationActionWidget(
+                      labelKey: 'admin.locations.edit',
+                      color: AppColors.textSecondary,
+                      onTap: onEdit,
+                    ),
+                  ),
+                  Expanded(
+                    child: AdminLocationActionWidget(
+                      labelKey: 'admin.locations.delete',
+                      color: AppColors.error,
+                      onTap: onDelete,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
