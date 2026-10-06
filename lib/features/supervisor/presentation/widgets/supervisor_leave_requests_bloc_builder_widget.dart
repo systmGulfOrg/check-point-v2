@@ -70,6 +70,7 @@ class SupervisorLeaveRequestsBlocBuilderWidget extends StatelessWidget {
                 _ => requests,
               },
               userRole: cubit.userRole,
+              currentUserId: cubit.currentUserId,
               onApprove: (req) {
                 if (req.ulid != null) {
                   cubit.approveRequest(

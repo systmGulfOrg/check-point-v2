@@ -22,6 +22,11 @@ class AdminLeaveRequestModel {
     this.reason,
     this.attachmentUrl,
     this.status,
+    this.directManagerId,
+    this.directManagerName,
+    this.hasDirectManager,
+    this.rejectionReason,
+    this.timeline,
     this.managerId,
     this.managerName,
     this.managerActionAt,
@@ -45,6 +50,11 @@ class AdminLeaveRequestModel {
   final String? reason;
   final String? attachmentUrl;
   final String? status;
+  final String? directManagerId;
+  final String? directManagerName;
+  final bool? hasDirectManager;
+  final String? rejectionReason;
+  final Map<String, dynamic>? timeline;
   // Stage 1
   final String? managerId;
   final String? managerName;

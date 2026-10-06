@@ -66,6 +66,7 @@ class AdminLeaveRequestsListWidget extends StatelessWidget {
 
         return AdminLeaveRequestCardWidget(
           request: requestData,
+          rawModel: item,
           onApprove: () {
             if (item.id != null) {
               cubit.updateStatus(requestId: item.id!, status: 'Approved');

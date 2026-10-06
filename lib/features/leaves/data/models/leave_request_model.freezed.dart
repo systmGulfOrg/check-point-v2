@@ -31,7 +31,12 @@ mixin _$LeaveRequestModel {
   String get status => throw _privateConstructorUsedError;
   String? get reason => throw _privateConstructorUsedError;
   String? get attachmentUrl => throw _privateConstructorUsedError;
-  DateTime? get createdAt =>
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  String? get directManagerId => throw _privateConstructorUsedError;
+  String? get directManagerName => throw _privateConstructorUsedError;
+  bool? get hasDirectManager => throw _privateConstructorUsedError;
+  String? get rejectionReason => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get timeline =>
       throw _privateConstructorUsedError; // Stage 1 - Manager
   String? get managerId => throw _privateConstructorUsedError;
   String? get managerName => throw _privateConstructorUsedError;
@@ -72,6 +77,11 @@ abstract class $LeaveRequestModelCopyWith<$Res> {
     String? reason,
     String? attachmentUrl,
     DateTime? createdAt,
+    String? directManagerId,
+    String? directManagerName,
+    bool? hasDirectManager,
+    String? rejectionReason,
+    Map<String, dynamic>? timeline,
     String? managerId,
     String? managerName,
     DateTime? managerActionAt,
@@ -109,6 +119,11 @@ class _$LeaveRequestModelCopyWithImpl<$Res, $Val extends LeaveRequestModel>
     Object? reason = freezed,
     Object? attachmentUrl = freezed,
     Object? createdAt = freezed,
+    Object? directManagerId = freezed,
+    Object? directManagerName = freezed,
+    Object? hasDirectManager = freezed,
+    Object? rejectionReason = freezed,
+    Object? timeline = freezed,
     Object? managerId = freezed,
     Object? managerName = freezed,
     Object? managerActionAt = freezed,
@@ -164,6 +179,26 @@ class _$LeaveRequestModelCopyWithImpl<$Res, $Val extends LeaveRequestModel>
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
                       as DateTime?,
+            directManagerId: freezed == directManagerId
+                ? _value.directManagerId
+                : directManagerId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            directManagerName: freezed == directManagerName
+                ? _value.directManagerName
+                : directManagerName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            hasDirectManager: freezed == hasDirectManager
+                ? _value.hasDirectManager
+                : hasDirectManager // ignore: cast_nullable_to_non_nullable
+                      as bool?,
+            rejectionReason: freezed == rejectionReason
+                ? _value.rejectionReason
+                : rejectionReason // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            timeline: freezed == timeline
+                ? _value.timeline
+                : timeline // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
             managerId: freezed == managerId
                 ? _value.managerId
                 : managerId // ignore: cast_nullable_to_non_nullable
@@ -223,6 +258,11 @@ abstract class _$$LeaveRequestModelImplCopyWith<$Res>
     String? reason,
     String? attachmentUrl,
     DateTime? createdAt,
+    String? directManagerId,
+    String? directManagerName,
+    bool? hasDirectManager,
+    String? rejectionReason,
+    Map<String, dynamic>? timeline,
     String? managerId,
     String? managerName,
     DateTime? managerActionAt,
@@ -259,6 +299,11 @@ class __$$LeaveRequestModelImplCopyWithImpl<$Res>
     Object? reason = freezed,
     Object? attachmentUrl = freezed,
     Object? createdAt = freezed,
+    Object? directManagerId = freezed,
+    Object? directManagerName = freezed,
+    Object? hasDirectManager = freezed,
+    Object? rejectionReason = freezed,
+    Object? timeline = freezed,
     Object? managerId = freezed,
     Object? managerName = freezed,
     Object? managerActionAt = freezed,
@@ -314,6 +359,26 @@ class __$$LeaveRequestModelImplCopyWithImpl<$Res>
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
                   as DateTime?,
+        directManagerId: freezed == directManagerId
+            ? _value.directManagerId
+            : directManagerId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        directManagerName: freezed == directManagerName
+            ? _value.directManagerName
+            : directManagerName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        hasDirectManager: freezed == hasDirectManager
+            ? _value.hasDirectManager
+            : hasDirectManager // ignore: cast_nullable_to_non_nullable
+                  as bool?,
+        rejectionReason: freezed == rejectionReason
+            ? _value.rejectionReason
+            : rejectionReason // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        timeline: freezed == timeline
+            ? _value._timeline
+            : timeline // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
         managerId: freezed == managerId
             ? _value.managerId
             : managerId // ignore: cast_nullable_to_non_nullable
@@ -366,6 +431,11 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
     this.reason,
     this.attachmentUrl,
     this.createdAt,
+    this.directManagerId,
+    this.directManagerName,
+    this.hasDirectManager,
+    this.rejectionReason,
+    final Map<String, dynamic>? timeline,
     this.managerId,
     this.managerName,
     this.managerActionAt,
@@ -374,7 +444,7 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
     this.hrName,
     this.hrActionAt,
     this.hrRejectionReason,
-  });
+  }) : _timeline = timeline;
 
   factory _$LeaveRequestModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LeaveRequestModelImplFromJson(json);
@@ -401,6 +471,24 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
   final String? attachmentUrl;
   @override
   final DateTime? createdAt;
+  @override
+  final String? directManagerId;
+  @override
+  final String? directManagerName;
+  @override
+  final bool? hasDirectManager;
+  @override
+  final String? rejectionReason;
+  final Map<String, dynamic>? _timeline;
+  @override
+  Map<String, dynamic>? get timeline {
+    final value = _timeline;
+    if (value == null) return null;
+    if (_timeline is EqualUnmodifiableMapView) return _timeline;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
   // Stage 1 - Manager
   @override
   final String? managerId;
@@ -422,7 +510,7 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
 
   @override
   String toString() {
-    return 'LeaveRequestModel(id: $id, leaveTypeId: $leaveTypeId, leaveTypeName: $leaveTypeName, employeeId: $employeeId, startDate: $startDate, endDate: $endDate, totalDays: $totalDays, status: $status, reason: $reason, attachmentUrl: $attachmentUrl, createdAt: $createdAt, managerId: $managerId, managerName: $managerName, managerActionAt: $managerActionAt, managerRejectionReason: $managerRejectionReason, hrId: $hrId, hrName: $hrName, hrActionAt: $hrActionAt, hrRejectionReason: $hrRejectionReason)';
+    return 'LeaveRequestModel(id: $id, leaveTypeId: $leaveTypeId, leaveTypeName: $leaveTypeName, employeeId: $employeeId, startDate: $startDate, endDate: $endDate, totalDays: $totalDays, status: $status, reason: $reason, attachmentUrl: $attachmentUrl, createdAt: $createdAt, directManagerId: $directManagerId, directManagerName: $directManagerName, hasDirectManager: $hasDirectManager, rejectionReason: $rejectionReason, timeline: $timeline, managerId: $managerId, managerName: $managerName, managerActionAt: $managerActionAt, managerRejectionReason: $managerRejectionReason, hrId: $hrId, hrName: $hrName, hrActionAt: $hrActionAt, hrRejectionReason: $hrRejectionReason)';
   }
 
   @override
@@ -448,6 +536,15 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
                 other.attachmentUrl == attachmentUrl) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
+            (identical(other.directManagerId, directManagerId) ||
+                other.directManagerId == directManagerId) &&
+            (identical(other.directManagerName, directManagerName) ||
+                other.directManagerName == directManagerName) &&
+            (identical(other.hasDirectManager, hasDirectManager) ||
+                other.hasDirectManager == hasDirectManager) &&
+            (identical(other.rejectionReason, rejectionReason) ||
+                other.rejectionReason == rejectionReason) &&
+            const DeepCollectionEquality().equals(other._timeline, _timeline) &&
             (identical(other.managerId, managerId) ||
                 other.managerId == managerId) &&
             (identical(other.managerName, managerName) ||
@@ -479,6 +576,11 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
     reason,
     attachmentUrl,
     createdAt,
+    directManagerId,
+    directManagerName,
+    hasDirectManager,
+    rejectionReason,
+    const DeepCollectionEquality().hash(_timeline),
     managerId,
     managerName,
     managerActionAt,
@@ -519,6 +621,11 @@ abstract class _LeaveRequestModel implements LeaveRequestModel {
     final String? reason,
     final String? attachmentUrl,
     final DateTime? createdAt,
+    final String? directManagerId,
+    final String? directManagerName,
+    final bool? hasDirectManager,
+    final String? rejectionReason,
+    final Map<String, dynamic>? timeline,
     final String? managerId,
     final String? managerName,
     final DateTime? managerActionAt,
@@ -553,7 +660,17 @@ abstract class _LeaveRequestModel implements LeaveRequestModel {
   @override
   String? get attachmentUrl;
   @override
-  DateTime? get createdAt; // Stage 1 - Manager
+  DateTime? get createdAt;
+  @override
+  String? get directManagerId;
+  @override
+  String? get directManagerName;
+  @override
+  bool? get hasDirectManager;
+  @override
+  String? get rejectionReason;
+  @override
+  Map<String, dynamic>? get timeline; // Stage 1 - Manager
   @override
   String? get managerId;
   @override

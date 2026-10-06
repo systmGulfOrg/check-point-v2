@@ -22,6 +22,11 @@ _$LeaveRequestModelImpl _$$LeaveRequestModelImplFromJson(
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
+  directManagerId: json['directManagerId'] as String?,
+  directManagerName: json['directManagerName'] as String?,
+  hasDirectManager: json['hasDirectManager'] as bool?,
+  rejectionReason: json['rejectionReason'] as String?,
+  timeline: json['timeline'] as Map<String, dynamic>?,
   managerId: json['managerId'] as String?,
   managerName: json['managerName'] as String?,
   managerActionAt: json['managerActionAt'] == null
@@ -50,6 +55,11 @@ Map<String, dynamic> _$$LeaveRequestModelImplToJson(
   'reason': instance.reason,
   'attachmentUrl': instance.attachmentUrl,
   'createdAt': instance.createdAt?.toIso8601String(),
+  'directManagerId': instance.directManagerId,
+  'directManagerName': instance.directManagerName,
+  'hasDirectManager': instance.hasDirectManager,
+  'rejectionReason': instance.rejectionReason,
+  'timeline': instance.timeline,
   'managerId': instance.managerId,
   'managerName': instance.managerName,
   'managerActionAt': instance.managerActionAt?.toIso8601String(),

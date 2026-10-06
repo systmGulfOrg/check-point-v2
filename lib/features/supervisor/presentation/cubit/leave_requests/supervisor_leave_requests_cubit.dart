@@ -86,8 +86,7 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
     );
     switch (result) {
       case Success(:final data):
-        // Hide supervisor's own requests
-        allRequests = data.where((r) => r.employeeId != currentUserId).toList();
+        allRequests = data;
         emit(
           SupervisorLeaveRequestsState.success(
             requests: _filteredRequests,

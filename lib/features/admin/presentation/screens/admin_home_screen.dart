@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
@@ -13,8 +14,28 @@ import 'package:check_point_v2/features/admin/presentation/widgets/admin_stats_g
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_top_bar_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_weekly_attendance_chart_widget.dart';
 
-class AdminHomeScreen extends StatelessWidget {
+class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
+
+  @override
+  State<AdminHomeScreen> createState() => _AdminHomeScreenState();
+}
+
+class _AdminHomeScreenState extends State<AdminHomeScreen> {
+  String? _adminName;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAdminName();
+  }
+
+  Future<void> _loadAdminName() async {
+    final name = await sl<AuthSessionStorage>().readUserName();
+    if (mounted && name != null && name.isNotEmpty) {
+      setState(() => _adminName = name);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +112,7 @@ class AdminHomeScreen extends StatelessWidget {
               hSpace(12),
               AdminGreetingWidget(
                 userNameKey: 'admin.dashboard.user',
+                userName: _adminName,
                 dateText: dateFormatted,
               ),
               hSpace(12),

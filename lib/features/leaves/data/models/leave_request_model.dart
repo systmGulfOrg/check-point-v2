@@ -17,6 +17,11 @@ class LeaveRequestModel with _$LeaveRequestModel {
     String? reason,
     String? attachmentUrl,
     DateTime? createdAt,
+    String? directManagerId,
+    String? directManagerName,
+    bool? hasDirectManager,
+    String? rejectionReason,
+    Map<String, dynamic>? timeline,
     // Stage 1 - Manager
     String? managerId,
     String? managerName,
