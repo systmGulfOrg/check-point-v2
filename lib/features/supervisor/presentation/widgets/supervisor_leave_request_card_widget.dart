@@ -99,6 +99,7 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
           tilePadding: EdgeInsets.fromLTRB(14.w, 12.h, 14.w, 10.h),
           childrenPadding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
           title: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppAvatarWidget(
                 name: name,
@@ -118,14 +119,48 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
                       '${request.leaveType ?? 'Leave'} ($dateRange)',
                       style: AppTextStyles.font12Regular,
                     ),
+                    hSpace(4),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 3.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: statusBgColor,
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 6.r,
+                            height: 6.r,
+                            decoration: BoxDecoration(
+                              color: statusColor,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          wSpace(5),
+                          Text(
+                            statusKey.tr(context: context),
+                            style: AppTextStyles.font11Medium.copyWith(
+                              color: statusColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     if (request.reason != null &&
                         request.reason!.isNotEmpty) ...[
-                      hSpace(2),
+                      hSpace(4),
                       Text(
                         request.reason!,
                         style: AppTextStyles.font12Regular.copyWith(
                           color: AppColors.placeholder,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                     if (request.attachmentUrl != null &&
@@ -164,33 +199,6 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: statusBgColor,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6.r,
-                      height: 6.r,
-                      decoration: BoxDecoration(
-                        color: statusColor,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    wSpace(5),
-                    Text(
-                      statusKey.tr(context: context),
-                      style: AppTextStyles.font12Bold.copyWith(
-                        color: statusColor,
-                      ),
-                    ),
                   ],
                 ),
               ),
