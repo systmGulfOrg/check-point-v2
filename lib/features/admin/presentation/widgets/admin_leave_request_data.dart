@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AdminLeaveRequestData {
   const AdminLeaveRequestData({
+    this.imageUrl,
     required this.initials,
     required this.nameKey,
     required this.leaveTypeKey,
@@ -14,6 +15,7 @@ class AdminLeaveRequestData {
     this.attachmentUrl,
   });
 
+  final String? imageUrl;
   final String initials;
   final String nameKey;
   final String leaveTypeKey;

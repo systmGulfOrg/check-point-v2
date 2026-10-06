@@ -33,15 +33,13 @@ class SupervisorTeamTodayRowWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Row(
         children: [
-          CircleAvatar(
+          AppAvatarWidget(
+            imageUrl: record.employeeImage,
+            name: name,
+            initials: initials,
+            subtitle: record.area,
             radius: 20.r,
-            backgroundColor: AppColors.softBrandBackground,
-            child: Text(
-              initials,
-              style: AppTextStyles.font14SemiBold.copyWith(
-                color: AppColors.brandPrimary,
-              ),
-            ),
+            enablePreview: true,
           ),
           wSpace(12),
           Expanded(

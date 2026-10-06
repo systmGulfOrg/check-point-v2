@@ -115,6 +115,7 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
                     hSpace(12),
                     for (final employee in employees) ...[
                       AdminEmployeeCardWidget(
+                        imageUrl: employee.imageUrl,
                         initials: _initials(employee.name),
                         name: employee.name ?? employee.userName ?? '-',
                         roles: employee.allRoles,

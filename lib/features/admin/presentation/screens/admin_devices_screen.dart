@@ -200,18 +200,11 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                           children: [
                             Row(
                               children: [
-                                CircleAvatar(
+                                AppAvatarWidget(
+                                  name: dev.employeeName,
+                                  subtitle: dev.deviceModel,
                                   radius: 20.r,
-                                  backgroundColor:
-                                      AppColors.softBrandBackground,
-                                  child: Text(
-                                    dev.employeeName?.isNotEmpty == true
-                                        ? dev.employeeName![0].toUpperCase()
-                                        : '?',
-                                    style: AppTextStyles.font16Bold.copyWith(
-                                      color: AppColors.brandPrimary,
-                                    ),
-                                  ),
+                                  enablePreview: true,
                                 ),
                                 wSpace(12),
                                 Expanded(

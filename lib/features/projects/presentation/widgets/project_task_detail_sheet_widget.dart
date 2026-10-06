@@ -459,20 +459,13 @@ class _ProjectTaskDetailSheetWidgetState
               horizontal: 14.w,
               vertical: 4.h,
             ),
-            leading: CircleAvatar(
+            leading: AppAvatarWidget(
+              imageUrl: imageUrl,
+              name: displayName,
+              initials: initial,
+              subtitle: subtitle,
               radius: 20.r,
-              backgroundColor: AppColors.softBrandBackground,
-              backgroundImage: imageUrl?.isNotEmpty == true
-                  ? NetworkImage(imageUrl!)
-                  : null,
-              child: imageUrl?.isNotEmpty == true
-                  ? null
-                  : Text(
-                      initial,
-                      style: AppTextStyles.font16Bold.copyWith(
-                        color: AppColors.brandPrimary,
-                      ),
-                    ),
+              enablePreview: true,
             ),
             title: Text(displayName, style: AppTextStyles.font14Bold),
             subtitle: subtitle != displayName

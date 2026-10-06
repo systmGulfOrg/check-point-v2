@@ -31,15 +31,13 @@ class AdminAttendanceRecordCardWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
+              AppAvatarWidget(
+                imageUrl: record.imageUrl,
+                name: record.name,
+                initials: record.initials,
+                subtitle: record.area,
                 radius: 18.r,
-                backgroundColor: AppColors.softGreenBackground,
-                child: Text(
-                  record.initials,
-                  style: AppTextStyles.font14Bold.copyWith(
-                    color: AppColors.success,
-                  ),
-                ),
+                enablePreview: true,
               ),
               wSpace(10),
               Expanded(

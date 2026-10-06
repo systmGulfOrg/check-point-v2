@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AdminAttendanceRecordData {
   const AdminAttendanceRecordData({
+    this.imageUrl,
     required this.initials,
     required this.name,
     required this.date,
@@ -14,6 +15,7 @@ class AdminAttendanceRecordData {
     required this.statusBackgroundColor,
   });
 
+  final String? imageUrl;
   final String initials;
   final String name;
   final String date;

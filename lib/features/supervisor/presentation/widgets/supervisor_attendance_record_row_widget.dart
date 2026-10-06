@@ -50,15 +50,13 @@ class SupervisorAttendanceRecordRowWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
+          AppAvatarWidget(
+            imageUrl: record.employeeImage,
+            name: name,
+            initials: initials,
+            subtitle: record.area,
             radius: 19.r,
-            backgroundColor: AppColors.softBrandBackground,
-            child: Text(
-              initials,
-              style: AppTextStyles.font12Bold.copyWith(
-                color: AppColors.brandPrimary,
-              ),
-            ),
+            enablePreview: true,
           ),
           wSpace(12),
           Expanded(

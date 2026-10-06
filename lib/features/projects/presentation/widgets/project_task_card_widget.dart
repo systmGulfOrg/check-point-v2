@@ -413,9 +413,6 @@ class ProjectTaskCardWidget extends StatelessWidget {
                                 final initial = name.isNotEmpty
                                     ? name[0].toUpperCase()
                                     : '?';
-                                final hasImage =
-                                    assignee.employeeImageUrl?.isNotEmpty ==
-                                    true;
 
                                 return Container(
                                   decoration: BoxDecoration(
@@ -425,23 +422,12 @@ class ProjectTaskCardWidget extends StatelessWidget {
                                       width: 1.5,
                                     ),
                                   ),
-                                  child: CircleAvatar(
+                                  child: AppAvatarWidget(
+                                    imageUrl: assignee.employeeImageUrl,
+                                    name: assignee.employeeName,
+                                    initials: initial,
                                     radius: 11.r,
-                                    backgroundColor: AppColors.brandPrimary,
-                                    backgroundImage: hasImage
-                                        ? NetworkImage(
-                                            assignee.employeeImageUrl!,
-                                          )
-                                        : null,
-                                    child: hasImage
-                                        ? null
-                                        : Text(
-                                            initial,
-                                            style: AppTextStyles.font10Bold
-                                                .copyWith(
-                                                  color: AppColors.white,
-                                                ),
-                                          ),
+                                    enablePreview: true,
                                   ),
                                 );
                               })

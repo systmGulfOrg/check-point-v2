@@ -30,15 +30,15 @@ class AdminPermissionsUserCardWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
+              AppAvatarWidget(
+                imageUrl: user.imageUrl,
+                name: user.name,
+                initials: user.initials,
+                subtitle: user.email ?? user.employeeCode,
                 radius: 20.r,
                 backgroundColor: AppColors.softBlueBackground,
-                child: Text(
-                  user.initials,
-                  style: AppTextStyles.font12Bold.copyWith(
-                    color: AppColors.info,
-                  ),
-                ),
+                textColor: AppColors.info,
+                enablePreview: true,
               ),
               vSpace(10),
               Expanded(

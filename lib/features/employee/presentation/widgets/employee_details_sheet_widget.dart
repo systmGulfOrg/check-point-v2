@@ -125,15 +125,12 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
           hSpace(18),
           Row(
             children: [
-              CircleAvatar(
+              AppAvatarWidget(
+                imageUrl: employee.imageUrl,
+                name: name,
+                subtitle: employee.position ?? employee.employeeCode,
                 radius: 28.r,
-                backgroundColor: AppColors.softBrandBackground,
-                child: Text(
-                  name.isEmpty ? '?' : name[0].toUpperCase(),
-                  style: AppTextStyles.font20Bold.copyWith(
-                    color: AppColors.brandPrimary,
-                  ),
-                ),
+                enablePreview: true,
               ),
               vSpace(12),
               Expanded(

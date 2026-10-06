@@ -28,13 +28,15 @@ class AdminSupervisorPermissionCardWidget extends StatelessWidget {
         ),
         child: Row(
           children: [
-            CircleAvatar(
+            AppAvatarWidget(
+              imageUrl: supervisor.imageUrl,
+              name: supervisor.name,
+              initials: supervisor.initials,
+              subtitle: supervisor.email,
               radius: 19.r,
               backgroundColor: AppColors.softBlueBackground,
-              child: Text(
-                supervisor.initials,
-                style: AppTextStyles.font12Bold.copyWith(color: AppColors.info),
-              ),
+              textColor: AppColors.info,
+              enablePreview: true,
             ),
             vSpace(12),
             Expanded(

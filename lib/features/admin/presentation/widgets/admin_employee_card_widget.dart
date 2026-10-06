@@ -11,6 +11,7 @@ class AdminEmployeeCardWidget extends StatelessWidget {
     required this.email,
     required this.empCode,
     super.key,
+    this.imageUrl,
     this.roles = const [],
     this.roleKey,
     this.department,
@@ -20,6 +21,7 @@ class AdminEmployeeCardWidget extends StatelessWidget {
     this.onTap,
   });
 
+  final String? imageUrl;
   final String initials;
   final String name;
   final List<String> roles;
@@ -104,15 +106,13 @@ class AdminEmployeeCardWidget extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
+                  AppAvatarWidget(
+                    imageUrl: imageUrl,
+                    name: name,
+                    initials: initials,
+                    subtitle: empCode,
                     radius: 22.r,
-                    backgroundColor: AppColors.softBrandBackground,
-                    child: Text(
-                      initials,
-                      style: AppTextStyles.font14SemiBold.copyWith(
-                        color: AppColors.brandPrimary,
-                      ),
-                    ),
+                    enablePreview: true,
                   ),
                   vSpace(12),
                   Expanded(

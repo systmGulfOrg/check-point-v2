@@ -61,17 +61,11 @@ class AuthProfileCardWidget extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    CircleAvatar(
+                    AppAvatarWidget(
+                      name: name,
+                      subtitle: username,
                       radius: 32.r,
-                      backgroundColor: AppColors.softBrandBackground,
-                      child: Text(
-                        name.trim().isEmpty
-                            ? 'U'
-                            : name.trim()[0].toUpperCase(),
-                        style: AppTextStyles.font18Bold.copyWith(
-                          color: AppColors.brandPrimary,
-                        ),
-                      ),
+                      enablePreview: true,
                     ),
                     hSpace(12),
                     Text(

@@ -36,15 +36,13 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
+                AppAvatarWidget(
+                  imageUrl: request.imageUrl,
+                  name: request.nameKey.tr(context: context),
+                  initials: request.initials,
+                  subtitle: request.leaveTypeKey.tr(context: context),
                   radius: 18.r,
-                  backgroundColor: AppColors.softGreenBackground,
-                  child: Text(
-                    request.initials,
-                    style: AppTextStyles.font12Bold.copyWith(
-                      color: AppColors.success,
-                    ),
-                  ),
+                  enablePreview: true,
                 ),
                 vSpace(12),
                 Expanded(

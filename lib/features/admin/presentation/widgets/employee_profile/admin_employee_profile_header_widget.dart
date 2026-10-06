@@ -39,24 +39,13 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  CircleAvatar(
+                  AppAvatarWidget(
+                    imageUrl: employee.imageUrl,
+                    name: employee.name,
+                    initials: initials,
+                    subtitle: employee.employeeCode,
                     radius: 36.r,
-                    backgroundColor: AppColors.softBrandBackground,
-                    backgroundImage:
-                        employee.imageUrl != null &&
-                            employee.imageUrl!.isNotEmpty
-                        ? NetworkImage(employee.imageUrl!)
-                        : null,
-                    child:
-                        (employee.imageUrl == null ||
-                            employee.imageUrl!.isEmpty)
-                        ? Text(
-                            initials,
-                            style: AppTextStyles.font24Bold.copyWith(
-                              color: AppColors.brandPrimary,
-                            ),
-                          )
-                        : null,
+                    enablePreview: true,
                   ),
                   Positioned(
                     bottom: 0,

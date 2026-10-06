@@ -318,14 +318,10 @@ class _AssigneeMultiSelectWidgetState extends State<AssigneeMultiSelectWidget> {
                       return Chip(
                         backgroundColor: AppColors.softBrandBackground,
                         deleteIconColor: AppColors.brandPrimary,
-                        avatar: CircleAvatar(
-                          backgroundColor: AppColors.brandPrimary,
-                          child: Text(
-                            name.isNotEmpty ? name[0].toUpperCase() : '?',
-                            style: AppTextStyles.font12Bold.copyWith(
-                              color: AppColors.white,
-                            ),
-                          ),
+                        avatar: AppAvatarWidget(
+                          name: name,
+                          radius: 10.r,
+                          enablePreview: true,
                         ),
                         label: Text(
                           name,

@@ -265,13 +265,12 @@ class AdminPolicyEmployeeOptionWidget extends StatelessWidget {
         ),
         child: Row(
           children: [
-            CircleAvatar(
+            AppAvatarWidget(
+              imageUrl: employee.imageUrl,
+              name: name,
+              subtitle: employee.departmentName,
               radius: 18.r,
-              backgroundColor: AppColors.softBrandBackground,
-              child: Text(
-                name[0].toUpperCase(),
-                style: AppTextStyles.font12Bold,
-              ),
+              enablePreview: true,
             ),
             vSpace(10),
             Expanded(

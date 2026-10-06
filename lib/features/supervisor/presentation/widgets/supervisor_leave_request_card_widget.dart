@@ -96,15 +96,12 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(14.w, 12.h, 14.w, 10.h),
             child: Row(
               children: [
-                CircleAvatar(
+                AppAvatarWidget(
+                  name: name,
+                  initials: initials,
+                  subtitle: request.leaveType,
                   radius: 19.r,
-                  backgroundColor: AppColors.softBrandBackground,
-                  child: Text(
-                    initials,
-                    style: AppTextStyles.font12Bold.copyWith(
-                      color: AppColors.brandPrimary,
-                    ),
-                  ),
+                  enablePreview: true,
                 ),
                 wSpace(12),
                 Expanded(

@@ -210,15 +210,15 @@ class _AdminAbsentEmployeesSheetWidgetState
                             ),
                             child: Row(
                               children: [
-                                CircleAvatar(
+                                AppAvatarWidget(
+                                  imageUrl: employee.imageUrl,
+                                  name: employee.name ?? employee.userName,
+                                  initials: initial,
+                                  subtitle: employee.departmentName,
                                   radius: 20.r,
                                   backgroundColor: AppColors.softRedBackground,
-                                  child: Text(
-                                    initial,
-                                    style: AppTextStyles.font14Bold.copyWith(
-                                      color: AppColors.error,
-                                    ),
-                                  ),
+                                  textColor: AppColors.error,
+                                  enablePreview: true,
                                 ),
                                 wSpace(12),
                                 Expanded(

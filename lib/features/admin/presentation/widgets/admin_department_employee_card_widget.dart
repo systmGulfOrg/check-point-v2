@@ -57,15 +57,13 @@ class AdminDepartmentEmployeeCardWidget extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
+                AppAvatarWidget(
+                  imageUrl: employee.imageUrl,
+                  name: employee.name,
+                  initials: _initials,
+                  subtitle: employee.employeeCode,
                   radius: 20.r,
-                  backgroundColor: AppColors.softBrandBackground,
-                  child: Text(
-                    _initials,
-                    style: AppTextStyles.font13SemiBold.copyWith(
-                      color: AppColors.brandPrimary,
-                    ),
-                  ),
+                  enablePreview: true,
                 ),
                 vSpace(12),
                 Expanded(

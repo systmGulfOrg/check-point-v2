@@ -14,17 +14,6 @@ class AdminRequestDetailsScreen extends StatelessWidget {
 
   final AccountRequestModel request;
 
-  String _getInitials(String? name) {
-    if (name == null || name.trim().isEmpty) return '?';
-    final parts = name.trim().split(RegExp(r'\s+'));
-    if (parts.length == 1) {
-      return parts.first
-          .substring(0, parts.first.length.clamp(1, 2))
-          .toUpperCase();
-    }
-    return (parts.first[0] + parts.last[0]).toUpperCase();
-  }
-
   Color _getStatusBackgroundColor() {
     if (request.isApproved) return AppColors.softGreenBackground;
     if (request.isRejected) return AppColors.softRedBackground;
@@ -69,15 +58,12 @@ class AdminRequestDetailsScreen extends StatelessWidget {
             decoration: AppDecorations.card,
             child: Row(
               children: [
-                CircleAvatar(
+                AppAvatarWidget(
+                  imageUrl: request.photo,
+                  name: request.name,
+                  subtitle: request.mobileId,
                   radius: 30.r,
-                  backgroundColor: AppColors.softBrandBackground,
-                  child: Text(
-                    _getInitials(request.name),
-                    style: AppTextStyles.font16Bold.copyWith(
-                      color: AppColors.brandPrimary,
-                    ),
-                  ),
+                  enablePreview: true,
                 ),
                 vSpace(14),
                 Expanded(

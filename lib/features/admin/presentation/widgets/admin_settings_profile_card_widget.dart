@@ -26,15 +26,12 @@ class AdminSettingsProfileCardWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          CircleAvatar(
+          AppAvatarWidget(
+            name: 'admin.settings.userName'.tr(context: context),
+            initials: 'SA',
+            subtitle: 'admin.settings.userEmail'.tr(context: context),
             radius: 32.r,
-            backgroundColor: AppColors.softBrandBackground,
-            child: Text(
-              'SA',
-              style: AppTextStyles.font18Bold.copyWith(
-                color: AppColors.brandPrimary,
-              ),
-            ),
+            enablePreview: true,
           ),
           hSpace(12),
           Text(

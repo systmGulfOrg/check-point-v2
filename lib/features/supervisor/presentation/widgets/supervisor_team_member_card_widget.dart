@@ -46,15 +46,13 @@ class SupervisorTeamMemberCardWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
+                AppAvatarWidget(
+                  imageUrl: employee.imageUrl,
+                  name: name,
+                  initials: initials.isEmpty ? 'EM' : initials,
+                  subtitle: code,
                   radius: 24.r,
-                  backgroundColor: AppColors.softBrandBackground,
-                  child: Text(
-                    initials.isEmpty ? 'EM' : initials,
-                    style: AppTextStyles.font14SemiBold.copyWith(
-                      color: AppColors.brandPrimary,
-                    ),
-                  ),
+                  enablePreview: true,
                 ),
                 vSpace(12),
                 Expanded(

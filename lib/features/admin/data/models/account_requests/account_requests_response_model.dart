@@ -41,13 +41,14 @@ class AccountRequestModel {
     this.mobileId,
     this.phone,
     this.deviceToken,
+    this.imageUrl,
+    this.photoPath,
     this.status,
     this.rejectReason,
     this.reviewedBy,
     this.reviewedAt,
     this.createdDate,
     this.createdEmployeeId,
-    this.photoPath,
   });
 
   final int? id;
@@ -55,13 +56,20 @@ class AccountRequestModel {
   final String? mobileId;
   final String? phone;
   final String? deviceToken;
+  final String? imageUrl;
+  final String? photoPath;
   final String? status;
   final String? rejectReason;
   final String? reviewedBy;
   final DateTime? reviewedAt;
   final DateTime? createdDate;
   final String? createdEmployeeId;
-  final String? photoPath;
+
+  String? get photo => (imageUrl != null && imageUrl!.isNotEmpty)
+      ? imageUrl
+      : (photoPath != null && photoPath!.isNotEmpty)
+          ? photoPath
+          : null;
 
   bool get isPending => status == null || status == 'Pending';
   bool get isApproved => status == 'Approved';

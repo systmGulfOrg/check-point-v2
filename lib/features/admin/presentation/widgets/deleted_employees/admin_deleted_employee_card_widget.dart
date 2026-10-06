@@ -49,13 +49,15 @@ class AdminDeletedEmployeeCardWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
+          AppAvatarWidget(
+            imageUrl: employee.imageUrl,
+            name: employee.name ?? employee.userName,
+            initials: initials,
+            subtitle: employee.employeeCode,
             radius: 22.r,
             backgroundColor: AppColors.softRedBackground,
-            child: Text(
-              initials,
-              style: AppTextStyles.font14Bold.copyWith(color: AppColors.error),
-            ),
+            textColor: AppColors.error,
+            enablePreview: true,
           ),
           wSpace(12),
           Expanded(

@@ -38,16 +38,13 @@ class SupervisorAssigneeOptionWidget extends StatelessWidget {
           ),
           child: Row(
             children: [
-              CircleAvatar(
+              AppAvatarWidget(
+                name: nameKey.tr(context: context),
+                initials: initials,
                 radius: 11.r,
                 backgroundColor: AppColors.softGreenBackground,
-                child: Text(
-                  initials,
-                  style: AppTextStyles.font11Medium.copyWith(
-                    color: AppColors.success,
-                    fontSize: 8.sp,
-                  ),
-                ),
+                textColor: AppColors.success,
+                enablePreview: true,
               ),
               vSpace(10),
               Expanded(

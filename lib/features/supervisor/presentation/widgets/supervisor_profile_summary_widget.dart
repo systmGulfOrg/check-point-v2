@@ -26,13 +26,14 @@ class SupervisorProfileSummaryWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          CircleAvatar(
+          AppAvatarWidget(
+            name: 'supervisor.profile.name'.tr(context: context),
+            initials: 'SJ',
+            subtitle: 'supervisor.profile.email'.tr(context: context),
             radius: 32.r,
             backgroundColor: AppColors.softBlueBackground,
-            child: Text(
-              'SJ',
-              style: AppTextStyles.font18Bold.copyWith(color: AppColors.info),
-            ),
+            textColor: AppColors.info,
+            enablePreview: true,
           ),
           hSpace(12),
           Text(

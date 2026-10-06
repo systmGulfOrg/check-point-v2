@@ -134,23 +134,12 @@ class _RemoteWorkPolicyEmployeesSheetWidgetState
                     final emp = employees[index];
                     return ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: CircleAvatar(
+                      leading: AppAvatarWidget(
+                        imageUrl: emp.imageUrl,
+                        name: emp.name ?? emp.userName,
+                        subtitle: emp.employeeCode,
                         radius: 20.r,
-                        backgroundColor: AppColors.softBrandBackground,
-                        backgroundImage:
-                            emp.imageUrl != null && emp.imageUrl!.isNotEmpty
-                            ? NetworkImage(emp.imageUrl!)
-                            : null,
-                        child: emp.imageUrl == null || emp.imageUrl!.isEmpty
-                            ? Text(
-                                emp.name?.isNotEmpty == true
-                                    ? emp.name![0].toUpperCase()
-                                    : '?',
-                                style: AppTextStyles.font14Bold.copyWith(
-                                  color: AppColors.brandPrimary,
-                                ),
-                              )
-                            : null,
+                        enablePreview: true,
                       ),
                       title: Text(
                         emp.name ?? '',

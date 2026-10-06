@@ -35,16 +35,11 @@ class AdminShiftEmployeesWidgetState extends State<AdminShiftEmployeesWidget> {
           children: [
             for (final employee in visibleEmployees)
               Chip(
-                avatar: CircleAvatar(
-                  backgroundColor: AppColors.softBrandBackground,
-                  child: Text(
-                    (employee.name ?? employee.userName ?? '?')
-                        .substring(0, 1)
-                        .toUpperCase(),
-                    style: AppTextStyles.font10Medium.copyWith(
-                      color: AppColors.brandPrimary,
-                    ),
-                  ),
+                avatar: AppAvatarWidget(
+                  imageUrl: employee.imageUrl,
+                  name: employee.name ?? employee.userName,
+                  radius: 12.r,
+                  enablePreview: true,
                 ),
                 label: Text(
                   employee.name ?? employee.userName ?? '-',
