@@ -12,7 +12,9 @@ class LeaveBalanceCardWidget extends StatelessWidget {
 
   IconData _getIcon(String name) {
     final lower = name.toLowerCase();
-    if (lower.contains('annual') || lower.contains('سنوية') || lower.contains('اعتيادية')) {
+    if (lower.contains('annual') ||
+        lower.contains('سنوية') ||
+        lower.contains('اعتيادية')) {
       return Icons.beach_access_rounded;
     }
     if (lower.contains('casual') || lower.contains('عارضة')) {
@@ -26,7 +28,9 @@ class LeaveBalanceCardWidget extends StatelessWidget {
 
   Color _getColor(String name) {
     final lower = name.toLowerCase();
-    if (lower.contains('annual') || lower.contains('سنوية') || lower.contains('اعتيادية')) {
+    if (lower.contains('annual') ||
+        lower.contains('سنوية') ||
+        lower.contains('اعتيادية')) {
       return AppColors.brandPrimary;
     }
     if (lower.contains('casual') || lower.contains('عارضة')) {
@@ -117,22 +121,14 @@ class LeaveBalanceCardWidget extends StatelessWidget {
                 '${balance.totalAllocated}',
                 AppColors.textPrimary,
               ),
-              Container(
-                width: 1,
-                height: 28.h,
-                color: AppColors.border,
-              ),
+              Container(width: 1, height: 28.h, color: AppColors.border),
               _buildStatColumn(
                 context,
                 'leaves.dashboard.used'.tr(context: context),
                 '${balance.usedBalance}',
                 AppColors.warning,
               ),
-              Container(
-                width: 1,
-                height: 28.h,
-                color: AppColors.border,
-              ),
+              Container(width: 1, height: 28.h, color: AppColors.border),
               _buildStatColumn(
                 context,
                 'leaves.dashboard.remaining'.tr(context: context),
@@ -184,12 +180,7 @@ class LeaveBalanceCardWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          value,
-          style: AppTextStyles.font18Bold.copyWith(
-            color: color,
-          ),
-        ),
+        Text(value, style: AppTextStyles.font18Bold.copyWith(color: color)),
         hSpace(2),
         Text(
           label,

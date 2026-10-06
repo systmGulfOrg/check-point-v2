@@ -37,10 +37,7 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
         LeaveStepStatus.inProgress,
         'leaves.approval.pendingManagerReview'.tr(),
       ),
-      _ => (
-        LeaveStepStatus.completed,
-        request.managerName,
-      ),
+      _ => (LeaveStepStatus.completed, request.managerName),
     };
 
     final managerDateStr = request.managerActionAt != null
@@ -73,10 +70,7 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
         LeaveStepStatus.waiting,
         'leaves.approval.waitingForManagerFirst'.tr(),
       ),
-      _ => (
-        LeaveStepStatus.waiting,
-        null,
-      ),
+      _ => (LeaveStepStatus.waiting, null),
     };
 
     final hrDateStr = request.hrActionAt != null

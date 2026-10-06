@@ -13,6 +13,12 @@ _$OfficialHolidayModelImpl _$$OfficialHolidayModelImplFromJson(
   name: json['name'] as String,
   date: DateTime.parse(json['date'] as String),
   isRecurring: json['isRecurring'] as bool,
+  arabicName: json['arabicName'] as String?,
+  originalDate: json['originalDate'] == null
+      ? null
+      : DateTime.parse(json['originalDate'] as String),
+  isRescheduled: json['isRescheduled'] as bool?,
+  rescheduledNote: json['rescheduledNote'] as String?,
 );
 
 Map<String, dynamic> _$$OfficialHolidayModelImplToJson(
@@ -22,4 +28,24 @@ Map<String, dynamic> _$$OfficialHolidayModelImplToJson(
   'name': instance.name,
   'date': instance.date.toIso8601String(),
   'isRecurring': instance.isRecurring,
+  'arabicName': instance.arabicName,
+  'originalDate': instance.originalDate?.toIso8601String(),
+  'isRescheduled': instance.isRescheduled,
+  'rescheduledNote': instance.rescheduledNote,
 };
+
+_$OfficialHolidaysResponseModelImpl
+_$$OfficialHolidaysResponseModelImplFromJson(Map<String, dynamic> json) =>
+    _$OfficialHolidaysResponseModelImpl(
+      value:
+          (json['value'] as List<dynamic>?)
+              ?.map(
+                (e) => OfficialHolidayModel.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$$OfficialHolidaysResponseModelImplToJson(
+  _$OfficialHolidaysResponseModelImpl instance,
+) => <String, dynamic>{'value': instance.value};

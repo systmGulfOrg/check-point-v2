@@ -10,8 +10,22 @@ class OfficialHolidayModel with _$OfficialHolidayModel {
     required String name,
     required DateTime date,
     required bool isRecurring,
+    String? arabicName,
+    DateTime? originalDate,
+    bool? isRescheduled,
+    String? rescheduledNote,
   }) = _OfficialHolidayModel;
 
   factory OfficialHolidayModel.fromJson(Map<String, dynamic> json) =>
       _$OfficialHolidayModelFromJson(json);
+}
+
+@freezed
+class OfficialHolidaysResponseModel with _$OfficialHolidaysResponseModel {
+  const factory OfficialHolidaysResponseModel({
+    @Default([]) List<OfficialHolidayModel> value,
+  }) = _OfficialHolidaysResponseModel;
+
+  factory OfficialHolidaysResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$OfficialHolidaysResponseModelFromJson(json);
 }

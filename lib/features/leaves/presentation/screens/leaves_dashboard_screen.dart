@@ -50,24 +50,25 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
               ),
             )
             .toList(),
-        onSubmit: ({
-          required startDate,
-          required endDate,
-          required reason,
-          required remark,
-          required leaveRequestType,
-          attachmentUrl,
-        }) {
-          cubit.submitLeave(
-            LeaveRequestBody(
-              leaveTypeId: leaveRequestType,
-              startDate: DateTime.parse(startDate),
-              endDate: DateTime.parse(endDate),
-              reason: reason,
-              attachmentUrl: attachmentUrl,
-            ),
-          );
-        },
+        onSubmit:
+            ({
+              required startDate,
+              required endDate,
+              required reason,
+              required remark,
+              required leaveRequestType,
+              attachmentUrl,
+            }) {
+              cubit.submitLeave(
+                LeaveRequestBody(
+                  leaveTypeId: leaveRequestType,
+                  startDate: DateTime.parse(startDate),
+                  endDate: DateTime.parse(endDate),
+                  reason: reason,
+                  attachmentUrl: attachmentUrl,
+                ),
+              );
+            },
       ),
     );
   }
@@ -127,14 +128,12 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
                       ],
                       LeaveStatusFilterWidget(
                         selectedIndex: _selectedFilterIndex,
-                        pendingCount: requests
-                            .where((r) {
-                              final s = r.status.toLowerCase();
-                              return s == 'pending' ||
-                                  s == 'pendinghr' ||
-                                  s == 'pendingmanager';
-                            })
-                            .length,
+                        pendingCount: requests.where((r) {
+                          final s = r.status.toLowerCase();
+                          return s == 'pending' ||
+                              s == 'pendinghr' ||
+                              s == 'pendingmanager';
+                        }).length,
                         onSelected: (index) =>
                             setState(() => _selectedFilterIndex = index),
                       ),
@@ -191,12 +190,8 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
       final s = r.status.toLowerCase();
       return switch (_selectedFilterIndex) {
         1 => s == 'pending' || s == 'pendinghr' || s == 'pendingmanager',
-        2 => s == 'approved' ||
-            s == 'approvedbyhr' ||
-            s == 'approvedbymanager',
-        3 => s == 'rejected' ||
-            s == 'rejectedbymanager' ||
-            s == 'rejectedbyhr',
+        2 => s == 'approved' || s == 'approvedbyhr' || s == 'approvedbymanager',
+        3 => s == 'rejected' || s == 'rejectedbymanager' || s == 'rejectedbyhr',
         _ => true,
       };
     }).toList();
@@ -228,12 +223,15 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
                 showDialog<bool>(
                   context: context,
                   builder: (dialogCtx) => AppDeleteConfirmationDialogWidget(
-                    title: 'admin.leaveManagement.deleteTitle'
-                        .tr(context: dialogCtx),
-                    message: 'admin.leaveManagement.deleteMessage'
-                        .tr(context: dialogCtx),
-                    confirmLabel: 'admin.leaveManagement.deleteConfirm'
-                        .tr(context: dialogCtx),
+                    title: 'admin.leaveManagement.deleteTitle'.tr(
+                      context: dialogCtx,
+                    ),
+                    message: 'admin.leaveManagement.deleteMessage'.tr(
+                      context: dialogCtx,
+                    ),
+                    confirmLabel: 'admin.leaveManagement.deleteConfirm'.tr(
+                      context: dialogCtx,
+                    ),
                     onConfirm: () async {
                       Navigator.of(dialogCtx).pop(true);
                     },

@@ -106,7 +106,10 @@ class UpcomingHolidayCardWidget extends StatelessWidget {
     }
 
     final formattedDate = holidayDate != null
-        ? DateFormat('d MMMM yyyy', context.locale.toString()).format(holidayDate!)
+        ? DateFormat(
+            'd MMMM yyyy',
+            context.locale.toString(),
+          ).format(holidayDate!)
         : '';
 
     final countdownText = (daysRemaining ?? 0) <= 1

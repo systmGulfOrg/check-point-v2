@@ -1,3 +1,4 @@
+import 'package:check_point_v2/core/core.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,11 +7,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import '../../data/models/short_leave_request_body.dart';
 import '../cubit/permit_cubit.dart';
 import '../cubit/permit_state.dart';
-import '../../../../core/styles/app_colors.dart';
-import '../../../../core/styles/app_text_styles.dart';
-import '../../../../core/widgets/custom_button.dart';
-import '../../../../core/widgets/custom_text_form_field.dart';
-import '../../../../core/utils/app_date_formatter.dart';
 
 class RequestPermissionScreen extends StatefulWidget {
   const RequestPermissionScreen({super.key});
@@ -90,8 +86,9 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedDate == null || _startTime == null || _endTime == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('employee.leaves.dateRequired'.tr())),
+      CustomSnackBar.show(
+        context,
+        message: 'employee.leaves.dateRequired'.tr(),
       );
       return;
     }
@@ -118,22 +115,15 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
         throw StateError(messageKey);
       }
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('permissions.request.success'.tr()),
-            backgroundColor: AppColors.success,
-          ),
+        CustomSnackBar.showSuccess(
+          context,
+          message: 'permissions.request.success'.tr(),
         );
         Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('errors.unknown'.tr()),
-            backgroundColor: AppColors.error,
-          ),
-        );
+        CustomSnackBar.showError(context, message: 'errors.unknown'.tr());
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -232,7 +222,10 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('permissions.request.fromTime'.tr(), style: AppTextStyles.font14Medium),
+                        Text(
+                          'permissions.request.fromTime'.tr(),
+                          style: AppTextStyles.font14Medium,
+                        ),
                         SizedBox(height: 8.h),
                         InkWell(
                           onTap: () => _selectTime(true),
@@ -272,7 +265,10 @@ class _RequestPermissionScreenState extends State<RequestPermissionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('permissions.request.toTime'.tr(), style: AppTextStyles.font14Medium),
+                        Text(
+                          'permissions.request.toTime'.tr(),
+                          style: AppTextStyles.font14Medium,
+                        ),
                         SizedBox(height: 8.h),
                         InkWell(
                           onTap: () => _selectTime(false),

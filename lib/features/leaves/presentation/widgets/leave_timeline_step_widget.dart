@@ -4,12 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/styles/app_text_styles.dart';
 
-enum LeaveStepStatus {
-  completed,
-  inProgress,
-  rejected,
-  waiting,
-}
+enum LeaveStepStatus { completed, inProgress, rejected, waiting }
 
 class LeaveTimelineStepWidget extends StatelessWidget {
   const LeaveTimelineStepWidget({
@@ -77,10 +72,7 @@ class LeaveTimelineStepWidget extends StatelessWidget {
                     color: status == LeaveStepStatus.waiting
                         ? AppColors.white
                         : dotColor,
-                    border: Border.all(
-                      color: dotColor,
-                      width: 2,
-                    ),
+                    border: Border.all(color: dotColor, width: 2),
                   ),
                   child: Center(
                     child: status == LeaveStepStatus.waiting
@@ -94,19 +86,12 @@ class LeaveTimelineStepWidget extends StatelessWidget {
                               ),
                             ),
                           )
-                        : Icon(
-                            icon,
-                            size: 11.r,
-                            color: AppColors.white,
-                          ),
+                        : Icon(icon, size: 11.r, color: AppColors.white),
                   ),
                 ),
                 if (!isLast)
                   Expanded(
-                    child: Container(
-                      width: 2.w,
-                      color: lineColor,
-                    ),
+                    child: Container(width: 2.w, color: lineColor),
                   ),
               ],
             ),

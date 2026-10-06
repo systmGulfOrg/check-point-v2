@@ -24,6 +24,32 @@ class LeavesCubit extends Cubit<LeavesState> {
     );
   }
 
+  Future<bool> rescheduleHoliday({
+    required String holidayId,
+    required String holidayName,
+    required DateTime newDate,
+    String? note,
+    bool reset = false,
+  }) async {
+    final result = await leavesRepo.rescheduleHoliday(
+      holidayId: holidayId,
+      holidayName: holidayName,
+      newDate: newDate,
+      note: note,
+      reset: reset,
+    );
+    return result.when(
+      success: (_) async {
+        await loadOfficialHolidays();
+        return true;
+      },
+      failure: (failure) {
+        emit(LeavesState.error(failure.messageKey));
+        return false;
+      },
+    );
+  }
+
   List<LeaveTypeModel> leaveTypes = [];
 
   Future<void> loadLeavesData() async {
@@ -90,9 +116,7 @@ class LeavesCubit extends Cubit<LeavesState> {
     result.when(
       success: (_) {
         emit(
-          const LeavesState.actionSuccess(
-            'Leave request deleted successfully',
-          ),
+          const LeavesState.actionSuccess('Leave request deleted successfully'),
         );
         unawaited(loadLeavesData());
       },

@@ -88,10 +88,10 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
           final mimeType = ext == 'png'
               ? 'image/png'
               : (ext == 'jpg' || ext == 'jpeg')
-                  ? 'image/jpeg'
-                  : ext == 'pdf'
-                      ? 'application/pdf'
-                      : 'application/octet-stream';
+              ? 'image/jpeg'
+              : ext == 'pdf'
+              ? 'application/pdf'
+              : 'application/octet-stream';
           base64Data = 'data:$mimeType;base64,${base64Encode(file.bytes!)}';
         } else if (file.path != null) {
           final bytes = await File(file.path!).readAsBytes();
@@ -99,10 +99,10 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
           final mimeType = ext == 'png'
               ? 'image/png'
               : (ext == 'jpg' || ext == 'jpeg')
-                  ? 'image/jpeg'
-                  : ext == 'pdf'
-                      ? 'application/pdf'
-                      : 'application/octet-stream';
+              ? 'image/jpeg'
+              : ext == 'pdf'
+              ? 'application/pdf'
+              : 'application/octet-stream';
           base64Data = 'data:$mimeType;base64,${base64Encode(bytes)}';
         }
 
@@ -112,45 +112,31 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
         });
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'leaves.request.attachmentSelected'.tr(context: context),
-              ),
-              backgroundColor: AppColors.success,
-              duration: const Duration(seconds: 2),
-            ),
+          CustomSnackBar.showSuccess(
+            context,
+            message: 'leaves.request.attachmentSelected'.tr(context: context),
           );
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error picking file: $e'),
-            backgroundColor: AppColors.error,
-          ),
-        );
+        CustomSnackBar.showError(context, message: 'Error picking file: $e');
       }
     }
   }
 
   void _submit(List<dynamic> types) {
     if (_selectedLeaveTypeId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('employee.leaves.leaveType'.tr(context: context)),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: 'employee.leaves.leaveType'.tr(context: context),
       );
       return;
     }
     if (_startDate == null || _endDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('employee.leaves.dateRequired'.tr(context: context)),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: 'employee.leaves.dateRequired'.tr(context: context),
       );
       return;
     }
@@ -166,13 +152,9 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
     if (selectedType != null &&
         selectedType.requiresAttachment == true &&
         _attachedFileName == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'leaves.request.attachmentMissing'.tr(context: context),
-          ),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: 'leaves.request.attachmentMissing'.tr(context: context),
       );
       return;
     }
@@ -205,20 +187,16 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
         listener: (context, state) {
           state.whenOrNull(
             submitSuccess: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('leaves.request.success'.tr(context: context)),
-                  backgroundColor: AppColors.success,
-                ),
+              CustomSnackBar.showSuccess(
+                context,
+                message: 'leaves.request.success'.tr(context: context),
               );
               Navigator.pop(context);
             },
             error: (msg) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(msg.tr(context: context)),
-                  backgroundColor: AppColors.error,
-                ),
+              CustomSnackBar.showError(
+                context,
+                message: msg.tr(context: context),
               );
             },
           );
@@ -332,10 +310,14 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
                             vertical: 6.h,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.brandPrimary.withValues(alpha: 0.08),
+                            color: AppColors.brandPrimary.withValues(
+                              alpha: 0.08,
+                            ),
                             borderRadius: BorderRadius.circular(8.r),
                             border: Border.all(
-                              color: AppColors.brandPrimary.withValues(alpha: 0.2),
+                              color: AppColors.brandPrimary.withValues(
+                                alpha: 0.2,
+                              ),
                             ),
                           ),
                           child: Row(
@@ -398,7 +380,9 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
                           color: AppColors.fieldBackground,
                           borderRadius: BorderRadius.circular(12.r),
                           border: Border.all(
-                            color: AppColors.brandPrimary.withValues(alpha: 0.4),
+                            color: AppColors.brandPrimary.withValues(
+                              alpha: 0.4,
+                            ),
                           ),
                         ),
                         child: Column(
@@ -439,7 +423,9 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
                           Container(
                             padding: EdgeInsets.all(8.r),
                             decoration: BoxDecoration(
-                              color: AppColors.brandPrimary.withValues(alpha: 0.1),
+                              color: AppColors.brandPrimary.withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: Icon(
@@ -527,8 +513,9 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
                                           ? AppDateFormatter.formatDate(
                                               _startDate!,
                                             )
-                                          : 'employee.leaves.dateHint'
-                                              .tr(context: context),
+                                          : 'employee.leaves.dateHint'.tr(
+                                              context: context,
+                                            ),
                                       style: AppTextStyles.font13Regular
                                           .copyWith(
                                             color: _startDate != null
@@ -581,8 +568,9 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
                                           ? AppDateFormatter.formatDate(
                                               _endDate!,
                                             )
-                                          : 'employee.leaves.dateHint'
-                                              .tr(context: context),
+                                          : 'employee.leaves.dateHint'.tr(
+                                              context: context,
+                                            ),
                                       style: AppTextStyles.font13Regular
                                           .copyWith(
                                             color: _endDate != null

@@ -29,9 +29,14 @@ abstract class LeavesApiService {
   Future<List<LeaveBalanceModel>> getLeaveBalances();
 
   @GET('/api/v1/leaves/holidays')
-  Future<List<OfficialHolidayModel>> getOfficialHolidays({
+  Future<OfficialHolidaysResponseModel> getOfficialHolidays({
     @Query('year') int? year,
   });
+
+  @POST('/api/v1/leaves/holidays/reschedule')
+  Future<OfficialHolidaysResponseModel> rescheduleHoliday(
+    @Body() Map<String, dynamic> body,
+  );
 
   @PATCH('/api/v1/leaves/{id}/status')
   Future<dynamic> updateLeaveStatus(

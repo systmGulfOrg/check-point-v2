@@ -12,10 +12,7 @@ import '../models/short_leave_model.dart';
 import '../models/short_leave_request_body.dart';
 
 class LeavesRepoImpl {
-  LeavesRepoImpl({
-    required this.api,
-    required this.sessionStorage,
-  });
+  LeavesRepoImpl({required this.api, required this.sessionStorage});
 
   final LeavesApiService api;
   final AuthSessionStorage sessionStorage;
@@ -45,10 +42,12 @@ class LeavesRepoImpl {
           final used = requestsList
               .where((r) {
                 final s = r.status.toLowerCase();
-                final isApproved = s == 'approved' ||
+                final isApproved =
+                    s == 'approved' ||
                     s == 'approvedbyhr' ||
                     s == 'approvedbymanager';
-                final matchesType = r.leaveTypeId == lt.id ||
+                final matchesType =
+                    r.leaveTypeId == lt.id ||
                     (r.leaveTypeName != null &&
                         r.leaveTypeName!.trim().toLowerCase() ==
                             lt.typeName.trim().toLowerCase());
@@ -108,24 +107,32 @@ class LeavesRepoImpl {
     int? year,
   }) async {
     try {
-      final models = await api.getOfficialHolidays(year: year);
-      return ApiResult.success(models);
+      final response = await api.getOfficialHolidays(year: year);
+      return ApiResult.success(response.value);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  Future<ApiResult<void>> rescheduleHoliday({
+    required String holidayId,
+    required String holidayName,
+    required DateTime newDate,
+    String? note,
+    bool reset = false,
+  }) async {
+    try {
+      final json = {
+        'holidayId': holidayId,
+        'name': holidayName,
+        'newDate': AppDateFormatter.formatDate(newDate),
+        'note': note,
+        'reset': reset,
+      };
+      await api.rescheduleHoliday(json);
+      return const ApiResult.success(null);
     } catch (e, _) {
-      return ApiResult.success([
-        OfficialHolidayModel(id: '1', name: 'عيد الميلاد المجيد', date: DateTime(2026, 1, 7), isRecurring: false),
-        OfficialHolidayModel(id: '2', name: 'ثورة 25 يناير / عيد الشرطة', date: DateTime(2026, 1, 25), isRecurring: false),
-        OfficialHolidayModel(id: '3', name: 'عيد الفطر المبارك', date: DateTime(2026, 3, 20), isRecurring: false),
-        OfficialHolidayModel(id: '4', name: 'شم النسيم', date: DateTime(2026, 4, 13), isRecurring: false),
-        OfficialHolidayModel(id: '5', name: 'عيد تحرير سيناء', date: DateTime(2026, 4, 25), isRecurring: false),
-        OfficialHolidayModel(id: '6', name: 'عيد العمال', date: DateTime(2026, 5, 1), isRecurring: false),
-        OfficialHolidayModel(id: '7', name: 'وقفة عرفات', date: DateTime(2026, 5, 26), isRecurring: false),
-        OfficialHolidayModel(id: '8', name: 'عيد الأضحى المبارك', date: DateTime(2026, 5, 27), isRecurring: false),
-        OfficialHolidayModel(id: '9', name: 'رأس السنة الهجرية', date: DateTime(2026, 6, 16), isRecurring: false),
-        OfficialHolidayModel(id: '10', name: 'ثورة 30 يونيو', date: DateTime(2026, 6, 30), isRecurring: false),
-        OfficialHolidayModel(id: '11', name: 'ثورة 23 يوليو', date: DateTime(2026, 7, 23), isRecurring: false),
-        OfficialHolidayModel(id: '12', name: 'المولد النبوي الشريف', date: DateTime(2026, 8, 25), isRecurring: false),
-        OfficialHolidayModel(id: '13', name: 'عيد القوات المسلحة (6 أكتوبر)', date: DateTime(2026, 10, 6), isRecurring: false),
-      ]);
+      return ApiResult.failure(ApiFailureMapper.map(e));
     }
   }
 
@@ -133,7 +140,8 @@ class LeavesRepoImpl {
     LeaveRequestBody body,
   ) async {
     try {
-      final employeeId = await sessionStorage.readEmployeeId() ??
+      final employeeId =
+          await sessionStorage.readEmployeeId() ??
           await sessionStorage.readUserId() ??
           '';
       final payload = {
@@ -171,9 +179,11 @@ class LeavesRepoImpl {
       final currentUserId = await sessionStorage.readUserId() ?? '';
       final currentEmployeeId = await sessionStorage.readEmployeeId() ?? '';
       final token = await sessionStorage.readToken();
-      final tokenPayload =
-          token != null ? AuthSessionStorage.decodeJwtPayload(token) : null;
-      final tokenEmpId = tokenPayload?['employeeId'] as String? ??
+      final tokenPayload = token != null
+          ? AuthSessionStorage.decodeJwtPayload(token)
+          : null;
+      final tokenEmpId =
+          tokenPayload?['employeeId'] as String? ??
           tokenPayload?['EmployeeId'] as String?;
       final currentUserName = await sessionStorage.readUserName() ?? '';
 
@@ -234,10 +244,7 @@ class LeavesRepoImpl {
     }
   }
 
-  Future<ApiResult<dynamic>> updateLeaveStatus(
-    String id,
-    String status,
-  ) async {
+  Future<ApiResult<dynamic>> updateLeaveStatus(String id, String status) async {
     try {
       final model = await api.updateLeaveStatus(id, {'status': status});
       return ApiResult.success(model);

@@ -13,9 +13,7 @@ class AdminOfficialHolidaysBlocBuilderWidget extends StatelessWidget {
     return BlocBuilder<LeavesCubit, LeavesState>(
       builder: (context, state) {
         return state.whenOrNull(
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
-              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
               holidaysLoaded: (holidays) =>
                   AdminOfficialHolidaysWidget(holidays: holidays),
               error: (message) => Center(child: Text(message)),

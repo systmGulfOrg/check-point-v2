@@ -6,7 +6,7 @@ import 'upcoming_holiday_state.dart';
 
 class UpcomingHolidayCubit extends Cubit<UpcomingHolidayState> {
   UpcomingHolidayCubit({required this.leavesRepo})
-      : super(const UpcomingHolidayState.initial());
+    : super(const UpcomingHolidayState.initial());
 
   final LeavesRepoImpl leavesRepo;
 
