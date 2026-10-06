@@ -21,7 +21,7 @@ class LeaveRequestModel with _$LeaveRequestModel {
     String? directManagerName,
     bool? hasDirectManager,
     String? rejectionReason,
-    Map<String, dynamic>? timeline,
+    List<dynamic>? timeline,
     // Stage 1 - Manager
     String? managerId,
     String? managerName,

@@ -23,7 +23,7 @@ AdminLeaveRequestModel _$AdminLeaveRequestModelFromJson(
   directManagerName: json['directManagerName'] as String?,
   hasDirectManager: json['hasDirectManager'] as bool?,
   rejectionReason: json['rejectionReason'] as String?,
-  timeline: json['timeline'] as Map<String, dynamic>?,
+  timeline: json['timeline'] as List<dynamic>?,
   managerId: json['managerId'] as String?,
   managerName: json['managerName'] as String?,
   managerActionAt: legacyApiValueToString(json['managerActionAt']),

@@ -36,7 +36,7 @@ mixin _$LeaveRequestModel {
   String? get directManagerName => throw _privateConstructorUsedError;
   bool? get hasDirectManager => throw _privateConstructorUsedError;
   String? get rejectionReason => throw _privateConstructorUsedError;
-  Map<String, dynamic>? get timeline =>
+  List<dynamic>? get timeline =>
       throw _privateConstructorUsedError; // Stage 1 - Manager
   String? get managerId => throw _privateConstructorUsedError;
   String? get managerName => throw _privateConstructorUsedError;
@@ -81,7 +81,7 @@ abstract class $LeaveRequestModelCopyWith<$Res> {
     String? directManagerName,
     bool? hasDirectManager,
     String? rejectionReason,
-    Map<String, dynamic>? timeline,
+    List<dynamic>? timeline,
     String? managerId,
     String? managerName,
     DateTime? managerActionAt,
@@ -198,7 +198,7 @@ class _$LeaveRequestModelCopyWithImpl<$Res, $Val extends LeaveRequestModel>
             timeline: freezed == timeline
                 ? _value.timeline
                 : timeline // ignore: cast_nullable_to_non_nullable
-                      as Map<String, dynamic>?,
+                      as List<dynamic>?,
             managerId: freezed == managerId
                 ? _value.managerId
                 : managerId // ignore: cast_nullable_to_non_nullable
@@ -262,7 +262,7 @@ abstract class _$$LeaveRequestModelImplCopyWith<$Res>
     String? directManagerName,
     bool? hasDirectManager,
     String? rejectionReason,
-    Map<String, dynamic>? timeline,
+    List<dynamic>? timeline,
     String? managerId,
     String? managerName,
     DateTime? managerActionAt,
@@ -378,7 +378,7 @@ class __$$LeaveRequestModelImplCopyWithImpl<$Res>
         timeline: freezed == timeline
             ? _value._timeline
             : timeline // ignore: cast_nullable_to_non_nullable
-                  as Map<String, dynamic>?,
+                  as List<dynamic>?,
         managerId: freezed == managerId
             ? _value.managerId
             : managerId // ignore: cast_nullable_to_non_nullable
@@ -435,7 +435,7 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
     this.directManagerName,
     this.hasDirectManager,
     this.rejectionReason,
-    final Map<String, dynamic>? timeline,
+    final List<dynamic>? timeline,
     this.managerId,
     this.managerName,
     this.managerActionAt,
@@ -479,14 +479,14 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
   final bool? hasDirectManager;
   @override
   final String? rejectionReason;
-  final Map<String, dynamic>? _timeline;
+  final List<dynamic>? _timeline;
   @override
-  Map<String, dynamic>? get timeline {
+  List<dynamic>? get timeline {
     final value = _timeline;
     if (value == null) return null;
-    if (_timeline is EqualUnmodifiableMapView) return _timeline;
+    if (_timeline is EqualUnmodifiableListView) return _timeline;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
+    return EqualUnmodifiableListView(value);
   }
 
   // Stage 1 - Manager
@@ -625,7 +625,7 @@ abstract class _LeaveRequestModel implements LeaveRequestModel {
     final String? directManagerName,
     final bool? hasDirectManager,
     final String? rejectionReason,
-    final Map<String, dynamic>? timeline,
+    final List<dynamic>? timeline,
     final String? managerId,
     final String? managerName,
     final DateTime? managerActionAt,
@@ -670,7 +670,7 @@ abstract class _LeaveRequestModel implements LeaveRequestModel {
   @override
   String? get rejectionReason;
   @override
-  Map<String, dynamic>? get timeline; // Stage 1 - Manager
+  List<dynamic>? get timeline; // Stage 1 - Manager
   @override
   String? get managerId;
   @override

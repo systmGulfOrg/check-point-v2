@@ -54,7 +54,7 @@ class AdminLeaveRequestModel {
   final String? directManagerName;
   final bool? hasDirectManager;
   final String? rejectionReason;
-  final Map<String, dynamic>? timeline;
+  final List<dynamic>? timeline;
   // Stage 1
   final String? managerId;
   final String? managerName;

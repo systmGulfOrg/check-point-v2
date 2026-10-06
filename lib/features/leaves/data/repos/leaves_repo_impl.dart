@@ -234,6 +234,11 @@ class LeavesRepoImpl {
           status: r.status ?? 'Pending',
           reason: r.reason,
           attachmentUrl: r.attachmentUrl,
+          directManagerId: r.directManagerId,
+          directManagerName: r.directManagerName,
+          hasDirectManager: r.hasDirectManager,
+          rejectionReason: r.rejectionReason,
+          timeline: r.timeline,
           managerName: r.managerName,
           managerActionAt: r.managerActionAt != null
               ? DateTime.tryParse(r.managerActionAt!)
