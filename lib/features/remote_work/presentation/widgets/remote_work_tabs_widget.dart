@@ -69,7 +69,9 @@ class RemoteWorkTabsWidget extends StatelessWidget {
           Expanded(
             child: tabs.isEmpty
                 ? const SizedBox.shrink()
-                : (tabs.length == 1 ? views.first : TabBarView(children: views)),
+                : (tabs.length == 1
+                      ? views.first
+                      : TabBarView(children: views)),
           ),
         ],
       ),

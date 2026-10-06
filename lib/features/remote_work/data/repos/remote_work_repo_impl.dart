@@ -105,17 +105,22 @@ class RemoteWorkRepoImpl implements RemoteWorkRepo {
   );
 
   @override
-  Future<ApiResult<List<EmployeeModel>>> getPolicyEmployees(String policyId) async {
+  Future<ApiResult<List<EmployeeModel>>> getPolicyEmployees(
+    String policyId,
+  ) async {
     try {
-      final response = await api.getPolicyEmployees(policyId) as Map<String, dynamic>;
+      final response =
+          await api.getPolicyEmployees(policyId) as Map<String, dynamic>;
       final value = response['value'];
-      final items = value is List ? value : (value is Map<String, dynamic> ? value['items'] : null);
+      final items = value is List
+          ? value
+          : (value is Map<String, dynamic> ? value['items'] : null);
       return ApiResult.success(
         items is List
             ? items
-                .whereType<Map<String, dynamic>>()
-                .map(EmployeeModel.fromJson)
-                .toList()
+                  .whereType<Map<String, dynamic>>()
+                  .map(EmployeeModel.fromJson)
+                  .toList()
             : const [],
       );
     } catch (e) {

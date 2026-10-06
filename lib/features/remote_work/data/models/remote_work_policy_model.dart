@@ -38,8 +38,12 @@ class RemoteWorkPolicyModel {
     final type = policyType.toLowerCase();
     if (type == 'hybrid' || type == 'onsite' || type == 'remote') return type;
     final normalizedName = name.toLowerCase();
-    if (normalizedName.contains('hybrid') || normalizedName.contains('هجين')) return 'hybrid';
-    if (normalizedName.contains('onsite') || normalizedName.contains('موقع') || normalizedName.contains('حضوري')) return 'onsite';
+    if (normalizedName.contains('hybrid') || normalizedName.contains('هجين'))
+      return 'hybrid';
+    if (normalizedName.contains('onsite') ||
+        normalizedName.contains('موقع') ||
+        normalizedName.contains('حضوري'))
+      return 'onsite';
     return 'remote';
   }
 
@@ -54,11 +58,13 @@ class RemoteWorkPolicyModel {
     return RemoteWorkPolicyModel(
       id: json['id'] as String? ?? '',
       name: json['name'] as String? ?? '',
-      allowedDays: (json['allowedDays'] as List<dynamic>?)
+      allowedDays:
+          (json['allowedDays'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
-      onsiteDays: (json['onsiteDays'] as List<dynamic>?)
+      onsiteDays:
+          (json['onsiteDays'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],

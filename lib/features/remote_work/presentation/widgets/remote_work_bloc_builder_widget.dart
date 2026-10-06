@@ -137,10 +137,7 @@ class _RemoteWorkContent extends StatelessWidget {
             ...visiblePolicies.asMap().entries.map(
               (entry) => AnimatedListItemWidget(
                 index: entry.key,
-                child: _PolicyCard(
-                  policy: entry.value,
-                  isAdmin: isAdmin,
-                ),
+                child: _PolicyCard(policy: entry.value, isAdmin: isAdmin),
               ),
             ),
         ],
@@ -184,32 +181,29 @@ class _ActionButton extends StatelessWidget {
   final VoidCallback onTap;
   @override
   Widget build(BuildContext context) => InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8.r),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 15.r, color: AppColors.brandPrimary),
-              SizedBox(width: 3.w),
-              Text(
-                label,
-                style: AppTextStyles.font13SemiBold.copyWith(
-                  color: AppColors.brandPrimary,
-                ),
-              ),
-            ],
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(8.r),
+    child: Padding(
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 15.r, color: AppColors.brandPrimary),
+          SizedBox(width: 3.w),
+          Text(
+            label,
+            style: AppTextStyles.font13SemiBold.copyWith(
+              color: AppColors.brandPrimary,
+            ),
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }
 
 class _PolicyCard extends StatelessWidget {
-  const _PolicyCard({
-    required this.policy,
-    required this.isAdmin,
-  });
+  const _PolicyCard({required this.policy, required this.isAdmin});
 
   final RemoteWorkPolicyModel policy;
   final bool isAdmin;
@@ -266,15 +260,15 @@ class _PolicyCard extends StatelessWidget {
     final isOnsite = type == 'onsite';
 
     String dayLabel(String value) => switch (value.toLowerCase()) {
-          'sun' || 'sunday' => 'admin.shifts.days.sun'.tr(context: context),
-          'mon' || 'monday' => 'admin.shifts.days.mon'.tr(context: context),
-          'tue' || 'tuesday' => 'admin.shifts.days.tue'.tr(context: context),
-          'wed' || 'wednesday' => 'admin.shifts.days.wed'.tr(context: context),
-          'thu' || 'thursday' => 'admin.shifts.days.thu'.tr(context: context),
-          'fri' || 'friday' => 'admin.shifts.days.fri'.tr(context: context),
-          'sat' || 'saturday' => 'admin.shifts.days.sat'.tr(context: context),
-          _ => value,
-        };
+      'sun' || 'sunday' => 'admin.shifts.days.sun'.tr(context: context),
+      'mon' || 'monday' => 'admin.shifts.days.mon'.tr(context: context),
+      'tue' || 'tuesday' => 'admin.shifts.days.tue'.tr(context: context),
+      'wed' || 'wednesday' => 'admin.shifts.days.wed'.tr(context: context),
+      'thu' || 'thursday' => 'admin.shifts.days.thu'.tr(context: context),
+      'fri' || 'friday' => 'admin.shifts.days.fri'.tr(context: context),
+      'sat' || 'saturday' => 'admin.shifts.days.sat'.tr(context: context),
+      _ => value,
+    };
 
     final remoteDays = policy.allowedDays.map(dayLabel).join('، ');
     final onsiteDays = policy.onsiteDays.map(dayLabel).join('، ');
@@ -285,7 +279,9 @@ class _PolicyCard extends StatelessWidget {
 
     final iconBg = isOnsite
         ? AppColors.softBrandBackground
-        : (isHybrid ? AppColors.softBlueBackground : AppColors.softBrandBackground);
+        : (isHybrid
+              ? AppColors.softBlueBackground
+              : AppColors.softBrandBackground);
 
     final iconColor = isOnsite
         ? AppColors.brandPrimary
@@ -308,11 +304,7 @@ class _PolicyCard extends StatelessWidget {
                     color: iconBg,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
-                  child: Icon(
-                    icon,
-                    color: iconColor,
-                    size: 22.r,
-                  ),
+                  child: Icon(icon, color: iconColor, size: 22.r),
                 ),
                 wSpace(12),
                 Expanded(

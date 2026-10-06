@@ -30,17 +30,17 @@ class RemoteWorkAccessGateWidget extends StatelessWidget {
 
     return BlocBuilder<EmployeeWorkAccessCubit, EmployeeWorkAccessState>(
       builder: (context, state) => switch (state) {
-        EmployeeWorkAccessInitial() || EmployeeWorkAccessLoading() =>
-          Skeletonizer(
-            enabled: true,
-            child: RemoteWorkTabsWidget(
-              isAdmin: isAdmin,
-              canReview: canReview,
-              showOnsite: true,
-              showRemote: true,
-              showHybrid: false,
-            ),
+        EmployeeWorkAccessInitial() ||
+        EmployeeWorkAccessLoading() => Skeletonizer(
+          enabled: true,
+          child: RemoteWorkTabsWidget(
+            isAdmin: isAdmin,
+            canReview: canReview,
+            showOnsite: true,
+            showRemote: true,
+            showHybrid: false,
           ),
+        ),
         EmployeeWorkAccessAllowed(:final workSystem) => RemoteWorkTabsWidget(
           isAdmin: isAdmin,
           canReview: canReview,

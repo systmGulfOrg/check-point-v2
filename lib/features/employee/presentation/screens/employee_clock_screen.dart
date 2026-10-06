@@ -35,20 +35,23 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
     final cubit = context.read<EmployeeAttendanceCubit>();
     final profile = cubit.employeeProfile;
     final holidayState = context.read<UpcomingHolidayCubit>().state;
-    final isHoliday = (profile?.todayHoliday != null &&
+    final isHoliday =
+        (profile?.todayHoliday != null &&
             profile!.todayHoliday!.isHoliday == true) ||
         (profile?.todayWorkMode == 'off' && profile?.todayHoliday != null) ||
         (holidayState is UpcomingHolidayStateLoaded &&
             holidayState.isTodayHoliday);
 
     if (isHoliday) {
-      final holidayName = profile?.todayHoliday?.arabicName ??
+      final holidayName =
+          profile?.todayHoliday?.arabicName ??
           profile?.todayHoliday?.name ??
           (holidayState is UpcomingHolidayStateLoaded
               ? holidayState.todayHoliday?.name
               : null) ??
           '';
-      final holidayGreeting = profile?.todayHoliday?.greeting ??
+      final holidayGreeting =
+          profile?.todayHoliday?.greeting ??
           profile?.holidayMessage ??
           'holidays.todayHolidayGreeting'.tr(context: context);
 
@@ -118,32 +121,25 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                       case EmployeeAttendanceStateCheckInSuccess():
                         final cubit = context.read<EmployeeAttendanceCubit>();
                         unawaited(cubit.loadAttendanceHistory());
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'employee.clock.checkedInSuccess'.tr(
-                                context: context,
-                              ),
-                            ),
+                        CustomSnackBar.show(
+                          context,
+                          message: 'employee.clock.checkedInSuccess'.tr(
+                            context: context,
                           ),
                         );
                       case EmployeeAttendanceStateCheckOutSuccess():
                         final cubit = context.read<EmployeeAttendanceCubit>();
                         unawaited(cubit.loadAttendanceHistory());
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'employee.clock.checkedOutSuccess'.tr(
-                                context: context,
-                              ),
-                            ),
+                        CustomSnackBar.show(
+                          context,
+                          message: 'employee.clock.checkedOutSuccess'.tr(
+                            context: context,
                           ),
                         );
                       case EmployeeAttendanceStateError(:final messageKey):
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(messageKey.tr(context: context)),
-                          ),
+                        CustomSnackBar.show(
+                          context,
+                          message: messageKey.tr(context: context),
                         );
                       default:
                         break;

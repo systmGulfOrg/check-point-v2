@@ -244,11 +244,9 @@ class _EmployeeAttendanceLocationSheetWidgetState
           : targetPoints.isEmpty
           ? 'attendance.noLocationData'
           : 'errors.outsideAttendanceArea';
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(messageKey.tr(context: context)),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: messageKey.tr(context: context),
       );
       return;
     }
@@ -281,11 +279,9 @@ class _EmployeeAttendanceLocationSheetWidgetState
       listener: (context, state) {
         switch (state) {
           case EmployeeAttendanceStateError(:final messageKey):
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(messageKey.tr(context: context)),
-                backgroundColor: AppColors.error,
-              ),
+            CustomSnackBar.showError(
+              context,
+              message: messageKey.tr(context: context),
             );
           default:
             break;

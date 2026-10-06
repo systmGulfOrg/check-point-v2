@@ -74,12 +74,24 @@ class _RemoteWorkPolicySheetWidgetState
       onsiteDays.addAll(p.onsiteDays);
     } else {
       if (policyType == 'onsite') {
-        onsiteDays.addAll(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']);
+        onsiteDays.addAll([
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+        ]);
       } else if (policyType == 'hybrid') {
         remoteDays.addAll(['Sunday', 'Tuesday', 'Thursday']);
         onsiteDays.addAll(['Monday', 'Wednesday']);
       } else {
-        remoteDays.addAll(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']);
+        remoteDays.addAll([
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+        ]);
       }
     }
   }
@@ -127,8 +139,8 @@ class _RemoteWorkPolicySheetWidgetState
                 isOnsite
                     ? 'remoteWork.onsitePolicy'.tr(context: context)
                     : (isHybrid
-                        ? 'remoteWork.hybridPolicy'.tr(context: context)
-                        : 'remoteWork.remotePolicy'.tr(context: context)),
+                          ? 'remoteWork.hybridPolicy'.tr(context: context)
+                          : 'remoteWork.remotePolicy'.tr(context: context)),
                 style: AppTextStyles.font14SemiBold.copyWith(
                   color: isOnsite
                       ? AppColors.brandPrimary
@@ -141,8 +153,8 @@ class _RemoteWorkPolicySheetWidgetState
                 hintKey: isOnsite
                     ? 'remoteWork.onsitePolicyHint'
                     : (isHybrid
-                        ? 'remoteWork.hybridPolicyHint'
-                        : 'remoteWork.remotePolicyHint'),
+                          ? 'remoteWork.hybridPolicyHint'
+                          : 'remoteWork.remotePolicyHint'),
                 controller: nameController,
               ),
               hSpace(16),
@@ -305,23 +317,19 @@ class _RemoteWorkPolicySheetWidgetState
                       isLoading: isSubmitting,
                       onTap: () async {
                         if (!isOnsite && remoteDays.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'remoteWork.daysRequired'.tr(context: context),
-                              ),
-                              backgroundColor: AppColors.error,
+                          CustomSnackBar.showError(
+                            context,
+                            message: 'remoteWork.daysRequired'.tr(
+                              context: context,
                             ),
                           );
                           return;
                         }
                         if (isHybrid && onsiteDays.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'remoteWork.daysRequired'.tr(context: context),
-                              ),
-                              backgroundColor: AppColors.error,
+                          CustomSnackBar.showError(
+                            context,
+                            message: 'remoteWork.daysRequired'.tr(
+                              context: context,
                             ),
                           );
                           return;
@@ -331,18 +339,34 @@ class _RemoteWorkPolicySheetWidgetState
                         final cubit = context.read<RemoteWorkCubit>();
                         final name = nameController.text.trim().isEmpty
                             ? (isOnsite
-                                ? 'remoteWork.onsitePolicy'.tr(context: context)
-                                : (isHybrid
-                                    ? 'remoteWork.hybridPolicy'.tr(context: context)
-                                    : 'remoteWork.remotePolicy'.tr(context: context)))
+                                  ? 'remoteWork.onsitePolicy'.tr(
+                                      context: context,
+                                    )
+                                  : (isHybrid
+                                        ? 'remoteWork.hybridPolicy'.tr(
+                                            context: context,
+                                          )
+                                        : 'remoteWork.remotePolicy'.tr(
+                                            context: context,
+                                          )))
                             : nameController.text.trim();
 
-                        final defaultDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
+                        final defaultDays = [
+                          'Sunday',
+                          'Monday',
+                          'Tuesday',
+                          'Wednesday',
+                          'Thursday',
+                        ];
                         final effectiveAllowedDays = isOnsite
-                            ? (onsiteDays.isNotEmpty ? onsiteDays.toList() : defaultDays)
+                            ? (onsiteDays.isNotEmpty
+                                  ? onsiteDays.toList()
+                                  : defaultDays)
                             : remoteDays.toList();
                         final effectiveOnsiteDays = (isOnsite || isHybrid)
-                            ? (onsiteDays.isNotEmpty ? onsiteDays.toList() : defaultDays)
+                            ? (onsiteDays.isNotEmpty
+                                  ? onsiteDays.toList()
+                                  : defaultDays)
                             : <String>[];
 
                         final bool saved;

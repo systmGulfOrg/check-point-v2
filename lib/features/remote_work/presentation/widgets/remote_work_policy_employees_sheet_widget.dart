@@ -10,10 +10,7 @@ import '../../data/models/remote_work_policy_model.dart';
 import '../../data/repos/remote_work_repo.dart';
 
 class RemoteWorkPolicyEmployeesSheetWidget extends StatefulWidget {
-  const RemoteWorkPolicyEmployeesSheetWidget({
-    required this.policy,
-    super.key,
-  });
+  const RemoteWorkPolicyEmployeesSheetWidget({required this.policy, super.key});
 
   final RemoteWorkPolicyModel policy;
 
@@ -29,7 +26,9 @@ class _RemoteWorkPolicyEmployeesSheetWidgetState
   @override
   void initState() {
     super.initState();
-    _employeesFuture = sl<RemoteWorkRepo>().getPolicyEmployees(widget.policy.id);
+    _employeesFuture = sl<RemoteWorkRepo>().getPolicyEmployees(
+      widget.policy.id,
+    );
   }
 
   @override
@@ -50,10 +49,7 @@ class _RemoteWorkPolicyEmployeesSheetWidgetState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.policy.name,
-                      style: AppTextStyles.font16Bold,
-                    ),
+                    Text(widget.policy.name, style: AppTextStyles.font16Bold),
                     hSpace(2),
                     Text(
                       'remoteWork.policyEmployees'.tr(context: context),
@@ -141,7 +137,8 @@ class _RemoteWorkPolicyEmployeesSheetWidgetState
                       leading: CircleAvatar(
                         radius: 20.r,
                         backgroundColor: AppColors.softBrandBackground,
-                        backgroundImage: emp.imageUrl != null && emp.imageUrl!.isNotEmpty
+                        backgroundImage:
+                            emp.imageUrl != null && emp.imageUrl!.isNotEmpty
                             ? NetworkImage(emp.imageUrl!)
                             : null,
                         child: emp.imageUrl == null || emp.imageUrl!.isEmpty

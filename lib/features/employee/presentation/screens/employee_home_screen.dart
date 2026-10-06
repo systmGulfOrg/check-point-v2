@@ -52,20 +52,23 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
     final cubit = context.read<EmployeeAttendanceCubit>();
     final profile = cubit.employeeProfile;
     final holidayState = context.read<UpcomingHolidayCubit>().state;
-    final isHoliday = (profile?.todayHoliday != null &&
+    final isHoliday =
+        (profile?.todayHoliday != null &&
             profile!.todayHoliday!.isHoliday == true) ||
         (profile?.todayWorkMode == 'off' && profile?.todayHoliday != null) ||
         (holidayState is UpcomingHolidayStateLoaded &&
             holidayState.isTodayHoliday);
 
     if (isHoliday) {
-      final holidayName = profile?.todayHoliday?.arabicName ??
+      final holidayName =
+          profile?.todayHoliday?.arabicName ??
           profile?.todayHoliday?.name ??
           (holidayState is UpcomingHolidayStateLoaded
               ? holidayState.todayHoliday?.name
               : null) ??
           '';
-      final holidayGreeting = profile?.todayHoliday?.greeting ??
+      final holidayGreeting =
+          profile?.todayHoliday?.greeting ??
           profile?.holidayMessage ??
           'holidays.todayHolidayGreeting'.tr(context: context);
 
@@ -120,231 +123,222 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
             ]);
           },
           child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const EmployeeHomeHeaderBlocBuilderWidget(),
-                  hSpace(16),
-                  const UpcomingHolidayCardBlocBuilderWidget(),
-                  hSpace(16),
-                  BlocConsumer<
-                    EmployeeAttendanceCubit,
-                    EmployeeAttendanceState
-                  >(
-                    listener: (context, state) {
-                      switch (state) {
-                        case EmployeeAttendanceStateCheckInSuccess():
-                          unawaited(
-                            context
-                                .read<EmployeeAttendanceCubit>()
-                                .loadAttendanceHistory(),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'employee.clock.checkedInSuccess'.tr(
-                                  context: context,
-                                ),
-                              ),
-                            ),
-                          );
-                        case EmployeeAttendanceStateCheckOutSuccess():
-                          unawaited(
-                            context
-                                .read<EmployeeAttendanceCubit>()
-                                .loadAttendanceHistory(),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'employee.clock.checkedOutSuccess'.tr(
-                                  context: context,
-                                ),
-                              ),
-                            ),
-                          );
-                        case EmployeeAttendanceStateError(:final messageKey):
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(SnackBar(content: Text(messageKey)));
-                        default:
-                          break;
-                      }
-                    },
-                    builder: (context, state) {
-                      final attendance = context
-                          .read<EmployeeAttendanceCubit>()
-                          .todayAttendance;
-                      final profile = context
-                          .read<EmployeeAttendanceCubit>()
-                          .employeeProfile;
-                      final cubit = context.read<EmployeeAttendanceCubit>();
-                      final workMode = profile?.todayWorkMode ?? 'onsite';
-                      final workSystem = profile?.workSystem ?? 'onsite';
-                      final clockIn =
-                          profile?.todayWorkStart ??
-                          profile?.workPolicy?.workingHoursStart ??
-                          profile?.clockInTime;
-                      final clockOut =
-                          profile?.todayWorkEnd ??
-                          profile?.workPolicy?.workingHoursEnd ??
-                          profile?.clockOutTime;
-                      final isCheckedIn =
-                          cubit.hasClockIn(attendance) &&
-                          !cubit.hasClockOut(attendance);
-                      final hasCheckedOut = cubit.hasClockOut(attendance);
-                      final holidayState =
-                          context.watch<UpcomingHolidayCubit?>()?.state;
-                      final isHolidayFromCubit =
-                          holidayState is UpcomingHolidayStateLoaded &&
-                              holidayState.isTodayHoliday;
-                      final isTodayHoliday = (profile?.todayHoliday != null &&
-                              profile!.todayHoliday!.isHoliday == true) ||
-                          (profile?.todayWorkMode == 'off' &&
-                              profile?.todayHoliday != null) ||
-                          isHolidayFromCubit;
-                      final holidayName = profile?.todayHoliday?.arabicName ??
-                          profile?.todayHoliday?.name ??
-                          (holidayState is UpcomingHolidayStateLoaded
-                              ? holidayState.todayHoliday?.name
-                              : null);
-                      final holidayGreeting = profile?.todayHoliday?.greeting ??
-                          profile?.holidayMessage;
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const EmployeeHomeHeaderBlocBuilderWidget(),
+                hSpace(16),
+                const UpcomingHolidayCardBlocBuilderWidget(),
+                hSpace(16),
+                BlocConsumer<EmployeeAttendanceCubit, EmployeeAttendanceState>(
+                  listener: (context, state) {
+                    switch (state) {
+                      case EmployeeAttendanceStateCheckInSuccess():
+                        unawaited(
+                          context
+                              .read<EmployeeAttendanceCubit>()
+                              .loadAttendanceHistory(),
+                        );
+                        CustomSnackBar.show(
+                          context,
+                          message: 'employee.clock.checkedInSuccess'.tr(
+                            context: context,
+                          ),
+                        );
+                      case EmployeeAttendanceStateCheckOutSuccess():
+                        unawaited(
+                          context
+                              .read<EmployeeAttendanceCubit>()
+                              .loadAttendanceHistory(),
+                        );
+                        CustomSnackBar.show(
+                          context,
+                          message: 'employee.clock.checkedOutSuccess'.tr(
+                            context: context,
+                          ),
+                        );
+                      case EmployeeAttendanceStateError(:final messageKey):
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(messageKey)));
+                      default:
+                        break;
+                    }
+                  },
+                  builder: (context, state) {
+                    final attendance = context
+                        .read<EmployeeAttendanceCubit>()
+                        .todayAttendance;
+                    final profile = context
+                        .read<EmployeeAttendanceCubit>()
+                        .employeeProfile;
+                    final cubit = context.read<EmployeeAttendanceCubit>();
+                    final workMode = profile?.todayWorkMode ?? 'onsite';
+                    final workSystem = profile?.workSystem ?? 'onsite';
+                    final clockIn =
+                        profile?.todayWorkStart ??
+                        profile?.workPolicy?.workingHoursStart ??
+                        profile?.clockInTime;
+                    final clockOut =
+                        profile?.todayWorkEnd ??
+                        profile?.workPolicy?.workingHoursEnd ??
+                        profile?.clockOutTime;
+                    final isCheckedIn =
+                        cubit.hasClockIn(attendance) &&
+                        !cubit.hasClockOut(attendance);
+                    final hasCheckedOut = cubit.hasClockOut(attendance);
+                    final holidayState = context
+                        .watch<UpcomingHolidayCubit?>()
+                        ?.state;
+                    final isHolidayFromCubit =
+                        holidayState is UpcomingHolidayStateLoaded &&
+                        holidayState.isTodayHoliday;
+                    final isTodayHoliday =
+                        (profile?.todayHoliday != null &&
+                            profile!.todayHoliday!.isHoliday == true) ||
+                        (profile?.todayWorkMode == 'off' &&
+                            profile?.todayHoliday != null) ||
+                        isHolidayFromCubit;
+                    final holidayName =
+                        profile?.todayHoliday?.arabicName ??
+                        profile?.todayHoliday?.name ??
+                        (holidayState is UpcomingHolidayStateLoaded
+                            ? holidayState.todayHoliday?.name
+                            : null);
+                    final holidayGreeting =
+                        profile?.todayHoliday?.greeting ??
+                        profile?.holidayMessage;
 
-                      return Skeletonizer(
-                        enabled: state is EmployeeAttendanceStateLoading,
-                        child: EmployeeTodayCardWidget(
-                          policyText:
-                              '${profile?.shiftName ?? 'employee.home.defaultPolicy'.tr(context: context)} — '
-                              '${AppDateFormatter.formatTimeString(clockIn)}–${AppDateFormatter.formatTimeString(clockOut)}',
-                          isOnTime: attendance?.isLate != true,
-                          checkInTime: AppDateFormatter.formatTimeString(
-                            attendance?.clockInTime,
+                    return Skeletonizer(
+                      enabled: state is EmployeeAttendanceStateLoading,
+                      child: EmployeeTodayCardWidget(
+                        policyText:
+                            '${profile?.shiftName ?? 'employee.home.defaultPolicy'.tr(context: context)} — '
+                            '${AppDateFormatter.formatTimeString(clockIn)}–${AppDateFormatter.formatTimeString(clockOut)}',
+                        isOnTime: attendance?.isLate != true,
+                        checkInTime: AppDateFormatter.formatTimeString(
+                          attendance?.clockInTime,
+                        ),
+                        checkOutTime: AppDateFormatter.formatTimeString(
+                          attendance?.clockOutTime,
+                        ),
+                        isCheckedIn: isCheckedIn,
+                        hasCheckedOut: hasCheckedOut,
+                        workedHours: attendance?.dayHours,
+                        leaveBalance: profile?.leaveBalance,
+                        workModeText: workMode.tr(context: context),
+                        workSystemText: workSystem.tr(context: context),
+                        onToggleCheckInOut: _toggleCheckInOut,
+                        isTodayHoliday: isTodayHoliday,
+                        holidayGreeting: holidayGreeting,
+                        holidayName: holidayName,
+                      ),
+                    );
+                  },
+                ),
+                hSpace(20),
+                BlocBuilder<EmployeeTasksCubit, EmployeeTasksState>(
+                  builder: (context, tasksState) {
+                    final activeCount = switch (tasksState) {
+                      EmployeeTasksStateSuccess(:final tasks) =>
+                        tasks
+                            .where(
+                              (t) =>
+                                  t.status != 'Completed' && t.status != 'Done',
+                            )
+                            .length,
+                      _ => 0,
+                    };
+                    return BlocBuilder<EmployeePlansCubit, EmployeePlansState>(
+                      builder: (context, plansState) {
+                        final upcomingPlans = switch (plansState) {
+                          EmployeePlansStateSuccess(:final plans) =>
+                            plans.length,
+                          _ => 0,
+                        };
+                        return Skeletonizer(
+                          enabled:
+                              tasksState is EmployeeTasksStateLoading ||
+                              plansState is EmployeePlansStateLoading,
+                          child: EmployeeStatsRowWidget(
+                            activeTasksCount: activeCount,
+                            upcomingPlansCount: upcomingPlans,
+                            pendingLeavesCount: 0,
                           ),
-                          checkOutTime: AppDateFormatter.formatTimeString(
-                            attendance?.clockOutTime,
-                          ),
-                          isCheckedIn: isCheckedIn,
-                          hasCheckedOut: hasCheckedOut,
-                          workedHours: attendance?.dayHours,
-                          leaveBalance: profile?.leaveBalance,
-                          workModeText: workMode.tr(context: context),
-                          workSystemText: workSystem.tr(context: context),
-                          onToggleCheckInOut: _toggleCheckInOut,
-                          isTodayHoliday: isTodayHoliday,
-                          holidayGreeting: holidayGreeting,
-                          holidayName: holidayName,
-                        ),
-                      );
-                    },
-                  ),
-                  hSpace(20),
-                  BlocBuilder<EmployeeTasksCubit, EmployeeTasksState>(
-                    builder: (context, tasksState) {
-                      final activeCount = switch (tasksState) {
-                        EmployeeTasksStateSuccess(:final tasks) =>
-                          tasks
-                              .where(
-                                (t) =>
-                                    t.status != 'Completed' &&
-                                    t.status != 'Done',
-                              )
-                              .length,
-                        _ => 0,
-                      };
-                      return BlocBuilder<
-                        EmployeePlansCubit,
-                        EmployeePlansState
-                      >(
-                        builder: (context, plansState) {
-                          final upcomingPlans = switch (plansState) {
-                            EmployeePlansStateSuccess(:final plans) =>
-                              plans.length,
-                            _ => 0,
-                          };
-                          return Skeletonizer(
-                            enabled:
-                                tasksState is EmployeeTasksStateLoading ||
-                                plansState is EmployeePlansStateLoading,
-                            child: EmployeeStatsRowWidget(
-                              activeTasksCount: activeCount,
-                              upcomingPlansCount: upcomingPlans,
-                              pendingLeavesCount: 0,
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  hSpace(20),
-                  BlocBuilder<EmployeeTasksCubit, EmployeeTasksState>(
-                    builder: (context, state) {
-                      final tasksList = switch (state) {
-                        EmployeeTasksStateSuccess(:final tasks) =>
-                          tasks
-                              .take(3)
-                              .map(
-                                (t) => EmployeeTaskData(
-                                  id: '${t.id ?? 0}',
-                                  title: t.title ?? '',
-                                  dueDate: 'Task #${t.id ?? 0}',
-                                  status: t.status ?? 'Pending',
-                                  priority: 'Normal',
-                                  description: t.description ?? '',
-                                  progressPercentage: 50,
-                                  assignees: const ['EM'],
-                                ),
-                              )
-                              .toList(),
-                        _ => const <EmployeeTaskData>[],
-                      };
-                      return Skeletonizer(
-                        enabled: state is EmployeeTasksStateLoading,
-                        child: EmployeeTasksSectionWidget(
-                          tasks: tasksList,
-                          onViewAllTap: widget.onViewAllTasks ?? () {},
-                        ),
-                      );
-                    },
-                  ),
-                  hSpace(20),
-                  BlocBuilder<EmployeePlansCubit, EmployeePlansState>(
-                    builder: (context, state) {
-                      final plansList = switch (state) {
-                        EmployeePlansStateSuccess(:final plans) =>
-                          plans
-                              .take(3)
-                              .map(
-                                (p) => EmployeePlanData(
-                                  id: '${p.id ?? 0}',
-                                  title: p.title ?? 'Plan #${p.id ?? 0}',
-                                  dateTime:
-                                      p.planDate ?? DateTime.now().toString(),
-                                  planType: p.planType ?? 'Mission',
-                                  description: p.notes ?? '',
-                                  status: p.status ?? 'planned',
-                                  assignees: const ['EM'],
-                                ),
-                              )
-                              .toList(),
-                        _ => const <EmployeePlanData>[],
-                      };
-                      return Skeletonizer(
-                        enabled: state is EmployeePlansStateLoading,
-                        child: EmployeePlansSectionWidget(
-                          plans: plansList,
-                          onViewAllTap: widget.onViewAllPlans ?? () {},
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
+                        );
+                      },
+                    );
+                  },
+                ),
+                hSpace(20),
+                BlocBuilder<EmployeeTasksCubit, EmployeeTasksState>(
+                  builder: (context, state) {
+                    final tasksList = switch (state) {
+                      EmployeeTasksStateSuccess(:final tasks) =>
+                        tasks
+                            .take(3)
+                            .map(
+                              (t) => EmployeeTaskData(
+                                id: '${t.id ?? 0}',
+                                title: t.title ?? '',
+                                dueDate: 'Task #${t.id ?? 0}',
+                                status: t.status ?? 'Pending',
+                                priority: 'Normal',
+                                description: t.description ?? '',
+                                progressPercentage: 50,
+                                assignees: const ['EM'],
+                              ),
+                            )
+                            .toList(),
+                      _ => const <EmployeeTaskData>[],
+                    };
+                    return Skeletonizer(
+                      enabled: state is EmployeeTasksStateLoading,
+                      child: EmployeeTasksSectionWidget(
+                        tasks: tasksList,
+                        onViewAllTap: widget.onViewAllTasks ?? () {},
+                      ),
+                    );
+                  },
+                ),
+                hSpace(20),
+                BlocBuilder<EmployeePlansCubit, EmployeePlansState>(
+                  builder: (context, state) {
+                    final plansList = switch (state) {
+                      EmployeePlansStateSuccess(:final plans) =>
+                        plans
+                            .take(3)
+                            .map(
+                              (p) => EmployeePlanData(
+                                id: '${p.id ?? 0}',
+                                title: p.title ?? 'Plan #${p.id ?? 0}',
+                                dateTime:
+                                    p.planDate ?? DateTime.now().toString(),
+                                planType: p.planType ?? 'Mission',
+                                description: p.notes ?? '',
+                                status: p.status ?? 'planned',
+                                assignees: const ['EM'],
+                              ),
+                            )
+                            .toList(),
+                      _ => const <EmployeePlanData>[],
+                    };
+                    return Skeletonizer(
+                      enabled: state is EmployeePlansStateLoading,
+                      child: EmployeePlansSectionWidget(
+                        plans: plansList,
+                        onViewAllTap: widget.onViewAllPlans ?? () {},
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ),
+      ),
     );
   }
 }

@@ -12,9 +12,7 @@ abstract class RemoteWorkApiService {
   Future<dynamic> getPolicies();
 
   @POST('/api/v2/remote-policies')
-  Future<dynamic> createPolicy(
-    @Body() Map<String, dynamic> body,
-  );
+  Future<dynamic> createPolicy(@Body() Map<String, dynamic> body);
 
   @PUT('/api/v2/remote-policies/{id}')
   Future<dynamic> updatePolicy(
@@ -36,9 +34,7 @@ abstract class RemoteWorkApiService {
   });
 
   @POST('/api/v2/remote-requests')
-  Future<dynamic> createRequest(
-    @Body() Map<String, dynamic> body,
-  );
+  Future<dynamic> createRequest(@Body() Map<String, dynamic> body);
 
   @PATCH('/api/v2/remote-requests/{id}/status')
   Future<dynamic> updateRequestStatus(
