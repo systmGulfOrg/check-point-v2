@@ -69,7 +69,7 @@ class EmployeeDetailsSheetWidget extends StatelessWidget {
                 attendedDays: attendedDays,
                 absentDays: absentDays,
                 lateDays: lateDays,
-            devicesHistory: state.devicesHistory,
+                devicesHistory: state.devicesHistory,
                 earlyLeaveDays: earlyLeaveDays,
                 totalHours: totalHours,
               ),
@@ -141,7 +141,8 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(name, style: AppTextStyles.font18Bold),
-                    if (employee.position != null && employee.position!.isNotEmpty) ...[
+                    if (employee.position != null &&
+                        employee.position!.isNotEmpty) ...[
                       hSpace(2),
                       Text(
                         employee.position!,
@@ -416,19 +417,30 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          AppDateFormatter.formatDateString(device.createdAt.toString()),
-                          style: AppTextStyles.font12Medium.copyWith(color: AppColors.textSecondary),
+                          AppDateFormatter.formatDateString(
+                            device.createdAt.toString(),
+                          ),
+                          style: AppTextStyles.font12Medium.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
                           decoration: BoxDecoration(
-                            color: device.isActive ? AppColors.softGreenBackground : AppColors.softBrandBackground,
+                            color: device.isActive
+                                ? AppColors.softGreenBackground
+                                : AppColors.softBrandBackground,
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Text(
                             device.isActive ? 'Active' : 'Revoked/Pending',
                             style: AppTextStyles.font10Bold.copyWith(
-                              color: device.isActive ? AppColors.success : AppColors.brandPrimary,
+                              color: device.isActive
+                                  ? AppColors.success
+                                  : AppColors.brandPrimary,
                             ),
                           ),
                         ),
@@ -447,11 +459,19 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                           visualDensity: VisualDensity.compact,
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
-                          icon: Icon(Icons.copy, size: 16.r, color: AppColors.brandPrimary),
+                          icon: Icon(
+                            Icons.copy,
+                            size: 16.r,
+                            color: AppColors.brandPrimary,
+                          ),
                           onPressed: () {
-                            Clipboard.setData(ClipboardData(text: device.deviceId));
+                            Clipboard.setData(
+                              ClipboardData(text: device.deviceId),
+                            );
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Device ID copied to clipboard')),
+                              const SnackBar(
+                                content: Text('Device ID copied to clipboard'),
+                              ),
                             );
                           },
                         ),
@@ -459,12 +479,15 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                     ),
                     if (device.deviceModel != null) ...[
                       hSpace(4),
-                      Text(device.deviceModel ?? '', style: AppTextStyles.font12Regular),
-                    ]
+                      Text(
+                        device.deviceModel ?? '',
+                        style: AppTextStyles.font12Regular,
+                      ),
+                    ],
                   ],
                 ),
               ),
-          ]
+          ],
         ],
       ),
     );

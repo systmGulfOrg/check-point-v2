@@ -28,9 +28,11 @@ part 'admin_api_service.g.dart';
 @RestApi()
 abstract class AdminApiService {
   @GET("/api/v2/audit")
-  Future<AuditLogsResponseModel> getAuditLogs(@Query("entityId") String entityId);
+  Future<AuditLogsResponseModel> getAuditLogs(
+    @Query("entityId") String entityId,
+  );
   factory AdminApiService(Dio dio, {String? baseUrl}) = _AdminApiService;
-  
+
   @GET('/api/v2/employees/{id}/devices')
   Future<PendingDevicesResponseModel> getEmployeeDevices(
     @Path('id') String employeeId,
@@ -50,7 +52,6 @@ abstract class AdminApiService {
     @Path('employeeId') String employeeId,
     @Path('deviceId') String deviceId,
   );
-
 
   // Employee Management
   @GET(ApiConstants.employees)

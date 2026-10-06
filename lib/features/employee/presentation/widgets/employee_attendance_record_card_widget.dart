@@ -66,7 +66,8 @@ class EmployeeAttendanceRecordCardWidget extends StatelessWidget {
                     Icon(
                       Icons.logout_rounded,
                       size: 16.r,
-                      color: record.checkOut != null && record.checkOut != '--:--'
+                      color:
+                          record.checkOut != null && record.checkOut != '--:--'
                           ? AppColors.brandPrimary
                           : AppColors.placeholder,
                     ),
@@ -74,7 +75,9 @@ class EmployeeAttendanceRecordCardWidget extends StatelessWidget {
                     Text(
                       'Out ${record.checkOut ?? '--:--'}',
                       style: AppTextStyles.font13SemiBold.copyWith(
-                        color: record.checkOut != null && record.checkOut != '--:--'
+                        color:
+                            record.checkOut != null &&
+                                record.checkOut != '--:--'
                             ? AppColors.textPrimary
                             : AppColors.placeholder,
                       ),
@@ -84,7 +87,9 @@ class EmployeeAttendanceRecordCardWidget extends StatelessWidget {
               ),
             ],
           ),
-          if (record.area != null && record.area!.isNotEmpty && record.area != '-') ...[
+          if (record.area != null &&
+              record.area!.isNotEmpty &&
+              record.area != '-') ...[
             hSpace(6),
             Row(
               children: [

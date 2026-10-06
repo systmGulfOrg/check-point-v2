@@ -60,9 +60,9 @@ class AdminLeaveTypeCardWidget extends StatelessWidget {
                     Text(
                       maxDays != null
                           ? 'admin.leaveManagement.daysCount'.tr(
-                            context: context,
-                            args: ['$maxDays'],
-                          )
+                              context: context,
+                              args: ['$maxDays'],
+                            )
                           : '-',
                       style: AppTextStyles.font12Regular.copyWith(
                         color: AppColors.textSecondary,

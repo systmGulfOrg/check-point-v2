@@ -48,8 +48,8 @@ class AdminPermissionsDetailsBlocBuilderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AdminPermissionsCubit, AdminPermissionsState>(
       builder: (context, state) => switch (state) {
-        AdminPermissionsInitial() || AdminPermissionsLoading() =>
-          _buildSkeleton(context),
+        AdminPermissionsInitial() ||
+        AdminPermissionsLoading() => _buildSkeleton(context),
         AdminPermissionsError(:final messageKey) => Center(
           child: Text(messageKey.tr(context: context)),
         ),
@@ -59,16 +59,19 @@ class AdminPermissionsDetailsBlocBuilderWidget extends StatelessWidget {
           :final selectedPermissions,
           :final loadingDetails,
           :final saving,
-        ) => selectedUser == null
-            ? Center(child: Text('admin.permissions.noUser'.tr(context: context)))
-            : loadingDetails
-            ? _buildSkeleton(context)
-            : AdminPermissionsDetailsContentWidget(
-                user: selectedUser,
-                catalogue: catalogue,
-                selectedPermissions: selectedPermissions,
-                saving: saving,
-              ),
+        ) =>
+          selectedUser == null
+              ? Center(
+                  child: Text('admin.permissions.noUser'.tr(context: context)),
+                )
+              : loadingDetails
+              ? _buildSkeleton(context)
+              : AdminPermissionsDetailsContentWidget(
+                  user: selectedUser,
+                  catalogue: catalogue,
+                  selectedPermissions: selectedPermissions,
+                  saving: saving,
+                ),
         _ => const SizedBox.shrink(),
       },
     );

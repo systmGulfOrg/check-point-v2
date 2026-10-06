@@ -29,10 +29,9 @@ class EmployeeSettingsSignOutButtonWidget extends StatelessWidget {
           final didLogout = await authSessionCubit.logout();
           if (!context.mounted) return;
           if (!didLogout) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('errors.logoutFailed'.tr(context: context)),
-              ),
+            CustomSnackBar.show(
+              context,
+              message: 'errors.logoutFailed'.tr(context: context),
             );
             return;
           }

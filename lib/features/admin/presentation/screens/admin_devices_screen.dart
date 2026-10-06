@@ -89,8 +89,9 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
           listener: (context, state) {
             state.maybeMap(
               error: (state) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message.tr(context: context))),
+                CustomSnackBar.show(
+                  context,
+                  message: state.message.tr(context: context),
                 );
               },
               orElse: () {},

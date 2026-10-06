@@ -7,11 +7,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies
 import 'admin_new_policy_sheet_widget.dart';
 
 class AdminNewPolicyButtonWidget extends StatelessWidget {
-  const AdminNewPolicyButtonWidget({
-    super.key,
-    this.labelKey,
-    this.shiftId,
-  });
+  const AdminNewPolicyButtonWidget({super.key, this.labelKey, this.shiftId});
 
   final String? labelKey;
   final int? shiftId;

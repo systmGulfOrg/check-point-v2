@@ -93,13 +93,17 @@ class _SupervisorLeaveManagementScreenState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'leaves.dashboard.balanceTitle'.tr(context: context),
+                              'leaves.dashboard.balanceTitle'.tr(
+                                context: context,
+                              ),
                               style: AppTextStyles.font16Bold,
                             ),
                             hSpace(8),
                             Padding(
                               padding: EdgeInsets.only(bottom: 16.h),
-                              child: LeaveBalancesListWidget(balances: balances),
+                              child: LeaveBalancesListWidget(
+                                balances: balances,
+                              ),
                             ),
                           ],
                         );

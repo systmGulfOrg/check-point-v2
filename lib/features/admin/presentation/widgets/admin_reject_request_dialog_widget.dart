@@ -12,10 +12,14 @@ class AdminRejectRequestDialogWidget extends StatefulWidget {
 
   final String applicantName;
 
-  static Future<String?> show(BuildContext context, {required String applicantName}) {
+  static Future<String?> show(
+    BuildContext context, {
+    required String applicantName,
+  }) {
     return showDialog<String>(
       context: context,
-      builder: (_) => AdminRejectRequestDialogWidget(applicantName: applicantName),
+      builder: (_) =>
+          AdminRejectRequestDialogWidget(applicantName: applicantName),
     );
   }
 
@@ -94,11 +98,15 @@ class _AdminRejectRequestDialogWidgetState
               hSpace(16),
               CustomTextFormField(
                 controller: _reasonController,
-                hintText: 'admin.requests.rejectReasonHint'.tr(context: context),
+                hintText: 'admin.requests.rejectReasonHint'.tr(
+                  context: context,
+                ),
                 maxLines: 3,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'admin.requests.rejectReasonRequired'.tr(context: context);
+                    return 'admin.requests.rejectReasonRequired'.tr(
+                      context: context,
+                    );
                   }
                   return null;
                 },
@@ -108,7 +116,9 @@ class _AdminRejectRequestDialogWidgetState
                 children: [
                   Expanded(
                     child: CustomButton(
-                      text: 'admin.locations.create.cancel'.tr(context: context),
+                      text: 'admin.locations.create.cancel'.tr(
+                        context: context,
+                      ),
                       onTap: () => Navigator.pop(context),
                       backgroundColor: AppColors.pageBackground,
                       textColor: AppColors.textPrimary,

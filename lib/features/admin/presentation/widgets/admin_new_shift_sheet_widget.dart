@@ -38,11 +38,9 @@ class _AdminNewShiftSheetWidgetState extends State<AdminNewShiftSheetWidget> {
   Future<void> submit() async {
     final name = nameController.text.trim();
     if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('auth.login.required'.tr(context: context)),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: 'auth.login.required'.tr(context: context),
       );
       return;
     }
@@ -61,13 +59,9 @@ class _AdminNewShiftSheetWidgetState extends State<AdminNewShiftSheetWidget> {
     setState(() => isSubmitting = false);
     if (saved) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'admin.locations.create.successMessage'.tr(context: context),
-          ),
-          backgroundColor: AppColors.success,
-        ),
+      CustomSnackBar.showSuccess(
+        context,
+        message: 'admin.locations.create.successMessage'.tr(context: context),
       );
     }
   }

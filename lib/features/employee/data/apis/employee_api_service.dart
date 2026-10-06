@@ -34,19 +34,13 @@ abstract class EmployeeApiService {
   Future<dynamic> checkIn(@Body() EmployeeCheckInRequestBody body);
 
   @POST(ApiConstants.employeeCheckInWithoutPlan)
-  Future<dynamic> checkInWithoutPlan(
-    @Body() EmployeeCheckInRequestBody body,
-  );
+  Future<dynamic> checkInWithoutPlan(@Body() EmployeeCheckInRequestBody body);
 
   @POST(ApiConstants.employeeCheckOut)
-  Future<dynamic> checkOut(
-    @Body() EmployeeCheckOutRequestBody body,
-  );
+  Future<dynamic> checkOut(@Body() EmployeeCheckOutRequestBody body);
 
   @POST(ApiConstants.employeeCheckOutWithoutPlan)
-  Future<dynamic> checkOutWithoutPlan(
-    @Body() EmployeeCheckOutRequestBody body,
-  );
+  Future<dynamic> checkOutWithoutPlan(@Body() EmployeeCheckOutRequestBody body);
 
   @GET('${ApiConstants.attendance}/employeeId/{employeeId}')
   Future<AttendanceResponseModel> getAttendanceHistory(

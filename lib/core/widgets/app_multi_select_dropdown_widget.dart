@@ -4,11 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 
 class AppMultiSelectItem<T> {
-  const AppMultiSelectItem({
-    required this.id,
-    required this.label,
-    this.value,
-  });
+  const AppMultiSelectItem({required this.id, required this.label, this.value});
 
   final String id;
   final String label;
@@ -89,9 +85,7 @@ class AppMultiSelectDropdownWidget<T> extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: AppTextStyles.font14Regular.copyWith(
-            color: hasSelection
-                ? AppColors.textPrimary
-                : AppColors.placeholder,
+            color: hasSelection ? AppColors.textPrimary : AppColors.placeholder,
           ),
         ),
       ),
@@ -159,10 +153,7 @@ class __MultiSelectSheetContentState<T>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  widget.label,
-                  style: AppTextStyles.font18Bold,
-                ),
+                Text(widget.label, style: AppTextStyles.font18Bold),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
                   icon: Icon(Icons.close_rounded, size: 20.r),

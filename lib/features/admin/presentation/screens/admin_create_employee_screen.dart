@@ -622,8 +622,9 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                                 initialValue: selectedDirectManagerId,
                                 isExpanded: true,
                                 hint: Text(
-                                  'admin.employeeWizard.selectDirectManager'
-                                      .tr(context: context),
+                                  'admin.employeeWizard.selectDirectManager'.tr(
+                                    context: context,
+                                  ),
                                 ),
                                 decoration: InputDecoration(
                                   filled: true,
@@ -633,8 +634,9 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                                   DropdownMenuItem<String?>(
                                     value: null,
                                     child: Text(
-                                      'admin.employeeWizard.noDirectManager'
-                                          .tr(context: context),
+                                      'admin.employeeWizard.noDirectManager'.tr(
+                                        context: context,
+                                      ),
                                     ),
                                   ),
                                   ...validEmployees.map(

@@ -17,7 +17,10 @@ class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
 
   Future<void> loadRequests() async {
     emit(const AdminAccountRequestsState.loading());
-    final result = await employeeRepo.getAccountRequests(page: 0, pageSize: 100);
+    final result = await employeeRepo.getAccountRequests(
+      page: 0,
+      pageSize: 100,
+    );
     result.when(
       success: (data) {
         allRequests = data;
@@ -61,7 +64,9 @@ class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
         final name = (r.name ?? '').toLowerCase();
         final mobile = (r.mobileId ?? '').toLowerCase();
         final phone = (r.phone ?? '').toLowerCase();
-        return name.contains(query) || mobile.contains(query) || phone.contains(query);
+        return name.contains(query) ||
+            mobile.contains(query) ||
+            phone.contains(query);
       }).toList();
     }
 

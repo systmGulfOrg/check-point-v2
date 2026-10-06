@@ -31,9 +31,7 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
       ),
       builder: (_) => MultiBlocProvider(
         providers: [
-          BlocProvider.value(
-            value: context.read<AdminEmployeesCubit>(),
-          ),
+          BlocProvider.value(value: context.read<AdminEmployeesCubit>()),
           BlocProvider<AdminDepartmentsCubit>(
             create: (_) => sl<AdminDepartmentsCubit>()..load(),
           ),

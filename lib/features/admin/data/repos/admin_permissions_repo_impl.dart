@@ -48,8 +48,9 @@ class AdminPermissionsRepoImpl implements AdminPermissionsRepo {
       final rawRoles = value['roles'] as Map? ?? const {};
       final roles = <String, List<String>>{
         for (final entry in rawRoles.entries)
-          entry.key.toString():
-              (entry.value as List? ?? const []).whereType<String>().toList(),
+          entry.key.toString(): (entry.value as List? ?? const [])
+              .whereType<String>()
+              .toList(),
       };
       return ApiResult.success(
         AdminPermissionsCatalogueModel(catalogue: catalogue, roles: roles),
@@ -73,11 +74,12 @@ class AdminPermissionsRepoImpl implements AdminPermissionsRepo {
       }
       final normalized = {
         ...value,
-        'customPermissions': value['customGrants'] ?? value['customPermissions'] ?? const <String>[],
+        'customPermissions':
+            value['customGrants'] ??
+            value['customPermissions'] ??
+            const <String>[],
       };
-      return ApiResult.success(
-        AdminPermissionUserModel.fromJson(normalized),
-      );
+      return ApiResult.success(AdminPermissionUserModel.fromJson(normalized));
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

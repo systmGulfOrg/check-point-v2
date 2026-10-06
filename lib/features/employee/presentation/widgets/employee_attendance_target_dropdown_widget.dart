@@ -29,12 +29,14 @@ class EmployeeAttendanceTargetDropdownWidget extends StatelessWidget {
     final isBranch = type == 'Branch';
     final branchId = selectedBranch?.id?.toString();
     final customerId = selectedCustomer?.id;
-    final hasBranch = branchId != null &&
+    final hasBranch =
+        branchId != null &&
         branches.any((item) => item.id?.toString() == branchId);
-    final hasCustomer = customerId != null &&
-        customers.any((item) => item.id == customerId);
-    final currentValue =
-        isBranch ? (hasBranch ? branchId : null) : (hasCustomer ? customerId : null);
+    final hasCustomer =
+        customerId != null && customers.any((item) => item.id == customerId);
+    final currentValue = isBranch
+        ? (hasBranch ? branchId : null)
+        : (hasCustomer ? customerId : null);
 
     return DropdownButtonFormField<String>(
       key: ValueKey('emp_loc_${currentValue ?? 'none'}'),

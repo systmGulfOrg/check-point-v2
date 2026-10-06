@@ -12,10 +12,7 @@ import 'admin_permissions_user_card_widget.dart';
 import 'admin_requests_empty_state_widget.dart';
 
 class AdminPermissionsBlocBuilderWidget extends StatelessWidget {
-  const AdminPermissionsBlocBuilderWidget({
-    required this.onManage,
-    super.key,
-  });
+  const AdminPermissionsBlocBuilderWidget({required this.onManage, super.key});
 
   final ValueChanged<AdminPermissionEmployeeModel> onManage;
 
@@ -24,68 +21,67 @@ class AdminPermissionsBlocBuilderWidget extends StatelessWidget {
     return BlocBuilder<AdminPermissionsCubit, AdminPermissionsState>(
       builder: (context, state) => switch (state) {
         AdminPermissionsInitial() || AdminPermissionsLoading() => Skeletonizer(
-            enabled: true,
-            child: Column(
-              children: [
-                CustomTextFormField(
-                  hintText: 'admin.permissions.search'.tr(context: context),
-                  prefixIcon: const Icon(Icons.search),
-                ),
-                hSpace(14),
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 4,
-                  separatorBuilder: (_, _) => hSpace(10),
-                  itemBuilder: (_, index) => AdminPermissionsUserCardWidget(
-                    user: AdminPermissionEmployeeModel(
-                      id: '$index',
-                      name: 'Loading Employee Name',
-                      email: 'employee@company.com',
-                      employeeCode: 'EMP-00$index',
-                      user: const AdminPermissionUserModel(
-                        id: '1',
-                        role: 'Supervisor',
-                        roles: ['Supervisor'],
-                        isActive: true,
-                      ),
-                    ),
-                    onManage: () {},
-                  ),
-                ),
-              ],
-            ),
-          ),
-        AdminPermissionsError(:final messageKey) =>
-          AdminRequestsEmptyStateWidget(messageKey: messageKey),
-        AdminPermissionsSuccess(:final users, :final searchQuery) =>
-          Column(
+          enabled: true,
+          child: Column(
             children: [
               CustomTextFormField(
                 hintText: 'admin.permissions.search'.tr(context: context),
                 prefixIcon: const Icon(Icons.search),
-                onChanged: context.read<AdminPermissionsCubit>().search,
               ),
               hSpace(14),
-              if (users.isEmpty)
-                AdminRequestsEmptyStateWidget(
-                  messageKey: searchQuery.isEmpty
-                      ? 'admin.permissions.noUsers'
-                      : 'admin.permissions.noSearchResults',
-                )
-              else
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: users.length,
-                  separatorBuilder: (_, _) => hSpace(10),
-                  itemBuilder: (_, index) => AdminPermissionsUserCardWidget(
-                    user: users[index],
-                    onManage: () => onManage(users[index]),
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 4,
+                separatorBuilder: (_, _) => hSpace(10),
+                itemBuilder: (_, index) => AdminPermissionsUserCardWidget(
+                  user: AdminPermissionEmployeeModel(
+                    id: '$index',
+                    name: 'Loading Employee Name',
+                    email: 'employee@company.com',
+                    employeeCode: 'EMP-00$index',
+                    user: const AdminPermissionUserModel(
+                      id: '1',
+                      role: 'Supervisor',
+                      roles: ['Supervisor'],
+                      isActive: true,
+                    ),
                   ),
+                  onManage: () {},
                 ),
+              ),
             ],
           ),
+        ),
+        AdminPermissionsError(:final messageKey) =>
+          AdminRequestsEmptyStateWidget(messageKey: messageKey),
+        AdminPermissionsSuccess(:final users, :final searchQuery) => Column(
+          children: [
+            CustomTextFormField(
+              hintText: 'admin.permissions.search'.tr(context: context),
+              prefixIcon: const Icon(Icons.search),
+              onChanged: context.read<AdminPermissionsCubit>().search,
+            ),
+            hSpace(14),
+            if (users.isEmpty)
+              AdminRequestsEmptyStateWidget(
+                messageKey: searchQuery.isEmpty
+                    ? 'admin.permissions.noUsers'
+                    : 'admin.permissions.noSearchResults',
+              )
+            else
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: users.length,
+                separatorBuilder: (_, _) => hSpace(10),
+                itemBuilder: (_, index) => AdminPermissionsUserCardWidget(
+                  user: users[index],
+                  onManage: () => onManage(users[index]),
+                ),
+              ),
+          ],
+        ),
         _ => const SizedBox.shrink(),
       },
     );

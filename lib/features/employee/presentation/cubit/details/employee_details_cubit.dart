@@ -28,7 +28,9 @@ class EmployeeDetailsCubit extends Cubit<EmployeeDetailsState> {
     }
     employee = (profileResult as Success).data;
     try {
-      final devicesResponse = await sl<AdminApiService>().getEmployeeDevices(employeeId);
+      final devicesResponse = await sl<AdminApiService>().getEmployeeDevices(
+        employeeId,
+      );
       if (devicesResponse.isSuccess) {
         devicesHistory = devicesResponse.value;
       }

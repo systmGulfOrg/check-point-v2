@@ -92,11 +92,17 @@ class _AdminEmployeeProfileEditFormWidgetState
 
     // Job
     _positionController = TextEditingController(text: emp.position ?? '');
-    _employeeCodeController = TextEditingController(text: emp.employeeCode ?? '');
+    _employeeCodeController = TextEditingController(
+      text: emp.employeeCode ?? '',
+    );
     _gradeController = TextEditingController(text: emp.grade ?? '');
     _divisionController = TextEditingController(text: emp.division ?? '');
-    _contractTypeController = TextEditingController(text: emp.contractType ?? '');
-    _contractStatusController = TextEditingController(text: emp.contractStatus ?? '');
+    _contractTypeController = TextEditingController(
+      text: emp.contractType ?? '',
+    );
+    _contractStatusController = TextEditingController(
+      text: emp.contractStatus ?? '',
+    );
     _selectedDepartmentId = emp.departmentId;
     _selectedBranchId = emp.branchId;
     _selectedWorkSystem = emp.workSystem ?? 'onsite';
@@ -106,38 +112,64 @@ class _AdminEmployeeProfileEditFormWidgetState
 
     // Personal
     _nameArController = TextEditingController(text: emp.nameAr ?? '');
-    _nameEnController = TextEditingController(text: emp.nameEn ?? emp.name ?? '');
+    _nameEnController = TextEditingController(
+      text: emp.nameEn ?? emp.name ?? '',
+    );
     _emailController = TextEditingController(text: emp.email ?? '');
-    _personalEmailController = TextEditingController(text: emp.personalEmail ?? '');
+    _personalEmailController = TextEditingController(
+      text: emp.personalEmail ?? '',
+    );
     _phoneController = TextEditingController(text: emp.phone ?? '');
-    _secondaryPhoneController = TextEditingController(text: emp.secondaryPhone ?? '');
+    _secondaryPhoneController = TextEditingController(
+      text: emp.secondaryPhone ?? '',
+    );
     _nationalIdController = TextEditingController(text: emp.nationalId ?? '');
-    _passportNumberController = TextEditingController(text: emp.passportNumber ?? '');
+    _passportNumberController = TextEditingController(
+      text: emp.passportNumber ?? '',
+    );
     _addressController = TextEditingController(text: emp.address ?? '');
     _cityController = TextEditingController(text: emp.city ?? '');
     _selectedGender = emp.gender?.toLowerCase() == 'female' ? 'female' : 'male';
-    _selectedMaritalStatus = emp.maritalStatus?.toLowerCase() == 'married' ? 'married' : 'single';
+    _selectedMaritalStatus = emp.maritalStatus?.toLowerCase() == 'married'
+        ? 'married'
+        : 'single';
     _idExpiryDate = _parseDate(emp.idExpiryDate);
     _birthDate = _parseDate(emp.birthDate);
 
     // Emergency
-    _emergencyNameController = TextEditingController(text: emp.emergencyContactName ?? '');
-    _emergencyRelationController = TextEditingController(text: emp.emergencyContactRelation ?? '');
-    _emergencyPhoneController = TextEditingController(text: emp.emergencyContactPhone ?? '');
+    _emergencyNameController = TextEditingController(
+      text: emp.emergencyContactName ?? '',
+    );
+    _emergencyRelationController = TextEditingController(
+      text: emp.emergencyContactRelation ?? '',
+    );
+    _emergencyPhoneController = TextEditingController(
+      text: emp.emergencyContactPhone ?? '',
+    );
 
     // Payroll
-    _basicSalaryController = TextEditingController(text: emp.basicSalary != null ? '${emp.basicSalary}' : '');
-    _allowancesController = TextEditingController(text: emp.allowances != null ? '${emp.allowances}' : '');
+    _basicSalaryController = TextEditingController(
+      text: emp.basicSalary != null ? '${emp.basicSalary}' : '',
+    );
+    _allowancesController = TextEditingController(
+      text: emp.allowances != null ? '${emp.allowances}' : '',
+    );
     _currencyController = TextEditingController(text: emp.currency ?? 'EGP');
     _bankNameController = TextEditingController(text: emp.bankName ?? '');
-    _bankAccountNumberController = TextEditingController(text: emp.bankAccountNumber ?? '');
+    _bankAccountNumberController = TextEditingController(
+      text: emp.bankAccountNumber ?? '',
+    );
     _ibanController = TextEditingController(text: emp.iban ?? '');
-    _socialInsuranceNumberController = TextEditingController(text: emp.socialInsuranceNumber ?? '');
+    _socialInsuranceNumberController = TextEditingController(
+      text: emp.socialInsuranceNumber ?? '',
+    );
 
     // Account
     _userNameController = TextEditingController(text: emp.userName ?? '');
     _passwordController = TextEditingController();
-    _leaveBalanceController = TextEditingController(text: '${emp.leaveBalance ?? 21}');
+    _leaveBalanceController = TextEditingController(
+      text: '${emp.leaveBalance ?? 21}',
+    );
     _selectedRoles = emp.allRoles.toSet();
     if (_selectedRoles.isEmpty) _selectedRoles.add('Employee');
     _canAddAttendance = emp.canAddAttendance ?? true;
@@ -208,53 +240,107 @@ class _AdminEmployeeProfileEditFormWidgetState
         name: _nameEnController.text.trim().isNotEmpty
             ? _nameEnController.text.trim()
             : widget.employee.name,
-        nameAr: _nameArController.text.trim().isNotEmpty ? _nameArController.text.trim() : null,
-        nameEn: _nameEnController.text.trim().isNotEmpty ? _nameEnController.text.trim() : null,
-        userName: _userNameController.text.trim().isNotEmpty ? _userNameController.text.trim() : null,
-        password: _passwordController.text.isNotEmpty ? _passwordController.text : null,
-        position: _positionController.text.trim().isNotEmpty ? _positionController.text.trim() : null,
-        employeeCode: _employeeCodeController.text.trim().isNotEmpty ? _employeeCodeController.text.trim() : null,
-        grade: _gradeController.text.trim().isNotEmpty ? _gradeController.text.trim() : null,
+        nameAr: _nameArController.text.trim().isNotEmpty
+            ? _nameArController.text.trim()
+            : null,
+        nameEn: _nameEnController.text.trim().isNotEmpty
+            ? _nameEnController.text.trim()
+            : null,
+        userName: _userNameController.text.trim().isNotEmpty
+            ? _userNameController.text.trim()
+            : null,
+        password: _passwordController.text.isNotEmpty
+            ? _passwordController.text
+            : null,
+        position: _positionController.text.trim().isNotEmpty
+            ? _positionController.text.trim()
+            : null,
+        employeeCode: _employeeCodeController.text.trim().isNotEmpty
+            ? _employeeCodeController.text.trim()
+            : null,
+        grade: _gradeController.text.trim().isNotEmpty
+            ? _gradeController.text.trim()
+            : null,
         departmentId: _selectedDepartmentId,
-        division: _divisionController.text.trim().isNotEmpty ? _divisionController.text.trim() : null,
+        division: _divisionController.text.trim().isNotEmpty
+            ? _divisionController.text.trim()
+            : null,
         branchId: _selectedBranchId,
         workSystem: _selectedWorkSystem,
         directManagerId: _selectedDirectManagerId,
         managerId: _selectedDirectManagerId,
-        contractType: _contractTypeController.text.trim().isNotEmpty ? _contractTypeController.text.trim() : null,
-        contractStatus: _contractStatusController.text.trim().isNotEmpty ? _contractStatusController.text.trim() : null,
+        contractType: _contractTypeController.text.trim().isNotEmpty
+            ? _contractTypeController.text.trim()
+            : null,
+        contractStatus: _contractStatusController.text.trim().isNotEmpty
+            ? _contractStatusController.text.trim()
+            : null,
         joinDate: _joinDate?.toIso8601String(),
         hireDate: _joinDate?.toIso8601String(),
         contractEndDate: _contractEndDate?.toIso8601String(),
-        email: _emailController.text.trim().isNotEmpty ? _emailController.text.trim() : null,
-        personalEmail: _personalEmailController.text.trim().isNotEmpty ? _personalEmailController.text.trim() : null,
-        phone: _phoneController.text.trim().isNotEmpty ? _phoneController.text.trim() : null,
-        secondaryPhone: _secondaryPhoneController.text.trim().isNotEmpty ? _secondaryPhoneController.text.trim() : null,
-        nationalId: _nationalIdController.text.trim().isNotEmpty ? _nationalIdController.text.trim() : null,
-        passportNumber: _passportNumberController.text.trim().isNotEmpty ? _passportNumberController.text.trim() : null,
+        email: _emailController.text.trim().isNotEmpty
+            ? _emailController.text.trim()
+            : null,
+        personalEmail: _personalEmailController.text.trim().isNotEmpty
+            ? _personalEmailController.text.trim()
+            : null,
+        phone: _phoneController.text.trim().isNotEmpty
+            ? _phoneController.text.trim()
+            : null,
+        secondaryPhone: _secondaryPhoneController.text.trim().isNotEmpty
+            ? _secondaryPhoneController.text.trim()
+            : null,
+        nationalId: _nationalIdController.text.trim().isNotEmpty
+            ? _nationalIdController.text.trim()
+            : null,
+        passportNumber: _passportNumberController.text.trim().isNotEmpty
+            ? _passportNumberController.text.trim()
+            : null,
         idExpiryDate: _idExpiryDate?.toIso8601String(),
         birthDate: _birthDate?.toIso8601String(),
         gender: _selectedGender,
         maritalStatus: _selectedMaritalStatus,
-        address: _addressController.text.trim().isNotEmpty ? _addressController.text.trim() : null,
-        city: _cityController.text.trim().isNotEmpty ? _cityController.text.trim() : null,
-        emergencyContactName: _emergencyNameController.text.trim().isNotEmpty ? _emergencyNameController.text.trim() : null,
-        emergencyContactRelation: _emergencyRelationController.text.trim().isNotEmpty ? _emergencyRelationController.text.trim() : null,
-        emergencyContactPhone: _emergencyPhoneController.text.trim().isNotEmpty ? _emergencyPhoneController.text.trim() : null,
+        address: _addressController.text.trim().isNotEmpty
+            ? _addressController.text.trim()
+            : null,
+        city: _cityController.text.trim().isNotEmpty
+            ? _cityController.text.trim()
+            : null,
+        emergencyContactName: _emergencyNameController.text.trim().isNotEmpty
+            ? _emergencyNameController.text.trim()
+            : null,
+        emergencyContactRelation:
+            _emergencyRelationController.text.trim().isNotEmpty
+            ? _emergencyRelationController.text.trim()
+            : null,
+        emergencyContactPhone: _emergencyPhoneController.text.trim().isNotEmpty
+            ? _emergencyPhoneController.text.trim()
+            : null,
         basicSalary: num.tryParse(_basicSalaryController.text.trim()),
         allowances: num.tryParse(_allowancesController.text.trim()),
-        currency: _currencyController.text.trim().isNotEmpty ? _currencyController.text.trim() : 'EGP',
-        bankName: _bankNameController.text.trim().isNotEmpty ? _bankNameController.text.trim() : null,
-        bankAccountNumber: _bankAccountNumberController.text.trim().isNotEmpty ? _bankAccountNumberController.text.trim() : null,
-        iban: _ibanController.text.trim().isNotEmpty ? _ibanController.text.trim() : null,
-        socialInsuranceNumber: _socialInsuranceNumberController.text.trim().isNotEmpty ? _socialInsuranceNumberController.text.trim() : null,
+        currency: _currencyController.text.trim().isNotEmpty
+            ? _currencyController.text.trim()
+            : 'EGP',
+        bankName: _bankNameController.text.trim().isNotEmpty
+            ? _bankNameController.text.trim()
+            : null,
+        bankAccountNumber: _bankAccountNumberController.text.trim().isNotEmpty
+            ? _bankAccountNumberController.text.trim()
+            : null,
+        iban: _ibanController.text.trim().isNotEmpty
+            ? _ibanController.text.trim()
+            : null,
+        socialInsuranceNumber:
+            _socialInsuranceNumberController.text.trim().isNotEmpty
+            ? _socialInsuranceNumberController.text.trim()
+            : null,
         role: _selectedRoles.contains('Admin')
             ? 'Admin'
             : _selectedRoles.contains('HR')
-                ? 'HR'
-                : _selectedRoles.contains('Supervisor')
-                    ? 'Supervisor'
-                    : 'Employee',
+            ? 'HR'
+            : _selectedRoles.contains('Supervisor')
+            ? 'Supervisor'
+            : 'Employee',
         roles: _selectedRoles.toList(),
         canAddAttendance: _canAddAttendance,
         canAddPlan: _canAddPlan,
@@ -286,10 +372,13 @@ class _AdminEmployeeProfileEditFormWidgetState
             selectedDirectManagerId: _selectedDirectManagerId,
             joinDate: _joinDate,
             contractEndDate: _contractEndDate,
-            onDepartmentChanged: (val) => setState(() => _selectedDepartmentId = val),
+            onDepartmentChanged: (val) =>
+                setState(() => _selectedDepartmentId = val),
             onBranchChanged: (val) => setState(() => _selectedBranchId = val),
-            onWorkSystemChanged: (val) => setState(() => _selectedWorkSystem = val),
-            onManagerChanged: (val) => setState(() => _selectedDirectManagerId = val),
+            onWorkSystemChanged: (val) =>
+                setState(() => _selectedWorkSystem = val),
+            onManagerChanged: (val) =>
+                setState(() => _selectedDirectManagerId = val),
             onSelectJoinDate: () => _pickDate(
               context: context,
               initial: _joinDate,
@@ -318,7 +407,8 @@ class _AdminEmployeeProfileEditFormWidgetState
             idExpiryDate: _idExpiryDate,
             birthDate: _birthDate,
             onGenderChanged: (val) => setState(() => _selectedGender = val),
-            onMaritalStatusChanged: (val) => setState(() => _selectedMaritalStatus = val),
+            onMaritalStatusChanged: (val) =>
+                setState(() => _selectedMaritalStatus = val),
             onSelectIdExpiryDate: () => _pickDate(
               context: context,
               initial: _idExpiryDate,
@@ -363,7 +453,8 @@ class _AdminEmployeeProfileEditFormWidgetState
                 }
               });
             },
-            onCanAddAttendanceChanged: (val) => setState(() => _canAddAttendance = val),
+            onCanAddAttendanceChanged: (val) =>
+                setState(() => _canAddAttendance = val),
             onCanAddPlanChanged: (val) => setState(() => _canAddPlan = val),
           ),
           hSpace(20),
@@ -375,11 +466,15 @@ class _AdminEmployeeProfileEditFormWidgetState
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     side: const BorderSide(color: AppColors.border),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
                   ),
                   child: Text(
                     'common.cancel'.tr(context: context),
-                    style: AppTextStyles.font14Regular.copyWith(fontWeight: FontWeight.w600),
+                    style: AppTextStyles.font14Regular.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),

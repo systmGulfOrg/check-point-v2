@@ -33,10 +33,7 @@ class AdminEmployeeProfilePayrollTabWidget extends StatelessWidget {
             padding: EdgeInsets.all(20.r),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [
-                  AppColors.brandPrimary,
-                  AppColors.brandSecondary,
-                ],
+                colors: [AppColors.brandPrimary, AppColors.brandSecondary],
                 begin: AlignmentDirectional.topStart,
                 end: AlignmentDirectional.bottomEnd,
               ),
@@ -174,7 +171,9 @@ class AdminEmployeeProfilePayrollTabWidget extends StatelessWidget {
             children: [
               AdminEmployeeProfileInfoRowWidget(
                 label: 'employee.profile.insuranceNumber'.tr(context: context),
-                value: employee.socialInsuranceNumber ?? 'employee.profile.notRegistered'.tr(context: context),
+                value:
+                    employee.socialInsuranceNumber ??
+                    'employee.profile.notRegistered'.tr(context: context),
                 icon: Icons.badge_outlined,
                 isCopyable: employee.socialInsuranceNumber != null,
               ),

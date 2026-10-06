@@ -57,92 +57,108 @@ class _AdminEmployeeProfileBlocBuilderWidgetState
               ),
             ),
           ),
-          success: (
-            employee,
-            attendance,
-            selectedMonth,
-            attendedDays,
-            absentDays,
-            lateDays,
-            earlyLeaveDays,
-            totalHours,
-            devicesHistory,
-            leaveRequests,
-            leaveBalances,
-            permissions,
-          ) =>
-              Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 8.h),
-                  child: AdminEmployeeProfileHeaderWidget(employee: employee),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardBackground,
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: AppColors.border),
+          success:
+              (
+                employee,
+                attendance,
+                selectedMonth,
+                attendedDays,
+                absentDays,
+                lateDays,
+                earlyLeaveDays,
+                totalHours,
+                devicesHistory,
+                leaveRequests,
+                leaveBalances,
+                permissions,
+              ) => Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 8.h),
+                    child: AdminEmployeeProfileHeaderWidget(employee: employee),
                   ),
-                  child: TabBar(
-                    controller: _tabController,
-                    isScrollable: true,
-                    labelColor: AppColors.brandPrimary,
-                    unselectedLabelColor: AppColors.textSecondary,
-                    labelStyle: AppTextStyles.font13SemiBold,
-                    unselectedLabelStyle: AppTextStyles.font13Medium,
-                    indicatorColor: AppColors.brandPrimary,
-                    indicatorWeight: 3,
-                    tabAlignment: TabAlignment.start,
-                    tabs: [
-                      Tab(
-                        icon: const Icon(Icons.badge_outlined),
-                        text: 'employee.profile.tabJobPersonal'.tr(context: context),
-                      ),
-                      Tab(
-                        icon: const Icon(Icons.event_available_outlined),
-                        text: 'employee.profile.tabAttendanceLeaves'.tr(context: context),
-                      ),
-                      Tab(
-                        icon: const Icon(Icons.account_balance_wallet_outlined),
-                        text: 'employee.profile.tabPayroll'.tr(context: context),
-                      ),
-                      Tab(
-                        icon: const Icon(Icons.verified_user_outlined),
-                        text: 'employee.profile.tabDocsSecurity'.tr(context: context),
-                      ),
-                    ],
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 8.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardBackground,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: TabBar(
+                      controller: _tabController,
+                      isScrollable: true,
+                      labelColor: AppColors.brandPrimary,
+                      unselectedLabelColor: AppColors.textSecondary,
+                      labelStyle: AppTextStyles.font13SemiBold,
+                      unselectedLabelStyle: AppTextStyles.font13Medium,
+                      indicatorColor: AppColors.brandPrimary,
+                      indicatorWeight: 3,
+                      tabAlignment: TabAlignment.start,
+                      tabs: [
+                        Tab(
+                          icon: const Icon(Icons.badge_outlined),
+                          text: 'employee.profile.tabJobPersonal'.tr(
+                            context: context,
+                          ),
+                        ),
+                        Tab(
+                          icon: const Icon(Icons.event_available_outlined),
+                          text: 'employee.profile.tabAttendanceLeaves'.tr(
+                            context: context,
+                          ),
+                        ),
+                        Tab(
+                          icon: const Icon(
+                            Icons.account_balance_wallet_outlined,
+                          ),
+                          text: 'employee.profile.tabPayroll'.tr(
+                            context: context,
+                          ),
+                        ),
+                        Tab(
+                          icon: const Icon(Icons.verified_user_outlined),
+                          text: 'employee.profile.tabDocsSecurity'.tr(
+                            context: context,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      AdminEmployeeProfileJobTabWidget(employee: employee),
-                      AdminEmployeeProfileAttendanceTabWidget(
-                        attendance: attendance,
-                        selectedMonth: selectedMonth,
-                        attendedDays: attendedDays,
-                        absentDays: absentDays,
-                        lateDays: lateDays,
-                        earlyLeaveDays: earlyLeaveDays,
-                        totalHours: totalHours,
-                        leaveBalances: leaveBalances,
-                        leaveRequests: leaveRequests,
-                        permissions: permissions,
-                        onMonthChanged: (m) =>
-                            context.read<AdminEmployeeProfileCubit>().setMonth(m),
-                      ),
-                      AdminEmployeeProfilePayrollTabWidget(employee: employee),
-                      AdminEmployeeProfileSecurityTabWidget(
-                        employee: employee,
-                        devices: devicesHistory,
-                      ),
-                    ],
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        AdminEmployeeProfileJobTabWidget(employee: employee),
+                        AdminEmployeeProfileAttendanceTabWidget(
+                          attendance: attendance,
+                          selectedMonth: selectedMonth,
+                          attendedDays: attendedDays,
+                          absentDays: absentDays,
+                          lateDays: lateDays,
+                          earlyLeaveDays: earlyLeaveDays,
+                          totalHours: totalHours,
+                          leaveBalances: leaveBalances,
+                          leaveRequests: leaveRequests,
+                          permissions: permissions,
+                          onMonthChanged: (m) => context
+                              .read<AdminEmployeeProfileCubit>()
+                              .setMonth(m),
+                        ),
+                        AdminEmployeeProfilePayrollTabWidget(
+                          employee: employee,
+                        ),
+                        AdminEmployeeProfileSecurityTabWidget(
+                          employee: employee,
+                          devices: devicesHistory,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
         );
       },
     );

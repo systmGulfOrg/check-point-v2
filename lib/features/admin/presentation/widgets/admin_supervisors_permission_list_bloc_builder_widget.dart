@@ -20,26 +20,27 @@ class AdminSupervisorsPermissionListBlocBuilderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
       builder: (context, state) => switch (state) {
-        AdminEmployeesStateLoading() || AdminEmployeesStateInitial() => Skeletonizer(
-            enabled: true,
-            child: AdminSupervisorsPermissionListWidget(
-              supervisors: const [
-                EmployeeModel(
-                  id: '1',
-                  name: 'Loading Supervisor',
-                  position: 'Department Manager',
-                  employeeCode: 'SUP-001',
-                ),
-                EmployeeModel(
-                  id: '2',
-                  name: 'Loading Supervisor 2',
-                  position: 'Team Leader',
-                  employeeCode: 'SUP-002',
-                ),
-              ],
-              onSupervisorTap: (_) {},
-            ),
+        AdminEmployeesStateLoading() ||
+        AdminEmployeesStateInitial() => Skeletonizer(
+          enabled: true,
+          child: AdminSupervisorsPermissionListWidget(
+            supervisors: const [
+              EmployeeModel(
+                id: '1',
+                name: 'Loading Supervisor',
+                position: 'Department Manager',
+                employeeCode: 'SUP-001',
+              ),
+              EmployeeModel(
+                id: '2',
+                name: 'Loading Supervisor 2',
+                position: 'Team Leader',
+                employeeCode: 'SUP-002',
+              ),
+            ],
+            onSupervisorTap: (_) {},
           ),
+        ),
         AdminEmployeesStateError(:final messageKey) =>
           AdminRequestsEmptyStateWidget(messageKey: messageKey),
         AdminEmployeesStateSuccess(:final employees) ||

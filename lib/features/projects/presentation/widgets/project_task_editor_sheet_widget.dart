@@ -22,7 +22,8 @@ class ProjectTaskEditorSheetWidget extends StatefulWidget {
     required Map<String, dynamic> body,
     required List<String> assigneeIds,
     required List<String> tags,
-  }) onSave;
+  })
+  onSave;
 
   @override
   State<ProjectTaskEditorSheetWidget> createState() =>
@@ -50,14 +51,16 @@ class _ProjectTaskEditorSheetWidgetState
     final task = widget.task;
     _titleController = TextEditingController(text: task?.title);
     _descriptionController = TextEditingController(text: task?.description);
-    _expectedController =
-        TextEditingController(text: task?.estimatedMinutes?.toString());
+    _expectedController = TextEditingController(
+      text: task?.estimatedMinutes?.toString(),
+    );
     _startDateController = TextEditingController(text: task?.startDate);
     _dueDateController = TextEditingController(text: task?.dueDate);
     _tagsController = TextEditingController(text: task?.tags.join(', '));
     _selectedAssignees = List<String>.from(task?.assigneeIds ?? []);
 
-    final initialStatus = (task != null &&
+    final initialStatus =
+        (task != null &&
             widget.project.statuses.any((s) => s.id == task.statusId))
         ? task.statusId
         : widget.project.statuses.firstOrNull?.id;
@@ -109,11 +112,7 @@ class _ProjectTaskEditorSheetWidgetState
       body['estimatedMinutes'] = expectedMinutes;
     }
 
-    widget.onSave(
-      body: body,
-      assigneeIds: ids,
-      tags: tagList,
-    );
+    widget.onSave(body: body, assigneeIds: ids, tags: tagList);
     Navigator.pop(context);
   }
 
@@ -235,28 +234,30 @@ class _ProjectTaskEditorSheetWidgetState
                                   ),
                                   hSpace(6),
                                   CustomTextFormField(
-                                    hintText: 'projects.startDate'
-                                        .tr(context: context),
+                                    hintText: 'projects.startDate'.tr(
+                                      context: context,
+                                    ),
                                     controller: _startDateController,
                                     readOnly: true,
                                     suffixIcon:
                                         _startDateController.text.isNotEmpty
-                                            ? IconButton(
-                                                icon: const Icon(
-                                                  Icons.clear_rounded,
-                                                  size: 18,
-                                                ),
-                                                onPressed: () => setState(
-                                                  () => _startDateController
-                                                      .clear(),
-                                                ),
-                                              )
-                                            : const Icon(
-                                                Icons.calendar_today_rounded,
-                                                size: 18,
-                                              ),
+                                        ? IconButton(
+                                            icon: const Icon(
+                                              Icons.clear_rounded,
+                                              size: 18,
+                                            ),
+                                            onPressed: () => setState(
+                                              () =>
+                                                  _startDateController.clear(),
+                                            ),
+                                          )
+                                        : const Icon(
+                                            Icons.calendar_today_rounded,
+                                            size: 18,
+                                          ),
                                     onTap: () async {
-                                      final initial = DateTime.tryParse(
+                                      final initial =
+                                          DateTime.tryParse(
                                             _startDateController.text,
                                           ) ??
                                           DateTime.now();
@@ -270,8 +271,8 @@ class _ProjectTaskEditorSheetWidgetState
                                         setState(() {
                                           _startDateController.text =
                                               AppDateFormatter.formatDate(
-                                            picked,
-                                          );
+                                                picked,
+                                              );
                                         });
                                       }
                                     },
@@ -290,28 +291,29 @@ class _ProjectTaskEditorSheetWidgetState
                                   ),
                                   hSpace(6),
                                   CustomTextFormField(
-                                    hintText: 'projects.dueDate'
-                                        .tr(context: context),
+                                    hintText: 'projects.dueDate'.tr(
+                                      context: context,
+                                    ),
                                     controller: _dueDateController,
                                     readOnly: true,
                                     suffixIcon:
                                         _dueDateController.text.isNotEmpty
-                                            ? IconButton(
-                                                icon: const Icon(
-                                                  Icons.clear_rounded,
-                                                  size: 18,
-                                                ),
-                                                onPressed: () => setState(
-                                                  () => _dueDateController
-                                                      .clear(),
-                                                ),
-                                              )
-                                            : const Icon(
-                                                Icons.calendar_today_rounded,
-                                                size: 18,
-                                              ),
+                                        ? IconButton(
+                                            icon: const Icon(
+                                              Icons.clear_rounded,
+                                              size: 18,
+                                            ),
+                                            onPressed: () => setState(
+                                              () => _dueDateController.clear(),
+                                            ),
+                                          )
+                                        : const Icon(
+                                            Icons.calendar_today_rounded,
+                                            size: 18,
+                                          ),
                                     onTap: () async {
-                                      final initial = DateTime.tryParse(
+                                      final initial =
+                                          DateTime.tryParse(
                                             _dueDateController.text,
                                           ) ??
                                           DateTime.now();
@@ -325,8 +327,8 @@ class _ProjectTaskEditorSheetWidgetState
                                         setState(() {
                                           _dueDateController.text =
                                               AppDateFormatter.formatDate(
-                                            picked,
-                                          );
+                                                picked,
+                                              );
                                         });
                                       }
                                     },
@@ -345,8 +347,9 @@ class _ProjectTaskEditorSheetWidgetState
                         ),
                         hSpace(6),
                         CustomTextFormField(
-                          hintText: 'projects.expectedMinutesHint'
-                              .tr(context: context),
+                          hintText: 'projects.expectedMinutesHint'.tr(
+                            context: context,
+                          ),
                           controller: _expectedController,
                           keyboardType: TextInputType.number,
                           prefixIcon: const Icon(
@@ -368,13 +371,16 @@ class _ProjectTaskEditorSheetWidgetState
                             for (final p in ['LOW', 'NORMAL', 'HIGH', 'URGENT'])
                               Expanded(
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 3.w),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 3.w,
+                                  ),
                                   child: InkWell(
                                     onTap: () => setState(() => _priority = p),
                                     borderRadius: BorderRadius.circular(10.r),
                                     child: AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 150),
+                                      duration: const Duration(
+                                        milliseconds: 150,
+                                      ),
                                       padding: EdgeInsets.symmetric(
                                         vertical: 10.h,
                                       ),
@@ -382,8 +388,9 @@ class _ProjectTaskEditorSheetWidgetState
                                         color: _priority == p
                                             ? _priorityColor(p).withAlpha(25)
                                             : AppColors.pageBackground,
-                                        borderRadius:
-                                            BorderRadius.circular(10.r),
+                                        borderRadius: BorderRadius.circular(
+                                          10.r,
+                                        ),
                                         border: Border.all(
                                           color: _priority == p
                                               ? _priorityColor(p)
@@ -396,13 +403,13 @@ class _ProjectTaskEditorSheetWidgetState
                                           p,
                                           style: AppTextStyles.font11Medium
                                               .copyWith(
-                                            color: _priority == p
-                                                ? _priorityColor(p)
-                                                : AppColors.textSecondary,
-                                            fontWeight: _priority == p
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                          ),
+                                                color: _priority == p
+                                                    ? _priorityColor(p)
+                                                    : AppColors.textSecondary,
+                                                fontWeight: _priority == p
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -421,9 +428,11 @@ class _ProjectTaskEditorSheetWidgetState
                           ),
                           hSpace(6),
                           DropdownButtonFormField<String>(
-                            initialValue: (_statusId != null &&
-                                    widget.project.statuses
-                                        .any((s) => s.id == _statusId))
+                            initialValue:
+                                (_statusId != null &&
+                                    widget.project.statuses.any(
+                                      (s) => s.id == _statusId,
+                                    ))
                                 ? _statusId
                                 : widget.project.statuses.first.id,
                             decoration: const InputDecoration(),
@@ -461,8 +470,7 @@ class _ProjectTaskEditorSheetWidgetState
                         ),
                         hSpace(6),
                         CustomTextFormField(
-                          hintText:
-                              'projects.tagsHint'.tr(context: context),
+                          hintText: 'projects.tagsHint'.tr(context: context),
                           controller: _tagsController,
                           prefixIcon: const Icon(
                             Icons.tag_rounded,

@@ -34,8 +34,10 @@ class AdminRegistrationRequestCardWidget extends StatelessWidget {
   }
 
   String _getStatusText(BuildContext context) {
-    if (request.isApproved) return 'admin.requests.filterApproved'.tr(context: context);
-    if (request.isRejected) return 'admin.requests.filterRejected'.tr(context: context);
+    if (request.isApproved)
+      return 'admin.requests.filterApproved'.tr(context: context);
+    if (request.isRejected)
+      return 'admin.requests.filterRejected'.tr(context: context);
     return 'admin.requests.filterPending'.tr(context: context);
   }
 
@@ -103,7 +105,8 @@ class AdminRegistrationRequestCardWidget extends StatelessWidget {
               ),
             ],
           ),
-          if (request.rejectReason != null && request.rejectReason!.isNotEmpty) ...[
+          if (request.rejectReason != null &&
+              request.rejectReason!.isNotEmpty) ...[
             hSpace(10),
             Container(
               padding: EdgeInsets.all(10.r),
@@ -191,7 +194,9 @@ class AdminRegistrationRequestCardWidget extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: onView,
                     icon: Icon(Icons.visibility_outlined, size: 17.r),
-                    label: Text('admin.requests.viewDetails'.tr(context: context)),
+                    label: Text(
+                      'admin.requests.viewDetails'.tr(context: context),
+                    ),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.brandInk,
                       side: const BorderSide(color: AppColors.border),

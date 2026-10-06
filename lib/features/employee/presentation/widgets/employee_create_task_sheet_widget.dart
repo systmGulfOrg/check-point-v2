@@ -40,8 +40,9 @@ class _EmployeeCreateTaskSheetWidgetState
   Future<void> submit() async {
     final title = titleController.text.trim();
     if (title.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('supervisor.tasks.create.titleRequired'.tr())),
+      CustomSnackBar.show(
+        context,
+        message: 'supervisor.tasks.create.titleRequired'.tr(),
       );
       return;
     }

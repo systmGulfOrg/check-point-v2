@@ -12,7 +12,7 @@ class DepartmentRequestModel {
       _$DepartmentRequestModelFromJson(json);
 
   Map<String, dynamic> toJson() => {
-        'name': departmentName,
-        'departmentName': departmentName,
-      };
+    'name': departmentName,
+    'departmentName': departmentName,
+  };
 }

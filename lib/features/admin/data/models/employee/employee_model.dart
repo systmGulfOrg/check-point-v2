@@ -170,7 +170,8 @@ class EmployeeModel {
   String get resolvedGrade => grade ?? 'Grade 4 (Senior)';
   String get resolvedDivision => division ?? departmentName ?? '-';
   String get resolvedContractType => contractType ?? 'Full-Time';
-  String get resolvedContractStatus => contractStatus ?? (canAddAttendance == true ? 'Active' : 'Probation');
+  String get resolvedContractStatus =>
+      contractStatus ?? (canAddAttendance == true ? 'Active' : 'Probation');
   String get resolvedJoinDate => joinDate ?? hireDate ?? '-';
   String get resolvedNationalId => nationalId ?? passportNumber ?? '-';
   String get resolvedEmergencyName => emergencyContactName ?? '-';

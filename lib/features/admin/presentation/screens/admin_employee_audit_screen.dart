@@ -1,3 +1,4 @@
+import 'package:check_point_v2/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -19,39 +20,32 @@ class AdminEmployeeAuditScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
-        title: Text('admin.employees.activityLog'.tr(context: context), style: AppTextStyles.font18Bold),
+        title: Text(
+          'admin.employees.activityLog'.tr(context: context),
+          style: AppTextStyles.font18Bold,
+        ),
       ),
       body: SafeArea(
         child: BlocConsumer<AdminEmployeeAuditCubit, AdminEmployeeAuditState>(
           listener: (context, state) {
             state.maybeMap(
               error: (state) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+                CustomSnackBar.showError(context, message: state.message);
               },
               orElse: () {},
             );
           },
           builder: (context, state) {
-            return state.map(
-              initial: (_) => const Center(child: CircularProgressIndicator(color: AppColors.brandPrimary)),
-              loading: (_) => const Center(child: CircularProgressIndicator(color: AppColors.brandPrimary)),
-              error: (state) => Center(child: Text(state.message, style: const TextStyle(color: AppColors.error))),
-              success: (state) {
-                final logs = state.logs;
-                if (logs.isEmpty) {
-                  return Center(
-                    child: Text('admin.requests.empty'.tr(context: context), style: AppTextStyles.font14Regular),
-                  );
-                }
-                return ListView.builder(
-                  padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
-                  itemCount: logs.length,
-                  itemBuilder: (context, index) {
-                    final log = logs[index];
-                    return AdminEmployeeAuditItemWidget(log: log);
-                  },
-                );
-              },
+            return state.maybeWhen(
+              success: (logs) => ListView.builder(
+                padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+                itemCount: logs.length,
+                itemBuilder: (context, index) {
+                  final log = logs[index];
+                  return AdminEmployeeAuditItemWidget(log: log);
+                },
+              ),
+              orElse: () => const SizedBox.shrink(),
             );
           },
         ),

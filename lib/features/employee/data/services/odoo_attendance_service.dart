@@ -21,12 +21,12 @@ class OdooAttendanceService {
   }
 
   Options get _options => Options(
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          if (AppConfig.odooApiKey.isNotEmpty) 'API-KEY': AppConfig.odooApiKey,
-        },
-      );
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      if (AppConfig.odooApiKey.isNotEmpty) 'API-KEY': AppConfig.odooApiKey,
+    },
+  );
 
   String get _baseUrl => AppConfig.odooBaseUrl;
 
@@ -39,10 +39,7 @@ class OdooAttendanceService {
     try {
       final response = await dio.post<Map<String, dynamic>>(
         '$_baseUrl/api/attendance/check_in',
-        data: {
-          'mobile_employee_id': employeeIdStr,
-          'location': location,
-        },
+        data: {'mobile_employee_id': employeeIdStr, 'location': location},
         options: _options,
       );
       return response.data?['success'] ?? false;
@@ -51,9 +48,7 @@ class OdooAttendanceService {
     }
   }
 
-  Future<bool> syncCheckOut({
-    required String employeeIdStr,
-  }) async {
+  Future<bool> syncCheckOut({required String employeeIdStr}) async {
     if (employeeIdStr.isEmpty) return false;
     try {
       final response = await dio.post<Map<String, dynamic>>(

@@ -33,4 +33,3 @@ class AppRoutes {
   static const String employeeSettings = '/employee/settings';
   static const String adminDeletedEmployees = '/admin/employees/deleted';
 }
-

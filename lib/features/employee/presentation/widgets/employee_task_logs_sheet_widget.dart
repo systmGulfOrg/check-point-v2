@@ -29,7 +29,10 @@ class EmployeeTaskLogsSheetWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Loading Task Logs Placeholder Title', style: AppTextStyles.font18Bold),
+                  Text(
+                    'Loading Task Logs Placeholder Title',
+                    style: AppTextStyles.font18Bold,
+                  ),
                   hSpace(14),
                   const Text('2026-09-20 • 60 min • Skeleton task log item'),
                   hSpace(10),

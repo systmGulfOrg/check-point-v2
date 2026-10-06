@@ -113,13 +113,9 @@ class _AdminEditEmployeeSheetWidgetState
     if (_nameController.text.trim().isEmpty) return;
     if (_selectedWorkSystem != 'onsite' &&
         _selectedRemoteWorkPolicyId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'admin.employeeWizard.workPolicyRequired'.tr(context: context),
-          ),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: 'admin.employeeWizard.workPolicyRequired'.tr(context: context),
       );
       return;
     }
@@ -488,7 +484,9 @@ class _AdminEditEmployeeSheetWidgetState
                       key: ValueKey(
                         'manager_${hasSelected ? _selectedDirectManagerId : 'none'}',
                       ),
-                      initialValue: hasSelected ? _selectedDirectManagerId : null,
+                      initialValue: hasSelected
+                          ? _selectedDirectManagerId
+                          : null,
                       isExpanded: true,
                       hint: Text(
                         'admin.employeeWizard.selectDirectManager'.tr(

@@ -163,11 +163,11 @@ class OdooTimeOffService {
   final Dio dio;
 
   Options get _options => Options(
-        headers: {
-          'Accept': 'application/json',
-          if (AppConfig.odooApiKey.isNotEmpty) 'API-KEY': AppConfig.odooApiKey,
-        },
-      );
+    headers: {
+      'Accept': 'application/json',
+      if (AppConfig.odooApiKey.isNotEmpty) 'API-KEY': AppConfig.odooApiKey,
+    },
+  );
 
   String get _baseUrl => AppConfig.odooBaseUrl;
 

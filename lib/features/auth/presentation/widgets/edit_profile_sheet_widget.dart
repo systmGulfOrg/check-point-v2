@@ -68,9 +68,9 @@ class _EditProfileSheetWidgetState extends State<EditProfileSheetWidget> {
     final username = usernameController.text.trim();
 
     await context.read<AuthProfileCubit>().updateProfile(
-          name: name,
-          username: username,
-        );
+      name: name,
+      username: username,
+    );
 
     if (mounted) {
       setState(() => isSaving = false);

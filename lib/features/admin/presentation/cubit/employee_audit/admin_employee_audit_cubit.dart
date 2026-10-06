@@ -4,7 +4,8 @@ import '../../../data/apis/admin_api_service.dart';
 import 'admin_employee_audit_state.dart';
 
 class AdminEmployeeAuditCubit extends Cubit<AdminEmployeeAuditState> {
-  AdminEmployeeAuditCubit({required this.api}) : super(const AdminEmployeeAuditState.initial());
+  AdminEmployeeAuditCubit({required this.api})
+    : super(const AdminEmployeeAuditState.initial());
 
   final AdminApiService api;
 

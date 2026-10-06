@@ -85,9 +85,8 @@ class SupervisorTaskCardWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Text(
-                        'supervisor.tasks.priority.${priority.toLowerCase()}'.tr(
-                          context: context,
-                        ),
+                        'supervisor.tasks.priority.${priority.toLowerCase()}'
+                            .tr(context: context),
                         style: AppTextStyles.font12Medium.copyWith(
                           color: switch (priority.toLowerCase()) {
                             'critical' || 'high' => AppColors.error,
@@ -158,39 +157,39 @@ class SupervisorTaskCardWidget extends StatelessWidget {
                 border: Border(top: BorderSide(color: AppColors.border)),
               ),
               child: Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: onEdit,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 10.h),
-                      alignment: Alignment.center,
-                      child: Text(
-                        'admin.locations.edit'.tr(context: context),
-                        style: AppTextStyles.font13SemiBold.copyWith(
-                          color: AppColors.textSecondary,
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: onEdit,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'admin.locations.edit'.tr(context: context),
+                          style: AppTextStyles.font13SemiBold.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Container(width: 1.w, height: 24.h, color: AppColors.border),
-                Expanded(
-                  child: InkWell(
-                    onTap: onDelete,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 10.h),
-                      alignment: Alignment.center,
-                      child: Text(
-                        'admin.locations.delete'.tr(context: context),
-                        style: AppTextStyles.font13SemiBold.copyWith(
-                          color: AppColors.error,
+                  Container(width: 1.w, height: 24.h, color: AppColors.border),
+                  Expanded(
+                    child: InkWell(
+                      onTap: onDelete,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'admin.locations.delete'.tr(context: context),
+                          style: AppTextStyles.font13SemiBold.copyWith(
+                            color: AppColors.error,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
               ),
             ),
         ],

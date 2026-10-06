@@ -68,11 +68,9 @@ class _AdminEditTaskSheetWidgetState extends State<AdminEditTaskSheetWidget> {
   Future<void> _submit() async {
     final title = titleController.text.trim();
     if (title.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('supervisor.tasks.create.titleRequired'.tr()),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: 'supervisor.tasks.create.titleRequired'.tr(),
       );
       return;
     }
@@ -103,11 +101,9 @@ class _AdminEditTaskSheetWidgetState extends State<AdminEditTaskSheetWidget> {
 
     if (success) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('supervisor.tasks.edit.success'.tr()),
-          backgroundColor: AppColors.success,
-        ),
+      CustomSnackBar.showSuccess(
+        context,
+        message: 'supervisor.tasks.edit.success'.tr(),
       );
     }
   }

@@ -16,12 +16,12 @@ class NotificationsRepoImpl {
       final items = value is Map<String, dynamic> ? value['items'] : null;
       final list = items is List
           ? items
-              .whereType<Map<String, dynamic>>()
-              .map(NotificationModel.fromJson)
-              .toList()
+                .whereType<Map<String, dynamic>>()
+                .map(NotificationModel.fromJson)
+                .toList()
           : <NotificationModel>[];
-      final unreadCount = value is Map<String, dynamic> &&
-              value['unreadCount'] is num
+      final unreadCount =
+          value is Map<String, dynamic> && value['unreadCount'] is num
           ? (value['unreadCount'] as num).toInt()
           : list.where((notification) => notification.readAt == null).length;
       return ApiResult.success(

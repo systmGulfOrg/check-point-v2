@@ -5,10 +5,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 
 class ProjectAddStatusSheetWidget extends StatefulWidget {
-  const ProjectAddStatusSheetWidget({
-    required this.onSave,
-    super.key,
-  });
+  const ProjectAddStatusSheetWidget({required this.onSave, super.key});
 
   final ValueChanged<String> onSave;
 

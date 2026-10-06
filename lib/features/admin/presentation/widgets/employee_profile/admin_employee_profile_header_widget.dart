@@ -7,10 +7,7 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 
 class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
-  const AdminEmployeeProfileHeaderWidget({
-    required this.employee,
-    super.key,
-  });
+  const AdminEmployeeProfileHeaderWidget({required this.employee, super.key});
 
   final EmployeeModel employee;
 
@@ -45,11 +42,13 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                   CircleAvatar(
                     radius: 36.r,
                     backgroundColor: AppColors.softBrandBackground,
-                    backgroundImage: employee.imageUrl != null &&
+                    backgroundImage:
+                        employee.imageUrl != null &&
                             employee.imageUrl!.isNotEmpty
                         ? NetworkImage(employee.imageUrl!)
                         : null,
-                    child: (employee.imageUrl == null ||
+                    child:
+                        (employee.imageUrl == null ||
                             employee.imageUrl!.isEmpty)
                         ? Text(
                             initials,
@@ -68,10 +67,7 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                         color: AppColors.cardBackground,
                         shape: BoxShape.circle,
                         boxShadow: const [
-                          BoxShadow(
-                            color: AppColors.shadow,
-                            blurRadius: 4,
-                          ),
+                          BoxShadow(color: AppColors.shadow, blurRadius: 4),
                         ],
                       ),
                       child: Icon(
@@ -109,7 +105,10 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                     ],
                     hSpace(4),
                     Text(
-                      employee.position ?? 'employee.profile.defaultPosition'.tr(context: context),
+                      employee.position ??
+                          'employee.profile.defaultPosition'.tr(
+                            context: context,
+                          ),
                       style: AppTextStyles.font13Medium.copyWith(
                         color: AppColors.brandPrimary,
                         fontWeight: FontWeight.w600,
@@ -159,13 +158,14 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                         Expanded(
                           child: InkWell(
                             onTap: () {
-                              final code = employee.employeeCode ?? employee.id ?? '';
+                              final code =
+                                  employee.employeeCode ?? employee.id ?? '';
                               if (code.isNotEmpty) {
                                 Clipboard.setData(ClipboardData(text: code));
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('employee.profile.codeCopied'.tr(context: context)),
-                                    duration: const Duration(seconds: 1),
+                                CustomSnackBar.show(
+                                  context,
+                                  message: 'employee.profile.codeCopied'.tr(
+                                    context: context,
                                   ),
                                 );
                               }
@@ -213,8 +213,11 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                 onTap: employee.phone != null && employee.phone!.isNotEmpty
                     ? () {
                         Clipboard.setData(ClipboardData(text: employee.phone!));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('employee.profile.phoneCopied'.tr(context: context))),
+                        CustomSnackBar.show(
+                          context,
+                          message: 'employee.profile.phoneCopied'.tr(
+                            context: context,
+                          ),
                         );
                       }
                     : null,
@@ -227,8 +230,11 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                 onTap: employee.email != null && employee.email!.isNotEmpty
                     ? () {
                         Clipboard.setData(ClipboardData(text: employee.email!));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('employee.profile.emailCopied'.tr(context: context))),
+                        CustomSnackBar.show(
+                          context,
+                          message: 'employee.profile.emailCopied'.tr(
+                            context: context,
+                          ),
                         );
                       }
                     : null,

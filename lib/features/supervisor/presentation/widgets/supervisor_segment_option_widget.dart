@@ -36,9 +36,7 @@ class SupervisorSegmentOptionWidget extends StatelessWidget {
           duration: const Duration(milliseconds: 180),
           curve: Curves.easeOut,
           style: AppTextStyles.font12Medium.copyWith(
-            color: isSelected
-                ? AppColors.textPrimary
-                : AppColors.textSecondary,
+            color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
           ),
           child: Text(labelKey.tr(context: context, args: labelArgs)),
         ),

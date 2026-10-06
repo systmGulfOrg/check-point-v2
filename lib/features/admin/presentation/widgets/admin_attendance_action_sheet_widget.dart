@@ -44,25 +44,26 @@ class _AdminAttendanceActionSheetWidgetState
     super.initState();
     final initialCheckIn =
         widget.record.checkIn != '--:--' && widget.record.checkIn.isNotEmpty
-            ? widget.record.checkIn
-            : '09:00';
+        ? widget.record.checkIn
+        : '09:00';
     final initialCheckOut =
         widget.record.checkOut != '--:--' && widget.record.checkOut.isNotEmpty
-            ? widget.record.checkOut
-            : '';
+        ? widget.record.checkOut
+        : '';
     checkInController = TextEditingController(text: initialCheckIn);
     checkOutController = TextEditingController(text: initialCheckOut);
     reasonController = TextEditingController();
     final statusSuffix = widget.record.statusKey.split('.').last;
-    selectedStatus = const [
-      'onTime',
-      'late',
-      'absent',
-      'excused',
-      'manual',
-      'earlyCheckout',
-      'onLeave',
-    ].contains(statusSuffix)
+    selectedStatus =
+        const [
+          'onTime',
+          'late',
+          'absent',
+          'excused',
+          'manual',
+          'earlyCheckout',
+          'onLeave',
+        ].contains(statusSuffix)
         ? statusSuffix
         : 'onTime';
   }
@@ -113,8 +114,9 @@ class _AdminAttendanceActionSheetWidgetState
     await cubit.updateAttendance(
       id: widget.attendanceId,
       clockInTime: checkIn.isNotEmpty && checkIn != '--:--' ? checkIn : null,
-      clockOutTime:
-          checkOut.isNotEmpty && checkOut != '--:--' ? checkOut : null,
+      clockOutTime: checkOut.isNotEmpty && checkOut != '--:--'
+          ? checkOut
+          : null,
       status: selectedStatus,
       reason: reason,
     );

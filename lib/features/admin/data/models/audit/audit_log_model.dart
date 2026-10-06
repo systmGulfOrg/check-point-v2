@@ -15,7 +15,8 @@ class AuditLogModel with _$AuditLogModel {
     Map<String, dynamic>? after,
   }) = _AuditLogModel;
 
-  factory AuditLogModel.fromJson(Map<String, dynamic> json) => _$AuditLogModelFromJson(json);
+  factory AuditLogModel.fromJson(Map<String, dynamic> json) =>
+      _$AuditLogModelFromJson(json);
 }
 
 @freezed
@@ -26,7 +27,8 @@ class AuditLogsResponseModel with _$AuditLogsResponseModel {
     required AuditLogsResponseValue value,
   }) = _AuditLogsResponseModel;
 
-  factory AuditLogsResponseModel.fromJson(Map<String, dynamic> json) => _$AuditLogsResponseModelFromJson(json);
+  factory AuditLogsResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$AuditLogsResponseModelFromJson(json);
 }
 
 @freezed
@@ -36,5 +38,6 @@ class AuditLogsResponseValue with _$AuditLogsResponseValue {
     int? totalCount,
   }) = _AuditLogsResponseValue;
 
-  factory AuditLogsResponseValue.fromJson(Map<String, dynamic> json) => _$AuditLogsResponseValueFromJson(json);
+  factory AuditLogsResponseValue.fromJson(Map<String, dynamic> json) =>
+      _$AuditLogsResponseValueFromJson(json);
 }

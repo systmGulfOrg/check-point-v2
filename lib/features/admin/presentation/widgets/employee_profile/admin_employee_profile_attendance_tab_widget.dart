@@ -108,7 +108,9 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
                   Expanded(
                     child: _statPill(
                       context,
-                      label: 'employee.profile.leaveRequests'.tr(context: context),
+                      label: 'employee.profile.leaveRequests'.tr(
+                        context: context,
+                      ),
                       value: '${leaveRequests.length}',
                       icon: Icons.flight_takeoff_rounded,
                       color: AppColors.brandPrimary,
@@ -118,7 +120,9 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
                   Expanded(
                     child: _statPill(
                       context,
-                      label: 'employee.profile.permissionsCount'.tr(context: context),
+                      label: 'employee.profile.permissionsCount'.tr(
+                        context: context,
+                      ),
                       value: '${permissions.length}',
                       icon: Icons.timer_outlined,
                       color: AppColors.brandSecondary,
@@ -144,8 +148,10 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
                   icon: const Icon(Icons.chevron_left_rounded),
                 ),
                 Text(
-                  DateFormat('MMMM yyyy', context.locale.toString())
-                      .format(selectedMonth),
+                  DateFormat(
+                    'MMMM yyyy',
+                    context.locale.toString(),
+                  ).format(selectedMonth),
                   style: AppTextStyles.font13SemiBold.copyWith(
                     color: AppColors.brandPrimary,
                   ),
@@ -267,11 +273,16 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(dateStr, style: AppTextStyles.font13Medium),
+                                Text(
+                                  dateStr,
+                                  style: AppTextStyles.font13Medium,
+                                ),
                                 if (item.isLate == true) ...[
                                   hSpace(2),
                                   Text(
-                                    'employee.details.late'.tr(context: context),
+                                    'employee.details.late'.tr(
+                                      context: context,
+                                    ),
                                     style: AppTextStyles.font11Medium.copyWith(
                                       color: AppColors.error,
                                       fontWeight: FontWeight.bold,
@@ -331,10 +342,7 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
             ),
           ),
           hSpace(4),
-          Text(
-            value,
-            style: AppTextStyles.font14Bold.copyWith(color: color),
-          ),
+          Text(value, style: AppTextStyles.font14Bold.copyWith(color: color)),
         ],
       ),
     );

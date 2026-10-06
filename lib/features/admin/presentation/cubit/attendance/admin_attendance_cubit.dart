@@ -60,7 +60,8 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
 
   List<AdminAttendanceModel> get todayPresentRecords {
     return todayRecords.where((r) {
-      final hasClockIn = r.clockInTime != null &&
+      final hasClockIn =
+          r.clockInTime != null &&
           r.clockInTime!.trim().isNotEmpty &&
           r.clockInTime != '--:--' &&
           !r.clockInTime!.startsWith('00:00');

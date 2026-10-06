@@ -32,11 +32,10 @@ class UserPermissionsSheetWidget extends StatelessWidget {
     return BlocBuilder<AuthProfileCubit, AuthProfileState>(
       builder: (context, state) {
         final (role, permissions) = switch (state) {
-          AuthProfileSuccess(
-            :final role,
-            :final permissions,
-          ) =>
-            (role, permissions),
+          AuthProfileSuccess(:final role, :final permissions) => (
+            role,
+            permissions,
+          ),
           _ => ('User', <String>[]),
         };
 

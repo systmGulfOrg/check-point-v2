@@ -40,26 +40,37 @@ class AdminEmployeeEditAccountCardWidget extends StatelessWidget {
         CustomTextFormField(
           controller: userNameController,
           hintText: 'Username (اسم المستخدم)',
-          prefixIcon: const Icon(Icons.account_circle_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.account_circle_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: passwordController,
           hintText: 'New Password - Optional (كلمة مرور جديدة)',
           obscureText: true,
-          prefixIcon: const Icon(Icons.lock_outline_rounded, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.lock_outline_rounded,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: leaveBalanceController,
           hintText: 'Annual Leave Balance (رصيد الإجازات السنوي)',
           keyboardType: TextInputType.number,
-          prefixIcon: const Icon(Icons.calendar_month_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.calendar_month_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(14),
         Text(
           'employee.profile.assignedRoles'.tr(context: context),
-          style: AppTextStyles.font13Medium.copyWith(fontWeight: FontWeight.w600),
+          style: AppTextStyles.font13Medium.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
         hSpace(8),
         Wrap(
@@ -74,13 +85,17 @@ class AdminEmployeeEditAccountCardWidget extends StatelessWidget {
               selectedColor: AppColors.brandPrimary.withValues(alpha: 0.15),
               checkmarkColor: AppColors.brandPrimary,
               labelStyle: AppTextStyles.font13Medium.copyWith(
-                color: isSelected ? AppColors.brandPrimary : AppColors.textPrimary,
+                color: isSelected
+                    ? AppColors.brandPrimary
+                    : AppColors.textPrimary,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
               ),
               side: BorderSide(
                 color: isSelected ? AppColors.brandPrimary : AppColors.border,
               ),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.r),
+              ),
             );
           }).toList(),
         ),

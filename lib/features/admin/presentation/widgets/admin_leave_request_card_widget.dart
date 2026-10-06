@@ -145,7 +145,9 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
                             vertical: 2.h,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.brandPrimary.withValues(alpha: 0.08),
+                            color: AppColors.brandPrimary.withValues(
+                              alpha: 0.08,
+                            ),
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Row(
@@ -158,7 +160,9 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
                               ),
                               wSpace(3),
                               Text(
-                                'leaves.request.hasAttachment'.tr(context: context),
+                                'leaves.request.hasAttachment'.tr(
+                                  context: context,
+                                ),
                                 style: AppTextStyles.font11Regular.copyWith(
                                   color: AppColors.brandPrimary,
                                   fontWeight: FontWeight.w500,

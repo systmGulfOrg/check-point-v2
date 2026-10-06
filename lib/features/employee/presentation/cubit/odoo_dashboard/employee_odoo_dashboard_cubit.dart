@@ -32,15 +32,19 @@ class EmployeeOdooDashboardCubit extends Cubit<EmployeeOdooDashboardState> {
       final attendanceData = results[1] as OdooMyAttendanceData;
       final leaveRequests = results[2] as List<OdooLeaveRequest>;
 
-      emit(EmployeeOdooDashboardState.success(
-        status: status,
-        attendanceData: attendanceData,
-        leaveRequests: leaveRequests,
-      ));
+      emit(
+        EmployeeOdooDashboardState.success(
+          status: status,
+          attendanceData: attendanceData,
+          leaveRequests: leaveRequests,
+        ),
+      );
     } catch (e) {
-      emit(EmployeeOdooDashboardState.error(
-        e.toString().replaceAll('Exception: ', ''),
-      ));
+      emit(
+        EmployeeOdooDashboardState.error(
+          e.toString().replaceAll('Exception: ', ''),
+        ),
+      );
     }
   }
 

@@ -48,7 +48,9 @@ class CustomDialogWidget extends StatelessWidget {
               width: 56.r,
               height: 56.r,
               decoration: BoxDecoration(
-                color: iconBackgroundColor ?? AppColors.brandPrimary.withValues(alpha: 0.1),
+                color:
+                    iconBackgroundColor ??
+                    AppColors.brandPrimary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -89,7 +91,9 @@ class CustomDialogWidget extends StatelessWidget {
               wSpace(12),
               Expanded(
                 child: CustomButton(
-                  text: confirmLabel ?? 'auth.login.confirmTransfer'.tr(context: context),
+                  text:
+                      confirmLabel ??
+                      'auth.login.confirmTransfer'.tr(context: context),
                   onTap: onConfirm,
                   backgroundColor: confirmButtonColor ?? AppColors.brandPrimary,
                   textColor: confirmButtonTextColor ?? AppColors.white,

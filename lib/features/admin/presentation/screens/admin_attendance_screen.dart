@@ -47,13 +47,10 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
       isScrollControlled: true,
       backgroundColor: AppColors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20.r),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
-      builder: (_) => AdminAbsentEmployeesSheetWidget(
-        absentEmployees: absentEmployees,
-      ),
+      builder: (_) =>
+          AdminAbsentEmployeesSheetWidget(absentEmployees: absentEmployees),
     );
   }
 
@@ -98,10 +95,8 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
           Padding(
             padding: EdgeInsetsDirectional.only(end: 8.w),
             child: IconButton(
-              onPressed: () => _openAbsentEmployeesSheet(
-                context,
-                absentEmployees,
-              ),
+              onPressed: () =>
+                  _openAbsentEmployeesSheet(context, absentEmployees),
               tooltip: 'admin.attendance.absentTitle'.tr(context: context),
               icon: Badge(
                 isLabelVisible: absentCount > 0,
@@ -149,10 +144,8 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                 AdminAttendanceTodaySummaryWidget(
                   presentCount: presentCount,
                   absentCount: absentCount,
-                  onTapAbsent: () => _openAbsentEmployeesSheet(
-                    context,
-                    absentEmployees,
-                  ),
+                  onTapAbsent: () =>
+                      _openAbsentEmployeesSheet(context, absentEmployees),
                 ),
                 hSpace(14),
                 const AdminAttendanceAdvancedFilterWidget(),
@@ -298,47 +291,58 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.vertical(
-                                                top: Radius.circular(20.r),
-                                              ),
+                                                    top: Radius.circular(20.r),
+                                                  ),
                                             ),
                                             builder: (_) => BlocProvider.value(
-                                              value: context.read<
-                                                  AdminAttendanceCubit>(),
+                                              value: context
+                                                  .read<AdminAttendanceCubit>(),
                                               child:
                                                   AdminAttendanceActionSheetWidget(
-                                                record: recordData,
-                                                attendanceId: item.id!,
-                                                action:
-                                                    AdminAttendanceAction.edit,
-                                              ),
+                                                    record: recordData,
+                                                    attendanceId: item.id!,
+                                                    action:
+                                                        AdminAttendanceAction
+                                                            .edit,
+                                                  ),
                                             ),
                                           );
                                         }
                                       : null,
-                                  onDelete: canDeleteAttendance ? () {
-                                    if (item.id != null) {
-                                      showDialog<void>(
-                                        context: context,
-                                        builder: (dialogContext) =>
-                                            AdminDeleteConfirmationDialogWidget(
-                                              title:
-                                                  'admin.attendance.deleteRecord'
-                                                      .tr(context: context),
-                                              message:
-                                                  'admin.attendance.deleteRecordMessage'
-                                                      .tr(context: context),
-                                              onConfirm: () {
-                                                Navigator.pop(dialogContext);
-                                                context
-                                                    .read<
-                                                      AdminAttendanceCubit
-                                                    >()
-                                                    .deleteAttendance(item.id!);
-                                              },
-                                            ),
-                                      );
-                                    }
-                                  } : null,
+                                  onDelete: canDeleteAttendance
+                                      ? () {
+                                          if (item.id != null) {
+                                            showDialog<void>(
+                                              context: context,
+                                              builder: (dialogContext) =>
+                                                  AdminDeleteConfirmationDialogWidget(
+                                                    title:
+                                                        'admin.attendance.deleteRecord'
+                                                            .tr(
+                                                              context: context,
+                                                            ),
+                                                    message:
+                                                        'admin.attendance.deleteRecordMessage'
+                                                            .tr(
+                                                              context: context,
+                                                            ),
+                                                    onConfirm: () {
+                                                      Navigator.pop(
+                                                        dialogContext,
+                                                      );
+                                                      context
+                                                          .read<
+                                                            AdminAttendanceCubit
+                                                          >()
+                                                          .deleteAttendance(
+                                                            item.id!,
+                                                          );
+                                                    },
+                                                  ),
+                                            );
+                                          }
+                                        }
+                                      : null,
                                 );
                               },
                             ),

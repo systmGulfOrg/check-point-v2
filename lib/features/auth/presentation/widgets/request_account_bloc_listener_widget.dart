@@ -1,3 +1,4 @@
+import 'package:check_point_v2/core/core.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,8 +24,9 @@ class RequestAccountBlocListenerWidget extends StatelessWidget {
             case RequestAccountSuccess():
               onSuccess();
             case RequestAccountError(:final messageKey):
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(messageKey.tr(context: context))),
+              CustomSnackBar.show(
+                context,
+                message: messageKey.tr(context: context),
               );
             default:
               break;

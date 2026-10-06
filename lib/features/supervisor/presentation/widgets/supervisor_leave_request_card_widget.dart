@@ -33,7 +33,6 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
     final status = request.status?.toLowerCase() ?? 'pending';
     final isPending = status == 'pending';
     final isPendingHR = status == 'pendinghr';
-    
 
     final (statusKey, statusColor, statusBgColor) = switch (status) {
       'pending' => (
@@ -73,7 +72,8 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
       ),
     };
 
-    final bool canApprove = (isPending || isPendingHR) &&
+    final bool canApprove =
+        (isPending || isPendingHR) &&
         (userRole == 'Admin' || userRole == 'HR' || userRole == 'Supervisor');
     final String approveLabel = (isPendingHR || userRole == 'Admin')
         ? 'leaves.approval.approveAsHR'
@@ -136,7 +136,9 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
                             vertical: 2.h,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.brandPrimary.withValues(alpha: 0.08),
+                            color: AppColors.brandPrimary.withValues(
+                              alpha: 0.08,
+                            ),
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Row(
@@ -149,7 +151,9 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
                               ),
                               wSpace(3),
                               Text(
-                                'leaves.request.hasAttachment'.tr(context: context),
+                                'leaves.request.hasAttachment'.tr(
+                                  context: context,
+                                ),
                                 style: AppTextStyles.font11Regular.copyWith(
                                   color: AppColors.brandPrimary,
                                   fontWeight: FontWeight.w500,

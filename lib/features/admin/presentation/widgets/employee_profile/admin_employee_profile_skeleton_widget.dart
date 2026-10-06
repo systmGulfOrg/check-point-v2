@@ -31,11 +31,10 @@ class AdminEmployeeProfileSkeletonWidget extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 32.r,
-                      backgroundColor: AppColors.brandPrimary.withValues(alpha: 0.15),
-                      child: Text(
-                        'AZ',
-                        style: AppTextStyles.font20Bold,
+                      backgroundColor: AppColors.brandPrimary.withValues(
+                        alpha: 0.15,
                       ),
+                      child: Text('AZ', style: AppTextStyles.font20Bold),
                     ),
                     wSpace(14),
                     Expanded(
@@ -55,21 +54,35 @@ class AdminEmployeeProfileSkeletonWidget extends StatelessWidget {
                           Row(
                             children: [
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w,
+                                  vertical: 2.h,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.success.withValues(alpha: 0.15),
+                                  color: AppColors.success.withValues(
+                                    alpha: 0.15,
+                                  ),
                                   borderRadius: BorderRadius.circular(6.r),
                                 ),
-                                child: Text('Active', style: AppTextStyles.font11Medium),
+                                child: Text(
+                                  'Active',
+                                  style: AppTextStyles.font11Medium,
+                                ),
                               ),
                               wSpace(6),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w,
+                                  vertical: 2.h,
+                                ),
                                 decoration: BoxDecoration(
                                   color: AppColors.pageBackground,
                                   borderRadius: BorderRadius.circular(6.r),
                                 ),
-                                child: Text('EMP-0000', style: AppTextStyles.font11Medium),
+                                child: Text(
+                                  'EMP-0000',
+                                  style: AppTextStyles.font11Medium,
+                                ),
                               ),
                             ],
                           ),

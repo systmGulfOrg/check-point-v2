@@ -91,10 +91,10 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
           final mimeType = ext == 'png'
               ? 'image/png'
               : (ext == 'jpg' || ext == 'jpeg')
-                  ? 'image/jpeg'
-                  : ext == 'pdf'
-                      ? 'application/pdf'
-                      : 'application/octet-stream';
+              ? 'image/jpeg'
+              : ext == 'pdf'
+              ? 'application/pdf'
+              : 'application/octet-stream';
           base64Data = 'data:$mimeType;base64,${base64Encode(file.bytes!)}';
         } else if (file.path != null) {
           final bytes = await File(file.path!).readAsBytes();
@@ -102,10 +102,10 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
           final mimeType = ext == 'png'
               ? 'image/png'
               : (ext == 'jpg' || ext == 'jpeg')
-                  ? 'image/jpeg'
-                  : ext == 'pdf'
-                      ? 'application/pdf'
-                      : 'application/octet-stream';
+              ? 'image/jpeg'
+              : ext == 'pdf'
+              ? 'application/pdf'
+              : 'application/octet-stream';
           base64Data = 'data:$mimeType;base64,${base64Encode(bytes)}';
         }
 
@@ -115,25 +115,15 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
         });
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'leaves.request.attachmentSelected'.tr(context: context),
-              ),
-              backgroundColor: AppColors.success,
-              duration: const Duration(seconds: 2),
-            ),
+          CustomSnackBar.showSuccess(
+            context,
+            message: 'leaves.request.attachmentSelected'.tr(context: context),
           );
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error picking file: $e'),
-            backgroundColor: AppColors.error,
-          ),
-        );
+        CustomSnackBar.showError(context, message: 'Error picking file: $e');
       }
     }
   }
@@ -335,7 +325,9 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                           color: AppColors.brandPrimary.withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(8.r),
                           border: Border.all(
-                            color: AppColors.brandPrimary.withValues(alpha: 0.2),
+                            color: AppColors.brandPrimary.withValues(
+                              alpha: 0.2,
+                            ),
                           ),
                         ),
                         child: Row(
@@ -436,7 +428,9 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                         Container(
                           padding: EdgeInsets.all(6.r),
                           decoration: BoxDecoration(
-                            color: AppColors.brandPrimary.withValues(alpha: 0.1),
+                            color: AppColors.brandPrimary.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(8.r),
                           ),
                           child: Icon(
@@ -620,14 +614,10 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                         }
                         if ((selectedType?.requiresAttachment ?? false) &&
                             _attachedFileName == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'leaves.request.attachmentMissing'.tr(
-                                  context: context,
-                                ),
-                              ),
-                              backgroundColor: AppColors.error,
+                          CustomSnackBar.showError(
+                            context,
+                            message: 'leaves.request.attachmentMissing'.tr(
+                              context: context,
                             ),
                           );
                           return;

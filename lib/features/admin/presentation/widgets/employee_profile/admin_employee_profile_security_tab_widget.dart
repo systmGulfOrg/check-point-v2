@@ -84,7 +84,8 @@ class AdminEmployeeProfileSecurityTabWidget extends StatelessWidget {
                 ),
               ),
               hSpace(8),
-              if (employee.permissions != null && employee.permissions!.isNotEmpty)
+              if (employee.permissions != null &&
+                  employee.permissions!.isNotEmpty)
                 Wrap(
                   spacing: 6.w,
                   runSpacing: 6.h,
@@ -128,7 +129,9 @@ class AdminEmployeeProfileSecurityTabWidget extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 12.h),
                     child: Text(
-                      'employee.profile.noRegisteredDevices'.tr(context: context),
+                      'employee.profile.noRegisteredDevices'.tr(
+                        context: context,
+                      ),
                       style: AppTextStyles.font13Regular.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -261,4 +264,3 @@ class AdminEmployeeProfileSecurityTabWidget extends StatelessWidget {
     );
   }
 }
-

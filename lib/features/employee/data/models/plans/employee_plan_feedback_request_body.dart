@@ -16,9 +16,9 @@ class EmployeePlanFeedbackRequestBody {
   final String? imageUrl;
   final String? notes;
 
-  factory EmployeePlanFeedbackRequestBody.fromJson(
-    Map<String, dynamic> json,
-  ) => _$EmployeePlanFeedbackRequestBodyFromJson(json);
+  factory EmployeePlanFeedbackRequestBody.fromJson(Map<String, dynamic> json) =>
+      _$EmployeePlanFeedbackRequestBodyFromJson(json);
 
-  Map<String, dynamic> toJson() => _$EmployeePlanFeedbackRequestBodyToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$EmployeePlanFeedbackRequestBodyToJson(this);
 }

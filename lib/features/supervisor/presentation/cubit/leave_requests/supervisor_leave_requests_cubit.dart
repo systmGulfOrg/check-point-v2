@@ -134,8 +134,8 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
     final action = reqStatus == 'pendinghr'
         ? 'ApproveHR'
         : (reqStatus == 'pending'
-            ? 'ApproveManager'
-            : (role == 'Admin' ? 'ApproveHR' : 'ApproveManager'));
+              ? 'ApproveManager'
+              : (role == 'Admin' ? 'ApproveHR' : 'ApproveManager'));
     final result = await leaveRequestsRepo.approveOrRejectLeaveRequestV2(
       ulid,
       action,
@@ -164,8 +164,8 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
     final action = reqStatus == 'pendinghr'
         ? 'RejectHR'
         : (reqStatus == 'pending'
-            ? 'RejectManager'
-            : (role == 'Admin' ? 'RejectHR' : 'RejectManager'));
+              ? 'RejectManager'
+              : (role == 'Admin' ? 'RejectHR' : 'RejectManager'));
     final result = await leaveRequestsRepo.approveOrRejectLeaveRequestV2(
       ulid,
       action,

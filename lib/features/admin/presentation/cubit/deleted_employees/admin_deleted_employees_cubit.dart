@@ -6,7 +6,7 @@ import 'admin_deleted_employees_state.dart';
 
 class AdminDeletedEmployeesCubit extends Cubit<AdminDeletedEmployeesState> {
   AdminDeletedEmployeesCubit({required this.employeeRepo})
-      : super(const AdminDeletedEmployeesState.initial());
+    : super(const AdminDeletedEmployeesState.initial());
 
   final AdminEmployeeRepo employeeRepo;
 

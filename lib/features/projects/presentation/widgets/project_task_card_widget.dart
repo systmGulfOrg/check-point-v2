@@ -164,8 +164,10 @@ class ProjectTaskCardWidget extends StatelessWidget {
 
                   // Priority Chip
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 3.h,
+                    ),
                     decoration: BoxDecoration(
                       color: _priorityBackground(priority),
                       borderRadius: BorderRadius.circular(6.r),
@@ -205,11 +207,12 @@ class ProjectTaskCardWidget extends StatelessWidget {
                                   wSpace(8),
                                   Text(
                                     s.name,
-                                    style: AppTextStyles.font13SemiBold.copyWith(
-                                      fontWeight: s.id == status.id
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                    ),
+                                    style: AppTextStyles.font13SemiBold
+                                        .copyWith(
+                                          fontWeight: s.id == status.id
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
                                   ),
                                 ],
                               ),
@@ -257,8 +260,10 @@ class ProjectTaskCardWidget extends StatelessWidget {
                     )
                   else
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 3.h,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.pageBackground,
                         borderRadius: BorderRadius.circular(6.r),
@@ -318,8 +323,9 @@ class ProjectTaskCardWidget extends StatelessWidget {
                                 wSpace(8),
                                 Text(
                                   'common.delete'.tr(context: context),
-                                  style:
-                                      const TextStyle(color: AppColors.error),
+                                  style: const TextStyle(
+                                    color: AppColors.error,
+                                  ),
                                 ),
                               ],
                             ),
@@ -387,47 +393,59 @@ class ProjectTaskCardWidget extends StatelessWidget {
               // Footer: Assignees avatars + Due date (with overdue badge) + Attachments
               Row(
                 children: [
-                  if (task.assignees.isNotEmpty || task.assigneeIds.isNotEmpty) ...[
+                  if (task.assignees.isNotEmpty ||
+                      task.assigneeIds.isNotEmpty) ...[
                     Wrap(
                       spacing: -6.w,
-                      children: (task.assignees.isNotEmpty
-                              ? task.assignees
-                              : task.assigneeIds
-                                  .map((id) => TaskAssigneeModel(employeeId: id)))
-                          .take(4)
-                          .map((assignee) {
-                        final name = assignee.employeeName?.trim().isNotEmpty == true
-                            ? assignee.employeeName!.trim()
-                            : (assignee.employeeId ?? '?');
-                        final initial = name.isNotEmpty ? name[0].toUpperCase() : '?';
-                        final hasImage =
-                            assignee.employeeImageUrl?.isNotEmpty == true;
+                      children:
+                          (task.assignees.isNotEmpty
+                                  ? task.assignees
+                                  : task.assigneeIds.map(
+                                      (id) => TaskAssigneeModel(employeeId: id),
+                                    ))
+                              .take(4)
+                              .map((assignee) {
+                                final name =
+                                    assignee.employeeName?.trim().isNotEmpty ==
+                                        true
+                                    ? assignee.employeeName!.trim()
+                                    : (assignee.employeeId ?? '?');
+                                final initial = name.isNotEmpty
+                                    ? name[0].toUpperCase()
+                                    : '?';
+                                final hasImage =
+                                    assignee.employeeImageUrl?.isNotEmpty ==
+                                    true;
 
-                        return Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: AppColors.white,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: CircleAvatar(
-                            radius: 11.r,
-                            backgroundColor: AppColors.brandPrimary,
-                            backgroundImage: hasImage
-                                ? NetworkImage(assignee.employeeImageUrl!)
-                                : null,
-                            child: hasImage
-                                ? null
-                                : Text(
-                                    initial,
-                                    style: AppTextStyles.font10Bold.copyWith(
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
                                       color: AppColors.white,
+                                      width: 1.5,
                                     ),
                                   ),
-                          ),
-                        );
-                      }).toList(),
+                                  child: CircleAvatar(
+                                    radius: 11.r,
+                                    backgroundColor: AppColors.brandPrimary,
+                                    backgroundImage: hasImage
+                                        ? NetworkImage(
+                                            assignee.employeeImageUrl!,
+                                          )
+                                        : null,
+                                    child: hasImage
+                                        ? null
+                                        : Text(
+                                            initial,
+                                            style: AppTextStyles.font10Bold
+                                                .copyWith(
+                                                  color: AppColors.white,
+                                                ),
+                                          ),
+                                  ),
+                                );
+                              })
+                              .toList(),
                     ),
                     wSpace(10),
                   ],
@@ -443,8 +461,8 @@ class ProjectTaskCardWidget extends StatelessWidget {
                         color: isOverdue
                             ? AppColors.softBrandBackground
                             : isDueToday
-                                ? AppColors.infoBackground
-                                : AppColors.transparent,
+                            ? AppColors.infoBackground
+                            : AppColors.transparent,
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                       child: Row(
@@ -458,24 +476,24 @@ class ProjectTaskCardWidget extends StatelessWidget {
                             color: isOverdue
                                 ? AppColors.error
                                 : isDueToday
-                                    ? AppColors.warning
-                                    : AppColors.textSecondary,
+                                ? AppColors.warning
+                                : AppColors.textSecondary,
                           ),
                           wSpace(4),
                           Text(
                             isOverdue
                                 ? '${AppDateFormatter.formatDateString(task.dueDate)} (${'projects.overdue'.tr(context: context)})'
                                 : isDueToday
-                                    ? 'projects.today'.tr(context: context)
-                                    : AppDateFormatter.formatDateString(
-                                        task.dueDate,
-                                      ),
+                                ? 'projects.today'.tr(context: context)
+                                : AppDateFormatter.formatDateString(
+                                    task.dueDate,
+                                  ),
                             style: AppTextStyles.font11Medium.copyWith(
                               color: isOverdue
                                   ? AppColors.error
                                   : isDueToday
-                                      ? AppColors.warning
-                                      : AppColors.textSecondary,
+                                  ? AppColors.warning
+                                  : AppColors.textSecondary,
                               fontWeight: (isOverdue || isDueToday)
                                   ? FontWeight.bold
                                   : FontWeight.normal,

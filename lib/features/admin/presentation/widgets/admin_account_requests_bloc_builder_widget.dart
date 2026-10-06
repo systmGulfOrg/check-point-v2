@@ -20,7 +20,10 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
   final void Function(AccountRequestModel request) onView;
   final void Function(AccountRequestModel request) onApprove;
 
-  void _showRejectDialog(BuildContext context, AccountRequestModel request) async {
+  void _showRejectDialog(
+    BuildContext context,
+    AccountRequestModel request,
+  ) async {
     final reason = await AdminRejectRequestDialogWidget.show(
       context,
       applicantName: request.name ?? '-',
@@ -30,11 +33,9 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
           .read<AdminAccountRequestsCubit>()
           .rejectRequest(id: request.id!, reason: reason);
       if (context.mounted && success == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('admin.requests.rejected'.tr(context: context)),
-            backgroundColor: AppColors.error,
-          ),
+        CustomSnackBar.showError(
+          context,
+          message: 'admin.requests.rejected'.tr(context: context),
         );
       }
     }

@@ -8,10 +8,7 @@ import 'admin_employee_profile_info_card_widget.dart';
 import 'admin_employee_profile_info_row_widget.dart';
 
 class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
-  const AdminEmployeeProfileJobTabWidget({
-    required this.employee,
-    super.key,
-  });
+  const AdminEmployeeProfileJobTabWidget({required this.employee, super.key});
 
   final EmployeeModel employee;
 
@@ -70,7 +67,9 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
               ),
               AdminEmployeeProfileInfoRowWidget(
                 label: 'employee.profile.directManager'.tr(context: context),
-                value: employee.resolvedDirectManagerName ?? 'employee.profile.noManager'.tr(context: context),
+                value:
+                    employee.resolvedDirectManagerName ??
+                    'employee.profile.noManager'.tr(context: context),
                 icon: Icons.supervisor_account_outlined,
               ),
               AdminEmployeeProfileInfoRowWidget(
@@ -85,7 +84,9 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
               ),
               if (employee.contractEndDate != null)
                 AdminEmployeeProfileInfoRowWidget(
-                  label: 'employee.profile.contractEndDate'.tr(context: context),
+                  label: 'employee.profile.contractEndDate'.tr(
+                    context: context,
+                  ),
                   value: employee.contractEndDate!,
                   icon: Icons.event_busy_outlined,
                 ),
@@ -153,12 +154,16 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
                 ),
               AdminEmployeeProfileInfoRowWidget(
                 label: 'employee.profile.gender'.tr(context: context),
-                value: employee.gender ?? 'employee.profile.notSpecified'.tr(context: context),
+                value:
+                    employee.gender ??
+                    'employee.profile.notSpecified'.tr(context: context),
                 icon: Icons.wc_outlined,
               ),
               AdminEmployeeProfileInfoRowWidget(
                 label: 'employee.profile.maritalStatus'.tr(context: context),
-                value: employee.maritalStatus ?? 'employee.profile.notSpecified'.tr(context: context),
+                value:
+                    employee.maritalStatus ??
+                    'employee.profile.notSpecified'.tr(context: context),
                 icon: Icons.favorite_border_rounded,
               ),
               AdminEmployeeProfileInfoRowWidget(
@@ -180,7 +185,9 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
                 icon: Icons.person_pin_circle_outlined,
               ),
               AdminEmployeeProfileInfoRowWidget(
-                label: 'employee.profile.emergencyRelation'.tr(context: context),
+                label: 'employee.profile.emergencyRelation'.tr(
+                  context: context,
+                ),
                 value: employee.resolvedEmergencyRelation,
                 icon: Icons.family_restroom_outlined,
               ),

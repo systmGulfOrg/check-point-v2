@@ -12,5 +12,6 @@ class NotificationsState with _$NotificationsState {
     List<NotificationModel> notifications,
     int unreadCount,
   ) = NotificationsSuccess;
-  const factory NotificationsState.error(String messageKey) = NotificationsError;
+  const factory NotificationsState.error(String messageKey) =
+      NotificationsError;
 }

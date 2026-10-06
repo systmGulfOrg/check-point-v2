@@ -243,8 +243,9 @@ class _AdminAbsentEmployeesSheetWidgetState
                                                 style: AppTextStyles
                                                     .font12Regular
                                                     .copyWith(
-                                                  color: AppColors.textSecondary,
-                                                ),
+                                                      color: AppColors
+                                                          .textSecondary,
+                                                    ),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
@@ -257,8 +258,9 @@ class _AdminAbsentEmployeesSheetWidgetState
                                               ' • ',
                                               style: AppTextStyles.font12Regular
                                                   .copyWith(
-                                                color: AppColors.textSecondary,
-                                              ),
+                                                    color:
+                                                        AppColors.textSecondary,
+                                                  ),
                                             ),
                                           ],
                                           if (employee.position != null ||
@@ -271,8 +273,9 @@ class _AdminAbsentEmployeesSheetWidgetState
                                                 style: AppTextStyles
                                                     .font12Regular
                                                     .copyWith(
-                                                  color: AppColors.textSecondary,
-                                                ),
+                                                      color: AppColors
+                                                          .textSecondary,
+                                                    ),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
@@ -308,9 +311,9 @@ class _AdminAbsentEmployeesSheetWidgetState
                                         ),
                                         style: AppTextStyles.font11Medium
                                             .copyWith(
-                                          color: AppColors.error,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                              color: AppColors.error,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
                                     ],
                                   ),

@@ -25,7 +25,9 @@ class AdminShiftsPoliciesScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) => Dialog(
         backgroundColor: AppColors.cardBackground,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
         insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
         child: Padding(
           padding: EdgeInsets.all(20.r),
@@ -78,7 +80,9 @@ class AdminShiftsPoliciesScreen extends StatelessWidget {
                         if (nameController.text.trim().isNotEmpty) {
                           context.read<AdminShiftsPoliciesCubit>().editShift(
                             shiftId,
-                            AddShiftRequestBody(name: nameController.text.trim()),
+                            AddShiftRequestBody(
+                              name: nameController.text.trim(),
+                            ),
                           );
                           Navigator.pop(dialogContext);
                         }

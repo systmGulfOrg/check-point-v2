@@ -39,8 +39,9 @@ class _ProjectEditSheetWidgetState extends State<ProjectEditSheetWidget> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.project?.name);
-    _descriptionController =
-        TextEditingController(text: widget.project?.description);
+    _descriptionController = TextEditingController(
+      text: widget.project?.description,
+    );
     _codeController = TextEditingController(text: widget.project?.code);
     _selectedDepartmentId = widget.project?.departmentId;
     _selectedManagerId = widget.project?.managerId;
@@ -93,8 +94,9 @@ class _ProjectEditSheetWidgetState extends State<ProjectEditSheetWidget> {
                 CustomTextFormField(
                   hintText: 'projects.name'.tr(context: context),
                   controller: _nameController,
-                  validator: (v) =>
-                      (v == null || v.trim().isEmpty) ? 'validation.required'.tr() : null,
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? 'validation.required'.tr()
+                      : null,
                 ),
                 SizedBox(height: 10.h),
                 CustomTextFormField(
@@ -109,7 +111,8 @@ class _ProjectEditSheetWidgetState extends State<ProjectEditSheetWidget> {
                 ),
                 SizedBox(height: 10.h),
                 DropdownButtonFormField<String?>(
-                  initialValue: (_selectedDepartmentId != null &&
+                  initialValue:
+                      (_selectedDepartmentId != null &&
                           widget.departments.any(
                             (d) => d.id.toString() == _selectedDepartmentId,
                           ))
@@ -136,18 +139,25 @@ class _ProjectEditSheetWidgetState extends State<ProjectEditSheetWidget> {
                 ),
                 SizedBox(height: 10.h),
                 DropdownButtonFormField<String?>(
-                  initialValue: (_selectedManagerId != null &&
-                          widget.employees.any((e) => e.id == _selectedManagerId))
+                  initialValue:
+                      (_selectedManagerId != null &&
+                          widget.employees.any(
+                            (e) => e.id == _selectedManagerId,
+                          ))
                       ? _selectedManagerId
                       : null,
                   decoration: InputDecoration(
-                    labelText: 'projects.responsiblePerson'.tr(context: context),
+                    labelText: 'projects.responsiblePerson'.tr(
+                      context: context,
+                    ),
                   ),
                   isExpanded: true,
                   items: [
                     DropdownMenuItem<String?>(
                       value: null,
-                      child: Text('projects.allOrUnassigned'.tr(context: context)),
+                      child: Text(
+                        'projects.allOrUnassigned'.tr(context: context),
+                      ),
                     ),
                     ...widget.employees.map(
                       (emp) => DropdownMenuItem<String?>(
@@ -160,8 +170,7 @@ class _ProjectEditSheetWidgetState extends State<ProjectEditSheetWidget> {
                       ),
                     ),
                   ],
-                  onChanged: (val) =>
-                      setState(() => _selectedManagerId = val),
+                  onChanged: (val) => setState(() => _selectedManagerId = val),
                 ),
                 SizedBox(height: 20.h),
                 Row(

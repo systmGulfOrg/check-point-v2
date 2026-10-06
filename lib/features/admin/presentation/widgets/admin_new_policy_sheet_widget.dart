@@ -48,11 +48,9 @@ class _AdminNewPolicySheetWidgetState extends State<AdminNewPolicySheetWidget> {
   Future<void> _submit() async {
     final effectiveShiftId = _selectedShiftId ?? widget.shiftId;
     if (effectiveShiftId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('admin.shifts.selectShift'.tr(context: context)),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: 'admin.shifts.selectShift'.tr(context: context),
       );
       return;
     }
@@ -63,11 +61,9 @@ class _AdminNewPolicySheetWidgetState extends State<AdminNewPolicySheetWidget> {
     final grace = int.tryParse(graceController.text.trim()) ?? 0;
 
     if (timeIn.isEmpty || timeOut.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('errors.unknown'.tr(context: context)),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: 'errors.unknown'.tr(context: context),
       );
       return;
     }
@@ -93,20 +89,14 @@ class _AdminNewPolicySheetWidgetState extends State<AdminNewPolicySheetWidget> {
 
     if (success) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'admin.shifts.policies.createSuccess'.tr(context: context),
-          ),
-          backgroundColor: AppColors.success,
-        ),
+      CustomSnackBar.showSuccess(
+        context,
+        message: 'admin.shifts.policies.createSuccess'.tr(context: context),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('errors.adminActionFailed'.tr(context: context)),
-          backgroundColor: AppColors.error,
-        ),
+      CustomSnackBar.showError(
+        context,
+        message: 'errors.adminActionFailed'.tr(context: context),
       );
     }
   }

@@ -26,9 +26,11 @@ class AdminTaskScopeFilterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasDept = selectedDepartmentId != null &&
+    final hasDept =
+        selectedDepartmentId != null &&
         departments.any((d) => d.id == selectedDepartmentId);
-    final hasEmp = selectedEmployeeId != null &&
+    final hasEmp =
+        selectedEmployeeId != null &&
         employees.any((e) => e.id == selectedEmployeeId);
 
     return Container(
@@ -41,7 +43,9 @@ class AdminTaskScopeFilterWidget extends StatelessWidget {
       child: Column(
         children: [
           DropdownButtonFormField<int?>(
-            key: ValueKey('filter_dept_${hasDept ? selectedDepartmentId : 'all'}'),
+            key: ValueKey(
+              'filter_dept_${hasDept ? selectedDepartmentId : 'all'}',
+            ),
             initialValue: hasDept ? selectedDepartmentId : null,
             isExpanded: true,
             decoration: InputDecoration(

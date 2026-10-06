@@ -130,7 +130,10 @@ class EmployeeAttendanceFilterWidget extends StatelessWidget {
                 onTap: onResetFilters,
                 borderRadius: BorderRadius.circular(20.r),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 6.h,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.infoBackground,
                     borderRadius: BorderRadius.circular(20.r),

@@ -48,7 +48,8 @@ class AuthSessionStorage {
   }) async {
     await secureStorage.write(key: tokenKey, value: token);
     final payload = decodeJwtPayload(token);
-    final resolvedEmployeeId = employeeId ??
+    final resolvedEmployeeId =
+        employeeId ??
         payload?['employeeId'] as String? ??
         payload?['EmployeeId'] as String?;
     if (resolvedEmployeeId != null && resolvedEmployeeId.isNotEmpty) {
@@ -88,7 +89,8 @@ class AuthSessionStorage {
     final token = await readToken();
     if (token != null) {
       final payload = decodeJwtPayload(token);
-      final fromToken = payload?['employeeId'] as String? ??
+      final fromToken =
+          payload?['employeeId'] as String? ??
           payload?['EmployeeId'] as String?;
       if (fromToken != null && fromToken.isNotEmpty) {
         await secureStorage.write(key: employeeIdKey, value: fromToken);

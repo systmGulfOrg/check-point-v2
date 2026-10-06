@@ -134,4 +134,11 @@ class AppDateFormatter {
     }
     return toEnglishDigits(rawDate.trim().split('T').first.split(' ').first);
   }
+
+  /// Formats a raw 24-hour time string into 12-hour Arabic (ص / م). E.g. "14:30" -> "02:30 م"
+  static String formatTime12HourArabic(String? rawTime) {
+    final str = formatTimeString(rawTime, use12Hour: true);
+    if (str == '--:--') return str;
+    return str.replaceAll('AM', 'ص').replaceAll('PM', 'م');
+  }
 }

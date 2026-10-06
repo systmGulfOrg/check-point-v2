@@ -56,10 +56,14 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
     final query = _searchQuery.trim().toLowerCase();
     return tasks.where((task) {
       final titleMatch = task.title.toLowerCase().contains(query);
-      final descMatch = task.description?.toLowerCase().contains(query) ?? false;
-      final tagMatch = task.tags.any((tag) => tag.toLowerCase().contains(query));
-      final assigneeMatch =
-          task.assigneeIds.any((a) => a.toLowerCase().contains(query));
+      final descMatch =
+          task.description?.toLowerCase().contains(query) ?? false;
+      final tagMatch = task.tags.any(
+        (tag) => tag.toLowerCase().contains(query),
+      );
+      final assigneeMatch = task.assigneeIds.any(
+        (a) => a.toLowerCase().contains(query),
+      );
       return titleMatch || descMatch || tagMatch || assigneeMatch;
     }).toList();
   }
@@ -161,7 +165,10 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
                             child: ElevatedButton.icon(
                               onPressed: () =>
                                   _createTask(context, cubit, allTasks),
-                              icon: const Icon(Icons.add_task_rounded, size: 18),
+                              icon: const Icon(
+                                Icons.add_task_rounded,
+                                size: 18,
+                              ),
                               label: Text(
                                 'projects.addTaskButton'.tr(context: context),
                                 style: AppTextStyles.font13Bold.copyWith(
@@ -188,7 +195,13 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
               // Board Content
               Expanded(
                 child: isListView
-                    ? _buildListView(context, cubit, boardProject, tasks, allTasks)
+                    ? _buildListView(
+                        context,
+                        cubit,
+                        boardProject,
+                        tasks,
+                        allTasks,
+                      )
                     : _buildKanbanView(context, cubit, boardProject, tasks),
               ),
             ],
@@ -207,9 +220,7 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
   ) {
     final statuses = boardProject.statuses;
     if (statuses.isEmpty) {
-      return Center(
-        child: Text('projects.empty'.tr(context: context)),
-      );
+      return Center(child: Text('projects.empty'.tr(context: context)));
     }
 
     final allTabLabel = 'common.all'.tr(context: context);
@@ -227,8 +238,9 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
             tabs: [
               Tab(text: '$allTabLabel (${tasks.length})'),
               ...statuses.map((status) {
-                final count =
-                    tasks.where((t) => t.statusId == status.id).length;
+                final count = tasks
+                    .where((t) => t.statusId == status.id)
+                    .length;
                 return Tab(text: '${status.name} ($count)');
               }),
             ],
@@ -238,8 +250,9 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
               children: [
                 _buildTasksList(context, cubit, boardProject, tasks),
                 ...statuses.map((status) {
-                  final filtered =
-                      tasks.where((t) => t.statusId == status.id).toList();
+                  final filtered = tasks
+                      .where((t) => t.statusId == status.id)
+                      .toList();
                   return _buildTasksList(
                     context,
                     cubit,
@@ -315,8 +328,9 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
       itemCount: boardProject.statuses.length,
       itemBuilder: (context, statusIndex) {
         final status = boardProject.statuses[statusIndex];
-        final columnTasks =
-            tasks.where((task) => task.statusId == status.id).toList();
+        final columnTasks = tasks
+            .where((task) => task.statusId == status.id)
+            .toList();
         final isHovered = hoveredStatusId == status.id;
 
         return DragTarget<ProjectDragData>(
@@ -377,10 +391,7 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
                     ),
                     wSpace(8),
                     Expanded(
-                      child: Text(
-                        status.name,
-                        style: AppTextStyles.font14Bold,
-                      ),
+                      child: Text(status.name, style: AppTextStyles.font14Bold),
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(
@@ -417,7 +428,8 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
                               task: task,
                               boardProject: boardProject,
                               canManage: canManage,
-                              onTap: () => _showTaskDetails(context, cubit, task),
+                              onTap: () =>
+                                  _showTaskDetails(context, cubit, task),
                               onMoveStatus: (statusId) =>
                                   cubit.moveTask(task.id, statusId),
                               onEdit: () => _editTask(context, cubit, task),
@@ -476,8 +488,10 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
     ProjectsCubit cubit,
     List<ProjectTaskModel> tasks,
   ) async {
-    final assigneeOptions =
-        tasks.expand((task) => task.assigneeIds).toSet().toList();
+    final assigneeOptions = tasks
+        .expand((task) => task.assigneeIds)
+        .toSet()
+        .toList();
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,

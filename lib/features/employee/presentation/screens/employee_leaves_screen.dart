@@ -104,14 +104,14 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                     case EmployeeLeaveRequestsStateActionSuccess(
                       :final message,
                     ):
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(message.tr(context: context))),
+                      CustomSnackBar.show(
+                        context,
+                        message: message.tr(context: context),
                       );
                     case EmployeeLeaveRequestsStateError(:final messageKey):
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(messageKey.tr(context: context)),
-                        ),
+                      CustomSnackBar.show(
+                        context,
+                        message: messageKey.tr(context: context),
                       );
                     default:
                       break;
@@ -268,51 +268,55 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                                         const AlwaysScrollableScrollPhysics(),
                                     itemCount: filteredLeaves.length,
                                     separatorBuilder: (_, _) => hSpace(12),
-                                    itemBuilder: (context, index) =>
-                                        AnimatedListItemWidget(
-                                          index: index,
-                                          child: EmployeeLeaveCardWidget(
-                                            leave: filteredLeaves[index],
-                                            onDelete: () {
-                                              final leaveId =
-                                                  filteredLeaves[index].id;
-                                              final cubit = context.read<
-                                                  EmployeeLeaveRequestsCubit>();
-                                              showDialog<bool>(
-                                                context: context,
-                                                builder: (dialogCtx) =>
-                                                    AppDeleteConfirmationDialogWidget(
+                                    itemBuilder: (context, index) => AnimatedListItemWidget(
+                                      index: index,
+                                      child: EmployeeLeaveCardWidget(
+                                        leave: filteredLeaves[index],
+                                        onDelete: () {
+                                          final leaveId =
+                                              filteredLeaves[index].id;
+                                          final cubit = context
+                                              .read<
+                                                EmployeeLeaveRequestsCubit
+                                              >();
+                                          showDialog<bool>(
+                                            context: context,
+                                            builder: (dialogCtx) =>
+                                                AppDeleteConfirmationDialogWidget(
                                                   title:
                                                       'admin.leaveManagement.deleteTitle'
                                                           .tr(
-                                                              context:
-                                                                  dialogCtx),
+                                                            context: dialogCtx,
+                                                          ),
                                                   message:
                                                       'admin.leaveManagement.deleteMessage'
                                                           .tr(
-                                                              context:
-                                                                  dialogCtx),
+                                                            context: dialogCtx,
+                                                          ),
                                                   confirmLabel:
                                                       'admin.leaveManagement.deleteConfirm'
                                                           .tr(
-                                                              context:
-                                                                  dialogCtx),
+                                                            context: dialogCtx,
+                                                          ),
                                                   onConfirm: () async {
-                                                    Navigator.of(dialogCtx)
-                                                        .pop(true);
+                                                    Navigator.of(
+                                                      dialogCtx,
+                                                    ).pop(true);
                                                   },
                                                 ),
-                                              ).then((confirmed) {
-                                                if (confirmed == true) {
-                                                  final idInt =
-                                                      int.tryParse(leaveId);
-                                                  cubit.deleteLeaveRequest(
-                                                      idInt ?? leaveId);
-                                                }
-                                              });
-                                            },
-                                          ),
-                                        ),
+                                          ).then((confirmed) {
+                                            if (confirmed == true) {
+                                              final idInt = int.tryParse(
+                                                leaveId,
+                                              );
+                                              cubit.deleteLeaveRequest(
+                                                idInt ?? leaveId,
+                                              );
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
                                   ),
                                 ),
                         ),

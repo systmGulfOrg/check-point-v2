@@ -69,12 +69,7 @@ class AdminEmployeeProfileInfoRowWidget extends StatelessWidget {
             InkWell(
               onTap: () {
                 Clipboard.setData(ClipboardData(text: value));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('$label copied'),
-                    duration: const Duration(seconds: 1),
-                  ),
-                );
+                CustomSnackBar.show(context, message: '$label copied');
               },
               borderRadius: BorderRadius.circular(6.r),
               child: Padding(

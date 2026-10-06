@@ -13,24 +13,32 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
   List<Widget> _buildChangesList(BuildContext context) {
     final before = log.before ?? {};
     final after = log.after ?? {};
-    
+
     // Ignore meta fields that always change but aren't useful to show as a business change
-    final ignoreKeys = {'updatedAt', 'createdAt', 'deletedAt', 'id', 'tenantId', 'userId'};
-    
-    final allKeys = {...before.keys, ...after.keys}
-        .where((k) => !ignoreKeys.contains(k))
-        .toList();
+    final ignoreKeys = {
+      'updatedAt',
+      'createdAt',
+      'deletedAt',
+      'id',
+      'tenantId',
+      'userId',
+    };
+
+    final allKeys = {
+      ...before.keys,
+      ...after.keys,
+    }.where((k) => !ignoreKeys.contains(k)).toList();
 
     List<Widget> changes = [];
     for (final key in allKeys) {
       final bVal = before[key];
       final aVal = after[key];
-      
+
       // Use jsonEncode for deep equality comparison
       final bStr = jsonEncode(bVal);
       final aStr = jsonEncode(aVal);
       if (bStr == aStr) continue;
-      
+
       // We found a change!
       changes.add(
         Padding(
@@ -46,7 +54,9 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
               children: [
                 Text(
                   key,
-                  style: AppTextStyles.font14Bold.copyWith(color: AppColors.textPrimary),
+                  style: AppTextStyles.font14Bold.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
                 ),
                 SizedBox(height: 6.h),
                 Row(
@@ -55,21 +65,53 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('admin.employees.before'.tr(context: context), style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary)),
+                          Text(
+                            'admin.employees.before'.tr(context: context),
+                            style: AppTextStyles.font12Regular.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
                           SizedBox(height: 2.h),
-                          Text(bVal?.toString() ?? 'admin.employees.emptyValue'.tr(context: context), style: AppTextStyles.font14Regular.copyWith(color: AppColors.error)),
+                          Text(
+                            bVal?.toString() ??
+                                'admin.employees.emptyValue'.tr(
+                                  context: context,
+                                ),
+                            style: AppTextStyles.font14Regular.copyWith(
+                              color: AppColors.error,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    Icon(context.locale.languageCode == 'ar' ? Icons.arrow_back : Icons.arrow_forward, size: 16.sp, color: AppColors.textSecondary),
+                    Icon(
+                      context.locale.languageCode == 'ar'
+                          ? Icons.arrow_back
+                          : Icons.arrow_forward,
+                      size: 16.sp,
+                      color: AppColors.textSecondary,
+                    ),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('admin.employees.after'.tr(context: context), style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary)),
+                          Text(
+                            'admin.employees.after'.tr(context: context),
+                            style: AppTextStyles.font12Regular.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
                           SizedBox(height: 2.h),
-                          Text(aVal?.toString() ?? 'admin.employees.emptyValue'.tr(context: context), style: AppTextStyles.font14Regular.copyWith(color: AppColors.success)),
+                          Text(
+                            aVal?.toString() ??
+                                'admin.employees.emptyValue'.tr(
+                                  context: context,
+                                ),
+                            style: AppTextStyles.font14Regular.copyWith(
+                              color: AppColors.success,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -86,7 +128,12 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
       changes.add(
         Padding(
           padding: EdgeInsets.only(top: 8.h),
-          child: Text('admin.employees.noVisibleChanges'.tr(context: context), style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary)),
+          child: Text(
+            'admin.employees.noVisibleChanges'.tr(context: context),
+            style: AppTextStyles.font12Regular.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
         ),
       );
     }
@@ -103,7 +150,11 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: AppColors.border),
         boxShadow: const [
-          BoxShadow(color: AppColors.shadow, blurRadius: 4, offset: Offset(0, 1)),
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 4,
+            offset: Offset(0, 1),
+          ),
         ],
       ),
       child: Column(
@@ -112,10 +163,14 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: Text(log.action, style: AppTextStyles.font16Bold)),
+              Expanded(
+                child: Text(log.action, style: AppTextStyles.font16Bold),
+              ),
               Text(
                 DateFormat('yyyy-MM-dd HH:mm').format(log.createdAt.toLocal()),
-                style: AppTextStyles.font12Regular.copyWith(color: AppColors.textSecondary),
+                style: AppTextStyles.font12Regular.copyWith(
+                  color: AppColors.textSecondary,
+                ),
               ),
             ],
           ),

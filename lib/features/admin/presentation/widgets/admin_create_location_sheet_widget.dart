@@ -174,13 +174,9 @@ class _AdminCreateLocationSheetWidgetState
 
       if (mounted && saved) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'admin.locations.create.successMessage'.tr(context: context),
-            ),
-            backgroundColor: AppColors.success,
-          ),
+        CustomSnackBar.showSuccess(
+          context,
+          message: 'admin.locations.create.successMessage'.tr(context: context),
         );
       } else if (mounted) {
         setState(() => _isLoading = false);

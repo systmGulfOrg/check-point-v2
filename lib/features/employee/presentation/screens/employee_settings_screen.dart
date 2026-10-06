@@ -87,7 +87,8 @@ class EmployeeSettingsScreen extends StatelessWidget {
                     icon: Icons.home_work_outlined,
                     titleKey: 'remoteWork.title',
                     valueKey: 'remoteWork.manageRequest',
-                    onTap: () => Navigator.pushNamed(context, AppRoutes.remoteWork),
+                    onTap: () =>
+                        Navigator.pushNamed(context, AppRoutes.remoteWork),
                   ),
                 ],
               ),

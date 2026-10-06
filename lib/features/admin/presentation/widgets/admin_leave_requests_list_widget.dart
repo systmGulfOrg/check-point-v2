@@ -82,9 +82,15 @@ class AdminLeaveRequestsListWidget extends StatelessWidget {
             showDialog<bool>(
               context: context,
               builder: (dialogCtx) => AppDeleteConfirmationDialogWidget(
-                title: 'admin.leaveManagement.deleteTitle'.tr(context: dialogCtx),
-                message: 'admin.leaveManagement.deleteMessage'.tr(context: dialogCtx),
-                confirmLabel: 'admin.leaveManagement.deleteConfirm'.tr(context: dialogCtx),
+                title: 'admin.leaveManagement.deleteTitle'.tr(
+                  context: dialogCtx,
+                ),
+                message: 'admin.leaveManagement.deleteMessage'.tr(
+                  context: dialogCtx,
+                ),
+                confirmLabel: 'admin.leaveManagement.deleteConfirm'.tr(
+                  context: dialogCtx,
+                ),
                 onConfirm: () async {
                   Navigator.of(dialogCtx).pop(true);
                 },

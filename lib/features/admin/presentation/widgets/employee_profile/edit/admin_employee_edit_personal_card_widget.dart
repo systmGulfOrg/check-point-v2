@@ -57,54 +57,78 @@ class AdminEmployeeEditPersonalCardWidget extends StatelessWidget {
         CustomTextFormField(
           controller: nameArController,
           hintText: 'employee.profile.nameAr'.tr(context: context),
-          prefixIcon: const Icon(Icons.badge_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.badge_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: nameEnController,
           hintText: 'employee.profile.nameEn'.tr(context: context),
-          prefixIcon: const Icon(Icons.badge_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.badge_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: emailController,
           hintText: 'employee.profile.officialEmail'.tr(context: context),
           keyboardType: TextInputType.emailAddress,
-          prefixIcon: const Icon(Icons.email_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.email_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: personalEmailController,
           hintText: 'employee.profile.personalEmail'.tr(context: context),
           keyboardType: TextInputType.emailAddress,
-          prefixIcon: const Icon(Icons.mail_outline_rounded, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.mail_outline_rounded,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: phoneController,
           hintText: 'employee.profile.primaryPhone'.tr(context: context),
           keyboardType: TextInputType.phone,
-          prefixIcon: const Icon(Icons.phone_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.phone_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: secondaryPhoneController,
           hintText: 'employee.profile.secondaryPhone'.tr(context: context),
           keyboardType: TextInputType.phone,
-          prefixIcon: const Icon(Icons.phone_android_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.phone_android_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: nationalIdController,
           hintText: 'employee.profile.nationalId'.tr(context: context),
           keyboardType: TextInputType.number,
-          prefixIcon: const Icon(Icons.credit_card_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.credit_card_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: passportNumberController,
           hintText: 'Passport Number (رقم الجواز)',
-          prefixIcon: const Icon(Icons.card_travel_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.card_travel_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         Row(
@@ -114,7 +138,10 @@ class AdminEmployeeEditPersonalCardWidget extends StatelessWidget {
                 onTap: onSelectIdExpiryDate,
                 borderRadius: BorderRadius.circular(10.r),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 14.h,
+                  ),
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.border),
                     borderRadius: BorderRadius.circular(10.r),
@@ -128,8 +155,12 @@ class AdminEmployeeEditPersonalCardWidget extends StatelessWidget {
                       ),
                       hSpace(2),
                       Text(
-                        idExpiryDate != null ? dateFormat.format(idExpiryDate!) : '-',
-                        style: AppTextStyles.font14Regular.copyWith(fontWeight: FontWeight.w600),
+                        idExpiryDate != null
+                            ? dateFormat.format(idExpiryDate!)
+                            : '-',
+                        style: AppTextStyles.font14Regular.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ],
                   ),
@@ -142,7 +173,10 @@ class AdminEmployeeEditPersonalCardWidget extends StatelessWidget {
                 onTap: onSelectBirthDate,
                 borderRadius: BorderRadius.circular(10.r),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 14.h,
+                  ),
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.border),
                     borderRadius: BorderRadius.circular(10.r),
@@ -157,7 +191,9 @@ class AdminEmployeeEditPersonalCardWidget extends StatelessWidget {
                       hSpace(2),
                       Text(
                         birthDate != null ? dateFormat.format(birthDate!) : '-',
-                        style: AppTextStyles.font14Regular.copyWith(fontWeight: FontWeight.w600),
+                        style: AppTextStyles.font14Regular.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ],
                   ),
@@ -175,13 +211,30 @@ class AdminEmployeeEditPersonalCardWidget extends StatelessWidget {
                 value: selectedGender,
                 decoration: InputDecoration(
                   labelText: 'employee.profile.gender'.tr(context: context),
-                  prefixIcon: const Icon(Icons.wc_outlined, color: AppColors.brandPrimary),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
+                  prefixIcon: const Icon(
+                    Icons.wc_outlined,
+                    color: AppColors.brandPrimary,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 8.w,
+                    vertical: 12.h,
+                  ),
                 ),
                 items: const [
-                  DropdownMenuItem(value: 'male', child: Text('Male (ذكر)', overflow: TextOverflow.ellipsis)),
-                  DropdownMenuItem(value: 'female', child: Text('Female (أنثى)', overflow: TextOverflow.ellipsis)),
+                  DropdownMenuItem(
+                    value: 'male',
+                    child: Text('Male (ذكر)', overflow: TextOverflow.ellipsis),
+                  ),
+                  DropdownMenuItem(
+                    value: 'female',
+                    child: Text(
+                      'Female (أنثى)',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ],
                 onChanged: onGenderChanged,
               ),
@@ -192,14 +245,36 @@ class AdminEmployeeEditPersonalCardWidget extends StatelessWidget {
                 isExpanded: true,
                 value: selectedMaritalStatus,
                 decoration: InputDecoration(
-                  labelText: 'employee.profile.maritalStatus'.tr(context: context),
-                  prefixIcon: const Icon(Icons.people_outline_rounded, color: AppColors.brandPrimary),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
+                  labelText: 'employee.profile.maritalStatus'.tr(
+                    context: context,
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.people_outline_rounded,
+                    color: AppColors.brandPrimary,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 8.w,
+                    vertical: 12.h,
+                  ),
                 ),
                 items: const [
-                  DropdownMenuItem(value: 'single', child: Text('Single (أعزب)', overflow: TextOverflow.ellipsis)),
-                  DropdownMenuItem(value: 'married', child: Text('Married (متزوج)', overflow: TextOverflow.ellipsis)),
+                  DropdownMenuItem(
+                    value: 'single',
+                    child: Text(
+                      'Single (أعزب)',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 'married',
+                    child: Text(
+                      'Married (متزوج)',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ],
                 onChanged: onMaritalStatusChanged,
               ),
@@ -210,13 +285,19 @@ class AdminEmployeeEditPersonalCardWidget extends StatelessWidget {
         CustomTextFormField(
           controller: addressController,
           hintText: 'employee.profile.address'.tr(context: context),
-          prefixIcon: const Icon(Icons.home_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.home_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: cityController,
           hintText: 'City (المدينة / المحافظة)',
-          prefixIcon: const Icon(Icons.location_city_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.location_city_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
       ],
     );

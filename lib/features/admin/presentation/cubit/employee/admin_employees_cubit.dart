@@ -70,8 +70,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     if (filter == null || filter.isEmpty) return allEmployees;
     return allEmployees
         .where(
-          (employee) =>
-              employee.allRoles.any((r) => r.toLowerCase() == filter),
+          (employee) => employee.allRoles.any((r) => r.toLowerCase() == filter),
         )
         .toList();
   }
@@ -170,7 +169,10 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     );
   }
 
-  Future<String?> setPlanPermission(String supervisorId, bool permission) async {
+  Future<String?> setPlanPermission(
+    String supervisorId,
+    bool permission,
+  ) async {
     emit(const AdminEmployeesState.loading());
     final result = await employeeRepo.setPlanPermission(
       supervisorId: supervisorId,

@@ -19,10 +19,12 @@ class SupervisorPersonalDashboardBlocBuilderWidget extends StatelessWidget {
         final cubit = context.read<EmployeeAttendanceCubit>();
         final profile = cubit.employeeProfile;
         final attendance = cubit.todayAttendance;
-        final workStart = profile?.todayWorkStart ??
+        final workStart =
+            profile?.todayWorkStart ??
             profile?.workPolicy?.workingHoursStart ??
             profile?.clockInTime;
-        final workEnd = profile?.todayWorkEnd ??
+        final workEnd =
+            profile?.todayWorkEnd ??
             profile?.workPolicy?.workingHoursEnd ??
             profile?.clockOutTime;
         final workSystem = profile?.workSystem ?? 'onsite';

@@ -25,7 +25,9 @@ class AdminDeletedEmployeesScreen extends StatelessWidget {
         ),
         title: Text(
           'admin.deletedEmployees.title'.tr(context: context),
-          style: AppTextStyles.font18Bold.copyWith(color: AppColors.textPrimary),
+          style: AppTextStyles.font18Bold.copyWith(
+            color: AppColors.textPrimary,
+          ),
         ),
         centerTitle: true,
       ),

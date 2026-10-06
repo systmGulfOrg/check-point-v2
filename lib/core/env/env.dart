@@ -13,12 +13,24 @@ abstract class Env {
   @EnviedField(varName: 'ODOO_API_KEY', obfuscate: true, defaultValue: '')
   static final String odooApiKey = _Env.odooApiKey;
 
-  @EnviedField(varName: 'GOOGLE_PLACES_API_KEY', obfuscate: true, defaultValue: '')
+  @EnviedField(
+    varName: 'GOOGLE_PLACES_API_KEY',
+    obfuscate: true,
+    defaultValue: '',
+  )
   static final String googlePlacesApiKey = _Env.googlePlacesApiKey;
 
-  @EnviedField(varName: 'AUTH_TOKEN_KEY', obfuscate: true, defaultValue: 'auth_token')
+  @EnviedField(
+    varName: 'AUTH_TOKEN_KEY',
+    obfuscate: true,
+    defaultValue: 'auth_token',
+  )
   static final String authTokenKey = _Env.authTokenKey;
 
-  @EnviedField(varName: 'DEVICE_TOKEN_KEY', obfuscate: true, defaultValue: 'device_token')
+  @EnviedField(
+    varName: 'DEVICE_TOKEN_KEY',
+    obfuscate: true,
+    defaultValue: 'device_token',
+  )
   static final String deviceTokenKey = _Env.deviceTokenKey;
 }

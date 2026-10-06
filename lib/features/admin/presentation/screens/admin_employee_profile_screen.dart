@@ -13,10 +13,7 @@ import 'package:check_point_v2/features/admin/presentation/widgets/employee_prof
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 
 class AdminEmployeeProfileScreen extends StatefulWidget {
-  const AdminEmployeeProfileScreen({
-    required this.employee,
-    super.key,
-  });
+  const AdminEmployeeProfileScreen({required this.employee, super.key});
 
   final EmployeeModel employee;
 
@@ -32,21 +29,21 @@ class _AdminEmployeeProfileScreenState
   EmployeeModel _resolveCurrentEmployee() {
     final state = context.read<AdminEmployeeProfileCubit>().state;
     return state.maybeWhen(
-      success: (
-        emp,
-        attendance,
-        selectedMonth,
-        attendedDays,
-        absentDays,
-        lateDays,
-        earlyLeaveDays,
-        totalHours,
-        devicesHistory,
-        leaveRequests,
-        leaveBalances,
-        permissions,
-      ) =>
-          emp,
+      success:
+          (
+            emp,
+            attendance,
+            selectedMonth,
+            attendedDays,
+            absentDays,
+            lateDays,
+            earlyLeaveDays,
+            totalHours,
+            devicesHistory,
+            leaveRequests,
+            leaveBalances,
+            permissions,
+          ) => emp,
       orElse: () => widget.employee,
     );
   }
@@ -67,17 +64,13 @@ class _AdminEmployeeProfileScreenState
           backgroundColor: AppColors.success,
         ),
       );
-      context
-          .read<AdminEmployeeProfileCubit>()
-          .load(empId, initialEmployee: currentEmp);
+      context.read<AdminEmployeeProfileCubit>().load(
+        empId,
+        initialEmployee: currentEmp,
+      );
       setState(() => _isEditing = false);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.tr(context: context)),
-          backgroundColor: AppColors.error,
-        ),
-      );
+      CustomSnackBar.showError(context, message: error.tr(context: context));
     }
   }
 
@@ -97,8 +90,9 @@ class _AdminEmployeeProfileScreenState
       backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text(
-          (_isEditing ? 'employee.profile.edit' : 'employee.profile.title')
-              .tr(context: context),
+          (_isEditing ? 'employee.profile.edit' : 'employee.profile.title').tr(
+            context: context,
+          ),
           style: AppTextStyles.font18Bold.copyWith(
             color: AppColors.textPrimary,
           ),
@@ -115,9 +109,7 @@ class _AdminEmployeeProfileScreenState
             }
           },
           icon: Icon(
-            _isEditing
-                ? Icons.close_rounded
-                : Icons.arrow_back_ios_new_rounded,
+            _isEditing ? Icons.close_rounded : Icons.arrow_back_ios_new_rounded,
           ),
           color: AppColors.textPrimary,
         ),
@@ -134,9 +126,10 @@ class _AdminEmployeeProfileScreenState
               onPressed: () {
                 final empId = currentEmp.id ?? widget.employee.id;
                 if (empId != null) {
-                  context
-                      .read<AdminEmployeeProfileCubit>()
-                      .load(empId, initialEmployee: currentEmp);
+                  context.read<AdminEmployeeProfileCubit>().load(
+                    empId,
+                    initialEmployee: currentEmp,
+                  );
                 }
               },
               icon: const Icon(Icons.refresh_rounded),

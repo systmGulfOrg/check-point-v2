@@ -77,7 +77,9 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
                   Expanded(
                     child: CustomTextFormField(
                       controller: searchController,
-                      hintText: 'admin.requests.searchHint'.tr(context: context),
+                      hintText: 'admin.requests.searchHint'.tr(
+                        context: context,
+                      ),
                       prefixIcon: Icon(Icons.search_rounded, size: 20.r),
                       onChanged: (val) => cubit.setSearch(val),
                     ),

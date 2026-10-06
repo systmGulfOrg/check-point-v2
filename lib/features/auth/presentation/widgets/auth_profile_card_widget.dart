@@ -65,7 +65,9 @@ class AuthProfileCardWidget extends StatelessWidget {
                       radius: 32.r,
                       backgroundColor: AppColors.softBrandBackground,
                       child: Text(
-                        name.trim().isEmpty ? 'U' : name.trim()[0].toUpperCase(),
+                        name.trim().isEmpty
+                            ? 'U'
+                            : name.trim()[0].toUpperCase(),
                         style: AppTextStyles.font18Bold.copyWith(
                           color: AppColors.brandPrimary,
                         ),

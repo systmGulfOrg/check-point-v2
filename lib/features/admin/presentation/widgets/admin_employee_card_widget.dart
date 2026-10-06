@@ -77,7 +77,9 @@ class AdminEmployeeCardWidget extends StatelessWidget {
 
     final displayRoles = roles.isNotEmpty
         ? roles
-        : (roleKey != null && roleKey!.isNotEmpty ? [roleKey!] : const ['Employee']);
+        : (roleKey != null && roleKey!.isNotEmpty
+              ? [roleKey!]
+              : const ['Employee']);
 
     return InkWell(
       onTap: onTap,

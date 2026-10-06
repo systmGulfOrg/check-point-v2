@@ -19,18 +19,18 @@ class AdminDeletedActionButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Tooltip(
-        message: tooltip,
-        child: InkWell(
-          onTap: onTap,
+    message: tooltip,
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8.r),
+      child: Container(
+        padding: EdgeInsets.all(8.r),
+        decoration: BoxDecoration(
+          color: background,
           borderRadius: BorderRadius.circular(8.r),
-          child: Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-              color: background,
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Icon(icon, size: 18.r, color: color),
-          ),
         ),
-      );
+        child: Icon(icon, size: 18.r, color: color),
+      ),
+    ),
+  );
 }

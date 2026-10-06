@@ -48,7 +48,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     return projects.where((p) {
       final nameMatch = p.name.toLowerCase().contains(query);
       final codeMatch = p.code?.toLowerCase().contains(query) ?? false;
-      final deptMatch = p.departmentName?.toLowerCase().contains(query) ?? false;
+      final deptMatch =
+          p.departmentName?.toLowerCase().contains(query) ?? false;
       final mgrMatch = p.managerName?.toLowerCase().contains(query) ?? false;
       return nameMatch || codeMatch || deptMatch || mgrMatch;
     }).toList();
@@ -81,173 +82,168 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       body: BlocConsumer<ProjectsCubit, ProjectsState>(
         listener: (context, state) {
           if (state case ProjectsStateError(:final messageKey)) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(messageKey.tr(context: context))),
+            CustomSnackBar.show(
+              context,
+              message: messageKey.tr(context: context),
             );
           }
         },
         builder: (context, state) => switch (state) {
           ProjectsStateLoading() => Skeletonizer(
-              enabled: true,
-              child: ListView.builder(
-                padding: EdgeInsets.all(16.r),
-                itemCount: 3,
-                itemBuilder: (context, index) => ProjectCardWidget(
-                  project: const ProjectModel(
-                    id: 'skeleton_id',
-                    name: 'Loading Project Name Placeholder',
-                    code: 'PROJ-001',
-                    description:
-                        'Loading project description details placeholder for skeleton animation',
-                    statuses: [
-                      ProjectStatusModel(id: '1', name: 'To Do'),
-                      ProjectStatusModel(id: '2', name: 'In Progress'),
-                      ProjectStatusModel(id: '3', name: 'Done'),
-                    ],
-                  ),
-                  onTap: () {},
+            enabled: true,
+            child: ListView.builder(
+              padding: EdgeInsets.all(16.r),
+              itemCount: 3,
+              itemBuilder: (context, index) => ProjectCardWidget(
+                project: const ProjectModel(
+                  id: 'skeleton_id',
+                  name: 'Loading Project Name Placeholder',
+                  code: 'PROJ-001',
+                  description:
+                      'Loading project description details placeholder for skeleton animation',
+                  statuses: [
+                    ProjectStatusModel(id: '1', name: 'To Do'),
+                    ProjectStatusModel(id: '2', name: 'In Progress'),
+                    ProjectStatusModel(id: '3', name: 'Done'),
+                  ],
                 ),
+                onTap: () {},
               ),
             ),
+          ),
           ProjectsStateSuccess(:final projects) => RefreshIndicator(
-              color: AppColors.brandPrimary,
-              onRefresh: context.read<ProjectsCubit>().loadProjects,
-              child: CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 12.h),
-                      child: Column(
-                        children: [
-                          // Search Box
-                          CustomTextFormField(
-                            hintText: 'projects.searchProjectsHint'
-                                .tr(context: context),
-                            controller: _searchController,
-                            prefixIcon: const Icon(
-                              Icons.search_rounded,
-                              color: AppColors.textSecondary,
-                              size: 20,
-                            ),
-                            suffixIcon: _searchQuery.isNotEmpty
-                                ? IconButton(
-                                    icon: const Icon(
-                                      Icons.close_rounded,
-                                      size: 18,
-                                      color: AppColors.textSecondary,
-                                    ),
-                                    onPressed: () {
-                                      _searchController.clear();
-                                      setState(() => _searchQuery = '');
-                                    },
-                                  )
-                                : null,
-                            onChanged: (val) =>
-                                setState(() => _searchQuery = val),
+            color: AppColors.brandPrimary,
+            onRefresh: context.read<ProjectsCubit>().loadProjects,
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 12.h),
+                    child: Column(
+                      children: [
+                        // Search Box
+                        CustomTextFormField(
+                          hintText: 'projects.searchProjectsHint'.tr(
+                            context: context,
                           ),
-
-                          if (canManage) ...[
-                            hSpace(10),
-                            Row(
-                              children: [
-                                Text(
-                                  '${projects.length} ${'projects.title'.tr(context: context)}',
-                                  style: AppTextStyles.font13SemiBold.copyWith(
+                          controller: _searchController,
+                          prefixIcon: const Icon(
+                            Icons.search_rounded,
+                            color: AppColors.textSecondary,
+                            size: 20,
+                          ),
+                          suffixIcon: _searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(
+                                    Icons.close_rounded,
+                                    size: 18,
                                     color: AppColors.textSecondary,
                                   ),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    setState(() => _searchQuery = '');
+                                  },
+                                )
+                              : null,
+                          onChanged: (val) =>
+                              setState(() => _searchQuery = val),
+                        ),
+
+                        if (canManage) ...[
+                          hSpace(10),
+                          Row(
+                            children: [
+                              Text(
+                                '${projects.length} ${'projects.title'.tr(context: context)}',
+                                style: AppTextStyles.font13SemiBold.copyWith(
+                                  color: AppColors.textSecondary,
                                 ),
-                                const Spacer(),
-                                ElevatedButton.icon(
-                                  onPressed: () =>
-                                      _createOrEditProject(context),
-                                  icon: const Icon(
-                                    Icons.add_rounded,
-                                    size: 18,
+                              ),
+                              const Spacer(),
+                              ElevatedButton.icon(
+                                onPressed: () => _createOrEditProject(context),
+                                icon: const Icon(
+                                  Icons.add_rounded,
+                                  size: 18,
+                                  color: AppColors.white,
+                                ),
+                                label: Text(
+                                  'projects.newProject'.tr(context: context),
+                                  style: AppTextStyles.font13Bold.copyWith(
                                     color: AppColors.white,
                                   ),
-                                  label: Text(
-                                    'projects.newProject'.tr(context: context),
-                                    style: AppTextStyles.font13Bold.copyWith(
-                                      color: AppColors.white,
-                                    ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.brandPrimary,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.r),
                                   ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.brandPrimary,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.r),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 14.w,
-                                      vertical: 8.h,
-                                    ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 14.w,
+                                    vertical: 8.h,
                                   ),
                                 ),
-                              ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+                if (_filterProjects(projects).isEmpty)
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.folder_open_rounded,
+                            size: 56.r,
+                            color: AppColors.placeholder,
+                          ),
+                          hSpace(12),
+                          Text(
+                            'projects.empty'.tr(context: context),
+                            style: AppTextStyles.font14Regular.copyWith(
+                              color: AppColors.textSecondary,
                             ),
-                          ],
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                  if (_filterProjects(projects).isEmpty)
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.folder_open_rounded,
-                              size: 56.r,
-                              color: AppColors.placeholder,
-                            ),
-                            hSpace(12),
-                            Text(
-                              'projects.empty'.tr(context: context),
-                              style: AppTextStyles.font14Regular.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  else
-                    SliverPadding(
-                      padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final filtered = _filterProjects(projects);
-                            final project = filtered[index];
-                            return ProjectCardWidget(
-                              project: project,
-                              onTap: () => _openBoard(project),
-                              onEdit: canManage
-                                  ? () => _createOrEditProject(
-                                        context,
-                                        project: project,
-                                      )
-                                  : null,
-                              onDelete: canManage
-                                  ? () => _confirmDeleteProject(
-                                        context,
-                                        project,
-                                      )
-                                  : null,
-                            );
-                          },
-                          childCount: _filterProjects(projects).length,
-                        ),
-                      ),
+                  )
+                else
+                  SliverPadding(
+                    padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final filtered = _filterProjects(projects);
+                        final project = filtered[index];
+                        return ProjectCardWidget(
+                          project: project,
+                          onTap: () => _openBoard(project),
+                          onEdit: canManage
+                              ? () => _createOrEditProject(
+                                  context,
+                                  project: project,
+                                )
+                              : null,
+                          onDelete: canManage
+                              ? () => _confirmDeleteProject(context, project)
+                              : null,
+                        );
+                      }, childCount: _filterProjects(projects).length),
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
+          ),
           ProjectsStateError() => Center(
-              child: Text('errors.server'.tr(context: context)),
-            ),
+            child: Text('errors.server'.tr(context: context)),
+          ),
           ProjectsStateInitial() => const SizedBox.shrink(),
           _ => const SizedBox.shrink(),
         },
@@ -315,8 +311,10 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     } catch (_) {}
 
     try {
-      final empRes =
-          await sl<AdminEmployeeRepo>().getEmployees(page: 0, pageSize: 100);
+      final empRes = await sl<AdminEmployeeRepo>().getEmployees(
+        page: 0,
+        pageSize: 100,
+      );
       empRes.when(success: (list) => employees = list, failure: (_) {});
     } catch (_) {}
 

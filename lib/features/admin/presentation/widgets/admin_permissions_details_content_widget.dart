@@ -60,10 +60,7 @@ class AdminPermissionsDetailsContentWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildRolePermissionsList(
-    BuildContext context,
-    String role,
-  ) {
+  Widget _buildRolePermissionsList(BuildContext context, String role) {
     final cubit = context.read<AdminPermissionsCubit>();
     final grouped = cubit.groupedPermissions(catalogue);
 
@@ -95,18 +92,16 @@ class AdminPermissionsDetailsContentWidget extends StatelessWidget {
                     ],
                   ),
                   hSpace(8),
-                  ...entry.value.map(
-                    (permission) {
-                      final isBase = cubit.isBasePermission(permission);
-                      final isSelected = selectedPermissions.contains(permission);
-                      return AdminPermissionsPermissionRowWidget(
-                        permission: permission,
-                        enabled: isSelected || isBase,
-                        baseRole: isBase,
-                        onChanged: () => cubit.togglePermission(permission),
-                      );
-                    },
-                  ),
+                  ...entry.value.map((permission) {
+                    final isBase = cubit.isBasePermission(permission);
+                    final isSelected = selectedPermissions.contains(permission);
+                    return AdminPermissionsPermissionRowWidget(
+                      permission: permission,
+                      enabled: isSelected || isBase,
+                      baseRole: isBase,
+                      onChanged: () => cubit.togglePermission(permission),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -126,12 +121,15 @@ class AdminPermissionsDetailsContentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final roles = user.user.allRoles.isEmpty ? ['Employee'] : user.user.allRoles;
+    final roles = user.user.allRoles.isEmpty
+        ? ['Employee']
+        : user.user.allRoles;
     final isPureAdmin = roles.length == 1 && roles.first == 'Admin';
     final hasMultipleRoles = roles.length > 1;
 
     final roleText = roles.join(', ');
-    final contact = user.email ??
+    final contact =
+        user.email ??
         user.employeeCode ??
         'admin.permissions.notAvailable'.tr(context: context);
 
@@ -167,7 +165,9 @@ class AdminPermissionsDetailsContentWidget extends StatelessWidget {
         ),
         hSpace(14),
         if (isPureAdmin)
-          Expanded(child: SingleChildScrollView(child: _buildAdminBanner(context)))
+          Expanded(
+            child: SingleChildScrollView(child: _buildAdminBanner(context)),
+          )
         else if (hasMultipleRoles)
           Expanded(
             child: DefaultTabController(

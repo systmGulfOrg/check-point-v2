@@ -10,7 +10,7 @@ class EmployeeCheckInUseCase {
   EmployeeCheckInUseCase({
     required this.attendanceRepo,
     required this.sessionStorage,
-  }); 
+  });
 
   final EmployeeAttendanceRepo attendanceRepo;
   final AuthSessionStorage sessionStorage;
@@ -49,7 +49,6 @@ class EmployeeCheckInUseCase {
           : null,
       employeeImage: selectedImageBase64,
     );
-    
 
     if (customerId != null) {
       return attendanceRepo.checkIn(requestBody);

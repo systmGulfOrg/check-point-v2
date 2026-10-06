@@ -66,8 +66,8 @@ class TaskAssigneeModel with _$TaskAssigneeModel {
       taskId: json['taskId']?.toString(),
       employeeId: (json['employeeId'] ?? emp?['id'] ?? json['id'])?.toString(),
       assignedAt: json['assignedAt']?.toString(),
-      employeeName:
-          (emp?['name'] ?? json['name'] ?? json['userName'])?.toString(),
+      employeeName: (emp?['name'] ?? json['name'] ?? json['userName'])
+          ?.toString(),
       employeeImageUrl: (emp?['imageUrl'] ?? json['imageUrl'])?.toString(),
     );
   }
@@ -151,25 +151,24 @@ List<TaskAssigneeModel> _assigneesFromJson(Object? value) {
       .where(
         (a) =>
             (a.employeeId?.isNotEmpty == true ||
-                a.employeeName?.isNotEmpty == true),
+            a.employeeName?.isNotEmpty == true),
       )
       .toList();
 }
 
 List<Map<String, dynamic>> _assigneesToJson(
   List<TaskAssigneeModel> assignees,
-) =>
-    assignees
-        .map(
-          (a) => {
-            'taskId': a.taskId,
-            'employeeId': a.employeeId,
-            'assignedAt': a.assignedAt,
-            'employee': {
-              'id': a.employeeId,
-              'name': a.employeeName,
-              'imageUrl': a.employeeImageUrl,
-            },
-          },
-        )
-        .toList();
+) => assignees
+    .map(
+      (a) => {
+        'taskId': a.taskId,
+        'employeeId': a.employeeId,
+        'assignedAt': a.assignedAt,
+        'employee': {
+          'id': a.employeeId,
+          'name': a.employeeName,
+          'imageUrl': a.employeeImageUrl,
+        },
+      },
+    )
+    .toList();

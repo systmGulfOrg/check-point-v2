@@ -51,17 +51,40 @@ class AppPermissions {
       case 'admin':
       case 'hr':
         return [
-          attendanceViewOwn, attendanceViewTeam, attendanceViewAll,
-          attendanceEdit, attendanceDelete, employeeView, employeeEdit,
-          employeeDelete, taskView, taskAssign, taskManage, remoteRequest,
-          remoteApprove, remotePolicyManage, leaveRequest, leaveApprove,
-          leaveManagerApprove, leaveHrApprove, permitApprove, planManage,
+          attendanceViewOwn,
+          attendanceViewTeam,
+          attendanceViewAll,
+          attendanceEdit,
+          attendanceDelete,
+          employeeView,
+          employeeEdit,
+          employeeDelete,
+          taskView,
+          taskAssign,
+          taskManage,
+          remoteRequest,
+          remoteApprove,
+          remotePolicyManage,
+          leaveRequest,
+          leaveApprove,
+          leaveManagerApprove,
+          leaveHrApprove,
+          permitApprove,
+          planManage,
         ];
       case 'supervisor':
         return [
-          attendanceViewOwn, attendanceViewTeam, employeeView, taskView,
-          taskAssign, leaveRequest, leaveManagerApprove, permitApprove,
-          remoteRequest, remoteApprove, reportView,
+          attendanceViewOwn,
+          attendanceViewTeam,
+          employeeView,
+          taskView,
+          taskAssign,
+          leaveRequest,
+          leaveManagerApprove,
+          permitApprove,
+          remoteRequest,
+          remoteApprove,
+          reportView,
         ];
       default:
         return [attendanceViewOwn, taskView, leaveRequest, remoteRequest];

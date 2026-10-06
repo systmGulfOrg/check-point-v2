@@ -99,14 +99,14 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                 listener: (context, state) {
                   switch (state) {
                     case EmployeeTasksStateActionSuccess(:final message):
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(message.tr(context: context))),
+                      CustomSnackBar.show(
+                        context,
+                        message: message.tr(context: context),
                       );
                     case EmployeeTasksStateError(:final messageKey):
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(messageKey.tr(context: context)),
-                        ),
+                      CustomSnackBar.show(
+                        context,
+                        message: messageKey.tr(context: context),
                       );
                     default:
                       break;

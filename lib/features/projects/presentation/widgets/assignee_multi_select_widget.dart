@@ -25,8 +25,7 @@ class AssigneeMultiSelectWidget extends StatefulWidget {
       _AssigneeMultiSelectWidgetState();
 }
 
-class _AssigneeMultiSelectWidgetState
-    extends State<AssigneeMultiSelectWidget> {
+class _AssigneeMultiSelectWidgetState extends State<AssigneeMultiSelectWidget> {
   List<EmployeeModel> _employees = [];
   bool _isLoading = false;
 
@@ -176,59 +175,63 @@ class _AssigneeMultiSelectWidgetState
                                 enabled: true,
                                 child: ListView.builder(
                                   itemCount: 5,
-                                  itemBuilder: (context, index) => CheckboxListTile(
-                                    value: false,
-                                    onChanged: (_) {},
-                                    title: Text('Loading Employee Name $index'),
-                                    subtitle: const Text('Loading Department'),
-                                  ),
+                                  itemBuilder: (context, index) =>
+                                      CheckboxListTile(
+                                        value: false,
+                                        onChanged: (_) {},
+                                        title: Text(
+                                          'Loading Employee Name $index',
+                                        ),
+                                        subtitle: const Text(
+                                          'Loading Department',
+                                        ),
+                                      ),
                                 ),
                               )
                             : filtered.isEmpty
-                                ? Center(
-                                    child: Text(
-                                      'projects.noAssignees'.tr(
-                                        context: context,
-                                      ),
-                                      style: AppTextStyles.font14Regular,
+                            ? Center(
+                                child: Text(
+                                  'projects.noAssignees'.tr(context: context),
+                                  style: AppTextStyles.font14Regular,
+                                ),
+                              )
+                            : ListView.builder(
+                                itemCount: filtered.length,
+                                itemBuilder: (context, index) {
+                                  final item = filtered[index];
+                                  final itemKey = item['key']!;
+                                  final isChecked = currentSelected.contains(
+                                    itemKey,
+                                  );
+                                  return CheckboxListTile(
+                                    value: isChecked,
+                                    activeColor: AppColors.brandPrimary,
+                                    title: Text(
+                                      item['label']!,
+                                      style: AppTextStyles.font14Bold,
                                     ),
-                                  )
-                                : ListView.builder(
-                                    itemCount: filtered.length,
-                                    itemBuilder: (context, index) {
-                                      final item = filtered[index];
-                                      final itemKey = item['key']!;
-                                      final isChecked =
-                                          currentSelected.contains(itemKey);
-                                      return CheckboxListTile(
-                                        value: isChecked,
-                                        activeColor: AppColors.brandPrimary,
-                                        title: Text(
-                                          item['label']!,
-                                          style: AppTextStyles.font14Bold,
-                                        ),
-                                        subtitle: item['sub']!.isNotEmpty
-                                            ? Text(
-                                                item['sub']!,
-                                                style: AppTextStyles
-                                                    .font12Regular
-                                                    .copyWith(
-                                                  color: AppColors.textSecondary,
+                                    subtitle: item['sub']!.isNotEmpty
+                                        ? Text(
+                                            item['sub']!,
+                                            style: AppTextStyles.font12Regular
+                                                .copyWith(
+                                                  color:
+                                                      AppColors.textSecondary,
                                                 ),
-                                              )
-                                            : null,
-                                        onChanged: (val) {
-                                          setSheetState(() {
-                                            if (val == true) {
-                                              currentSelected.add(itemKey);
-                                            } else {
-                                              currentSelected.remove(itemKey);
-                                            }
-                                          });
-                                        },
-                                      );
+                                          )
+                                        : null,
+                                    onChanged: (val) {
+                                      setSheetState(() {
+                                        if (val == true) {
+                                          currentSelected.add(itemKey);
+                                        } else {
+                                          currentSelected.remove(itemKey);
+                                        }
+                                      });
                                     },
-                                  ),
+                                  );
+                                },
+                              ),
                       ),
                       SizedBox(height: 12.h),
                       SizedBox(

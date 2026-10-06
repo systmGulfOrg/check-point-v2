@@ -38,8 +38,10 @@ class AdminRequestDetailsScreen extends StatelessWidget {
   }
 
   String _getStatusText(BuildContext context) {
-    if (request.isApproved) return 'admin.requests.filterApproved'.tr(context: context);
-    if (request.isRejected) return 'admin.requests.filterRejected'.tr(context: context);
+    if (request.isApproved)
+      return 'admin.requests.filterApproved'.tr(context: context);
+    if (request.isRejected)
+      return 'admin.requests.filterRejected'.tr(context: context);
     return 'admin.requests.filterPending'.tr(context: context);
   }
 
@@ -109,21 +111,28 @@ class AdminRequestDetailsScreen extends StatelessWidget {
               ],
             ),
           ),
-          if (request.rejectReason != null && request.rejectReason!.isNotEmpty) ...[
+          if (request.rejectReason != null &&
+              request.rejectReason!.isNotEmpty) ...[
             hSpace(14),
             Container(
               padding: EdgeInsets.all(16.r),
               decoration: BoxDecoration(
                 color: AppColors.softRedBackground,
                 borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+                border: Border.all(
+                  color: AppColors.error.withValues(alpha: 0.3),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.info_outline, color: AppColors.error, size: 18.r),
+                      Icon(
+                        Icons.info_outline,
+                        color: AppColors.error,
+                        size: 18.r,
+                      ),
                       vSpace(6),
                       Text(
                         'admin.requests.rejectionReason'.tr(context: context),
@@ -181,15 +190,10 @@ class AdminRequestDetailsScreen extends StatelessWidget {
                                     ClipboardData(text: request.mobileId!),
                                   );
                                   if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'admin.requests.copiedMobileId'.tr(
-                                            context: context,
-                                          ),
-                                        ),
-                                        duration: const Duration(seconds: 2),
-                                      ),
+                                    CustomSnackBar.show(
+                                      context,
+                                      message: 'admin.requests.copiedMobileId'
+                                          .tr(context: context),
                                     );
                                   }
                                 },
@@ -293,13 +297,9 @@ class AdminRequestDetailsScreen extends StatelessWidget {
                       .read<AdminAccountRequestsCubit>()
                       .rejectRequest(id: request.id!, reason: reason);
                   if (context.mounted && success == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'admin.requests.rejected'.tr(context: context),
-                        ),
-                        backgroundColor: AppColors.error,
-                      ),
+                    CustomSnackBar.showError(
+                      context,
+                      message: 'admin.requests.rejected'.tr(context: context),
                     );
                     context.pop();
                   }
@@ -329,7 +329,9 @@ class AdminRequestDetailsScreen extends StatelessWidget {
                   arguments: request,
                 );
                 if (created == true && context.mounted) {
-                  await context.read<AdminAccountRequestsCubit>().loadRequests();
+                  await context
+                      .read<AdminAccountRequestsCubit>()
+                      .loadRequests();
                   if (context.mounted) context.pop();
                 }
               },

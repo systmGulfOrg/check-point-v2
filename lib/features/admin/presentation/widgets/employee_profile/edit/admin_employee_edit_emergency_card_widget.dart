@@ -25,20 +25,29 @@ class AdminEmployeeEditEmergencyCardWidget extends StatelessWidget {
         CustomTextFormField(
           controller: emergencyNameController,
           hintText: 'employee.profile.emergencyName'.tr(context: context),
-          prefixIcon: const Icon(Icons.person_pin_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.person_pin_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: emergencyRelationController,
           hintText: 'employee.profile.emergencyRelation'.tr(context: context),
-          prefixIcon: const Icon(Icons.favorite_outline_rounded, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.favorite_outline_rounded,
+            color: AppColors.brandPrimary,
+          ),
         ),
         hSpace(10),
         CustomTextFormField(
           controller: emergencyPhoneController,
           hintText: 'employee.profile.emergencyPhone'.tr(context: context),
           keyboardType: TextInputType.phone,
-          prefixIcon: const Icon(Icons.phone_in_talk_outlined, color: AppColors.brandPrimary),
+          prefixIcon: const Icon(
+            Icons.phone_in_talk_outlined,
+            color: AppColors.brandPrimary,
+          ),
         ),
       ],
     );

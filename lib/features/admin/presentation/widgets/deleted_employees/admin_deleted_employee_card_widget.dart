@@ -24,7 +24,8 @@ class AdminDeletedEmployeeCardWidget extends StatelessWidget {
     final subText = [
       if (employee.employeeCode != null && employee.employeeCode!.isNotEmpty)
         employee.employeeCode!,
-      if (employee.departmentName != null && employee.departmentName!.isNotEmpty)
+      if (employee.departmentName != null &&
+          employee.departmentName!.isNotEmpty)
         employee.departmentName!,
     ].join('  •  ');
 
@@ -120,8 +121,9 @@ class AdminDeletedEmployeeCardWidget extends StatelessWidget {
                 icon: Icons.delete_forever_rounded,
                 color: AppColors.error,
                 background: AppColors.softRedBackground,
-                tooltip:
-                    'admin.deletedEmployees.permanentDelete'.tr(context: context),
+                tooltip: 'admin.deletedEmployees.permanentDelete'.tr(
+                  context: context,
+                ),
                 onTap: onPermanentDelete,
               ),
             ],

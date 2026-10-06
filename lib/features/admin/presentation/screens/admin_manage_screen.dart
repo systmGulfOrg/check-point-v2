@@ -27,7 +27,8 @@ class AdminManageScreen extends StatelessWidget {
               iconBackgroundColor: AppColors.softBlueBackground,
               titleKey: 'admin.manage.devices',
               subtitleKey: 'admin.manage.devicesSub',
-              onTap: () => Navigator.pushNamed(context, AppRoutes.adminPendingDevices),
+              onTap: () =>
+                  Navigator.pushNamed(context, AppRoutes.adminPendingDevices),
             ),
             hSpace(10),
             AdminManageCardWidget(

@@ -72,8 +72,8 @@ class AttendanceVerificationService {
     double radiusMeters = 150,
     List<LatLng> polygon = const [],
   }) {
-    final insideCircle = center == null ||
-        _distanceMeters(center, point) <= radiusMeters;
+    final insideCircle =
+        center == null || _distanceMeters(center, point) <= radiusMeters;
     final insidePolygon = polygon.isEmpty || _isInsidePolygon(point, polygon);
     return insideCircle && insidePolygon;
   }

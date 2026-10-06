@@ -216,28 +216,28 @@ class SupervisorAttendanceDateBarWidget extends StatelessWidget {
         if (onAddPressed != null) ...[
           wSpace(10),
           Container(
-          decoration: BoxDecoration(
-            color: AppColors.brandPrimary,
-            borderRadius: BorderRadius.circular(14.r),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.brandPrimary.withValues(alpha: 0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onAddPressed,
+            decoration: BoxDecoration(
+              color: AppColors.brandPrimary,
               borderRadius: BorderRadius.circular(14.r),
-              child: Padding(
-                padding: EdgeInsets.all(12.r),
-                child: Icon(Icons.add, color: AppColors.white, size: 20.r),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.brandPrimary.withValues(alpha: 0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onAddPressed,
+                borderRadius: BorderRadius.circular(14.r),
+                child: Padding(
+                  padding: EdgeInsets.all(12.r),
+                  child: Icon(Icons.add, color: AppColors.white, size: 20.r),
+                ),
               ),
             ),
-          ),
           ),
         ],
       ],

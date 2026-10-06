@@ -87,25 +87,30 @@ class SupervisorTasksBlocBuilderWidget extends StatelessWidget {
                     .toList(),
               _ => tasks,
             },
-            onEdit: canManageTasks ? (task) {
-              showModalBottomSheet<void>(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: AppColors.cardBackground,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                builder: (_) => MultiBlocProvider(
-                  providers: [
-                    BlocProvider.value(value: cubit),
-                    BlocProvider<SupervisorTeamCubit>(
-                      create: (_) => sl<SupervisorTeamCubit>()..loadTeam(),
-                    ),
-                  ],
-                  child: SupervisorEditTaskSheetWidget(task: task),
-                ),
-              );
-            } : null,
+            onEdit: canManageTasks
+                ? (task) {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: AppColors.cardBackground,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                      ),
+                      builder: (_) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider.value(value: cubit),
+                          BlocProvider<SupervisorTeamCubit>(
+                            create: (_) =>
+                                sl<SupervisorTeamCubit>()..loadTeam(),
+                          ),
+                        ],
+                        child: SupervisorEditTaskSheetWidget(task: task),
+                      ),
+                    );
+                  }
+                : null,
             onStatusToggle: (task) {
               if (task.id != null) {
                 final isDone =
@@ -119,11 +124,13 @@ class SupervisorTasksBlocBuilderWidget extends StatelessWidget {
                 );
               }
             },
-            onDelete: canManageTasks ? (task) {
-              if (task.id != null) {
-                _showDeleteDialog(context, cubit, task.id!);
-              }
-            } : null,
+            onDelete: canManageTasks
+                ? (task) {
+                    if (task.id != null) {
+                      _showDeleteDialog(context, cubit, task.id!);
+                    }
+                  }
+                : null,
           ),
           SupervisorTasksError(:final messageKey) => Center(
             child: Text(

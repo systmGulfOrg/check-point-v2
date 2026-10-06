@@ -30,31 +30,35 @@ class AdminTopBarWidget extends StatelessWidget {
               ),
             ],
           ),
-          child: BlocBuilder<AdminPendingDevicesCubit, AdminPendingDevicesState>(
-            builder: (context, state) {
-              final pendingCount = state.maybeWhen(
-                success: (devices) => devices.length,
-                orElse: () => 0,
-              );
-              
-              return Badge(
-                isLabelVisible: pendingCount > 0,
-                label: Text(pendingCount.toString()),
-                backgroundColor: AppColors.error,
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.adminPendingDevices);
-                  },
-                  icon: Icon(
-                    Icons.notifications_none_rounded,
-                    color: AppColors.brandInk,
-                    size: 20.r,
-                  ),
-                ),
-              );
-            },
-          ),
+          child:
+              BlocBuilder<AdminPendingDevicesCubit, AdminPendingDevicesState>(
+                builder: (context, state) {
+                  final pendingCount = state.maybeWhen(
+                    success: (devices) => devices.length,
+                    orElse: () => 0,
+                  );
+
+                  return Badge(
+                    isLabelVisible: pendingCount > 0,
+                    label: Text(pendingCount.toString()),
+                    backgroundColor: AppColors.error,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.adminPendingDevices,
+                        );
+                      },
+                      icon: Icon(
+                        Icons.notifications_none_rounded,
+                        color: AppColors.brandInk,
+                        size: 20.r,
+                      ),
+                    ),
+                  );
+                },
+              ),
         ),
       ],
     );

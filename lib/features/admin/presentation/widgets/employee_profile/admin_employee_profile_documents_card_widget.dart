@@ -70,10 +70,10 @@ class _AdminEmployeeProfileDocumentsCardWidgetState
       final mimeType = ext == 'png'
           ? 'image/png'
           : (ext == 'jpg' || ext == 'jpeg')
-              ? 'image/jpeg'
-              : ext == 'pdf'
-                  ? 'application/pdf'
-                  : 'application/octet-stream';
+          ? 'image/jpeg'
+          : ext == 'pdf'
+          ? 'application/pdf'
+          : 'application/octet-stream';
 
       if (file.bytes != null) {
         base64Data = 'data:$mimeType;base64,${base64Encode(file.bytes!)}';
@@ -109,22 +109,16 @@ class _AdminEmployeeProfileDocumentsCardWidgetState
       setState(() => _uploadingType = null);
 
       if (error == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('employee.profile.docUploadedSuccess'.tr(context: context)),
-            backgroundColor: AppColors.success,
-          ),
+        CustomSnackBar.showSuccess(
+          context,
+          message: 'employee.profile.docUploadedSuccess'.tr(context: context),
         );
-        context
-            .read<AdminEmployeeProfileCubit>()
-            .load(empId, initialEmployee: widget.employee);
+        context.read<AdminEmployeeProfileCubit>().load(
+          empId,
+          initialEmployee: widget.employee,
+        );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error.tr(context: context)),
-            backgroundColor: AppColors.error,
-          ),
-        );
+        CustomSnackBar.showError(context, message: error.tr(context: context));
       }
     } catch (_) {
       if (mounted) setState(() => _uploadingType = null);
@@ -149,15 +143,14 @@ class _AdminEmployeeProfileDocumentsCardWidgetState
     setState(() => _uploadingType = null);
 
     if (error == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('employee.profile.docDeletedSuccess'.tr(context: context)),
-          backgroundColor: AppColors.success,
-        ),
+      CustomSnackBar.showSuccess(
+        context,
+        message: 'employee.profile.docDeletedSuccess'.tr(context: context),
       );
-      context
-          .read<AdminEmployeeProfileCubit>()
-          .load(empId, initialEmployee: widget.employee);
+      context.read<AdminEmployeeProfileCubit>().load(
+        empId,
+        initialEmployee: widget.employee,
+      );
     }
   }
 
@@ -171,7 +164,10 @@ class _AdminEmployeeProfileDocumentsCardWidgetState
 
     final otherDocs = docs.where((d) {
       final t = d['type'] ?? d['id'];
-      return t != 'contract' && t != 'degree' && t != 'criminal_record' && t != 'insurance';
+      return t != 'contract' &&
+          t != 'degree' &&
+          t != 'criminal_record' &&
+          t != 'insurance';
     }).toList();
 
     return AdminEmployeeProfileInfoCardWidget(
@@ -184,7 +180,9 @@ class _AdminEmployeeProfileDocumentsCardWidgetState
           isUploaded: contractDoc != null,
           isUploading: _uploadingType == 'contract',
           onUpload: () => _uploadDocument('contract', 'Employment Contract'),
-          onDelete: contractDoc != null ? () => _deleteDocument('contract') : null,
+          onDelete: contractDoc != null
+              ? () => _deleteDocument('contract')
+              : null,
         ),
         AdminEmployeeDocumentItemWidget(
           title: 'employee.profile.docDegree'.tr(context: context),
@@ -200,7 +198,9 @@ class _AdminEmployeeProfileDocumentsCardWidgetState
           isUploaded: criminalDoc != null,
           isUploading: _uploadingType == 'criminal_record',
           onUpload: () => _uploadDocument('criminal_record', 'Criminal Record'),
-          onDelete: criminalDoc != null ? () => _deleteDocument('criminal_record') : null,
+          onDelete: criminalDoc != null
+              ? () => _deleteDocument('criminal_record')
+              : null,
         ),
         AdminEmployeeDocumentItemWidget(
           title: 'employee.profile.docInsurance'.tr(context: context),
@@ -208,7 +208,9 @@ class _AdminEmployeeProfileDocumentsCardWidgetState
           isUploaded: insuranceDoc != null,
           isUploading: _uploadingType == 'insurance',
           onUpload: () => _uploadDocument('insurance', 'Social Insurance Form'),
-          onDelete: insuranceDoc != null ? () => _deleteDocument('insurance') : null,
+          onDelete: insuranceDoc != null
+              ? () => _deleteDocument('insurance')
+              : null,
         ),
         ...otherDocs.map((d) {
           final type = (d['type'] ?? d['id'] ?? 'other').toString();
@@ -217,7 +219,8 @@ class _AdminEmployeeProfileDocumentsCardWidgetState
             fileName: d['name'] as String?,
             isUploaded: true,
             isUploading: _uploadingType == type,
-            onUpload: () => _uploadDocument(type, d['name']?.toString() ?? 'Document'),
+            onUpload: () =>
+                _uploadDocument(type, d['name']?.toString() ?? 'Document'),
             onDelete: () => _deleteDocument(type),
           );
         }),
@@ -232,7 +235,9 @@ class _AdminEmployeeProfileDocumentsCardWidgetState
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.brandPrimary,
             side: const BorderSide(color: AppColors.brandPrimary),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.r),
+            ),
             padding: EdgeInsets.symmetric(vertical: 10.h),
           ),
         ),

@@ -179,8 +179,9 @@ class AppRouter {
           child: MultiBlocProvider(
             providers: [
               BlocProvider<AdminEmployeeProfileCubit>(
-                create: (_) => sl<AdminEmployeeProfileCubit>()
-                  ..load(employee.id ?? '', initialEmployee: employee),
+                create: (_) =>
+                    sl<AdminEmployeeProfileCubit>()
+                      ..load(employee.id ?? '', initialEmployee: employee),
               ),
               BlocProvider<AuthProfileCubit>(
                 create: (_) => sl<AuthProfileCubit>()..loadProfile(),

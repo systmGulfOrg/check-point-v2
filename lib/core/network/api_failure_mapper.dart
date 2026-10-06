@@ -18,7 +18,9 @@ class ApiFailureMapper {
         return const ApiFailure(messageKey: 'errors.deviceLoginAccess');
       }
       if (normalizedMessage.contains('locked') ||
-          (normalizedMessage.contains('failed') && normalizedMessage.contains('login') && normalizedMessage.contains('lock'))) {
+          (normalizedMessage.contains('failed') &&
+              normalizedMessage.contains('login') &&
+              normalizedMessage.contains('lock'))) {
         return const ApiFailure(messageKey: 'errors.accountLocked');
       }
     }
@@ -39,10 +41,15 @@ class ApiFailureMapper {
               item['errorMessage'] as String,
       ];
       final message = messages.join(' ').toLowerCase();
-      if ((message.contains('device') || message.contains('devise')) && message.contains('access') && message.contains('login')) {
+      if ((message.contains('device') || message.contains('devise')) &&
+          message.contains('access') &&
+          message.contains('login')) {
         return const ApiFailure(messageKey: 'errors.deviceLoginAccess');
       }
-      if (message.contains('locked') || (message.contains('failed') && message.contains('login') && (message.contains('lock') || message.contains('try again')))) {
+      if (message.contains('locked') ||
+          (message.contains('failed') &&
+              message.contains('login') &&
+              (message.contains('lock') || message.contains('try again')))) {
         return const ApiFailure(messageKey: 'errors.accountLocked');
       }
       return switch (error.type) {
@@ -56,19 +63,31 @@ class ApiFailureMapper {
           messageKey: 'errors.unauthorized',
         ),
         _ when status == 403 => ApiFailure(
-          messageKey: messages.any((m) => m.toLowerCase().contains('device is not registered'))
+          messageKey:
+              messages.any(
+                (m) => m.toLowerCase().contains('device is not registered'),
+              )
               ? 'errors.deviceLoginAccess'
-              : (message.contains('locked') || (message.contains('failed') && message.contains('login')))
-                  ? 'errors.accountLocked'
-                  : 'errors.forbidden',
+              : (message.contains('locked') ||
+                    (message.contains('failed') && message.contains('login')))
+              ? 'errors.accountLocked'
+              : 'errors.forbidden',
         ),
         _ when status == 404 => const ApiFailure(messageKey: 'errors.notFound'),
-        _ when status == 409 => ApiFailure(messageKey: messages.isNotEmpty ? messages.join(' ') : 'errors.conflict'),
+        _ when status == 409 => ApiFailure(
+          messageKey: messages.isNotEmpty
+              ? messages.join(' ')
+              : 'errors.conflict',
+        ),
         _ when status == 400 => ApiFailure(
-          messageKey: messages.isNotEmpty ? messages.join(' ') : 'errors.validation',
+          messageKey: messages.isNotEmpty
+              ? messages.join(' ')
+              : 'errors.validation',
         ),
         _ when status == 429 => ApiFailure(
-          messageKey: messages.isNotEmpty ? messages.join(' ') : 'errors.rateLimit',
+          messageKey: messages.isNotEmpty
+              ? messages.join(' ')
+              : 'errors.rateLimit',
         ),
         _ when status != null && status >= 500 => const ApiFailure(
           messageKey: 'errors.server',

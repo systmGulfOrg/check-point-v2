@@ -17,18 +17,11 @@ class AdminEmployeesBlocListenerWidget extends StatelessWidget {
         listener: (context, state) {
           switch (state) {
             case AdminEmployeesStateActionSuccess(:final message):
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(message),
-                  backgroundColor: AppColors.success,
-                ),
-              );
+              CustomSnackBar.showSuccess(context, message: message);
             case AdminEmployeesStateError(:final messageKey):
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(messageKey.tr(context: context)),
-                  backgroundColor: AppColors.error,
-                ),
+              CustomSnackBar.showError(
+                context,
+                message: messageKey.tr(context: context),
               );
             default:
               break;

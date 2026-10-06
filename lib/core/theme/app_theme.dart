@@ -30,9 +30,7 @@ class AppTheme {
         titleTextStyle: AppTextStyles.font18Bold.copyWith(
           color: AppColors.textPrimary,
         ),
-        iconTheme: const IconThemeData(
-          color: AppColors.textPrimary,
-        ),
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,

@@ -64,12 +64,17 @@ class _AdminLeaveManagementScreenState extends State<AdminLeaveManagementScreen>
     return switch (_selectedFilter) {
       1 => list.where((r) {
         final s = r.status?.toLowerCase() ?? '';
-        return s == 'pending' || s == 'pendinghr' || s == 'pendingadmin' || s == 'pendingmanager';
+        return s == 'pending' ||
+            s == 'pendinghr' ||
+            s == 'pendingadmin' ||
+            s == 'pendingmanager';
       }).toList(),
       2 => list.where((r) => r.status?.toLowerCase() == 'approved').toList(),
       3 => list.where((r) {
         final s = r.status?.toLowerCase() ?? '';
-        return s == 'rejected' || s == 'rejectedbyhr' || s == 'rejectedbymanager';
+        return s == 'rejected' ||
+            s == 'rejectedbyhr' ||
+            s == 'rejectedbymanager';
       }).toList(),
       _ => list,
     };

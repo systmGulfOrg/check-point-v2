@@ -119,9 +119,10 @@ class ProjectCardWidget extends StatelessWidget {
                                       wSpace(4),
                                       Text(
                                         project.departmentName!,
-                                        style: AppTextStyles.font11Medium.copyWith(
-                                          color: AppColors.brandPrimary,
-                                        ),
+                                        style: AppTextStyles.font11Medium
+                                            .copyWith(
+                                              color: AppColors.brandPrimary,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -147,9 +148,10 @@ class ProjectCardWidget extends StatelessWidget {
                                       wSpace(4),
                                       Text(
                                         project.managerName!,
-                                        style: AppTextStyles.font11Medium.copyWith(
-                                          color: AppColors.brandPrimary,
-                                        ),
+                                        style: AppTextStyles.font11Medium
+                                            .copyWith(
+                                              color: AppColors.brandPrimary,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -241,11 +243,7 @@ class ProjectCardWidget extends StatelessWidget {
                       ),
                     ),
                   if (onEdit != null && onDelete != null)
-                    Container(
-                      width: 1,
-                      height: 18.h,
-                      color: AppColors.border,
-                    ),
+                    Container(width: 1, height: 18.h, color: AppColors.border),
                   if (onDelete != null)
                     Expanded(
                       child: InkWell(

@@ -76,10 +76,7 @@ class EmployeeLeaveCardWidget extends StatelessWidget {
         LeaveStepStatus.inProgress,
         'leaves.approval.pendingManagerReview'.tr(),
       ),
-      _ => (
-        LeaveStepStatus.completed,
-        leave.managerName,
-      ),
+      _ => (LeaveStepStatus.completed, leave.managerName),
     };
 
     // Determine Stage 3 (HR / Admin) state
@@ -108,10 +105,7 @@ class EmployeeLeaveCardWidget extends StatelessWidget {
         LeaveStepStatus.waiting,
         'leaves.approval.waitingForManagerFirst'.tr(),
       ),
-      _ => (
-        LeaveStepStatus.waiting,
-        null,
-      ),
+      _ => (LeaveStepStatus.waiting, null),
     };
 
     return Container(
@@ -167,8 +161,10 @@ class EmployeeLeaveCardWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
                       color: statusBg,
                       borderRadius: BorderRadius.circular(16.r),

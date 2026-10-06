@@ -34,12 +34,17 @@ class AdminDeletedEmployeesBlocBuilderWidget extends StatelessWidget {
     );
   }
 
-  void _showPermanentDeleteDialog(BuildContext context, String id, String name) {
+  void _showPermanentDeleteDialog(
+    BuildContext context,
+    String id,
+    String name,
+  ) {
     showDialog<void>(
       context: context,
       builder: (dialogCtx) => CustomDialogWidget(
-        title:
-            'admin.deletedEmployees.permanentDeleteTitle'.tr(context: context),
+        title: 'admin.deletedEmployees.permanentDeleteTitle'.tr(
+          context: context,
+        ),
         message: 'admin.deletedEmployees.permanentDeleteMessage'.tr(
           args: [name],
           context: context,
@@ -47,8 +52,9 @@ class AdminDeletedEmployeesBlocBuilderWidget extends StatelessWidget {
         icon: Icons.delete_forever_rounded,
         iconColor: AppColors.error,
         iconBackgroundColor: AppColors.softRedBackground,
-        confirmLabel:
-            'admin.deletedEmployees.permanentDelete'.tr(context: context),
+        confirmLabel: 'admin.deletedEmployees.permanentDelete'.tr(
+          context: context,
+        ),
         cancelLabel: 'common.cancel'.tr(context: context),
         confirmButtonColor: AppColors.error,
         onConfirm: () {
@@ -64,8 +70,9 @@ class AdminDeletedEmployeesBlocBuilderWidget extends StatelessWidget {
       BlocBuilder<AdminDeletedEmployeesCubit, AdminDeletedEmployeesState>(
         builder: (context, state) => switch (state) {
           AdminDeletedEmployeesStateInitial() => const SizedBox.shrink(),
-          AdminDeletedEmployeesStateLoading() =>
-            const Center(child: CircularProgressIndicator()),
+          AdminDeletedEmployeesStateLoading() => const Center(
+            child: CircularProgressIndicator(),
+          ),
           AdminDeletedEmployeesStateError(:final messageKey) =>
             AdminRequestsEmptyStateWidget(messageKey: messageKey),
           AdminDeletedEmployeesStateSuccess(:final employees) ||
