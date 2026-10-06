@@ -16,6 +16,7 @@ class AccountRequestModel {
     this.siteId,
     this.notes,
     this.photoPath,
+    this.imageUrl,
   });
 
   @JsonKey(name: 'name')
@@ -50,6 +51,9 @@ class AccountRequestModel {
 
   @JsonKey(name: 'photoPath')
   final String? photoPath;
+
+  @JsonKey(name: 'imageUrl')
+  final String? imageUrl;
 
   String get effectiveName => fullName ?? name;
   String get effectiveDeviceId => deviceId ?? mobileId;

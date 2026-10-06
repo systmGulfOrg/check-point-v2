@@ -19,6 +19,7 @@ AccountRequestModel _$AccountRequestModelFromJson(Map<String, dynamic> json) =>
       siteId: json['siteId'] as String?,
       notes: json['notes'] as String?,
       photoPath: json['photoPath'] as String?,
+      imageUrl: json['imageUrl'] as String?,
     );
 
 Map<String, dynamic> _$AccountRequestModelToJson(
@@ -35,4 +36,5 @@ Map<String, dynamic> _$AccountRequestModelToJson(
   'siteId': instance.siteId,
   'notes': instance.notes,
   'photoPath': instance.photoPath,
+  'imageUrl': instance.imageUrl,
 };

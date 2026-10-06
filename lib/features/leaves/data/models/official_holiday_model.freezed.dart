@@ -29,6 +29,10 @@ mixin _$OfficialHolidayModel {
   DateTime? get originalDate => throw _privateConstructorUsedError;
   bool? get isRescheduled => throw _privateConstructorUsedError;
   String? get rescheduledNote => throw _privateConstructorUsedError;
+  bool? get isCancelled => throw _privateConstructorUsedError;
+  String? get cancelReason => throw _privateConstructorUsedError;
+  List<String>? get excludedDepartmentIds => throw _privateConstructorUsedError;
+  List<String>? get excludedEmployeeIds => throw _privateConstructorUsedError;
 
   /// Serializes this OfficialHolidayModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -56,6 +60,10 @@ abstract class $OfficialHolidayModelCopyWith<$Res> {
     DateTime? originalDate,
     bool? isRescheduled,
     String? rescheduledNote,
+    bool? isCancelled,
+    String? cancelReason,
+    List<String>? excludedDepartmentIds,
+    List<String>? excludedEmployeeIds,
   });
 }
 
@@ -85,6 +93,10 @@ class _$OfficialHolidayModelCopyWithImpl<
     Object? originalDate = freezed,
     Object? isRescheduled = freezed,
     Object? rescheduledNote = freezed,
+    Object? isCancelled = freezed,
+    Object? cancelReason = freezed,
+    Object? excludedDepartmentIds = freezed,
+    Object? excludedEmployeeIds = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -120,6 +132,22 @@ class _$OfficialHolidayModelCopyWithImpl<
                 ? _value.rescheduledNote
                 : rescheduledNote // ignore: cast_nullable_to_non_nullable
                       as String?,
+            isCancelled: freezed == isCancelled
+                ? _value.isCancelled
+                : isCancelled // ignore: cast_nullable_to_non_nullable
+                      as bool?,
+            cancelReason: freezed == cancelReason
+                ? _value.cancelReason
+                : cancelReason // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            excludedDepartmentIds: freezed == excludedDepartmentIds
+                ? _value.excludedDepartmentIds
+                : excludedDepartmentIds // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+            excludedEmployeeIds: freezed == excludedEmployeeIds
+                ? _value.excludedEmployeeIds
+                : excludedEmployeeIds // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
           )
           as $Val,
     );
@@ -144,6 +172,10 @@ abstract class _$$OfficialHolidayModelImplCopyWith<$Res>
     DateTime? originalDate,
     bool? isRescheduled,
     String? rescheduledNote,
+    bool? isCancelled,
+    String? cancelReason,
+    List<String>? excludedDepartmentIds,
+    List<String>? excludedEmployeeIds,
   });
 }
 
@@ -169,6 +201,10 @@ class __$$OfficialHolidayModelImplCopyWithImpl<$Res>
     Object? originalDate = freezed,
     Object? isRescheduled = freezed,
     Object? rescheduledNote = freezed,
+    Object? isCancelled = freezed,
+    Object? cancelReason = freezed,
+    Object? excludedDepartmentIds = freezed,
+    Object? excludedEmployeeIds = freezed,
   }) {
     return _then(
       _$OfficialHolidayModelImpl(
@@ -204,6 +240,22 @@ class __$$OfficialHolidayModelImplCopyWithImpl<$Res>
             ? _value.rescheduledNote
             : rescheduledNote // ignore: cast_nullable_to_non_nullable
                   as String?,
+        isCancelled: freezed == isCancelled
+            ? _value.isCancelled
+            : isCancelled // ignore: cast_nullable_to_non_nullable
+                  as bool?,
+        cancelReason: freezed == cancelReason
+            ? _value.cancelReason
+            : cancelReason // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        excludedDepartmentIds: freezed == excludedDepartmentIds
+            ? _value._excludedDepartmentIds
+            : excludedDepartmentIds // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+        excludedEmployeeIds: freezed == excludedEmployeeIds
+            ? _value._excludedEmployeeIds
+            : excludedEmployeeIds // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
       ),
     );
   }
@@ -221,7 +273,12 @@ class _$OfficialHolidayModelImpl implements _OfficialHolidayModel {
     this.originalDate,
     this.isRescheduled,
     this.rescheduledNote,
-  });
+    this.isCancelled,
+    this.cancelReason,
+    final List<String>? excludedDepartmentIds,
+    final List<String>? excludedEmployeeIds,
+  }) : _excludedDepartmentIds = excludedDepartmentIds,
+       _excludedEmployeeIds = excludedEmployeeIds;
 
   factory _$OfficialHolidayModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$OfficialHolidayModelImplFromJson(json);
@@ -242,10 +299,35 @@ class _$OfficialHolidayModelImpl implements _OfficialHolidayModel {
   final bool? isRescheduled;
   @override
   final String? rescheduledNote;
+  @override
+  final bool? isCancelled;
+  @override
+  final String? cancelReason;
+  final List<String>? _excludedDepartmentIds;
+  @override
+  List<String>? get excludedDepartmentIds {
+    final value = _excludedDepartmentIds;
+    if (value == null) return null;
+    if (_excludedDepartmentIds is EqualUnmodifiableListView)
+      return _excludedDepartmentIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<String>? _excludedEmployeeIds;
+  @override
+  List<String>? get excludedEmployeeIds {
+    final value = _excludedEmployeeIds;
+    if (value == null) return null;
+    if (_excludedEmployeeIds is EqualUnmodifiableListView)
+      return _excludedEmployeeIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'OfficialHolidayModel(id: $id, name: $name, date: $date, isRecurring: $isRecurring, arabicName: $arabicName, originalDate: $originalDate, isRescheduled: $isRescheduled, rescheduledNote: $rescheduledNote)';
+    return 'OfficialHolidayModel(id: $id, name: $name, date: $date, isRecurring: $isRecurring, arabicName: $arabicName, originalDate: $originalDate, isRescheduled: $isRescheduled, rescheduledNote: $rescheduledNote, isCancelled: $isCancelled, cancelReason: $cancelReason, excludedDepartmentIds: $excludedDepartmentIds, excludedEmployeeIds: $excludedEmployeeIds)';
   }
 
   @override
@@ -265,7 +347,19 @@ class _$OfficialHolidayModelImpl implements _OfficialHolidayModel {
             (identical(other.isRescheduled, isRescheduled) ||
                 other.isRescheduled == isRescheduled) &&
             (identical(other.rescheduledNote, rescheduledNote) ||
-                other.rescheduledNote == rescheduledNote));
+                other.rescheduledNote == rescheduledNote) &&
+            (identical(other.isCancelled, isCancelled) ||
+                other.isCancelled == isCancelled) &&
+            (identical(other.cancelReason, cancelReason) ||
+                other.cancelReason == cancelReason) &&
+            const DeepCollectionEquality().equals(
+              other._excludedDepartmentIds,
+              _excludedDepartmentIds,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._excludedEmployeeIds,
+              _excludedEmployeeIds,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -280,6 +374,10 @@ class _$OfficialHolidayModelImpl implements _OfficialHolidayModel {
     originalDate,
     isRescheduled,
     rescheduledNote,
+    isCancelled,
+    cancelReason,
+    const DeepCollectionEquality().hash(_excludedDepartmentIds),
+    const DeepCollectionEquality().hash(_excludedEmployeeIds),
   );
 
   /// Create a copy of OfficialHolidayModel
@@ -310,6 +408,10 @@ abstract class _OfficialHolidayModel implements OfficialHolidayModel {
     final DateTime? originalDate,
     final bool? isRescheduled,
     final String? rescheduledNote,
+    final bool? isCancelled,
+    final String? cancelReason,
+    final List<String>? excludedDepartmentIds,
+    final List<String>? excludedEmployeeIds,
   }) = _$OfficialHolidayModelImpl;
 
   factory _OfficialHolidayModel.fromJson(Map<String, dynamic> json) =
@@ -331,6 +433,14 @@ abstract class _OfficialHolidayModel implements OfficialHolidayModel {
   bool? get isRescheduled;
   @override
   String? get rescheduledNote;
+  @override
+  bool? get isCancelled;
+  @override
+  String? get cancelReason;
+  @override
+  List<String>? get excludedDepartmentIds;
+  @override
+  List<String>? get excludedEmployeeIds;
 
   /// Create a copy of OfficialHolidayModel
   /// with the given fields replaced by the non-null parameter values.

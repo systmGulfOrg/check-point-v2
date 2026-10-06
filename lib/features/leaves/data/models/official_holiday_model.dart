@@ -14,6 +14,10 @@ class OfficialHolidayModel with _$OfficialHolidayModel {
     DateTime? originalDate,
     bool? isRescheduled,
     String? rescheduledNote,
+    bool? isCancelled,
+    String? cancelReason,
+    List<String>? excludedDepartmentIds,
+    List<String>? excludedEmployeeIds,
   }) = _OfficialHolidayModel;
 
   factory OfficialHolidayModel.fromJson(Map<String, dynamic> json) =>

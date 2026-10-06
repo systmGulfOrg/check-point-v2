@@ -120,6 +120,10 @@ class LeavesRepoImpl {
     required DateTime newDate,
     String? note,
     bool reset = false,
+    bool isCancelled = false,
+    String? cancelReason,
+    List<String>? excludedDepartmentIds,
+    List<String>? excludedEmployeeIds,
   }) async {
     try {
       final json = {
@@ -128,6 +132,10 @@ class LeavesRepoImpl {
         'newDate': AppDateFormatter.formatDate(newDate),
         'note': note,
         'reset': reset,
+        'isCancelled': isCancelled,
+        'cancelReason': cancelReason,
+        'excludedDepartmentIds': excludedDepartmentIds ?? [],
+        'excludedEmployeeIds': excludedEmployeeIds ?? [],
       };
       await api.rescheduleHoliday(json);
       return const ApiResult.success(null);

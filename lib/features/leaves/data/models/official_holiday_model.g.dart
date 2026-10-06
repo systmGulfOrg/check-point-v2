@@ -19,6 +19,14 @@ _$OfficialHolidayModelImpl _$$OfficialHolidayModelImplFromJson(
       : DateTime.parse(json['originalDate'] as String),
   isRescheduled: json['isRescheduled'] as bool?,
   rescheduledNote: json['rescheduledNote'] as String?,
+  isCancelled: json['isCancelled'] as bool?,
+  cancelReason: json['cancelReason'] as String?,
+  excludedDepartmentIds: (json['excludedDepartmentIds'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  excludedEmployeeIds: (json['excludedEmployeeIds'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
 );
 
 Map<String, dynamic> _$$OfficialHolidayModelImplToJson(
@@ -32,6 +40,10 @@ Map<String, dynamic> _$$OfficialHolidayModelImplToJson(
   'originalDate': instance.originalDate?.toIso8601String(),
   'isRescheduled': instance.isRescheduled,
   'rescheduledNote': instance.rescheduledNote,
+  'isCancelled': instance.isCancelled,
+  'cancelReason': instance.cancelReason,
+  'excludedDepartmentIds': instance.excludedDepartmentIds,
+  'excludedEmployeeIds': instance.excludedEmployeeIds,
 };
 
 _$OfficialHolidaysResponseModelImpl

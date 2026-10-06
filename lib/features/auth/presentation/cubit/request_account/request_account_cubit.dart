@@ -59,6 +59,7 @@ class RequestAccountCubit extends Cubit<RequestAccountState> {
       siteId: siteId,
       notes: notes,
       photoPath: effectivePhoto,
+      imageUrl: effectivePhoto,
     );
     final result = await authRepo.requestAccount(request);
     result.when(

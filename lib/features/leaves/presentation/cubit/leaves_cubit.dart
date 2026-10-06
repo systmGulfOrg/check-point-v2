@@ -30,6 +30,10 @@ class LeavesCubit extends Cubit<LeavesState> {
     required DateTime newDate,
     String? note,
     bool reset = false,
+    bool isCancelled = false,
+    String? cancelReason,
+    List<String>? excludedDepartmentIds,
+    List<String>? excludedEmployeeIds,
   }) async {
     final result = await leavesRepo.rescheduleHoliday(
       holidayId: holidayId,
@@ -37,6 +41,10 @@ class LeavesCubit extends Cubit<LeavesState> {
       newDate: newDate,
       note: note,
       reset: reset,
+      isCancelled: isCancelled,
+      cancelReason: cancelReason,
+      excludedDepartmentIds: excludedDepartmentIds,
+      excludedEmployeeIds: excludedEmployeeIds,
     );
     return result.when(
       success: (_) async {

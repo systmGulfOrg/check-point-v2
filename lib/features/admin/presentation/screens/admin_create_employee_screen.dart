@@ -105,10 +105,10 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
     phoneController = TextEditingController(text: req?.phone);
     emailController = TextEditingController();
 
-    // Auto-generate employee code (e.g. EMP-2415) which is freely editable
     final randomDigits = 1000 + Random().nextInt(9000);
     employeeCodeController = TextEditingController(text: 'EMP-$randomDigits');
     positionController = TextEditingController();
+    selectedPhotoPath = req?.photo;
   }
 
   @override
@@ -545,7 +545,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                         emailController: emailController,
                         employeeCodeController: employeeCodeController,
                         selectedPhotoPath: selectedPhotoPath,
-                        initialPhotoUrl: widget.accountRequest?.photoPath,
+                        initialPhotoUrl: widget.accountRequest?.photo,
                         nameFocusNode: nameFocusNode,
                         usernameFocusNode: usernameFocusNode,
                         passwordFocusNode: passwordFocusNode,
