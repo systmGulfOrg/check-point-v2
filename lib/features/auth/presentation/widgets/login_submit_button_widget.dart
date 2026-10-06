@@ -16,11 +16,28 @@ class LoginSubmitButtonWidget extends StatelessWidget {
   final VoidCallback onSubmit;
   final int rateLimitSeconds;
 
+  String _formatDuration(BuildContext context, int totalSeconds) {
+    if (totalSeconds >= 60) {
+      final minutes = totalSeconds ~/ 60;
+      final seconds = totalSeconds % 60;
+      final formattedTime =
+          '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+      return 'auth.login.countdownWait'.tr(
+        context: context,
+        args: [formattedTime],
+      );
+    }
+    return 'auth.login.countdownWait'.tr(
+      context: context,
+      args: ['$totalSeconds ثانية'],
+    );
+  }
+
   @override
   Widget build(BuildContext context) => BlocBuilder<LoginCubit, LoginState>(
     builder: (context, state) => CustomButton(
       text: rateLimitSeconds > 0
-          ? 'انتظر $rateLimitSeconds ثانية'
+          ? _formatDuration(context, rateLimitSeconds)
           : 'auth.login.submit'.tr(context: context),
       enabled: rateLimitSeconds == 0,
       onTap: onSubmit,

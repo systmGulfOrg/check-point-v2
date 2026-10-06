@@ -25,6 +25,14 @@ mixin _$LoginState {
     success,
     required TResult Function(String messageKey) error,
     required TResult Function() deviceTransferRequired,
+    required TResult Function(int lockoutMinutes, String messageKey)
+    accountLocked,
+    required TResult Function(
+      String messageKey,
+      String? siteName,
+      String? rawMessage,
+    )
+    outsideZone,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
@@ -33,6 +41,9 @@ mixin _$LoginState {
     TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
     TResult? Function()? deviceTransferRequired,
+    TResult? Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult? Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
@@ -41,6 +52,9 @@ mixin _$LoginState {
     TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
     TResult Function()? deviceTransferRequired,
+    TResult Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -51,6 +65,8 @@ mixin _$LoginState {
     required TResult Function(LoginError value) error,
     required TResult Function(LoginDeviceTransferRequired value)
     deviceTransferRequired,
+    required TResult Function(LoginAccountLocked value) accountLocked,
+    required TResult Function(LoginOutsideZone value) outsideZone,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
@@ -60,6 +76,8 @@ mixin _$LoginState {
     TResult? Function(LoginError value)? error,
     TResult? Function(LoginDeviceTransferRequired value)?
     deviceTransferRequired,
+    TResult? Function(LoginAccountLocked value)? accountLocked,
+    TResult? Function(LoginOutsideZone value)? outsideZone,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
@@ -68,6 +86,8 @@ mixin _$LoginState {
     TResult Function(LoginSuccess value)? success,
     TResult Function(LoginError value)? error,
     TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
+    TResult Function(LoginAccountLocked value)? accountLocked,
+    TResult Function(LoginOutsideZone value)? outsideZone,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
 }
@@ -143,6 +163,14 @@ class _$LoginInitialImpl implements LoginInitial {
     success,
     required TResult Function(String messageKey) error,
     required TResult Function() deviceTransferRequired,
+    required TResult Function(int lockoutMinutes, String messageKey)
+    accountLocked,
+    required TResult Function(
+      String messageKey,
+      String? siteName,
+      String? rawMessage,
+    )
+    outsideZone,
   }) {
     return initial();
   }
@@ -155,6 +183,9 @@ class _$LoginInitialImpl implements LoginInitial {
     TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
     TResult? Function()? deviceTransferRequired,
+    TResult? Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult? Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
   }) {
     return initial?.call();
   }
@@ -167,6 +198,9 @@ class _$LoginInitialImpl implements LoginInitial {
     TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
     TResult Function()? deviceTransferRequired,
+    TResult Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -184,6 +218,8 @@ class _$LoginInitialImpl implements LoginInitial {
     required TResult Function(LoginError value) error,
     required TResult Function(LoginDeviceTransferRequired value)
     deviceTransferRequired,
+    required TResult Function(LoginAccountLocked value) accountLocked,
+    required TResult Function(LoginOutsideZone value) outsideZone,
   }) {
     return initial(this);
   }
@@ -197,6 +233,8 @@ class _$LoginInitialImpl implements LoginInitial {
     TResult? Function(LoginError value)? error,
     TResult? Function(LoginDeviceTransferRequired value)?
     deviceTransferRequired,
+    TResult? Function(LoginAccountLocked value)? accountLocked,
+    TResult? Function(LoginOutsideZone value)? outsideZone,
   }) {
     return initial?.call(this);
   }
@@ -209,6 +247,8 @@ class _$LoginInitialImpl implements LoginInitial {
     TResult Function(LoginSuccess value)? success,
     TResult Function(LoginError value)? error,
     TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
+    TResult Function(LoginAccountLocked value)? accountLocked,
+    TResult Function(LoginOutsideZone value)? outsideZone,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -271,6 +311,14 @@ class _$LoginLoadingImpl implements LoginLoading {
     success,
     required TResult Function(String messageKey) error,
     required TResult Function() deviceTransferRequired,
+    required TResult Function(int lockoutMinutes, String messageKey)
+    accountLocked,
+    required TResult Function(
+      String messageKey,
+      String? siteName,
+      String? rawMessage,
+    )
+    outsideZone,
   }) {
     return loading();
   }
@@ -283,6 +331,9 @@ class _$LoginLoadingImpl implements LoginLoading {
     TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
     TResult? Function()? deviceTransferRequired,
+    TResult? Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult? Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
   }) {
     return loading?.call();
   }
@@ -295,6 +346,9 @@ class _$LoginLoadingImpl implements LoginLoading {
     TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
     TResult Function()? deviceTransferRequired,
+    TResult Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -312,6 +366,8 @@ class _$LoginLoadingImpl implements LoginLoading {
     required TResult Function(LoginError value) error,
     required TResult Function(LoginDeviceTransferRequired value)
     deviceTransferRequired,
+    required TResult Function(LoginAccountLocked value) accountLocked,
+    required TResult Function(LoginOutsideZone value) outsideZone,
   }) {
     return loading(this);
   }
@@ -325,6 +381,8 @@ class _$LoginLoadingImpl implements LoginLoading {
     TResult? Function(LoginError value)? error,
     TResult? Function(LoginDeviceTransferRequired value)?
     deviceTransferRequired,
+    TResult? Function(LoginAccountLocked value)? accountLocked,
+    TResult? Function(LoginOutsideZone value)? outsideZone,
   }) {
     return loading?.call(this);
   }
@@ -337,6 +395,8 @@ class _$LoginLoadingImpl implements LoginLoading {
     TResult Function(LoginSuccess value)? success,
     TResult Function(LoginError value)? error,
     TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
+    TResult Function(LoginAccountLocked value)? accountLocked,
+    TResult Function(LoginOutsideZone value)? outsideZone,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -434,6 +494,14 @@ class _$LoginSuccessImpl implements LoginSuccess {
     success,
     required TResult Function(String messageKey) error,
     required TResult Function() deviceTransferRequired,
+    required TResult Function(int lockoutMinutes, String messageKey)
+    accountLocked,
+    required TResult Function(
+      String messageKey,
+      String? siteName,
+      String? rawMessage,
+    )
+    outsideZone,
   }) {
     return success(user, selectedRole);
   }
@@ -446,6 +514,9 @@ class _$LoginSuccessImpl implements LoginSuccess {
     TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
     TResult? Function()? deviceTransferRequired,
+    TResult? Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult? Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
   }) {
     return success?.call(user, selectedRole);
   }
@@ -458,6 +529,9 @@ class _$LoginSuccessImpl implements LoginSuccess {
     TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
     TResult Function()? deviceTransferRequired,
+    TResult Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -475,6 +549,8 @@ class _$LoginSuccessImpl implements LoginSuccess {
     required TResult Function(LoginError value) error,
     required TResult Function(LoginDeviceTransferRequired value)
     deviceTransferRequired,
+    required TResult Function(LoginAccountLocked value) accountLocked,
+    required TResult Function(LoginOutsideZone value) outsideZone,
   }) {
     return success(this);
   }
@@ -488,6 +564,8 @@ class _$LoginSuccessImpl implements LoginSuccess {
     TResult? Function(LoginError value)? error,
     TResult? Function(LoginDeviceTransferRequired value)?
     deviceTransferRequired,
+    TResult? Function(LoginAccountLocked value)? accountLocked,
+    TResult? Function(LoginOutsideZone value)? outsideZone,
   }) {
     return success?.call(this);
   }
@@ -500,6 +578,8 @@ class _$LoginSuccessImpl implements LoginSuccess {
     TResult Function(LoginSuccess value)? success,
     TResult Function(LoginError value)? error,
     TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
+    TResult Function(LoginAccountLocked value)? accountLocked,
+    TResult Function(LoginOutsideZone value)? outsideZone,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -602,6 +682,14 @@ class _$LoginErrorImpl implements LoginError {
     success,
     required TResult Function(String messageKey) error,
     required TResult Function() deviceTransferRequired,
+    required TResult Function(int lockoutMinutes, String messageKey)
+    accountLocked,
+    required TResult Function(
+      String messageKey,
+      String? siteName,
+      String? rawMessage,
+    )
+    outsideZone,
   }) {
     return error(messageKey);
   }
@@ -614,6 +702,9 @@ class _$LoginErrorImpl implements LoginError {
     TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
     TResult? Function()? deviceTransferRequired,
+    TResult? Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult? Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
   }) {
     return error?.call(messageKey);
   }
@@ -626,6 +717,9 @@ class _$LoginErrorImpl implements LoginError {
     TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
     TResult Function()? deviceTransferRequired,
+    TResult Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -643,6 +737,8 @@ class _$LoginErrorImpl implements LoginError {
     required TResult Function(LoginError value) error,
     required TResult Function(LoginDeviceTransferRequired value)
     deviceTransferRequired,
+    required TResult Function(LoginAccountLocked value) accountLocked,
+    required TResult Function(LoginOutsideZone value) outsideZone,
   }) {
     return error(this);
   }
@@ -656,6 +752,8 @@ class _$LoginErrorImpl implements LoginError {
     TResult? Function(LoginError value)? error,
     TResult? Function(LoginDeviceTransferRequired value)?
     deviceTransferRequired,
+    TResult? Function(LoginAccountLocked value)? accountLocked,
+    TResult? Function(LoginOutsideZone value)? outsideZone,
   }) {
     return error?.call(this);
   }
@@ -668,6 +766,8 @@ class _$LoginErrorImpl implements LoginError {
     TResult Function(LoginSuccess value)? success,
     TResult Function(LoginError value)? error,
     TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
+    TResult Function(LoginAccountLocked value)? accountLocked,
+    TResult Function(LoginOutsideZone value)? outsideZone,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -739,6 +839,14 @@ class _$LoginDeviceTransferRequiredImpl implements LoginDeviceTransferRequired {
     success,
     required TResult Function(String messageKey) error,
     required TResult Function() deviceTransferRequired,
+    required TResult Function(int lockoutMinutes, String messageKey)
+    accountLocked,
+    required TResult Function(
+      String messageKey,
+      String? siteName,
+      String? rawMessage,
+    )
+    outsideZone,
   }) {
     return deviceTransferRequired();
   }
@@ -751,6 +859,9 @@ class _$LoginDeviceTransferRequiredImpl implements LoginDeviceTransferRequired {
     TResult? Function(LoginResponseModel user, String? selectedRole)? success,
     TResult? Function(String messageKey)? error,
     TResult? Function()? deviceTransferRequired,
+    TResult? Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult? Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
   }) {
     return deviceTransferRequired?.call();
   }
@@ -763,6 +874,9 @@ class _$LoginDeviceTransferRequiredImpl implements LoginDeviceTransferRequired {
     TResult Function(LoginResponseModel user, String? selectedRole)? success,
     TResult Function(String messageKey)? error,
     TResult Function()? deviceTransferRequired,
+    TResult Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
     required TResult orElse(),
   }) {
     if (deviceTransferRequired != null) {
@@ -780,6 +894,8 @@ class _$LoginDeviceTransferRequiredImpl implements LoginDeviceTransferRequired {
     required TResult Function(LoginError value) error,
     required TResult Function(LoginDeviceTransferRequired value)
     deviceTransferRequired,
+    required TResult Function(LoginAccountLocked value) accountLocked,
+    required TResult Function(LoginOutsideZone value) outsideZone,
   }) {
     return deviceTransferRequired(this);
   }
@@ -793,6 +909,8 @@ class _$LoginDeviceTransferRequiredImpl implements LoginDeviceTransferRequired {
     TResult? Function(LoginError value)? error,
     TResult? Function(LoginDeviceTransferRequired value)?
     deviceTransferRequired,
+    TResult? Function(LoginAccountLocked value)? accountLocked,
+    TResult? Function(LoginOutsideZone value)? outsideZone,
   }) {
     return deviceTransferRequired?.call(this);
   }
@@ -805,6 +923,8 @@ class _$LoginDeviceTransferRequiredImpl implements LoginDeviceTransferRequired {
     TResult Function(LoginSuccess value)? success,
     TResult Function(LoginError value)? error,
     TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
+    TResult Function(LoginAccountLocked value)? accountLocked,
+    TResult Function(LoginOutsideZone value)? outsideZone,
     required TResult orElse(),
   }) {
     if (deviceTransferRequired != null) {
@@ -817,4 +937,427 @@ class _$LoginDeviceTransferRequiredImpl implements LoginDeviceTransferRequired {
 abstract class LoginDeviceTransferRequired implements LoginState {
   const factory LoginDeviceTransferRequired() =
       _$LoginDeviceTransferRequiredImpl;
+}
+
+/// @nodoc
+abstract class _$$LoginAccountLockedImplCopyWith<$Res> {
+  factory _$$LoginAccountLockedImplCopyWith(
+    _$LoginAccountLockedImpl value,
+    $Res Function(_$LoginAccountLockedImpl) then,
+  ) = __$$LoginAccountLockedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int lockoutMinutes, String messageKey});
+}
+
+/// @nodoc
+class __$$LoginAccountLockedImplCopyWithImpl<$Res>
+    extends _$LoginStateCopyWithImpl<$Res, _$LoginAccountLockedImpl>
+    implements _$$LoginAccountLockedImplCopyWith<$Res> {
+  __$$LoginAccountLockedImplCopyWithImpl(
+    _$LoginAccountLockedImpl _value,
+    $Res Function(_$LoginAccountLockedImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? lockoutMinutes = null, Object? messageKey = null}) {
+    return _then(
+      _$LoginAccountLockedImpl(
+        lockoutMinutes: null == lockoutMinutes
+            ? _value.lockoutMinutes
+            : lockoutMinutes // ignore: cast_nullable_to_non_nullable
+                  as int,
+        messageKey: null == messageKey
+            ? _value.messageKey
+            : messageKey // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$LoginAccountLockedImpl implements LoginAccountLocked {
+  const _$LoginAccountLockedImpl({
+    this.lockoutMinutes = 15,
+    this.messageKey = 'errors.accountLocked',
+  });
+
+  @override
+  @JsonKey()
+  final int lockoutMinutes;
+  @override
+  @JsonKey()
+  final String messageKey;
+
+  @override
+  String toString() {
+    return 'LoginState.accountLocked(lockoutMinutes: $lockoutMinutes, messageKey: $messageKey)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LoginAccountLockedImpl &&
+            (identical(other.lockoutMinutes, lockoutMinutes) ||
+                other.lockoutMinutes == lockoutMinutes) &&
+            (identical(other.messageKey, messageKey) ||
+                other.messageKey == messageKey));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, lockoutMinutes, messageKey);
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoginAccountLockedImplCopyWith<_$LoginAccountLockedImpl> get copyWith =>
+      __$$LoginAccountLockedImplCopyWithImpl<_$LoginAccountLockedImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(LoginResponseModel user, String? selectedRole)
+    success,
+    required TResult Function(String messageKey) error,
+    required TResult Function() deviceTransferRequired,
+    required TResult Function(int lockoutMinutes, String messageKey)
+    accountLocked,
+    required TResult Function(
+      String messageKey,
+      String? siteName,
+      String? rawMessage,
+    )
+    outsideZone,
+  }) {
+    return accountLocked(lockoutMinutes, messageKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(LoginResponseModel user, String? selectedRole)? success,
+    TResult? Function(String messageKey)? error,
+    TResult? Function()? deviceTransferRequired,
+    TResult? Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult? Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
+  }) {
+    return accountLocked?.call(lockoutMinutes, messageKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(LoginResponseModel user, String? selectedRole)? success,
+    TResult Function(String messageKey)? error,
+    TResult Function()? deviceTransferRequired,
+    TResult Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
+    required TResult orElse(),
+  }) {
+    if (accountLocked != null) {
+      return accountLocked(lockoutMinutes, messageKey);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoginInitial value) initial,
+    required TResult Function(LoginLoading value) loading,
+    required TResult Function(LoginSuccess value) success,
+    required TResult Function(LoginError value) error,
+    required TResult Function(LoginDeviceTransferRequired value)
+    deviceTransferRequired,
+    required TResult Function(LoginAccountLocked value) accountLocked,
+    required TResult Function(LoginOutsideZone value) outsideZone,
+  }) {
+    return accountLocked(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoginInitial value)? initial,
+    TResult? Function(LoginLoading value)? loading,
+    TResult? Function(LoginSuccess value)? success,
+    TResult? Function(LoginError value)? error,
+    TResult? Function(LoginDeviceTransferRequired value)?
+    deviceTransferRequired,
+    TResult? Function(LoginAccountLocked value)? accountLocked,
+    TResult? Function(LoginOutsideZone value)? outsideZone,
+  }) {
+    return accountLocked?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoginInitial value)? initial,
+    TResult Function(LoginLoading value)? loading,
+    TResult Function(LoginSuccess value)? success,
+    TResult Function(LoginError value)? error,
+    TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
+    TResult Function(LoginAccountLocked value)? accountLocked,
+    TResult Function(LoginOutsideZone value)? outsideZone,
+    required TResult orElse(),
+  }) {
+    if (accountLocked != null) {
+      return accountLocked(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class LoginAccountLocked implements LoginState {
+  const factory LoginAccountLocked({
+    final int lockoutMinutes,
+    final String messageKey,
+  }) = _$LoginAccountLockedImpl;
+
+  int get lockoutMinutes;
+  String get messageKey;
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LoginAccountLockedImplCopyWith<_$LoginAccountLockedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LoginOutsideZoneImplCopyWith<$Res> {
+  factory _$$LoginOutsideZoneImplCopyWith(
+    _$LoginOutsideZoneImpl value,
+    $Res Function(_$LoginOutsideZoneImpl) then,
+  ) = __$$LoginOutsideZoneImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String messageKey, String? siteName, String? rawMessage});
+}
+
+/// @nodoc
+class __$$LoginOutsideZoneImplCopyWithImpl<$Res>
+    extends _$LoginStateCopyWithImpl<$Res, _$LoginOutsideZoneImpl>
+    implements _$$LoginOutsideZoneImplCopyWith<$Res> {
+  __$$LoginOutsideZoneImplCopyWithImpl(
+    _$LoginOutsideZoneImpl _value,
+    $Res Function(_$LoginOutsideZoneImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? messageKey = null,
+    Object? siteName = freezed,
+    Object? rawMessage = freezed,
+  }) {
+    return _then(
+      _$LoginOutsideZoneImpl(
+        messageKey: null == messageKey
+            ? _value.messageKey
+            : messageKey // ignore: cast_nullable_to_non_nullable
+                  as String,
+        siteName: freezed == siteName
+            ? _value.siteName
+            : siteName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        rawMessage: freezed == rawMessage
+            ? _value.rawMessage
+            : rawMessage // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$LoginOutsideZoneImpl implements LoginOutsideZone {
+  const _$LoginOutsideZoneImpl({
+    this.messageKey = 'auth.login.outsideZoneMessage',
+    this.siteName,
+    this.rawMessage,
+  });
+
+  @override
+  @JsonKey()
+  final String messageKey;
+  @override
+  final String? siteName;
+  @override
+  final String? rawMessage;
+
+  @override
+  String toString() {
+    return 'LoginState.outsideZone(messageKey: $messageKey, siteName: $siteName, rawMessage: $rawMessage)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LoginOutsideZoneImpl &&
+            (identical(other.messageKey, messageKey) ||
+                other.messageKey == messageKey) &&
+            (identical(other.siteName, siteName) ||
+                other.siteName == siteName) &&
+            (identical(other.rawMessage, rawMessage) ||
+                other.rawMessage == rawMessage));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, messageKey, siteName, rawMessage);
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoginOutsideZoneImplCopyWith<_$LoginOutsideZoneImpl> get copyWith =>
+      __$$LoginOutsideZoneImplCopyWithImpl<_$LoginOutsideZoneImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(LoginResponseModel user, String? selectedRole)
+    success,
+    required TResult Function(String messageKey) error,
+    required TResult Function() deviceTransferRequired,
+    required TResult Function(int lockoutMinutes, String messageKey)
+    accountLocked,
+    required TResult Function(
+      String messageKey,
+      String? siteName,
+      String? rawMessage,
+    )
+    outsideZone,
+  }) {
+    return outsideZone(messageKey, siteName, rawMessage);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(LoginResponseModel user, String? selectedRole)? success,
+    TResult? Function(String messageKey)? error,
+    TResult? Function()? deviceTransferRequired,
+    TResult? Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult? Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
+  }) {
+    return outsideZone?.call(messageKey, siteName, rawMessage);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(LoginResponseModel user, String? selectedRole)? success,
+    TResult Function(String messageKey)? error,
+    TResult Function()? deviceTransferRequired,
+    TResult Function(int lockoutMinutes, String messageKey)? accountLocked,
+    TResult Function(String messageKey, String? siteName, String? rawMessage)?
+    outsideZone,
+    required TResult orElse(),
+  }) {
+    if (outsideZone != null) {
+      return outsideZone(messageKey, siteName, rawMessage);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoginInitial value) initial,
+    required TResult Function(LoginLoading value) loading,
+    required TResult Function(LoginSuccess value) success,
+    required TResult Function(LoginError value) error,
+    required TResult Function(LoginDeviceTransferRequired value)
+    deviceTransferRequired,
+    required TResult Function(LoginAccountLocked value) accountLocked,
+    required TResult Function(LoginOutsideZone value) outsideZone,
+  }) {
+    return outsideZone(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoginInitial value)? initial,
+    TResult? Function(LoginLoading value)? loading,
+    TResult? Function(LoginSuccess value)? success,
+    TResult? Function(LoginError value)? error,
+    TResult? Function(LoginDeviceTransferRequired value)?
+    deviceTransferRequired,
+    TResult? Function(LoginAccountLocked value)? accountLocked,
+    TResult? Function(LoginOutsideZone value)? outsideZone,
+  }) {
+    return outsideZone?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoginInitial value)? initial,
+    TResult Function(LoginLoading value)? loading,
+    TResult Function(LoginSuccess value)? success,
+    TResult Function(LoginError value)? error,
+    TResult Function(LoginDeviceTransferRequired value)? deviceTransferRequired,
+    TResult Function(LoginAccountLocked value)? accountLocked,
+    TResult Function(LoginOutsideZone value)? outsideZone,
+    required TResult orElse(),
+  }) {
+    if (outsideZone != null) {
+      return outsideZone(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class LoginOutsideZone implements LoginState {
+  const factory LoginOutsideZone({
+    final String messageKey,
+    final String? siteName,
+    final String? rawMessage,
+  }) = _$LoginOutsideZoneImpl;
+
+  String get messageKey;
+  String? get siteName;
+  String? get rawMessage;
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LoginOutsideZoneImplCopyWith<_$LoginOutsideZoneImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

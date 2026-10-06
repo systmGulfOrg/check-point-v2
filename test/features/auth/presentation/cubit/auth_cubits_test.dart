@@ -78,6 +78,7 @@ class _FakeAuthSessionStorage extends AuthSessionStorage {
   @override
   Future<void> saveUserSession({
     required String token,
+    String? refreshToken,
     String? userId,
     String? employeeId,
     int? departmentId,
@@ -87,6 +88,9 @@ class _FakeAuthSessionStorage extends AuthSessionStorage {
     List<String> permissions = const [],
   }) async {
     _storage[AuthSessionStorage.tokenKey] = token;
+    if (refreshToken != null) {
+      _storage[AuthSessionStorage.refreshTokenKey] = refreshToken;
+    }
   }
 
   @override

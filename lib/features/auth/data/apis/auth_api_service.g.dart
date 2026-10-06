@@ -28,7 +28,7 @@ class _AuthApiService implements AuthApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/Auth/Login',
+            '/api/v2/auth/login',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -46,7 +46,7 @@ class _AuthApiService implements AuthApiService {
   }
 
   @override
-  Future<ResultModel> requestDeviceTransfer(LoginRequestModel request) async {
+  Future<ResultModel> selfRegister(AccountRequestModel request) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -56,7 +56,7 @@ class _AuthApiService implements AuthApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/Auth/DeviceTransferRequest',
+            '/api/v2/employees/account-requests',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -85,6 +85,34 @@ class _AuthApiService implements AuthApiService {
           .compose(
             _dio.options,
             '/api/AccountRequest',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ResultModel _value;
+    try {
+      _value = ResultModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ResultModel> requestDeviceTransfer(LoginRequestModel request) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _options = _setStreamType<ResultModel>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/Auth/DeviceTransferRequest',
             queryParameters: queryParameters,
             data: _data,
           )

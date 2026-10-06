@@ -10,14 +10,21 @@ class RequestAccessBrandWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
     children: [
-      Image.asset(AppAssets.logo, height: 64.h, fit: BoxFit.contain),
-      hSpace(8),
+      Image.asset(AppAssets.logo, height: 46.h, fit: BoxFit.contain),
+      hSpace(10),
       Text(
-        'auth.requestAccess.brandSubtitle'.tr(context: context),
+        'auth.requestAccess.cardTitle'.tr(context: context),
         textAlign: TextAlign.center,
-        style: AppTextStyles.font12Medium.copyWith(
+        style: AppTextStyles.font20Bold.copyWith(
+          color: AppColors.brandInk,
+        ),
+      ),
+      hSpace(4),
+      Text(
+        'auth.requestAccess.welcomeDescription'.tr(context: context),
+        textAlign: TextAlign.center,
+        style: AppTextStyles.font12Regular.copyWith(
           color: AppColors.textSecondary,
-          letterSpacing: 0.1,
         ),
       ),
     ],

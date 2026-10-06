@@ -17,13 +17,16 @@ abstract class AuthApiService {
   @POST(ApiConstants.login)
   Future<LoginResultModel> login(@Body() LoginRequestModel request);
 
-  @POST("/api/Auth/DeviceTransferRequest")
-  Future<ResultModel> requestDeviceTransfer(@Body() LoginRequestModel request);
+  @POST(ApiConstants.selfRegistration)
+  Future<ResultModel> selfRegister(@Body() AccountRequestModel request);
 
   @POST(ApiConstants.accountRequest)
   Future<ResultModel> requestAccount(@Body() AccountRequestModel request);
 
-  @GET('/api/AccountRequest/status')
+  @POST(ApiConstants.deviceTransferRequest)
+  Future<ResultModel> requestDeviceTransfer(@Body() LoginRequestModel request);
+
+  @GET(ApiConstants.accountRequestStatus)
   Future<AccountRequestStatusResponseModel> getAccountRequestStatus(
     @Query('mobileId') String mobileId,
   );

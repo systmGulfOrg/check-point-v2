@@ -38,7 +38,7 @@ class AuthRepoImpl implements AuthRepo {
           ),
         );
       }
-      final token = user.token;
+      final token = user.effectiveToken;
       if (token == null || token.isEmpty) {
         return ApiResult.failure(
           const ApiFailure(messageKey: 'errors.invalidCredentials'),
@@ -53,13 +53,23 @@ class AuthRepoImpl implements AuthRepo {
   @override
   Future<ApiResult<void>> requestAccount(AccountRequestModel request) async {
     try {
-      final response = await api.requestAccount(request);
-      if (response.isSuccess != true) {
-        return ApiResult.failure(
-          const ApiFailure(messageKey: 'errors.accountRequestFailed'),
-        );
+      try {
+        final response = await api.selfRegister(request);
+        if (response.isSuccess != true) {
+          return ApiResult.failure(
+            const ApiFailure(messageKey: 'errors.accountRequestFailed'),
+          );
+        }
+        return const ApiResult.success(null);
+      } catch (e) {
+        final response = await api.requestAccount(request);
+        if (response.isSuccess != true) {
+          return ApiResult.failure(
+            const ApiFailure(messageKey: 'errors.accountRequestFailed'),
+          );
+        }
+        return const ApiResult.success(null);
       }
-      return const ApiResult.success(null);
     } catch (error) {
       return ApiResult.failure(ApiFailureMapper.map(error));
     }

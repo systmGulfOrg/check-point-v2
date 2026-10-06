@@ -1,9 +1,9 @@
-import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/auth/biometric_auth_service.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_response_model.dart';
 import 'package:check_point_v2/features/auth/domain/use_cases/login_use_case.dart';
 import 'login_state.dart';
@@ -39,7 +39,25 @@ class LoginCubit extends Cubit<LoginState> {
         );
         emit(LoginState.success(data, selectedRole: role));
       case Failure<LoginResponseModel>(:final failure):
-        if (failure.messageKey == 'errors.deviceLoginAccess') {
+        if (failure.isAccountLocked) {
+          emit(
+            LoginState.accountLocked(
+              lockoutMinutes: failure.lockoutMinutes ?? 15,
+              messageKey: failure.messageKey,
+            ),
+          );
+        } else if (failure.isOutsideZone) {
+          final siteName =
+              failure.details?['siteName'] as String? ??
+              failure.details?['site_name'] as String?;
+          emit(
+            LoginState.outsideZone(
+              messageKey: failure.messageKey,
+              siteName: siteName,
+              rawMessage: failure.rawMessage,
+            ),
+          );
+        } else if (failure.isDeviceNotApproved) {
           emit(const LoginState.deviceTransferRequired());
         } else {
           emit(LoginState.error(failure.messageKey));
@@ -60,9 +78,7 @@ class LoginCubit extends Cubit<LoginState> {
     final result = await loginUseCase.authRepo.requestDeviceTransfer(request);
     result.when(
       success: (_) {
-        emit(
-          const LoginState.error('deviceTransferSuccess'),
-        ); // we can use error state just to show a snackbar, or create a specific state
+        emit(const LoginState.error('deviceTransferSuccess'));
       },
       failure: (failure) {
         emit(LoginState.error(failure.messageKey));

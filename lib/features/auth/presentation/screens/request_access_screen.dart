@@ -7,7 +7,6 @@ import 'package:check_point_v2/features/auth/presentation/widgets/request_accoun
 import 'package:check_point_v2/features/auth/presentation/widgets/request_access_brand_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/request_access_form_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/request_access_success_widget.dart';
-import 'package:check_point_v2/features/auth/presentation/widgets/request_access_welcome_widget.dart';
 
 class RequestAccessScreen extends StatefulWidget {
   const RequestAccessScreen({super.key});
@@ -27,7 +26,7 @@ class _RequestAccessScreenState extends State<RequestAccessScreen> {
         backgroundColor: AppColors.white,
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsetsDirectional.fromSTEB(20.w, 24.h, 20.w, 16.h),
+            padding: EdgeInsetsDirectional.fromSTEB(20.w, 16.h, 20.w, 16.h),
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: 460.w),
@@ -35,17 +34,17 @@ class _RequestAccessScreenState extends State<RequestAccessScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const RequestAccessBrandWidget(),
-                    hSpace(34),
+                    hSpace(18),
                     if (requestSent)
                       Card(
                         elevation: 0,
                         margin: EdgeInsets.zero,
                         color: AppColors.cardBackground,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24.r),
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(24.r),
+                          padding: EdgeInsets.all(20.r),
                           child: RequestAccessSuccessWidget(
                             onBack: () => context.pushNamedAndRemoveUntil(
                               AppRoutes.login,
@@ -54,22 +53,20 @@ class _RequestAccessScreenState extends State<RequestAccessScreen> {
                         ),
                       )
                     else ...[
-                      const RequestAccessWelcomeWidget(),
-                      hSpace(22),
                       Card(
                         elevation: 0,
                         margin: EdgeInsets.zero,
                         color: AppColors.cardBackground,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24.r),
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(22.r),
+                          padding: EdgeInsets.all(18.r),
                           child: const RequestAccessFormWidget(),
                         ),
                       ),
                     ],
-                    hSpace(28),
+                    hSpace(20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

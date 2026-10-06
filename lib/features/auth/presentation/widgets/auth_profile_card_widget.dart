@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
@@ -18,13 +19,38 @@ class AuthProfileCardWidget extends StatelessWidget {
     return BlocBuilder<AuthProfileCubit, AuthProfileState>(
       builder: (context, state) {
         return switch (state) {
-          AuthProfileLoading() || AuthProfileInitial() => Container(
-            height: 190.h,
-            decoration: BoxDecoration(
-              color: AppColors.pageBackground,
-              borderRadius: BorderRadius.circular(20.r),
+          AuthProfileLoading() || AuthProfileInitial() => Skeletonizer(
+            enabled: true,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground,
+                borderRadius: BorderRadius.circular(20.r),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Column(
+                children: [
+                  CircleAvatar(radius: 32.r),
+                  hSpace(12),
+                  const Text('User Name Placeholder'),
+                  hSpace(4),
+                  const Text('username@checkpoint'),
+                  hSpace(14),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 4.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.softBrandBackground,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: const Text('ADMINISTRATOR'),
+                  ),
+                ],
+              ),
             ),
-            child: const Center(child: CircularProgressIndicator()),
           ),
           AuthProfileError(:final messageKey) => Container(
             width: double.infinity,
