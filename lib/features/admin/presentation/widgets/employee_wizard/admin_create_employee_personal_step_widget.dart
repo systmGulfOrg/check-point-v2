@@ -40,7 +40,7 @@ class AdminCreateEmployeePersonalStepWidget extends StatefulWidget {
 
 class _AdminCreateEmployeePersonalStepWidgetState
     extends State<AdminCreateEmployeePersonalStepWidget> {
-  bool obscurePassword = true;
+  bool obscurePassword = false;
 
   Future<void> _pickPhoto() async {
     try {

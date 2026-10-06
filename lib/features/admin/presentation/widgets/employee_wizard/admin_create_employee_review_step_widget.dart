@@ -46,6 +46,13 @@ class AdminCreateEmployeeReviewStepWidget extends StatelessWidget {
       _ => 'admin.employeeWizard.workSystemOnsite'.tr(context: context),
     };
 
+    final localizedRoles = roles.map((r) => switch (r) {
+      'Supervisor' => 'admin.roles.supervisor'.tr(context: context),
+      'Admin' => 'admin.roles.admin'.tr(context: context),
+      'HR' => 'admin.roles.hr'.tr(context: context),
+      _ => 'admin.roles.employee'.tr(context: context),
+    }).join(', ');
+
     final items = <(String, String)>[
       ('admin.employeeWizard.reviewName'.tr(context: context), name),
       ('admin.employeeWizard.reviewUsername'.tr(context: context), username),
@@ -65,7 +72,7 @@ class AdminCreateEmployeeReviewStepWidget extends StatelessWidget {
       ),
       (
         'admin.employeeWizard.reviewRoles'.tr(context: context),
-        roles.join(', '),
+        localizedRoles.isNotEmpty ? localizedRoles : '-',
       ),
       (
         'admin.employeeWizard.reviewWorkSystem'.tr(context: context),
