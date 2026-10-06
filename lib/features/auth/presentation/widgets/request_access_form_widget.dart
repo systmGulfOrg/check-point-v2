@@ -23,10 +23,8 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
   late final TextEditingController fullNameController;
   late final TextEditingController nationalIdController;
   late final TextEditingController phoneController;
-  late final TextEditingController siteNameController;
   late final TextEditingController notesController;
 
-  String _accountType = 'Personal';
   String? _selectedPhotoPath;
 
   @override
@@ -35,7 +33,6 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
     fullNameController = TextEditingController();
     nationalIdController = TextEditingController();
     phoneController = TextEditingController();
-    siteNameController = TextEditingController();
     notesController = TextEditingController();
   }
 
@@ -44,7 +41,6 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
     fullNameController.dispose();
     nationalIdController.dispose();
     phoneController.dispose();
-    siteNameController.dispose();
     notesController.dispose();
     super.dispose();
   }
@@ -133,86 +129,6 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
         ),
         hSpace(18),
 
-        // Account Type Selector
-        Text(
-          'نوع الحساب',
-          textAlign: TextAlign.start,
-          style: AppTextStyles.font14SemiBold,
-        ),
-        hSpace(8),
-        Row(
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () => setState(() => _accountType = 'Personal'),
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 12.h),
-                  decoration: BoxDecoration(
-                    color: _accountType == 'Personal'
-                        ? AppColors.softBrandBackground
-                        : AppColors.white,
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
-                      color: _accountType == 'Personal'
-                          ? AppColors.brandPrimary
-                          : AppColors.border,
-                      width: _accountType == 'Personal' ? 1.5 : 1,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'حساب شخصي',
-                      style: AppTextStyles.font13Medium.copyWith(
-                        color: _accountType == 'Personal'
-                            ? AppColors.brandPrimaryDark
-                            : AppColors.textSecondary,
-                        fontWeight: _accountType == 'Personal'
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            wSpace(12),
-            Expanded(
-              child: GestureDetector(
-                onTap: () => setState(() => _accountType = 'Site'),
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 12.h),
-                  decoration: BoxDecoration(
-                    color: _accountType == 'Site'
-                        ? AppColors.softBrandBackground
-                        : AppColors.white,
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
-                      color: _accountType == 'Site'
-                          ? AppColors.brandPrimary
-                          : AppColors.border,
-                      width: _accountType == 'Site' ? 1.5 : 1,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'حساب موقع / مشروع',
-                      style: AppTextStyles.font13Medium.copyWith(
-                        color: _accountType == 'Site'
-                            ? AppColors.brandPrimaryDark
-                            : AppColors.textSecondary,
-                        fontWeight: _accountType == 'Site'
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        hSpace(18),
-
         // Full Name
         Text(
           'auth.requestAccess.fullName'.tr(context: context),
@@ -235,32 +151,6 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
             return null;
           },
         ),
-
-        // If Site Account: Site / Project Name
-        if (_accountType == 'Site') ...[
-          hSpace(16),
-          Text(
-            'اسم الموقع أو المشروع',
-            textAlign: TextAlign.start,
-            style: AppTextStyles.font14SemiBold,
-          ),
-          hSpace(8),
-          CustomTextFormField(
-            hintText: 'أدخل اسم الموقع الخاص بك',
-            controller: siteNameController,
-            prefixIcon: Icon(
-              Icons.location_city_outlined,
-              size: 21.r,
-              color: AppColors.placeholder,
-            ),
-            validator: (value) {
-              if (_accountType == 'Site' && (value == null || value.trim().isEmpty)) {
-                return 'برجاء إدخال اسم الموقع';
-              }
-              return null;
-            },
-          ),
-        ],
 
         // National ID
         hSpace(16),
@@ -325,10 +215,8 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
             if (!(formKey.currentState?.validate() ?? false)) return;
             context.read<RequestAccountCubit>().submit(
               name: fullNameController.text.trim(),
-              accountType: _accountType,
-              siteId: _accountType == 'Site'
-                  ? siteNameController.text.trim()
-                  : null,
+              accountType: 'Personal',
+              siteId: null,
               nationalId: nationalIdController.text.trim().isNotEmpty
                   ? nationalIdController.text.trim()
                   : null,
