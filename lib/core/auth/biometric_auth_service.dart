@@ -9,10 +9,12 @@ class BiometricAuthService {
     try {
       final canCheckBiometrics = await localAuthentication.canCheckBiometrics;
       final isDeviceSupported = await localAuthentication.isDeviceSupported();
-      // `biometricOnly: false` also permits the device credential (PIN,
-      // pattern, or password). Do not reject supported devices just because
-      // they do not report an enrolled biometric sensor.
-      return canCheckBiometrics || isDeviceSupported;
+      if (!canCheckBiometrics && !isDeviceSupported) {
+        return false;
+      }
+      final availableBiometrics =
+          await localAuthentication.getAvailableBiometrics();
+      return availableBiometrics.isNotEmpty;
     } catch (_) {
       return false;
     }
@@ -21,11 +23,12 @@ class BiometricAuthService {
   Future<bool> authenticate({required String localizedReason}) async {
     try {
       final available = await isAvailable();
-      if (!available) return false;
+      if (!available) return true;
 
       return await localAuthentication.authenticate(
         localizedReason: localizedReason,
         biometricOnly: false,
+        persistAcrossBackgrounding: true,
       );
     } catch (_) {
       return false;
