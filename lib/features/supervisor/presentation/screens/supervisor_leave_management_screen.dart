@@ -27,7 +27,9 @@ class _SupervisorLeaveManagementScreenState
   @override
   void initState() {
     super.initState();
-    context.read<SupervisorLeaveRequestsCubit>().loadLeaveTypes();
+    final cubit = context.read<SupervisorLeaveRequestsCubit>();
+    cubit.loadLeaveTypes();
+    cubit.loadRequests();
     context.read<LeavesCubit>().loadLeavesData();
   }
 
