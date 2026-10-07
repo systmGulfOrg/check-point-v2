@@ -25,37 +25,68 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 24.h),
+        padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 24.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Center(
+              child: Container(
+                width: 38.w,
+                height: 4.h,
+                margin: EdgeInsets.only(bottom: 16.h),
+                decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'supervisor.more.title'.tr(context: context),
-                  style: AppTextStyles.font18Bold,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'supervisor.more.title'.tr(context: context),
+                      style: AppTextStyles.font18Bold,
+                    ),
+                    hSpace(2),
+                    Text(
+                      'supervisor.more.subtitle'.tr(context: context),
+                      style: AppTextStyles.font12Regular.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.close_rounded, size: 20.r),
+                  style: IconButton.styleFrom(
+                    backgroundColor: AppColors.pageBackground,
+                    shape: const CircleBorder(),
+                  ),
+                  icon: Icon(
+                    Icons.close_rounded,
+                    size: 20.r,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
-            const Divider(color: AppColors.border),
-            hSpace(16),
+            hSpace(18),
             GridView.count(
-              crossAxisCount: 3,
+              crossAxisCount: 2,
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               mainAxisSpacing: 12.h,
               crossAxisSpacing: 12.w,
-              childAspectRatio: 1.2,
+              childAspectRatio: 1.32,
               children: [
                 SupervisorMoreOptionWidget(
                   icon: Icons.calendar_month_outlined,
                   labelKey: 'supervisor.more.leaves',
-                  badge: '1',
+                  subtitleKey: 'supervisor.more.leavesSubtitle',
                   backgroundColor: AppColors.softGreenBackground,
                   iconColor: AppColors.success,
                   onTap: () {
@@ -64,19 +95,9 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                   },
                 ),
                 SupervisorMoreOptionWidget(
-                  icon: Icons.notifications_none_rounded,
-                  labelKey: 'supervisor.more.notifications',
-                  badge: '2',
-                  backgroundColor: AppColors.softBrandBackground,
-                  iconColor: AppColors.brandPrimary,
-                  onTap: () {
-                    Navigator.pop(context);
-                    onNotificationsTap();
-                  },
-                ),
-                SupervisorMoreOptionWidget(
                   icon: Icons.home_work_outlined,
-                  labelKey: 'remoteWork.title',
+                  labelKey: 'supervisor.more.remoteWork',
+                  subtitleKey: 'supervisor.more.remoteWorkSubtitle',
                   backgroundColor: AppColors.softBlueBackground,
                   iconColor: AppColors.info,
                   onTap: () {
@@ -85,10 +106,22 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                   },
                 ),
                 SupervisorMoreOptionWidget(
+                  icon: Icons.notifications_none_rounded,
+                  labelKey: 'supervisor.more.notifications',
+                  subtitleKey: 'supervisor.more.notificationsSubtitle',
+                  backgroundColor: AppColors.softBrandBackground,
+                  iconColor: AppColors.brandPrimary,
+                  onTap: () {
+                    Navigator.pop(context);
+                    onNotificationsTap();
+                  },
+                ),
+                SupervisorMoreOptionWidget(
                   icon: Icons.person_outline_rounded,
                   labelKey: 'supervisor.more.profile',
-                  backgroundColor: AppColors.pageBackground,
-                  iconColor: AppColors.textSecondary,
+                  subtitleKey: 'supervisor.more.profileSubtitle',
+                  backgroundColor: AppColors.softYellowBackground,
+                  iconColor: AppColors.warning,
                   onTap: () {
                     Navigator.pop(context);
                     onProfileTap();
@@ -102,3 +135,4 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
     );
   }
 }
+
