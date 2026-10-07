@@ -35,4 +35,5 @@ class ApiConstants {
       '/api/Plan/removeAssignCustomerPlan';
   static const String planFeedback = '/api/Plan/planFeedback';
   static const String feedBackStatus = '/api/Plan/feedBackStatus';
+  static const String customerPlans = '/api/CustomerPlan';
 }

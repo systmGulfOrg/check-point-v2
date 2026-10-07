@@ -21,6 +21,7 @@ import 'package:check_point_v2/features/admin/data/models/employee/edit_employee
 import 'package:check_point_v2/features/admin/data/models/employee/employees_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/police_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 import 'package:check_point_v2/features/admin/data/models/device/pending_device_model.dart';
 
 part 'admin_api_service.g.dart';
@@ -321,4 +322,31 @@ abstract class AdminApiService {
 
   @POST(ApiConstants.plans)
   Future<ResultModel> createPlan(@Body() CreatePlanRequestBody body);
+
+  // Customer Plans / Visits
+  @GET('${ApiConstants.customerPlans}/customerPlans')
+  Future<CustomerVisitsResponseModel> getCustomerPlans({
+    @Query('customerId') String? customerId,
+    @Query('employeeId') String? employeeId,
+    @Query('status') String? status,
+    @Query('itemCount') int itemCount = 100,
+    @Query('index') int index = 0,
+  });
+
+  @GET('${ApiConstants.customerPlans}/customerPlan/{id}')
+  Future<SingleCustomerVisitResponseModel> getCustomerPlanById(
+    @Path('id') String id,
+  );
+
+  @POST('${ApiConstants.customerPlans}/customerPlan')
+  Future<dynamic> createCustomerPlan(@Body() Map<String, dynamic> body);
+
+  @PUT('${ApiConstants.customerPlans}/customerPlan/{id}')
+  Future<dynamic> updateCustomerPlan(
+    @Path('id') String id,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @DELETE('${ApiConstants.customerPlans}/customerPlan/{id}')
+  Future<ResultModel> deleteCustomerPlan(@Path('id') String id);
 }

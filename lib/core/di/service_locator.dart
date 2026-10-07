@@ -192,7 +192,7 @@ Future<void> setupServiceLocator() async {
     () => AdminLocationsRepoImpl(api: sl<AdminApiService>()),
   );
   sl.registerLazySingleton<AdminCustomerVisitsRepo>(
-    () => AdminCustomerVisitsRepoImpl(),
+    () => AdminCustomerVisitsRepoImpl(api: sl<AdminApiService>()),
   );
   sl.registerLazySingleton<AdminShiftsPoliciesRepo>(
     () => AdminShiftsPoliciesRepoImpl(api: sl<AdminApiService>()),
