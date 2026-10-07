@@ -34,6 +34,70 @@ class AdminLeaveRequestsListWidget extends StatelessWidget {
     return name;
   }
 
+  String _formatDateRange(String? start, String? end) {
+    if (start == null && end == null) return '-';
+    final startFormatted = AppDateFormatter.formatDateString(start);
+    final endFormatted = AppDateFormatter.formatDateString(end);
+    int? days;
+    if (start != null && end != null) {
+      try {
+        final s = DateTime.parse(start);
+        final e = DateTime.parse(end);
+        days = e.difference(s).inDays + 1;
+      } catch (_) {}
+    }
+    if (days != null && days > 0) {
+      return '$startFormatted - $endFormatted ($days ${'leaves.dashboard.days'.tr()})';
+    }
+    return '$startFormatted - $endFormatted';
+  }
+
+  (String, Color, Color) _mapStatus(String? status) {
+    final s = status?.toLowerCase() ?? '';
+    return switch (s) {
+      'approved' || 'approvedbyhr' || 'approvedbymanager' => (
+        'leaves.status.approved',
+        AppColors.success,
+        AppColors.softGreenBackground,
+      ),
+      'rejectedbymanager' => (
+        'leaves.status.rejectedByManager',
+        AppColors.error,
+        AppColors.softRedBackground,
+      ),
+      'rejectedbyhr' => (
+        'leaves.status.rejectedByHR',
+        AppColors.error,
+        AppColors.softRedBackground,
+      ),
+      'rejected' => (
+        'leaves.status.rejected',
+        AppColors.error,
+        AppColors.softRedBackground,
+      ),
+      'pendinghr' => (
+        'leaves.status.pendingHR',
+        AppColors.warningOrange,
+        AppColors.softYellowBackground,
+      ),
+      'pendingmanager' => (
+        'leaves.status.pendingManager',
+        AppColors.warningOrange,
+        AppColors.softYellowBackground,
+      ),
+      'cancelled' => (
+        'leaves.status.cancelled',
+        AppColors.placeholder,
+        AppColors.pageBackground,
+      ),
+      _ => (
+        'leaves.status.pending',
+        AppColors.warningOrange,
+        AppColors.softYellowBackground,
+      ),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     if (requests.isEmpty) {
@@ -56,32 +120,22 @@ class AdminLeaveRequestsListWidget extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: requests.length,
-      separatorBuilder: (_, _) => hSpace(10),
+      separatorBuilder: (_, _) => hSpace(12),
       itemBuilder: (context, index) {
         final item = requests[index];
         final name = item.employeeName ?? 'Employee';
-        final isApproved = item.status?.toLowerCase() == 'approved';
-        final isRejected = item.status?.toLowerCase() == 'rejected';
+        final (statusKey, statusColor, statusBgColor) = _mapStatus(item.status);
 
         final requestData = AdminLeaveRequestData(
           initials: name.isNotEmpty ? name[0] : 'E',
           nameKey: name,
           leaveTypeKey: _getTranslatedName(item.leaveType),
-          dateRange:
-              '${AppDateFormatter.formatDateString(item.startDate)} - ${AppDateFormatter.formatDateString(item.endDate)}',
+          dateRange: _formatDateRange(item.startDate, item.endDate),
           reasonKey: item.reason ?? '-',
           appliedDate: AppDateFormatter.formatDateString(item.startDate),
-          statusKey: item.status ?? 'Pending',
-          statusColor: isApproved
-              ? AppColors.success
-              : isRejected
-              ? AppColors.error
-              : AppColors.warningOrange,
-          statusBackgroundColor: isApproved
-              ? AppColors.softGreenBackground
-              : isRejected
-              ? AppColors.softRedBackground
-              : AppColors.softYellowBackground,
+          statusKey: statusKey,
+          statusColor: statusColor,
+          statusBackgroundColor: statusBgColor,
           attachmentUrl: item.attachmentUrl,
         );
 

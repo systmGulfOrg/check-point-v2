@@ -28,9 +28,9 @@ class AdminLeaveManagementFilterWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(4.r),
       decoration: BoxDecoration(
-        color: AppColors.selectedBackground,
+        color: AppColors.softBrandBackground,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.8)),
       ),
       child: Row(
         children: [

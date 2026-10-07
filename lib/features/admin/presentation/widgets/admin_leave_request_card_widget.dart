@@ -36,16 +36,30 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
         rawModel?.managerActionAt == null &&
         (statusLower == 'pending' || statusLower == 'pendingmanager');
 
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(14.r),
         border: Border.all(color: AppColors.border),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
       child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        data: Theme.of(context).copyWith(
+          dividerColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
         child: ExpansionTile(
+          shape: const RoundedRectangleBorder(side: BorderSide.none),
+          collapsedShape: const RoundedRectangleBorder(side: BorderSide.none),
           tilePadding: EdgeInsets.all(14.r),
           childrenPadding: EdgeInsets.fromLTRB(14.r, 0, 14.r, 14.r),
           title: Row(
@@ -53,13 +67,13 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
             children: [
               AppAvatarWidget(
                 imageUrl: request.imageUrl,
-                name: request.nameKey.tr(context: context),
+                name: request.nameKey,
                 initials: request.initials,
-                subtitle: request.leaveTypeKey.tr(context: context),
-                radius: 18.r,
+                subtitle: request.leaveTypeKey,
+                radius: 19.r,
                 enablePreview: true,
               ),
-              vSpace(12),
+              SizedBox(width: 12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,38 +82,47 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            request.nameKey.tr(context: context),
-                            style: AppTextStyles.font14SemiBold,
+                            request.nameKey,
+                            style: AppTextStyles.font14Bold,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         if (onDelete != null)
-                          InkWell(
-                            onTap: onDelete,
-                            borderRadius: BorderRadius.circular(8.r),
-                            child: Padding(
-                              padding: EdgeInsets.all(4.r),
-                              child: Icon(
-                                Icons.delete_outline_rounded,
-                                size: 18.r,
-                                color: AppColors.error,
+                          Material(
+                            color: AppColors.transparent,
+                            child: InkWell(
+                              onTap: onDelete,
+                              borderRadius: BorderRadius.circular(8.r),
+                              child: Padding(
+                                padding: EdgeInsets.all(4.r),
+                                child: Icon(
+                                  Icons.delete_outline_rounded,
+                                  size: 18.r,
+                                  color: AppColors.error,
+                                ),
                               ),
                             ),
                           ),
                       ],
                     ),
-                    hSpace(3),
+                    SizedBox(height: 3.h),
                     Row(
                       children: [
                         Expanded(
                           child: Text(
-                            request.leaveTypeKey.tr(context: context),
-                            style: AppTextStyles.font13SemiBold,
+                            request.leaveTypeKey,
+                            style: AppTextStyles.font13SemiBold.copyWith(
+                              color: AppColors.brandPrimary,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Container(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 9.w,
-                            vertical: 4.h,
+                            horizontal: 8.w,
+                            vertical: 3.h,
                           ),
                           decoration: BoxDecoration(
                             color: request.statusBackgroundColor,
@@ -116,11 +139,12 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
                                   shape: BoxShape.circle,
                                 ),
                               ),
-                              vSpace(5),
+                              SizedBox(width: 5.w),
                               Text(
                                 request.statusKey.tr(context: context),
                                 style: AppTextStyles.font11Medium.copyWith(
                                   color: request.statusColor,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],
@@ -128,63 +152,92 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    hSpace(4),
-                    Text(
-                      request.dateRange,
-                      style: AppTextStyles.font12Regular,
-                    ),
-                    hSpace(4),
-                    Text(
-                      '"${request.reasonKey.tr(context: context)}"',
-                      style: AppTextStyles.font12Regular.copyWith(
-                        color: AppColors.placeholder,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                    hSpace(4),
-                    Text(
-                      'admin.leaveManagement.applied'.tr(
-                        context: context,
-                        args: [request.appliedDate],
-                      ),
-                      style: AppTextStyles.font12Regular,
-                    ),
-                    if (request.attachmentUrl != null &&
-                        request.attachmentUrl!.isNotEmpty) ...[
-                      hSpace(4),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6.w,
-                          vertical: 2.h,
+                    SizedBox(height: 4.h),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_month_outlined,
+                          size: 13.r,
+                          color: AppColors.textSecondary,
                         ),
-                        decoration: BoxDecoration(
-                          color: AppColors.brandPrimary.withValues(
-                            alpha: 0.08,
+                        SizedBox(width: 4.w),
+                        Expanded(
+                          child: Text(
+                            request.dateRange,
+                            style: AppTextStyles.font12Regular.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(4.r),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.attach_file_rounded,
-                              size: 12.r,
-                              color: AppColors.brandPrimary,
-                            ),
-                            wSpace(3),
-                            Text(
-                              'leaves.request.hasAttachment'.tr(
-                                context: context,
-                              ),
-                              style: AppTextStyles.font11Regular.copyWith(
-                                color: AppColors.brandPrimary,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                      ],
+                    ),
+                    if (request.reasonKey.isNotEmpty &&
+                        request.reasonKey != '-') ...[
+                      SizedBox(height: 3.h),
+                      Text(
+                        '"${request.reasonKey}"',
+                        style: AppTextStyles.font12Regular.copyWith(
+                          color: AppColors.placeholder,
+                          fontStyle: FontStyle.italic,
                         ),
                       ),
                     ],
+                    SizedBox(height: 4.h),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.access_time_rounded,
+                          size: 12.r,
+                          color: AppColors.placeholder,
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          'admin.leaveManagement.applied'.tr(
+                            context: context,
+                            args: [request.appliedDate],
+                          ),
+                          style: AppTextStyles.font11Regular.copyWith(
+                            color: AppColors.placeholder,
+                          ),
+                        ),
+                        if (request.attachmentUrl != null &&
+                            request.attachmentUrl!.isNotEmpty) ...[
+                          const Spacer(),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 6.w,
+                              vertical: 2.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.brandPrimary.withValues(
+                                alpha: 0.08,
+                              ),
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.attach_file_rounded,
+                                  size: 12.r,
+                                  color: AppColors.brandPrimary,
+                                ),
+                                SizedBox(width: 3.w),
+                                Text(
+                                  'leaves.request.hasAttachment'.tr(
+                                    context: context,
+                                  ),
+                                  style: AppTextStyles.font11Regular.copyWith(
+                                    color: AppColors.brandPrimary,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                   ],
                 ),
               ),

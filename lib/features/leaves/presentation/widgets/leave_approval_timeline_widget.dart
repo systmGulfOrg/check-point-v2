@@ -464,8 +464,14 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
           isLast: true,
         ),
 
-        // Rejection Reason Banner
-        if (effectiveRejectionReason != null &&
+        // Rejection Reason Banner (only if not already displayed inside the timeline step)
+        if (!((managerStatus == LeaveStepStatus.rejected &&
+                    managerRejectionReason != null &&
+                    managerRejectionReason!.isNotEmpty) ||
+                (hrStatus == LeaveStepStatus.rejected &&
+                    hrRejectionReason != null &&
+                    hrRejectionReason!.isNotEmpty)) &&
+            effectiveRejectionReason != null &&
             effectiveRejectionReason.isNotEmpty) ...[
           SizedBox(height: 10.h),
           Container(

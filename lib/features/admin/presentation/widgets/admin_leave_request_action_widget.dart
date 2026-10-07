@@ -20,23 +20,32 @@ class AdminLeaveRequestActionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 11.h),
-        decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: AppColors.border)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 16.r),
-            vSpace(5),
-            Text(
-              labelKey.tr(context: context),
-              style: AppTextStyles.font12Medium.copyWith(color: color),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 6.h),
+      child: Material(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(10.r),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(10.r),
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10.h),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: color.withValues(alpha: 0.25)),
             ),
-          ],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: color, size: 16.r),
+                SizedBox(width: 6.w),
+                Text(
+                  labelKey.tr(context: context),
+                  style: AppTextStyles.font12Bold.copyWith(color: color),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

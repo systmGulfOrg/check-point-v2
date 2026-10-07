@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -148,14 +149,28 @@ class LeaveTimelineStepWidget extends StatelessWidget {
                         color: AppColors.softRedBackground,
                         borderRadius: BorderRadius.circular(8.r),
                         border: Border.all(
-                          color: AppColors.error.withValues(alpha: 0.3),
+                          color: AppColors.error.withValues(alpha: 0.2),
                         ),
                       ),
-                      child: Text(
-                        reason!,
-                        style: AppTextStyles.font12Regular.copyWith(
-                          color: AppColors.error,
-                        ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.error_outline_rounded,
+                            size: 14.r,
+                            color: AppColors.error,
+                          ),
+                          SizedBox(width: 6.w),
+                          Expanded(
+                            child: Text(
+                              '${'leaves.rejection.reason'.tr(context: context)}: $reason',
+                              style: AppTextStyles.font12Regular.copyWith(
+                                color: AppColors.error,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

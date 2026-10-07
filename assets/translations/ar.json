@@ -1183,6 +1183,8 @@
   "leaves.status.cancelled": "ملغى",
   "leaves.status.pending": "في انتظار الموافقة",
   "leaves.status.pendingHR": "في انتظار موافقة الموارد البشرية",
+  "leaves.status.pendingManager": "في انتظار موافقة المدير المباشر",
+  "leaves.status.rejected": "مرفوض",
   "leaves.status.rejectedByHR": "مرفوض من الموارد البشرية",
   "leaves.status.rejectedByManager": "مرفوض من المدير",
   "notifications.leave.approvehr.body": "تم اعتماد طلب الإجازة من الموارد البشرية.",

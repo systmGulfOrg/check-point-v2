@@ -493,6 +493,34 @@
   - تشغيل وفتح المستندات والروابط عبر تطبيق المشاهد الخارجي أو المتصفح باستخدام `url_launcher` (`LaunchMode.externalApplication`) مع إشعارات نجاح/خطأ واضحة باللغة العربية.
 - **الحالة:** 🟢 تم الحل (Resolved).
 
+---
+
+## 47. تحسينات شاملة لواجهة إدارة الإجازات، شريط التبويبات، الحركات (Animations)، وترجمة الحالات والتواريخ
+- **الشاشات والملفات:**
+  - `AdminLeaveManagementScreen` (`lib/features/admin/presentation/screens/admin_leave_management_screen.dart`)
+  - `AdminLeaveManagementFilterWidget` (`lib/features/admin/presentation/widgets/admin_leave_management_filter_widget.dart`)
+  - `AdminLeaveRequestsListWidget` (`lib/features/admin/presentation/widgets/admin_leave_requests_list_widget.dart`)
+  - `AdminLeaveRequestCardWidget` (`lib/features/admin/presentation/widgets/admin_leave_request_card_widget.dart`)
+  - `AdminLeaveRequestActionWidget` (`lib/features/admin/presentation/widgets/admin_leave_request_action_widget.dart`)
+  - `LeaveApprovalTimelineWidget` (`lib/features/leaves/presentation/widgets/leave_approval_timeline_widget.dart`)
+  - `LeaveTimelineStepWidget` (`lib/features/leaves/presentation/widgets/leave_timeline_step_widget.dart`)
+  - ملفات الترجمة: `ar.json`, `ar-EG.json`, `en.json`
+- **المشاكل المرصودة في صور المستخدم:**
+  1. شريط التبويبات العلوي كان يقطع عنوان "أنواع الإجازات والأرصدة" بسبب عدم كفاية العرض الثابت.
+  2. شريط فلترة الحالات كان بخلفية برتقالية باهتة بدون تباين ناعم أو ظلال تفاعلية.
+  3. بطاقة الطلب كانت تعرض حالات باللغة الإنجليزية الخام مثل `"Pending"` و `"Approved"` ومفتاح غير مترجم مثل `"leaves.status.rejected"`.
+  4. تكرار صندوق سبب الرفض مرتين متتاليتين في أسفل البطاقة وتحت خطوة التايم لاين.
+  5. عدم وجود مسافات كافية وأيقونات توضيحية لتواريخ الطلبات وعدد الأيام.
+  6. زر الحذف كان بأيقونة حمراء حادة دون تفاعل ناعم.
+- **الحل المُنفذ:**
+  - **شريط التبويبات**: تحويل الـ TabBar إلى شريط قابل للتمرير التلقائي (`isScrollable: true`) بمحاذاة `TabAlignment.start` ومؤشر نشط أنيق يمنع أي التفاف أو قص للعناوين.
+  - **ترجمة جميع الحالات وتوحيدها**: إضافة مفاتيح الترجمة لكافة الحالات (`مرفوض`، `معتمد`، `في انتظار الموافقة`، `في انتظار موافقة الموارد البشرية`، `في انتظار موافقة المدير المباشر`) في اللغتين العربية والإنجليزية.
+  - **تحسين شريط الفلاتر والأنيميشن**: إضافة انتقالات ناعمة مع ظلال هادئة للتبويب النشط وزيادة دقة عداد الطلبات المعلقة ليشمل جميع مراحل الانتظار.
+  - **تصميم البطاقات**: بطاقات تفاعلية أنيقة بحواف ناعمة (`14.r`) وظلال هادئة مع أيقونات التواريخ ومدة الإجازة بالأيام (`3 أيام`)، وشريحة المرفق التفاعلية.
+  - **إلغاء التكرار في سبب الرفض**: إظهار سبب الرفض حصرياً تحت المرحلة المعنية مع أيقونة تنبيه وتصميم منسق.
+- **الحالة:** 🟢 تم الحل (Resolved).
+
+
 
 
 

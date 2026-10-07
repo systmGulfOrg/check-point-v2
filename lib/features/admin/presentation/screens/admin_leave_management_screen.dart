@@ -94,17 +94,34 @@ class _AdminLeaveManagementScreenState extends State<AdminLeaveManagementScreen>
           'admin.leaveManagement.title'.tr(context: context),
           style: AppTextStyles.font18Bold,
         ),
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: AppColors.brandPrimary,
-          unselectedLabelColor: AppColors.textSecondary,
-          indicatorColor: AppColors.brandPrimary,
-          labelStyle: AppTextStyles.font13SemiBold,
-          tabs: [
-            Tab(text: 'admin.leaveManagement.tabRequests'.tr(context: context)),
-            Tab(text: 'admin.leaveManagement.tabTypes'.tr(context: context)),
-            Tab(text: 'admin.leaveManagement.tabHolidays'.tr(context: context)),
-          ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(46.h),
+          child: Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: AppColors.border, width: 1),
+              ),
+            ),
+            child: TabBar(
+              controller: _tabController,
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              labelColor: AppColors.brandPrimary,
+              unselectedLabelColor: AppColors.textSecondary,
+              indicatorColor: AppColors.brandPrimary,
+              indicatorWeight: 3.h,
+              indicatorSize: TabBarIndicatorSize.label,
+              labelStyle: AppTextStyles.font14Bold,
+              unselectedLabelStyle: AppTextStyles.font14Regular,
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              labelPadding: EdgeInsets.symmetric(horizontal: 14.w),
+              tabs: [
+                Tab(text: 'admin.leaveManagement.tabRequests'.tr(context: context)),
+                Tab(text: 'admin.leaveManagement.tabTypes'.tr(context: context)),
+                Tab(text: 'admin.leaveManagement.tabHolidays'.tr(context: context)),
+              ],
+            ),
+          ),
         ),
       ),
       body: SafeArea(
@@ -183,9 +200,13 @@ class _AdminLeaveManagementScreenState extends State<AdminLeaveManagementScreen>
   }
 
   Widget _buildRequestsTab(List<AdminLeaveRequestModel> requests) {
-    final pendingCount = requests
-        .where((r) => r.status?.toLowerCase() == 'pending')
-        .length;
+    final pendingCount = requests.where((r) {
+      final s = r.status?.toLowerCase() ?? '';
+      return s == 'pending' ||
+          s == 'pendinghr' ||
+          s == 'pendingmanager' ||
+          s == 'pendingadmin';
+    }).length;
     final filtered = _filterRequests(requests);
 
     return SingleChildScrollView(
