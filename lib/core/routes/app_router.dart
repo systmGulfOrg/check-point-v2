@@ -9,6 +9,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admi
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/plans/admin_plans_cubit.dart';
@@ -331,6 +332,9 @@ class AppRouter {
               BlocProvider<AdminCustomersCubit>(
                 create: (_) =>
                     sl<AdminCustomersCubit>()..load(type: 'Customer'),
+              ),
+              BlocProvider<AdminCustomerVisitsCubit>(
+                create: (_) => sl<AdminCustomerVisitsCubit>()..loadAllVisits(),
               ),
             ],
             child: const AdminLocationsScreen(),

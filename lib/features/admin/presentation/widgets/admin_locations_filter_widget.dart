@@ -8,19 +8,22 @@ class AdminLocationsFilterWidget extends StatelessWidget {
   const AdminLocationsFilterWidget({
     required this.selectedIndex,
     required this.onSelected,
+    this.labels,
     super.key,
   });
 
   final int selectedIndex;
   final ValueChanged<int> onSelected;
+  final List<String>? labels;
 
-  static const _labels = <String>[
+  static const _defaultLabels = <String>[
     'admin.locations.tabs.branches',
     'admin.locations.tabs.customers',
   ];
 
   @override
   Widget build(BuildContext context) {
+    final effectiveLabels = labels ?? _defaultLabels;
     return Container(
       padding: EdgeInsets.all(4.r),
       decoration: BoxDecoration(
@@ -30,7 +33,7 @@ class AdminLocationsFilterWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          for (int i = 0; i < _labels.length; i++)
+          for (int i = 0; i < effectiveLabels.length; i++)
             Expanded(
               child: InkWell(
                 onTap: () => onSelected(i),
@@ -45,7 +48,7 @@ class AdminLocationsFilterWidget extends StatelessWidget {
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    _labels[i].tr(context: context),
+                    effectiveLabels[i].tr(context: context),
                     style: AppTextStyles.font11Medium.copyWith(
                       color: selectedIndex == i
                           ? AppColors.textPrimary

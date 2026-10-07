@@ -26,7 +26,7 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 24.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,

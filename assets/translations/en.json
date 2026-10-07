@@ -667,6 +667,7 @@
   "admin.visits.tabOverview": "Customer Info",
   "admin.visits.time": "Visit Time",
   "admin.visits.title": "Visit History",
+  "admin.visits.myVisits": "My Field Visits",
   "admin.visits.uploadDoc": "Attach Document",
   "admin.visits.viewDoc": "View Document",
   "admin.visits.visitSuccess": "Visit plan added successfully",

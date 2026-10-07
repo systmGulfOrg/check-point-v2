@@ -667,6 +667,7 @@
   "admin.visits.tabOverview": "بيانات العميل",
   "admin.visits.time": "وقت الزيارة",
   "admin.visits.title": "سجل الزيارات",
+  "admin.visits.myVisits": "زياراتي الميدانية",
   "admin.visits.uploadDoc": "إرفاق مستند للزيارة",
   "admin.visits.viewDoc": "عرض المستند",
   "admin.visits.visitSuccess": "تمت إضافة خطة الزيارة بنجاح",

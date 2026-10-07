@@ -560,7 +560,32 @@
     - في واجهة الموظف: إضافة زر إجراء سريع "العملاء وخطة الزيارات".
     - في واجهة المشرف: إضافة خيار "العملاء والزيارات" في قائمة المزيد.
   - **توليد خطط الزيارات وتوثيق المستندات**: فتح إمكانية إنشاء وتوثيق الزيارات لجميع الأدوار، مع ملء قائمة المرافقين/الحاضرين بموظفي النظام مباشرة.
-- **الحل:** 🟢 تم الحل (Resolved).
+- **الحالة:** 🟢 تم الحل (Resolved).
+
+---
+
+## 50. حصر عرض الزيارات الميدانية للموظف/المشرف على الزيارات الخاصة به فقط وإصلاح Overflow شيت المشرف
+- **الشاشات والملفات:**
+  - `AdminLocationsScreen` (`lib/features/admin/presentation/screens/admin_locations_screen.dart`)
+  - `AdminMyVisitsBlocBuilderWidget` (`lib/features/admin/presentation/widgets/customer_visits/admin_my_visits_bloc_builder_widget.dart`)
+  - `AdminCustomerDetailsSheetWidget` (`lib/features/admin/presentation/widgets/customer_visits/admin_customer_details_sheet_widget.dart`)
+  - `AdminCustomerVisitCardWidget` (`lib/features/admin/presentation/widgets/customer_visits/admin_customer_visit_card_widget.dart`)
+  - `AdminLocationsFilterWidget` (`lib/features/admin/presentation/widgets/admin_locations_filter_widget.dart`)
+  - `SupervisorMoreOptionsSheetWidget` (`lib/features/supervisor/presentation/widgets/supervisor_more_options_sheet_widget.dart`)
+  - ملفات الترجمة: `ar.json`, `ar-EG.json`, `en.json`
+- **المشكلة:**
+  1. شاشة العملاء والزيارات وتفاصيل العميل كانت تعرض كل الزيارات بدون فلترة المستخدم الحالي، والمطلوب أن تقتصر الزيارات المعروضة للموظف أو المشرف على الزيارات التي أنشأها بنفسه أو أُضيف فيها كمرافق/حاضر.
+  2. حدوث overflow بمقدار 88 بكسل في أسفل قائمة خيارات المشرف الإضافية (`SupervisorMoreOptionsSheetWidget`).
+- **الحل المُنفذ:**
+  - **تخصيص تبويبات الشاشة بحسب دور المستخدم**:
+    - للموظف والمشرف: تظهر تبويبات **"العملاء المخصصون"** و **"زياراتي الميدانية"** مباشرة.
+    - للمدير: تظهر تبويبات **"الفروع"**، **"العملاء"**، و **"سجل الزيارات"**.
+  - **فلترة الزيارات بحسب المستخدم المسجل**:
+    - التحقق التلقائي في `AdminMyVisitsBlocBuilderWidget` و `AdminCustomerDetailsSheetWidget` من حضور الموظف/المشرف في قائمة الحاضرين أو كونه منشئ الزيارة.
+  - **إصلاح Overflow قائمة المشرف**:
+    - تغليف محتوى الشيت داخل `SingleChildScrollView` لمنع أي تجاوز رأسي على مختلف أحجام الشاشات.
+- **الحالة:** 🟢 تم الحل (Resolved).
+
 
 
 

@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_state.dart';
 import 'admin_create_customer_visit_sheet_widget.dart';
@@ -30,13 +32,58 @@ class AdminCustomerDetailsSheetWidget extends StatefulWidget {
 class _AdminCustomerDetailsSheetWidgetState
     extends State<AdminCustomerDetailsSheetWidget> {
   int selectedTab = 0;
+  String? _currentUserRole;
+  String? _currentUserName;
 
   @override
   void initState() {
     super.initState();
+    _loadUserSession();
     context.read<AdminCustomerVisitsCubit>().loadCustomerVisits(
       widget.customer.id ?? '',
     );
+  }
+
+  Future<void> _loadUserSession() async {
+    final storage = sl<AuthSessionStorage>();
+    final role = await storage.readUserRole();
+    final name = await storage.readUserName();
+    if (mounted) {
+      setState(() {
+        _currentUserRole = role;
+        _currentUserName = name;
+      });
+    }
+  }
+
+  bool _isVisitForCurrentUser(CustomerVisitModel visit) {
+    final role = _currentUserRole?.toLowerCase() ?? '';
+    if (role.contains('admin')) {
+      return true;
+    }
+
+    final userName = _currentUserName?.trim().toLowerCase() ?? '';
+
+    for (final attendee in visit.attendees) {
+      final cleanAttendee = attendee.toLowerCase();
+      if (cleanAttendee.contains('أنا') || cleanAttendee.contains('me')) {
+        return true;
+      }
+      if (userName.isNotEmpty &&
+          (cleanAttendee.contains(userName) ||
+              userName.contains(cleanAttendee))) {
+        return true;
+      }
+      final tokens = userName
+          .split(RegExp(r'\s+'))
+          .where((t) => t.length > 2);
+      for (final token in tokens) {
+        if (cleanAttendee.contains(token)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   void _openCreateVisitSheet() {
@@ -325,7 +372,8 @@ class _AdminCustomerDetailsSheetWidgetState
           ),
           actionSuccess: (_) => const SizedBox.shrink(),
           success: (visits) {
-            if (visits.isEmpty) {
+            final visibleVisits = visits.where(_isVisitForCurrentUser).toList();
+            if (visibleVisits.isEmpty) {
               return Center(
                 child: Padding(
                   padding: EdgeInsets.all(24.r),
@@ -353,10 +401,10 @@ class _AdminCustomerDetailsSheetWidgetState
             return ListView.separated(
               controller: scrollController,
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-              itemCount: visits.length,
+              itemCount: visibleVisits.length,
               separatorBuilder: (_, _) => SizedBox(height: 12.h),
               itemBuilder: (context, index) {
-                final visit = visits[index];
+                final visit = visibleVisits[index];
                 return AnimatedListItemWidget(
                   index: index,
                   child: AdminCustomerVisitCardWidget(

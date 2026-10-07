@@ -105,6 +105,31 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
 
+          // Customer Name (if available)
+          if (visit.customerName != null && visit.customerName!.isNotEmpty) ...[
+            Row(
+              children: [
+                Icon(
+                  Icons.business_rounded,
+                  size: 14.r,
+                  color: AppColors.info,
+                ),
+                SizedBox(width: 4.w),
+                Expanded(
+                  child: Text(
+                    visit.customerName!,
+                    style: AppTextStyles.font12Bold.copyWith(
+                      color: AppColors.info,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 4.h),
+          ],
+
           // Title
           Text(
             visit.title ?? 'admin.visits.title'.tr(context: context),
