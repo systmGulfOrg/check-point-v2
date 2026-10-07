@@ -210,55 +210,76 @@ class _AdminRecordVisitOutcomeDialogWidgetState
             ),
             SizedBox(height: 16.h),
             Text(
-              'admin.visits.document'.tr(context: context),
+              'admin.visits.outcomeDocumentSection'.tr(context: context),
               style: AppTextStyles.font12Medium,
             ),
             SizedBox(height: 8.h),
             if (attachedDocName != null && attachedDocName!.isNotEmpty)
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                decoration: BoxDecoration(
-                  color: AppColors.selectedBackground,
-                  borderRadius: BorderRadius.circular(10.r),
-                  border: Border.all(color: AppColors.brandPrimary.withValues(alpha: 0.3)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.picture_as_pdf_rounded,
-                      color: AppColors.error,
-                      size: 20.r,
+              Builder(
+                builder: (context) {
+                  final isImg = attachedDocName!.toLowerCase().endsWith('.png') ||
+                      attachedDocName!.toLowerCase().endsWith('.jpg') ||
+                      attachedDocName!.toLowerCase().endsWith('.jpeg');
+                  final isPdf = attachedDocName!.toLowerCase().endsWith('.pdf');
+                  final docIcon = isImg
+                      ? Icons.image_rounded
+                      : isPdf
+                      ? Icons.picture_as_pdf_rounded
+                      : Icons.description_rounded;
+                  final docIconColor = isImg
+                      ? AppColors.info
+                      : isPdf
+                      ? AppColors.error
+                      : AppColors.brandPrimary;
+
+                  return Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.selectedBackground,
+                      borderRadius: BorderRadius.circular(10.r),
+                      border: Border.all(
+                        color: AppColors.brandPrimary.withValues(alpha: 0.3),
+                      ),
                     ),
-                    SizedBox(width: 8.w),
-                    Expanded(
-                      child: Directionality(
-                        textDirection: ui.TextDirection.ltr,
-                        child: Text(
-                          attachedDocName!,
-                          style: AppTextStyles.font12Medium.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                    child: Row(
+                      children: [
+                        Icon(
+                          docIcon,
+                          color: docIconColor,
+                          size: 20.r,
                         ),
-                      ),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: Directionality(
+                            textDirection: ui.TextDirection.ltr,
+                            child: Text(
+                              attachedDocName!,
+                              style: AppTextStyles.font12Medium.copyWith(
+                                color: AppColors.textPrimary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.delete_outline_rounded,
+                            color: AppColors.error,
+                            size: 18.r,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              attachedDocName = null;
+                              attachedDocUrl = null;
+                            });
+                          },
+                          tooltip: 'admin.visits.removeDoc'.tr(context: context),
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.delete_outline_rounded,
-                        color: AppColors.error,
-                        size: 18.r,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          attachedDocName = null;
-                          attachedDocUrl = null;
-                        });
-                      },
-                      tooltip: 'admin.visits.removeDoc'.tr(context: context),
-                    ),
-                  ],
-                ),
+                  );
+                },
               )
             else
               InkWell(

@@ -649,6 +649,7 @@
   "admin.visits.details": "تفاصيل العميل وسجل الزيارات",
   "admin.visits.docAttached": "تم إرفاق المستند بنجاح",
   "admin.visits.document": "المستند المرفق للزيارة",
+  "admin.visits.outcomeDocumentSection": "مستند / تقرير ما بعد الزيارة (محضر الزيارة أو صور الإنجاز)",
   "admin.visits.editOutcome": "تعديل تقرير الزيارة",
   "admin.visits.empty": "لا توجد زيارات مسجلة لهذا العميل حتى الآن.",
   "admin.visits.emptyAll": "لا توجد خطط أو زيارات مسجلة.",

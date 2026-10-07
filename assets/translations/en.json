@@ -649,6 +649,7 @@
   "admin.visits.details": "Customer Details & Visit History",
   "admin.visits.docAttached": "Document attached successfully",
   "admin.visits.document": "Attached Document",
+  "admin.visits.outcomeDocumentSection": "Post-Visit Report Document (Meeting Minutes or Photos)",
   "admin.visits.editOutcome": "Edit Visit Report",
   "admin.visits.empty": "No visits recorded for this customer yet.",
   "admin.visits.emptyAll": "No plans or visits recorded.",

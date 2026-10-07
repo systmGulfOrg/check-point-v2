@@ -59,7 +59,11 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
       statusIcon = Icons.schedule_rounded;
     }
 
-    final scheduledBy = visit.createdByName ?? visit.createdBy;
+    final rawScheduledBy = visit.createdByName ?? visit.createdBy;
+    final isOpaqueId = rawScheduledBy != null &&
+        rawScheduledBy.length >= 15 &&
+        !rawScheduledBy.contains(' ');
+    final scheduledBy = isOpaqueId ? null : rawScheduledBy;
 
     return Container(
       decoration: BoxDecoration(
