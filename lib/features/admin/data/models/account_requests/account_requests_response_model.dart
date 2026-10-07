@@ -62,8 +62,13 @@ class AccountRequestModel {
   final String? rejectReason;
   final String? reviewedBy;
   final DateTime? reviewedAt;
+  @JsonKey(readValue: _readCreatedDate)
   final DateTime? createdDate;
   final String? createdEmployeeId;
+
+  static Object? _readCreatedDate(Map<dynamic, dynamic> json, String key) {
+    return json['createdDate'] ?? json['createdAt'] ?? json['created_at'];
+  }
 
   String? get photo => (imageUrl != null && imageUrl!.isNotEmpty)
       ? imageUrl

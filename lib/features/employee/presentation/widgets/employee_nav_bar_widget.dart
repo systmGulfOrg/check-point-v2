@@ -19,11 +19,6 @@ class EmployeeNavBarWidget extends StatelessWidget {
       labelKey: 'employee.nav.clock',
     ),
     NavBarItemData(
-      icon: Icons.assignment_outlined,
-      labelKey: 'employee.nav.tasks',
-    ),
-    NavBarItemData(icon: Icons.map_outlined, labelKey: 'employee.nav.plans'),
-    NavBarItemData(
       icon: Icons.calendar_today_outlined,
       labelKey: 'employee.nav.leaves',
     ),

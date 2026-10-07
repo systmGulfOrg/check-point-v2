@@ -30,23 +30,26 @@ AccountRequestsPageModel _$AccountRequestsPageModelFromJson(
   totalCount: (json['totalCount'] as num?)?.toInt(),
 );
 
-AccountRequestModel _$AccountRequestModelFromJson(Map<String, dynamic> json) =>
-    AccountRequestModel(
-      id: (json['id'] as num?)?.toInt(),
-      name: json['name'] as String?,
-      mobileId: json['mobileId'] as String?,
-      phone: json['phone'] as String?,
-      deviceToken: json['deviceToken'] as String?,
-      imageUrl: json['imageUrl'] as String?,
-      photoPath: json['photoPath'] as String?,
-      status: json['status'] as String?,
-      rejectReason: json['rejectReason'] as String?,
-      reviewedBy: json['reviewedBy'] as String?,
-      reviewedAt: json['reviewedAt'] == null
-          ? null
-          : DateTime.parse(json['reviewedAt'] as String),
-      createdDate: json['createdDate'] == null
-          ? null
-          : DateTime.parse(json['createdDate'] as String),
-      createdEmployeeId: json['createdEmployeeId'] as String?,
-    );
+AccountRequestModel _$AccountRequestModelFromJson(
+  Map<String, dynamic> json,
+) => AccountRequestModel(
+  id: (json['id'] as num?)?.toInt(),
+  name: json['name'] as String?,
+  mobileId: json['mobileId'] as String?,
+  phone: json['phone'] as String?,
+  deviceToken: json['deviceToken'] as String?,
+  imageUrl: json['imageUrl'] as String?,
+  photoPath: json['photoPath'] as String?,
+  status: json['status'] as String?,
+  rejectReason: json['rejectReason'] as String?,
+  reviewedBy: json['reviewedBy'] as String?,
+  reviewedAt: json['reviewedAt'] == null
+      ? null
+      : DateTime.parse(json['reviewedAt'] as String),
+  createdDate: AccountRequestModel._readCreatedDate(json, 'createdDate') == null
+      ? null
+      : DateTime.parse(
+          AccountRequestModel._readCreatedDate(json, 'createdDate') as String,
+        ),
+  createdEmployeeId: json['createdEmployeeId'] as String?,
+);

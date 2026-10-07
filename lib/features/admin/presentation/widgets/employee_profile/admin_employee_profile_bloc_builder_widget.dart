@@ -9,7 +9,6 @@ import 'package:check_point_v2/features/admin/presentation/cubit/employee_profil
 import 'admin_employee_profile_attendance_tab_widget.dart';
 import 'admin_employee_profile_header_widget.dart';
 import 'admin_employee_profile_job_tab_widget.dart';
-import 'admin_employee_profile_payroll_tab_widget.dart';
 import 'admin_employee_profile_security_tab_widget.dart';
 import 'admin_employee_profile_skeleton_widget.dart';
 
@@ -29,7 +28,7 @@ class _AdminEmployeeProfileBlocBuilderWidgetState
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -111,14 +110,6 @@ class _AdminEmployeeProfileBlocBuilderWidgetState
                           ),
                         ),
                         Tab(
-                          icon: const Icon(
-                            Icons.account_balance_wallet_outlined,
-                          ),
-                          text: 'employee.profile.tabPayroll'.tr(
-                            context: context,
-                          ),
-                        ),
-                        Tab(
                           icon: const Icon(Icons.verified_user_outlined),
                           text: 'employee.profile.tabDocsSecurity'.tr(
                             context: context,
@@ -146,9 +137,6 @@ class _AdminEmployeeProfileBlocBuilderWidgetState
                           onMonthChanged: (m) => context
                               .read<AdminEmployeeProfileCubit>()
                               .setMonth(m),
-                        ),
-                        AdminEmployeeProfilePayrollTabWidget(
-                          employee: employee,
                         ),
                         AdminEmployeeProfileSecurityTabWidget(
                           employee: employee,

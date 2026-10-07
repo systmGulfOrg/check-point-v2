@@ -64,6 +64,10 @@ EditEmployeeRequestBody _$EditEmployeeRequestBodyFromJson(
   documents: (json['documents'] as List<dynamic>?)
       ?.map((e) => e as Map<String, dynamic>)
       .toList(),
+  imageUrl: json['imageUrl'] as String?,
+  customPermissions: (json['customPermissions'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
 );
 
 Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
@@ -74,6 +78,8 @@ Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
   if (instance.password case final value?) 'password': value,
   if (instance.position case final value?) 'position': value,
   if (instance.mobileId case final value?) 'mobileId': value,
+  if (instance.imageUrl case final value?) 'imageUrl': value,
+  if (instance.customPermissions case final value?) 'customPermissions': value,
   if (instance.role case final value?) 'role': value,
   if (instance.roles case final value?) 'roles': value,
   if (instance.departmentId case final value?) 'departmentId': value,

@@ -442,27 +442,29 @@ class _EmployeeAttendanceLocationSheetWidgetState
                                                 ?.todayWorkDay ??
                                             '--',
                                         'start':
-                                            context
-                                                .read<EmployeeAttendanceCubit>()
-                                                .employeeProfile
-                                                ?.todayWorkStart ??
-                                            context
-                                                .read<EmployeeAttendanceCubit>()
-                                                .employeeProfile
-                                                ?.workPolicy
-                                                ?.workingHoursStart ??
-                                            '--:--',
+                                            AppDateFormatter.formatTimeString(
+                                              context
+                                                  .read<EmployeeAttendanceCubit>()
+                                                  .employeeProfile
+                                                  ?.todayWorkStart ??
+                                              context
+                                                  .read<EmployeeAttendanceCubit>()
+                                                  .employeeProfile
+                                                  ?.workPolicy
+                                                  ?.workingHoursStart,
+                                            ),
                                         'end':
-                                            context
-                                                .read<EmployeeAttendanceCubit>()
-                                                .employeeProfile
-                                                ?.todayWorkEnd ??
-                                            context
-                                                .read<EmployeeAttendanceCubit>()
-                                                .employeeProfile
-                                                ?.workPolicy
-                                                ?.workingHoursEnd ??
-                                            '--:--',
+                                            AppDateFormatter.formatTimeString(
+                                              context
+                                                  .read<EmployeeAttendanceCubit>()
+                                                  .employeeProfile
+                                                  ?.todayWorkEnd ??
+                                              context
+                                                  .read<EmployeeAttendanceCubit>()
+                                                  .employeeProfile
+                                                  ?.workPolicy
+                                                  ?.workingHoursEnd,
+                                            ),
                                       },
                                     ),
                                     style: AppTextStyles.font12Regular,
@@ -570,7 +572,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
                             ? 'employee.home.checkOutAction'.tr()
                             : 'employee.home.checkInAction'.tr(),
                         isLoading: state is EmployeeAttendanceStateLoading,
-                        enabled: true,
+                        enabled: userLocation != null && isInside,
                         onTap: _submit,
                       ),
                     ],

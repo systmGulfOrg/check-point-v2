@@ -91,7 +91,7 @@ class AppDateFormatter {
     return toEnglishDigits(DateFormat('HH:mm', 'en').format(date));
   }
 
-  /// Cleans raw time strings (e.g. "17:00:00" -> "05:00 م" or "05:00 PM").
+  /// Cleans and formats raw time strings (e.g. "17:00:00" -> "05:00 م", "9:30" -> "09:30 ص", "17" -> "05:00 م").
   static String formatTimeString(
     String? rawTime, {
     bool use12Hour = true,
@@ -106,22 +106,20 @@ class AppDateFormatter {
     }
     final cleaned = toEnglishDigits(rawTime.trim().split('.').first);
     final parts = cleaned.split(':');
-    if (parts.length >= 2) {
-      final hour = int.tryParse(parts[0]);
-      final minute = int.tryParse(parts[1]);
-      if (hour != null && minute != null) {
-        if (use12Hour) {
-          final isPm = hour >= 12;
-          final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
-          final mStr = minute.toString().padLeft(2, '0');
-          final hStr = h12.toString().padLeft(2, '0');
-          final period = isArabic ? (isPm ? 'م' : 'ص') : (isPm ? 'PM' : 'AM');
-          return '$hStr:$mStr $period';
-        } else {
-          final hStr = hour.toString().padLeft(2, '0');
-          final mStr = minute.toString().padLeft(2, '0');
-          return '$hStr:$mStr';
-        }
+    final hour = int.tryParse(parts[0]);
+    final minute = parts.length >= 2 ? int.tryParse(parts[1]) : 0;
+    if (hour != null && minute != null) {
+      if (use12Hour) {
+        final isPm = hour >= 12;
+        final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+        final mStr = minute.toString().padLeft(2, '0');
+        final hStr = h12.toString().padLeft(2, '0');
+        final period = isArabic ? (isPm ? 'م' : 'ص') : (isPm ? 'PM' : 'AM');
+        return '$hStr:$mStr $period';
+      } else {
+        final hStr = hour.toString().padLeft(2, '0');
+        final mStr = minute.toString().padLeft(2, '0');
+        return '$hStr:$mStr';
       }
     }
     return cleaned;

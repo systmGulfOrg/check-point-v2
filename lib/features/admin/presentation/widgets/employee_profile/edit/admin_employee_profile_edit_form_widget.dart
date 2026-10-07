@@ -1,15 +1,30 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:ui' as ui;
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
-import 'admin_employee_edit_account_card_widget.dart';
-import 'admin_employee_edit_emergency_card_widget.dart';
-import 'admin_employee_edit_job_card_widget.dart';
-import 'admin_employee_edit_payroll_card_widget.dart';
-import 'admin_employee_edit_personal_card_widget.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/department_response_model.dart';
+import 'package:check_point_v2/features/admin/data/repos/admin_permissions_repo.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_employee_work_system_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_permissions_picker_dialog_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_wizard_field_widget.dart';
+import '../admin_employee_profile_info_card_widget.dart';
 
 class AdminEmployeeProfileEditFormWidget extends StatefulWidget {
   const AdminEmployeeProfileEditFormWidget({
@@ -32,318 +47,186 @@ class _AdminEmployeeProfileEditFormWidgetState
     extends State<AdminEmployeeProfileEditFormWidget> {
   final _formKey = GlobalKey<FormState>();
   bool _isSaving = false;
+  bool _obscurePassword = true;
 
-  // Job Controllers
-  late final TextEditingController _positionController;
-  late final TextEditingController _employeeCodeController;
-  late final TextEditingController _gradeController;
-  late final TextEditingController _divisionController;
-  late final TextEditingController _contractTypeController;
-  late final TextEditingController _contractStatusController;
-  int? _selectedDepartmentId;
-  int? _selectedBranchId;
-  late String _selectedWorkSystem;
-  String? _selectedDirectManagerId;
-  DateTime? _joinDate;
-  DateTime? _contractEndDate;
-
-  // Personal Controllers
-  late final TextEditingController _nameArController;
-  late final TextEditingController _nameEnController;
-  late final TextEditingController _emailController;
-  late final TextEditingController _personalEmailController;
-  late final TextEditingController _phoneController;
-  late final TextEditingController _secondaryPhoneController;
-  late final TextEditingController _nationalIdController;
-  late final TextEditingController _passportNumberController;
-  late final TextEditingController _addressController;
-  late final TextEditingController _cityController;
-  String? _selectedGender;
-  String? _selectedMaritalStatus;
-  DateTime? _idExpiryDate;
-  DateTime? _birthDate;
-
-  // Emergency Controllers
-  late final TextEditingController _emergencyNameController;
-  late final TextEditingController _emergencyRelationController;
-  late final TextEditingController _emergencyPhoneController;
-
-  // Payroll Controllers
-  late final TextEditingController _basicSalaryController;
-  late final TextEditingController _allowancesController;
-  late final TextEditingController _currencyController;
-  late final TextEditingController _bankNameController;
-  late final TextEditingController _bankAccountNumberController;
-  late final TextEditingController _ibanController;
-  late final TextEditingController _socialInsuranceNumberController;
-
-  // Account Controllers
+  late final TextEditingController _nameController;
   late final TextEditingController _userNameController;
   late final TextEditingController _passwordController;
-  late final TextEditingController _leaveBalanceController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _phoneController;
+  late final TextEditingController _employeeCodeController;
+  late final TextEditingController _positionController;
+  late final TextEditingController _mobileIdController;
+
+  String? _selectedPhotoPath;
+  String? _photoBase64;
+
+  int? _selectedDepartmentId;
+  int? _selectedBranchId;
+  String? _selectedDirectManagerId;
+  late String _selectedWorkSystem;
+  String? _selectedRemoteWorkPolicyId;
+
   late final Set<String> _selectedRoles;
-  late bool _canAddAttendance;
-  late bool _canAddPlan;
+  final Set<String> _selectedPermissions = {};
+
+  static const List<String> _availableRoles = [
+    'Employee',
+    'Supervisor',
+    'Admin',
+  ];
 
   @override
   void initState() {
     super.initState();
     final emp = widget.employee;
 
-    // Job
-    _positionController = TextEditingController(text: emp.position ?? '');
+    _nameController = TextEditingController(text: emp.name ?? '');
+    _userNameController = TextEditingController(text: emp.userName ?? '');
+    _passwordController = TextEditingController();
+    _emailController = TextEditingController(text: emp.email ?? '');
+    _phoneController = TextEditingController(text: emp.phone ?? '');
     _employeeCodeController = TextEditingController(
       text: emp.employeeCode ?? '',
     );
-    _gradeController = TextEditingController(text: emp.grade ?? '');
-    _divisionController = TextEditingController(text: emp.division ?? '');
-    _contractTypeController = TextEditingController(
-      text: emp.contractType ?? '',
-    );
-    _contractStatusController = TextEditingController(
-      text: emp.contractStatus ?? '',
-    );
+    _positionController = TextEditingController(text: emp.position ?? '');
+    _mobileIdController = TextEditingController(text: emp.mobileId ?? '');
+
     _selectedDepartmentId = emp.departmentId;
     _selectedBranchId = emp.branchId;
-    _selectedWorkSystem = emp.workSystem ?? 'onsite';
     _selectedDirectManagerId = emp.resolvedDirectManagerId;
-    _joinDate = _parseDate(emp.joinDate ?? emp.hireDate);
-    _contractEndDate = _parseDate(emp.contractEndDate);
+    _selectedWorkSystem = emp.workSystem ?? 'onsite';
+    _selectedRemoteWorkPolicyId = emp.remoteWorkPolicyId;
 
-    // Personal
-    _nameArController = TextEditingController(text: emp.nameAr ?? '');
-    _nameEnController = TextEditingController(
-      text: emp.nameEn ?? emp.name ?? '',
-    );
-    _emailController = TextEditingController(text: emp.email ?? '');
-    _personalEmailController = TextEditingController(
-      text: emp.personalEmail ?? '',
-    );
-    _phoneController = TextEditingController(text: emp.phone ?? '');
-    _secondaryPhoneController = TextEditingController(
-      text: emp.secondaryPhone ?? '',
-    );
-    _nationalIdController = TextEditingController(text: emp.nationalId ?? '');
-    _passportNumberController = TextEditingController(
-      text: emp.passportNumber ?? '',
-    );
-    _addressController = TextEditingController(text: emp.address ?? '');
-    _cityController = TextEditingController(text: emp.city ?? '');
-    _selectedGender = emp.gender?.toLowerCase() == 'female' ? 'female' : 'male';
-    _selectedMaritalStatus = emp.maritalStatus?.toLowerCase() == 'married'
-        ? 'married'
-        : 'single';
-    _idExpiryDate = _parseDate(emp.idExpiryDate);
-    _birthDate = _parseDate(emp.birthDate);
-
-    // Emergency
-    _emergencyNameController = TextEditingController(
-      text: emp.emergencyContactName ?? '',
-    );
-    _emergencyRelationController = TextEditingController(
-      text: emp.emergencyContactRelation ?? '',
-    );
-    _emergencyPhoneController = TextEditingController(
-      text: emp.emergencyContactPhone ?? '',
-    );
-
-    // Payroll
-    _basicSalaryController = TextEditingController(
-      text: emp.basicSalary != null ? '${emp.basicSalary}' : '',
-    );
-    _allowancesController = TextEditingController(
-      text: emp.allowances != null ? '${emp.allowances}' : '',
-    );
-    _currencyController = TextEditingController(text: emp.currency ?? 'EGP');
-    _bankNameController = TextEditingController(text: emp.bankName ?? '');
-    _bankAccountNumberController = TextEditingController(
-      text: emp.bankAccountNumber ?? '',
-    );
-    _ibanController = TextEditingController(text: emp.iban ?? '');
-    _socialInsuranceNumberController = TextEditingController(
-      text: emp.socialInsuranceNumber ?? '',
-    );
-
-    // Account
-    _userNameController = TextEditingController(text: emp.userName ?? '');
-    _passwordController = TextEditingController();
-    _leaveBalanceController = TextEditingController(
-      text: '${emp.leaveBalance ?? 21}',
-    );
     _selectedRoles = emp.allRoles.toSet();
     if (_selectedRoles.isEmpty) _selectedRoles.add('Employee');
-    _canAddAttendance = emp.canAddAttendance ?? true;
-    _canAddPlan = emp.canAddPlan ?? true;
-  }
 
-  static DateTime? _parseDate(String? raw) {
-    if (raw == null || raw.trim().isEmpty) return null;
-    return DateTime.tryParse(raw);
+    if (emp.customPermissions != null) {
+      _selectedPermissions.addAll(emp.customPermissions!);
+    } else if (emp.permissions != null) {
+      _selectedPermissions.addAll(emp.permissions!);
+    }
+
+    _selectedPhotoPath = emp.imageUrl;
   }
 
   @override
   void dispose() {
-    _positionController.dispose();
-    _employeeCodeController.dispose();
-    _gradeController.dispose();
-    _divisionController.dispose();
-    _contractTypeController.dispose();
-    _contractStatusController.dispose();
-    _nameArController.dispose();
-    _nameEnController.dispose();
-    _emailController.dispose();
-    _personalEmailController.dispose();
-    _phoneController.dispose();
-    _secondaryPhoneController.dispose();
-    _nationalIdController.dispose();
-    _passportNumberController.dispose();
-    _addressController.dispose();
-    _cityController.dispose();
-    _emergencyNameController.dispose();
-    _emergencyRelationController.dispose();
-    _emergencyPhoneController.dispose();
-    _basicSalaryController.dispose();
-    _allowancesController.dispose();
-    _currencyController.dispose();
-    _bankNameController.dispose();
-    _bankAccountNumberController.dispose();
-    _ibanController.dispose();
-    _socialInsuranceNumberController.dispose();
+    _nameController.dispose();
     _userNameController.dispose();
     _passwordController.dispose();
-    _leaveBalanceController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _employeeCodeController.dispose();
+    _positionController.dispose();
+    _mobileIdController.dispose();
     super.dispose();
   }
 
-  Future<void> _pickDate({
-    required BuildContext context,
-    required DateTime? initial,
-    required ValueChanged<DateTime> onPicked,
-  }) async {
-    final now = DateTime.now();
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: initial ?? now,
-      firstDate: DateTime(1950),
-      lastDate: DateTime(2050),
+  Future<void> _pickPhoto() async {
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
+      if (result != null && result.files.single.path != null) {
+        final filePath = result.files.single.path!;
+        final bytes = await File(filePath).readAsBytes();
+        final base64String = base64Encode(bytes);
+        setState(() {
+          _selectedPhotoPath = filePath;
+          _photoBase64 = 'data:image/jpeg;base64,$base64String';
+        });
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _openPermissionsPicker() async {
+    final permissionsRepo = sl<AdminPermissionsRepo>();
+    final result = await permissionsRepo.getCatalogue();
+    if (!mounted) return;
+    await result.when(
+      success: (catalogue) async {
+        final updated = await AdminPermissionsPickerDialogWidget.show(
+          context,
+          catalogue: catalogue,
+          initialSelectedPermissions: _selectedPermissions,
+        );
+        if (mounted && updated != null) {
+          setState(() {
+            _selectedPermissions
+              ..clear()
+              ..addAll(updated);
+          });
+        }
+      },
+      failure: (failure) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(failure.messageKey.tr(context: context)),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      },
     );
-    if (picked != null) {
-      onPicked(picked);
-    }
   }
 
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
+
+    final name = _nameController.text.trim();
+    if (name.isEmpty) return;
+
+    if (_selectedWorkSystem != 'onsite' &&
+        _selectedRemoteWorkPolicyId == null) {
+      CustomSnackBar.showError(
+        context,
+        message: 'admin.employeeWizard.workPolicyRequired'.tr(context: context),
+      );
+      return;
+    }
+
     setState(() => _isSaving = true);
     try {
       final body = EditEmployeeRequestBody(
-        name: _nameEnController.text.trim().isNotEmpty
-            ? _nameEnController.text.trim()
-            : widget.employee.name,
-        nameAr: _nameArController.text.trim().isNotEmpty
-            ? _nameArController.text.trim()
-            : null,
-        nameEn: _nameEnController.text.trim().isNotEmpty
-            ? _nameEnController.text.trim()
-            : null,
+        name: name,
         userName: _userNameController.text.trim().isNotEmpty
             ? _userNameController.text.trim()
             : null,
         password: _passwordController.text.isNotEmpty
             ? _passwordController.text
             : null,
-        position: _positionController.text.trim().isNotEmpty
-            ? _positionController.text.trim()
-            : null,
-        employeeCode: _employeeCodeController.text.trim().isNotEmpty
-            ? _employeeCodeController.text.trim()
-            : null,
-        grade: _gradeController.text.trim().isNotEmpty
-            ? _gradeController.text.trim()
-            : null,
-        departmentId: _selectedDepartmentId,
-        division: _divisionController.text.trim().isNotEmpty
-            ? _divisionController.text.trim()
-            : null,
-        branchId: _selectedBranchId,
-        workSystem: _selectedWorkSystem,
-        directManagerId: _selectedDirectManagerId,
-        managerId: _selectedDirectManagerId,
-        contractType: _contractTypeController.text.trim().isNotEmpty
-            ? _contractTypeController.text.trim()
-            : null,
-        contractStatus: _contractStatusController.text.trim().isNotEmpty
-            ? _contractStatusController.text.trim()
-            : null,
-        joinDate: _joinDate?.toIso8601String(),
-        hireDate: _joinDate?.toIso8601String(),
-        contractEndDate: _contractEndDate?.toIso8601String(),
         email: _emailController.text.trim().isNotEmpty
             ? _emailController.text.trim()
-            : null,
-        personalEmail: _personalEmailController.text.trim().isNotEmpty
-            ? _personalEmailController.text.trim()
             : null,
         phone: _phoneController.text.trim().isNotEmpty
             ? _phoneController.text.trim()
             : null,
-        secondaryPhone: _secondaryPhoneController.text.trim().isNotEmpty
-            ? _secondaryPhoneController.text.trim()
+        employeeCode: _employeeCodeController.text.trim().isNotEmpty
+            ? _employeeCodeController.text.trim()
             : null,
-        nationalId: _nationalIdController.text.trim().isNotEmpty
-            ? _nationalIdController.text.trim()
+        position: _positionController.text.trim().isNotEmpty
+            ? _positionController.text.trim()
             : null,
-        passportNumber: _passportNumberController.text.trim().isNotEmpty
-            ? _passportNumberController.text.trim()
+        mobileId: _mobileIdController.text.trim().isNotEmpty
+            ? _mobileIdController.text.trim()
             : null,
-        idExpiryDate: _idExpiryDate?.toIso8601String(),
-        birthDate: _birthDate?.toIso8601String(),
-        gender: _selectedGender,
-        maritalStatus: _selectedMaritalStatus,
-        address: _addressController.text.trim().isNotEmpty
-            ? _addressController.text.trim()
-            : null,
-        city: _cityController.text.trim().isNotEmpty
-            ? _cityController.text.trim()
-            : null,
-        emergencyContactName: _emergencyNameController.text.trim().isNotEmpty
-            ? _emergencyNameController.text.trim()
-            : null,
-        emergencyContactRelation:
-            _emergencyRelationController.text.trim().isNotEmpty
-            ? _emergencyRelationController.text.trim()
-            : null,
-        emergencyContactPhone: _emergencyPhoneController.text.trim().isNotEmpty
-            ? _emergencyPhoneController.text.trim()
-            : null,
-        basicSalary: num.tryParse(_basicSalaryController.text.trim()),
-        allowances: num.tryParse(_allowancesController.text.trim()),
-        currency: _currencyController.text.trim().isNotEmpty
-            ? _currencyController.text.trim()
-            : 'EGP',
-        bankName: _bankNameController.text.trim().isNotEmpty
-            ? _bankNameController.text.trim()
-            : null,
-        bankAccountNumber: _bankAccountNumberController.text.trim().isNotEmpty
-            ? _bankAccountNumberController.text.trim()
-            : null,
-        iban: _ibanController.text.trim().isNotEmpty
-            ? _ibanController.text.trim()
-            : null,
-        socialInsuranceNumber:
-            _socialInsuranceNumberController.text.trim().isNotEmpty
-            ? _socialInsuranceNumberController.text.trim()
-            : null,
+        imageUrl: _photoBase64 ?? widget.employee.imageUrl,
+        workSystem: _selectedWorkSystem,
+        remoteWorkPolicyId: _selectedRemoteWorkPolicyId,
+        departmentId: _selectedDepartmentId,
+        branchId: _selectedBranchId,
+        directManagerId: _selectedDirectManagerId,
+        managerId: _selectedDirectManagerId,
         role: _selectedRoles.contains('Admin')
             ? 'Admin'
             : _selectedRoles.contains('Supervisor')
             ? 'Supervisor'
             : 'Employee',
         roles: _selectedRoles.toList(),
-        canAddAttendance: _canAddAttendance,
-        canAddPlan: _canAddPlan,
-        leaveBalance: int.tryParse(_leaveBalanceController.text.trim()),
+        customPermissions: _selectedPermissions.toList(),
       );
+
       await widget.onSave(body);
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -357,105 +240,519 @@ class _AdminEmployeeProfileEditFormWidgetState
       child: ListView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         children: [
-          AdminEmployeeEditJobCardWidget(
-            positionController: _positionController,
-            employeeCodeController: _employeeCodeController,
-            gradeController: _gradeController,
-            divisionController: _divisionController,
-            contractTypeController: _contractTypeController,
-            contractStatusController: _contractStatusController,
-            selectedDepartmentId: _selectedDepartmentId,
-            selectedBranchId: _selectedBranchId,
-            selectedWorkSystem: _selectedWorkSystem,
-            selectedDirectManagerId: _selectedDirectManagerId,
-            joinDate: _joinDate,
-            contractEndDate: _contractEndDate,
-            onDepartmentChanged: (val) =>
-                setState(() => _selectedDepartmentId = val),
-            onBranchChanged: (val) => setState(() => _selectedBranchId = val),
-            onWorkSystemChanged: (val) =>
-                setState(() => _selectedWorkSystem = val),
-            onManagerChanged: (val) =>
-                setState(() => _selectedDirectManagerId = val),
-            onSelectJoinDate: () => _pickDate(
-              context: context,
-              initial: _joinDate,
-              onPicked: (d) => setState(() => _joinDate = d),
-            ),
-            onSelectContractEndDate: () => _pickDate(
-              context: context,
-              initial: _contractEndDate,
-              onPicked: (d) => setState(() => _contractEndDate = d),
-            ),
+          // Section 1: Personal & Account Details
+          AdminEmployeeProfileInfoCardWidget(
+            title: 'admin.employeeWizard.personalTitle'.tr(context: context),
+            icon: Icons.person_outline_rounded,
+            children: [
+              // Avatar Picker
+              Center(
+                child: GestureDetector(
+                  onTap: _pickPhoto,
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: 88.r,
+                        height: 88.r,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.brandPrimary,
+                            width: 2,
+                          ),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: AppColors.shadow,
+                              blurRadius: 8,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: ClipOval(
+                          child: _buildAvatarImage(),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: EdgeInsets.all(6.r),
+                          decoration: const BoxDecoration(
+                            color: AppColors.brandPrimary,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.camera_alt_rounded,
+                            size: 16.r,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              hSpace(16),
+              AdminWizardFieldWidget(
+                label: 'admin.employeeWizard.employeeCode'.tr(context: context),
+                required: false,
+                child: CustomTextFormField(
+                  controller: _employeeCodeController,
+                  hintText: 'EMP-001',
+                  prefixIcon: Icon(
+                    Icons.badge_outlined,
+                    size: 20.r,
+                    color: AppColors.placeholder,
+                  ),
+                ),
+              ),
+              AdminWizardFieldWidget(
+                label: 'admin.employeeWizard.fullName'.tr(context: context),
+                child: CustomTextFormField(
+                  controller: _nameController,
+                  hintText: 'admin.employeeWizard.fullNameHint'.tr(
+                    context: context,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.person_outline,
+                    size: 20.r,
+                    color: AppColors.placeholder,
+                  ),
+                  validator: (val) {
+                    if (val == null || val.trim().isEmpty) {
+                      return 'admin.employeeWizard.requiredField'.tr(
+                        context: context,
+                      );
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              AdminWizardFieldWidget(
+                label: 'admin.employeeWizard.username'.tr(context: context),
+                child: CustomTextFormField(
+                  controller: _userNameController,
+                  hintText: 'user.name',
+                  prefixIcon: Icon(
+                    Icons.alternate_email_rounded,
+                    size: 20.r,
+                    color: AppColors.placeholder,
+                  ),
+                  validator: (val) {
+                    if (val == null || val.trim().isEmpty) {
+                      return 'admin.employeeWizard.requiredField'.tr(
+                        context: context,
+                      );
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              AdminWizardFieldWidget(
+                label: 'admin.employeeWizard.password'.tr(context: context),
+                required: false,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Directionality(
+                      textDirection: ui.TextDirection.ltr,
+                      child: CustomTextFormField(
+                        controller: _passwordController,
+                        hintText: '••••••••',
+                        prefixIcon: Icon(
+                          Icons.lock_outline,
+                          size: 20.r,
+                          color: AppColors.placeholder,
+                        ),
+                        obscureText: _obscurePassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            size: 20.r,
+                            color: AppColors.textSecondary,
+                          ),
+                          onPressed: () {
+                            setState(
+                              () => _obscurePassword = !_obscurePassword,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    hSpace(4),
+                    Text(
+                      'admin.editEmployee.leavePasswordEmptyHint'.tr(
+                        context: context,
+                      ),
+                      style: AppTextStyles.font11Regular.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              AdminWizardFieldWidget(
+                label: 'admin.employeeWizard.email'.tr(context: context),
+                required: false,
+                child: CustomTextFormField(
+                  controller: _emailController,
+                  hintText: 'user@company.com',
+                  prefixIcon: Icon(
+                    Icons.mail_outline,
+                    size: 20.r,
+                    color: AppColors.placeholder,
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (val) {
+                    if (val != null && val.trim().isNotEmpty) {
+                      final emailRegex = RegExp(
+                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                      );
+                      if (!emailRegex.hasMatch(val.trim())) {
+                        return 'admin.employeeWizard.invalidEmail'.tr(
+                          context: context,
+                        );
+                      }
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              AdminWizardFieldWidget(
+                label: 'admin.employeeWizard.phone'.tr(context: context),
+                required: false,
+                child: CustomTextFormField(
+                  controller: _phoneController,
+                  hintText: '01012345678',
+                  prefixIcon: Icon(
+                    Icons.phone_outlined,
+                    size: 20.r,
+                    color: AppColors.placeholder,
+                  ),
+                  keyboardType: TextInputType.phone,
+                ),
+              ),
+              AdminWizardFieldWidget(
+                label: 'admin.employeeWizard.position'.tr(context: context),
+                required: false,
+                child: CustomTextFormField(
+                  controller: _positionController,
+                  hintText: 'admin.employeeWizard.positionHint'.tr(
+                    context: context,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.work_outline,
+                    size: 20.r,
+                    color: AppColors.placeholder,
+                  ),
+                ),
+              ),
+              AdminWizardFieldWidget(
+                label: 'admin.employeeWizard.mobile'.tr(context: context),
+                required: false,
+                child: CustomTextFormField(
+                  controller: _mobileIdController,
+                  hintText: 'Device Hardware UUID',
+                  prefixIcon: Icon(
+                    Icons.smartphone_rounded,
+                    size: 20.r,
+                    color: AppColors.placeholder,
+                  ),
+                ),
+              ),
+            ],
           ),
           hSpace(16),
-          AdminEmployeeEditPersonalCardWidget(
-            nameArController: _nameArController,
-            nameEnController: _nameEnController,
-            emailController: _emailController,
-            personalEmailController: _personalEmailController,
-            phoneController: _phoneController,
-            secondaryPhoneController: _secondaryPhoneController,
-            nationalIdController: _nationalIdController,
-            passportNumberController: _passportNumberController,
-            addressController: _addressController,
-            cityController: _cityController,
-            selectedGender: _selectedGender,
-            selectedMaritalStatus: _selectedMaritalStatus,
-            idExpiryDate: _idExpiryDate,
-            birthDate: _birthDate,
-            onGenderChanged: (val) => setState(() => _selectedGender = val),
-            onMaritalStatusChanged: (val) =>
-                setState(() => _selectedMaritalStatus = val),
-            onSelectIdExpiryDate: () => _pickDate(
+
+          // Section 2: Work System & Policy
+          AdminEmployeeProfileInfoCardWidget(
+            title: 'admin.employeeWizard.workTitle'.tr(context: context),
+            icon: Icons.devices_other_outlined,
+            children: [
+              AdminEmployeeWorkSystemWidget(
+                selectedSystem: _selectedWorkSystem,
+                selectedPolicyId: _selectedRemoteWorkPolicyId,
+                onSystemChanged: (ws) =>
+                    setState(() => _selectedWorkSystem = ws),
+                onPolicyChanged: (pid) =>
+                    setState(() => _selectedRemoteWorkPolicyId = pid),
+              ),
+            ],
+          ),
+          hSpace(16),
+
+          // Section 3: Organization, Roles & Permissions
+          AdminEmployeeProfileInfoCardWidget(
+            title: 'admin.employeeWizard.attendanceTitle'.tr(
               context: context,
-              initial: _idExpiryDate,
-              onPicked: (d) => setState(() => _idExpiryDate = d),
             ),
-            onSelectBirthDate: () => _pickDate(
-              context: context,
-              initial: _birthDate,
-              onPicked: (d) => setState(() => _birthDate = d),
-            ),
-          ),
-          hSpace(16),
-          AdminEmployeeEditEmergencyCardWidget(
-            emergencyNameController: _emergencyNameController,
-            emergencyRelationController: _emergencyRelationController,
-            emergencyPhoneController: _emergencyPhoneController,
-          ),
-          hSpace(16),
-          AdminEmployeeEditPayrollCardWidget(
-            basicSalaryController: _basicSalaryController,
-            allowancesController: _allowancesController,
-            currencyController: _currencyController,
-            bankNameController: _bankNameController,
-            bankAccountNumberController: _bankAccountNumberController,
-            ibanController: _ibanController,
-            socialInsuranceNumberController: _socialInsuranceNumberController,
-          ),
-          hSpace(16),
-          AdminEmployeeEditAccountCardWidget(
-            userNameController: _userNameController,
-            passwordController: _passwordController,
-            leaveBalanceController: _leaveBalanceController,
-            selectedRoles: _selectedRoles,
-            canAddAttendance: _canAddAttendance,
-            canAddPlan: _canAddPlan,
-            onRoleToggled: (role) {
-              setState(() {
-                if (_selectedRoles.contains(role)) {
-                  if (_selectedRoles.length > 1) _selectedRoles.remove(role);
-                } else {
-                  _selectedRoles.add(role);
-                }
-              });
-            },
-            onCanAddAttendanceChanged: (val) =>
-                setState(() => _canAddAttendance = val),
-            onCanAddPlanChanged: (val) => setState(() => _canAddPlan = val),
+            icon: Icons.corporate_fare_rounded,
+            children: [
+              // Department Dropdown
+              BlocBuilder<AdminDepartmentsCubit, AdminDepartmentsState>(
+                builder: (context, state) {
+                  final depts = switch (state) {
+                    AdminDepartmentsSuccess(:final departments) => departments,
+                    _ => <DepartmentModel>[],
+                  };
+                  return DropdownButtonFormField<int>(
+                    initialValue: _selectedDepartmentId != null &&
+                            depts.any((d) => d.id == _selectedDepartmentId)
+                        ? _selectedDepartmentId
+                        : null,
+                    decoration: InputDecoration(
+                      labelText: 'admin.employeeWizard.department'.tr(
+                        context: context,
+                      ),
+                      prefixIcon: const Icon(Icons.business_outlined),
+                      filled: true,
+                      fillColor: AppColors.pageBackground,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: const BorderSide(color: AppColors.border),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: const BorderSide(color: AppColors.border),
+                      ),
+                    ),
+                    items: depts
+                        .map(
+                          (d) => DropdownMenuItem(
+                            value: d.id,
+                            child: Text(d.departmentName ?? '-'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (val) =>
+                        setState(() => _selectedDepartmentId = val),
+                  );
+                },
+              ),
+              hSpace(14),
+
+              // Branch Dropdown
+              BlocBuilder<AdminBranchesCubit, AdminBranchesState>(
+                builder: (context, state) {
+                  final branches = switch (state) {
+                    AdminBranchesSuccess(:final branches) => branches,
+                    _ => <BranchModel>[],
+                  };
+                  return DropdownButtonFormField<int>(
+                    initialValue: _selectedBranchId != null &&
+                            branches.any((b) => b.id == _selectedBranchId)
+                        ? _selectedBranchId
+                        : null,
+                    decoration: InputDecoration(
+                      labelText: 'admin.employeeWizard.branch'.tr(
+                        context: context,
+                      ),
+                      prefixIcon: const Icon(Icons.location_on_outlined),
+                      filled: true,
+                      fillColor: AppColors.pageBackground,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: const BorderSide(color: AppColors.border),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: const BorderSide(color: AppColors.border),
+                      ),
+                    ),
+                    items: branches
+                        .map(
+                          (b) => DropdownMenuItem(
+                            value: b.id,
+                            child: Text(b.name ?? '-'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (val) =>
+                        setState(() => _selectedBranchId = val),
+                  );
+                },
+              ),
+              hSpace(14),
+
+              // Direct Manager Dropdown
+              BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
+                builder: (context, state) {
+                  final employees = state.maybeWhen(
+                    success: (empList, _) => empList
+                        .where((e) => e.id != widget.employee.id)
+                        .toList(),
+                    orElse: () => <EmployeeModel>[],
+                  );
+                  return DropdownButtonFormField<String>(
+                    initialValue: _selectedDirectManagerId != null &&
+                            employees.any(
+                              (e) => e.id == _selectedDirectManagerId,
+                            )
+                        ? _selectedDirectManagerId
+                        : null,
+                    decoration: InputDecoration(
+                      labelText: 'admin.employeeWizard.selectDirectManager'.tr(
+                        context: context,
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.supervisor_account_outlined,
+                      ),
+                      filled: true,
+                      fillColor: AppColors.pageBackground,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: const BorderSide(color: AppColors.border),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: const BorderSide(color: AppColors.border),
+                      ),
+                    ),
+                    items: [
+                      DropdownMenuItem<String>(
+                        value: null,
+                        child: Text(
+                          'admin.employeeWizard.noDirectManager'.tr(
+                            context: context,
+                          ),
+                        ),
+                      ),
+                      ...employees.map(
+                        (e) => DropdownMenuItem(
+                          value: e.id,
+                          child: Text(e.name ?? '-'),
+                        ),
+                      ),
+                    ],
+                    onChanged: (val) =>
+                        setState(() => _selectedDirectManagerId = val),
+                  );
+                },
+              ),
+              hSpace(16),
+
+              // Roles
+              Text(
+                'admin.employeeWizard.roles'.tr(context: context),
+                style: AppTextStyles.font14SemiBold.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              hSpace(8),
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
+                children: _availableRoles.map((role) {
+                  final isSelected = _selectedRoles.contains(role);
+                  return FilterChip(
+                    label: Text(
+                      role,
+                      style: AppTextStyles.font12Medium.copyWith(
+                        color: isSelected
+                            ? AppColors.white
+                            : AppColors.textPrimary,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                    selected: isSelected,
+                    selectedColor: AppColors.brandPrimary,
+                    checkmarkColor: AppColors.white,
+                    backgroundColor: AppColors.pageBackground,
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _selectedRoles.add(role);
+                        } else if (_selectedRoles.length > 1) {
+                          _selectedRoles.remove(role);
+                        }
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+              hSpace(16),
+
+              // Permissions Dialog Button
+              Container(
+                padding: EdgeInsets.all(14.r),
+                decoration: BoxDecoration(
+                  color: AppColors.pageBackground,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(8.r),
+                      decoration: BoxDecoration(
+                        color: AppColors.brandPrimary.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.admin_panel_settings_outlined,
+                        color: AppColors.brandPrimary,
+                        size: 20.r,
+                      ),
+                    ),
+                    wSpace(12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'admin.employeeWizard.permissionsSection'.tr(
+                              context: context,
+                            ),
+                            style: AppTextStyles.font13SemiBold.copyWith(
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          hSpace(2),
+                          Text(
+                            '${_selectedPermissions.length} ${'admin.employeeWizard.permissionsSelectedCount'.tr(context: context)}',
+                            style: AppTextStyles.font11Regular.copyWith(
+                              color: AppColors.brandPrimary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: _openPermissionsPicker,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.brandPrimary,
+                        foregroundColor: AppColors.white,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 14.w,
+                          vertical: 8.h,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        'admin.employeeWizard.managePermissions'.tr(
+                          context: context,
+                        ),
+                        style: AppTextStyles.font12Medium.copyWith(
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           hSpace(20),
+
+          // Bottom Action Buttons
           Row(
             children: [
               Expanded(
@@ -488,6 +785,36 @@ class _AdminEmployeeProfileEditFormWidgetState
           ),
           hSpace(32),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAvatarImage() {
+    if (_selectedPhotoPath != null) {
+      if (_selectedPhotoPath!.startsWith('data:image') ||
+          _selectedPhotoPath!.length > 300) {
+        try {
+          final clean = _selectedPhotoPath!.contains(',')
+              ? _selectedPhotoPath!.split(',').last
+              : _selectedPhotoPath!;
+          final bytes = base64Decode(clean);
+          return Image.memory(bytes, fit: BoxFit.cover);
+        } catch (_) {}
+      }
+      final file = File(_selectedPhotoPath!);
+      if (file.existsSync()) {
+        return Image.file(file, fit: BoxFit.cover);
+      }
+      if (_selectedPhotoPath!.startsWith('http')) {
+        return Image.network(_selectedPhotoPath!, fit: BoxFit.cover);
+      }
+    }
+    return Container(
+      color: AppColors.pageBackground,
+      child: Icon(
+        Icons.person_rounded,
+        size: 46.r,
+        color: AppColors.placeholder,
       ),
     );
   }

@@ -8,15 +8,15 @@ import 'supervisor_more_option_widget.dart';
 class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
   const SupervisorMoreOptionsSheetWidget({
     required this.onLeavesTap,
-    required this.onPlansTap,
     required this.onNotificationsTap,
     required this.onProfileTap,
     required this.onRemoteWorkTap,
+    this.onPlansTap,
     super.key,
   });
 
   final VoidCallback onLeavesTap;
-  final VoidCallback onPlansTap;
+  final VoidCallback? onPlansTap;
   final VoidCallback onNotificationsTap;
   final VoidCallback onProfileTap;
   final VoidCallback onRemoteWorkTap;
@@ -61,16 +61,6 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                   onTap: () {
                     Navigator.pop(context);
                     onLeavesTap();
-                  },
-                ),
-                SupervisorMoreOptionWidget(
-                  icon: Icons.map_outlined,
-                  labelKey: 'supervisor.more.plans',
-                  backgroundColor: AppColors.softBlueBackground,
-                  iconColor: AppColors.info,
-                  onTap: () {
-                    Navigator.pop(context);
-                    onPlansTap();
                   },
                 ),
                 SupervisorMoreOptionWidget(

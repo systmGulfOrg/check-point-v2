@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'admin_employee_contact_dialog_widget.dart';
 
 class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
   const AdminEmployeeProfileHeaderWidget({required this.employee, super.key});
@@ -16,6 +19,8 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
     final initials = _getInitials(employee.name);
     final status = employee.resolvedContractStatus;
     final isActive = status.toLowerCase() == 'active';
+    final hasPhone = employee.phone != null && employee.phone!.trim().isNotEmpty;
+    final hasEmail = employee.email != null && employee.email!.trim().isNotEmpty;
 
     return Container(
       width: double.infinity,
@@ -166,7 +171,7 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                                   Icons.badge_outlined,
                                   size: 14.r,
                                   color: AppColors.placeholder,
-                                ),
+                                  ),
                                 wSpace(4),
                                 Flexible(
                                   child: Text(
@@ -198,33 +203,39 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                 context,
                 icon: Icons.phone_outlined,
                 label: 'employee.profile.call'.tr(context: context),
-                color: AppColors.success,
-                onTap: employee.phone != null && employee.phone!.isNotEmpty
-                    ? () {
-                        Clipboard.setData(ClipboardData(text: employee.phone!));
-                        CustomSnackBar.show(
-                          context,
-                          message: 'employee.profile.phoneCopied'.tr(
-                            context: context,
-                          ),
-                        );
-                      }
+                color: hasPhone ? AppColors.success : AppColors.placeholder,
+                isEnabled: hasPhone,
+                onTap: hasPhone
+                    ? () => AdminEmployeeContactDialogWidget.show(
+                        context,
+                        name: employee.resolvedNameAr,
+                        phone: employee.phone!.trim(),
+                      )
                     : null,
               ),
               _buildQuickAction(
                 context,
                 icon: Icons.email_outlined,
                 label: 'employee.profile.emailAction'.tr(context: context),
-                color: AppColors.brandPrimary,
-                onTap: employee.email != null && employee.email!.isNotEmpty
-                    ? () {
-                        Clipboard.setData(ClipboardData(text: employee.email!));
-                        CustomSnackBar.show(
-                          context,
-                          message: 'employee.profile.emailCopied'.tr(
-                            context: context,
-                          ),
-                        );
+                color: hasEmail ? AppColors.brandPrimary : AppColors.placeholder,
+                isEnabled: hasEmail,
+                onTap: hasEmail
+                    ? () async {
+                        final email = employee.email!.trim();
+                        final uri = Uri.parse('mailto:$email');
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri);
+                        } else {
+                          if (context.mounted) {
+                            Clipboard.setData(ClipboardData(text: email));
+                            CustomSnackBar.show(
+                              context,
+                              message: 'employee.profile.emailCopied'.tr(
+                                context: context,
+                              ),
+                            );
+                          }
+                        }
                       }
                     : null,
               ),
@@ -233,6 +244,7 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                 icon: Icons.shield_outlined,
                 label: employee.role ?? 'Employee',
                 color: AppColors.brandSecondary,
+                isEnabled: true,
                 onTap: null,
               ),
             ],
@@ -247,26 +259,30 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
     required IconData icon,
     required String label,
     required Color color,
+    required bool isEnabled,
     VoidCallback? onTap,
   }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(10.r),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 16.r, color: color),
-            wSpace(6),
-            Text(
-              label,
-              style: AppTextStyles.font12Medium.copyWith(
-                color: color,
-                fontWeight: FontWeight.w600,
+      child: Opacity(
+        opacity: isEnabled ? 1.0 : 0.45,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 16.r, color: color),
+              wSpace(6),
+              Text(
+                label,
+                style: AppTextStyles.font12Medium.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

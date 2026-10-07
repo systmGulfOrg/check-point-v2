@@ -167,17 +167,17 @@ class EmployeeModel {
   String? get resolvedDirectManagerName => directManagerName ?? managerName;
   String get resolvedNameAr => nameAr ?? name ?? '-';
   String get resolvedNameEn => nameEn ?? userName ?? name ?? '-';
-  String get resolvedGrade => grade ?? 'Grade 4 (Senior)';
-  String get resolvedDivision => division ?? departmentName ?? '-';
-  String get resolvedContractType => contractType ?? 'Full-Time';
+  String get resolvedGrade => grade ?? '-';
+  String get resolvedDivision => division ?? '-';
+  String get resolvedContractType => contractType ?? '-';
   String get resolvedContractStatus =>
-      contractStatus ?? (canAddAttendance == true ? 'Active' : 'Probation');
+      contractStatus ?? (canAddAttendance == true ? 'Active' : 'Inactive');
   String get resolvedJoinDate => joinDate ?? hireDate ?? '-';
   String get resolvedNationalId => nationalId ?? passportNumber ?? '-';
   String get resolvedEmergencyName => emergencyContactName ?? '-';
   String get resolvedEmergencyRelation => emergencyContactRelation ?? '-';
   String get resolvedEmergencyPhone => emergencyContactPhone ?? '-';
-  String get resolvedBankName => bankName ?? 'CIB Bank';
+  String get resolvedBankName => bankName ?? '-';
   String get resolvedBankAccount => bankAccountNumber ?? '-';
   String get resolvedIban => iban ?? '-';
   num get resolvedBasicSalary => basicSalary ?? 0;

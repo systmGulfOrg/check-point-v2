@@ -6,12 +6,9 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/widgets/upcoming_holiday_card_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
-import 'package:check_point_v2/features/supervisor/presentation/cubit/plans/supervisor_plans_cubit.dart';
-import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_top_bar_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_personal_dashboard_bloc_builder_widget.dart';
-import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_active_tasks_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_alert_banner_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_stats_grid_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_team_today_bloc_builder_widget.dart';
@@ -26,8 +23,6 @@ class SupervisorHomeScreen extends StatelessWidget {
         color: AppColors.brandPrimary,
         onRefresh: () => Future.wait([
           context.read<SupervisorAttendanceCubit>().loadAttendance(),
-          context.read<SupervisorPlansCubit>().loadPlans(),
-          context.read<SupervisorTasksCubit>().loadTasks(),
           context.read<SupervisorTeamCubit>().loadTeam(),
           context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
         ]),
@@ -47,8 +42,6 @@ class SupervisorHomeScreen extends StatelessWidget {
               const SupervisorStatsGridBlocBuilderWidget(),
               hSpace(20),
               const SupervisorTeamTodayBlocBuilderWidget(),
-              hSpace(20),
-              const SupervisorActiveTasksBlocBuilderWidget(),
             ],
           ),
         ),

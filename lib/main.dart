@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import 'app/app.dart';
+import 'check_point_app.dart';
 import 'core/di/service_locator.dart';
 
 Future<void> main() async {

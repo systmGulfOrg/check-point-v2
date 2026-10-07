@@ -8,7 +8,6 @@ import 'supervisor_profile_screen.dart';
 import 'supervisor_team_screen.dart';
 import 'package:check_point_v2/features/employee/presentation/screens/employee_clock_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_more_options_sheet_widget.dart';
-import 'package:check_point_v2/features/projects/presentation/screens/projects_screen.dart';
 
 class SupervisorMainScreen extends StatefulWidget {
   const SupervisorMainScreen({super.key});
@@ -33,10 +32,6 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
       labelKey: 'supervisor.nav.attendance',
     ),
     NavBarItemData(
-      icon: Icons.assignment_outlined,
-      labelKey: 'supervisor.nav.tasks',
-    ),
-    NavBarItemData(
       icon: Icons.grid_view_rounded,
       labelKey: 'supervisor.nav.more',
     ),
@@ -47,7 +42,6 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
     EmployeeClockScreen(),
     SupervisorTeamScreen(),
     SupervisorAttendanceScreen(),
-    ProjectsScreen(),
     SupervisorProfileScreen(),
   ];
 
@@ -79,7 +73,7 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
         items: _items,
         selectedIndex: _selectedNavIndex,
         onTabSelected: (index) {
-          if (index == 5) {
+          if (index == 4) {
             setState(() => _selectedNavIndex = index);
             showModalBottomSheet<void>(
               context: context,
@@ -92,16 +86,14 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
                   context,
                   AppRoutes.supervisorLeaveManagement,
                 ),
-                onPlansTap: () =>
-                    Navigator.pushNamed(context, AppRoutes.supervisorPlans),
                 onNotificationsTap: () => Navigator.pushNamed(
                   context,
                   AppRoutes.supervisorNotifications,
                 ),
                 onProfileTap: () {
                   setState(() {
-                    _selectedIndex = 5;
-                    _selectedNavIndex = 5;
+                    _selectedIndex = 4;
+                    _selectedNavIndex = 4;
                   });
                 },
                 onRemoteWorkTap: () =>

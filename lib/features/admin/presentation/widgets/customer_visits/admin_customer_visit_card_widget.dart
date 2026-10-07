@@ -92,7 +92,7 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                   ),
                   SizedBox(width: 4.w),
                   Text(
-                    '${visit.visitDate ?? ''} • ${visit.visitTime ?? ''}',
+                    '${visit.visitDate != null ? AppDateFormatter.formatDateString(visit.visitDate) : ''} • ${visit.visitTime != null ? AppDateFormatter.formatTimeString(visit.visitTime) : ''}',
                     style: AppTextStyles.font12Medium.copyWith(
                       color: AppColors.textSecondary,
                     ),
