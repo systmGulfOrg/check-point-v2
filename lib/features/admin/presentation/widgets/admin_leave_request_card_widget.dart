@@ -28,6 +28,14 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasDirectManager = rawModel?.hasDirectManager == true ||
+        (rawModel?.directManagerName != null &&
+            rawModel!.directManagerName!.isNotEmpty);
+    final statusLower = (rawModel?.status ?? request.statusKey).toLowerCase();
+    final isWaitingForManager = hasDirectManager &&
+        rawModel?.managerActionAt == null &&
+        (statusLower == 'pending' || statusLower == 'pendingmanager');
+
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
@@ -191,26 +199,62 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
             ],
             if (request.isPending && !isOwnRequest) ...[
               hSpace(12),
-              Row(
-                children: [
-                  Expanded(
-                    child: AdminLeaveRequestActionWidget(
-                      icon: Icons.check_rounded,
-                      labelKey: 'supervisor.leave.approve',
-                      color: AppColors.success,
-                      onTap: onApprove,
+              if (isWaitingForManager)
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 8.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.softYellowBackground,
+                    borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(
+                      color: AppColors.warningOrange.withValues(alpha: 0.3),
                     ),
                   ),
-                  Expanded(
-                    child: AdminLeaveRequestActionWidget(
-                      icon: Icons.close_rounded,
-                      labelKey: 'supervisor.leave.reject',
-                      color: AppColors.error,
-                      onTap: onReject,
-                    ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.hourglass_top_rounded,
+                        size: 18.r,
+                        color: AppColors.warningOrange,
+                      ),
+                      wSpace(8),
+                      Expanded(
+                        child: Text(
+                          'leaves.approval.waitingForManagerFirst'.tr(
+                            context: context,
+                          ),
+                          style: AppTextStyles.font12Medium.copyWith(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                )
+              else
+                Row(
+                  children: [
+                    Expanded(
+                      child: AdminLeaveRequestActionWidget(
+                        icon: Icons.check_rounded,
+                        labelKey: 'supervisor.leave.approve',
+                        color: AppColors.success,
+                        onTap: onApprove,
+                      ),
+                    ),
+                    Expanded(
+                      child: AdminLeaveRequestActionWidget(
+                        icon: Icons.close_rounded,
+                        labelKey: 'supervisor.leave.reject',
+                        color: AppColors.error,
+                        onTap: onReject,
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ],
         ),
