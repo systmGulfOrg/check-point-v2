@@ -24,9 +24,9 @@ class EmployeeCheckInUseCase {
   }) async {
     final employeeId = await sessionStorage.readUserId() ?? '';
     final apiArea = switch (area) {
-      'Branch' => 'Office',
-      'Customer' => 'Customer',
-      'Site' => 'Site',
+      'Branch' || 'Office' => 'Office',
+      'Customer' || 'CustomerSite' => 'CustomerSite',
+      'Site' || 'Field' => 'Field',
       'Remote' => 'Remote',
       _ => 'Office',
     };
