@@ -35,7 +35,6 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
         : 'EM';
     final status = request.status?.toLowerCase() ?? 'pending';
     final isPending = status == 'pending';
-    final isPendingHR = status == 'pendinghr';
 
     final (statusKey, statusColor, statusBgColor) = switch (status) {
       'pending' => (
@@ -75,12 +74,12 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
         ),
     };
 
+    // In supervisor management, the direct manager acts ONLY on Stage 1 (isPending).
+    // Once approved by manager (status is PendingHR), it moves to HR/Admin stage and manager buttons must not show.
     final bool canApprove = !isOwnRequest &&
-        (isPending || isPendingHR) &&
+        isPending &&
         (userRole == 'Admin' || userRole == 'Supervisor');
-    final String approveLabel = (isPendingHR || userRole == 'Admin')
-        ? 'admin.requests.approve'
-        : 'leaves.approval.approveAsManager';
+    const String approveLabel = 'leaves.approval.approveAsManager';
 
     final start = AppDateFormatter.formatDateString(request.startDate);
     final end = AppDateFormatter.formatDateString(request.endDate);
