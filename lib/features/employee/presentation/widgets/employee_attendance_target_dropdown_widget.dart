@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 
 class EmployeeAttendanceTargetDropdownWidget extends StatelessWidget {
   const EmployeeAttendanceTargetDropdownWidget({
@@ -13,12 +14,14 @@ class EmployeeAttendanceTargetDropdownWidget extends StatelessWidget {
     required this.selectedCustomer,
     required this.onBranchChanged,
     required this.onCustomerChanged,
+    this.todayVisits = const [],
     super.key,
   });
 
   final String type;
   final List<BranchModel> branches;
   final List<CustomerModel> customers;
+  final List<CustomerVisitModel> todayVisits;
   final BranchModel? selectedBranch;
   final CustomerModel? selectedCustomer;
   final ValueChanged<BranchModel> onBranchChanged;
@@ -42,24 +45,42 @@ class EmployeeAttendanceTargetDropdownWidget extends StatelessWidget {
       key: ValueKey('emp_loc_${currentValue ?? 'none'}'),
       initialValue: currentValue,
       decoration: InputDecoration(labelText: 'attendance.location'.tr()),
+      isExpanded: true,
       items: isBranch
           ? branches
                 .where((item) => item.id != null)
                 .map(
                   (item) => DropdownMenuItem(
                     value: item.id.toString(),
-                    child: Text(item.name ?? 'Branch'),
+                    child: Text(
+                      item.name ?? 'Branch',
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 )
                 .toList()
           : customers
                 .where((item) => item.id != null)
-                .map(
-                  (item) => DropdownMenuItem(
+                .map((item) {
+                  final visit = todayVisits
+                      .where((v) => v.customerId == item.id)
+                      .firstOrNull;
+                  final timePrefix =
+                      visit?.visitTime != null && visit!.visitTime!.isNotEmpty
+                      ? '🕒 ${visit.visitTime} • '
+                      : '';
+                  final titleSuffix =
+                      visit?.title != null && visit!.title!.isNotEmpty
+                      ? ' (${visit.title})'
+                      : '';
+                  return DropdownMenuItem(
                     value: item.id,
-                    child: Text(item.name ?? type),
-                  ),
-                )
+                    child: Text(
+                      '$timePrefix${item.name ?? type}$titleSuffix',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  );
+                })
                 .toList(),
       onChanged: (value) {
         if (value == null) return;

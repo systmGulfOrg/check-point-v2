@@ -40,6 +40,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
   BranchModel? branch;
   CustomerModel? customer;
   CustomerVisitModel? todayScheduledVisit;
+  List<CustomerVisitModel> todayVisits = const [];
   LatLng? userLocation;
   GoogleMapController? mapController;
   bool isMapExpanded = false;
@@ -64,13 +65,45 @@ class _EmployeeAttendanceLocationSheetWidgetState
     );
   }
 
+  int _compareVisitTimes(String? a, String? b) {
+    if (a == null || a.isEmpty) return 1;
+    if (b == null || b.isEmpty) return -1;
+    final minutesA = _parseTimeToMinutes(a);
+    final minutesB = _parseTimeToMinutes(b);
+    return minutesA.compareTo(minutesB);
+  }
+
+  int _parseTimeToMinutes(String timeStr) {
+    try {
+      final clean = timeStr.trim();
+      final isPm = clean.contains('م') || clean.toLowerCase().contains('pm');
+      final isAm = clean.contains('ص') || clean.toLowerCase().contains('am');
+
+      final numbers = clean.replaceAll(RegExp(r'[^0-9:]'), '');
+      final parts = numbers.split(':');
+      if (parts.isEmpty) return 0;
+
+      int hours = int.tryParse(parts[0]) ?? 0;
+      int minutes = parts.length > 1 ? (int.tryParse(parts[1]) ?? 0) : 0;
+
+      if (isPm && hours < 12) {
+        hours += 12;
+      } else if (isAm && hours == 12) {
+        hours = 0;
+      }
+      return hours * 60 + minutes;
+    } catch (_) {
+      return 0;
+    }
+  }
+
   Future<void> _initScheduleAndVisits() async {
     final profile = await context
         .read<EmployeeAttendanceCubit>()
         .loadEmployeeProfile();
     if (!mounted) return;
 
-    CustomerVisitModel? visit;
+    List<CustomerVisitModel> visits = [];
     try {
       final result = await sl<AdminCustomerVisitsRepo>().getAllVisits();
       if (result case Success(:final data)) {
@@ -78,7 +111,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
         final currentEmpId = profile?.id;
         final currentEmpName = profile?.name?.trim().toLowerCase();
 
-        visit = data.where((v) {
+        visits = data.where((v) {
           if (v.status == 'cancelled') return false;
           final isToday = v.visitDate == todayStr ||
               v.visitDate?.startsWith(todayStr) == true;
@@ -88,16 +121,25 @@ class _EmployeeAttendanceLocationSheetWidgetState
               v.attendees.contains(currentEmpId);
           final isAttendeeName = currentEmpName != null &&
               v.attendees.any((a) => a.toLowerCase().contains(currentEmpName));
-          return isAttendeeId || isAttendeeName;
-        }).firstOrNull;
+          final isCreator = v.createdBy == currentEmpId;
+          return isAttendeeId || isAttendeeName || isCreator;
+        }).toList();
+
+        visits.sort((a, b) => _compareVisitTimes(a.visitTime, b.visitTime));
       }
     } catch (_) {}
 
     if (!mounted) return;
 
+    final activeVisit = visits
+            .where((v) => v.status != 'completed')
+            .firstOrNull ??
+        visits.firstOrNull;
+
     setState(() {
       isWorkScheduleLoading = false;
-      todayScheduledVisit = visit;
+      todayVisits = visits;
+      todayScheduledVisit = activeVisit;
     });
 
     final mode = profile?.todayWorkMode ?? 'onsite';
@@ -105,7 +147,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
         .read<EmployeeAttendanceCubit>()
         .hasClockOut(context.read<EmployeeAttendanceCubit>().todayAttendance);
 
-    if (visit != null || hasClockOut) {
+    if (activeVisit != null || hasClockOut) {
       _changeType('Customer');
     } else if (mode == 'remote') {
       _changeType('Remote');
@@ -393,6 +435,25 @@ class _EmployeeAttendanceLocationSheetWidgetState
                 final customerOptions = availableCustomers.isNotEmpty
                     ? availableCustomers
                     : customers;
+                final sortedCustomerOptions = List<CustomerModel>.from(customerOptions);
+                sortedCustomerOptions.sort((a, b) {
+                  final visitA = todayVisits
+                      .where((v) => v.customerId == a.id)
+                      .firstOrNull;
+                  final visitB = todayVisits
+                      .where((v) => v.customerId == b.id)
+                      .firstOrNull;
+                  if (visitA != null && visitB != null) {
+                    return _compareVisitTimes(
+                      visitA.visitTime,
+                      visitB.visitTime,
+                    );
+                  }
+                  if (visitA != null) return -1;
+                  if (visitB != null) return 1;
+                  return (a.name ?? '').compareTo(b.name ?? '');
+                });
+
                 if (type == 'Branch' &&
                     branch == null &&
                     branchOptions.isNotEmpty) {
@@ -404,8 +465,15 @@ class _EmployeeAttendanceLocationSheetWidgetState
                 }
                 if (type != 'Branch' &&
                     customer == null &&
-                    customerOptions.isNotEmpty) {
-                  customer = customerOptions.first;
+                    sortedCustomerOptions.isNotEmpty) {
+                  if (todayScheduledVisit != null) {
+                    final matching = sortedCustomerOptions
+                        .where((c) => c.id == todayScheduledVisit!.customerId)
+                        .firstOrNull;
+                    customer = matching ?? sortedCustomerOptions.first;
+                  } else {
+                    customer = sortedCustomerOptions.first;
+                  }
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     _focusTarget();
                     _loadTargetAddress();
@@ -426,7 +494,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
                           : 'employee.home.checkInAction'.tr(),
                       style: AppTextStyles.font20Bold,
                     ),
-                    if (todayScheduledVisit != null) ...[
+                    if (todayVisits.isNotEmpty) ...[
                       hSpace(8),
                       Container(
                         width: double.infinity,
@@ -440,40 +508,154 @@ class _EmployeeAttendanceLocationSheetWidgetState
                             ),
                           ),
                         ),
-                        child: Row(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              padding: EdgeInsets.all(8.r),
-                              decoration: const BoxDecoration(
-                                color: AppColors.brandPrimary,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.business_center_rounded,
-                                color: AppColors.white,
-                                size: 16.r,
-                              ),
-                            ),
-                            wSpace(10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'زيارة عميل مجدولة اليوم',
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(6.r),
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.brandPrimary,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.route_rounded,
+                                    color: AppColors.white,
+                                    size: 15.r,
+                                  ),
+                                ),
+                                wSpace(8),
+                                Expanded(
+                                  child: Text(
+                                    todayVisits.length == 1
+                                        ? 'زيارة عميل مجدولة اليوم'
+                                        : 'جدول زيارات اليوم (${todayVisits.length} زيارات مرتبة بالوقت)',
                                     style: AppTextStyles.font12Bold.copyWith(
                                       color: AppColors.brandPrimaryDark,
                                     ),
                                   ),
-                                  hSpace(2),
-                                  Text(
-                                    '${todayScheduledVisit!.customerName ?? "العميل"} • ${todayScheduledVisit!.title ?? "اجتماع عمل"}${todayScheduledVisit!.visitTime != null && todayScheduledVisit!.visitTime!.isNotEmpty ? " (${todayScheduledVisit!.visitTime})" : ""}',
-                                    style: AppTextStyles.font12Regular.copyWith(
-                                      color: AppColors.textPrimary,
+                                ),
+                              ],
+                            ),
+                            hSpace(8),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  for (int i = 0; i < todayVisits.length; i++) ...[
+                                    if (i > 0)
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 4.w,
+                                        ),
+                                        child: Icon(
+                                          Icons.arrow_back_rounded,
+                                          size: 14.r,
+                                          color: AppColors.placeholder,
+                                        ),
+                                      ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          todayScheduledVisit = todayVisits[i];
+                                          final matchingCust =
+                                              sortedCustomerOptions
+                                                  .where(
+                                                    (c) =>
+                                                        c.id ==
+                                                        todayVisits[i].customerId,
+                                                  )
+                                                  .firstOrNull;
+                                          if (matchingCust != null) {
+                                            customer = matchingCust;
+                                          }
+                                        });
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          _focusTarget();
+                                          _loadTargetAddress();
+                                        });
+                                      },
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w,
+                                          vertical: 6.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              todayScheduledVisit?.id ==
+                                                      todayVisits[i].id
+                                                  ? AppColors.brandPrimary
+                                                  : AppColors.cardBackground,
+                                          borderRadius: BorderRadius.circular(
+                                            8.r,
+                                          ),
+                                          border: Border.all(
+                                            color:
+                                                todayScheduledVisit?.id ==
+                                                        todayVisits[i].id
+                                                    ? AppColors.brandPrimary
+                                                    : AppColors.border,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              todayVisits[i].visitTime !=
+                                                          null &&
+                                                      todayVisits[i]
+                                                          .visitTime!
+                                                          .isNotEmpty
+                                                  ? '🕒 ${todayVisits[i].visitTime} '
+                                                  : '',
+                                              style: AppTextStyles.font11Bold
+                                                  .copyWith(
+                                                    color:
+                                                        todayScheduledVisit
+                                                                    ?.id ==
+                                                                todayVisits[i]
+                                                                    .id
+                                                            ? AppColors.white
+                                                            : AppColors
+                                                                .brandPrimary,
+                                                  ),
+                                            ),
+                                            Text(
+                                              todayVisits[i].customerName ??
+                                                  'عميل',
+                                              style: AppTextStyles.font11Medium
+                                                  .copyWith(
+                                                    color:
+                                                        todayScheduledVisit
+                                                                    ?.id ==
+                                                                todayVisits[i]
+                                                                    .id
+                                                            ? AppColors.white
+                                                            : AppColors
+                                                                .textPrimary,
+                                                  ),
+                                            ),
+                                            if (todayVisits[i].status ==
+                                                'completed') ...[
+                                              wSpace(4),
+                                              Icon(
+                                                Icons.check_circle_rounded,
+                                                size: 12.r,
+                                                color:
+                                                    todayScheduledVisit?.id ==
+                                                            todayVisits[i].id
+                                                        ? AppColors.white
+                                                        : AppColors.success,
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                  ],
                                 ],
                               ),
                             ),
@@ -609,7 +791,8 @@ class _EmployeeAttendanceLocationSheetWidgetState
                       EmployeeAttendanceTargetDropdownWidget(
                         type: type,
                         branches: branchOptions,
-                        customers: customerOptions,
+                        customers: sortedCustomerOptions,
+                        todayVisits: todayVisits,
                         selectedBranch: branch,
                         selectedCustomer: customer,
                         onBranchChanged: (selected) {
@@ -620,7 +803,15 @@ class _EmployeeAttendanceLocationSheetWidgetState
                           });
                         },
                         onCustomerChanged: (selected) {
-                          setState(() => customer = selected);
+                          setState(() {
+                            customer = selected;
+                            final matching = todayVisits
+                                .where((v) => v.customerId == selected.id)
+                                .firstOrNull;
+                            if (matching != null) {
+                              todayScheduledVisit = matching;
+                            }
+                          });
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             _focusTarget();
                             _loadTargetAddress();
