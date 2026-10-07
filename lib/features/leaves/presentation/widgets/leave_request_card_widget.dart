@@ -189,36 +189,45 @@ class LeaveRequestCardWidget extends StatelessWidget {
               if (request.attachmentUrl != null &&
                   request.attachmentUrl!.isNotEmpty) ...[
                 SizedBox(height: 6.h),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 8.w,
-                    vertical: 3.h,
+                InkWell(
+                  onTap: () => AppDocumentViewerDialogWidget.show(
+                    context,
+                    fileName: 'مستند طلب الإجازة (${request.leaveTypeName})',
+                    fileUrl: request.attachmentUrl,
                   ),
-                  decoration: BoxDecoration(
-                    color: AppColors.brandPrimary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.attach_file_rounded,
-                        size: 12.r,
-                        color: AppColors.brandPrimary,
-                      ),
-                      SizedBox(width: 4.w),
-                      Flexible(
-                        child: Text(
-                          'leaves.request.hasAttachment'.tr(),
-                          style: AppTextStyles.font11Regular.copyWith(
-                            color: AppColors.brandPrimary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                  borderRadius: BorderRadius.circular(6.r),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 3.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.brandPrimary.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.attach_file_rounded,
+                          size: 12.r,
+                          color: AppColors.brandPrimary,
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 4.w),
+                        Flexible(
+                          child: Text(
+                            'leaves.request.hasAttachment'.tr(),
+                            style: AppTextStyles.font11Regular.copyWith(
+                              color: AppColors.brandPrimary,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

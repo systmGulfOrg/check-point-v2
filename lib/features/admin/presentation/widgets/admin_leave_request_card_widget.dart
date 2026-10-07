@@ -203,36 +203,45 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
                         if (request.attachmentUrl != null &&
                             request.attachmentUrl!.isNotEmpty) ...[
                           const Spacer(),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 6.w,
-                              vertical: 2.h,
+                          InkWell(
+                            onTap: () => AppDocumentViewerDialogWidget.show(
+                              context,
+                              fileName: 'مستند طلب الإجازة - ${request.nameKey}',
+                              fileUrl: request.attachmentUrl,
                             ),
-                            decoration: BoxDecoration(
-                              color: AppColors.brandPrimary.withValues(
-                                alpha: 0.08,
+                            borderRadius: BorderRadius.circular(6.r),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 6.w,
+                                vertical: 2.h,
                               ),
-                              borderRadius: BorderRadius.circular(6.r),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.attach_file_rounded,
-                                  size: 12.r,
-                                  color: AppColors.brandPrimary,
+                              decoration: BoxDecoration(
+                                color: AppColors.brandPrimary.withValues(
+                                  alpha: 0.08,
                                 ),
-                                SizedBox(width: 3.w),
-                                Text(
-                                  'leaves.request.hasAttachment'.tr(
-                                    context: context,
-                                  ),
-                                  style: AppTextStyles.font11Regular.copyWith(
+                                borderRadius: BorderRadius.circular(6.r),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.attach_file_rounded,
+                                    size: 12.r,
                                     color: AppColors.brandPrimary,
-                                    fontWeight: FontWeight.w500,
                                   ),
-                                ),
-                              ],
+                                  SizedBox(width: 3.w),
+                                  Text(
+                                    'leaves.request.hasAttachment'.tr(
+                                      context: context,
+                                    ),
+                                    style: AppTextStyles.font11Regular.copyWith(
+                                      color: AppColors.brandPrimary,
+                                      fontWeight: FontWeight.w500,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],

@@ -6,7 +6,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
-import 'admin_customer_visit_doc_viewer_dialog_widget.dart';
 import 'admin_record_visit_outcome_dialog_widget.dart';
 
 class AdminCustomerVisitCardWidget extends StatelessWidget {
@@ -164,12 +163,10 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
           if (visit.documentName != null && visit.documentName!.isNotEmpty) ...[
             SizedBox(height: 8.h),
             InkWell(
-              onTap: () => showDialog<void>(
-                context: context,
-                builder: (_) => AdminCustomerVisitDocViewerDialogWidget(
-                  fileName: visit.documentName!,
-                  fileUrl: visit.documentUrl,
-                ),
+              onTap: () => AppDocumentViewerDialogWidget.show(
+                context,
+                fileName: visit.documentName!,
+                fileUrl: visit.documentUrl,
               ),
               borderRadius: BorderRadius.circular(8.r),
               child: Container(

@@ -530,6 +530,17 @@ class _ProjectTaskDetailSheetWidgetState
                     ),
                   )
                 : null,
+            trailing: Icon(
+              Icons.visibility_outlined,
+              size: 18.r,
+              color: AppColors.brandPrimary,
+            ),
+            onTap: () => AppDocumentViewerDialogWidget.show(
+              context,
+              fileName: file.fileName ?? 'مستند المهمة',
+              fileUrl: file.fileUrl,
+              fileSize: file.fileSize,
+            ),
           ),
         );
       }).toList(),
