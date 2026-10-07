@@ -56,8 +56,21 @@ class _EmployeeAttendanceLocationSheetWidgetState
   void initState() {
     super.initState();
     final cubit = context.read<EmployeeAttendanceCubit>();
+    final hasClockIn = cubit.hasClockIn(cubit.todayAttendance);
+    final hasClockOut = cubit.hasClockOut(cubit.todayAttendance);
+    final mode = cubit.employeeProfile?.todayWorkMode ?? 'onsite';
+
+    if (!widget.isCheckOut && (hasClockIn || hasClockOut)) {
+      type = 'Customer';
+      cubit.loadCustomersByType('Customer');
+    } else if (mode == 'remote') {
+      type = 'Remote';
+    } else {
+      type = 'Branch';
+      cubit.loadBranches();
+    }
+
     _initScheduleAndVisits();
-    cubit.loadBranches();
     _refreshLocation();
     timer = Timer.periodic(
       const Duration(seconds: 5),
@@ -143,11 +156,16 @@ class _EmployeeAttendanceLocationSheetWidgetState
     });
 
     final mode = profile?.todayWorkMode ?? 'onsite';
+    final hasClockIn = context
+        .read<EmployeeAttendanceCubit>()
+        .hasClockIn(context.read<EmployeeAttendanceCubit>().todayAttendance);
     final hasClockOut = context
         .read<EmployeeAttendanceCubit>()
         .hasClockOut(context.read<EmployeeAttendanceCubit>().todayAttendance);
 
-    if (activeVisit != null || hasClockOut) {
+    if (!widget.isCheckOut && (hasClockIn || hasClockOut)) {
+      _changeType('Customer');
+    } else if (activeVisit != null) {
       _changeType('Customer');
     } else if (mode == 'remote') {
       _changeType('Remote');
@@ -157,33 +175,49 @@ class _EmployeeAttendanceLocationSheetWidgetState
   }
 
   Set<String> get allowedTypes {
-    final mode = context
-        .read<EmployeeAttendanceCubit>()
-        .employeeProfile
-        ?.todayWorkMode ?? 'onsite';
+    final cubit = context.read<EmployeeAttendanceCubit>();
+    final mode = cubit.employeeProfile?.todayWorkMode ?? 'onsite';
+    final hasClockIn = cubit.hasClockIn(cubit.todayAttendance);
+    final hasClockOut = cubit.hasClockOut(cubit.todayAttendance);
 
     final types = <String>{};
 
-    if (mode == 'remote') {
-      types.add('Remote');
-    } else {
-      // mode == 'onsite' or 'hybrid' on onsite day
-      types.add('Branch');
-    }
-
-    final hasClockOut = context
-        .read<EmployeeAttendanceCubit>()
-        .hasClockOut(context.read<EmployeeAttendanceCubit>().todayAttendance);
-
-    // Customer visit is available if scheduled, or if checked out of branch, or has customers
-    if (todayScheduledVisit != null || hasClockOut || availableCustomers.isNotEmpty) {
+    if (widget.isCheckOut) {
+      if (mode == 'remote') {
+        types.add('Remote');
+      } else {
+        types.add('Branch');
+      }
       types.add('Customer');
+      return types;
     }
+
+    if (!hasClockIn && !hasClockOut) {
+      if (mode == 'remote') {
+        types.add('Remote');
+      } else {
+        types.add('Branch');
+      }
+    }
+
+    types.add('Customer');
 
     return types;
   }
 
   void _showDisabledTypeMessage(String value) {
+    final cubit = context.read<EmployeeAttendanceCubit>();
+    final hasClockIn = cubit.hasClockIn(cubit.todayAttendance);
+    final hasClockOut = cubit.hasClockOut(cubit.todayAttendance);
+
+    if (!widget.isCheckOut && (hasClockIn || hasClockOut) && (value == 'Branch' || value == 'Remote')) {
+      CustomSnackBar.showError(
+        context,
+        message: 'attendance.alreadyCheckedInOffice'.tr(context: context),
+      );
+      return;
+    }
+
     if (value == 'Customer' && todayScheduledVisit == null && availableCustomers.isEmpty) {
       CustomSnackBar.showError(
         context,
@@ -192,10 +226,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
       return;
     }
 
-    final mode = context
-        .read<EmployeeAttendanceCubit>()
-        .employeeProfile
-        ?.todayWorkMode;
+    final mode = cubit.employeeProfile?.todayWorkMode;
     final messageKey = switch (mode) {
       'remote' => 'attendance.remoteWorkDayLocationMessage',
       'onsite' => 'attendance.onsiteWorkDayLocationMessage',
@@ -279,12 +310,16 @@ class _EmployeeAttendanceLocationSheetWidgetState
       branch = null;
       customer = null;
       targetAddress = null;
-      if (value != 'Branch') {
+      if (value == 'Branch') {
         availableCustomers = const [];
+      } else if (value == 'Customer') {
+        availableBranches = const [];
       }
     });
     if (value == 'Customer') {
       context.read<EmployeeAttendanceCubit>().loadCustomersByType('Customer');
+    } else if (value == 'Branch') {
+      context.read<EmployeeAttendanceCubit>().loadBranches();
     }
   }
 

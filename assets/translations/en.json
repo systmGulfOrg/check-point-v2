@@ -678,6 +678,7 @@
   "attendance.address": "Address",
   "attendance.addressCopied": "Address copied",
   "attendance.addressUnavailable": "Address is unavailable",
+  "attendance.alreadyCheckedInOffice": "You have already completed office attendance for today. Only customer visits are available.",
   "attendance.branch": "Branch",
   "attendance.collapseMap": "Collapse map",
   "attendance.coordinates": "Coordinates",

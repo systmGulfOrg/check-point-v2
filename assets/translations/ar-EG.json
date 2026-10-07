@@ -678,6 +678,7 @@
   "attendance.address": "العنوان",
   "attendance.addressCopied": "تم نسخ العنوان",
   "attendance.addressUnavailable": "العنوان غير متاح",
+  "attendance.alreadyCheckedInOffice": "لقد قمت بتسجيل الحضور للشركة بالفعل لهذا اليوم. متاح فقط تسجيل زيارات العملاء.",
   "attendance.branch": "الفرع",
   "attendance.collapseMap": "تصغير الخريطة",
   "attendance.coordinates": "الإحداثيات",
