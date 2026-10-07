@@ -9,6 +9,7 @@ import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
 import 'admin_customer_visit_doc_viewer_dialog_widget.dart';
 
@@ -114,16 +115,44 @@ class _AdminCreateCustomerVisitSheetWidgetState
     });
   }
 
-  void _attachMockDocument() {
-    setState(() {
-      attachedDocName =
-          'خطة_الزيارة_${DateTime.now().millisecondsSinceEpoch % 1000}.pdf';
-      attachedDocUrl = 'https://example.com/docs/visit_plan.pdf';
-    });
-    CustomSnackBar.showSuccess(
-      context,
-      message: 'admin.visits.docAttached'.tr(),
-    );
+  Future<void> _pickDocument() async {
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: [
+          'pdf',
+          'png',
+          'jpg',
+          'jpeg',
+          'doc',
+          'docx',
+          'xls',
+          'xlsx',
+          'txt',
+        ],
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        setState(() {
+          attachedDocName = file.name;
+          attachedDocUrl = file.path ?? 'file://${file.name}';
+        });
+        if (mounted) {
+          CustomSnackBar.showSuccess(
+            context,
+            message: 'admin.visits.docAttached'.tr(),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        CustomSnackBar.showError(
+          context,
+          message: 'حدث خطأ أثناء اختيار الملف'.tr(),
+        );
+      }
+    }
   }
 
   Future<void> _submit() async {
@@ -608,7 +637,7 @@ class _AdminCreateCustomerVisitSheetWidgetState
                       )
                     : InkWell(
                         key: const ValueKey('doc_upload_button'),
-                        onTap: _attachMockDocument,
+                        onTap: _pickDocument,
                         borderRadius: BorderRadius.circular(14.r),
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 14.h),
