@@ -111,7 +111,7 @@ class _AdminEmployeeProfileBlocBuilderWidgetState
                         ),
                         Tab(
                           icon: const Icon(Icons.verified_user_outlined),
-                          text: 'employee.profile.tabDocsSecurity'.tr(
+                          text: 'employee.profile.tabDevicesSecurity'.tr(
                             context: context,
                           ),
                         ),

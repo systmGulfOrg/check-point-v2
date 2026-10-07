@@ -5,7 +5,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/device/pending_device_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
-import 'admin_employee_profile_documents_card_widget.dart';
 import 'admin_employee_profile_info_card_widget.dart';
 
 class AdminEmployeeProfileSecurityTabWidget extends StatelessWidget {
@@ -24,10 +23,7 @@ class AdminEmployeeProfileSecurityTabWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: Column(
         children: [
-          // 1. Digital Documents
-          AdminEmployeeProfileDocumentsCardWidget(employee: employee),
-
-          // 2. System Access & RBAC Permissions
+          // 1. System Access & RBAC Permissions
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.sectionRBAC'.tr(context: context),
             icon: Icons.admin_panel_settings_outlined,
