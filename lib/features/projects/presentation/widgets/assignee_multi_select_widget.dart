@@ -13,12 +13,18 @@ class AssigneeMultiSelectWidget extends StatefulWidget {
     required this.selectedIds,
     required this.onChanged,
     this.fallbackOptions = const [],
+    this.title,
+    this.hintText,
+    this.useNameAsKey = false,
     super.key,
   });
 
   final List<String> selectedIds;
   final ValueChanged<List<String>> onChanged;
   final List<String> fallbackOptions;
+  final String? title;
+  final String? hintText;
+  final bool useNameAsKey;
 
   @override
   State<AssigneeMultiSelectWidget> createState() =>
@@ -103,7 +109,13 @@ class _AssigneeMultiSelectWidgetState extends State<AssigneeMultiSelectWidget> {
                   final addedKeys = <String>{};
 
                   for (final emp in _employees) {
-                    final key = emp.id ?? emp.name ?? '';
+                    final key = widget.useNameAsKey
+                        ? (emp.name?.isNotEmpty == true
+                            ? emp.name!
+                            : (emp.userName?.isNotEmpty == true
+                                ? emp.userName!
+                                : (emp.id ?? '')))
+                        : (emp.id ?? emp.name ?? '');
                     if (key.isNotEmpty && !addedKeys.contains(key)) {
                       addedKeys.add(key);
                       allItems.add({
@@ -151,7 +163,10 @@ class _AssigneeMultiSelectWidgetState extends State<AssigneeMultiSelectWidget> {
                         children: [
                           Expanded(
                             child: Text(
-                              'projects.selectAssignees'.tr(context: context),
+                              widget.title ??
+                                  'projects.selectAssignees'.tr(
+                                    context: context,
+                                  ),
                               style: AppTextStyles.font18Bold,
                             ),
                           ),
@@ -266,7 +281,7 @@ class _AssigneeMultiSelectWidgetState extends State<AssigneeMultiSelectWidget> {
           children: [
             Expanded(
               child: Text(
-                'projects.assignees'.tr(context: context),
+                widget.title ?? 'projects.assignees'.tr(context: context),
                 style: AppTextStyles.font14Bold,
               ),
             ),
@@ -299,7 +314,8 @@ class _AssigneeMultiSelectWidgetState extends State<AssigneeMultiSelectWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'projects.selectAssignees'.tr(context: context),
+                        widget.hintText ??
+                            'projects.selectAssignees'.tr(context: context),
                         style: AppTextStyles.font13Regular.copyWith(
                           color: AppColors.textSecondary,
                         ),

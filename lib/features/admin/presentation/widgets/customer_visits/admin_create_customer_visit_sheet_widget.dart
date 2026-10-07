@@ -65,8 +65,8 @@ class _AdminCreateCustomerVisitSheetWidgetState
   Future<void> _loadSystemEmployees() async {
     setState(() => isLoadingEmployees = true);
     final result = await sl<AdminEmployeeRepo>().getEmployees(
-      page: 1,
-      pageSize: 50,
+      page: 0,
+      pageSize: 100,
     );
     if (!mounted) return;
     switch (result) {
