@@ -8,11 +8,13 @@ class EmployeeHomeQuickActionsWidget extends StatelessWidget {
   const EmployeeHomeQuickActionsWidget({
     required this.onRequestLeave,
     required this.onRequestPermission,
+    this.onCustomerVisitsTap,
     super.key,
   });
 
   final VoidCallback onRequestLeave;
   final VoidCallback onRequestPermission;
+  final VoidCallback? onCustomerVisitsTap;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,17 @@ class EmployeeHomeQuickActionsWidget extends StatelessWidget {
             ),
           ],
         ),
+        if (onCustomerVisitsTap != null) ...[
+          hSpace(10),
+          _QuickActionButton(
+            icon: Icons.handshake_outlined,
+            title: 'employee.home.customerVisits'.tr(context: context),
+            iconColor: AppColors.warning,
+            backgroundColor: AppColors.softYellowBackground,
+            borderColor: AppColors.warning.withValues(alpha: 0.25),
+            onTap: onCustomerVisitsTap!,
+          ),
+        ],
       ],
     );
   }

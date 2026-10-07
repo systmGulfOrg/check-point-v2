@@ -11,11 +11,13 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
     required this.onNotificationsTap,
     required this.onProfileTap,
     required this.onRemoteWorkTap,
+    this.onCustomersTap,
     this.onPlansTap,
     super.key,
   });
 
   final VoidCallback onLeavesTap;
+  final VoidCallback? onCustomersTap;
   final VoidCallback? onPlansTap;
   final VoidCallback onNotificationsTap;
   final VoidCallback onProfileTap;
@@ -83,6 +85,17 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
               crossAxisSpacing: 12.w,
               childAspectRatio: 1.32,
               children: [
+                SupervisorMoreOptionWidget(
+                  icon: Icons.business_center_outlined,
+                  labelKey: 'supervisor.more.customers',
+                  subtitleKey: 'supervisor.more.customersSubtitle',
+                  backgroundColor: AppColors.softBrandBackground,
+                  iconColor: AppColors.brandPrimary,
+                  onTap: () {
+                    Navigator.pop(context);
+                    onCustomersTap?.call();
+                  },
+                ),
                 SupervisorMoreOptionWidget(
                   icon: Icons.calendar_month_outlined,
                   labelKey: 'supervisor.more.leaves',

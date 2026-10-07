@@ -96,6 +96,10 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
                     _selectedNavIndex = 4;
                   });
                 },
+                onCustomersTap: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.adminLocations,
+                ),
                 onRemoteWorkTap: () =>
                     Navigator.pushNamed(context, AppRoutes.remoteWork),
               ),

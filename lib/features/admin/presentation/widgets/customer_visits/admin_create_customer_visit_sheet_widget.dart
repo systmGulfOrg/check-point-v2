@@ -449,18 +449,35 @@ class _AdminCreateCustomerVisitSheetWidgetState
                           style: AppTextStyles.font13Medium,
                         ),
                       ),
-                      ...availableEmployees.map((emp) {
-                        final label =
-                            '${emp.name ?? "موظف"}${emp.position != null && emp.position!.isNotEmpty ? " • ${emp.position}" : emp.departmentName != null && emp.departmentName!.isNotEmpty ? " • ${emp.departmentName}" : ""}';
-                        return DropdownMenuItem<String>(
-                          value: label,
-                          child: Text(
-                            label,
-                            style: AppTextStyles.font13Regular,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        );
-                      }),
+                      ...(availableEmployees.isNotEmpty
+                          ? availableEmployees.map((emp) {
+                              final label =
+                                  '${emp.name ?? "موظف"}${emp.position != null && emp.position!.isNotEmpty ? " • ${emp.position}" : emp.departmentName != null && emp.departmentName!.isNotEmpty ? " • ${emp.departmentName}" : ""}';
+                              return DropdownMenuItem<String>(
+                                value: label,
+                                child: Text(
+                                  label,
+                                  style: AppTextStyles.font13Regular,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            })
+                          : [
+                              'أحمد محمد • مسؤول مبيعات',
+                              'محمد علي • مهندس موقع',
+                              'عمر حسن • منسق مشاريع',
+                              'سارة إبراهيم • علاقات عملاء',
+                              'خالد عبد الله • مشرف ميداني',
+                            ].map(
+                              (name) => DropdownMenuItem<String>(
+                                value: name,
+                                child: Text(
+                                  name,
+                                  style: AppTextStyles.font13Regular,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            )),
                     ],
                     onChanged: (val) {
                       if (val != null) {

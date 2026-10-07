@@ -18,10 +18,75 @@ import 'admin_location_data.dart';
 import 'admin_locations_skeleton_widget.dart';
 import 'admin_locations_tab_widget.dart';
 
-class AdminCustomersBlocBuilderWidget extends StatelessWidget {
+class AdminCustomersBlocBuilderWidget extends StatefulWidget {
   const AdminCustomersBlocBuilderWidget({this.type = 'customer', super.key});
 
   final String type;
+
+  @override
+  State<AdminCustomersBlocBuilderWidget> createState() =>
+      _AdminCustomersBlocBuilderWidgetState();
+}
+
+class _AdminCustomersBlocBuilderWidgetState
+    extends State<AdminCustomersBlocBuilderWidget> {
+  String? _currentUserRole;
+  String? _currentUserName;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserSession();
+  }
+
+  Future<void> _loadUserSession() async {
+    final storage = sl<AuthSessionStorage>();
+    final role = await storage.readUserRole();
+    final name = await storage.readUserName();
+    if (mounted) {
+      setState(() {
+        _currentUserRole = role;
+        _currentUserName = name;
+      });
+    }
+  }
+
+  List<CustomerModel> _filterCustomers(List<CustomerModel> customers) {
+    final role = _currentUserRole?.toLowerCase() ?? '';
+    // Admins and SuperAdmins see all customers
+    if (role.contains('admin')) {
+      return customers;
+    }
+
+    final userName = _currentUserName?.trim().toLowerCase() ?? '';
+
+    return customers.where((c) {
+      final workesAs = c.workesAs?.trim().toLowerCase();
+      // If workesAs is empty, unrestricted, or not set, visible to all
+      if (workesAs == null ||
+          workesAs.isEmpty ||
+          workesAs == '-' ||
+          workesAs == 'الكل' ||
+          workesAs == 'all') {
+        return true;
+      }
+      if (userName.isNotEmpty && workesAs.contains(userName)) {
+        return true;
+      }
+      // Also match by partial tokens (e.g. if workesAs is "أحمد، محمد" and user is "أحمد" or "Ahmed")
+      final tokens = workesAs
+          .split(RegExp(r'[,،/|&\s]+'))
+          .map((t) => t.trim())
+          .where((t) => t.isNotEmpty);
+      for (final token in tokens) {
+        if (token.isNotEmpty &&
+            (userName.contains(token) || token.contains(userName))) {
+          return true;
+        }
+      }
+      return false;
+    }).toList();
+  }
 
   void _showDeleteDialog(BuildContext context, String customerId) {
     showDialog<void>(
@@ -118,8 +183,9 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
               style: AppTextStyles.font14Regular,
             ),
           ),
-          AdminCustomersSuccess(:final customers) =>
-            customers.isEmpty
+          AdminCustomersSuccess(:final customers) => () {
+            final visibleCustomers = _filterCustomers(customers);
+            return visibleCustomers.isEmpty
                 ? Padding(
                     padding: const EdgeInsets.all(24),
                     child: Text(
@@ -129,14 +195,14 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
                   )
                 : Column(
                     children: [
-                      for (final customer in customers) ...[
+                      for (final customer in visibleCustomers) ...[
                         AdminLocationCardWidget(
                           location: AdminLocationData(
                             nameKey: customer.name ?? '-',
                             descriptionKey: customer.workesAs ?? '-',
                             addressKey: customer.location ?? '-',
                             statusKey: 'admin.locations.status.active',
-                            icon: type == 'site'
+                            icon: widget.type == 'site'
                                 ? Icons.map_outlined
                                 : Icons.people_outline_rounded,
                             iconColor: AppColors.info,
@@ -167,7 +233,8 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
                         hSpace(10),
                       ],
                     ],
-                  ),
+                  );
+          }(),
           _ => const SizedBox.shrink(),
         },
       );

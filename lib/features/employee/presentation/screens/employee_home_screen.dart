@@ -288,6 +288,10 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                     context,
                     AppRoutes.permissionsRequest,
                   ),
+                  onCustomerVisitsTap: () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.adminLocations,
+                  ),
                 ),
                 hSpace(20),
                 EmployeeHomeLeavesBlocBuilderWidget(

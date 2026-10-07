@@ -536,6 +536,33 @@
     - لموظف العمل عن بُعد (`Remote`): يتاح له خيار **"عن بُعد"** افتراضياً.
 - **الحالة:** 🟢 تم الحل (Resolved).
 
+---
+
+## 49. تخصيص العملاء للموظفين وصلاحيات الوصول والزيارات لكل الأدوار (موظف / مشرف / مدير)
+- **الشاشات والملفات:**
+  - `AdminCustomersBlocBuilderWidget` (`lib/features/admin/presentation/widgets/admin_customers_bloc_builder_widget.dart`)
+  - `AdminLocationFormFieldsWidget` (`lib/features/admin/presentation/widgets/admin_location_form_fields_widget.dart`)
+  - `AdminCreateLocationSheetWidget` (`lib/features/admin/presentation/widgets/admin_create_location_sheet_widget.dart`)
+  - `AdminCreateCustomerVisitSheetWidget` (`lib/features/admin/presentation/widgets/customer_visits/admin_create_customer_visit_sheet_widget.dart`)
+  - `EmployeeHomeQuickActionsWidget` (`lib/features/employee/presentation/widgets/employee_home_quick_actions_widget.dart`)
+  - `EmployeeHomeScreen` (`lib/features/employee/presentation/screens/employee_home_screen.dart`)
+  - `SupervisorMoreOptionsSheetWidget` (`lib/features/supervisor/presentation/widgets/supervisor_more_options_sheet_widget.dart`)
+  - `SupervisorMainScreen` (`lib/features/supervisor/presentation/screens/supervisor_main_screen.dart`)
+  - ملفات الترجمة: `ar.json`, `ar-EG.json`, `en.json`
+- **المشكلة:**
+  1. الحاجة لتخصيص العميل لموظفين محددين (مثل أحمد ومحمد) بحيث لا يظهر العميل إلا للموظفين المسؤولين عنه فقط (وللإدارة/المشرفين).
+  2. عدم توفر شاشة / زر وصول مباشر لسجل العملاء والزيارات لكل من الموظف والمشرف لمتابعة تاريخ الزيارات وما تم فيها.
+  3. الحاجة لتمكين جميع الأدوار (موظف / مشرف / مدير) من إنشاء خطة زيارة للعميل مع قائمة موظفي السيستم الحاضرين.
+- **الحل المُنفذ:**
+  - **تخصيص الموظفين المسؤولين عن العميل (`workesAs`)**: إضافة حقل مخصص مع شرائح اقتراحات سريعة لأسماء موظفي السيستم تتيح تحديد المسؤولين (مثل أحمد، محمد) أو تركها فارغة ليتاح للجميع.
+  - **فلترة عرض العملاء بحسب المستخدم المسجل**: يرى المديرون كل العملاء، بينما يرى الموظف/المشرف حصراً العملاء المخصصين له أو العملاء المتاحين للجميع.
+  - **توفير قسم العملاء والزيارات في واجهات الموظف والمشرف**:
+    - في واجهة الموظف: إضافة زر إجراء سريع "العملاء وخطة الزيارات".
+    - في واجهة المشرف: إضافة خيار "العملاء والزيارات" في قائمة المزيد.
+  - **توليد خطط الزيارات وتوثيق المستندات**: فتح إمكانية إنشاء وتوثيق الزيارات لجميع الأدوار، مع ملء قائمة المرافقين/الحاضرين بموظفي النظام مباشرة.
+- **الحل:** 🟢 تم الحل (Resolved).
+
+
 
 
 
