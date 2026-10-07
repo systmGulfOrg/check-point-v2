@@ -46,6 +46,18 @@ class LeaveBalanceCardWidget extends StatelessWidget {
     if (name.startsWith('leaves.dashboard.')) {
       return name.tr();
     }
+    final lower = name.toLowerCase().trim();
+    if (lower == 'annual leave' ||
+        lower == 'annual' ||
+        lower == 'إجازة اعتيادية / سنوية') {
+      return 'leaves.dashboard.annualLeave'.tr();
+    }
+    if (lower == 'sick leave' || lower == 'sick' || lower == 'إجازة مرضية') {
+      return 'leaves.dashboard.sickLeave'.tr();
+    }
+    if (lower == 'casual leave' || lower == 'casual' || lower == 'إجازة عارضة') {
+      return 'leaves.dashboard.casualLeave'.tr();
+    }
     return name;
   }
 

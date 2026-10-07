@@ -1129,6 +1129,7 @@
   "leaves.dashboard.annualLeave": "إجازة اعتيادية / سنوية",
   "leaves.dashboard.balanceTitle": "رصيد الإجازات",
   "leaves.dashboard.casualLeave": "إجازة عارضة",
+  "leaves.dashboard.days": "أيام",
   "leaves.dashboard.daysLeft": "أيام متبقية",
   "leaves.dashboard.noLeavesTaken": "لم يتم استهلاك أي رصيد بعد",
   "leaves.dashboard.remaining": "المتبقي",

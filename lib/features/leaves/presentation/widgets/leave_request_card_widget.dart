@@ -16,6 +16,26 @@ class LeaveRequestCardWidget extends StatelessWidget {
   final LeaveRequestModel request;
   final VoidCallback? onDelete;
 
+  String _getTranslatedName(String? name) {
+    if (name == null || name.isEmpty) return 'leaves.request.title'.tr();
+    if (name.startsWith('leaves.dashboard.')) {
+      return name.tr();
+    }
+    final lower = name.toLowerCase().trim();
+    if (lower == 'annual leave' ||
+        lower == 'annual' ||
+        lower == 'إجازة اعتيادية / سنوية') {
+      return 'leaves.dashboard.annualLeave'.tr();
+    }
+    if (lower == 'sick leave' || lower == 'sick' || lower == 'إجازة مرضية') {
+      return 'leaves.dashboard.sickLeave'.tr();
+    }
+    if (lower == 'casual leave' || lower == 'casual' || lower == 'إجازة عارضة') {
+      return 'leaves.dashboard.casualLeave'.tr();
+    }
+    return name;
+  }
+
   @override
   Widget build(BuildContext context) {
     final status = request.status.toLowerCase();
@@ -69,86 +89,30 @@ class LeaveRequestCardWidget extends StatelessWidget {
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          tilePadding: EdgeInsets.all(16.w),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          tilePadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+          childrenPadding: EdgeInsets.zero,
+          title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      request.leaveTypeName ?? 'Leave Request',
-                      style: AppTextStyles.font16Bold,
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      '${AppDateFormatter.formatDate(request.startDate)} - ${AppDateFormatter.formatDate(request.endDate)} (${request.totalDays} ${'leaves.dashboard.days'.tr()})',
-                      style: AppTextStyles.font13Regular.copyWith(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    if (request.reason != null &&
-                        request.reason!.isNotEmpty) ...[
-                      SizedBox(height: 4.h),
-                      Text(
-                        request.reason!,
-                        style: AppTextStyles.font13Regular.copyWith(
-                          color: AppColors.textSecondary,
-                          fontStyle: FontStyle.italic,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                    if (request.attachmentUrl != null &&
-                        request.attachmentUrl!.isNotEmpty) ...[
-                      SizedBox(height: 6.h),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 4.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.brandPrimary.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(6.r),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.attach_file_rounded,
-                              size: 13.r,
-                              color: AppColors.brandPrimary,
-                            ),
-                            SizedBox(width: 4.w),
-                            Text(
-                              'leaves.request.hasAttachment'.tr(),
-                              style: AppTextStyles.font11Regular.copyWith(
-                                color: AppColors.brandPrimary,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
               Row(
-                mainAxisSize: MainAxisSize.min,
                 children: [
+                  Expanded(
+                    child: Text(
+                      _getTranslatedName(request.leaveTypeName),
+                      style: AppTextStyles.font14Bold,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
                   Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
+                      horizontal: 8.w,
                       vertical: 4.h,
                     ),
                     decoration: BoxDecoration(
                       color: statusBg,
-                      borderRadius: BorderRadius.circular(16.r),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -161,10 +125,10 @@ class LeaveRequestCardWidget extends StatelessWidget {
                             shape: BoxShape.circle,
                           ),
                         ),
-                        SizedBox(width: 6.w),
+                        SizedBox(width: 5.w),
                         Text(
                           statusKey.tr(),
-                          style: AppTextStyles.font12Medium.copyWith(
+                          style: AppTextStyles.font11Medium.copyWith(
                             color: statusColor,
                             fontWeight: FontWeight.w600,
                           ),
@@ -173,7 +137,7 @@ class LeaveRequestCardWidget extends StatelessWidget {
                     ),
                   ),
                   if (onDelete != null) ...[
-                    SizedBox(width: 8.w),
+                    SizedBox(width: 4.w),
                     InkWell(
                       onTap: onDelete,
                       borderRadius: BorderRadius.circular(8.r),
@@ -189,11 +153,80 @@ class LeaveRequestCardWidget extends StatelessWidget {
                   ],
                 ],
               ),
+              SizedBox(height: 6.h),
+              Row(
+                children: [
+                  Icon(
+                    Icons.calendar_today_outlined,
+                    size: 13.r,
+                    color: AppColors.textSecondary,
+                  ),
+                  SizedBox(width: 5.w),
+                  Expanded(
+                    child: Text(
+                      '${AppDateFormatter.formatDate(request.startDate)} - ${AppDateFormatter.formatDate(request.endDate)} (${request.totalDays} ${'leaves.dashboard.days'.tr()})',
+                      style: AppTextStyles.font12Medium.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              if (request.reason != null && request.reason!.isNotEmpty) ...[
+                SizedBox(height: 4.h),
+                Text(
+                  request.reason!,
+                  style: AppTextStyles.font12Regular.copyWith(
+                    color: AppColors.textSecondary,
+                    fontStyle: FontStyle.italic,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+              if (request.attachmentUrl != null &&
+                  request.attachmentUrl!.isNotEmpty) ...[
+                SizedBox(height: 6.h),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.w,
+                    vertical: 3.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.brandPrimary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.attach_file_rounded,
+                        size: 12.r,
+                        color: AppColors.brandPrimary,
+                      ),
+                      SizedBox(width: 4.w),
+                      Flexible(
+                        child: Text(
+                          'leaves.request.hasAttachment'.tr(),
+                          style: AppTextStyles.font11Regular.copyWith(
+                            color: AppColors.brandPrimary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 16.h),
+              padding: EdgeInsets.only(left: 14.w, right: 14.w, bottom: 14.h),
               child: LeaveApprovalTimelineWidget.fromModel(request: request),
             ),
           ],
