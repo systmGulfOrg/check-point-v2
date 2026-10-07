@@ -25,6 +25,8 @@ class LeavesDashboardScreen extends StatefulWidget {
 
 class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
   int _selectedFilterIndex = 0;
+  List<dynamic>? _cachedBalances;
+  List<LeaveRequestModel>? _cachedRequests;
 
   @override
   void initState() {
@@ -91,70 +93,126 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
         child: RefreshIndicator(
           color: AppColors.brandPrimary,
           onRefresh: context.read<LeavesCubit>().loadLeavesData,
-          child: BlocBuilder<LeavesCubit, LeavesState>(
+          child: BlocConsumer<LeavesCubit, LeavesState>(
+            listener: (context, state) {
+              state.maybeWhen(
+                submitSuccess: () {
+                  CustomSnackBar.showSuccess(
+                    context,
+                    message: 'leaves.request.success'.tr(context: context),
+                  );
+                },
+                actionSuccess: (message) {
+                  CustomSnackBar.showSuccess(
+                    context,
+                    message: message.tr(context: context),
+                  );
+                },
+                error: (message) {
+                  CustomSnackBar.showError(
+                    context,
+                    message: message.tr(context: context),
+                  );
+                },
+                orElse: () {},
+              );
+            },
             builder: (context, state) {
-              return state.maybeWhen(
-                loading: () => Skeletonizer(
-                  enabled: true,
-                  child: ListView.separated(
-                    padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
-                    itemCount: 4,
-                    separatorBuilder: (_, _) => hSpace(12),
-                    itemBuilder: (_, _) => Card(
-                      child: ListTile(
-                        title: const Text('Annual Leave Balance Placeholder'),
-                        subtitle: const Text('14 / 21 Days Available'),
-                        trailing: const Icon(Icons.arrow_forward_ios),
+              state.maybeWhen(
+                success: (balances, types, requests) {
+                  _cachedBalances = balances;
+                  _cachedRequests = requests;
+                },
+                orElse: () {},
+              );
+
+              if (_cachedBalances == null && _cachedRequests == null) {
+                return state.maybeWhen(
+                  loading: () => Skeletonizer(
+                    enabled: true,
+                    child: ListView.separated(
+                      padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
+                      itemCount: 4,
+                      separatorBuilder: (_, _) => hSpace(12),
+                      itemBuilder: (_, _) => Card(
+                        child: ListTile(
+                          title: const Text('Annual Leave Balance Placeholder'),
+                          subtitle: const Text('14 / 21 Days Available'),
+                          trailing: const Icon(Icons.arrow_forward_ios),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                success: (balances, types, requests) => SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 100.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (balances.isNotEmpty) ...[
-                        Text(
-                          'leaves.dashboard.balanceTitle'.tr(context: context),
-                          style: AppTextStyles.font16Bold,
-                        ),
-                        hSpace(8),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 16.h),
-                          child: LeaveBalancesListWidget(balances: balances),
-                        ),
-                      ],
-                      LeaveStatusFilterWidget(
-                        selectedIndex: _selectedFilterIndex,
-                        pendingCount: requests.where((r) {
-                          final s = r.status.toLowerCase();
-                          return s == 'pending' ||
-                              s == 'pendinghr' ||
-                              s == 'pendingmanager';
-                        }).length,
-                        onSelected: (index) =>
-                            setState(() => _selectedFilterIndex = index),
+                  error: (message) => SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.all(32.r),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline_rounded,
+                            size: 48.r,
+                            color: AppColors.error,
+                          ),
+                          hSpace(12),
+                          Text(
+                            message.tr(context: context),
+                            style: AppTextStyles.font14Regular.copyWith(
+                              color: AppColors.error,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          hSpace(16),
+                          OutlinedButton(
+                            onPressed: () => context.read<LeavesCubit>().loadLeavesData(),
+                            child: Text('common.retry'.tr(context: context)),
+                          ),
+                        ],
                       ),
-                      hSpace(16),
-                      ..._buildFilteredRequests(requests),
+                    ),
+                  ),
+                  orElse: () => const SizedBox.shrink(),
+                );
+              }
+
+              final balances = (_cachedBalances ?? []).cast<dynamic>();
+              final requests = _cachedRequests ?? [];
+
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 100.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (balances.isNotEmpty) ...[
+                      Text(
+                        'leaves.dashboard.balanceTitle'.tr(context: context),
+                        style: AppTextStyles.font16Bold,
+                      ),
+                      hSpace(8),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 16.h),
+                        child: LeaveBalancesListWidget(
+                          balances: balances.cast(),
+                        ),
+                      ),
                     ],
-                  ),
-                ),
-                error: (message) => SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.all(32.r),
-                  child: Center(
-                    child: Text(
-                      message.tr(context: context),
-                      style: AppTextStyles.font14Regular.copyWith(
-                        color: AppColors.error,
-                      ),
+                    LeaveStatusFilterWidget(
+                      selectedIndex: _selectedFilterIndex,
+                      pendingCount: requests.where((r) {
+                        final s = r.status.toLowerCase();
+                        return s == 'pending' ||
+                            s == 'pendinghr' ||
+                            s == 'pendingmanager';
+                      }).length,
+                      onSelected: (index) =>
+                          setState(() => _selectedFilterIndex = index),
                     ),
-                  ),
+                    hSpace(16),
+                    ..._buildFilteredRequests(requests),
+                  ],
                 ),
-                orElse: () => const SizedBox.shrink(),
               );
             },
           ),

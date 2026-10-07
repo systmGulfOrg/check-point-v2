@@ -1,10 +1,10 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import '../../../../core/styles/app_colors.dart';
-import '../../../../core/styles/app_text_styles.dart';
-import '../../../../core/utils/app_date_formatter.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../../../admin/data/models/leave_requests/admin_leave_request_model.dart';
 import '../../data/models/leave_request_model.dart';
 import 'leave_timeline_step_widget.dart';
@@ -134,48 +134,119 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
               SizedBox(height: 12.h),
               ClipRRect(
                 borderRadius: BorderRadius.circular(12.r),
-                child: InteractiveViewer(
-                  maxScale: 4.0,
-                  child: Image.network(
-                    url,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      height: 200.h,
-                      color: AppColors.softBrandBackground,
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.broken_image_rounded,
-                            size: 48.r,
-                            color: AppColors.placeholder,
-                          ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            'leaves.workflow.noAttachment'.tr(context: ctx),
-                            style: AppTextStyles.font12Regular.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Container(
-                        height: 200.h,
-                        alignment: Alignment.center,
-                        child: const CircularProgressIndicator.adaptive(),
-                      );
-                    },
-                  ),
-                ),
+                child: _buildAttachmentContent(ctx, url),
               ),
               SizedBox(height: 12.h),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildAttachmentContent(BuildContext ctx, String url) {
+    // 1. Base64 Image or data URI
+    if (url.startsWith('data:image/') ||
+        (!url.startsWith('http') &&
+            !url.startsWith('data:application/pdf') &&
+            !url.toLowerCase().contains('.pdf'))) {
+      try {
+        final cleanBase64 = url.contains(',') ? url.split(',').last : url;
+        final bytes = base64Decode(cleanBase64.trim());
+        return InteractiveViewer(
+          maxScale: 4.0,
+          child: Image.memory(
+            bytes,
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) => _buildFallback(ctx),
+          ),
+        );
+      } catch (_) {
+        // Fallback
+      }
+    }
+
+    // 2. PDF Document
+    if (url.startsWith('data:application/pdf') ||
+        url.toLowerCase().contains('.pdf') ||
+        url.toLowerCase().contains('.doc')) {
+      return Container(
+        height: 180.h,
+        padding: EdgeInsets.all(16.r),
+        decoration: BoxDecoration(
+          color: AppColors.pageBackground,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.picture_as_pdf_rounded,
+              size: 54.r,
+              color: AppColors.error,
+            ),
+            hSpace(10),
+            Text(
+              'leaves.request.hasAttachment'.tr(context: ctx),
+              style: AppTextStyles.font14Bold,
+            ),
+            hSpace(4),
+            Text(
+              'PDF Document / المستند المرفق',
+              style: AppTextStyles.font12Regular.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // 3. HTTP URL
+    if (url.startsWith('http')) {
+      return InteractiveViewer(
+        maxScale: 4.0,
+        child: Image.network(
+          url,
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) => _buildFallback(ctx),
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              height: 200.h,
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator.adaptive(),
+            );
+          },
+        ),
+      );
+    }
+
+    return _buildFallback(ctx);
+  }
+
+  Widget _buildFallback(BuildContext ctx) {
+    return Container(
+      height: 200.h,
+      color: AppColors.softBrandBackground,
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.broken_image_rounded,
+            size: 48.r,
+            color: AppColors.placeholder,
+          ),
+          hSpace(8),
+          Text(
+            'leaves.workflow.noAttachment'.tr(context: ctx),
+            style: AppTextStyles.font12Regular.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }
