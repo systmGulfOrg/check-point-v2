@@ -249,15 +249,24 @@ class _AdminMyVisitsBlocBuilderWidgetState
                         index: index,
                         child: AdminCustomerVisitCardWidget(
                           visit: visit,
-                          onRecordOutcome: (outcome, status, notes) => context
-                              .read<AdminCustomerVisitsCubit>()
-                              .updateVisitOutcome(
-                                visitId: visit.id ?? '',
-                                customerId: visit.customerId ?? '',
-                                outcome: outcome,
-                                status: status,
-                                notes: notes,
-                              ),
+                          onRecordOutcome:
+                              (
+                                outcome,
+                                status,
+                                notes,
+                                documentName,
+                                documentUrl,
+                              ) => context
+                                  .read<AdminCustomerVisitsCubit>()
+                                  .updateVisitOutcome(
+                                    visitId: visit.id ?? '',
+                                    customerId: visit.customerId ?? '',
+                                    outcome: outcome,
+                                    status: status,
+                                    notes: notes,
+                                    documentName: documentName,
+                                    documentUrl: documentUrl,
+                                  ),
                         ),
                       );
                     },

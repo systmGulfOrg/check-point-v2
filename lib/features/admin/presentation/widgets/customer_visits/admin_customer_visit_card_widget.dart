@@ -16,23 +16,50 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
   });
 
   final CustomerVisitModel visit;
-  final Future<void> Function(String outcome, String status, String? notes)
-  onRecordOutcome;
+  final Future<void> Function(
+    String outcome,
+    String status,
+    String? notes,
+    String? documentName,
+    String? documentUrl,
+  ) onRecordOutcome;
 
   @override
   Widget build(BuildContext context) {
-    final isCompleted = visit.status == 'completed';
     final isCancelled = visit.status == 'cancelled';
-    final statusColor = isCompleted
-        ? AppColors.success
-        : isCancelled
-        ? AppColors.error
-        : AppColors.brandPrimary;
-    final statusText = isCompleted
-        ? 'admin.visits.statusCompleted'.tr(context: context)
-        : isCancelled
-        ? 'admin.visits.statusCancelled'.tr(context: context)
-        : 'admin.visits.statusScheduled'.tr(context: context);
+    final hasOutcome =
+        visit.outcome != null && visit.outcome!.trim().isNotEmpty;
+    final isVisitedPendingReport =
+        (visit.status == 'visited' || visit.status == 'completed') &&
+        !hasOutcome;
+    final isCompleted =
+        (visit.status == 'completed' || visit.status == 'visited') &&
+        hasOutcome;
+
+    final Color statusColor;
+    final String statusText;
+    final IconData statusIcon;
+
+    if (isCompleted) {
+      statusColor = AppColors.success;
+      statusText = 'admin.visits.statusCompleted'.tr(context: context);
+      statusIcon = Icons.check_circle_rounded;
+    } else if (isVisitedPendingReport) {
+      statusColor = const Color(0xFFD97706);
+      statusText =
+          'admin.visits.statusVisitedPendingReport'.tr(context: context);
+      statusIcon = Icons.pending_actions_rounded;
+    } else if (isCancelled) {
+      statusColor = AppColors.error;
+      statusText = 'admin.visits.statusCancelled'.tr(context: context);
+      statusIcon = Icons.cancel_rounded;
+    } else {
+      statusColor = AppColors.brandPrimary;
+      statusText = 'admin.visits.statusScheduled'.tr(context: context);
+      statusIcon = Icons.schedule_rounded;
+    }
+
+    final scheduledBy = visit.createdByName ?? visit.createdBy;
 
     return Container(
       decoration: BoxDecoration(
@@ -65,15 +92,7 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      isCompleted
-                          ? Icons.check_circle_rounded
-                          : isCancelled
-                          ? Icons.cancel_rounded
-                          : Icons.schedule_rounded,
-                      color: statusColor,
-                      size: 14.r,
-                    ),
+                    Icon(statusIcon, color: statusColor, size: 14.r),
                     SizedBox(width: 4.w),
                     Text(
                       statusText,
@@ -134,6 +153,37 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
             visit.title ?? 'admin.visits.title'.tr(context: context),
             style: AppTextStyles.font14Bold,
           ),
+
+          // Scheduled By (مين اللي جدول الزيارة)
+          if (scheduledBy != null && scheduledBy.trim().isNotEmpty) ...[
+            SizedBox(height: 6.h),
+            Row(
+              children: [
+                Icon(
+                  Icons.person_outline_rounded,
+                  size: 14.r,
+                  color: AppColors.textSecondary,
+                ),
+                SizedBox(width: 5.w),
+                Text(
+                  '${'admin.visits.scheduledBy'.tr(context: context)}: ',
+                  style: AppTextStyles.font12Medium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    scheduledBy,
+                    style: AppTextStyles.font12Bold.copyWith(
+                      color: AppColors.brandPrimary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ],
 
           // Attendees ("مين حضر / مين معايا")
           if (visit.attendees.isNotEmpty) ...[
@@ -243,8 +293,44 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
             ),
           ],
 
-          // Outcome Report ("حصل إيه")
-          if (visit.outcome != null && visit.outcome!.isNotEmpty) ...[
+          // Notice for Visited Pending Report (تم الحضور - ناقص تقرير الزيارة)
+          if (isVisitedPendingReport) ...[
+            SizedBox(height: 8.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(10.r),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFBEB),
+                borderRadius: BorderRadius.circular(8.r),
+                border: Border.all(
+                  color: const Color(0xFFF59E0B).withValues(alpha: 0.35),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline_rounded,
+                    color: const Color(0xFFD97706),
+                    size: 16.r,
+                  ),
+                  SizedBox(width: 6.w),
+                  Expanded(
+                    child: Text(
+                      'admin.visits.pendingReportNotice'.tr(context: context),
+                      style: AppTextStyles.font12Medium.copyWith(
+                        color: const Color(0xFFB45309),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+
+          // Outcome Report ("ما حدث في الزيارة")
+          if (isCompleted &&
+              visit.outcome != null &&
+              visit.outcome!.isNotEmpty) ...[
             SizedBox(height: 8.h),
             Container(
               width: double.infinity,
@@ -296,20 +382,32 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                 context: context,
                 builder: (_) => AdminRecordVisitOutcomeDialogWidget(
                   visit: visit,
-                  onSubmit: onRecordOutcome,
+                  onSubmit:
+                      (outcome, status, notes, documentName, documentUrl) =>
+                          onRecordOutcome(
+                            outcome,
+                            status,
+                            notes,
+                            documentName,
+                            documentUrl,
+                          ),
                 ),
               ),
               icon: Icon(
                 isCompleted ? Icons.edit_note_rounded : Icons.add_task_rounded,
                 size: 16.r,
-                color: AppColors.brandPrimary,
+                color: isVisitedPendingReport
+                    ? const Color(0xFFD97706)
+                    : AppColors.brandPrimary,
               ),
               label: Text(
                 isCompleted
-                    ? 'تعديل تقرير الزيارة'
+                    ? 'admin.visits.editOutcome'.tr(context: context)
                     : 'admin.visits.recordOutcome'.tr(context: context),
                 style: AppTextStyles.font12Bold.copyWith(
-                  color: AppColors.brandPrimary,
+                  color: isVisitedPendingReport
+                      ? const Color(0xFFD97706)
+                      : AppColors.brandPrimary,
                 ),
               ),
             ),

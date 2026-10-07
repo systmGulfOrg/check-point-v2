@@ -409,15 +409,24 @@ class _AdminCustomerDetailsSheetWidgetState
                   index: index,
                   child: AdminCustomerVisitCardWidget(
                     visit: visit,
-                    onRecordOutcome: (outcome, status, notes) => context
-                        .read<AdminCustomerVisitsCubit>()
-                        .updateVisitOutcome(
-                          visitId: visit.id ?? '',
-                          customerId: widget.customer.id ?? '',
-                          outcome: outcome,
-                          status: status,
-                          notes: notes,
-                        ),
+                    onRecordOutcome:
+                        (
+                          outcome,
+                          status,
+                          notes,
+                          documentName,
+                          documentUrl,
+                        ) => context
+                            .read<AdminCustomerVisitsCubit>()
+                            .updateVisitOutcome(
+                              visitId: visit.id ?? '',
+                              customerId: widget.customer.id ?? '',
+                              outcome: outcome,
+                              status: status,
+                              notes: notes,
+                              documentName: documentName,
+                              documentUrl: documentUrl,
+                            ),
                   ),
                 );
               },

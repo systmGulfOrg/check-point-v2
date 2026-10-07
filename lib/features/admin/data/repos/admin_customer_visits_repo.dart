@@ -12,5 +12,7 @@ abstract class AdminCustomerVisitsRepo {
     required String outcome,
     required String status,
     String? notes,
+    String? documentName,
+    String? documentUrl,
   });
 }

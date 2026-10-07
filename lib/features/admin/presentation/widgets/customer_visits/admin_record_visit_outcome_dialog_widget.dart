@@ -1,4 +1,7 @@
+import 'dart:ui' as ui;
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -13,8 +16,13 @@ class AdminRecordVisitOutcomeDialogWidget extends StatefulWidget {
   });
 
   final CustomerVisitModel visit;
-  final Future<void> Function(String outcome, String status, String? notes)
-  onSubmit;
+  final Future<void> Function(
+    String outcome,
+    String status,
+    String? notes,
+    String? documentName,
+    String? documentUrl,
+  ) onSubmit;
 
   @override
   State<AdminRecordVisitOutcomeDialogWidget> createState() =>
@@ -26,6 +34,8 @@ class _AdminRecordVisitOutcomeDialogWidgetState
   late final TextEditingController outcomeController;
   late final TextEditingController notesController;
   String selectedStatus = 'completed';
+  String? attachedDocName;
+  String? attachedDocUrl;
   bool isSubmitting = false;
 
   @override
@@ -33,9 +43,10 @@ class _AdminRecordVisitOutcomeDialogWidgetState
     super.initState();
     outcomeController = TextEditingController(text: widget.visit.outcome ?? '');
     notesController = TextEditingController(text: widget.visit.notes ?? '');
-    selectedStatus = widget.visit.status == 'scheduled'
-        ? 'completed'
-        : widget.visit.status;
+    attachedDocName = widget.visit.documentName;
+    attachedDocUrl = widget.visit.documentUrl;
+    selectedStatus =
+        widget.visit.status == 'cancelled' ? 'cancelled' : 'completed';
   }
 
   @override
@@ -43,6 +54,46 @@ class _AdminRecordVisitOutcomeDialogWidgetState
     outcomeController.dispose();
     notesController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickDocument() async {
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: [
+          'pdf',
+          'png',
+          'jpg',
+          'jpeg',
+          'doc',
+          'docx',
+          'xls',
+          'xlsx',
+          'txt',
+        ],
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        setState(() {
+          attachedDocName = file.name;
+          attachedDocUrl = file.path ?? 'file://${file.name}';
+        });
+        if (mounted) {
+          CustomSnackBar.showSuccess(
+            context,
+            message: 'admin.visits.docAttached'.tr(context: context),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        CustomSnackBar.showError(
+          context,
+          message: 'حدث خطأ أثناء اختيار الملف'.tr(),
+        );
+      }
+    }
   }
 
   Future<void> _handleSubmit() async {
@@ -62,6 +113,8 @@ class _AdminRecordVisitOutcomeDialogWidgetState
       notesController.text.trim().isNotEmpty
           ? notesController.text.trim()
           : null,
+      attachedDocName,
+      attachedDocUrl,
     );
     if (mounted) {
       setState(() => isSubmitting = false);
@@ -155,6 +208,91 @@ class _AdminRecordVisitOutcomeDialogWidgetState
               hintText: 'admin.visits.notesHint'.tr(context: context),
               maxLines: 2,
             ),
+            SizedBox(height: 16.h),
+            Text(
+              'admin.visits.document'.tr(context: context),
+              style: AppTextStyles.font12Medium,
+            ),
+            SizedBox(height: 8.h),
+            if (attachedDocName != null && attachedDocName!.isNotEmpty)
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: AppColors.selectedBackground,
+                  borderRadius: BorderRadius.circular(10.r),
+                  border: Border.all(color: AppColors.brandPrimary.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.picture_as_pdf_rounded,
+                      color: AppColors.error,
+                      size: 20.r,
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Directionality(
+                        textDirection: ui.TextDirection.ltr,
+                        child: Text(
+                          attachedDocName!,
+                          style: AppTextStyles.font12Medium.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.delete_outline_rounded,
+                        color: AppColors.error,
+                        size: 18.r,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          attachedDocName = null;
+                          attachedDocUrl = null;
+                        });
+                      },
+                      tooltip: 'admin.visits.removeDoc'.tr(context: context),
+                    ),
+                  ],
+                ),
+              )
+            else
+              InkWell(
+                onTap: _pickDocument,
+                borderRadius: BorderRadius.circular(10.r),
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 14.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.fieldBackground,
+                    borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(
+                      color: AppColors.border,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.attach_file_rounded,
+                        size: 18.r,
+                        color: AppColors.brandPrimary,
+                      ),
+                      SizedBox(width: 6.w),
+                      Text(
+                        'admin.visits.attachOutcomeDoc'.tr(context: context),
+                        style: AppTextStyles.font12Medium.copyWith(
+                          color: AppColors.brandPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             SizedBox(height: 20.h),
             CustomButton(
               text: 'admin.visits.recordOutcome'.tr(context: context),

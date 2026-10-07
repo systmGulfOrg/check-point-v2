@@ -62,6 +62,8 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
     required String outcome,
     required String status,
     String? notes,
+    String? documentName,
+    String? documentUrl,
   }) async {
     emit(const AdminCustomerVisitsState.loading());
     final result = await visitsRepo.updateVisitOutcome(
@@ -69,6 +71,8 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
       outcome: outcome,
       status: status,
       notes: notes,
+      documentName: documentName,
+      documentUrl: documentUrl,
     );
     switch (result) {
       case Success():

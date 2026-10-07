@@ -18,6 +18,7 @@ class CustomerVisitModel {
     this.notes,
     this.outcome,
     this.createdBy,
+    this.createdByName,
     this.status = 'scheduled',
     this.createdAt,
   });
@@ -35,6 +36,7 @@ class CustomerVisitModel {
   final String? notes;
   final String? outcome;
   final String? createdBy;
+  final String? createdByName;
   @JsonKey(defaultValue: 'scheduled')
   final String status;
   final String? createdAt;
@@ -57,6 +59,7 @@ class CustomerVisitModel {
     String? notes,
     String? outcome,
     String? createdBy,
+    String? createdByName,
     String? status,
     String? createdAt,
   }) {
@@ -73,6 +76,7 @@ class CustomerVisitModel {
       notes: notes ?? this.notes,
       outcome: outcome ?? this.outcome,
       createdBy: createdBy ?? this.createdBy,
+      createdByName: createdByName ?? this.createdByName,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
     );

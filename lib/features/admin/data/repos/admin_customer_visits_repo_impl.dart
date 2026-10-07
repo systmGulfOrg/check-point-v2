@@ -64,12 +64,16 @@ class AdminCustomerVisitsRepoImpl implements AdminCustomerVisitsRepo {
     required String outcome,
     required String status,
     String? notes,
+    String? documentName,
+    String? documentUrl,
   }) async {
     try {
       await api.updateCustomerPlan(visitId, {
         'outcome': outcome,
         'status': status,
         ...?notes == null ? null : {'note': notes, 'notes': notes},
+        ...?documentName == null ? null : {'documentName': documentName},
+        ...?documentUrl == null ? null : {'documentUrl': documentUrl},
       });
       return const ApiResult.success(null);
     } catch (e) {

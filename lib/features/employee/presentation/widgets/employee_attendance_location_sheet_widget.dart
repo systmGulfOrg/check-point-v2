@@ -409,10 +409,11 @@ class _EmployeeAttendanceLocationSheetWidgetState
           unawaited(
             sl<AdminCustomerVisitsRepo>().updateVisitOutcome(
               visitId: visitId,
-              outcome:
-                  'تم تسجيل الحضور الفعلي بمقر العميل بنجاح وتوثيق الزيارة.',
-              status: 'completed',
-              notes: 'تسجيل حضور تلقائي من تطبيق الهاتف - نوع الحضور: عميل',
+              outcome: todayScheduledVisit?.outcome ?? '',
+              status: 'visited',
+              notes: todayScheduledVisit?.notes,
+              documentName: todayScheduledVisit?.documentName,
+              documentUrl: todayScheduledVisit?.documentUrl,
             ),
           );
         }

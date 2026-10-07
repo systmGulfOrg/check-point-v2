@@ -24,6 +24,7 @@ CustomerVisitModel _$CustomerVisitModelFromJson(Map<String, dynamic> json) =>
       notes: json['notes'] as String?,
       outcome: json['outcome'] as String?,
       createdBy: json['createdBy'] as String?,
+      createdByName: json['createdByName'] as String?,
       status: json['status'] as String? ?? 'scheduled',
       createdAt: json['createdAt'] as String?,
     );
@@ -42,6 +43,7 @@ Map<String, dynamic> _$CustomerVisitModelToJson(CustomerVisitModel instance) =>
       'notes': instance.notes,
       'outcome': instance.outcome,
       'createdBy': instance.createdBy,
+      'createdByName': instance.createdByName,
       'status': instance.status,
       'createdAt': instance.createdAt,
     };
