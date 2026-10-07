@@ -57,6 +57,7 @@ class _AdminEmployeeProfileEditFormWidgetState
   late final TextEditingController _employeeCodeController;
   late final TextEditingController _positionController;
   late final TextEditingController _mobileIdController;
+  late final TextEditingController _leaveBalanceController;
 
   String? _selectedPhotoPath;
   String? _photoBase64;
@@ -66,6 +67,8 @@ class _AdminEmployeeProfileEditFormWidgetState
   String? _selectedDirectManagerId;
   late String _selectedWorkSystem;
   String? _selectedRemoteWorkPolicyId;
+  late bool _canAddAttendance;
+  late bool _canAddPlan;
 
   late final Set<String> _selectedRoles;
   final Set<String> _selectedPermissions = {};
@@ -91,19 +94,24 @@ class _AdminEmployeeProfileEditFormWidgetState
     );
     _positionController = TextEditingController(text: emp.position ?? '');
     _mobileIdController = TextEditingController(text: emp.mobileId ?? '');
+    _leaveBalanceController = TextEditingController(
+      text: '${emp.leaveBalance ?? 21}',
+    );
 
     _selectedDepartmentId = emp.departmentId;
     _selectedBranchId = emp.branchId;
     _selectedDirectManagerId = emp.resolvedDirectManagerId;
     _selectedWorkSystem = emp.workSystem ?? 'onsite';
     _selectedRemoteWorkPolicyId = emp.remoteWorkPolicyId;
+    _canAddAttendance = emp.canAddAttendance ?? true;
+    _canAddPlan = emp.canAddPlan ?? true;
 
     _selectedRoles = emp.allRoles.toSet();
     if (_selectedRoles.isEmpty) _selectedRoles.add('Employee');
 
-    if (emp.customPermissions != null) {
+    if (emp.customPermissions != null && emp.customPermissions!.isNotEmpty) {
       _selectedPermissions.addAll(emp.customPermissions!);
-    } else if (emp.permissions != null) {
+    } else if (emp.permissions != null && emp.permissions!.isNotEmpty) {
       _selectedPermissions.addAll(emp.permissions!);
     }
 
@@ -120,6 +128,7 @@ class _AdminEmployeeProfileEditFormWidgetState
     _employeeCodeController.dispose();
     _positionController.dispose();
     _mobileIdController.dispose();
+    _leaveBalanceController.dispose();
     super.dispose();
   }
 
@@ -225,6 +234,9 @@ class _AdminEmployeeProfileEditFormWidgetState
             : 'Employee',
         roles: _selectedRoles.toList(),
         customPermissions: _selectedPermissions.toList(),
+        canAddAttendance: _canAddAttendance,
+        canAddPlan: _canAddPlan,
+        leaveBalance: int.tryParse(_leaveBalanceController.text.trim()),
       );
 
       await widget.onSave(body);
@@ -746,6 +758,44 @@ class _AdminEmployeeProfileEditFormWidgetState
                       ),
                     ),
                   ],
+                ),
+              ),
+              hSpace(16),
+
+              // Attendance & Plan Toggles
+              SwitchListTile.adaptive(
+                value: _canAddAttendance,
+                onChanged: (v) => setState(() => _canAddAttendance = v),
+                title: Text(
+                  'admin.employees.canAddAttendance'.tr(context: context),
+                  style: AppTextStyles.font14Medium,
+                ),
+                contentPadding: EdgeInsets.zero,
+              ),
+              SwitchListTile.adaptive(
+                value: _canAddPlan,
+                onChanged: (v) => setState(() => _canAddPlan = v),
+                title: Text(
+                  'admin.employees.canAddPlan'.tr(context: context),
+                  style: AppTextStyles.font14Medium,
+                ),
+                contentPadding: EdgeInsets.zero,
+              ),
+              hSpace(12),
+
+              // Leave Balance
+              AdminWizardFieldWidget(
+                label: 'admin.employees.leaveBalance'.tr(context: context),
+                required: false,
+                child: CustomTextFormField(
+                  controller: _leaveBalanceController,
+                  hintText: '21',
+                  keyboardType: TextInputType.number,
+                  prefixIcon: Icon(
+                    Icons.event_available_outlined,
+                    size: 20.r,
+                    color: AppColors.placeholder,
+                  ),
                 ),
               ),
             ],
