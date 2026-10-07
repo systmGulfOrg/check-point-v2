@@ -46,9 +46,9 @@ class EmployeeClockCardWidget extends StatelessWidget {
       child: Column(
         children: [
           const EmployeeClockGaugeWidget(),
-          hSpace(16),
+          hSpace(14),
           const EmployeeLiveClockWidget(),
-          hSpace(6),
+          hSpace(8),
           Text(
             policyText,
             textAlign: TextAlign.center,
@@ -56,7 +56,7 @@ class EmployeeClockCardWidget extends StatelessWidget {
               color: AppColors.brandPrimary,
             ),
           ),
-          hSpace(20),
+          hSpace(16),
           Row(
             children: [
               Expanded(
@@ -134,21 +134,24 @@ class EmployeeClockCardWidget extends StatelessWidget {
               ),
             ],
           ),
-          hSpace(20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const EmployeeStatusBadgeWidget(status: 'On Time'),
-              if (workedHours != null) wSpace(12),
-              if (workedHours != null)
-                Text(
-                  workedHours!,
-                  style: AppTextStyles.font13Regular.copyWith(
-                    color: AppColors.textSecondary,
+          hSpace(16),
+          if (isCheckedIn || hasCheckedOut) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const EmployeeStatusBadgeWidget(status: 'On Time'),
+                if (workedHours != null) wSpace(12),
+                if (workedHours != null)
+                  Text(
+                    workedHours!,
+                    style: AppTextStyles.font13Regular.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
-                ),
-            ],
-          ),
+              ],
+            ),
+            hSpace(16),
+          ],
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             transitionBuilder: (child, animation) => FadeTransition(

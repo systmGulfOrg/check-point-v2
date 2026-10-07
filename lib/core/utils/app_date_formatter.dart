@@ -81,9 +81,30 @@ class AppDateFormatter {
     return toEnglishDigits(DateFormat('dd-MM-yyyy', 'en').format(date));
   }
 
-  /// E.g. "09:30 AM"
-  static String formatTime(DateTime date) {
-    return toEnglishDigits(DateFormat('hh:mm a', 'en').format(date));
+  /// E.g. "09:30 AM" or "09:30 ص"
+  static String formatTime(DateTime date, {bool isArabic = true}) {
+    final hour = date.hour;
+    final minute = date.minute;
+    final isPm = hour >= 12;
+    final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+    final mStr = minute.toString().padLeft(2, '0');
+    final hStr = h12.toString().padLeft(2, '0');
+    final period = isArabic ? (isPm ? 'م' : 'ص') : (isPm ? 'PM' : 'AM');
+    return '$hStr:$mStr $period';
+  }
+
+  /// Formats policy name and working hours cleanly without redundant dashes or '--:--'.
+  static String formatPolicySchedule({
+    required String policyName,
+    String? rawStart,
+    String? rawEnd,
+    bool isArabic = true,
+  }) {
+    final start = formatTimeString(rawStart, isArabic: isArabic);
+    final end = formatTimeString(rawEnd, isArabic: isArabic);
+    final hasValidHours = start != '--:--' && end != '--:--';
+    if (!hasValidHours) return policyName;
+    return '$policyName • $start - $end';
   }
 
   /// E.g. "14:30"

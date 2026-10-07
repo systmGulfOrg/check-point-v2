@@ -134,13 +134,15 @@ class SupervisorPersonalSummaryWidget extends StatelessWidget {
               ),
             ],
           ),
-          hSpace(10),
-          Text(
-            '${'supervisor.dashboard.workHours'.tr(context: context)}: $workStart - $workEnd',
-            style: AppTextStyles.font12Regular.copyWith(
-              color: AppColors.textSecondary,
+          if (workStart != '--:--' && workEnd != '--:--') ...[
+            hSpace(10),
+            Text(
+              '${'supervisor.dashboard.workHours'.tr(context: context)}: $workStart - $workEnd',
+              style: AppTextStyles.font12Regular.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
-          ),
+          ],
           hSpace(14),
           SizedBox(
             width: double.infinity,

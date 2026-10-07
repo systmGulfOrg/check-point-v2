@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -36,7 +37,11 @@ class _EmployeeLiveClockWidgetState extends State<EmployeeLiveClockWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTime = AppDateFormatter.formatTime(currentDateTime);
+    final isArabic = context.locale.languageCode == 'ar';
+    final currentTime = AppDateFormatter.formatTime(
+      currentDateTime,
+      isArabic: isArabic,
+    );
     final currentDate = AppDateFormatter.formatYearMonthDay(currentDateTime);
 
     return Column(
@@ -52,17 +57,19 @@ class _EmployeeLiveClockWidgetState extends State<EmployeeLiveClockWidget> {
             key: ValueKey<String>(currentTime),
             style: AppTextStyles.font24Bold.copyWith(
               fontSize: 28.sp,
-              letterSpacing: 1.2,
+              letterSpacing: 0.8,
             ),
           ),
         ),
-        hSpace(6),
+        hSpace(4),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           child: Text(
             currentDate,
             key: ValueKey<String>(currentDate),
-            style: AppTextStyles.font13Regular,
+            style: AppTextStyles.font13Regular.copyWith(
+              color: AppColors.textSecondary,
+            ),
           ),
         ),
       ],

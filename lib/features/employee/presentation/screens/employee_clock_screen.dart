@@ -153,15 +153,36 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                         cubit.hasClockIn(attendance) &&
                         !cubit.hasClockOut(attendance);
                     final hasCheckedOut = cubit.hasClockOut(attendance);
+                    final isArabic = context.locale.languageCode == 'ar';
+                    final policyName =
+                        profile?.shiftName ??
+                        profile?.workPolicy?.name ??
+                        'employee.home.defaultPolicy'.tr(context: context);
+                    final rawStart =
+                        profile?.todayWorkStart ??
+                        profile?.workPolicy?.workingHoursStart ??
+                        profile?.clockInTime;
+                    final rawEnd =
+                        profile?.todayWorkEnd ??
+                        profile?.workPolicy?.workingHoursEnd ??
+                        profile?.clockOutTime;
+
+                    final policyText = AppDateFormatter.formatPolicySchedule(
+                      policyName: policyName,
+                      rawStart: rawStart,
+                      rawEnd: rawEnd,
+                      isArabic: isArabic,
+                    );
+
                     return EmployeeClockCardWidget(
-                      policyText:
-                          '${profile?.shiftName ?? 'employee.home.defaultPolicy'.tr(context: context)} — '
-                          '${AppDateFormatter.formatTimeString(profile?.clockInTime)}–${AppDateFormatter.formatTimeString(profile?.clockOutTime)}',
+                      policyText: policyText,
                       checkInTime: AppDateFormatter.formatTimeString(
                         attendance?.clockInTime,
+                        isArabic: isArabic,
                       ),
                       checkOutTime: AppDateFormatter.formatTimeString(
                         attendance?.clockOutTime,
+                        isArabic: isArabic,
                       ),
                       isCheckedIn: isCheckedIn,
                       hasCheckedOut: hasCheckedOut,

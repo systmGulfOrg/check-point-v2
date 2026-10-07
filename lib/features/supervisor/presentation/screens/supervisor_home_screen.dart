@@ -37,6 +37,7 @@ class SupervisorHomeScreen extends StatelessWidget {
               const UpcomingHolidayCardBlocBuilderWidget(),
               hSpace(16),
               const SupervisorPersonalDashboardBlocBuilderWidget(),
+              hSpace(16),
               const SupervisorAlertBannerBlocBuilderWidget(),
               hSpace(20),
               const SupervisorStatsGridBlocBuilderWidget(),

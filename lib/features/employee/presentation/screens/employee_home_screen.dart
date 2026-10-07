@@ -157,14 +157,6 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                     final cubit = context.read<EmployeeAttendanceCubit>();
                     final workMode = profile?.todayWorkMode ?? 'onsite';
                     final workSystem = profile?.workSystem ?? 'onsite';
-                    final clockIn =
-                        profile?.todayWorkStart ??
-                        profile?.workPolicy?.workingHoursStart ??
-                        profile?.clockInTime;
-                    final clockOut =
-                        profile?.todayWorkEnd ??
-                        profile?.workPolicy?.workingHoursEnd ??
-                        profile?.clockOutTime;
                     final isCheckedIn =
                         cubit.hasClockIn(attendance) &&
                         !cubit.hasClockOut(attendance);
@@ -191,18 +183,39 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                         profile?.todayHoliday?.greeting ??
                         profile?.holidayMessage;
 
+                    final isArabic = context.locale.languageCode == 'ar';
+                    final policyName =
+                        profile?.shiftName ??
+                        profile?.workPolicy?.name ??
+                        'employee.home.defaultPolicy'.tr(context: context);
+                    final rawStart =
+                        profile?.todayWorkStart ??
+                        profile?.workPolicy?.workingHoursStart ??
+                        profile?.clockInTime;
+                    final rawEnd =
+                        profile?.todayWorkEnd ??
+                        profile?.workPolicy?.workingHoursEnd ??
+                        profile?.clockOutTime;
+
+                    final policyText = AppDateFormatter.formatPolicySchedule(
+                      policyName: policyName,
+                      rawStart: rawStart,
+                      rawEnd: rawEnd,
+                      isArabic: isArabic,
+                    );
+
                     return Skeletonizer(
                       enabled: state is EmployeeAttendanceStateLoading,
                       child: EmployeeTodayCardWidget(
-                        policyText:
-                            '${profile?.shiftName ?? 'employee.home.defaultPolicy'.tr(context: context)} — '
-                            '${AppDateFormatter.formatTimeString(clockIn)}–${AppDateFormatter.formatTimeString(clockOut)}',
+                        policyText: policyText,
                         isOnTime: attendance?.isLate != true,
                         checkInTime: AppDateFormatter.formatTimeString(
                           attendance?.clockInTime,
+                          isArabic: isArabic,
                         ),
                         checkOutTime: AppDateFormatter.formatTimeString(
                           attendance?.clockOutTime,
+                          isArabic: isArabic,
                         ),
                         isCheckedIn: isCheckedIn,
                         hasCheckedOut: hasCheckedOut,

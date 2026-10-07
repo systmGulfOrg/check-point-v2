@@ -97,6 +97,7 @@ class SupervisorPersonalDashboardBlocBuilderWidget extends StatelessWidget {
             cubit.hasClockIn(attendance) && !cubit.hasClockOut(attendance);
         final hasCheckedOut = cubit.hasClockOut(attendance);
 
+        final isArabic = context.locale.languageCode == 'ar';
         return Skeletonizer(
           enabled: isLoading,
           child: Column(
@@ -116,13 +117,21 @@ class SupervisorPersonalDashboardBlocBuilderWidget extends StatelessWidget {
                     'employee.home.defaultPolicy'.tr(context: context),
                 workSystem: workSystem.tr(context: context),
                 workMode: workMode.tr(context: context),
-                workStart: AppDateFormatter.formatTimeString(workStart),
-                workEnd: AppDateFormatter.formatTimeString(workEnd),
+                workStart: AppDateFormatter.formatTimeString(
+                  workStart,
+                  isArabic: isArabic,
+                ),
+                workEnd: AppDateFormatter.formatTimeString(
+                  workEnd,
+                  isArabic: isArabic,
+                ),
                 checkIn: AppDateFormatter.formatTimeString(
                   attendance?.clockInTime,
+                  isArabic: isArabic,
                 ),
                 checkOut: AppDateFormatter.formatTimeString(
                   attendance?.clockOutTime,
+                  isArabic: isArabic,
                 ),
                 leaveBalance: '${profile?.leaveBalance ?? '--'}',
                 isCheckedIn: isCheckedIn,

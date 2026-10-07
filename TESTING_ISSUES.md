@@ -377,6 +377,27 @@
 - **الحل المُنفذ:**
   - التحقق من تسلسل الموافقة: إذا كان للموظف مدير مباشر والطلب لا يزال في المرحلة الأولى (`PendingManager` / `isWaitingForManager`)، يتم إخفاء أزرار القبول/الرفض للإدارة وإظهار شارة توضيحية: "في انتظار موافقة المدير أولاً".
   - تظهر أزرار اعتماد الموارد البشرية / الإدارة فقط بعد اعتماد المدير المباشر للطلب (المرحلة 2) أو إذا كان الموظف بدون مدير مباشر.
+## 39. تنسيق عرض سياسة العمل وساعات الدوام وضبط المسافات الرأسية
+- **الشاشات والملفات:**
+  - `AppDateFormatter` (`lib/core/utils/app_date_formatter.dart`)
+  - `EmployeeClockCardWidget` (`lib/features/employee/presentation/widgets/employee_clock_card_widget.dart`)
+  - `EmployeeLiveClockWidget` (`lib/features/employee/presentation/widgets/employee_live_clock_widget.dart`)
+  - `EmployeeClockScreen` (`lib/features/employee/presentation/screens/employee_clock_screen.dart`)
+  - `EmployeeHomeScreen` (`lib/features/employee/presentation/screens/employee_home_screen.dart`)
+  - `SupervisorPersonalSummaryWidget` (`lib/features/supervisor/presentation/widgets/supervisor_personal_summary_widget.dart`)
+  - `SupervisorPersonalDashboardBlocBuilderWidget` (`lib/features/supervisor/presentation/widgets/supervisor_personal_dashboard_bloc_builder_widget.dart`)
+  - `SupervisorHomeScreen` (`lib/features/supervisor/presentation/screens/supervisor_home_screen.dart`)
+- **اللقطة المرجعية:** لقطات المستخدم التوضيحية لبطاقات الحضور وساعات الدوام.
+- **المشكلة:**
+  1. ظهور شرطات متكررة وفارغة مثل `السياسة الأساسية — --:--–--:--` عند عدم توفر ساعات عمل مسجلة في كائن الموظف بدلاً من الاكتفاء باسم السياسة.
+  2. انعكاس وتداخل توقيت الساعة الحية في النمط العربي وظهور `PM 12:29` مقلوبة للأعلى.
+  3. التصاق شارة الحالة (`On Time`) مباشرة بالزر السفلي الأحمر (`تسجيل الخروج`) بدون مسافة فاصلة.
+  4. التصاق بطاقة الحضور بلوحة التنبيهات الصفراء (`فيه طلب إجازة مستني موافقتك`) في شاشة المشرف.
+- **الحل المُنفذ:**
+  - إضافة دالة مركزية `AppDateFormatter.formatPolicySchedule` لدمج اسم السياسة مع مواعيد الدوام فقط عندما تكون الساعات صحيحة وموجودة (مثل `السياسة الأساسية • 09:00 ص - 05:00 م`)، أو الاكتفاء باسم السياسة بمفرده بدون أي شرطات أو `--:--`.
+  - تعريب وتنسيق توقيت الساعة الحية باللغة الحالية (`12:29 م` أو `12:29 PM`) لمنع انعكاس الأحرف في الواجهات العربية.
+  - ضبط المسافات الرأسية وإضافة `hSpace(16)` بين شارة `On Time` وأزرار تسجيل الدخول/الخروج.
+  - إضافة `hSpace(16)` كمسافة فاصلة بين بطاقة الحضور وبانر التنبيهات في شاشة المشرف.
 - **الحالة:** 🟢 تم الحل (Resolved).
 
 
