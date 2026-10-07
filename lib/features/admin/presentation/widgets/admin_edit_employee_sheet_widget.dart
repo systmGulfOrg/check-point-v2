@@ -234,40 +234,58 @@ class _AdminEditEmployeeSheetWidgetState
   }
 
   @override
-  Widget build(BuildContext context) => SafeArea(
-    child: Padding(
-      padding: EdgeInsets.fromLTRB(
-        20.w,
-        18.h,
-        20.w,
-        16.h + MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'admin.employees.editEmployee'.tr(context: context),
-                    style: AppTextStyles.font18Bold,
-                  ),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.close_rounded, size: 20.r),
-                  ),
-                ],
+  Widget build(BuildContext context) => SizedBox(
+    height: MediaQuery.of(context).size.height * 0.78,
+    child: SafeArea(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          20.w,
+          10.h,
+          20.w,
+          16.h + MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Drag Handle
+            Center(
+              child: Container(
+                width: 44.w,
+                height: 4.h,
+                margin: EdgeInsets.only(bottom: 12.h),
+                decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
               ),
-              const Divider(color: AppColors.border),
-              hSpace(14),
+            ),
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'admin.employees.editEmployee'.tr(context: context),
+                  style: AppTextStyles.font18Bold,
+                ),
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(Icons.close_rounded, size: 20.r),
+                ),
+              ],
+            ),
+            const Divider(color: AppColors.border),
+            hSpace(10),
 
-              // Photo Picker Section
-              Center(
+            // Scrollable Form Content
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Photo Picker Section
+                      Center(
                 child: GestureDetector(
                   onTap: _pickPhoto,
                   child: Stack(
@@ -940,7 +958,11 @@ class _AdminEditEmployeeSheetWidgetState
         ),
       ),
     ),
-  );
+  ],
+),
+),
+),
+);
 
   Widget _buildAvatarImage() {
     if (_selectedPhotoPath != null) {
