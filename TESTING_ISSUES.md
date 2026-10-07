@@ -450,6 +450,25 @@
   - تحديث فتح الشيت في `AdminCustomersBlocBuilderWidget` ليستخدم `BlocProvider(create: (_) => sl<AdminCustomerVisitsCubit>())` لضمان إنشاء وإدارة دورة حياة الـ Cubit بشكل سليم.
 - **الحالة:** 🟢 تم الحل (Resolved).
 
+## 44. تحسين تجربة تخطيط زيارات العملاء، قائمة الحاضرين من موظفي السيستم، وعزل اتجاه اسم المستند (LTR) وتكامل حضور العميل
+- **الشاشات والملفات:**
+  - `AdminCreateCustomerVisitSheetWidget` (`lib/features/admin/presentation/widgets/customer_visits/admin_create_customer_visit_sheet_widget.dart`)
+  - `AdminCustomerVisitCardWidget` (`lib/features/admin/presentation/widgets/customer_visits/admin_customer_visit_card_widget.dart`)
+  - `EmployeeAttendanceLocationTypeSelectorWidget` (`lib/features/employee/presentation/widgets/employee_attendance_location_type_selector_widget.dart`)
+  - `EmployeeAttendanceLocationSheetWidget` (`lib/features/employee/presentation/widgets/employee_attendance_location_sheet_widget.dart`)
+- **اللقطة المرجعية:** لقطات شاشة المستخدم لنموذج إضافة خطة الزيارة وشاشة تسجيل الحضور والانصراف.
+- **المشكلة:**
+  1. إدخال المرافقين في خطة الزيارة كان مجرد حقل نصي يدوي بدلاً من اختيار موظفي النظام المسجلين.
+  2. انعكاس اسم المستند المرفق ليظهر بشكل مقلوب مثل `pdf.182_خطة_الزيارة` بسبب تداخل اتجاه النص العربي مع الامتداد والأرقام الإنجليزية.
+  3. وجود تبويب "الموقع" غير الضروري حالياً في خيارات نوع موقع الحضور.
+  4. الحاجة لتكامل شاشة الحضور بحيث يتم فتح تبويب "العميل" تلقائياً عند وجود زيارة مجدولة للموظف اليوم وتوثيق الحضور والنتائج في سجل العميل.
+- **الحل المُنفذ:**
+  - **قائمة الموظفين في الحضور (Dropdown)**: تحميل موظفي السيستم وإتاحة قائمة منسدلة ذكية لاختيار الموظف مع منصبه/قسمه وإضافته كشريحة تفاعلية (Chip) قابلة للحذف، بالإضافة لخيار "أنا (المشرف / المسؤول)".
+  - **ضبط اتجاه المستند وعرضه (LTR & Viewer)**: عزل اتجاه اسم الملف عبر `ui.TextDirection.ltr` لمنع الانعكاس، وإتاحة معاينة المستند المرفق بالضغط المباشر عليه.
+  - **إلغاء تبويب "الموقع"**: إزالة خيار `Site` وتوسيع الخيارات المتبقية (`الفرع`، `العميل`، `عن بُعد`) لتشغل المساحة بتناسق تام.
+  - **تكامل زيارات العملاء في الحضور**: رصد الزيارات المجدولة لليوم تلقائياً وعرض بانر توضيحي بأعلى الشيت واختيار تبويب "العميل" افتراضياً، وتحديث حالة ونتائج الزيارة في سجل العميل عند تسجيل الحضور.
+- **الحالة:** 🟢 تم الحل (Resolved).
+
 
 
 

@@ -1,10 +1,16 @@
+import 'dart:ui' as ui;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
+import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
+import 'admin_customer_visit_doc_viewer_dialog_widget.dart';
 
 class AdminCreateCustomerVisitSheetWidget extends StatefulWidget {
   const AdminCreateCustomerVisitSheetWidget({
@@ -33,6 +39,8 @@ class _AdminCreateCustomerVisitSheetWidgetState
   late final TextEditingController notesController;
 
   final List<String> attendees = [];
+  List<EmployeeModel> availableEmployees = [];
+  bool isLoadingEmployees = false;
   String? attachedDocName;
   String? attachedDocUrl;
   bool isSubmitting = false;
@@ -51,6 +59,25 @@ class _AdminCreateCustomerVisitSheetWidgetState
 
     // Default companions for great UX
     attendees.add('أنا (المشرف / المسؤول)');
+    _loadSystemEmployees();
+  }
+
+  Future<void> _loadSystemEmployees() async {
+    setState(() => isLoadingEmployees = true);
+    final result = await sl<AdminEmployeeRepo>().getEmployees(
+      page: 1,
+      pageSize: 50,
+    );
+    if (!mounted) return;
+    switch (result) {
+      case Success(:final data):
+        setState(() {
+          availableEmployees = data;
+          isLoadingEmployees = false;
+        });
+      case Failure():
+        setState(() => isLoadingEmployees = false);
+    }
   }
 
   @override
@@ -61,6 +88,14 @@ class _AdminCreateCustomerVisitSheetWidgetState
     attendeeInputController.dispose();
     notesController.dispose();
     super.dispose();
+  }
+
+  void _addEmployeeAttendee(String name) {
+    if (!attendees.contains(name)) {
+      setState(() {
+        attendees.add(name);
+      });
+    }
   }
 
   void _addAttendee() {
@@ -362,14 +397,86 @@ class _AdminCreateCustomerVisitSheetWidgetState
                 style: AppTextStyles.font12Medium,
               ),
               SizedBox(height: 8.h),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 14.w),
+                decoration: BoxDecoration(
+                  color: AppColors.fieldBackground,
+                  borderRadius: BorderRadius.circular(14.r),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    icon: isLoadingEmployees
+                        ? SizedBox(
+                            width: 16.r,
+                            height: 16.r,
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            size: 20.r,
+                            color: AppColors.textSecondary,
+                          ),
+                    hint: Row(
+                      children: [
+                        Icon(
+                          Icons.person_add_alt_1_rounded,
+                          size: 18.r,
+                          color: AppColors.brandPrimary,
+                        ),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: Text(
+                            isLoadingEmployees
+                                ? 'جاري تحميل موظفي السيستم...'
+                                : 'اختر موظف من السيستم لإضافته...',
+                            style: AppTextStyles.font13Regular.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    items: [
+                      DropdownMenuItem<String>(
+                        value: 'أنا (المشرف / المسؤول)',
+                        child: Text(
+                          'أنا (المشرف / المسؤول)',
+                          style: AppTextStyles.font13Medium,
+                        ),
+                      ),
+                      ...availableEmployees.map((emp) {
+                        final label =
+                            '${emp.name ?? "موظف"}${emp.position != null && emp.position!.isNotEmpty ? " • ${emp.position}" : emp.departmentName != null && emp.departmentName!.isNotEmpty ? " • ${emp.departmentName}" : ""}';
+                        return DropdownMenuItem<String>(
+                          value: label,
+                          child: Text(
+                            label,
+                            style: AppTextStyles.font13Regular,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        );
+                      }),
+                    ],
+                    onChanged: (val) {
+                      if (val != null) {
+                        _addEmployeeAttendee(val);
+                      }
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: 8.h),
               Row(
                 children: [
                   Expanded(
                     child: CustomTextFormField(
                       controller: attendeeInputController,
-                      hintText: 'admin.visits.attendeesHint'.tr(
-                        context: context,
-                      ),
+                      hintText: 'أو أدخل اسم مرافق خارجي...',
                     ),
                   ),
                   SizedBox(width: 8.w),
@@ -425,44 +532,61 @@ class _AdminCreateCustomerVisitSheetWidgetState
                   child: ScaleTransition(scale: animation, child: child),
                 ),
                 child: attachedDocName != null
-                    ? Container(
+                    ? InkWell(
                         key: const ValueKey('doc_attached'),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12.w,
-                          vertical: 10.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardBackground,
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(color: AppColors.brandPrimary),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.picture_as_pdf_rounded,
-                              color: AppColors.error,
-                              size: 24.r,
-                            ),
-                            SizedBox(width: 10.w),
-                            Expanded(
-                              child: Text(
-                                attachedDocName!,
-                                style: AppTextStyles.font13Medium,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () => setState(() {
-                                attachedDocName = null;
-                                attachedDocUrl = null;
-                              }),
-                              icon: Icon(
-                                Icons.delete_outline_rounded,
+                        onTap: () {
+                          showDialog<void>(
+                            context: context,
+                            builder: (_) =>
+                                AdminCustomerVisitDocViewerDialogWidget(
+                                  fileName: attachedDocName!,
+                                  fileUrl: attachedDocUrl,
+                                ),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(12.r),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 10.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.cardBackground,
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(color: AppColors.brandPrimary),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.picture_as_pdf_rounded,
                                 color: AppColors.error,
-                                size: 20.r,
+                                size: 24.r,
                               ),
-                            ),
-                          ],
+                              SizedBox(width: 10.w),
+                              Expanded(
+                                child: Directionality(
+                                  textDirection: ui.TextDirection.ltr,
+                                  child: Text(
+                                    attachedDocName!,
+                                    style: AppTextStyles.font13Medium,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () => setState(() {
+                                  attachedDocName = null;
+                                  attachedDocUrl = null;
+                                }),
+                                icon: Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: AppColors.error,
+                                  size: 20.r,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       )
                     : InkWell(

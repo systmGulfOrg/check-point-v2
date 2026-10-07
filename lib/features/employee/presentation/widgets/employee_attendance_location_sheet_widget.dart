@@ -8,8 +8,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
+import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
+import 'package:check_point_v2/features/admin/data/repos/admin_customer_visits_repo.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_state.dart';
 import 'attendance_target_details_widget.dart';
@@ -36,6 +39,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
   String type = 'Branch';
   BranchModel? branch;
   CustomerModel? customer;
+  CustomerVisitModel? todayScheduledVisit;
   LatLng? userLocation;
   GoogleMapController? mapController;
   bool isMapExpanded = false;
@@ -52,12 +56,38 @@ class _EmployeeAttendanceLocationSheetWidgetState
     super.initState();
     final cubit = context.read<EmployeeAttendanceCubit>();
     _loadWorkSchedule();
+    _checkTodayCustomerVisit();
     cubit.loadBranches();
     _refreshLocation();
     timer = Timer.periodic(
       const Duration(seconds: 5),
       (_) => _refreshLocation(),
     );
+  }
+
+  Future<void> _checkTodayCustomerVisit() async {
+    final result = await sl<AdminCustomerVisitsRepo>().getAllVisits();
+    if (!mounted) return;
+    if (result case Success(:final data)) {
+      final todayStr = AppDateFormatter.formatYearMonthDay(DateTime.now());
+      final visit = data.where((v) {
+        return v.status != 'cancelled' &&
+            (v.visitDate == todayStr ||
+                v.visitDate?.startsWith(todayStr) == true);
+      }).firstOrNull;
+      if (visit != null && mounted) {
+        setState(() {
+          todayScheduledVisit = visit;
+        });
+        final mode = context
+            .read<EmployeeAttendanceCubit>()
+            .employeeProfile
+            ?.todayWorkMode;
+        if (mode != 'remote') {
+          _changeType('Customer');
+        }
+      }
+    }
   }
 
   Future<void> _loadWorkSchedule() async {
@@ -76,14 +106,14 @@ class _EmployeeAttendanceLocationSheetWidgetState
 
   Set<String> get allowedTypes {
     if (widget.isCheckOut || isWorkScheduleLoading) {
-      return const {'Branch', 'Customer', 'Site', 'Remote'};
+      return const {'Branch', 'Customer', 'Remote'};
     }
     return switch (context
         .read<EmployeeAttendanceCubit>()
         .employeeProfile
         ?.todayWorkMode) {
       'remote' => const {'Remote'},
-      'onsite' => const {'Branch', 'Customer', 'Site'},
+      'onsite' => const {'Branch', 'Customer'},
       _ => const <String>{},
     };
   }
@@ -179,8 +209,8 @@ class _EmployeeAttendanceLocationSheetWidgetState
         availableCustomers = const [];
       }
     });
-    if (value == 'Customer' || value == 'Site') {
-      context.read<EmployeeAttendanceCubit>().loadCustomersByType(value);
+    if (value == 'Customer') {
+      context.read<EmployeeAttendanceCubit>().loadCustomersByType('Customer');
     }
   }
 
@@ -264,6 +294,20 @@ class _EmployeeAttendanceLocationSheetWidgetState
         targetCenter: targetCenter,
         targetPolygon: targetCenter == null ? targetPoints : const [],
       );
+      if (type == 'Customer' && todayScheduledVisit != null) {
+        final visitId = todayScheduledVisit?.id;
+        if (visitId != null && visitId.isNotEmpty) {
+          unawaited(
+            sl<AdminCustomerVisitsRepo>().updateVisitOutcome(
+              visitId: visitId,
+              outcome:
+                  'تم تسجيل الحضور الفعلي بمقر العميل بنجاح وتوثيق الزيارة.',
+              status: 'completed',
+              notes: 'تسجيل حضور تلقائي من تطبيق الهاتف - نوع الحضور: عميل',
+            ),
+          );
+        }
+      }
     }
     if (!mounted) return;
     final state = cubit.state;
@@ -350,6 +394,61 @@ class _EmployeeAttendanceLocationSheetWidgetState
                           : 'employee.home.checkInAction'.tr(),
                       style: AppTextStyles.font20Bold,
                     ),
+                    if (todayScheduledVisit != null) ...[
+                      hSpace(8),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(12.r),
+                        decoration: BoxDecoration(
+                          color: AppColors.softBrandBackground,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: AppColors.brandPrimary.withValues(
+                              alpha: 0.4,
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(8.r),
+                              decoration: const BoxDecoration(
+                                color: AppColors.brandPrimary,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.business_center_rounded,
+                                color: AppColors.white,
+                                size: 16.r,
+                              ),
+                            ),
+                            wSpace(10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'زيارة عميل مجدولة اليوم',
+                                    style: AppTextStyles.font12Bold.copyWith(
+                                      color: AppColors.brandPrimaryDark,
+                                    ),
+                                  ),
+                                  hSpace(2),
+                                  Text(
+                                    '${todayScheduledVisit!.customerName ?? "العميل"} • ${todayScheduledVisit!.title ?? "اجتماع عمل"}${todayScheduledVisit!.visitTime != null && todayScheduledVisit!.visitTime!.isNotEmpty ? " (${todayScheduledVisit!.visitTime})" : ""}',
+                                    style: AppTextStyles.font12Regular.copyWith(
+                                      color: AppColors.textPrimary,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                     hSpace(12),
                     Text(
                       'attendance.locationType'.tr(),
