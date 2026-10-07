@@ -15,6 +15,10 @@ class CustomerVisitModel {
     this.attendees = const [],
     this.documentName,
     this.documentUrl,
+    this.planDocumentName,
+    this.planDocumentUrl,
+    this.outcomeDocumentName,
+    this.outcomeDocumentUrl,
     this.notes,
     this.outcome,
     this.createdBy,
@@ -33,6 +37,10 @@ class CustomerVisitModel {
   final List<String> attendees;
   final String? documentName;
   final String? documentUrl;
+  final String? planDocumentName;
+  final String? planDocumentUrl;
+  final String? outcomeDocumentName;
+  final String? outcomeDocumentUrl;
   final String? notes;
   final String? outcome;
   final String? createdBy;
@@ -56,6 +64,10 @@ class CustomerVisitModel {
     List<String>? attendees,
     String? documentName,
     String? documentUrl,
+    String? planDocumentName,
+    String? planDocumentUrl,
+    String? outcomeDocumentName,
+    String? outcomeDocumentUrl,
     String? notes,
     String? outcome,
     String? createdBy,
@@ -73,6 +85,10 @@ class CustomerVisitModel {
       attendees: attendees ?? this.attendees,
       documentName: documentName ?? this.documentName,
       documentUrl: documentUrl ?? this.documentUrl,
+      planDocumentName: planDocumentName ?? this.planDocumentName,
+      planDocumentUrl: planDocumentUrl ?? this.planDocumentUrl,
+      outcomeDocumentName: outcomeDocumentName ?? this.outcomeDocumentName,
+      outcomeDocumentUrl: outcomeDocumentUrl ?? this.outcomeDocumentUrl,
       notes: notes ?? this.notes,
       outcome: outcome ?? this.outcome,
       createdBy: createdBy ?? this.createdBy,

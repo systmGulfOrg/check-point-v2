@@ -65,6 +65,22 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
         !rawScheduledBy.contains(' ');
     final scheduledBy = isOpaqueId ? null : rawScheduledBy;
 
+    final planDocName = visit.planDocumentName ??
+        (visit.outcomeDocumentName != null &&
+                visit.outcomeDocumentName != visit.documentName
+            ? visit.documentName
+            : (visit.outcome == null ? visit.documentName : null));
+    final planDocUrl = visit.planDocumentUrl ??
+        (visit.outcomeDocumentUrl != null &&
+                visit.outcomeDocumentUrl != visit.documentUrl
+            ? visit.documentUrl
+            : (visit.outcome == null ? visit.documentUrl : null));
+
+    final outcomeDocName = visit.outcomeDocumentName ??
+        (visit.outcome != null ? visit.documentName : null);
+    final outcomeDocUrl = visit.outcomeDocumentUrl ??
+        (visit.outcome != null ? visit.documentUrl : null);
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
@@ -213,14 +229,14 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
             ),
           ],
 
-          // Attached Document preview chip
-          if (visit.documentName != null && visit.documentName!.isNotEmpty) ...[
+          // Plan Document preview chip (قبل الاجتماع)
+          if (planDocName != null && planDocName.isNotEmpty) ...[
             SizedBox(height: 8.h),
             InkWell(
               onTap: () => AppDocumentViewerDialogWidget.show(
                 context,
-                fileName: visit.documentName!,
-                fileUrl: visit.documentUrl,
+                fileName: planDocName,
+                fileUrl: planDocUrl,
               ),
               borderRadius: BorderRadius.circular(8.r),
               child: Container(
@@ -234,16 +250,22 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.picture_as_pdf_rounded,
-                      color: AppColors.error,
+                      Icons.description_outlined,
+                      color: AppColors.brandPrimary,
                       size: 16.r,
                     ),
                     SizedBox(width: 6.w),
+                    Text(
+                      '${'admin.visits.planDocTitle'.tr(context: context)}: ',
+                      style: AppTextStyles.font11Bold.copyWith(
+                        color: AppColors.brandPrimaryDark,
+                      ),
+                    ),
                     Flexible(
                       child: Directionality(
                         textDirection: ui.TextDirection.ltr,
                         child: Text(
-                          visit.documentName!,
+                          planDocName,
                           style: AppTextStyles.font12Medium.copyWith(
                             color: AppColors.brandPrimary,
                             decoration: TextDecoration.underline,
@@ -257,6 +279,64 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                     Icon(
                       Icons.visibility_outlined,
                       color: AppColors.brandPrimary,
+                      size: 14.r,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+
+          // Outcome Document preview chip (بعد الاجتماع)
+          if (outcomeDocName != null && outcomeDocName.isNotEmpty) ...[
+            SizedBox(height: 8.h),
+            InkWell(
+              onTap: () => AppDocumentViewerDialogWidget.show(
+                context,
+                fileName: outcomeDocName,
+                fileUrl: outcomeDocUrl,
+              ),
+              borderRadius: BorderRadius.circular(8.r),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: AppColors.softBlueBackground,
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(color: AppColors.info.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.assignment_turned_in_outlined,
+                      color: AppColors.info,
+                      size: 16.r,
+                    ),
+                    SizedBox(width: 6.w),
+                    Text(
+                      '${'admin.visits.outcomeDocTitle'.tr(context: context)}: ',
+                      style: AppTextStyles.font11Bold.copyWith(
+                        color: AppColors.info,
+                      ),
+                    ),
+                    Flexible(
+                      child: Directionality(
+                        textDirection: ui.TextDirection.ltr,
+                        child: Text(
+                          outcomeDocName,
+                          style: AppTextStyles.font12Medium.copyWith(
+                            color: AppColors.info,
+                            decoration: TextDecoration.underline,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 6.w),
+                    Icon(
+                      Icons.visibility_outlined,
+                      color: AppColors.info,
                       size: 14.r,
                     ),
                   ],

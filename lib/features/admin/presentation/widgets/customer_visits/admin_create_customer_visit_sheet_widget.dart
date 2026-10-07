@@ -44,6 +44,7 @@ class _AdminCreateCustomerVisitSheetWidgetState
   late final TextEditingController attendeeInputController;
   late final TextEditingController notesController;
 
+  String creatorDisplayName = 'أنا (المشرف / المسؤول)';
   final List<String> attendees = [];
   List<EmployeeModel> availableEmployees = [];
   bool isLoadingEmployees = false;
@@ -65,11 +66,27 @@ class _AdminCreateCustomerVisitSheetWidgetState
     attendeeInputController = TextEditingController();
     notesController = TextEditingController();
 
-    // Default companions for great UX
-    attendees.add('أنا (المشرف / المسؤول)');
+    // Default creator as attendee - user can remove themselves via 'x' chip
+    attendees.add(creatorDisplayName);
+    _resolveCurrentUserName();
     _loadSystemEmployees();
     if (customersList.isEmpty && widget.initialCustomer == null) {
       _loadCustomers();
+    }
+  }
+
+  Future<void> _resolveCurrentUserName() async {
+    final name = (await sl<AuthSessionStorage>().readUserName())?.trim();
+    if (!mounted) return;
+    if (name != null && name.isNotEmpty) {
+      final updatedLabel = 'أنا ($name)';
+      setState(() {
+        final idx = attendees.indexOf(creatorDisplayName);
+        creatorDisplayName = updatedLabel;
+        if (idx != -1) {
+          attendees[idx] = updatedLabel;
+        }
+      });
     }
   }
 
@@ -514,9 +531,9 @@ class _AdminCreateCustomerVisitSheetWidgetState
                     ),
                     items: [
                       DropdownMenuItem<String>(
-                        value: 'أنا (المشرف / المسؤول)',
+                        value: creatorDisplayName,
                         child: Text(
-                          'أنا (المشرف / المسؤول)',
+                          creatorDisplayName,
                           style: AppTextStyles.font13Medium,
                         ),
                       ),

@@ -13,6 +13,7 @@ import 'package:check_point_v2/features/admin/data/models/locations/branch_respo
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_customer_visits_repo.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/customer_visits/admin_record_visit_outcome_dialog_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_state.dart';
 import 'attendance_target_details_widget.dart';
@@ -20,6 +21,7 @@ import 'employee_attendance_location_map_widget.dart';
 import 'employee_attendance_location_status_widget.dart';
 import 'employee_attendance_location_type_selector_widget.dart';
 import 'employee_attendance_target_dropdown_widget.dart';
+import 'employee_attended_visit_card_widget.dart';
 
 class EmployeeAttendanceLocationSheetWidget extends StatefulWidget {
   const EmployeeAttendanceLocationSheetWidget({
@@ -145,7 +147,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
     if (!mounted) return;
 
     final activeVisit = visits
-            .where((v) => v.status != 'completed')
+            .where((v) => v.status != 'visited' && v.status != 'completed')
             .firstOrNull ??
         visits.firstOrNull;
 
@@ -686,6 +688,18 @@ class _EmployeeAttendanceLocationSheetWidgetState
                                                         ? AppColors.white
                                                         : AppColors.success,
                                               ),
+                                            ] else if (todayVisits[i].status ==
+                                                'visited') ...[
+                                              wSpace(4),
+                                              Icon(
+                                                Icons.pending_actions_rounded,
+                                                size: 12.r,
+                                                color:
+                                                    todayScheduledVisit?.id ==
+                                                            todayVisits[i].id
+                                                        ? AppColors.white
+                                                        : AppColors.warning,
+                                              ),
                                             ],
                                           ],
                                         ),
@@ -841,12 +855,16 @@ class _EmployeeAttendanceLocationSheetWidgetState
                         onCustomerChanged: (selected) {
                           setState(() {
                             customer = selected;
-                            final matching = todayVisits
+                            final matchingVisits = todayVisits
                                 .where((v) => v.customerId == selected.id)
-                                .firstOrNull;
-                            if (matching != null) {
-                              todayScheduledVisit = matching;
-                            }
+                                .toList();
+                            final active = matchingVisits
+                                    .where((v) =>
+                                        v.status != 'visited' &&
+                                        v.status != 'completed')
+                                    .firstOrNull ??
+                                matchingVisits.firstOrNull;
+                            todayScheduledVisit = active;
                           });
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             _focusTarget();
@@ -875,6 +893,138 @@ class _EmployeeAttendanceLocationSheetWidgetState
                         isLoading: state is EmployeeAttendanceStateLoading,
                         enabled: true,
                         onTap: _submit,
+                      ),
+                    ] else if (type == 'Customer' &&
+                        (todayScheduledVisit ??
+                                (customer != null
+                                    ? todayVisits
+                                        .where((v) =>
+                                            v.customerId == customer!.id)
+                                        .firstOrNull
+                                    : null)) !=
+                            null &&
+                        ((todayScheduledVisit ??
+                                    todayVisits
+                                        .where((v) =>
+                                            v.customerId == customer!.id)
+                                        .first)
+                                .status ==
+                            'visited' ||
+                            (todayScheduledVisit ??
+                                    todayVisits
+                                        .where((v) =>
+                                            v.customerId == customer!.id)
+                                        .first)
+                                .status ==
+                            'completed')) ...[
+                      hSpace(14),
+                      Builder(
+                        builder: (context) {
+                          final matchingVisit = todayScheduledVisit ??
+                              todayVisits
+                                  .where((v) => v.customerId == customer!.id)
+                                  .first;
+                          final nextPendingVisit = todayVisits
+                              .where((v) =>
+                                  v.id != matchingVisit.id &&
+                                  v.status != 'visited' &&
+                                  v.status != 'completed')
+                              .firstOrNull;
+
+                          return EmployeeAttendedVisitCardWidget(
+                            visit: matchingVisit,
+                            nextVisit: nextPendingVisit,
+                            onNextVisitTap: nextPendingVisit == null
+                                ? null
+                                : () {
+                                    setState(() {
+                                      todayScheduledVisit = nextPendingVisit;
+                                      final matchingCust =
+                                          sortedCustomerOptions
+                                              .where((c) =>
+                                                  c.id ==
+                                                  nextPendingVisit.customerId)
+                                              .firstOrNull;
+                                      if (matchingCust != null) {
+                                        customer = matchingCust;
+                                      }
+                                    });
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      _focusTarget();
+                                      _loadTargetAddress();
+                                    });
+                                  },
+                            onRecordOutcomeTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (ctx) =>
+                                    AdminRecordVisitOutcomeDialogWidget(
+                                  visit: matchingVisit,
+                                  onSubmit: (
+                                    outcome,
+                                    status,
+                                    notes,
+                                    docName,
+                                    docUrl,
+                                  ) async {
+                                    final visitId = matchingVisit.id;
+                                    if (visitId == null || visitId.isEmpty) return;
+                                    final res = await sl<AdminCustomerVisitsRepo>()
+                                        .updateVisitOutcome(
+                                      visitId: visitId,
+                                      outcome: outcome,
+                                      status: status,
+                                      notes: notes,
+                                      documentName: docName,
+                                      documentUrl: docUrl,
+                                    );
+                                    if (!mounted) return;
+                                    if (res case Success()) {
+                                      setState(() {
+                                        final updated = matchingVisit.copyWith(
+                                          outcome: outcome,
+                                          status: status,
+                                          notes: notes,
+                                          outcomeDocumentName: docName,
+                                          outcomeDocumentUrl: docUrl,
+                                          documentName:
+                                              matchingVisit.documentName ??
+                                                  docName,
+                                          documentUrl:
+                                              matchingVisit.documentUrl ??
+                                                  docUrl,
+                                        );
+                                        todayVisits = todayVisits
+                                            .map((v) =>
+                                                v.id == updated.id
+                                                    ? updated
+                                                    : v)
+                                            .toList();
+                                        todayScheduledVisit = updated;
+                                      });
+                                      if (context.mounted) {
+                                        CustomSnackBar.showSuccess(
+                                          context,
+                                          message: 'admin.visits.outcomeSuccess'
+                                              .tr(context: context),
+                                        );
+                                      }
+                                    } else if (res
+                                        case Failure(:final failure)) {
+                                      if (context.mounted) {
+                                        CustomSnackBar.showError(
+                                          context,
+                                          message: failure.messageKey.tr(context: context),
+                                        );
+                                      }
+                                    }
+                                  },
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
                     ] else if (points.isEmpty) ...[
                       hSpace(20),

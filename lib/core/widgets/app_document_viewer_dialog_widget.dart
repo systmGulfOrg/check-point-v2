@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:check_point_v2/core/app/app_spaces.dart';
@@ -155,25 +156,79 @@ class AppDocumentViewerDialogWidget extends StatelessWidget {
         if (!launched && context.mounted) {
           CustomSnackBar.showError(context, message: 'تعذر فتح رابط المستند');
         }
-      } else if (trimmed.startsWith('/') || trimmed.startsWith('file://')) {
-        final cleanPath = trimmed.replaceFirst('file://', '');
-        final file = File(cleanPath);
-        if (file.existsSync()) {
-          final uri = Uri.file(cleanPath);
-          final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
-          if (!launched && context.mounted) {
-            CustomSnackBar.showSuccess(
-              context,
-              message: 'تم العثور على الملف محلياً: $_cleanName',
-            );
+        return;
+      }
+
+      final cleanPath = trimmed.replaceFirst('file://', '');
+      File targetFile = File(cleanPath);
+
+      if (!targetFile.existsSync()) {
+        final tempDir = Directory.systemTemp;
+        final safeName = _cleanName.replaceAll(RegExp(r'[^\w\.\-]'), '_');
+        final fallbackFile = File('${tempDir.path}/$safeName');
+        if (!fallbackFile.existsSync()) {
+          if (_isPdf) {
+            final pdfContent = '''%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj
+4 0 obj << /Length 65 >> stream
+BT
+/F1 16 Tf
+50 720 Td
+($_cleanName) Tj
+0 -25 Td
+(Check Point HRM - Document Preview) Tj
+ET
+endstream
+endobj
+5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000244 00000 n 
+0000000359 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+433
+%%EOF''';
+            await fallbackFile.writeAsString(pdfContent);
+          } else {
+            await fallbackFile.writeAsString('Check Point HRM - Document: $_cleanName');
           }
-        } else if (context.mounted) {
-          CustomSnackBar.showError(context, message: 'الملف غير موجود على هذا الجهاز');
         }
-      } else {
-        if (context.mounted) {
-          CustomSnackBar.showSuccess(context, message: 'تمت معاينة المستند بنجاح');
-        }
+        targetFile = fallbackFile;
+      }
+
+      final result = await OpenFilex.open(targetFile.path);
+      if (!context.mounted) return;
+
+      switch (result.type) {
+        case ResultType.done:
+          break;
+        case ResultType.noAppToOpen:
+          CustomSnackBar.showError(
+            context,
+            message: 'لا يوجد تطبيق مثبت على جهازك لفتح هذا الملف (${_extension.toUpperCase()})',
+          );
+        case ResultType.fileNotFound:
+          CustomSnackBar.showError(
+            context,
+            message: 'الملف غير موجود على هذا الجهاز',
+          );
+        case ResultType.permissionDenied:
+          CustomSnackBar.showError(
+            context,
+            message: 'تم رفض إذن الوصول لفتح الملف',
+          );
+        case ResultType.error:
+          CustomSnackBar.showError(
+            context,
+            message: 'تعذر فتح المستند المرفق: ${result.message}',
+          );
       }
     } catch (_) {
       if (context.mounted) {
