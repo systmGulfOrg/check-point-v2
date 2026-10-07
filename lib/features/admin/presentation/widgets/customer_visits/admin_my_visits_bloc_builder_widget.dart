@@ -26,6 +26,8 @@ class _AdminMyVisitsBlocBuilderWidgetState
     extends State<AdminMyVisitsBlocBuilderWidget> {
   String? _currentUserRole;
   String? _currentUserName;
+  String? _currentUserId;
+  String? _currentEmployeeId;
 
   @override
   void initState() {
@@ -38,21 +40,37 @@ class _AdminMyVisitsBlocBuilderWidgetState
     final storage = sl<AuthSessionStorage>();
     final role = await storage.readUserRole();
     final name = await storage.readUserName();
+    final userId = await storage.readUserId();
+    final employeeId = await storage.readEmployeeId();
     if (mounted) {
       setState(() {
         _currentUserRole = role;
         _currentUserName = name;
+        _currentUserId = userId;
+        _currentEmployeeId = employeeId;
       });
     }
   }
 
-  bool _isVisitForCurrentUser(CustomerVisitModel visit) {
+  bool _isVisitForCurrentUser(
+    CustomerVisitModel visit,
+    List<CustomerModel> accessibleCustomers,
+  ) {
     final role = _currentUserRole?.toLowerCase() ?? '';
     if (role.contains('admin')) {
       return true;
     }
 
+    if (visit.createdBy != null &&
+        ((_currentUserId != null && visit.createdBy == _currentUserId) ||
+            (_currentEmployeeId != null &&
+                visit.createdBy == _currentEmployeeId))) {
+      return true;
+    }
+
     final userName = _currentUserName?.trim().toLowerCase() ?? '';
+    final userId = _currentUserId?.trim().toLowerCase() ?? '';
+    final empId = _currentEmployeeId?.trim().toLowerCase() ?? '';
 
     for (final attendee in visit.attendees) {
       final cleanAttendee = attendee.toLowerCase();
@@ -64,6 +82,12 @@ class _AdminMyVisitsBlocBuilderWidgetState
               userName.contains(cleanAttendee))) {
         return true;
       }
+      if (userId.isNotEmpty && cleanAttendee.contains(userId)) {
+        return true;
+      }
+      if (empId.isNotEmpty && cleanAttendee.contains(empId)) {
+        return true;
+      }
       final tokens = userName
           .split(RegExp(r'\s+'))
           .where((t) => t.length > 2);
@@ -73,6 +97,22 @@ class _AdminMyVisitsBlocBuilderWidgetState
         }
       }
     }
+
+    if (visit.customerId != null && visit.customerId!.isNotEmpty) {
+      final matchesCustomer = accessibleCustomers.any(
+        (c) => c.id == visit.customerId,
+      );
+      if (matchesCustomer) return true;
+    }
+
+    if (visit.customerName != null && visit.customerName!.isNotEmpty) {
+      final visitCustName = visit.customerName!.trim().toLowerCase();
+      final matchesCustomerName = accessibleCustomers.any(
+        (c) => c.name?.trim().toLowerCase() == visitCustName,
+      );
+      if (matchesCustomerName) return true;
+    }
+
     return false;
   }
 
@@ -131,7 +171,9 @@ class _AdminMyVisitsBlocBuilderWidgetState
           ),
           actionSuccess: (_) => const SizedBox.shrink(),
           success: (visits) {
-            final myVisits = visits.where(_isVisitForCurrentUser).toList();
+            final myVisits = visits
+                .where((v) => _isVisitForCurrentUser(v, availableCustomers))
+                .toList();
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,

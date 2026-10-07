@@ -643,6 +643,7 @@
   "admin.visits.attendees": "المرافقون / الحاضرون (مين معايا)",
   "admin.visits.attendeesHint": "أدخل اسم المرافق واضغط إضافة",
   "admin.visits.customer": "العميل",
+  "admin.visits.selectCustomerRequired": "يرجى اختيار العميل أولاً",
   "admin.visits.date": "تاريخ الزيارة",
   "admin.visits.details": "تفاصيل العميل وسجل الزيارات",
   "admin.visits.docAttached": "تم إرفاق المستند بنجاح",

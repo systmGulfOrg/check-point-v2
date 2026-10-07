@@ -11,6 +11,9 @@ import 'package:check_point_v2/features/admin/data/models/locations/customer_res
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
+import 'package:check_point_v2/features/admin/data/repos/admin_locations_repo.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
 import 'admin_customer_visit_doc_viewer_dialog_widget.dart';
 
 class AdminCreateCustomerVisitSheetWidget extends StatefulWidget {
@@ -33,6 +36,8 @@ class AdminCreateCustomerVisitSheetWidget extends StatefulWidget {
 class _AdminCreateCustomerVisitSheetWidgetState
     extends State<AdminCreateCustomerVisitSheetWidget> {
   CustomerModel? selectedCustomer;
+  List<CustomerModel> customersList = [];
+  bool isLoadingCustomers = false;
   late final TextEditingController titleController;
   late final TextEditingController dateController;
   late final TextEditingController timeController;
@@ -49,7 +54,9 @@ class _AdminCreateCustomerVisitSheetWidgetState
   @override
   void initState() {
     super.initState();
-    selectedCustomer = widget.initialCustomer;
+    customersList = List.from(widget.availableCustomers);
+    selectedCustomer = widget.initialCustomer ??
+        (customersList.isNotEmpty ? customersList.first : null);
     titleController = TextEditingController();
     dateController = TextEditingController(
       text: AppDateFormatter.formatYearMonthDay(DateTime.now()),
@@ -61,6 +68,24 @@ class _AdminCreateCustomerVisitSheetWidgetState
     // Default companions for great UX
     attendees.add('أنا (المشرف / المسؤول)');
     _loadSystemEmployees();
+    if (customersList.isEmpty && widget.initialCustomer == null) {
+      _loadCustomers();
+    }
+  }
+
+  Future<void> _loadCustomers() async {
+    setState(() => isLoadingCustomers = true);
+    final result = await sl<AdminLocationsRepo>().getCustomersByType('Customer');
+    if (!mounted) return;
+    if (result case Success(:final data)) {
+      setState(() {
+        customersList = data;
+        selectedCustomer ??= data.firstOrNull;
+        isLoadingCustomers = false;
+      });
+    } else {
+      setState(() => isLoadingCustomers = false);
+    }
   }
 
   Future<void> _loadSystemEmployees() async {
@@ -166,8 +191,15 @@ class _AdminCreateCustomerVisitSheetWidgetState
     }
 
     final cust = selectedCustomer ?? widget.initialCustomer;
-    final customerId = cust?.id ?? '1';
-    final customerName = cust?.name ?? 'العميل';
+    if (cust?.id == null || cust!.id!.isEmpty) {
+      CustomSnackBar.showError(
+        context,
+        message: 'admin.visits.selectCustomerRequired'.tr(),
+      );
+      return;
+    }
+    final customerId = cust.id!;
+    final customerName = cust.name ?? '';
 
     setState(() => isSubmitting = true);
 
@@ -195,6 +227,12 @@ class _AdminCreateCustomerVisitSheetWidgetState
       CustomSnackBar.showSuccess(
         context,
         message: 'admin.visits.visitSuccess'.tr(),
+      );
+    } else {
+      final key = context.read<AdminCustomerVisitsCubit>().lastErrorKey;
+      CustomSnackBar.showError(
+        context,
+        message: (key ?? 'admin.visits.selectCustomerRequired').tr(),
       );
     }
   }
@@ -248,8 +286,11 @@ class _AdminCreateCustomerVisitSheetWidgetState
               SizedBox(height: 14.h),
 
               // Customer Selection if multiple
-              if (widget.initialCustomer == null &&
-                  widget.availableCustomers.isNotEmpty) ...[
+              if (widget.initialCustomer == null && isLoadingCustomers) ...[
+                const Center(child: CircularProgressIndicator.adaptive()),
+                SizedBox(height: 16.h),
+              ] else if (widget.initialCustomer == null &&
+                  customersList.isNotEmpty) ...[
                 Text(
                   'admin.visits.customer'.tr(context: context),
                   style: AppTextStyles.font12Medium,
@@ -264,10 +305,11 @@ class _AdminCreateCustomerVisitSheetWidgetState
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<CustomerModel>(
-                      value:
-                          selectedCustomer ?? widget.availableCustomers.first,
+                      value: customersList.contains(selectedCustomer)
+                          ? selectedCustomer
+                          : customersList.first,
                       isExpanded: true,
-                      items: widget.availableCustomers.map((c) {
+                      items: customersList.map((c) {
                         return DropdownMenuItem<CustomerModel>(
                           value: c,
                           child: Text(

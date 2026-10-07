@@ -32,7 +32,10 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
     }
   }
 
+  String? lastErrorKey;
+
   Future<bool> addVisitPlan(CustomerVisitModel visit) async {
+    final previous = state;
     emit(const AdminCustomerVisitsState.loading());
     final result = await visitsRepo.addVisitPlan(visit);
     switch (result) {
@@ -44,9 +47,11 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
         }
         return true;
       case Failure(:final failure):
-        emit(AdminCustomerVisitsState.error(failure.messageKey));
+        lastErrorKey = failure.messageKey;
+        emit(previous);
         return false;
       default:
+        emit(previous);
         return false;
     }
   }

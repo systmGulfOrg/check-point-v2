@@ -643,6 +643,7 @@
   "admin.visits.attendees": "Companions / Attendees (Who is with me)",
   "admin.visits.attendeesHint": "Enter companion name and tap add",
   "admin.visits.customer": "Customer",
+  "admin.visits.selectCustomerRequired": "Please select a customer first",
   "admin.visits.date": "Visit Date",
   "admin.visits.details": "Customer Details & Visit History",
   "admin.visits.docAttached": "Document attached successfully",
