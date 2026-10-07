@@ -55,8 +55,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
   void initState() {
     super.initState();
     final cubit = context.read<EmployeeAttendanceCubit>();
-    _loadWorkSchedule();
-    _checkTodayCustomerVisit();
+    _initScheduleAndVisits();
     cubit.loadBranches();
     _refreshLocation();
     timer = Timer.periodic(
@@ -65,60 +64,84 @@ class _EmployeeAttendanceLocationSheetWidgetState
     );
   }
 
-  Future<void> _checkTodayCustomerVisit() async {
-    final result = await sl<AdminCustomerVisitsRepo>().getAllVisits();
-    if (!mounted) return;
-    if (result case Success(:final data)) {
-      final todayStr = AppDateFormatter.formatYearMonthDay(DateTime.now());
-      final visit = data.where((v) {
-        return v.status != 'cancelled' &&
-            (v.visitDate == todayStr ||
-                v.visitDate?.startsWith(todayStr) == true);
-      }).firstOrNull;
-      if (visit != null && mounted) {
-        setState(() {
-          todayScheduledVisit = visit;
-        });
-        final mode = context
-            .read<EmployeeAttendanceCubit>()
-            .employeeProfile
-            ?.todayWorkMode;
-        if (mode != 'remote') {
-          _changeType('Customer');
-        }
-      }
-    }
-  }
-
-  Future<void> _loadWorkSchedule() async {
+  Future<void> _initScheduleAndVisits() async {
     final profile = await context
         .read<EmployeeAttendanceCubit>()
         .loadEmployeeProfile();
     if (!mounted) return;
-    setState(() => isWorkScheduleLoading = false);
-    final mode = profile?.todayWorkMode;
-    if (mode == 'remote') {
+
+    CustomerVisitModel? visit;
+    try {
+      final result = await sl<AdminCustomerVisitsRepo>().getAllVisits();
+      if (result case Success(:final data)) {
+        final todayStr = AppDateFormatter.formatYearMonthDay(DateTime.now());
+        final currentEmpId = profile?.id;
+        final currentEmpName = profile?.name?.trim().toLowerCase();
+
+        visit = data.where((v) {
+          if (v.status == 'cancelled') return false;
+          final isToday = v.visitDate == todayStr ||
+              v.visitDate?.startsWith(todayStr) == true;
+          if (!isToday) return false;
+
+          final isAttendeeId = currentEmpId != null &&
+              v.attendees.contains(currentEmpId);
+          final isAttendeeName = currentEmpName != null &&
+              v.attendees.any((a) => a.toLowerCase().contains(currentEmpName));
+          return isAttendeeId || isAttendeeName;
+        }).firstOrNull;
+      }
+    } catch (_) {}
+
+    if (!mounted) return;
+
+    setState(() {
+      isWorkScheduleLoading = false;
+      todayScheduledVisit = visit;
+    });
+
+    final mode = profile?.todayWorkMode ?? 'onsite';
+    if (visit != null) {
+      _changeType('Customer');
+    } else if (mode == 'remote') {
       _changeType('Remote');
-    } else if (mode == 'onsite' && type == 'Remote') {
+    } else {
       _changeType('Branch');
     }
   }
 
   Set<String> get allowedTypes {
-    if (widget.isCheckOut || isWorkScheduleLoading) {
-      return const {'Branch', 'Customer', 'Remote'};
-    }
-    return switch (context
+    final mode = context
         .read<EmployeeAttendanceCubit>()
         .employeeProfile
-        ?.todayWorkMode) {
-      'remote' => const {'Remote'},
-      'onsite' => const {'Branch', 'Customer'},
-      _ => const <String>{},
-    };
+        ?.todayWorkMode ?? 'onsite';
+
+    final types = <String>{};
+
+    if (mode == 'remote') {
+      types.add('Remote');
+    } else {
+      // mode == 'onsite' or 'hybrid' on onsite day
+      types.add('Branch');
+    }
+
+    // Customer visit is ONLY available if there is an active scheduled customer visit for this employee today
+    if (todayScheduledVisit != null) {
+      types.add('Customer');
+    }
+
+    return types;
   }
 
   void _showDisabledTypeMessage(String value) {
+    if (value == 'Customer' && todayScheduledVisit == null) {
+      CustomSnackBar.showError(
+        context,
+        message: 'attendance.noCustomerVisitToday'.tr(context: context),
+      );
+      return;
+    }
+
     final mode = context
         .read<EmployeeAttendanceCubit>()
         .employeeProfile
@@ -128,9 +151,10 @@ class _EmployeeAttendanceLocationSheetWidgetState
       'onsite' => 'attendance.onsiteWorkDayLocationMessage',
       _ => 'attendance.unscheduledWorkDayLocationMessage',
     };
-    ScaffoldMessenger.of(
+    CustomSnackBar.showError(
       context,
-    ).showSnackBar(SnackBar(content: Text(messageKey.tr(context: context))));
+      message: messageKey.tr(context: context),
+    );
   }
 
   @override

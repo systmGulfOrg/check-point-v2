@@ -693,6 +693,7 @@
   "attendance.moveToLocationNote": "Please move to the selected location. Check-in will be enabled when you arrive.",
   "attendance.myLocation": "My location",
   "attendance.noLocationData": "No attendance location data found.",
+  "attendance.noCustomerVisitToday": "You have no scheduled customer visit today.",
   "attendance.onsiteWorkDayLocationMessage": "Today is an onsite work day. Remote attendance is not available.",
   "attendance.outsideArea": "You are outside the area. Check-in is unavailable.",
   "attendance.readyNote": "Your location is valid. You can continue with attendance.",
