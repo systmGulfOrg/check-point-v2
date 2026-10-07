@@ -413,6 +413,17 @@
   - **حماية الطلب الشخصي (`isOwnRequest`)**: قراءة وتخزين `currentEmployeeId` و `currentUserName` ومطابقة كائن الطلب بدقة لإخفاء أزرار القبول/الرفض فوراً على طلبات المستخدم الشخصية والاكتفاء بعرض حالة الطلب والتايم لاين.
   - **الحفاظ على محتوى الشاشة وعدم إفراغها**: في `SupervisorLeaveRequestsBlocBuilderWidget` و `AdminLeaveManagementScreen` تم التبديل إلى `BlocConsumer` مع التخزين المؤقت للطلبات، بحيث تظل القائمة معروضة دائماً دون أن تختفي.
   - **عرض التنبيهات من الأعلى (`CustomSnackBar`)**: نقل رسائل الأخطاء والتنبيهات لتظهر كـ `CustomSnackBar` علوي أنيق بدلاً من تشويه وتفريغ الشاشة.
+## 41. إثراء الشاشة الرئيسية للموظف ببطاقات أرصدة الإجازات، أحدث الطلبات، والإجراءات السريعة
+- **الشاشات والملفات:**
+  - `EmployeeHomeScreen` (`lib/features/employee/presentation/screens/employee_home_screen.dart`)
+  - `EmployeeHomeQuickActionsWidget` (`lib/features/employee/presentation/widgets/employee_home_quick_actions_widget.dart`)
+  - `EmployeeHomeLeavesBlocBuilderWidget` (`lib/features/employee/presentation/widgets/employee_home_leaves_bloc_builder_widget.dart`)
+- **اللقطة المرجعية:** لقطة شاشة المستخدم لشاشة "يومي" الرئيسية وملاحظة المساحة الفارغة الكبيرة أسفل بطاقة الحضور.
+- **المشكلة:** الشاشة الرئيسية للموظف كانت تحتوي فقط على بطاقة الحضور ورأس الصفحة مع فراغ كبير جداً في باقي الصفحة دون استغلال المساحة بمعلومات مهمة مثل أرصدة الإجازات والطلبات الحديثة.
+- **الحل المُنفذ:**
+  - إضافة ودجت الإجراءات السريعة `EmployeeHomeQuickActionsWidget` لتقديم اختصارات مباشرة لـ **"طلب إجازة"** و **"طلب إذن"**.
+  - ربط الشاشة مع `LeavesCubit` وعرض بطاقات **"أرصدة الإجازات"** التفاعلية (`LeaveBalancesListWidget`).
+  - عرض قسم **"أحدث طلبات الإجازة"** يضم آخر 3 طلبات بحالاتها الزمنية (`معلق`، `مقبول`، إلخ) مع زر "عرض الكل >" للانتقال السريع لسجل الإجازات.
 - **الحالة:** 🟢 تم الحل (Resolved).
 
 
