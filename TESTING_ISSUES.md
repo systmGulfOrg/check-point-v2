@@ -426,6 +426,30 @@
   - عرض قسم **"أحدث طلبات الإجازة"** يضم آخر 3 طلبات بحالاتها الزمنية (`معلق`، `مقبول`، إلخ) مع زر "عرض الكل >" للانتقال السريع لسجل الإجازات.
 - **الحالة:** 🟢 تم الحل (Resolved).
 
+## 42. تصحيح صلاحيات اعتماد طلبات الإجازة للمشرف في الـ Backend (403 Forbidden)
+- **المكونات والملفات:**
+  - `auth.ts` (`apps/api/src/plugins/auth.ts` في `checkpoint-web`)
+  - `leave.routes.ts` (`apps/api/src/modules/workforce/leave.routes.ts` في `checkpoint-web`)
+- **اللقطة المرجعية:** سجل Dio الخطأ:
+  `PATCH /api/v2/leave-requests/:id/status 403 Forbidden - Missing required permission: leave.approve`
+- **المشكلة:**
+  - عند قيام المشرف (Supervisor) باعتماد طلب إجازة لأحد أفراد فريقه (`action: ApproveManager`)، كان السيرفر يرفض الطلب بالخطأ بـ 403 Forbidden لأن المسار كان يشترط حصراً صلاحية `leave.approve` (الخاصة بالأدمن والـ HR) متجاهلاً صلاحية `leave.manager_approve` التي يمتلكها المشرف افتراضياً.
+- **الحل المُنفذ:**
+  - إضافة دالة حماية مرنة `requireAnyPermission` في بلجن التوثيق `auth.ts` للتحقق من امتلاك المستخدم لأي صلاحية من الصلاحيات المطلوبة.
+  - تحديث معالج مسار `PATCH /leave-requests/:id/status` في `leave.routes.ts` لاستخدام `requireAnyPermission(PERMISSIONS.LEAVE_APPROVE, PERMISSIONS.LEAVE_MANAGER_APPROVE, PERMISSIONS.LEAVE_HR_APPROVE)`.
+
+## 43. معالجة خطأ تسجيل AdminCustomerVisitsCubit في GetIt
+- **الشاشات والملفات:**
+  - `service_locator.dart` (`lib/core/di/service_locator.dart`)
+  - `AdminCustomersBlocBuilderWidget` (`lib/features/admin/presentation/widgets/admin_customers_bloc_builder_widget.dart`)
+- **اللقطة المرجعية:** الشاشة الحمراء عند فتح تفاصيل العميل والزيارات:
+  `Bad state: GetIt: Object/factory with type AdminCustomerVisitsCubit is not registered inside GetIt.`
+- **المشكلة:** عدم تسجيل `AdminCustomerVisitsRepo` و `AdminCustomerVisitsCubit` في ملف حقن التبعيات المركزي `service_locator.dart`، مما تسبب في استثناء GetIt عند الضغط على بطاقة العميل لفتح سجل الزيارات.
+- **الحل المُنفذ:**
+  - تسجيل `AdminCustomerVisitsRepo` كـ `LazySingleton` و `AdminCustomerVisitsCubit` كـ `Factory` في `lib/core/di/service_locator.dart`.
+  - تحديث فتح الشيت في `AdminCustomersBlocBuilderWidget` ليستخدم `BlocProvider(create: (_) => sl<AdminCustomerVisitsCubit>())` لضمان إنشاء وإدارة دورة حياة الـ Cubit بشكل سليم.
+- **الحالة:** 🟢 تم الحل (Resolved).
+
 
 
 

@@ -76,8 +76,8 @@ class AdminCustomersBlocBuilderWidget extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.transparent,
-      builder: (_) => BlocProvider.value(
-        value: sl<AdminCustomerVisitsCubit>(),
+      builder: (_) => BlocProvider<AdminCustomerVisitsCubit>(
+        create: (_) => sl<AdminCustomerVisitsCubit>(),
         child: AdminCustomerDetailsSheetWidget(
           customer: customer,
           onEdit: () {

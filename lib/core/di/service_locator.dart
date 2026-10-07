@@ -9,6 +9,8 @@ import 'package:check_point_v2/core/services/attendance_verification_service.dar
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo_impl.dart';
+import 'package:check_point_v2/features/admin/data/repos/admin_customer_visits_repo.dart';
+import 'package:check_point_v2/features/admin/data/repos/admin_customer_visits_repo_impl.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo_impl.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_leave_requests_repo.dart';
@@ -24,6 +26,7 @@ import 'package:check_point_v2/features/admin/data/repos/admin_tasks_repo_impl.d
 import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/pending_devices/admin_pending_devices_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_department_employees_cubit.dart';
@@ -188,6 +191,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<AdminLocationsRepo>(
     () => AdminLocationsRepoImpl(api: sl<AdminApiService>()),
   );
+  sl.registerLazySingleton<AdminCustomerVisitsRepo>(
+    () => AdminCustomerVisitsRepoImpl(),
+  );
   sl.registerLazySingleton<AdminShiftsPoliciesRepo>(
     () => AdminShiftsPoliciesRepoImpl(api: sl<AdminApiService>()),
   );
@@ -348,6 +354,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<AdminCustomersCubit>(
     () => AdminCustomersCubit(locationsRepo: sl<AdminLocationsRepo>()),
+  );
+  sl.registerFactory<AdminCustomerVisitsCubit>(
+    () => AdminCustomerVisitsCubit(visitsRepo: sl<AdminCustomerVisitsRepo>()),
   );
   sl.registerFactory<AdminShiftsPoliciesCubit>(
     () => AdminShiftsPoliciesCubit(
