@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import '../../../admin/data/models/leave_requests/admin_leave_request_model.dart';
@@ -101,6 +102,37 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
   final String? rejectionReason;
   final bool isOwnRequest;
 
+  Future<void> _openAttachment(BuildContext context, String url) async {
+    try {
+      if (url.startsWith('http')) {
+        final uri = Uri.tryParse(url);
+        if (uri != null) {
+          final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+          if (!launched && context.mounted) {
+            CustomSnackBar.showError(
+              context,
+              message: 'تعذر فتح الرابط المرفق',
+            );
+          }
+        }
+      } else {
+        if (context.mounted) {
+          CustomSnackBar.showSuccess(
+            context,
+            message: 'تمت معاينة المستند المرفق بنجاح',
+          );
+        }
+      }
+    } catch (_) {
+      if (context.mounted) {
+        CustomSnackBar.showError(
+          context,
+          message: 'تعذر فتح المستند المرفق',
+        );
+      }
+    }
+  }
+
   void _showAttachmentDialog(BuildContext context, String url) {
     showDialog<void>(
       context: context,
@@ -136,7 +168,13 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.r),
                 child: _buildAttachmentContent(ctx, url),
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: 16.h),
+              CustomButton(
+                text: 'فتح / معاينة المستند المرفق',
+                icon: Icons.open_in_new_rounded,
+                onTap: () => _openAttachment(ctx, url),
+              ),
+              SizedBox(height: 4.h),
             ],
           ),
         ),
@@ -170,35 +208,40 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
     if (url.startsWith('data:application/pdf') ||
         url.toLowerCase().contains('.pdf') ||
         url.toLowerCase().contains('.doc')) {
-      return Container(
-        height: 180.h,
-        padding: EdgeInsets.all(16.r),
-        decoration: BoxDecoration(
-          color: AppColors.pageBackground,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.picture_as_pdf_rounded,
-              size: 54.r,
-              color: AppColors.error,
-            ),
-            hSpace(10),
-            Text(
-              'leaves.request.hasAttachment'.tr(context: ctx),
-              style: AppTextStyles.font14Bold,
-            ),
-            hSpace(4),
-            Text(
-              'PDF Document / المستند المرفق',
-              style: AppTextStyles.font12Regular.copyWith(
-                color: AppColors.textSecondary,
+      return InkWell(
+        onTap: () => _openAttachment(ctx, url),
+        borderRadius: BorderRadius.circular(12.r),
+        child: Container(
+          height: 180.h,
+          width: double.infinity,
+          padding: EdgeInsets.all(16.r),
+          decoration: BoxDecoration(
+            color: AppColors.pageBackground,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.picture_as_pdf_rounded,
+                size: 54.r,
+                color: AppColors.error,
               ),
-            ),
-          ],
+              hSpace(10),
+              Text(
+                'leaves.request.hasAttachment'.tr(context: ctx),
+                style: AppTextStyles.font14Bold,
+              ),
+              hSpace(4),
+              Text(
+                'PDF Document / اضغط للفتح أو التحميل',
+                style: AppTextStyles.font12Regular.copyWith(
+                  color: AppColors.brandPrimary,
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
