@@ -43,64 +43,65 @@ class SupervisorLeaveRequestsBlocBuilderWidget extends StatelessWidget {
       SupervisorLeaveRequestsState
     >(
       builder: (context, state) {
-        return switch (state) {
-          SupervisorLeaveRequestsLoading() => const Skeletonizer(
+        final allRequests = cubit.allRequests;
+        if (state is SupervisorLeaveRequestsLoading && allRequests.isEmpty) {
+          return const Skeletonizer(
             enabled: true,
             child: SupervisorLeaveRequestsListWidget(requests: _dummyRequests),
-          ),
-          SupervisorLeaveRequestsSuccess(:final requests) =>
-            SupervisorLeaveRequestsListWidget(
-              requests: switch (selectedFilterIndex) {
-                1 =>
-                  requests
-                      .where(
-                        (r) =>
-                            r.status?.toLowerCase() == 'pending' ||
-                            r.status?.toLowerCase() == 'pendinghr',
-                      )
-                      .toList(),
-                2 =>
-                  requests
-                      .where((r) => r.status?.toLowerCase() == 'approved')
-                      .toList(),
-                3 =>
-                  requests
-                      .where((r) => r.status?.toLowerCase() == 'rejected')
-                      .toList(),
-                _ => requests,
-              },
-              userRole: cubit.userRole,
-              currentUserId: cubit.currentUserId,
-              onApprove: (req) {
-                if (req.ulid != null) {
-                  cubit.approveRequest(
-                    req.ulid!,
-                    cubit.userRole,
-                    currentStatus: req.status,
-                  );
-                }
-              },
-              onReject: (req) {
-                if (req.ulid != null) {
-                  _showRejectReasonDialog(
-                    context,
-                    cubit,
-                    req.ulid!,
-                    currentStatus: req.status,
-                  );
-                }
-              },
-            ),
-          SupervisorLeaveRequestsError(:final messageKey) => Center(
-            child: Text(
-              messageKey.tr(context: context),
-              style: AppTextStyles.font14Regular.copyWith(
-                color: AppColors.error,
-              ),
-            ),
-          ),
-          _ => const SupervisorLeaveRequestsListWidget(requests: []),
+          );
+        }
+
+        final requests = switch (state) {
+          SupervisorLeaveRequestsSuccess(:final requests) => requests,
+          _ => allRequests,
         };
+
+        final filtered = switch (selectedFilterIndex) {
+          1 =>
+            requests
+                .where(
+                  (r) =>
+                      r.status?.toLowerCase() == 'pending' ||
+                      r.status?.toLowerCase() == 'pendinghr',
+                )
+                .toList(),
+          2 =>
+            requests
+                .where((r) => r.status?.toLowerCase() == 'approved')
+                .toList(),
+          3 =>
+            requests
+                .where((r) => r.status?.toLowerCase() == 'rejected')
+                .toList(),
+          _ => requests,
+        };
+
+        return SupervisorLeaveRequestsListWidget(
+          requests: filtered,
+          userRole: cubit.userRole,
+          currentUserId: cubit.currentUserId,
+          currentEmployeeId: cubit.currentEmployeeId,
+          currentUserName: cubit.currentUserName,
+          onApprove: (req) {
+            if (req.ulid != null) {
+              cubit.approveRequest(
+                req.ulid!,
+                cubit.userRole,
+                currentStatus: req.status,
+              );
+            }
+          },
+          onReject: (req) {
+            if (req.ulid != null) {
+              _showRejectReasonDialog(
+                context,
+                cubit,
+                req.ulid!,
+                currentStatus: req.status,
+              );
+            }
+          },
+        );
       },
     );
   }

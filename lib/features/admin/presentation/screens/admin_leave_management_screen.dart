@@ -28,6 +28,8 @@ class _AdminLeaveManagementScreenState extends State<AdminLeaveManagementScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
   int _selectedFilter = 0;
+  List<AdminLeaveRequestModel>? _cachedRequests;
+  List<LeaveTypeModel>? _cachedLeaveTypes;
 
   @override
   void initState() {
@@ -109,46 +111,69 @@ class _AdminLeaveManagementScreenState extends State<AdminLeaveManagementScreen>
         child: RefreshIndicator(
           color: AppColors.brandPrimary,
           onRefresh: context.read<AdminLeaveRequestsCubit>().loadAll,
-          child: BlocBuilder<AdminLeaveRequestsCubit, AdminLeaveRequestsState>(
+          child: BlocConsumer<AdminLeaveRequestsCubit, AdminLeaveRequestsState>(
+            listener: (context, state) {
+              state.maybeWhen(
+                actionSuccess: (message) {
+                  CustomSnackBar.showSuccess(
+                    context,
+                    message: message.tr(context: context),
+                  );
+                },
+                error: (messageKey) {
+                  CustomSnackBar.showError(
+                    context,
+                    message: messageKey.tr(context: context),
+                  );
+                },
+                orElse: () {},
+              );
+            },
             builder: (context, state) {
-              return state.when(
-                initial: () => const SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: AdminLeaveRequestsSkeletonWidget(),
-                  ),
-                ),
-                loading: () => const SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: AdminLeaveRequestsSkeletonWidget(),
-                  ),
-                ),
-                actionSuccess: (_) => const SizedBox.shrink(),
-                error: (messageKey) => SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Padding(
-                    padding: EdgeInsets.all(24.r),
-                    child: Center(
-                      child: Text(
-                        messageKey.tr(context: context),
-                        style: AppTextStyles.font14Regular.copyWith(
-                          color: AppColors.error,
+              state.maybeWhen(
+                success: (requests, leaveTypes) {
+                  _cachedRequests = requests;
+                  _cachedLeaveTypes = leaveTypes;
+                },
+                orElse: () {},
+              );
+
+              final requests = _cachedRequests;
+              final leaveTypes = _cachedLeaveTypes;
+
+              if (requests == null && leaveTypes == null) {
+                return state.maybeWhen(
+                  error: (messageKey) => SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Padding(
+                      padding: EdgeInsets.all(24.r),
+                      child: Center(
+                        child: Text(
+                          messageKey.tr(context: context),
+                          style: AppTextStyles.font14Regular.copyWith(
+                            color: AppColors.error,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                success: (requests, leaveTypes) => TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildRequestsTab(requests),
-                    _buildLeaveTypesTab(leaveTypes),
-                    const AdminOfficialHolidaysBlocBuilderWidget(),
-                  ],
-                ),
+                  orElse: () => const SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: AdminLeaveRequestsSkeletonWidget(),
+                    ),
+                  ),
+                );
+              }
+
+              return TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildRequestsTab(requests ?? []),
+                  _buildLeaveTypesTab(leaveTypes ?? []),
+                  const AdminOfficialHolidaysBlocBuilderWidget(),
+                ],
               );
             },
           ),

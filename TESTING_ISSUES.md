@@ -398,6 +398,21 @@
   - تعريب وتنسيق توقيت الساعة الحية باللغة الحالية (`12:29 م` أو `12:29 PM`) لمنع انعكاس الأحرف في الواجهات العربية.
   - ضبط المسافات الرأسية وإضافة `hSpace(16)` بين شارة `On Time` وأزرار تسجيل الدخول/الخروج.
   - إضافة `hSpace(16)` كمسافة فاصلة بين بطاقة الحضور وبانر التنبيهات في شاشة المشرف.
+## 40. منع إفراغ شاشة إدارة الإجازات عند حدوث خطأ ومنع أزرار الموافقة على الطلب الشخصي
+- **الشاشات والملفات:**
+  - `SupervisorLeaveManagementScreen` (`lib/features/supervisor/presentation/screens/supervisor_leave_management_screen.dart`)
+  - `SupervisorLeaveRequestsBlocBuilderWidget` (`lib/features/supervisor/presentation/widgets/supervisor_leave_requests_bloc_builder_widget.dart`)
+  - `SupervisorLeaveRequestsListWidget` (`lib/features/supervisor/presentation/widgets/supervisor_leave_requests_list_widget.dart`)
+  - `SupervisorLeaveRequestsCubit` (`lib/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart`)
+  - `AdminLeaveManagementScreen` (`lib/features/admin/presentation/screens/admin_leave_management_screen.dart`)
+- **اللقطة المرجعية:** لقطة شاشة المستخدم لشاشة إدارة الإجازات عند ظهور نص الخطأ الأحمر في المنتصف.
+- **المشكلة:**
+  1. اختفاء قائمة طلبات الإجازة بالكامل وظهور نص أحمر في منتصف الشاشة: `"ليس لديك صلاحية لتنفيذ هذه العملية."` عند محاولة المشرف/الموظف إجراء معاملة على طلبه أو عند حدوث خطأ في الاتصال.
+  2. ظهور أزرار "قبول" و"رفض" للمشرف على طلب الإجازة الشخصي الخاص به بسبب عدم مطابقة `currentUserId` مع `employeeId`، مما أدى لرفض السيرفر بـ 403 Forbidden (لأنه لا يجوز للموظف اعتماد طلبه الخاص).
+- **الحل المُنفذ:**
+  - **حماية الطلب الشخصي (`isOwnRequest`)**: قراءة وتخزين `currentEmployeeId` و `currentUserName` ومطابقة كائن الطلب بدقة لإخفاء أزرار القبول/الرفض فوراً على طلبات المستخدم الشخصية والاكتفاء بعرض حالة الطلب والتايم لاين.
+  - **الحفاظ على محتوى الشاشة وعدم إفراغها**: في `SupervisorLeaveRequestsBlocBuilderWidget` و `AdminLeaveManagementScreen` تم التبديل إلى `BlocConsumer` مع التخزين المؤقت للطلبات، بحيث تظل القائمة معروضة دائماً دون أن تختفي.
+  - **عرض التنبيهات من الأعلى (`CustomSnackBar`)**: نقل رسائل الأخطاء والتنبيهات لتظهر كـ `CustomSnackBar` علوي أنيق بدلاً من تشويه وتفريغ الشاشة.
 - **الحالة:** 🟢 تم الحل (Resolved).
 
 

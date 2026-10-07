@@ -21,6 +21,8 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
   String? statusFilter;
   String userRole = 'Employee';
   String currentUserId = '';
+  String currentEmployeeId = '';
+  String currentUserName = '';
 
   int get pendingCount => allRequests
       .where((request) => request.status?.toLowerCase() == 'pending')
@@ -29,6 +31,8 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
   Future<void> initRole() async {
     userRole = await sessionStorage.readUserRole() ?? 'Employee';
     currentUserId = await sessionStorage.readUserId() ?? '';
+    currentEmployeeId = await sessionStorage.readEmployeeId() ?? currentUserId;
+    currentUserName = await sessionStorage.readUserName() ?? '';
   }
 
   Future<List<LeaveTypeModel>> loadLeaveTypes() async {
@@ -70,6 +74,12 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
       },
       failure: (failure) {
         emit(SupervisorLeaveRequestsState.error(failure.messageKey));
+        emit(
+          SupervisorLeaveRequestsState.success(
+            requests: _filteredRequests,
+            statusFilter: statusFilter,
+          ),
+        );
         return false;
       },
     );
@@ -95,6 +105,14 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
         );
       case Failure(:final failure):
         emit(SupervisorLeaveRequestsState.error(failure.messageKey));
+        if (allRequests.isNotEmpty) {
+          emit(
+            SupervisorLeaveRequestsState.success(
+              requests: _filteredRequests,
+              statusFilter: statusFilter,
+            ),
+          );
+        }
     }
   }
 
@@ -147,6 +165,12 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
       },
       failure: (failure) {
         emit(SupervisorLeaveRequestsState.error(failure.messageKey));
+        emit(
+          SupervisorLeaveRequestsState.success(
+            requests: _filteredRequests,
+            statusFilter: statusFilter,
+          ),
+        );
         return false;
       },
     );
@@ -177,6 +201,12 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
       },
       failure: (failure) {
         emit(SupervisorLeaveRequestsState.error(failure.messageKey));
+        emit(
+          SupervisorLeaveRequestsState.success(
+            requests: _filteredRequests,
+            statusFilter: statusFilter,
+          ),
+        );
         return false;
       },
     );

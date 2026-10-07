@@ -12,6 +12,8 @@ class SupervisorLeaveRequestsListWidget extends StatelessWidget {
     super.key,
     this.userRole = 'Employee',
     this.currentUserId = '',
+    this.currentEmployeeId = '',
+    this.currentUserName = '',
     this.onApprove,
     this.onReject,
   });
@@ -19,6 +21,8 @@ class SupervisorLeaveRequestsListWidget extends StatelessWidget {
   final List<AdminLeaveRequestModel> requests;
   final String userRole;
   final String currentUserId;
+  final String currentEmployeeId;
+  final String currentUserName;
   final ValueChanged<AdminLeaveRequestModel>? onApprove;
   final ValueChanged<AdminLeaveRequestModel>? onReject;
 
@@ -46,7 +50,12 @@ class SupervisorLeaveRequestsListWidget extends StatelessWidget {
       itemBuilder: (context, index) {
         final request = requests[index];
         final isOwnRequest =
-            currentUserId.isNotEmpty && request.employeeId == currentUserId;
+            (currentUserId.isNotEmpty && request.employeeId == currentUserId) ||
+            (currentEmployeeId.isNotEmpty &&
+                request.employeeId == currentEmployeeId) ||
+            (currentUserName.isNotEmpty &&
+                request.employeeName?.trim().toLowerCase() ==
+                    currentUserName.trim().toLowerCase());
 
         return AnimatedListItemWidget(
           index: index,
