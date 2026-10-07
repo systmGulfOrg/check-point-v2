@@ -329,6 +329,16 @@
   - تصميم البطاقات بنمط عصري (Modern Cards) يحتوي على أيقونة مميزة ملونة بخلفية ناعمة، عنوان بارز، شرح وظيفي مختصر، ومؤشر تنقل.
 - **الحالة:** 🟢 تم الحل (Resolved).
 
+---
+
+## 35. معالجة خطأ ProviderNotFound في نافذة ترحيل/تعديل الإجازات الرسمية
+- **الشاشات:** `AdminOfficialHolidaysWidget` و `AdminRescheduleHolidayDialogWidget`.
+- **المشكلة:** ظهور شاشة حمراء `Could not find the correct Provider<AdminDepartmentsCubit> above this AdminRescheduleHolidayDialogWidget` عند الضغط على ترحيل أو تعديل الإجازة الرسمية لاختيار الاستثناءات بالأقسام أو الموظفين.
+- **الحل المُنفذ:**
+  - تغليف الـ Dialog بمزود `MultiBlocProvider` يحقن كلاً من `AdminDepartmentsCubit` و `AdminEmployeesCubit` تلقائياً عبر `sl` عند فتح النافذة وتحميل بيانات الأقسام والموظفين لعرض الاستثناءات بسلاسة.
+- **الحالة:** 🟢 تم الحل (Resolved).
+
+
 
 
 

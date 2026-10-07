@@ -72,9 +72,6 @@ class _AdminRescheduleHolidayDialogWidgetState
         selectedExcludedEmployeeIds.isNotEmpty) {
       activeTab = 2;
     }
-
-    context.read<AdminDepartmentsCubit>().load();
-    context.read<AdminEmployeesCubit>().loadEmployees();
   }
 
   @override

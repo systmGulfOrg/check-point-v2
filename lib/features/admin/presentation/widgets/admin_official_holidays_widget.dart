@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
 import 'package:check_point_v2/features/leaves/data/models/official_holiday_model.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
 import 'admin_reschedule_holiday_dialog_widget.dart';
@@ -20,29 +23,39 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
     final cubit = context.read<LeavesCubit>();
     showDialog<void>(
       context: context,
-      builder: (_) => AdminRescheduleHolidayDialogWidget(
-        holiday: holiday,
-        onSave: ({
-          required DateTime newDate,
-          required String? note,
-          required bool reset,
-          required bool isCancelled,
-          required String? cancelReason,
-          required List<String> excludedDepartmentIds,
-          required List<String> excludedEmployeeIds,
-        }) async {
-          await cubit.rescheduleHoliday(
-            holidayId: holiday.id,
-            holidayName: holiday.name,
-            newDate: newDate,
-            note: note,
-            reset: reset,
-            isCancelled: isCancelled,
-            cancelReason: cancelReason,
-            excludedDepartmentIds: excludedDepartmentIds,
-            excludedEmployeeIds: excludedEmployeeIds,
-          );
-        },
+      builder: (_) => MultiBlocProvider(
+        providers: [
+          BlocProvider<AdminDepartmentsCubit>(
+            create: (_) => sl<AdminDepartmentsCubit>()..load(),
+          ),
+          BlocProvider<AdminEmployeesCubit>(
+            create: (_) => sl<AdminEmployeesCubit>()..loadEmployees(),
+          ),
+        ],
+        child: AdminRescheduleHolidayDialogWidget(
+          holiday: holiday,
+          onSave: ({
+            required DateTime newDate,
+            required String? note,
+            required bool reset,
+            required bool isCancelled,
+            required String? cancelReason,
+            required List<String> excludedDepartmentIds,
+            required List<String> excludedEmployeeIds,
+          }) async {
+            await cubit.rescheduleHoliday(
+              holidayId: holiday.id,
+              holidayName: holiday.name,
+              newDate: newDate,
+              note: note,
+              reset: reset,
+              isCancelled: isCancelled,
+              cancelReason: cancelReason,
+              excludedDepartmentIds: excludedDepartmentIds,
+              excludedEmployeeIds: excludedEmployeeIds,
+            );
+          },
+        ),
       ),
     );
   }

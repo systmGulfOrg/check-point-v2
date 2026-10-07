@@ -26,10 +26,8 @@ class AdminEmployeeContactDialogWidget extends StatelessWidget {
     return showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (_) => AdminEmployeeContactDialogWidget(
-        name: name,
-        phone: phone,
-      ),
+      builder: (_) =>
+          AdminEmployeeContactDialogWidget(name: name, phone: phone),
     );
   }
 
@@ -137,7 +135,9 @@ class AdminEmployeeContactDialogWidget extends StatelessWidget {
               context,
               icon: Icons.chat_outlined,
               title: 'employee.profile.actionWhatsApp'.tr(context: context),
-              subtitle: 'employee.profile.actionWhatsAppDesc'.tr(context: context),
+              subtitle: 'employee.profile.actionWhatsAppDesc'.tr(
+                context: context,
+              ),
               color: const Color(0xFF25D366),
               onTap: () => _openWhatsApp(context),
             ),
@@ -146,7 +146,9 @@ class AdminEmployeeContactDialogWidget extends StatelessWidget {
               context,
               icon: Icons.copy_rounded,
               title: 'employee.profile.actionCopyPhone'.tr(context: context),
-              subtitle: 'employee.profile.actionCopyPhoneDesc'.tr(context: context),
+              subtitle: 'employee.profile.actionCopyPhoneDesc'.tr(
+                context: context,
+              ),
               color: AppColors.brandPrimary,
               onTap: () => _copyNumber(context),
             ),
