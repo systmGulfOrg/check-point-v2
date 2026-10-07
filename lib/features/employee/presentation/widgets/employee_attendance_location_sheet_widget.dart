@@ -101,7 +101,11 @@ class _EmployeeAttendanceLocationSheetWidgetState
     });
 
     final mode = profile?.todayWorkMode ?? 'onsite';
-    if (visit != null) {
+    final hasClockOut = context
+        .read<EmployeeAttendanceCubit>()
+        .hasClockOut(context.read<EmployeeAttendanceCubit>().todayAttendance);
+
+    if (visit != null || hasClockOut) {
       _changeType('Customer');
     } else if (mode == 'remote') {
       _changeType('Remote');
@@ -125,8 +129,12 @@ class _EmployeeAttendanceLocationSheetWidgetState
       types.add('Branch');
     }
 
-    // Customer visit is ONLY available if there is an active scheduled customer visit for this employee today
-    if (todayScheduledVisit != null) {
+    final hasClockOut = context
+        .read<EmployeeAttendanceCubit>()
+        .hasClockOut(context.read<EmployeeAttendanceCubit>().todayAttendance);
+
+    // Customer visit is available if scheduled, or if checked out of branch, or has customers
+    if (todayScheduledVisit != null || hasClockOut || availableCustomers.isNotEmpty) {
       types.add('Customer');
     }
 
@@ -134,7 +142,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
   }
 
   void _showDisabledTypeMessage(String value) {
-    if (value == 'Customer' && todayScheduledVisit == null) {
+    if (value == 'Customer' && todayScheduledVisit == null && availableCustomers.isEmpty) {
       CustomSnackBar.showError(
         context,
         message: 'attendance.noCustomerVisitToday'.tr(context: context),

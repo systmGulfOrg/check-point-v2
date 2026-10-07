@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/styles/app_motion.dart';
-import 'supervisor_attendance_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/screens/admin_locations_screen.dart';
 import 'supervisor_home_screen.dart';
 import 'supervisor_profile_screen.dart';
 import 'supervisor_team_screen.dart';
@@ -23,30 +28,43 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
   static const _items = <NavBarItemData>[
     NavBarItemData(icon: Icons.home_outlined, labelKey: 'supervisor.nav.home'),
     NavBarItemData(
+      icon: Icons.groups_outlined,
+      labelKey: 'supervisor.nav.customers',
+    ),
+    NavBarItemData(
       icon: Icons.person_pin_circle_outlined,
       labelKey: 'supervisor.nav.myAttendance',
     ),
     NavBarItemData(icon: Icons.group_outlined, labelKey: 'supervisor.nav.team'),
-    NavBarItemData(
-      icon: Icons.access_time_rounded,
-      labelKey: 'supervisor.nav.attendance',
-    ),
     NavBarItemData(
       icon: Icons.grid_view_rounded,
       labelKey: 'supervisor.nav.more',
     ),
   ];
 
-  static const _screens = <Widget>[
-    SupervisorHomeScreen(),
-    EmployeeClockScreen(),
-    SupervisorTeamScreen(),
-    SupervisorAttendanceScreen(),
-    SupervisorProfileScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final screens = <Widget>[
+      const SupervisorHomeScreen(),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<AdminCustomersCubit>(
+            create: (_) => sl<AdminCustomersCubit>()..load(type: 'Customer'),
+          ),
+          BlocProvider<AdminCustomerVisitsCubit>(
+            create: (_) => sl<AdminCustomerVisitsCubit>()..loadAllVisits(),
+          ),
+          BlocProvider<AdminBranchesCubit>(
+            create: (_) => sl<AdminBranchesCubit>()..load(),
+          ),
+        ],
+        child: const AdminLocationsScreen(),
+      ),
+      const EmployeeClockScreen(),
+      const SupervisorTeamScreen(),
+      const SupervisorProfileScreen(),
+    ];
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: AnimatedSwitcher(
@@ -66,7 +84,7 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
         child: IndexedStack(
           key: ValueKey<int>(_selectedIndex),
           index: _selectedIndex,
-          children: _screens,
+          children: screens,
         ),
       ),
       bottomNavigationBar: CustomBottomNavBarWidget(
@@ -96,10 +114,12 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
                     _selectedNavIndex = 4;
                   });
                 },
-                onCustomersTap: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.adminLocations,
-                ),
+                onCustomersTap: () {
+                  setState(() {
+                    _selectedIndex = 1;
+                    _selectedNavIndex = 1;
+                  });
+                },
                 onRemoteWorkTap: () =>
                     Navigator.pushNamed(context, AppRoutes.remoteWork),
               ),

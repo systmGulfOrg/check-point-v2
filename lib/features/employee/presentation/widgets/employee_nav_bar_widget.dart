@@ -15,6 +15,10 @@ class EmployeeNavBarWidget extends StatelessWidget {
   static const _items = <NavBarItemData>[
     NavBarItemData(icon: Icons.home_outlined, labelKey: 'employee.nav.home'),
     NavBarItemData(
+      icon: Icons.groups_outlined,
+      labelKey: 'employee.nav.customers',
+    ),
+    NavBarItemData(
       icon: Icons.access_time_rounded,
       labelKey: 'employee.nav.clock',
     ),

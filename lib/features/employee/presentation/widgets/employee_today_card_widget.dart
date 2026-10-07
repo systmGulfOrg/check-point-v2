@@ -255,19 +255,34 @@ class EmployeeTodayCardWidget extends StatelessWidget {
               ),
             )
           else if (hasCheckedOut && !isCheckedIn)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
-                if (isOnTime)
-                  const EmployeeStatusBadgeWidget(status: 'On Time'),
-                if (isOnTime && workedHours != null) wSpace(12),
-                if (workedHours != null)
-                  Text(
-                    workedHours!,
-                    style: AppTextStyles.font13Regular.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (isOnTime)
+                      const EmployeeStatusBadgeWidget(status: 'On Time'),
+                    if (isOnTime && workedHours != null) wSpace(12),
+                    if (workedHours != null)
+                      Text(
+                        workedHours!,
+                        style: AppTextStyles.font13Regular.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                  ],
+                ),
+                hSpace(12),
+                CustomButton(
+                  key: const ValueKey<String>('today_customer_checkin_btn'),
+                  text: 'employee.home.checkInCustomerAction'.tr(
+                    context: context,
                   ),
+                  icon: Icons.person_pin_circle_outlined,
+                  backgroundColor: AppColors.softBrandBackground,
+                  textColor: AppColors.brandPrimary,
+                  onTap: onToggleCheckInOut,
+                ),
               ],
             )
           else

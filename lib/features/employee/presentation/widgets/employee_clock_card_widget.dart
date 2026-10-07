@@ -163,7 +163,16 @@ class EmployeeClockCardWidget extends StatelessWidget {
               ),
             ),
             child: hasCheckedOut && !isCheckedIn
-                ? const SizedBox.shrink(key: ValueKey<String>('completed'))
+                ? CustomButton(
+                    key: const ValueKey<String>('customer_checkin_btn'),
+                    text: 'employee.home.checkInCustomerAction'.tr(
+                      context: context,
+                    ),
+                    icon: Icons.person_pin_circle_outlined,
+                    backgroundColor: AppColors.softBrandBackground,
+                    textColor: AppColors.brandPrimary,
+                    onTap: onToggleCheckInOut,
+                  )
                 : CustomButton(
                     key: ValueKey<bool>(isCheckedIn),
                     text: isCheckedIn
