@@ -26,10 +26,16 @@ import 'employee_attended_visit_card_widget.dart';
 class EmployeeAttendanceLocationSheetWidget extends StatefulWidget {
   const EmployeeAttendanceLocationSheetWidget({
     required this.isCheckOut,
+    this.initialCustomer,
+    this.initialVisit,
+    this.initialType,
     super.key,
   });
 
   final bool isCheckOut;
+  final CustomerModel? initialCustomer;
+  final CustomerVisitModel? initialVisit;
+  final String? initialType;
 
   @override
   State<EmployeeAttendanceLocationSheetWidget> createState() =>
@@ -62,7 +68,15 @@ class _EmployeeAttendanceLocationSheetWidgetState
     final hasClockOut = cubit.hasClockOut(cubit.todayAttendance);
     final mode = cubit.employeeProfile?.todayWorkMode ?? 'onsite';
 
-    if (!widget.isCheckOut && (hasClockIn || hasClockOut)) {
+    if (widget.initialVisit != null) {
+      type = widget.initialType ?? 'Customer';
+      todayScheduledVisit = widget.initialVisit;
+      cubit.loadCustomersByType('Customer');
+    } else if (widget.initialCustomer != null) {
+      type = widget.initialType ?? 'Customer';
+      customer = widget.initialCustomer;
+      cubit.loadCustomersByType('Customer');
+    } else if (!widget.isCheckOut && (hasClockIn || hasClockOut)) {
       type = 'Customer';
       cubit.loadCustomersByType('Customer');
     } else if (mode == 'remote') {

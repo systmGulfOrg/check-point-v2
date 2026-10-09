@@ -218,6 +218,65 @@ class _AdminCreateCustomerVisitSheetWidgetState
     final customerId = cust.id!;
     final customerName = cust.name ?? '';
 
+    final visitDateParsed = DateTime.tryParse(dateController.text.trim());
+    if (visitDateParsed != null &&
+        (visitDateParsed.weekday == DateTime.friday ||
+            visitDateParsed.weekday == DateTime.saturday)) {
+      final shouldProceed = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          title: Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: AppColors.warningOrange,
+                size: 24.r,
+              ),
+              SizedBox(width: 8.w),
+              Text('تنبيه موعد الزيارة', style: AppTextStyles.font16Bold),
+            ],
+          ),
+          content: Text(
+            'التاريخ المحدد يوافق عطلة أسبوعية (إجازة).\n\nهل ترغب في المتابعة وتأكيد جدولة زيارة العميل في يوم الإجازة؟',
+            style: AppTextStyles.font14Regular,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(
+                'إلغاء / تغيير التاريخ',
+                style: AppTextStyles.font14Medium.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.brandPrimary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+              ),
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(
+                'متابعة وتأكيد',
+                style: AppTextStyles.font14Bold.copyWith(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+
+      if (shouldProceed != true) {
+        return;
+      }
+    }
+
     setState(() => isSubmitting = true);
 
     final visit = CustomerVisitModel(
@@ -428,11 +487,13 @@ class _AdminCreateCustomerVisitSheetWidgetState
                                 const Duration(days: 30),
                               ),
                               lastDate: DateTime(2030),
-                              initialDate: DateTime.now(),
+                              initialDate: DateTime.tryParse(dateController.text.trim()) ?? DateTime.now(),
                             );
                             if (date != null && mounted) {
-                              dateController.text =
-                                  AppDateFormatter.formatYearMonthDay(date);
+                              setState(() {
+                                dateController.text =
+                                    AppDateFormatter.formatYearMonthDay(date);
+                              });
                             }
                           },
                         ),
@@ -476,6 +537,50 @@ class _AdminCreateCustomerVisitSheetWidgetState
                     ),
                   ),
                 ],
+              ),
+              Builder(
+                builder: (context) {
+                  final parsedDate = DateTime.tryParse(dateController.text.trim());
+                  if (parsedDate != null &&
+                      (parsedDate.weekday == DateTime.friday ||
+                          parsedDate.weekday == DateTime.saturday)) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 8.h),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 6.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.softYellowBackground,
+                          borderRadius: BorderRadius.circular(8.r),
+                          border: Border.all(
+                            color: AppColors.warningOrange.withValues(alpha: 0.3),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline_rounded,
+                              size: 15.r,
+                              color: AppColors.warningOrange,
+                            ),
+                            SizedBox(width: 6.w),
+                            Expanded(
+                              child: Text(
+                                'تنبيه: التاريخ المحدد يوافق عطلة أسبوعية (إجازة)',
+                                style: AppTextStyles.font11Medium.copyWith(
+                                  color: AppColors.warningOrange,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
               SizedBox(height: 16.h),
 

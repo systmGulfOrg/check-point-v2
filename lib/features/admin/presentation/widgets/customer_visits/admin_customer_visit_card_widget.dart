@@ -2,10 +2,14 @@ import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_location_sheet_widget.dart';
 import 'admin_record_visit_outcome_dialog_widget.dart';
 
 class AdminCustomerVisitCardWidget extends StatelessWidget {
@@ -23,6 +27,22 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
     String? documentName,
     String? documentUrl,
   ) onRecordOutcome;
+
+  void _openAttendanceCheckIn(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => BlocProvider<EmployeeAttendanceCubit>(
+        create: (_) => sl<EmployeeAttendanceCubit>(),
+        child: EmployeeAttendanceLocationSheetWidget(
+          isCheckOut: false,
+          initialVisit: visit,
+          initialType: 'Customer',
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,19 +101,22 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
     final outcomeDocUrl = visit.outcomeDocumentUrl ??
         (visit.outcome != null ? visit.documentUrl : null);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.border),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.shadow,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
+    return InkWell(
+      onTap: isCancelled ? null : () => _openAttendanceCheckIn(context),
+      borderRadius: BorderRadius.circular(14.r),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(14.r),
+          border: Border.all(color: AppColors.border),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.shadow,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
       padding: EdgeInsets.all(14.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -457,47 +480,82 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
             ),
           ],
 
-          // Action button to record or edit outcome
-          SizedBox(height: 10.h),
-          Align(
-            alignment: AlignmentDirectional.centerEnd,
-            child: TextButton.icon(
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (_) => AdminRecordVisitOutcomeDialogWidget(
-                  visit: visit,
-                  onSubmit:
-                      (outcome, status, notes, documentName, documentUrl) =>
-                          onRecordOutcome(
-                            outcome,
-                            status,
-                            notes,
-                            documentName,
-                            documentUrl,
-                          ),
+          // Action buttons: Check-in for scheduled visits, Report for visited/completed
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              if (!isCancelled && !isCompleted && !isVisitedPendingReport) ...[
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.brandPrimary,
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 8.h,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    elevation: 0,
+                  ),
+                  onPressed: () => _openAttendanceCheckIn(context),
+                  icon: Icon(
+                    Icons.location_on_rounded,
+                    size: 16.r,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    'تسجيل حضور الزيارة',
+                    style: AppTextStyles.font12Bold.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
-              icon: Icon(
-                isCompleted ? Icons.edit_note_rounded : Icons.add_task_rounded,
-                size: 16.r,
-                color: isVisitedPendingReport
-                    ? const Color(0xFFD97706)
-                    : AppColors.brandPrimary,
-              ),
-              label: Text(
-                isCompleted
-                    ? 'admin.visits.editOutcome'.tr(context: context)
-                    : 'admin.visits.recordOutcome'.tr(context: context),
-                style: AppTextStyles.font12Bold.copyWith(
-                  color: isVisitedPendingReport
-                      ? const Color(0xFFD97706)
-                      : AppColors.brandPrimary,
+              ],
+              if (isVisitedPendingReport || isCompleted) ...[
+                TextButton.icon(
+                  onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (_) => AdminRecordVisitOutcomeDialogWidget(
+                      visit: visit,
+                      onSubmit:
+                          (outcome, status, notes, documentName, documentUrl) =>
+                              onRecordOutcome(
+                                outcome,
+                                status,
+                                notes,
+                                documentName,
+                                documentUrl,
+                              ),
+                    ),
+                  ),
+                  icon: Icon(
+                    isCompleted
+                        ? Icons.edit_note_rounded
+                        : Icons.assignment_turned_in_rounded,
+                    size: 16.r,
+                    color: isVisitedPendingReport
+                        ? const Color(0xFFD97706)
+                        : AppColors.brandPrimary,
+                  ),
+                  label: Text(
+                    isCompleted
+                        ? 'admin.visits.editOutcome'.tr(context: context)
+                        : 'admin.visits.recordOutcome'.tr(context: context),
+                    style: AppTextStyles.font12Bold.copyWith(
+                      color: isVisitedPendingReport
+                          ? const Color(0xFFD97706)
+                          : AppColors.brandPrimary,
+                    ),
+                  ),
                 ),
-              ),
-            ),
+              ],
+            ],
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
