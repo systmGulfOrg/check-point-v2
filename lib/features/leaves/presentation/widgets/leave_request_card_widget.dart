@@ -154,25 +154,36 @@ class LeaveRequestCardWidget extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 6.h),
-              Row(
-                children: [
-                  Icon(
-                    Icons.calendar_today_outlined,
-                    size: 13.r,
-                    color: AppColors.textSecondary,
-                  ),
-                  SizedBox(width: 5.w),
-                  Expanded(
-                    child: Text(
-                      '${AppDateFormatter.formatDate(request.startDate)} - ${AppDateFormatter.formatDate(request.endDate)} (${request.totalDays} ${'leaves.dashboard.days'.tr()})',
-                      style: AppTextStyles.font12Medium.copyWith(
-                        color: AppColors.textPrimary,
+              Builder(
+                builder: (context) {
+                  final isPermit = request.totalDays == 0 ||
+                      (request.leaveTypeName?.contains('إذن') ?? false) ||
+                      (request.leaveTypeName?.toLowerCase().contains('permit') ?? false);
+                  final dateText = isPermit
+                      ? AppDateFormatter.formatDate(request.startDate)
+                      : '${AppDateFormatter.formatDate(request.startDate)} - ${AppDateFormatter.formatDate(request.endDate)} (${request.totalDays} ${'leaves.dashboard.days'.tr()})';
+
+                  return Row(
+                    children: [
+                      Icon(
+                        isPermit ? Icons.access_time_rounded : Icons.calendar_today_outlined,
+                        size: 13.r,
+                        color: AppColors.textSecondary,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
+                      SizedBox(width: 5.w),
+                      Expanded(
+                        child: Text(
+                          dateText,
+                          style: AppTextStyles.font12Medium.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
               if (request.reason != null && request.reason!.isNotEmpty) ...[
                 SizedBox(height: 4.h),

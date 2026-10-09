@@ -137,6 +137,15 @@ class _ApplyForPermissionSheetWidgetState
       return;
     }
 
+    if (_selectedDate.weekday == DateTime.friday ||
+        _selectedDate.weekday == DateTime.saturday) {
+      CustomSnackBar.showError(
+        context,
+        message: 'لا يمكن تقديم طلب إذن في يوم عطلة أسبوعية',
+      );
+      return;
+    }
+
     setState(() => _isSubmitting = true);
 
     final body = ShortLeaveRequestBody(
@@ -282,6 +291,38 @@ class _ApplyForPermissionSheetWidgetState
                   context: context,
                 ),
               ),
+              if (_selectedDate.weekday == DateTime.friday ||
+                  _selectedDate.weekday == DateTime.saturday) ...[
+                hSpace(6),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.softYellowBackground,
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(
+                      color: AppColors.warningOrange.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline_rounded,
+                        size: 16.r,
+                        color: AppColors.warningOrange,
+                      ),
+                      wSpace(6),
+                      Expanded(
+                        child: Text(
+                          'تنبيه: هذا اليوم يوافق عطلة أسبوعية',
+                          style: AppTextStyles.font11Medium.copyWith(
+                            color: AppColors.warningOrange,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               hSpace(14),
 
               // Time Range Pickers
