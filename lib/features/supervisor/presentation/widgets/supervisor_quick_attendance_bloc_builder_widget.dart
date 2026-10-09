@@ -18,9 +18,21 @@ class SupervisorQuickAttendanceBlocBuilderWidget extends StatelessWidget {
     return BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
       builder: (context, state) {
         final cubit = context.read<EmployeeAttendanceCubit>();
+        final profile = cubit.employeeProfile;
         final attendance = cubit.todayAttendance;
         final hasIn = cubit.hasClockIn(attendance);
         final hasOut = cubit.hasClockOut(attendance);
+        final holidayState = context.read<UpcomingHolidayCubit?>()?.state;
+        final isHoliday = holidayState is UpcomingHolidayStateLoaded
+            ? holidayState.isTodayHoliday
+            : (profile?.todayHoliday?.isHoliday == true);
+        final isWeeklyOff = profile?.todayWorkMode == 'off' && !isHoliday;
+
+        // Hide quick attendance on holiday or weekly off if employee hasn't checked in yet
+        if (!hasIn && (isHoliday || isWeeklyOff)) {
+          return const SizedBox.shrink();
+        }
+
         if (hasIn && hasOut) return const SizedBox.shrink();
         final isCheckOut = hasIn && !hasOut;
 
@@ -36,11 +48,6 @@ class SupervisorQuickAttendanceBlocBuilderWidget extends StatelessWidget {
               : AppColors.brandPrimary,
           isLoading: state is EmployeeAttendanceStateLoading,
           onTap: () {
-            final profile = cubit.employeeProfile;
-            final holidayState = context.read<UpcomingHolidayCubit>().state;
-            final isHoliday = holidayState is UpcomingHolidayStateLoaded
-                ? holidayState.isTodayHoliday
-                : (profile?.todayHoliday?.isHoliday == true);
             if (isHoliday) {
               final holidayName =
                   (holidayState is UpcomingHolidayStateLoaded
@@ -60,6 +67,22 @@ class SupervisorQuickAttendanceBlocBuilderWidget extends StatelessWidget {
                   icon: Icons.celebration_rounded,
                   iconColor: AppColors.success,
                   confirmButtonColor: AppColors.success,
+                ),
+              );
+              return;
+            }
+            if (isWeeklyOff) {
+              showDialog<void>(
+                context: context,
+                builder: (ctx) => CustomDialogWidget(
+                  title: 'employee.home.todayWeeklyOffTitle'.tr(context: ctx),
+                  message:
+                      '${'employee.home.todayWeeklyOffGreeting'.tr(context: ctx)}\n${'employee.home.weeklyOffAttendanceNotAllowed'.tr(context: ctx)}',
+                  confirmLabel: 'core.actions.ok'.tr(context: ctx),
+                  onConfirm: () => Navigator.of(ctx).pop(),
+                  icon: Icons.weekend_rounded,
+                  iconColor: AppColors.textSecondary,
+                  confirmButtonColor: AppColors.brandPrimary,
                 ),
               );
               return;

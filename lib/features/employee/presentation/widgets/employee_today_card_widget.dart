@@ -19,6 +19,7 @@ class EmployeeTodayCardWidget extends StatelessWidget {
     required this.workSystemText,
     required this.onToggleCheckInOut,
     this.isTodayHoliday = false,
+    this.isTodayWeeklyOff = false,
     this.holidayGreeting,
     this.holidayName,
     super.key,
@@ -36,6 +37,7 @@ class EmployeeTodayCardWidget extends StatelessWidget {
   final String workSystemText;
   final VoidCallback onToggleCheckInOut;
   final bool isTodayHoliday;
+  final bool isTodayWeeklyOff;
   final String? holidayGreeting;
   final String? holidayName;
 
@@ -248,6 +250,39 @@ class EmployeeTodayCardWidget extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: AppTextStyles.font13SemiBold.copyWith(
                         color: AppColors.success,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else if (isTodayWeeklyOff)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
+              decoration: BoxDecoration(
+                color: AppColors.softBlueBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: AppColors.info.withValues(alpha: 0.35),
+                  width: 1.2,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.weekend_rounded,
+                    color: AppColors.info,
+                    size: 22.r,
+                  ),
+                  wSpace(8),
+                  Expanded(
+                    child: Text(
+                      'employee.home.todayWeeklyOffGreeting'.tr(context: context),
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.font13SemiBold.copyWith(
+                        color: AppColors.info,
                       ),
                     ),
                   ),

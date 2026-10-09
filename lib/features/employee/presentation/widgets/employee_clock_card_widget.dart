@@ -16,6 +16,10 @@ class EmployeeClockCardWidget extends StatelessWidget {
     required this.hasCheckedOut,
     required this.workedHours,
     required this.onToggleCheckInOut,
+    this.isTodayHoliday = false,
+    this.isTodayWeeklyOff = false,
+    this.holidayGreeting,
+    this.holidayName,
     super.key,
   });
 
@@ -26,6 +30,10 @@ class EmployeeClockCardWidget extends StatelessWidget {
   final bool hasCheckedOut;
   final String? workedHours;
   final VoidCallback onToggleCheckInOut;
+  final bool isTodayHoliday;
+  final bool isTodayWeeklyOff;
+  final String? holidayGreeting;
+  final String? holidayName;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +143,74 @@ class EmployeeClockCardWidget extends StatelessWidget {
             ],
           ),
           hSpace(16),
-          if (isCheckedIn || hasCheckedOut) ...[
+          if (isTodayHoliday)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
+              decoration: BoxDecoration(
+                color: AppColors.softGreenBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: AppColors.success.withValues(alpha: 0.35),
+                  width: 1.2,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.celebration_rounded,
+                    color: AppColors.success,
+                    size: 22.r,
+                  ),
+                  wSpace(8),
+                  Expanded(
+                    child: Text(
+                      holidayGreeting ??
+                          '${'holidays.todayHolidayTitle'.tr(context: context)}: ${holidayName ?? ''} - ${'holidays.todayHolidayGreeting'.tr(context: context)}',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.font13SemiBold.copyWith(
+                        color: AppColors.success,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else if (isTodayWeeklyOff)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
+              decoration: BoxDecoration(
+                color: AppColors.softBlueBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: AppColors.info.withValues(alpha: 0.35),
+                  width: 1.2,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.weekend_rounded,
+                    color: AppColors.info,
+                    size: 22.r,
+                  ),
+                  wSpace(8),
+                  Expanded(
+                    child: Text(
+                      'employee.home.todayWeeklyOffGreeting'.tr(context: context),
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.font13SemiBold.copyWith(
+                        color: AppColors.info,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else if (isCheckedIn || hasCheckedOut) ...[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -152,38 +227,39 @@ class EmployeeClockCardWidget extends StatelessWidget {
             ),
             hSpace(16),
           ],
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: SizeTransition(
-                sizeFactor: animation,
-                axisAlignment: -1,
-                child: child,
+          if (!isTodayHoliday && !isTodayWeeklyOff)
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) => FadeTransition(
+                opacity: animation,
+                child: SizeTransition(
+                  sizeFactor: animation,
+                  axisAlignment: -1,
+                  child: child,
+                ),
               ),
-            ),
-            child: hasCheckedOut && !isCheckedIn
-                ? CustomButton(
-                    key: const ValueKey<String>('customer_checkin_btn'),
-                    text: 'employee.home.checkInCustomerAction'.tr(
-                      context: context,
+              child: hasCheckedOut && !isCheckedIn
+                  ? CustomButton(
+                      key: const ValueKey<String>('customer_checkin_btn'),
+                      text: 'employee.home.checkInCustomerAction'.tr(
+                        context: context,
+                      ),
+                      icon: Icons.person_pin_circle_outlined,
+                      backgroundColor: AppColors.softBrandBackground,
+                      textColor: AppColors.brandPrimary,
+                      onTap: onToggleCheckInOut,
+                    )
+                  : CustomButton(
+                      key: ValueKey<bool>(isCheckedIn),
+                      text: isCheckedIn
+                          ? 'employee.home.checkOutAction'.tr(context: context)
+                          : 'employee.home.checkInAction'.tr(context: context),
+                      backgroundColor: isCheckedIn
+                          ? AppColors.error
+                          : AppColors.brandPrimary,
+                      onTap: onToggleCheckInOut,
                     ),
-                    icon: Icons.person_pin_circle_outlined,
-                    backgroundColor: AppColors.softBrandBackground,
-                    textColor: AppColors.brandPrimary,
-                    onTap: onToggleCheckInOut,
-                  )
-                : CustomButton(
-                    key: ValueKey<bool>(isCheckedIn),
-                    text: isCheckedIn
-                        ? 'employee.home.checkOutAction'.tr(context: context)
-                        : 'employee.home.checkInAction'.tr(context: context),
-                    backgroundColor: isCheckedIn
-                        ? AppColors.error
-                        : AppColors.brandPrimary,
-                    onTap: onToggleCheckInOut,
-                  ),
-          ),
+            ),
         ],
       ),
     );

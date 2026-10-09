@@ -119,6 +119,24 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
       return;
     }
 
+    final isWeeklyOff = profile?.todayWorkMode == 'off' && !isHoliday;
+    if (isWeeklyOff) {
+      showDialog<void>(
+        context: context,
+        builder: (ctx) => CustomDialogWidget(
+          title: 'employee.home.todayWeeklyOffTitle'.tr(context: ctx),
+          message:
+              '${'employee.home.todayWeeklyOffGreeting'.tr(context: ctx)}\n${'employee.home.weeklyOffAttendanceNotAllowed'.tr(context: ctx)}',
+          confirmLabel: 'core.actions.ok'.tr(context: ctx),
+          onConfirm: () => Navigator.of(ctx).pop(),
+          icon: Icons.weekend_rounded,
+          iconColor: AppColors.info,
+          confirmButtonColor: AppColors.info,
+        ),
+      );
+      return;
+    }
+
     final attendanceCubit = context.read<EmployeeAttendanceCubit>();
     showModalBottomSheet<void>(
       context: context,
@@ -220,9 +238,9 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                     final isTodayHoliday =
                         (profile?.todayHoliday != null &&
                             profile!.todayHoliday!.isHoliday == true) ||
-                        (profile?.todayWorkMode == 'off' &&
-                            profile?.todayHoliday != null) ||
                         isHolidayFromCubit;
+                    final isTodayWeeklyOff =
+                        profile?.todayWorkMode == 'off' && !isTodayHoliday;
                     final holidayName =
                         profile?.todayHoliday?.arabicName ??
                         profile?.todayHoliday?.name ??
@@ -275,6 +293,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                         workSystemText: workSystem.tr(context: context),
                         onToggleCheckInOut: _toggleCheckInOut,
                         isTodayHoliday: isTodayHoliday,
+                        isTodayWeeklyOff: isTodayWeeklyOff,
                         holidayGreeting: holidayGreeting,
                         holidayName: holidayName,
                       ),

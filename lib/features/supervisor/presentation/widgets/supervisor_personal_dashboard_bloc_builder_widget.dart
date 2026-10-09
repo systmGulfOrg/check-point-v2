@@ -55,6 +55,24 @@ class SupervisorPersonalDashboardBlocBuilderWidget extends StatelessWidget {
       return;
     }
 
+    final isWeeklyOff = profile?.todayWorkMode == 'off' && !isHoliday;
+    if (isWeeklyOff) {
+      showDialog<void>(
+        context: context,
+        builder: (ctx) => CustomDialogWidget(
+          title: 'employee.home.todayWeeklyOffTitle'.tr(context: ctx),
+          message:
+              '${'employee.home.todayWeeklyOffGreeting'.tr(context: ctx)}\n${'employee.home.weeklyOffAttendanceNotAllowed'.tr(context: ctx)}',
+          confirmLabel: 'core.actions.ok'.tr(context: ctx),
+          onConfirm: () => Navigator.of(ctx).pop(),
+          icon: Icons.weekend_rounded,
+          iconColor: AppColors.textSecondary,
+          confirmButtonColor: AppColors.brandPrimary,
+        ),
+      );
+      return;
+    }
+
     final attendanceCubit = context.read<EmployeeAttendanceCubit>();
     showModalBottomSheet<void>(
       context: context,
@@ -82,6 +100,16 @@ class SupervisorPersonalDashboardBlocBuilderWidget extends StatelessWidget {
         final cubit = context.read<EmployeeAttendanceCubit>();
         final profile = cubit.employeeProfile;
         final attendance = cubit.todayAttendance;
+        final holidayState = context.watch<UpcomingHolidayCubit?>()?.state;
+        final isTodayHoliday =
+            (profile?.todayHoliday != null &&
+                profile!.todayHoliday!.isHoliday == true) ||
+            (profile?.todayWorkMode == 'off' &&
+                profile?.todayHoliday != null) ||
+            (holidayState is UpcomingHolidayStateLoaded &&
+                holidayState.isTodayHoliday);
+        final isTodayWeeklyOff =
+            profile?.todayWorkMode == 'off' && !isTodayHoliday;
         final workStart =
             profile?.todayWorkStart ??
             profile?.workPolicy?.workingHoursStart ??
@@ -136,6 +164,8 @@ class SupervisorPersonalDashboardBlocBuilderWidget extends StatelessWidget {
                 leaveBalance: '${profile?.leaveBalance ?? '--'}',
                 isCheckedIn: isCheckedIn,
                 hasCheckedOut: hasCheckedOut,
+                isTodayHoliday: isTodayHoliday,
+                isTodayWeeklyOff: isTodayWeeklyOff,
                 onToggleCheckInOut: () => _toggleCheckInOut(context),
               ),
             ],

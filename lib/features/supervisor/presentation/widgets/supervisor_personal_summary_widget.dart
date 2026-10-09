@@ -19,6 +19,10 @@ class SupervisorPersonalSummaryWidget extends StatelessWidget {
     required this.isCheckedIn,
     required this.hasCheckedOut,
     required this.onToggleCheckInOut,
+    this.isTodayHoliday = false,
+    this.isTodayWeeklyOff = false,
+    this.holidayGreeting,
+    this.holidayName,
     super.key,
   });
 
@@ -33,6 +37,10 @@ class SupervisorPersonalSummaryWidget extends StatelessWidget {
   final bool isCheckedIn;
   final bool hasCheckedOut;
   final VoidCallback onToggleCheckInOut;
+  final bool isTodayHoliday;
+  final bool isTodayWeeklyOff;
+  final String? holidayGreeting;
+  final String? holidayName;
 
   @override
   Widget build(BuildContext context) {
@@ -144,42 +152,110 @@ class SupervisorPersonalSummaryWidget extends StatelessWidget {
             ),
           ],
           hSpace(14),
-          SizedBox(
-            width: double.infinity,
-            height: 44.h,
-            child: ElevatedButton.icon(
-              onPressed: hasCheckedOut ? null : onToggleCheckInOut,
-              icon: Icon(
-                hasCheckedOut
-                    ? Icons.check_circle_outline_rounded
-                    : (isCheckedIn
-                        ? Icons.logout_rounded
-                        : Icons.login_rounded),
-                size: 18.r,
-                color: AppColors.white,
-              ),
-              label: Text(
-                hasCheckedOut
-                    ? 'employee.home.checkOutLabel'.tr(context: context)
-                    : (isCheckedIn
-                        ? 'employee.home.checkOutAction'.tr(context: context)
-                        : 'employee.home.checkInAction'.tr(context: context)),
-                style: AppTextStyles.font14Bold.copyWith(
-                  color: AppColors.white,
+          if (isTodayHoliday)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
+              decoration: BoxDecoration(
+                color: AppColors.softGreenBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: AppColors.success.withValues(alpha: 0.35),
+                  width: 1.2,
                 ),
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: hasCheckedOut
-                    ? AppColors.textSecondary
-                    : (isCheckedIn ? AppColors.info : AppColors.brandPrimary),
-                disabledBackgroundColor:
-                    AppColors.textSecondary.withValues(alpha: 0.5),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.celebration_rounded,
+                    color: AppColors.success,
+                    size: 22.r,
+                  ),
+                  wSpace(8),
+                  Expanded(
+                    child: Text(
+                      holidayGreeting ??
+                          '${'holidays.todayHolidayTitle'.tr(context: context)}: ${holidayName ?? ''} - ${'holidays.todayHolidayGreeting'.tr(context: context)}',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.font13SemiBold.copyWith(
+                        color: AppColors.success,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else if (isTodayWeeklyOff)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
+              decoration: BoxDecoration(
+                color: AppColors.softBlueBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: AppColors.info.withValues(alpha: 0.35),
+                  width: 1.2,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.weekend_rounded,
+                    color: AppColors.info,
+                    size: 22.r,
+                  ),
+                  wSpace(8),
+                  Expanded(
+                    child: Text(
+                      'employee.home.todayWeeklyOffGreeting'.tr(context: context),
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.font13SemiBold.copyWith(
+                        color: AppColors.info,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else
+            SizedBox(
+              width: double.infinity,
+              height: 44.h,
+              child: ElevatedButton.icon(
+                onPressed: hasCheckedOut ? null : onToggleCheckInOut,
+                icon: Icon(
+                  hasCheckedOut
+                      ? Icons.check_circle_outline_rounded
+                      : (isCheckedIn
+                          ? Icons.logout_rounded
+                          : Icons.login_rounded),
+                  size: 18.r,
+                  color: AppColors.white,
+                ),
+                label: Text(
+                  hasCheckedOut
+                      ? 'employee.home.checkOutLabel'.tr(context: context)
+                      : (isCheckedIn
+                          ? 'employee.home.checkOutAction'.tr(context: context)
+                          : 'employee.home.checkInAction'.tr(context: context)),
+                  style: AppTextStyles.font14Bold.copyWith(
+                    color: AppColors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: hasCheckedOut
+                      ? AppColors.textSecondary
+                      : (isCheckedIn ? AppColors.info : AppColors.brandPrimary),
+                  disabledBackgroundColor:
+                      AppColors.textSecondary.withValues(alpha: 0.5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
