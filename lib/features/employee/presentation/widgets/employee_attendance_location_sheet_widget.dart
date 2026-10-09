@@ -457,97 +457,126 @@ class _EmployeeAttendanceLocationSheetWidgetState
             break;
         }
       },
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 12.h),
-          child: SingleChildScrollView(
-            child: BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
-              builder: (context, state) {
-                final branches = switch (state) {
-                  EmployeeAttendanceStateBranchesLoaded(:final branches) =>
-                    branches,
-                  _ => const <BranchModel>[],
-                };
-                final customers = switch (state) {
-                  EmployeeAttendanceStateTargetsLoaded(:final targets) =>
-                    targets,
-                  _ => const <CustomerModel>[],
-                };
-                switch (state) {
-                  case EmployeeAttendanceStateBranchesLoaded(:final branches):
-                    availableBranches = branches;
-                  case EmployeeAttendanceStateTargetsLoaded(:final targets):
-                    availableCustomers = targets;
-                  default:
-                    break;
-                }
-                final branchOptions = availableBranches.isNotEmpty
-                    ? availableBranches
-                    : branches;
-                final customerOptions = availableCustomers.isNotEmpty
-                    ? availableCustomers
-                    : customers;
-                final sortedCustomerOptions = List<CustomerModel>.from(customerOptions);
-                sortedCustomerOptions.sort((a, b) {
-                  final visitA = todayVisits
-                      .where((v) => v.customerId == a.id)
-                      .firstOrNull;
-                  final visitB = todayVisits
-                      .where((v) => v.customerId == b.id)
-                      .firstOrNull;
-                  if (visitA != null && visitB != null) {
-                    return _compareVisitTimes(
-                      visitA.visitTime,
-                      visitB.visitTime,
-                    );
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.pageBackground,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 12.h),
+            child: SingleChildScrollView(
+              child: BlocBuilder<EmployeeAttendanceCubit, EmployeeAttendanceState>(
+                builder: (context, state) {
+                  final branches = switch (state) {
+                    EmployeeAttendanceStateBranchesLoaded(:final branches) =>
+                      branches,
+                    _ => const <BranchModel>[],
+                  };
+                  final customers = switch (state) {
+                    EmployeeAttendanceStateTargetsLoaded(:final targets) =>
+                      targets,
+                    _ => const <CustomerModel>[],
+                  };
+                  switch (state) {
+                    case EmployeeAttendanceStateBranchesLoaded(:final branches):
+                      availableBranches = branches;
+                    case EmployeeAttendanceStateTargetsLoaded(:final targets):
+                      availableCustomers = targets;
+                    default:
+                      break;
                   }
-                  if (visitA != null) return -1;
-                  if (visitB != null) return 1;
-                  return (a.name ?? '').compareTo(b.name ?? '');
-                });
-
-                if (type == 'Branch' &&
-                    branch == null &&
-                    branchOptions.isNotEmpty) {
-                  branch = branchOptions.first;
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _focusTarget();
-                    _loadTargetAddress();
-                  });
-                }
-                if (type != 'Branch' &&
-                    customer == null &&
-                    sortedCustomerOptions.isNotEmpty) {
-                  if (todayScheduledVisit != null) {
-                    final matching = sortedCustomerOptions
-                        .where((c) => c.id == todayScheduledVisit!.customerId)
+                  final branchOptions = availableBranches.isNotEmpty
+                      ? availableBranches
+                      : branches;
+                  final customerOptions = availableCustomers.isNotEmpty
+                      ? availableCustomers
+                      : customers;
+                  final sortedCustomerOptions = List<CustomerModel>.from(customerOptions);
+                  sortedCustomerOptions.sort((a, b) {
+                    final visitA = todayVisits
+                        .where((v) => v.customerId == a.id)
                         .firstOrNull;
-                    customer = matching ?? sortedCustomerOptions.first;
-                  } else {
-                    customer = sortedCustomerOptions.first;
-                  }
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _focusTarget();
-                    _loadTargetAddress();
+                    final visitB = todayVisits
+                        .where((v) => v.customerId == b.id)
+                        .firstOrNull;
+                    if (visitA != null && visitB != null) {
+                      return _compareVisitTimes(
+                        visitA.visitTime,
+                        visitB.visitTime,
+                      );
+                    }
+                    if (visitA != null) return -1;
+                    if (visitB != null) return 1;
+                    return (a.name ?? '').compareTo(b.name ?? '');
                   });
-                }
-                final points = targetPoints;
-                final mapCenter =
-                    targetCenter ??
-                    userLocation ??
-                    const LatLng(30.0444, 31.2357);
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.isCheckOut
-                          ? 'employee.home.checkOutAction'.tr()
-                          : 'employee.home.checkInAction'.tr(),
-                      style: AppTextStyles.font20Bold,
-                    ),
-                    if (todayVisits.isNotEmpty) ...[
-                      hSpace(8),
+
+                  if (type == 'Branch' &&
+                      branch == null &&
+                      branchOptions.isNotEmpty) {
+                    branch = branchOptions.first;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _focusTarget();
+                      _loadTargetAddress();
+                    });
+                  }
+                  if (type != 'Branch' &&
+                      customer == null &&
+                      sortedCustomerOptions.isNotEmpty) {
+                    if (todayScheduledVisit != null) {
+                      final matching = sortedCustomerOptions
+                          .where((c) => c.id == todayScheduledVisit!.customerId)
+                          .firstOrNull;
+                      customer = matching ?? sortedCustomerOptions.first;
+                    } else {
+                      customer = sortedCustomerOptions.first;
+                    }
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _focusTarget();
+                      _loadTargetAddress();
+                    });
+                  }
+                  final points = targetPoints;
+                  final mapCenter =
+                      targetCenter ??
+                      userLocation ??
+                      const LatLng(30.0444, 31.2357);
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 40.w,
+                          height: 4.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.border,
+                            borderRadius: BorderRadius.circular(2.r),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            widget.isCheckOut
+                                ? 'employee.home.checkOutAction'.tr()
+                                : 'employee.home.checkInAction'.tr(),
+                            style: AppTextStyles.font20Bold,
+                          ),
+                          IconButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            icon: Icon(
+                              Icons.close_rounded,
+                              color: AppColors.textSecondary,
+                              size: 20.r,
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (todayVisits.isNotEmpty) ...[
+                        hSpace(8),
                       Container(
                         width: double.infinity,
                         padding: EdgeInsets.all(12.r),
@@ -1105,6 +1134,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
