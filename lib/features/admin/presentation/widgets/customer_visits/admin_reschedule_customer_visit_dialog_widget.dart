@@ -177,7 +177,9 @@ class _AdminRescheduleCustomerVisitDialogWidgetState
         ? AppDateFormatter.formatDate(selectedDate!)
         : 'اختر التاريخ';
     final timeDisplay = selectedTime != null
-        ? selectedTime!.format(context)
+        ? AppDateFormatter.formatReadableTime(
+            '${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}',
+          )
         : 'اختر الوقت';
 
     return Dialog(

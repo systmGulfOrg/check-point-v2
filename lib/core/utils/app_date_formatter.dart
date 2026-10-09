@@ -81,15 +81,24 @@ class AppDateFormatter {
     return toEnglishDigits(DateFormat('dd-MM-yyyy', 'en').format(date));
   }
 
-  /// E.g. "09:30 AM" or "09:30 ص"
-  static String formatTime(DateTime date, {bool isArabic = true}) {
+  /// E.g. "09:30 AM", "09:30 ص", or "09:30 صباحاً"
+  static String formatTime(
+    DateTime date, {
+    bool isArabic = true,
+    bool fullPeriod = false,
+  }) {
     final hour = date.hour;
     final minute = date.minute;
     final isPm = hour >= 12;
     final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
     final mStr = minute.toString().padLeft(2, '0');
     final hStr = h12.toString().padLeft(2, '0');
-    final period = isArabic ? (isPm ? 'م' : 'ص') : (isPm ? 'PM' : 'AM');
+    final String period;
+    if (isArabic) {
+      period = fullPeriod ? (isPm ? 'مساءً' : 'صباحاً') : (isPm ? 'م' : 'ص');
+    } else {
+      period = isPm ? 'PM' : 'AM';
+    }
     return '$hStr:$mStr $period';
   }
 
@@ -112,11 +121,12 @@ class AppDateFormatter {
     return toEnglishDigits(DateFormat('HH:mm', 'en').format(date));
   }
 
-  /// Cleans and formats raw time strings (e.g. "17:00:00" -> "05:00 م", "9:30" -> "09:30 ص", "17" -> "05:00 م").
+  /// Cleans and formats raw time strings (e.g. "17:00:00" -> "05:00 مساءً", "9:30" -> "09:30 صباحاً").
   static String formatTimeString(
     String? rawTime, {
     bool use12Hour = true,
     bool isArabic = true,
+    bool fullPeriod = false,
   }) {
     if (rawTime == null ||
         rawTime.trim().isEmpty ||
@@ -135,7 +145,12 @@ class AppDateFormatter {
         final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
         final mStr = minute.toString().padLeft(2, '0');
         final hStr = h12.toString().padLeft(2, '0');
-        final period = isArabic ? (isPm ? 'م' : 'ص') : (isPm ? 'PM' : 'AM');
+        final String period;
+        if (isArabic) {
+          period = fullPeriod ? (isPm ? 'مساءً' : 'صباحاً') : (isPm ? 'م' : 'ص');
+        } else {
+          period = isPm ? 'PM' : 'AM';
+        }
         return '$hStr:$mStr $period';
       } else {
         final hStr = hour.toString().padLeft(2, '0');
@@ -144,6 +159,48 @@ class AppDateFormatter {
       }
     }
     return cleaned;
+  }
+
+  /// Formats raw time string into human readable 12-hour Arabic (e.g. "18:37" -> "06:37 مساءً").
+  static String formatReadableTime(String? rawTime, {bool isArabic = true}) {
+    return formatTimeString(
+      rawTime,
+      use12Hour: true,
+      isArabic: isArabic,
+      fullPeriod: true,
+    );
+  }
+
+  /// Formats date and time together cleanly, e.g. "2026-10-09 (06:37 مساءً)" or "2026-10-09" or "06:37 مساءً".
+  static String formatScheduleDateTime(
+    String? rawDate,
+    String? rawTime, {
+    bool isArabic = true,
+  }) {
+    final hasDate = rawDate != null && rawDate.trim().isNotEmpty;
+    final hasTime = rawTime != null &&
+        rawTime.trim().isNotEmpty &&
+        rawTime != '--:--' &&
+        !rawTime.startsWith('00:00:00');
+
+    final formattedDate = hasDate ? formatDateString(rawDate) : '';
+    final formattedTime = hasTime
+        ? formatTimeString(
+            rawTime,
+            use12Hour: true,
+            isArabic: isArabic,
+            fullPeriod: true,
+          )
+        : '';
+
+    if (hasDate && hasTime && formattedTime != '--:--') {
+      return '$formattedDate ($formattedTime)';
+    } else if (hasDate) {
+      return formattedDate;
+    } else if (hasTime && formattedTime != '--:--') {
+      return formattedTime;
+    }
+    return '-';
   }
 
   /// Normalizes and formats raw date strings into standard English digits.

@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -17,10 +16,25 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
     if (iso == null || iso.isEmpty) return '';
     try {
       final dt = DateTime.parse(iso).toLocal();
-      return DateFormat('yyyy-MM-dd • hh:mm a').format(dt);
+      final dateStr = AppDateFormatter.formatDate(dt, pattern: 'yyyy-MM-dd');
+      final timeStr = AppDateFormatter.formatTime(dt, isArabic: true, fullPeriod: true);
+      return '$dateStr • $timeStr';
     } catch (_) {
       return iso;
     }
+  }
+
+  String _formatLogDetails(VisitChangeLogModel log) {
+    if (log.details == null || log.details!.isEmpty) return '';
+    final details = log.details!;
+    if (details.startsWith('تم تعديل موعد الزيارة إلى')) {
+      final formattedNewSchedule = AppDateFormatter.formatScheduleDateTime(
+        log.newDate,
+        log.newTime,
+      );
+      return 'تم تعديل موعد الزيارة إلى $formattedNewSchedule';
+    }
+    return details;
   }
 
   Widget _buildActionBadge(BuildContext context, String action) {
@@ -191,6 +205,14 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final log = logs[index];
                   final action = log.action ?? 'updated';
+                  final hasPreviousSchedule = (log.previousDate != null &&
+                          log.previousDate!.trim().isNotEmpty) ||
+                      (log.previousTime != null &&
+                          log.previousTime!.trim().isNotEmpty);
+                  final hasNewSchedule = (log.newDate != null &&
+                          log.newDate!.trim().isNotEmpty) ||
+                      (log.newTime != null &&
+                          log.newTime!.trim().isNotEmpty);
 
                   return Container(
                     padding: EdgeInsets.all(12.r),
@@ -234,7 +256,7 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
                             ],
                           ),
                         ],
-                        if (log.previousDate != null || log.newDate != null) ...[
+                        if (hasPreviousSchedule || hasNewSchedule) ...[
                           SizedBox(height: 6.h),
                           Container(
                             padding: EdgeInsets.symmetric(
@@ -248,12 +270,17 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
                             ),
                             child: Row(
                               children: [
-                                if (log.previousDate != null) ...[
-                                  Text(
-                                    log.previousDate!,
-                                    style: AppTextStyles.font12Medium.copyWith(
-                                      color: AppColors.textSecondary,
-                                      decoration: TextDecoration.lineThrough,
+                                if (hasPreviousSchedule) ...[
+                                  Flexible(
+                                    child: Text(
+                                      AppDateFormatter.formatScheduleDateTime(
+                                        log.previousDate,
+                                        log.previousTime,
+                                      ),
+                                      style: AppTextStyles.font12Medium.copyWith(
+                                        color: AppColors.textSecondary,
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
                                     ),
                                   ),
                                   SizedBox(width: 8.w),
@@ -264,10 +291,15 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
                                   ),
                                   SizedBox(width: 8.w),
                                 ],
-                                Text(
-                                  '${log.newDate ?? ''} ${log.newTime ?? ''}'.trim(),
-                                  style: AppTextStyles.font12Bold.copyWith(
-                                    color: AppColors.brandPrimary,
+                                Flexible(
+                                  child: Text(
+                                    AppDateFormatter.formatScheduleDateTime(
+                                      log.newDate,
+                                      log.newTime,
+                                    ),
+                                    style: AppTextStyles.font12Bold.copyWith(
+                                      color: AppColors.brandPrimary,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -277,7 +309,7 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
                         if (log.details != null && log.details!.isNotEmpty) ...[
                           SizedBox(height: 6.h),
                           Text(
-                            log.details!,
+                            _formatLogDetails(log),
                             style: AppTextStyles.font12Regular.copyWith(
                               color: AppColors.textSecondary,
                               height: 1.35,
