@@ -7,11 +7,13 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart'
     as admin_lt;
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_state.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_leave_sheet_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_permission_sheet_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_location_sheet_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_header_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_leaves_bloc_builder_widget.dart';
@@ -19,6 +21,7 @@ import 'package:check_point_v2/features/employee/presentation/widgets/employee_h
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_today_card_widget.dart';
 import 'package:check_point_v2/features/leaves/data/models/leave_request_body.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/permit_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_state.dart';
 import 'package:check_point_v2/features/leaves/presentation/widgets/upcoming_holiday_card_bloc_builder_widget.dart';
@@ -75,6 +78,27 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                 ),
               );
             },
+      ),
+    );
+  }
+
+  void _showApplyPermissionSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.transparent,
+      builder: (_) => ApplyForPermissionSheetWidget(
+        onSubmit: (body) async {
+          final permitCubit = sl<PermitCubit>();
+          final success = await permitCubit.submit(body);
+          if (success && context.mounted) {
+            CustomSnackBar.showSuccess(
+              context,
+              message: 'permissions.request.success'.tr(),
+            );
+            context.read<LeavesCubit>().loadLeavesData();
+          }
+        },
       ),
     );
   }
@@ -303,10 +327,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                 hSpace(20),
                 EmployeeHomeQuickActionsWidget(
                   onRequestLeave: () => _showApplyLeaveSheet(context),
-                  onRequestPermission: () => Navigator.pushNamed(
-                    context,
-                    AppRoutes.permissionsRequest,
-                  ),
+                  onRequestPermission: () => _showApplyPermissionSheet(context),
                   onCustomerVisitsTap: () => Navigator.pushNamed(
                     context,
                     AppRoutes.adminLocations,

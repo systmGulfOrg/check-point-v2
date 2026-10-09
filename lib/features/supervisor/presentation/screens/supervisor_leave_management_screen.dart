@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_leave_sheet_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_permission_sheet_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_state.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_state.dart';
+import 'package:check_point_v2/features/leaves/presentation/cubit/permit_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/widgets/leave_balances_list_widget.dart';
 import 'package:check_point_v2/features/leaves/presentation/widgets/leave_status_filter_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_leave_requests_bloc_builder_widget.dart';
@@ -60,6 +63,28 @@ class _SupervisorLeaveManagementScreenState
                 attachmentUrl: attachmentUrl,
               );
             },
+      ),
+    );
+  }
+
+  void _showApplyPermissionSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.transparent,
+      builder: (_) => ApplyForPermissionSheetWidget(
+        onSubmit: (body) async {
+          final permitCubit = sl<PermitCubit>();
+          final success = await permitCubit.submit(body);
+          if (success && context.mounted) {
+            CustomSnackBar.showSuccess(
+              context,
+              message: 'permissions.request.success'.tr(),
+            );
+            context.read<SupervisorLeaveRequestsCubit>().loadRequests();
+            context.read<LeavesCubit>().loadLeavesData();
+          }
+        },
       ),
     );
   }
@@ -160,8 +185,7 @@ class _SupervisorLeaveManagementScreenState
         children: [
           FloatingActionButton.extended(
             heroTag: 'supervisorPermissionBtn',
-            onPressed: () =>
-                Navigator.pushNamed(context, AppRoutes.permissionsRequest),
+            onPressed: () => _showApplyPermissionSheet(context),
             backgroundColor: AppColors.brandSecondary,
             icon: const Icon(Icons.timer),
             label: Text('leaves.dashboard.requestPermission'.tr()),

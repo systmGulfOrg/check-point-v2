@@ -1275,10 +1275,14 @@
   "permissions.labels.task.manage": "إدارة وصلاحيات المهام",
   "permissions.labels.task.view": "عرض قائمة المهام",
   "permissions.labels.tenant.settings": "إعدادات المنشأة العامة",
-  "permissions.labels.tenant.user_manage": "إدارة المستخدمين في المنشأة",
+  "permissions.request.title": "طلب إذن",
   "permissions.request.fromTime": "من الساعة",
   "permissions.request.toTime": "إلى الساعة",
-  "permits": {
+  "permissions.request.timeRequired": "يرجى تحديد وقت البداية والنهاية",
+  "permissions.request.invalidTimeRange": "يجب أن يكون وقت النهاية بعد وقت البداية",
+  "permissions.request.success": "تم تقديم طلب الإذن بنجاح",
+  "common.hours": "ساعة",
+  "common.minutes": "دقيقة",
     "type": {
       "lateArrival": "إذن تأخير",
       "earlyDeparture": "إذن انصراف مبكر",

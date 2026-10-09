@@ -5,11 +5,14 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart'
     as admin_lt;
 import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_leave_sheet_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_permission_sheet_widget.dart';
 import '../cubit/leaves_cubit.dart';
 import '../cubit/leaves_state.dart';
+import '../cubit/permit_cubit.dart';
 import '../../data/models/leave_request_body.dart';
 import '../../data/models/leave_request_model.dart';
 import '../widgets/leave_balances_list_widget.dart';
@@ -71,6 +74,27 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
                 ),
               );
             },
+      ),
+    );
+  }
+
+  void _showApplyPermissionSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.transparent,
+      builder: (_) => ApplyForPermissionSheetWidget(
+        onSubmit: (body) async {
+          final permitCubit = sl<PermitCubit>();
+          final success = await permitCubit.submit(body);
+          if (success && context.mounted) {
+            CustomSnackBar.showSuccess(
+              context,
+              message: 'permissions.request.success'.tr(),
+            );
+            context.read<LeavesCubit>().loadLeavesData();
+          }
+        },
       ),
     );
   }
@@ -224,8 +248,7 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
         children: [
           FloatingActionButton.extended(
             heroTag: 'employeePermissionBtn',
-            onPressed: () =>
-                Navigator.pushNamed(context, AppRoutes.permissionsRequest),
+            onPressed: () => _showApplyPermissionSheet(context),
             backgroundColor: AppColors.brandSecondary,
             icon: const Icon(Icons.timer),
             label: Text('leaves.dashboard.requestPermission'.tr()),

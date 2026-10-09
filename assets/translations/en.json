@@ -1276,8 +1276,14 @@
   "permissions.labels.task.view": "View Tasks",
   "permissions.labels.tenant.settings": "Tenant Settings",
   "permissions.labels.tenant.user_manage": "Manage Tenant Users",
+  "permissions.request.title": "Request Permission",
   "permissions.request.fromTime": "From time",
   "permissions.request.toTime": "To time",
+  "permissions.request.timeRequired": "Please select start and end time",
+  "permissions.request.invalidTimeRange": "End time must be after start time",
+  "permissions.request.success": "Permission request submitted successfully",
+  "common.hours": "hours",
+  "common.minutes": "minutes",
   "permits": {
     "type": {
       "lateArrival": "Late Arrival",
