@@ -149,8 +149,7 @@ class _AdminRescheduleCustomerVisitDialogWidgetState
 
     setState(() => isSubmitting = true);
     try {
-      final dateStr =
-          DateFormat('yyyy-MM-dd').format(selectedDate!);
+      final dateStr = AppDateFormatter.formatDate(selectedDate!);
       final timeStr = selectedTime != null
           ? '${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}'
           : null;
@@ -175,7 +174,7 @@ class _AdminRescheduleCustomerVisitDialogWidgetState
   @override
   Widget build(BuildContext context) {
     final dateDisplay = selectedDate != null
-        ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+        ? AppDateFormatter.formatDate(selectedDate!)
         : 'اختر التاريخ';
     final timeDisplay = selectedTime != null
         ? selectedTime!.format(context)

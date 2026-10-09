@@ -65,7 +65,7 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
     String? documentName,
     String? documentUrl,
   }) async {
-    emit(const AdminCustomerVisitsState.loading());
+    final previous = state;
     final result = await visitsRepo.updateVisitOutcome(
       visitId: visitId,
       outcome: outcome,
@@ -83,9 +83,11 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
         }
         return true;
       case Failure(:final failure):
-        emit(AdminCustomerVisitsState.error(failure.messageKey));
+        lastErrorKey = failure.messageKey;
+        emit(previous);
         return false;
       default:
+        emit(previous);
         return false;
     }
   }
@@ -95,7 +97,7 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
     required String customerId,
     String? reason,
   }) async {
-    emit(const AdminCustomerVisitsState.loading());
+    final previous = state;
     final result = await visitsRepo.cancelVisit(
       visitId: visitId,
       reason: reason,
@@ -109,9 +111,11 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
         }
         return true;
       case Failure(:final failure):
-        emit(AdminCustomerVisitsState.error(failure.messageKey));
+        lastErrorKey = failure.messageKey;
+        emit(previous);
         return false;
       default:
+        emit(previous);
         return false;
     }
   }
@@ -123,7 +127,7 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
     String? visitTime,
     String? reason,
   }) async {
-    emit(const AdminCustomerVisitsState.loading());
+    final previous = state;
     final result = await visitsRepo.rescheduleVisit(
       visitId: visitId,
       visitDate: visitDate,
@@ -139,9 +143,11 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
         }
         return true;
       case Failure(:final failure):
-        emit(AdminCustomerVisitsState.error(failure.messageKey));
+        lastErrorKey = failure.messageKey;
+        emit(previous);
         return false;
       default:
+        emit(previous);
         return false;
     }
   }
