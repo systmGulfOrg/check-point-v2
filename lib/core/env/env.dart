@@ -2,6 +2,7 @@ import 'package:envied/envied.dart';
 
 part 'env.g.dart';
 
+// Environment configuration loaded from .env
 @Envied(path: '.env', obfuscate: true)
 abstract class Env {
   @EnviedField(varName: 'BASE_URL', obfuscate: true)
