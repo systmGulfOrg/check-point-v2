@@ -296,7 +296,17 @@ class LeavesRepoImpl {
     ShortLeaveRequestBody body,
   ) async {
     try {
-      return ApiResult.success(await api.submitShortLeaveRequest(body));
+      final jsonBody = <String, dynamic>{
+        'date': body.date.toIso8601String(),
+        'startTime': body.startTime,
+        'endTime': body.endTime,
+        'permitType': body.permitType,
+        if (body.durationMinutes != null)
+          'durationMinutes': body.durationMinutes,
+        if (body.reason != null && body.reason!.isNotEmpty)
+          'reason': body.reason,
+      };
+      return ApiResult.success(await api.submitShortLeaveRequest(jsonBody));
     } catch (e, _) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

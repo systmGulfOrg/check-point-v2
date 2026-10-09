@@ -1284,11 +1284,10 @@
   "permissions.request.success": "تم تقديم طلب الإذن بنجاح",
   "common.hours": "ساعة",
   "common.minutes": "دقيقة",
-    "type": {
-      "lateArrival": "إذن تأخير",
-      "earlyDeparture": "إذن انصراف مبكر",
-      "temporaryExit": "إذن خروج مؤقت"
-    }
+  "type": {
+    "lateArrival": "إذن تأخير",
+    "earlyDeparture": "إذن انصراف مبكر",
+    "temporaryExit": "إذن خروج مؤقت"
   },
   "permits.type.earlyDeparture": "إذن انصراف مبكر",
   "permits.type.lateArrival": "إذن تأخير",

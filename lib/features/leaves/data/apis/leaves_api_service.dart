@@ -8,7 +8,6 @@ import '../../../admin/data/models/leave_requests/leave_type_model.dart'
 import '../models/leave_balance_model.dart';
 import '../models/official_holiday_model.dart';
 import '../models/short_leave_model.dart';
-import '../models/short_leave_request_body.dart';
 
 part 'leaves_api_service.g.dart';
 
@@ -55,6 +54,6 @@ abstract class LeavesApiService {
 
   @POST('/api/v1/leaves/permissions/request')
   Future<ShortLeaveModel> submitShortLeaveRequest(
-    @Body() ShortLeaveRequestBody body,
+    @Body() Map<String, dynamic> body,
   );
 }
