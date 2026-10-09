@@ -15,4 +15,14 @@ abstract class AdminCustomerVisitsRepo {
     String? documentName,
     String? documentUrl,
   });
+  Future<ApiResult<void>> cancelVisit({
+    required String visitId,
+    String? reason,
+  });
+  Future<ApiResult<void>> rescheduleVisit({
+    required String visitId,
+    required String visitDate,
+    String? visitTime,
+    String? reason,
+  });
 }

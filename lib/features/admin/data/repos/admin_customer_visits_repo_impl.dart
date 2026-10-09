@@ -80,4 +80,40 @@ class AdminCustomerVisitsRepoImpl implements AdminCustomerVisitsRepo {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
   }
+
+  @override
+  Future<ApiResult<void>> cancelVisit({
+    required String visitId,
+    String? reason,
+  }) async {
+    try {
+      await api.updateCustomerPlan(visitId, {
+        'status': 'Cancelled',
+        ...?reason == null ? null : {'note': reason, 'notes': reason},
+      });
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<void>> rescheduleVisit({
+    required String visitId,
+    required String visitDate,
+    String? visitTime,
+    String? reason,
+  }) async {
+    try {
+      await api.updateCustomerPlan(visitId, {
+        'visitDate': visitDate,
+        'status': 'Rescheduled',
+        ...?visitTime == null ? null : {'visitTime': visitTime},
+        ...?reason == null ? null : {'note': reason, 'notes': reason},
+      });
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
 }

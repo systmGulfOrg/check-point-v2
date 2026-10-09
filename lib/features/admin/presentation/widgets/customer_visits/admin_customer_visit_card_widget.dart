@@ -8,14 +8,20 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_location_sheet_widget.dart';
+import 'admin_cancel_customer_visit_dialog_widget.dart';
+import 'admin_customer_visit_logs_sheet_widget.dart';
 import 'admin_record_visit_outcome_dialog_widget.dart';
+import 'admin_reschedule_customer_visit_dialog_widget.dart';
 
 class AdminCustomerVisitCardWidget extends StatelessWidget {
   const AdminCustomerVisitCardWidget({
     required this.visit,
     required this.onRecordOutcome,
+    this.onRescheduleVisit,
+    this.onCancelVisit,
     super.key,
   });
 
@@ -27,6 +33,12 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
     String? documentName,
     String? documentUrl,
   ) onRecordOutcome;
+  final Future<void> Function({
+    required String visitDate,
+    String? visitTime,
+    String? reason,
+  })? onRescheduleVisit;
+  final Future<void> Function(String? reason)? onCancelVisit;
 
   void _openAttendanceCheckIn(BuildContext context) {
     showModalBottomSheet<void>(
@@ -41,6 +53,89 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
           initialType: 'Customer',
         ),
       ),
+    );
+  }
+
+  void _openRescheduleDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (_) => AdminRescheduleCustomerVisitDialogWidget(
+        visit: visit,
+        onConfirm: ({required visitDate, visitTime, reason}) async {
+          if (onRescheduleVisit != null) {
+            await onRescheduleVisit!(
+              visitDate: visitDate,
+              visitTime: visitTime,
+              reason: reason,
+            );
+          } else {
+            final cubit = context.read<AdminCustomerVisitsCubit>();
+            final success = await cubit.rescheduleVisit(
+              visitId: visit.id ?? '',
+              customerId: visit.customerId ?? '',
+              visitDate: visitDate,
+              visitTime: visitTime,
+              reason: reason,
+            );
+            if (context.mounted) {
+              if (success) {
+                CustomSnackBar.showSuccess(
+                  context,
+                  message: 'تم تعديل موعد الزيارة بنجاح',
+                );
+              } else {
+                CustomSnackBar.showError(
+                  context,
+                  message: 'حدث خطأ أثناء تعديل موعد الزيارة',
+                );
+              }
+            }
+          }
+        },
+      ),
+    );
+  }
+
+  void _openCancelDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (_) => AdminCancelCustomerVisitDialogWidget(
+        visit: visit,
+        onConfirm: (reason) async {
+          if (onCancelVisit != null) {
+            await onCancelVisit!(reason);
+          } else {
+            final cubit = context.read<AdminCustomerVisitsCubit>();
+            final success = await cubit.cancelVisit(
+              visitId: visit.id ?? '',
+              customerId: visit.customerId ?? '',
+              reason: reason,
+            );
+            if (context.mounted) {
+              if (success) {
+                CustomSnackBar.showSuccess(
+                  context,
+                  message: 'تم إلغاء الزيارة بنجاح',
+                );
+              } else {
+                CustomSnackBar.showError(
+                  context,
+                  message: 'حدث خطأ أثناء إلغاء الزيارة',
+                );
+              }
+            }
+          }
+        },
+      ),
+    );
+  }
+
+  void _openLogsSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => AdminCustomerVisitLogsSheetWidget(visit: visit),
     );
   }
 
@@ -121,7 +216,7 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header: Status badge & Date/Time
+          // Header: Status badge & Date/Time & Options Menu
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -147,6 +242,7 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                 ),
               ),
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
                     Icons.calendar_today_rounded,
@@ -159,6 +255,89 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                     style: AppTextStyles.font12Medium.copyWith(
                       color: AppColors.textSecondary,
                     ),
+                  ),
+                  SizedBox(width: 2.w),
+                  PopupMenuButton<String>(
+                    icon: Icon(
+                      Icons.more_vert_rounded,
+                      size: 18.r,
+                      color: AppColors.textSecondary,
+                    ),
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    onSelected: (action) {
+                      switch (action) {
+                        case 'reschedule':
+                          _openRescheduleDialog(context);
+                        case 'cancel':
+                          _openCancelDialog(context);
+                        case 'logs':
+                          _openLogsSheet(context);
+                      }
+                    },
+                    itemBuilder: (ctx) => [
+                      if (!isCancelled && !isCompleted) ...[
+                        PopupMenuItem<String>(
+                          value: 'reschedule',
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.edit_calendar_rounded,
+                                size: 18.r,
+                                color: AppColors.brandPrimary,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                'تعديل موعد الزيارة',
+                                style: AppTextStyles.font13Medium.copyWith(
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'cancel',
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.event_busy_rounded,
+                                size: 18.r,
+                                color: AppColors.error,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                'إلغاء الزيارة',
+                                style: AppTextStyles.font13Medium.copyWith(
+                                  color: AppColors.error,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      PopupMenuItem<String>(
+                        value: 'logs',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.history_rounded,
+                              size: 18.r,
+                              color: AppColors.textSecondary,
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              'سجل نشاط الزيارة (Log)',
+                              style: AppTextStyles.font13Medium.copyWith(
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -400,6 +579,42 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
             ),
           ],
 
+          // Cancelled Notice
+          if (isCancelled) ...[
+            SizedBox(height: 8.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(10.r),
+              decoration: BoxDecoration(
+                color: AppColors.error.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(8.r),
+                border: Border.all(
+                  color: AppColors.error.withValues(alpha: 0.25),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.cancel_outlined,
+                    color: AppColors.error,
+                    size: 16.r,
+                  ),
+                  SizedBox(width: 6.w),
+                  Expanded(
+                    child: Text(
+                      visit.notes != null && visit.notes!.isNotEmpty
+                          ? 'الزيارة ملغاة: ${visit.notes}'
+                          : 'تم إلغاء هذه الزيارة',
+                      style: AppTextStyles.font12Medium.copyWith(
+                        color: AppColors.error,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+
           // Notice for Visited Pending Report (تم الحضور - ناقص تقرير الزيارة)
           if (isVisitedPendingReport) ...[
             SizedBox(height: 8.h),
@@ -480,11 +695,44 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
             ),
           ],
 
-          // Action buttons: Check-in for scheduled visits, Report for visited/completed
+          // Footer Action buttons: Log & Check-in / Report
           SizedBox(height: 12.h),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              // Log history button
+              InkWell(
+                onTap: () => _openLogsSheet(context),
+                borderRadius: BorderRadius.circular(8.r),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.w,
+                    vertical: 5.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.pageBackground,
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.history_rounded,
+                        size: 14.r,
+                        color: AppColors.textSecondary,
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        'سجل النشاط (${visit.logs.length})',
+                        style: AppTextStyles.font11Medium.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Spacer(),
               if (!isCancelled && !isCompleted && !isVisitedPendingReport) ...[
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(

@@ -13,6 +13,7 @@ class CustomerVisitModel {
     this.visitDate,
     this.visitTime,
     this.attendees = const [],
+    this.logs = const [],
     this.documentName,
     this.documentUrl,
     this.planDocumentName,
@@ -35,6 +36,8 @@ class CustomerVisitModel {
   final String? visitTime;
   @JsonKey(defaultValue: [])
   final List<String> attendees;
+  @JsonKey(defaultValue: [])
+  final List<VisitChangeLogModel> logs;
   final String? documentName;
   final String? documentUrl;
   final String? planDocumentName;
@@ -62,6 +65,7 @@ class CustomerVisitModel {
     String? visitDate,
     String? visitTime,
     List<String>? attendees,
+    List<VisitChangeLogModel>? logs,
     String? documentName,
     String? documentUrl,
     String? planDocumentName,
@@ -83,6 +87,7 @@ class CustomerVisitModel {
       visitDate: visitDate ?? this.visitDate,
       visitTime: visitTime ?? this.visitTime,
       attendees: attendees ?? this.attendees,
+      logs: logs ?? this.logs,
       documentName: documentName ?? this.documentName,
       documentUrl: documentUrl ?? this.documentUrl,
       planDocumentName: planDocumentName ?? this.planDocumentName,
@@ -97,6 +102,36 @@ class CustomerVisitModel {
       createdAt: createdAt ?? this.createdAt,
     );
   }
+}
+
+@JsonSerializable()
+class VisitChangeLogModel {
+  const VisitChangeLogModel({
+    this.action,
+    this.actorName,
+    this.timestamp,
+    this.details,
+    this.reason,
+    this.previousDate,
+    this.newDate,
+    this.previousTime,
+    this.newTime,
+  });
+
+  final String? action;
+  final String? actorName;
+  final String? timestamp;
+  final String? details;
+  final String? reason;
+  final String? previousDate;
+  final String? newDate;
+  final String? previousTime;
+  final String? newTime;
+
+  factory VisitChangeLogModel.fromJson(Map<String, dynamic> json) =>
+      _$VisitChangeLogModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$VisitChangeLogModelToJson(this);
 }
 
 @JsonSerializable()

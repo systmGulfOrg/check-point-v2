@@ -89,4 +89,60 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
         return false;
     }
   }
+
+  Future<bool> cancelVisit({
+    required String visitId,
+    required String customerId,
+    String? reason,
+  }) async {
+    emit(const AdminCustomerVisitsState.loading());
+    final result = await visitsRepo.cancelVisit(
+      visitId: visitId,
+      reason: reason,
+    );
+    switch (result) {
+      case Success():
+        if (customerId.isNotEmpty) {
+          await loadCustomerVisits(customerId);
+        } else {
+          await loadAllVisits();
+        }
+        return true;
+      case Failure(:final failure):
+        emit(AdminCustomerVisitsState.error(failure.messageKey));
+        return false;
+      default:
+        return false;
+    }
+  }
+
+  Future<bool> rescheduleVisit({
+    required String visitId,
+    required String customerId,
+    required String visitDate,
+    String? visitTime,
+    String? reason,
+  }) async {
+    emit(const AdminCustomerVisitsState.loading());
+    final result = await visitsRepo.rescheduleVisit(
+      visitId: visitId,
+      visitDate: visitDate,
+      visitTime: visitTime,
+      reason: reason,
+    );
+    switch (result) {
+      case Success():
+        if (customerId.isNotEmpty) {
+          await loadCustomerVisits(customerId);
+        } else {
+          await loadAllVisits();
+        }
+        return true;
+      case Failure(:final failure):
+        emit(AdminCustomerVisitsState.error(failure.messageKey));
+        return false;
+      default:
+        return false;
+    }
+  }
 }
