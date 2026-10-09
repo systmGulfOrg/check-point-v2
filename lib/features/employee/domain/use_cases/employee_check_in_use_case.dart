@@ -51,7 +51,13 @@ class EmployeeCheckInUseCase {
     );
 
     if (customerId != null) {
-      return attendanceRepo.checkIn(requestBody);
+      final result = await attendanceRepo.checkIn(requestBody);
+      return result.when(
+        success: (data) => ApiResult.success(data),
+        failure: (failure) async {
+          return attendanceRepo.checkInWithoutPlan(requestBody);
+        },
+      );
     } else {
       return attendanceRepo.checkInWithoutPlan(requestBody);
     }

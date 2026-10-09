@@ -217,133 +217,148 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header: Status badge & Date/Time & Options Menu
+          // Header: Status badge & Options Menu
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: statusColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8.r),
-                  border: Border.all(color: statusColor.withValues(alpha: 0.3)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(statusIcon, color: statusColor, size: 14.r),
-                    SizedBox(width: 4.w),
-                    Text(
-                      statusText,
-                      style: AppTextStyles.font12Bold.copyWith(
-                        color: statusColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.calendar_today_rounded,
-                    size: 13.r,
-                    color: AppColors.placeholder,
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(color: statusColor.withValues(alpha: 0.3)),
                   ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    '${visit.visitDate != null ? AppDateFormatter.formatDateString(visit.visitDate) : ''}${visit.visitTime != null ? ' • ${AppDateFormatter.formatReadableTime(visit.visitTime)}' : ''}',
-                    style: AppTextStyles.font12Medium.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  SizedBox(width: 2.w),
-                  PopupMenuButton<String>(
-                    icon: Icon(
-                      Icons.more_vert_rounded,
-                      size: 18.r,
-                      color: AppColors.textSecondary,
-                    ),
-                    padding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    onSelected: (action) {
-                      switch (action) {
-                        case 'reschedule':
-                          _openRescheduleDialog(context);
-                        case 'cancel':
-                          _openCancelDialog(context);
-                        case 'logs':
-                          _openLogsSheet(context);
-                      }
-                    },
-                    itemBuilder: (ctx) => [
-                      if (!isCancelled && !isCompleted) ...[
-                        PopupMenuItem<String>(
-                          value: 'reschedule',
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.edit_calendar_rounded,
-                                size: 18.r,
-                                color: AppColors.brandPrimary,
-                              ),
-                              SizedBox(width: 8.w),
-                              Text(
-                                'تعديل موعد الزيارة',
-                                style: AppTextStyles.font13Medium.copyWith(
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                            ],
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(statusIcon, color: statusColor, size: 14.r),
+                      SizedBox(width: 4.w),
+                      Flexible(
+                        child: Text(
+                          statusText,
+                          style: AppTextStyles.font12Bold.copyWith(
+                            color: statusColor,
                           ),
-                        ),
-                        PopupMenuItem<String>(
-                          value: 'cancel',
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.event_busy_rounded,
-                                size: 18.r,
-                                color: AppColors.error,
-                              ),
-                              SizedBox(width: 8.w),
-                              Text(
-                                'إلغاء الزيارة',
-                                style: AppTextStyles.font13Medium.copyWith(
-                                  color: AppColors.error,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                      PopupMenuItem<String>(
-                        value: 'logs',
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.history_rounded,
-                              size: 18.r,
-                              color: AppColors.textSecondary,
-                            ),
-                            SizedBox(width: 8.w),
-                            Text(
-                              'سجل نشاط الزيارة (Log)',
-                              style: AppTextStyles.font13Medium.copyWith(
-                                color: AppColors.textPrimary,
-                              ),
-                            ),
-                          ],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
+                  ),
+                ),
+              ),
+              PopupMenuButton<String>(
+                icon: Icon(
+                  Icons.more_vert_rounded,
+                  size: 18.r,
+                  color: AppColors.textSecondary,
+                ),
+                padding: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                onSelected: (action) {
+                  switch (action) {
+                    case 'reschedule':
+                      _openRescheduleDialog(context);
+                    case 'cancel':
+                      _openCancelDialog(context);
+                    case 'logs':
+                      _openLogsSheet(context);
+                  }
+                },
+                itemBuilder: (ctx) => [
+                  if (!isCancelled && !isCompleted) ...[
+                    PopupMenuItem<String>(
+                      value: 'reschedule',
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.edit_calendar_rounded,
+                            size: 18.r,
+                            color: AppColors.brandPrimary,
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            'تعديل موعد الزيارة',
+                            style: AppTextStyles.font13Medium.copyWith(
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'cancel',
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.event_busy_rounded,
+                            size: 18.r,
+                            color: AppColors.error,
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            'إلغاء الزيارة',
+                            style: AppTextStyles.font13Medium.copyWith(
+                              color: AppColors.error,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  PopupMenuItem<String>(
+                    value: 'logs',
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.history_rounded,
+                          size: 18.r,
+                          color: AppColors.textSecondary,
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          'سجل نشاط الزيارة (Log)',
+                          style: AppTextStyles.font13Medium.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 8.h),
+
+          // Date / Time schedule row
+          if (visit.visitDate != null || visit.visitTime != null) ...[
+            Row(
+              children: [
+                Icon(
+                  Icons.calendar_today_rounded,
+                  size: 13.r,
+                  color: AppColors.placeholder,
+                ),
+                SizedBox(width: 5.w),
+                Expanded(
+                  child: Text(
+                    '${visit.visitDate != null ? AppDateFormatter.formatDateString(visit.visitDate) : ''}${visit.visitTime != null ? ' • ${AppDateFormatter.formatReadableTime(visit.visitTime)}' : ''}',
+                    style: AppTextStyles.font12Medium.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 8.h),
+          ],
 
           // Customer Name (if available)
           if (visit.customerName != null && visit.customerName!.isNotEmpty) ...[
