@@ -799,6 +799,7 @@
   "common.retry": "إعادة المحاولة",
   "common.save": "حفظ",
   "common.search": "بحث",
+  "common.select": "تحديد",
   "common.status": "الحالة",
   "employee.attendance.noHistory": "لا يوجد سجل حضور",
   "employee.clock.checkedInSuccess": "تم تسجيل الحضور بنجاح",

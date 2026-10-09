@@ -799,6 +799,7 @@
   "common.retry": "Retry",
   "common.save": "Save",
   "common.search": "Search",
+  "common.select": "Select",
   "common.status": "Status",
   "employee.attendance.noHistory": "No attendance history found",
   "employee.clock.checkedInSuccess": "Checked in successfully",
