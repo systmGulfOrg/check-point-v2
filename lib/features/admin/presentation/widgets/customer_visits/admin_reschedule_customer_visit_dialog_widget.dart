@@ -130,64 +130,17 @@ class _AdminRescheduleCustomerVisitDialogWidgetState
     if (isSelectedDateWeekend) {
       final shouldProceed = await showDialog<bool>(
         context: context,
-        builder: (ctx) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          backgroundColor: AppColors.cardBackground,
-          title: Row(
-            children: [
-              Icon(
-                Icons.warning_amber_rounded,
-                color: const Color(0xFFD97706),
-                size: 24.r,
-              ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: Text(
-                  'تنبيه موعد الزيارة',
-                  style: AppTextStyles.font16Bold.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          content: Text(
-            'التاريخ المحدد يوافق عطلة أسبوعية (إجازة). هل ترغب في المتابعة وتأكيد تعديل موعد الزيارة في يوم الإجازة؟',
-            style: AppTextStyles.font14Regular.copyWith(
-              color: AppColors.textSecondary,
-              height: 1.4,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(false),
-              child: Text(
-                'إلغاء / تغيير التاريخ',
-                style: AppTextStyles.font14Medium.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFD97706),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                elevation: 0,
-              ),
-              onPressed: () => Navigator.of(ctx).pop(true),
-              child: Text(
-                'متابعة وتأكيد',
-                style: AppTextStyles.font14Bold.copyWith(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+        builder: (ctx) => CustomDialogWidget(
+          icon: Icons.warning_amber_rounded,
+          iconColor: const Color(0xFFD97706),
+          iconBackgroundColor: const Color(0xFFFEF3C7),
+          title: 'تنبيه موعد الزيارة',
+          message:
+              'التاريخ المحدد يوافق عطلة أسبوعية (إجازة).\nهل ترغب في المتابعة وتأكيد تعديل موعد الزيارة في يوم الإجازة؟',
+          confirmLabel: 'متابعة وتأكيد',
+          cancelLabel: 'إلغاء / تغيير التاريخ',
+          confirmButtonColor: AppColors.brandPrimary,
+          onConfirm: () => Navigator.pop(ctx, true),
         ),
       );
 
