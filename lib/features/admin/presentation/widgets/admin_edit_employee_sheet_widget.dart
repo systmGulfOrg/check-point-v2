@@ -877,27 +877,6 @@ class _AdminEditEmployeeSheetWidgetState
                   );
                 },
               ),
-              hSpace(14),
-
-              // Attendance & Plan Toggles
-              SwitchListTile.adaptive(
-                value: _canAddAttendance,
-                onChanged: (v) => setState(() => _canAddAttendance = v),
-                title: Text(
-                  'admin.employees.canAddAttendance'.tr(context: context),
-                  style: AppTextStyles.font14Medium,
-                ),
-                contentPadding: EdgeInsets.zero,
-              ),
-              SwitchListTile.adaptive(
-                value: _canAddPlan,
-                onChanged: (v) => setState(() => _canAddPlan = v),
-                title: Text(
-                  'admin.employees.canAddPlan'.tr(context: context),
-                  style: AppTextStyles.font14Medium,
-                ),
-                contentPadding: EdgeInsets.zero,
-              ),
               hSpace(12),
 
               // Leave Balance

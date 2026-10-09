@@ -11,11 +11,11 @@ class AdminEmployeeEditAccountCardWidget extends StatelessWidget {
     required this.passwordController,
     required this.leaveBalanceController,
     required this.selectedRoles,
-    required this.canAddAttendance,
-    required this.canAddPlan,
     required this.onRoleToggled,
-    required this.onCanAddAttendanceChanged,
-    required this.onCanAddPlanChanged,
+    this.canAddAttendance,
+    this.canAddPlan,
+    this.onCanAddAttendanceChanged,
+    this.onCanAddPlanChanged,
     super.key,
   });
 
@@ -23,11 +23,11 @@ class AdminEmployeeEditAccountCardWidget extends StatelessWidget {
   final TextEditingController passwordController;
   final TextEditingController leaveBalanceController;
   final Set<String> selectedRoles;
-  final bool canAddAttendance;
-  final bool canAddPlan;
+  final bool? canAddAttendance;
+  final bool? canAddPlan;
   final ValueChanged<String> onRoleToggled;
-  final ValueChanged<bool> onCanAddAttendanceChanged;
-  final ValueChanged<bool> onCanAddPlanChanged;
+  final ValueChanged<bool>? onCanAddAttendanceChanged;
+  final ValueChanged<bool>? onCanAddPlanChanged;
 
   static const List<String> _roles = ['Employee', 'Supervisor', 'Admin'];
 
@@ -99,29 +99,7 @@ class AdminEmployeeEditAccountCardWidget extends StatelessWidget {
             );
           }).toList(),
         ),
-        hSpace(12),
-        const Divider(height: 1, color: AppColors.border),
         hSpace(8),
-        SwitchListTile.adaptive(
-          value: canAddAttendance,
-          onChanged: onCanAddAttendanceChanged,
-          title: Text(
-            'Can Add Attendance (تسجيل الحضور)',
-            style: AppTextStyles.font13Medium,
-          ),
-          activeTrackColor: AppColors.brandPrimary,
-          contentPadding: EdgeInsets.zero,
-        ),
-        SwitchListTile.adaptive(
-          value: canAddPlan,
-          onChanged: onCanAddPlanChanged,
-          title: Text(
-            'Can Add Plan (إضافة الخطط)',
-            style: AppTextStyles.font13Medium,
-          ),
-          activeTrackColor: AppColors.brandPrimary,
-          contentPadding: EdgeInsets.zero,
-        ),
       ],
     );
   }
