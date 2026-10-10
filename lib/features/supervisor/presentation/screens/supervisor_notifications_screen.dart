@@ -1,18 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_notifications_bloc_builder.dart';
 
-class SupervisorNotificationsScreen extends StatefulWidget {
+import 'package:check_point_v2/core/styles/app_colors.dart';
+import 'package:check_point_v2/core/styles/app_text_styles.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_notifications_bloc_builder_widget.dart';
+
+class SupervisorNotificationsScreen extends StatelessWidget {
   const SupervisorNotificationsScreen({super.key});
 
-  @override
-  State<SupervisorNotificationsScreen> createState() =>
-      _SupervisorNotificationsScreenState();
-}
-
-class _SupervisorNotificationsScreenState
-    extends State<SupervisorNotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +21,9 @@ class _SupervisorNotificationsScreenState
           style: AppTextStyles.font18Bold,
         ),
       ),
-      body: const SafeArea(child: SupervisorNotificationsBlocBuilder()),
+      body: const SafeArea(
+        child: SupervisorNotificationsBlocBuilderWidget(),
+      ),
     );
   }
 }

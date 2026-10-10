@@ -44,7 +44,11 @@ class SupervisorLeaveRequestsBlocBuilderWidget extends StatelessWidget {
     >(
       builder: (context, state) {
         final allRequests = cubit.allRequests;
-        if (state is SupervisorLeaveRequestsLoading && allRequests.isEmpty) {
+        final shouldShowSkeleton = switch (state) {
+          SupervisorLeaveRequestsLoading() => allRequests.isEmpty,
+          _ => false,
+        };
+        if (shouldShowSkeleton) {
           return const Skeletonizer(
             enabled: true,
             child: SupervisorLeaveRequestsListWidget(requests: _dummyRequests),

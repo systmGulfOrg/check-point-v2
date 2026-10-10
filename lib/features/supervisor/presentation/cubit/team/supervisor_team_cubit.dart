@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_team_repo.dart';
 import 'supervisor_team_state.dart';
@@ -15,13 +14,13 @@ class SupervisorTeamCubit extends Cubit<SupervisorTeamState> {
   Future<void> loadTeam({int? departmentId}) async {
     emit(const SupervisorTeamState.loading());
     final result = await teamRepo.getTeamEmployees(departmentId: departmentId);
-    switch (result) {
-      case Success(:final data):
+    result.when(
+      success: (data) {
         _allMembers = data;
         emit(SupervisorTeamState.success(_allMembers));
-      case Failure(:final failure):
-        emit(SupervisorTeamState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) => emit(SupervisorTeamState.error(failure.messageKey)),
+    );
   }
 
   void search(String query) {

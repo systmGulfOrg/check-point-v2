@@ -72,7 +72,7 @@ class SupervisorTeamBlocBuilderWidget extends StatelessWidget {
           ),
           _ => ListView(
             physics: const AlwaysScrollableScrollPhysics(),
-            children: const [SizedBox(height: 1)],
+            children: [SizedBox(height: 1.h)],
           ),
         };
       },
