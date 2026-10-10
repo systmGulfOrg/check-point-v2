@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
 import 'employee_work_access_state.dart';
 
@@ -23,8 +22,8 @@ class EmployeeWorkAccessCubit extends Cubit<EmployeeWorkAccessState> {
     }
 
     final result = await attendanceRepo.getEmployeeById(employeeId);
-    switch (result) {
-      case Success(:final data):
+    result.when(
+      success: (data) {
         final workSystem = data.workSystem?.trim().toLowerCase();
         if (workSystem == 'remote') {
           emit(const EmployeeWorkAccessState.allowed(workSystem: 'remote'));
@@ -35,8 +34,10 @@ class EmployeeWorkAccessCubit extends Cubit<EmployeeWorkAccessState> {
           return;
         }
         emit(const EmployeeWorkAccessState.denied('remoteWork.accessDenied'));
-      case Failure():
+      },
+      failure: (_) {
         emit(const EmployeeWorkAccessState.denied('remoteWork.accessDenied'));
-    }
+      },
+    );
   }
 }

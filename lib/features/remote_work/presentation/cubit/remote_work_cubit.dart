@@ -19,16 +19,27 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
     final policiesResult = results[0] as ApiResult<List<RemoteWorkPolicyModel>>;
     final requestsResult =
         results[1] as ApiResult<List<RemoteWorkRequestModel>>;
-    if (policiesResult case Failure(:final failure)) {
-      emit(RemoteWorkState.error(failure.messageKey));
-      return;
-    }
-    if (requestsResult case Failure(:final failure)) {
-      emit(RemoteWorkState.error(failure.messageKey));
-      return;
-    }
-    policies = (policiesResult as Success<List<RemoteWorkPolicyModel>>).data;
-    requests = (requestsResult as Success<List<RemoteWorkRequestModel>>).data;
+
+    final loadedPolicies = policiesResult.when(
+      success: (data) => data,
+      failure: (failure) {
+        emit(RemoteWorkState.error(failure.messageKey));
+        return null;
+      },
+    );
+    if (loadedPolicies == null) return;
+
+    final loadedRequests = requestsResult.when(
+      success: (data) => data,
+      failure: (failure) {
+        emit(RemoteWorkState.error(failure.messageKey));
+        return null;
+      },
+    );
+    if (loadedRequests == null) return;
+
+    policies = loadedPolicies;
+    requests = loadedRequests;
     emit(RemoteWorkState.success(policies: policies, requests: requests));
   }
 
@@ -42,12 +53,16 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
       policyId: policyId,
       reason: reason,
     );
-    if (result case Failure(:final failure)) {
-      emit(RemoteWorkState.error(failure.messageKey));
-      return false;
-    }
-    await load();
-    return true;
+    return result.when(
+      success: (_) async {
+        await load();
+        return true;
+      },
+      failure: (failure) {
+        emit(RemoteWorkState.error(failure.messageKey));
+        return false;
+      },
+    );
   }
 
   Future<bool> updateStatus({
@@ -60,12 +75,16 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
       status: status,
       reviewNote: reviewNote,
     );
-    if (result case Failure(:final failure)) {
-      emit(RemoteWorkState.error(failure.messageKey));
-      return false;
-    }
-    await load();
-    return true;
+    return result.when(
+      success: (_) async {
+        await load();
+        return true;
+      },
+      failure: (failure) {
+        emit(RemoteWorkState.error(failure.messageKey));
+        return false;
+      },
+    );
   }
 
   Future<bool> createPolicy({
@@ -88,21 +107,28 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
       allowedDelayTime: allowedDelayTime,
       maxDaysPerWeek: maxDays,
     );
-    if (result case Failure(:final failure)) {
-      emit(RemoteWorkState.error(failure.messageKey));
-      return false;
-    }
-    await load();
-    return true;
+    return result.when(
+      success: (_) async {
+        await load();
+        return true;
+      },
+      failure: (failure) {
+        emit(RemoteWorkState.error(failure.messageKey));
+        return false;
+      },
+    );
   }
 
   Future<void> deactivatePolicy(String id) async {
     final result = await repo.deactivatePolicy(id);
-    if (result case Failure(:final failure)) {
-      emit(RemoteWorkState.error(failure.messageKey));
-      return;
-    }
-    await load();
+    await result.when(
+      success: (_) async {
+        await load();
+      },
+      failure: (failure) async {
+        emit(RemoteWorkState.error(failure.messageKey));
+      },
+    );
   }
 
   Future<bool> updatePolicy({
@@ -127,11 +153,15 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
       allowedDelayTime: allowedDelayTime,
       maxDaysPerWeek: maxDays,
     );
-    if (result case Failure(:final failure)) {
-      emit(RemoteWorkState.error(failure.messageKey));
-      return false;
-    }
-    await load();
-    return true;
+    return result.when(
+      success: (_) async {
+        await load();
+        return true;
+      },
+      failure: (failure) {
+        emit(RemoteWorkState.error(failure.messageKey));
+        return false;
+      },
+    );
   }
 }

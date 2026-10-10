@@ -93,7 +93,7 @@ class _RemoteWorkPolicyEmployeesSheetWidgetState
                   );
                 }
                 final result = snapshot.data;
-                if (result == null || result is Failure) {
+                if (result == null) {
                   return Center(
                     child: Text(
                       'remoteWork.loadEmployeesError'.tr(context: context),
@@ -104,8 +104,17 @@ class _RemoteWorkPolicyEmployeesSheetWidgetState
                   );
                 }
 
-                final employees = (result as Success<List<EmployeeModel>>).data;
-                if (employees.isEmpty) {
+                return result.when(
+                  failure: (_) => Center(
+                    child: Text(
+                      'remoteWork.loadEmployeesError'.tr(context: context),
+                      style: AppTextStyles.font14Regular.copyWith(
+                        color: AppColors.error,
+                      ),
+                    ),
+                  ),
+                  success: (employees) {
+                    if (employees.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -155,10 +164,12 @@ class _RemoteWorkPolicyEmployeesSheetWidgetState
                   },
                 );
               },
-            ),
-          ),
-        ],
+            );
+          },
+        ),
       ),
-    );
+    ],
+  ),
+);
   }
 }

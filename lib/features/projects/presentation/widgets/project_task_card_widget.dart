@@ -323,7 +323,7 @@ class ProjectTaskCardWidget extends StatelessWidget {
                                 wSpace(8),
                                 Text(
                                   'common.delete'.tr(context: context),
-                                  style: const TextStyle(
+                                  style: AppTextStyles.font14Regular.copyWith(
                                     color: AppColors.error,
                                   ),
                                 ),

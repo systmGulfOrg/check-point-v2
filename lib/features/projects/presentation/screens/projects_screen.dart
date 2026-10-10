@@ -28,11 +28,12 @@ class ProjectsScreen extends StatefulWidget {
 
 class _ProjectsScreenState extends State<ProjectsScreen> {
   String _searchQuery = '';
-  final TextEditingController _searchController = TextEditingController();
+  late final TextEditingController _searchController;
 
   @override
   void initState() {
     super.initState();
+    _searchController = TextEditingController();
     context.read<ProjectsCubit>().loadProjects();
   }
 
@@ -260,13 +261,10 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
             role.toLowerCase() == 'supervisor',
       _ => false,
     };
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => BlocProvider.value(
-          value: context.read<ProjectsCubit>(),
-          child: ProjectBoardScreen(project: project, canManage: canManage),
-        ),
-      ),
+    Navigator.pushNamed(
+      context,
+      AppRoutes.projectBoard,
+      arguments: ProjectBoardScreenArgs(project: project, canManage: canManage),
     );
   }
 

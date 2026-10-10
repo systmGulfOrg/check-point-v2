@@ -78,11 +78,12 @@ class _AssigneeMultiSelectWidgetState extends State<AssigneeMultiSelectWidget> {
         : (found.userName?.isNotEmpty == true ? found.userName! : id);
   }
 
-  void _openSelectionSheet() {
+  Future<void> _openSelectionSheet() async {
     final currentSelected = Set<String>.from(widget.selectedIds);
     final searchController = TextEditingController();
 
-    showModalBottomSheet<void>(
+    try {
+      await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.transparent,
@@ -269,6 +270,9 @@ class _AssigneeMultiSelectWidgetState extends State<AssigneeMultiSelectWidget> {
         );
       },
     );
+    } finally {
+      searchController.dispose();
+    }
   }
 
   @override

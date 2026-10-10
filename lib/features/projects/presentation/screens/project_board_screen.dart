@@ -20,6 +20,13 @@ class ProjectDragData {
   final String? statusId;
 }
 
+class ProjectBoardScreenArgs {
+  const ProjectBoardScreenArgs({required this.project, this.canManage = false});
+
+  final ProjectModel project;
+  final bool canManage;
+}
+
 class ProjectBoardScreen extends StatefulWidget {
   const ProjectBoardScreen({
     required this.project,
@@ -40,10 +47,16 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
   String? draggingStatusId;
   String? hoveredStatusId;
   String _searchQuery = '';
-  final TextEditingController _searchController = TextEditingController();
+  late final TextEditingController _searchController;
 
   ProjectModel get project => widget.project;
   bool get canManage => widget.canManage;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
 
   @override
   void dispose() {
