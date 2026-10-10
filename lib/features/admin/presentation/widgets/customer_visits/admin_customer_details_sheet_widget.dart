@@ -34,6 +34,8 @@ class _AdminCustomerDetailsSheetWidgetState
   int selectedTab = 0;
   String? _currentUserRole;
   String? _currentUserName;
+  String? _currentUserId;
+  String? _currentEmployeeId;
 
   @override
   void initState() {
@@ -48,10 +50,14 @@ class _AdminCustomerDetailsSheetWidgetState
     final storage = sl<AuthSessionStorage>();
     final role = await storage.readUserRole();
     final name = await storage.readUserName();
+    final userId = await storage.readUserId();
+    final employeeId = await storage.readEmployeeId();
     if (mounted) {
       setState(() {
         _currentUserRole = role;
         _currentUserName = name;
+        _currentUserId = userId;
+        _currentEmployeeId = employeeId;
       });
     }
   }
@@ -63,17 +69,61 @@ class _AdminCustomerDetailsSheetWidgetState
     }
 
     final userName = _currentUserName?.trim().toLowerCase() ?? '';
+    final userId = _currentUserId?.trim().toLowerCase() ?? '';
+    final empId = _currentEmployeeId?.trim().toLowerCase() ?? '';
 
-    for (final attendee in visit.attendees) {
-      final cleanAttendee = attendee.toLowerCase();
-      if (cleanAttendee.contains('أنا') || cleanAttendee.contains('me')) {
+    // 1. Check if the current user created the visit
+    if (visit.createdBy != null && visit.createdBy!.isNotEmpty) {
+      final createdByLower = visit.createdBy!.trim().toLowerCase();
+      if ((userId.isNotEmpty && createdByLower == userId) ||
+          (empId.isNotEmpty && createdByLower == empId) ||
+          (userName.isNotEmpty && createdByLower == userName)) {
         return true;
       }
+    }
+    if (visit.createdByName != null && visit.createdByName!.isNotEmpty) {
+      final createdByNameLower = visit.createdByName!.trim().toLowerCase();
+      if (userName.isNotEmpty &&
+          (createdByNameLower == userName ||
+              createdByNameLower.contains(userName) ||
+              userName.contains(createdByNameLower))) {
+        return true;
+      }
+    }
+
+    // 2. Check if the current user is an attendee
+    for (final attendee in visit.attendees) {
+      final cleanAttendee = attendee.trim().toLowerCase();
+      if (cleanAttendee.isEmpty) continue;
+
+      if (cleanAttendee.startsWith('أنا') || cleanAttendee.startsWith('me')) {
+        final match = RegExp(r'[\(（]([^\)）]+)[\)）]').firstMatch(cleanAttendee);
+        if (match != null) {
+          final inner = match.group(1)?.trim().toLowerCase() ?? '';
+          if (userName.isNotEmpty &&
+              (inner == userName ||
+                  inner.contains(userName) ||
+                  userName.contains(inner))) {
+            return true;
+          }
+          if (userId.isNotEmpty && inner == userId) return true;
+          if (empId.isNotEmpty && inner == empId) return true;
+        }
+        continue;
+      }
+
       if (userName.isNotEmpty &&
           (cleanAttendee.contains(userName) ||
               userName.contains(cleanAttendee))) {
         return true;
       }
+      if (userId.isNotEmpty && cleanAttendee.contains(userId)) {
+        return true;
+      }
+      if (empId.isNotEmpty && cleanAttendee.contains(empId)) {
+        return true;
+      }
+
       final tokens = userName
           .split(RegExp(r'\s+'))
           .where((t) => t.length > 2);

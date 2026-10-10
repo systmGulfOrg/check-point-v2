@@ -52,6 +52,40 @@ class _AdminMyVisitsBlocBuilderWidgetState
     }
   }
 
+  List<CustomerModel> _filterCustomers(List<CustomerModel> customers) {
+    final role = _currentUserRole?.toLowerCase() ?? '';
+    if (role.contains('admin')) {
+      return customers;
+    }
+
+    final userName = _currentUserName?.trim().toLowerCase() ?? '';
+
+    return customers.where((c) {
+      final workesAs = c.workesAs?.trim().toLowerCase();
+      if (workesAs == null ||
+          workesAs.isEmpty ||
+          workesAs == '-' ||
+          workesAs == 'الكل' ||
+          workesAs == 'all') {
+        return true;
+      }
+      if (userName.isNotEmpty && workesAs.contains(userName)) {
+        return true;
+      }
+      final tokens = workesAs
+          .split(RegExp(r'[,،/|&\s]+'))
+          .map((t) => t.trim())
+          .where((t) => t.isNotEmpty);
+      for (final token in tokens) {
+        if (token.isNotEmpty &&
+            (userName.contains(token) || token.contains(userName))) {
+          return true;
+        }
+      }
+      return false;
+    }).toList();
+  }
+
   bool _isVisitForCurrentUser(
     CustomerVisitModel visit,
     List<CustomerModel> accessibleCustomers,
@@ -61,22 +95,50 @@ class _AdminMyVisitsBlocBuilderWidgetState
       return true;
     }
 
-    if (visit.createdBy != null &&
-        ((_currentUserId != null && visit.createdBy == _currentUserId) ||
-            (_currentEmployeeId != null &&
-                visit.createdBy == _currentEmployeeId))) {
-      return true;
-    }
-
     final userName = _currentUserName?.trim().toLowerCase() ?? '';
     final userId = _currentUserId?.trim().toLowerCase() ?? '';
     final empId = _currentEmployeeId?.trim().toLowerCase() ?? '';
 
-    for (final attendee in visit.attendees) {
-      final cleanAttendee = attendee.toLowerCase();
-      if (cleanAttendee.contains('أنا') || cleanAttendee.contains('me')) {
+    // 1. Check if the current user created the visit
+    if (visit.createdBy != null && visit.createdBy!.isNotEmpty) {
+      final createdByLower = visit.createdBy!.trim().toLowerCase();
+      if ((userId.isNotEmpty && createdByLower == userId) ||
+          (empId.isNotEmpty && createdByLower == empId) ||
+          (userName.isNotEmpty && createdByLower == userName)) {
         return true;
       }
+    }
+    if (visit.createdByName != null && visit.createdByName!.isNotEmpty) {
+      final createdByNameLower = visit.createdByName!.trim().toLowerCase();
+      if (userName.isNotEmpty &&
+          (createdByNameLower == userName ||
+              createdByNameLower.contains(userName) ||
+              userName.contains(createdByNameLower))) {
+        return true;
+      }
+    }
+
+    // 2. Check if the current user is an attendee
+    for (final attendee in visit.attendees) {
+      final cleanAttendee = attendee.trim().toLowerCase();
+      if (cleanAttendee.isEmpty) continue;
+
+      if (cleanAttendee.startsWith('أنا') || cleanAttendee.startsWith('me')) {
+        final match = RegExp(r'[\(（]([^\)）]+)[\)）]').firstMatch(cleanAttendee);
+        if (match != null) {
+          final inner = match.group(1)?.trim().toLowerCase() ?? '';
+          if (userName.isNotEmpty &&
+              (inner == userName ||
+                  inner.contains(userName) ||
+                  userName.contains(inner))) {
+            return true;
+          }
+          if (userId.isNotEmpty && inner == userId) return true;
+          if (empId.isNotEmpty && inner == empId) return true;
+        }
+        continue;
+      }
+
       if (userName.isNotEmpty &&
           (cleanAttendee.contains(userName) ||
               userName.contains(cleanAttendee))) {
@@ -88,6 +150,7 @@ class _AdminMyVisitsBlocBuilderWidgetState
       if (empId.isNotEmpty && cleanAttendee.contains(empId)) {
         return true;
       }
+
       final tokens = userName
           .split(RegExp(r'\s+'))
           .where((t) => t.length > 2);
@@ -98,6 +161,7 @@ class _AdminMyVisitsBlocBuilderWidgetState
       }
     }
 
+    // 3. Check if the visit belongs to an accessible (assigned) customer
     if (visit.customerId != null && visit.customerId!.isNotEmpty) {
       final matchesCustomer = accessibleCustomers.any(
         (c) => c.id == visit.customerId,
@@ -138,10 +202,11 @@ class _AdminMyVisitsBlocBuilderWidgetState
   @override
   Widget build(BuildContext context) {
     final customersState = context.watch<AdminCustomersCubit>().state;
-    final availableCustomers = switch (customersState) {
+    final allCustomers = switch (customersState) {
       AdminCustomersSuccess(:final customers) => customers,
       _ => const <CustomerModel>[],
     };
+    final accessibleCustomers = _filterCustomers(allCustomers);
 
     return BlocBuilder<AdminCustomerVisitsCubit, AdminCustomerVisitsState>(
       builder: (context, state) {
@@ -172,7 +237,7 @@ class _AdminMyVisitsBlocBuilderWidgetState
           actionSuccess: (_) => const SizedBox.shrink(),
           success: (visits) {
             final myVisits = visits
-                .where((v) => _isVisitForCurrentUser(v, availableCustomers))
+                .where((v) => _isVisitForCurrentUser(v, accessibleCustomers))
                 .toList();
 
             return Column(
@@ -188,7 +253,7 @@ class _AdminMyVisitsBlocBuilderWidgetState
                     TextButton.icon(
                       onPressed: () => _openCreateVisitSheet(
                         context,
-                        availableCustomers,
+                        accessibleCustomers,
                       ),
                       icon: const Icon(Icons.add_rounded, size: 16),
                       label: Text(
@@ -230,7 +295,7 @@ class _AdminMyVisitsBlocBuilderWidgetState
                             icon: Icons.add_rounded,
                             onTap: () => _openCreateVisitSheet(
                               context,
-                              availableCustomers,
+                              accessibleCustomers,
                             ),
                           ),
                         ],
