@@ -162,7 +162,7 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                             color: switch (role.toLowerCase()) {
                               'admin' => AppColors.softBrandBackground,
                               'supervisor' => AppColors.softYellowBackground,
-                              'hr' => const Color(0xFFF3E8FF),
+                              'hr' => AppColors.softPurpleBackground,
                               _ => AppColors.softGreenBackground,
                             },
                             borderRadius: BorderRadius.circular(8.r),
@@ -177,7 +177,7 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                               color: switch (role.toLowerCase()) {
                                 'admin' => AppColors.brandPrimary,
                                 'supervisor' => AppColors.warningOrange,
-                                'hr' => const Color(0xFF7E22CE),
+                                'hr' => AppColors.purpleText,
                                 _ => AppColors.success,
                               },
                               fontWeight: FontWeight.w700,
@@ -465,8 +465,12 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                               ClipboardData(text: device.deviceId),
                             );
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Device ID copied to clipboard'),
+                              SnackBar(
+                                content: Text(
+                                  'admin.employeeWizard.mobileCopied'.tr(
+                                    context: context,
+                                  ),
+                                ),
                               ),
                             );
                           },

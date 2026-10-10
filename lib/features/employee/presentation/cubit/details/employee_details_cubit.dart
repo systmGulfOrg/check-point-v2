@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
@@ -22,11 +21,18 @@ class EmployeeDetailsCubit extends Cubit<EmployeeDetailsState> {
   Future<void> load(String employeeId) async {
     emit(const EmployeeDetailsState.loading());
     final profileResult = await attendanceRepo.getEmployeeById(employeeId);
-    if (profileResult case Failure(:final failure)) {
-      emit(EmployeeDetailsState.error(failure.messageKey));
-      return;
-    }
-    employee = (profileResult as Success).data;
+    final hasProfile = profileResult.when(
+      success: (data) {
+        employee = data;
+        return true;
+      },
+      failure: (failure) {
+        emit(EmployeeDetailsState.error(failure.messageKey));
+        return false;
+      },
+    );
+    if (!hasProfile) return;
+
     try {
       final devicesResponse = await sl<AdminApiService>().getEmployeeDevices(
         employeeId,
@@ -40,13 +46,14 @@ class EmployeeDetailsCubit extends Cubit<EmployeeDetailsState> {
       pageIndex: 0,
       itemCount: 100,
     );
-    switch (attendanceResult) {
-      case Success(:final data):
+    attendanceResult.when(
+      success: (data) {
         allAttendance = data;
         _emitMonthlyDetails();
-      case Failure(:final failure):
-        emit(EmployeeDetailsState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) =>
+          emit(EmployeeDetailsState.error(failure.messageKey)),
+    );
   }
 
   void setMonth(DateTime month) {

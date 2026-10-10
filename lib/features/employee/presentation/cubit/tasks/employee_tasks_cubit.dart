@@ -22,12 +22,10 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
     emit(const EmployeeTasksState.loading());
     final employeeId = await sessionStorage.readUserId() ?? '';
     final result = await actionRepo.getEmployeeTasks(employeeId);
-    switch (result) {
-      case Success(:final data):
-        emit(EmployeeTasksState.success(data));
-      case Failure(:final failure):
-        emit(EmployeeTasksState.error(failure.messageKey));
-    }
+    result.when(
+      success: (data) => emit(EmployeeTasksState.success(data)),
+      failure: (failure) => emit(EmployeeTasksState.error(failure.messageKey)),
+    );
   }
 
   Future<void> loadTeamMembers() async {
@@ -36,21 +34,26 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
     var departmentId = await sessionStorage.readDepartmentId();
     if (departmentId == null) {
       final profileResult = await actionRepo.getEmployeeProfile(employeeId);
-      if (profileResult case Success(:final data)) {
-        departmentId = data.departmentId;
-        if (departmentId != null) {
-          await sessionStorage.saveDepartmentId(departmentId);
-        }
-      }
+      profileResult.when(
+        success: (data) async {
+          departmentId = data.departmentId;
+          if (departmentId != null) {
+            await sessionStorage.saveDepartmentId(departmentId!);
+          }
+        },
+        failure: (_) {},
+      );
     }
     if (departmentId == null) return;
-    final profile = await actionRepo.getTeamEmployees(departmentId);
-    switch (profile) {
-      case Success(:final data):
+    final profile = await actionRepo.getTeamEmployees(departmentId!);
+    profile.when(
+      success: (data) {
         teamMembers = data.where((member) => member.id != employeeId).toList();
-      case Failure():
+      },
+      failure: (_) {
         teamMembers = const [];
-    }
+      },
+    );
   }
 
   Future<bool> addTask(AddTaskRequestBody body) async {
@@ -101,13 +104,14 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
   Future<void> updateTaskStatus(int taskId, String status) async {
     emit(const EmployeeTasksState.loading());
     final result = await actionRepo.updateTaskStatus(taskId, status);
-    switch (result) {
-      case Success():
+    await result.when(
+      success: (_) async {
         await loadMyTasks();
         emit(const EmployeeTasksState.actionSuccess('tasks.statusUpdated'));
-      case Failure(:final failure):
-        emit(EmployeeTasksState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) async =>
+          emit(EmployeeTasksState.error(failure.messageKey)),
+    );
   }
 
   Future<void> removeTask(int taskId) async {
@@ -118,12 +122,13 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
       employeeId: employeeId,
     );
     final result = await actionRepo.removeTask(requestBody);
-    switch (result) {
-      case Success():
+    await result.when(
+      success: (_) async {
         await loadMyTasks();
         emit(const EmployeeTasksState.actionSuccess('tasks.removed'));
-      case Failure(:final failure):
-        emit(EmployeeTasksState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) async =>
+          emit(EmployeeTasksState.error(failure.messageKey)),
+    );
   }
 }

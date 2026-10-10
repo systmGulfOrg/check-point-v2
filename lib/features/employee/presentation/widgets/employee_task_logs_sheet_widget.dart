@@ -6,7 +6,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/features/employee/data/models/tasks/employee_task_log_model.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employee_tasks_cubit.dart';
 
 class EmployeeTaskLogsSheetWidget extends StatelessWidget {
@@ -42,22 +41,15 @@ class EmployeeTaskLogsSheetWidget extends StatelessWidget {
             ),
           );
         }
-        final errorKey = switch (result) {
-          Failure<List<EmployeeTaskLogModel>>(:final failure) =>
-            failure.messageKey,
-          _ => null,
-        };
-        if (errorKey != null) {
-          return Padding(
-            padding: EdgeInsets.all(24.r),
-            child: Text(errorKey.tr()),
-          );
+        if (result == null) {
+          return const SizedBox.shrink();
         }
-        final logs = switch (result) {
-          Success<List<EmployeeTaskLogModel>>(:final data) => data,
-          _ => const <EmployeeTaskLogModel>[],
-        };
-        return SafeArea(
+        return result.when(
+          failure: (failure) => Padding(
+            padding: EdgeInsets.all(24.r),
+            child: Text(failure.messageKey.tr()),
+          ),
+          success: (logs) => SafeArea(
           child: Padding(
             padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 16.h),
             child: logs.isEmpty
@@ -80,7 +72,8 @@ class EmployeeTaskLogsSheetWidget extends StatelessWidget {
                           ),
                         ),
                     ],
-                  ),
+              ),
+            ),
           ),
         );
       },

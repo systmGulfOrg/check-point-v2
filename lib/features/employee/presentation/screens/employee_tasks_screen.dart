@@ -155,8 +155,8 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                     _ => allTasks,
                   };
 
-                  if (state is EmployeeTasksStateLoading) {
-                    return Expanded(
+                  return switch (state) {
+                    EmployeeTasksStateLoading() => Expanded(
                       child: Skeletonizer(
                         child: RefreshIndicator(
                           color: AppColors.brandPrimary,
@@ -182,78 +182,77 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                           ),
                         ),
                       ),
-                    );
-                  }
-
-                  return Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${filteredTasks.length} tasks',
-                          style: AppTextStyles.font13Regular.copyWith(
-                            color: AppColors.textSecondary,
+                    ),
+                    _ => Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${filteredTasks.length} tasks',
+                            style: AppTextStyles.font13Regular.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
                           ),
-                        ),
-                        hSpace(12),
-                        Expanded(
-                          child: filteredTasks.isEmpty
-                              ? Center(child: Text('employee.tasks.empty'.tr()))
-                              : RefreshIndicator(
-                                  color: AppColors.brandPrimary,
-                                  onRefresh: context
-                                      .read<EmployeeTasksCubit>()
-                                      .loadMyTasks,
-                                  child: ListView.separated(
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(),
-                                    itemCount: filteredTasks.length,
-                                    separatorBuilder: (_, _) => hSpace(12),
-                                    itemBuilder: (context, index) =>
-                                        AnimatedListItemWidget(
-                                          index: index,
-                                          child: EmployeeTaskDetailCardWidget(
-                                            task: filteredTasks[index],
-                                            onStatusToggle: () {
-                                              final task = filteredTasks[index];
-                                              final isDone =
-                                                  task.status.toLowerCase() ==
-                                                      'completed' ||
-                                                  task.status.toLowerCase() ==
-                                                      'done';
-                                              context
-                                                  .read<EmployeeTasksCubit>()
-                                                  .updateTaskStatus(
-                                                    int.tryParse(task.id) ?? 0,
-                                                    isDone
-                                                        ? 'In Progress'
-                                                        : 'Completed',
-                                                  );
-                                            },
-                                            onLogsTap: () => showModalBottomSheet<void>(
-                                              context: context,
-                                              isScrollControlled: true,
-                                              backgroundColor:
-                                                  AppColors.cardBackground,
-                                              builder: (_) => BlocProvider.value(
-                                                value: context
-                                                    .read<EmployeeTasksCubit>(),
-                                                child:
-                                                    EmployeeTaskLogsSheetWidget(
-                                                      taskId:
-                                                          filteredTasks[index]
-                                                              .id,
-                                                    ),
+                          hSpace(12),
+                          Expanded(
+                            child: filteredTasks.isEmpty
+                                ? Center(child: Text('employee.tasks.empty'.tr()))
+                                : RefreshIndicator(
+                                    color: AppColors.brandPrimary,
+                                    onRefresh: context
+                                        .read<EmployeeTasksCubit>()
+                                        .loadMyTasks,
+                                    child: ListView.separated(
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      itemCount: filteredTasks.length,
+                                      separatorBuilder: (_, _) => hSpace(12),
+                                      itemBuilder: (context, index) =>
+                                          AnimatedListItemWidget(
+                                            index: index,
+                                            child: EmployeeTaskDetailCardWidget(
+                                              task: filteredTasks[index],
+                                              onStatusToggle: () {
+                                                final task = filteredTasks[index];
+                                                final isDone =
+                                                    task.status.toLowerCase() ==
+                                                        'completed' ||
+                                                    task.status.toLowerCase() ==
+                                                        'done';
+                                                context
+                                                    .read<EmployeeTasksCubit>()
+                                                    .updateTaskStatus(
+                                                      int.tryParse(task.id) ?? 0,
+                                                      isDone
+                                                          ? 'In Progress'
+                                                          : 'Completed',
+                                                    );
+                                              },
+                                              onLogsTap: () => showModalBottomSheet<void>(
+                                                context: context,
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                    AppColors.cardBackground,
+                                                builder: (_) => BlocProvider.value(
+                                                  value: context
+                                                      .read<EmployeeTasksCubit>(),
+                                                  child:
+                                                      EmployeeTaskLogsSheetWidget(
+                                                        taskId:
+                                                            filteredTasks[index]
+                                                                .id,
+                                                      ),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
+                                    ),
                                   ),
-                                ),
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
-                  );
+                  };
                 },
               ),
             ],

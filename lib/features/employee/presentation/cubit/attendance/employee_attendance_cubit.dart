@@ -62,14 +62,16 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
   Future<void> loadBranches() async {
     emit(const EmployeeAttendanceState.loading());
     final employeeId = await sessionStorage.readUserId();
-    var branchId = await sessionStorage.readBranchId();
+    int? branchId = await sessionStorage.readBranchId();
     if (branchId == null && employeeId != null && employeeId.isNotEmpty) {
       final employeeResult = await attendanceRepo.getEmployeeById(employeeId);
-      if (employeeResult case Success(:final data)) {
-        branchId = data.branchId;
-        if (branchId != null) {
-          await sessionStorage.saveBranchId(branchId);
-        }
+      final id = employeeResult.when(
+        success: (data) => data.branchId,
+        failure: (_) => null,
+      );
+      if (id != null) {
+        branchId = id;
+        await sessionStorage.saveBranchId(id);
       }
     }
     final ApiResult<List<BranchModel>> result;
@@ -82,12 +84,10 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     } else {
       result = await attendanceRepo.getBranches();
     }
-    switch (result) {
-      case Success(:final data):
-        emit(EmployeeAttendanceState.branchesLoaded(data));
-      case Failure(:final failure):
-        emit(EmployeeAttendanceState.error(failure.messageKey));
-    }
+    result.when(
+      success: (data) => emit(EmployeeAttendanceState.branchesLoaded(data)),
+      failure: (failure) => emit(EmployeeAttendanceState.error(failure.messageKey)),
+    );
   }
 
   Future<void> checkIn({
@@ -116,13 +116,14 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
       selectedImageBase64: selectedImageBase64,
     );
 
-    switch (result) {
-      case Success(:final data):
+    result.when(
+      success: (data) {
         todayAttendance = data;
         emit(EmployeeAttendanceState.checkInSuccess(data));
-      case Failure(:final failure):
-        emit(EmployeeAttendanceState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) =>
+          emit(EmployeeAttendanceState.error(failure.messageKey)),
+    );
   }
 
   Future<LatLng?> refreshCurrentLocation() async {
@@ -161,13 +162,14 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
       currentLocation: currentLocation,
     );
 
-    switch (result) {
-      case Success(:final data):
+    result.when(
+      success: (data) {
         todayAttendance = data;
         emit(EmployeeAttendanceState.checkOutSuccess(data));
-      case Failure(:final failure):
-        emit(EmployeeAttendanceState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) =>
+          emit(EmployeeAttendanceState.error(failure.messageKey)),
+    );
   }
 
   List<AdminAttendanceModel> _allHistoryRecords = [];
@@ -177,15 +179,16 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
   Future<void> loadCustomersByType(String type) async {
     emit(const EmployeeAttendanceState.loading());
     final result = await attendanceRepo.getCustomersByType(type);
-    switch (result) {
-      case Success(:final data):
+    result.when(
+      success: (data) {
         if (data.isNotEmpty) {
           selectedTarget = data.first;
         }
         emit(EmployeeAttendanceState.targetsLoaded(data));
-      case Failure(:final failure):
-        emit(EmployeeAttendanceState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) =>
+          emit(EmployeeAttendanceState.error(failure.messageKey)),
+    );
   }
 
   Future<void> loadAttendanceHistory() async {
@@ -193,24 +196,27 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     final employeeId = await sessionStorage.readUserId() ?? '';
     if (employeeId.isNotEmpty) {
       final profileResult = await attendanceRepo.getEmployeeById(employeeId);
-      if (profileResult case Success(:final data)) {
-        employeeProfile = data;
-      }
+      profileResult.when(
+        success: (data) => employeeProfile = data,
+        failure: (_) {},
+      );
     }
     final result = await attendanceRepo.getAttendanceHistory(
       employeeId: employeeId,
     );
-    switch (result) {
-      case Success(:final data):
+    result.when(
+      success: (data) {
         _allHistoryRecords = data;
         todayAttendance = _findTodayRecord(data);
         _applyFilters();
-      case Failure():
+      },
+      failure: (_) {
         // Fallback to empty list instead of showing errors.unknown
         _allHistoryRecords = [];
         todayAttendance = null;
         _applyFilters();
-    }
+      },
+    );
   }
 
   AdminAttendanceModel? _findTodayRecord(List<AdminAttendanceModel> records) {

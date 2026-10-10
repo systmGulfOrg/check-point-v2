@@ -135,12 +135,13 @@ class _EmployeeAttendanceLocationSheetWidgetState
     List<CustomerVisitModel> visits = [];
     try {
       final result = await sl<AdminCustomerVisitsRepo>().getAllVisits();
-      if (result case Success(:final data)) {
-        final todayStr = AppDateFormatter.formatYearMonthDay(DateTime.now());
-        final currentEmpId = profile?.id;
-        final currentEmpName = profile?.name?.trim().toLowerCase();
+      result.when(
+        success: (data) {
+          final todayStr = AppDateFormatter.formatYearMonthDay(DateTime.now());
+          final currentEmpId = profile?.id;
+          final currentEmpName = profile?.name?.trim().toLowerCase();
 
-        visits = data.where((v) {
+          visits = data.where((v) {
           if (v.status == 'cancelled') return false;
           final isToday = v.visitDate == todayStr ||
               v.visitDate?.startsWith(todayStr) == true;
@@ -154,8 +155,10 @@ class _EmployeeAttendanceLocationSheetWidgetState
           return isAttendeeId || isAttendeeName || isCreator;
         }).toList();
 
-        visits.sort((a, b) => _compareVisitTimes(a.visitTime, b.visitTime));
-      }
+          visits.sort((a, b) => _compareVisitTimes(a.visitTime, b.visitTime));
+        },
+        failure: (_) {},
+      );
     } catch (_) {}
 
     if (!mounted) return;
@@ -1023,45 +1026,47 @@ class _EmployeeAttendanceLocationSheetWidgetState
                                       documentUrl: docUrl,
                                     );
                                     if (!mounted) return;
-                                    if (res case Success()) {
-                                      setState(() {
-                                        final updated = matchingVisit.copyWith(
-                                          outcome: outcome,
-                                          status: status,
-                                          notes: notes,
-                                          outcomeDocumentName: docName,
-                                          outcomeDocumentUrl: docUrl,
-                                          documentName:
-                                              matchingVisit.documentName ??
-                                                  docName,
-                                          documentUrl:
-                                              matchingVisit.documentUrl ??
-                                                  docUrl,
-                                        );
-                                        todayVisits = todayVisits
-                                            .map((v) =>
-                                                v.id == updated.id
-                                                    ? updated
-                                                    : v)
-                                            .toList();
-                                        todayScheduledVisit = updated;
-                                      });
-                                      if (context.mounted) {
-                                        CustomSnackBar.showSuccess(
-                                          context,
-                                          message: 'admin.visits.outcomeSuccess'
-                                              .tr(context: context),
-                                        );
-                                      }
-                                    } else if (res
-                                        case Failure(:final failure)) {
-                                      if (context.mounted) {
-                                        CustomSnackBar.showError(
-                                          context,
-                                          message: failure.messageKey.tr(context: context),
-                                        );
-                                      }
-                                    }
+                                    res.when(
+                                      success: (_) {
+                                        setState(() {
+                                          final updated = matchingVisit.copyWith(
+                                            outcome: outcome,
+                                            status: status,
+                                            notes: notes,
+                                            outcomeDocumentName: docName,
+                                            outcomeDocumentUrl: docUrl,
+                                            documentName:
+                                                matchingVisit.documentName ??
+                                                    docName,
+                                            documentUrl:
+                                                matchingVisit.documentUrl ??
+                                                    docUrl,
+                                          );
+                                          todayVisits = todayVisits
+                                              .map((v) =>
+                                                  v.id == updated.id
+                                                      ? updated
+                                                      : v)
+                                              .toList();
+                                          todayScheduledVisit = updated;
+                                        });
+                                        if (context.mounted) {
+                                          CustomSnackBar.showSuccess(
+                                            context,
+                                            message: 'admin.visits.outcomeSuccess'
+                                                .tr(context: context),
+                                          );
+                                        }
+                                      },
+                                      failure: (failure) {
+                                        if (context.mounted) {
+                                          CustomSnackBar.showError(
+                                            context,
+                                            message: failure.messageKey.tr(context: context),
+                                          );
+                                        }
+                                      },
+                                    );
                                   },
                                 ),
                               );

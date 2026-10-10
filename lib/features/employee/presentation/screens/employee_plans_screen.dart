@@ -73,8 +73,8 @@ class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
                     _ => const <EmployeePlanData>[],
                   };
 
-                  if (state is EmployeePlansStateLoading) {
-                    return Expanded(
+                  return switch (state) {
+                    EmployeePlansStateLoading() => Expanded(
                       child: Skeletonizer(
                         child: RefreshIndicator(
                           color: AppColors.brandPrimary,
@@ -99,44 +99,43 @@ class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
                           ),
                         ),
                       ),
-                    );
-                  }
-
-                  return Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${plans.length} plans',
-                          style: AppTextStyles.font13Regular.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                        hSpace(12),
-                        Expanded(
-                          child: plans.isEmpty
-                              ? Center(child: Text('employee.plans.empty'.tr()))
-                              : RefreshIndicator(
-                                  color: AppColors.brandPrimary,
-                                  onRefresh: context
-                                      .read<EmployeePlansCubit>()
-                                      .loadMyPlans,
-                                  child: ListView.separated(
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(),
-                                    itemCount: plans.length,
-                                    separatorBuilder: (_, _) => hSpace(12),
-                                    itemBuilder: (context, index) {
-                                      return EmployeePlanDetailCardWidget(
-                                        plan: plans[index],
-                                      );
-                                    },
-                                  ),
-                                ),
-                        ),
-                      ],
                     ),
-                  );
+                    _ => Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${plans.length} plans',
+                            style: AppTextStyles.font13Regular.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                          hSpace(12),
+                          Expanded(
+                            child: plans.isEmpty
+                                ? Center(child: Text('employee.plans.empty'.tr()))
+                                : RefreshIndicator(
+                                    color: AppColors.brandPrimary,
+                                    onRefresh: context
+                                        .read<EmployeePlansCubit>()
+                                        .loadMyPlans,
+                                    child: ListView.separated(
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      itemCount: plans.length,
+                                      separatorBuilder: (_, _) => hSpace(12),
+                                      itemBuilder: (context, index) {
+                                        return EmployeePlanDetailCardWidget(
+                                          plan: plans[index],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  };
                 },
               ),
             ],

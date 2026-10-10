@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
+import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/features/employee/data/services/odoo_timeoff_service.dart';
 import 'employee_odoo_dashboard_state.dart';
 
@@ -40,11 +41,8 @@ class EmployeeOdooDashboardCubit extends Cubit<EmployeeOdooDashboardState> {
         ),
       );
     } catch (e) {
-      emit(
-        EmployeeOdooDashboardState.error(
-          e.toString().replaceAll('Exception: ', ''),
-        ),
-      );
+      final failure = ApiFailureMapper.map(e);
+      emit(EmployeeOdooDashboardState.error(failure.messageKey));
     }
   }
 
