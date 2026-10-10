@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/auth/biometric_auth_service.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_response_model.dart';
 import 'package:check_point_v2/features/auth/domain/use_cases/login_use_case.dart';
 import 'login_state.dart';
@@ -32,19 +31,21 @@ class LoginCubit extends Cubit<LoginState> {
       role: role,
       enableBiometricLogin: enableBiometricLogin,
     );
-    switch (result) {
-      case Success<LoginResponseModel>(:final data):
+    await result.when(
+      success: (data) async {
         await authSessionStorage.dismissAccountRequestForMobileId(
           loginUseCase.deviceIdentityProvider.mobileId,
         );
         emit(LoginState.success(data, selectedRole: role));
-      case Failure<LoginResponseModel>(:final failure):
+      },
+      failure: (failure) async {
         if (failure.messageKey == 'errors.deviceLoginAccess') {
           emit(const LoginState.deviceTransferRequired());
         } else {
           emit(LoginState.error(failure.messageKey));
         }
-    }
+      },
+    );
   }
 
   Future<void> requestDeviceTransfer({

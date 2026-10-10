@@ -41,13 +41,10 @@ class _EditProfileSheetWidgetState extends State<EditProfileSheetWidget> {
   void initState() {
     super.initState();
     final state = context.read<AuthProfileCubit>().state;
-    String currentName = '';
-    String currentUsername = '';
-
-    if (state is AuthProfileSuccess) {
-      currentName = state.name;
-      currentUsername = state.username;
-    }
+    final (currentName, currentUsername) = switch (state) {
+      AuthProfileSuccess(:final name, :final username) => (name, username),
+      _ => ('', ''),
+    };
 
     nameController = TextEditingController(text: currentName);
     usernameController = TextEditingController(text: currentUsername);
