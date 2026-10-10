@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
@@ -25,6 +26,36 @@ class EmployeeClockScreen extends StatefulWidget {
 }
 
 class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
+  static const _dummyAttendanceRecords = [
+    EmployeeAttendanceRecordData(
+      date: '2026-10-10',
+      checkIn: '09:00 AM',
+      checkOut: '05:00 PM',
+      area: 'Main Office',
+      status: 'On Time',
+      isLate: false,
+      isEarly: false,
+    ),
+    EmployeeAttendanceRecordData(
+      date: '2026-10-09',
+      checkIn: '09:15 AM',
+      checkOut: '05:00 PM',
+      area: 'Main Office',
+      status: 'Late',
+      isLate: true,
+      isEarly: false,
+    ),
+    EmployeeAttendanceRecordData(
+      date: '2026-10-08',
+      checkIn: '09:00 AM',
+      checkOut: '04:45 PM',
+      area: 'Main Office',
+      status: 'Early Leave',
+      isLate: false,
+      isEarly: true,
+    ),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -214,24 +245,27 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                       isArabic: isArabic,
                     );
 
-                    return EmployeeClockCardWidget(
-                      policyText: policyText,
-                      checkInTime: AppDateFormatter.formatTimeString(
-                        attendance?.clockInTime,
-                        isArabic: isArabic,
+                    return Skeletonizer(
+                      enabled: state is EmployeeAttendanceStateLoading,
+                      child: EmployeeClockCardWidget(
+                        policyText: policyText,
+                        checkInTime: AppDateFormatter.formatTimeString(
+                          attendance?.clockInTime,
+                          isArabic: isArabic,
+                        ),
+                        checkOutTime: AppDateFormatter.formatTimeString(
+                          attendance?.clockOutTime,
+                          isArabic: isArabic,
+                        ),
+                        isCheckedIn: isCheckedIn,
+                        hasCheckedOut: hasCheckedOut,
+                        workedHours: attendance?.dayHours,
+                        onToggleCheckInOut: _toggleCheckInOut,
+                        isTodayHoliday: isTodayHoliday,
+                        isTodayWeeklyOff: isTodayWeeklyOff,
+                        holidayGreeting: holidayGreeting,
+                        holidayName: holidayName,
                       ),
-                      checkOutTime: AppDateFormatter.formatTimeString(
-                        attendance?.clockOutTime,
-                        isArabic: isArabic,
-                      ),
-                      isCheckedIn: isCheckedIn,
-                      hasCheckedOut: hasCheckedOut,
-                      workedHours: attendance?.dayHours,
-                      onToggleCheckInOut: _toggleCheckInOut,
-                      isTodayHoliday: isTodayHoliday,
-                      isTodayWeeklyOff: isTodayWeeklyOff,
-                      holidayGreeting: holidayGreeting,
-                      holidayName: holidayName,
                     );
                   },
                 ),
@@ -265,6 +299,38 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                       EmployeeAttendanceState
                     >(
                       builder: (context, state) {
+                        if (state is EmployeeAttendanceStateLoading) {
+                          return Skeletonizer(
+                            enabled: true,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.cardBackground,
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: Column(
+                                children: [
+                                  for (
+                                    int i = 0;
+                                    i < _dummyAttendanceRecords.length;
+                                    i++
+                                  ) ...[
+                                    EmployeeAttendanceRecordCardWidget(
+                                      record: _dummyAttendanceRecords[i],
+                                    ),
+                                    if (i < _dummyAttendanceRecords.length - 1)
+                                      const Divider(
+                                        height: 1,
+                                        thickness: 1,
+                                        color: AppColors.border,
+                                      ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+
                         final historyRecords = switch (state) {
                           EmployeeAttendanceStateHistoryLoaded(
                             :final history,
