@@ -32,9 +32,9 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
     cubit.loadNativeLeaveTypes();
   }
 
-  void _showApplyLeaveSheet(BuildContext context) {
+  Future<void> _showApplyLeaveSheet(BuildContext context) async {
     final cubit = context.read<EmployeeLeaveRequestsCubit>();
-    showModalBottomSheet<void>(
+    await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.transparent,
@@ -63,6 +63,9 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
         ),
       ),
     );
+    if (context.mounted) {
+      await cubit.loadLeaveRequests();
+    }
   }
 
   @override

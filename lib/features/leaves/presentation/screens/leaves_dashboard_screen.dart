@@ -37,9 +37,9 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
     context.read<LeavesCubit>().loadLeavesData();
   }
 
-  void _showApplyLeaveSheet(BuildContext context) {
+  Future<void> _showApplyLeaveSheet(BuildContext context) async {
     final cubit = context.read<LeavesCubit>();
-    showModalBottomSheet<void>(
+    await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.transparent,
@@ -76,10 +76,14 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
             },
       ),
     );
+    if (context.mounted) {
+      await context.read<LeavesCubit>().loadLeavesData();
+    }
   }
 
-  void _showApplyPermissionSheet(BuildContext context) {
-    showModalBottomSheet<void>(
+  Future<void> _showApplyPermissionSheet(BuildContext context) async {
+    final cubit = context.read<LeavesCubit>();
+    await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.transparent,
@@ -92,11 +96,13 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
               context,
               message: 'permissions.request.success'.tr(),
             );
-            context.read<LeavesCubit>().loadLeavesData();
           }
         },
       ),
     );
+    if (context.mounted) {
+      await cubit.loadLeavesData();
+    }
   }
 
   @override

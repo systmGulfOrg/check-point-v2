@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
 import '../../data/models/leave_balance_model.dart';
 import '../../data/models/leave_request_body.dart';
 import '../../data/models/leave_request_model.dart';
@@ -93,42 +94,42 @@ class LeavesCubit extends Cubit<LeavesState> {
   Future<void> submitLeave(LeaveRequestBody body) async {
     emit(const LeavesState.submitting());
     final result = await leavesRepo.submitLeaveRequest(body);
-    result.when(
-      success: (_) {
+    switch (result) {
+      case Success():
         emit(const LeavesState.submitSuccess());
-        unawaited(loadLeavesData());
-      },
-      failure: (f) => emit(LeavesState.error(f.messageKey)),
-    );
+        await loadLeavesData();
+      case Failure(:final failure):
+        emit(LeavesState.error(failure.messageKey));
+    }
   }
 
   Future<void> cancelLeave(String id) async {
     emit(const LeavesState.loading());
     final result = await leavesRepo.cancelLeaveRequest(id);
-    result.when(
-      success: (_) {
+    switch (result) {
+      case Success():
         emit(
           const LeavesState.actionSuccess(
             'Leave request cancelled successfully',
           ),
         );
-        unawaited(loadLeavesData());
-      },
-      failure: (f) => emit(LeavesState.error(f.messageKey)),
-    );
+        await loadLeavesData();
+      case Failure(:final failure):
+        emit(LeavesState.error(failure.messageKey));
+    }
   }
 
   Future<void> deleteLeaveRequest(dynamic id) async {
     emit(const LeavesState.loading());
     final result = await leavesRepo.deleteLeaveRequest(id);
-    result.when(
-      success: (_) {
+    switch (result) {
+      case Success():
         emit(
           const LeavesState.actionSuccess('Leave request deleted successfully'),
         );
-        unawaited(loadLeavesData());
-      },
-      failure: (f) => emit(LeavesState.error(f.messageKey)),
-    );
+        await loadLeavesData();
+      case Failure(:final failure):
+        emit(LeavesState.error(failure.messageKey));
+    }
   }
 }
