@@ -141,10 +141,11 @@ class _AdminEmployeeProfileEditFormWidgetState
       if (result != null && result.files.single.path != null) {
         final filePath = result.files.single.path!;
         final bytes = await File(filePath).readAsBytes();
-        final base64String = base64Encode(bytes);
+        final base64String =
+            await AppImageCompressor.compressAndEncodeBase64(bytes);
         setState(() {
           _selectedPhotoPath = filePath;
-          _photoBase64 = 'data:image/jpeg;base64,$base64String';
+          _photoBase64 = base64String;
         });
       }
     } catch (_) {}
@@ -220,7 +221,10 @@ class _AdminEmployeeProfileEditFormWidgetState
         mobileId: _mobileIdController.text.trim().isNotEmpty
             ? _mobileIdController.text.trim()
             : null,
-        imageUrl: _photoBase64 ?? widget.employee.imageUrl,
+        imageUrl: _photoBase64 ??
+            await AppImageCompressor.compressExistingBase64(
+              widget.employee.imageUrl,
+            ),
         workSystem: _selectedWorkSystem,
         remoteWorkPolicyId: _selectedRemoteWorkPolicyId,
         departmentId: _selectedDepartmentId,

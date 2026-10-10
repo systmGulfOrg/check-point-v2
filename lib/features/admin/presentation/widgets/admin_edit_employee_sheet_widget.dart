@@ -135,10 +135,11 @@ class _AdminEditEmployeeSheetWidgetState
       if (result != null && result.files.single.path != null) {
         final filePath = result.files.single.path!;
         final bytes = await File(filePath).readAsBytes();
-        final base64String = base64Encode(bytes);
+        final base64String =
+            await AppImageCompressor.compressAndEncodeBase64(bytes);
         setState(() {
           _selectedPhotoPath = filePath;
-          _photoBase64 = 'data:image/jpeg;base64,$base64String';
+          _photoBase64 = base64String;
         });
       }
     } catch (_) {}
@@ -174,7 +175,7 @@ class _AdminEditEmployeeSheetWidgetState
     );
   }
 
-  void _handleSave() {
+  Future<void> _handleSave() async {
     if (_nameController.text.trim().isEmpty) return;
     if (_selectedWorkSystem != 'onsite' &&
         _selectedRemoteWorkPolicyId == null) {
@@ -190,6 +191,11 @@ class _AdminEditEmployeeSheetWidgetState
         : _selectedRoles.contains('Supervisor')
             ? 'Supervisor'
             : 'Employee';
+
+    final resolvedImageUrl = _photoBase64 ??
+        await AppImageCompressor.compressExistingBase64(
+          widget.employee.imageUrl,
+        );
 
     widget.onSave(
       EditEmployeeRequestBody(
@@ -215,7 +221,7 @@ class _AdminEditEmployeeSheetWidgetState
         employeeCode: _employeeCodeController.text.trim().isNotEmpty
             ? _employeeCodeController.text.trim()
             : null,
-        imageUrl: _photoBase64 ?? widget.employee.imageUrl,
+        imageUrl: resolvedImageUrl,
         role: primaryRole,
         roles: _selectedRoles.toList(),
         customPermissions: _selectedPermissions.toList(),
@@ -230,7 +236,9 @@ class _AdminEditEmployeeSheetWidgetState
         leaveBalance: int.tryParse(_leaveBalanceController.text.trim()),
       ),
     );
-    Navigator.pop(context);
+    if (mounted) {
+      Navigator.pop(context);
+    }
   }
 
   @override
