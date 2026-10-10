@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/routes/routes.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart';
-import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_state.dart';
 import 'supervisor_alert_banner_widget.dart';
 
 class SupervisorAlertBannerBlocBuilderWidget extends StatelessWidget {
@@ -11,25 +10,19 @@ class SupervisorAlertBannerBlocBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<
-      SupervisorLeaveRequestsCubit,
-      SupervisorLeaveRequestsState
-    >(
-      builder: (context, state) {
-        return switch (state) {
-          SupervisorLeaveRequestsSuccess(:final requests) =>
-            requests.any((r) => r.status?.toLowerCase() == 'pending')
-                ? SupervisorAlertBannerWidget(
-                    messageKey: 'supervisor.dashboard.alertPending',
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      AppRoutes.supervisorLeaveManagement,
-                    ),
-                  )
-                : const SizedBox.shrink(),
-          _ => const SizedBox.shrink(),
-        };
-      },
+    final cubit = context.watch<SupervisorLeaveRequestsCubit>();
+    final hasActionable = cubit.allRequests.any(cubit.isActionableForMe);
+
+    if (!hasActionable) {
+      return const SizedBox.shrink();
+    }
+
+    return SupervisorAlertBannerWidget(
+      messageKey: 'supervisor.dashboard.alertPending',
+      onTap: () => Navigator.pushNamed(
+        context,
+        AppRoutes.supervisorLeaveManagement,
+      ),
     );
   }
 }

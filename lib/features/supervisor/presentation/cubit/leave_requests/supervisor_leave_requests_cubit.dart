@@ -24,9 +24,56 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
   String currentEmployeeId = '';
   String currentUserName = '';
 
-  int get pendingCount => allRequests
-      .where((request) => request.status?.toLowerCase() == 'pending')
-      .length;
+  bool isActionableForMe(AdminLeaveRequestModel request) {
+    final status = request.status?.toLowerCase() ?? '';
+    if (status != 'pending') return false;
+
+    final isOwnRequest =
+        (currentUserId.isNotEmpty && request.employeeId == currentUserId) ||
+        (currentEmployeeId.isNotEmpty &&
+            request.employeeId == currentEmployeeId) ||
+        (currentUserName.isNotEmpty &&
+            request.employeeName?.trim().toLowerCase() ==
+                currentUserName.trim().toLowerCase());
+    if (isOwnRequest) return false;
+
+    final directManagerId = request.directManagerId?.trim().toLowerCase();
+    final directManagerName = request.directManagerName?.trim().toLowerCase();
+    final currentEmp = currentEmployeeId.trim().toLowerCase();
+    final currentUsr = currentUserId.trim().toLowerCase();
+    final currentNm = currentUserName.trim().toLowerCase();
+
+    if (directManagerId != null && directManagerId.isNotEmpty) {
+      if (currentEmp.isNotEmpty && directManagerId == currentEmp) return true;
+      if (currentUsr.isNotEmpty && directManagerId == currentUsr) return true;
+      if (currentNm.isNotEmpty &&
+          directManagerName != null &&
+          directManagerName.isNotEmpty) {
+        if (directManagerName == currentNm ||
+            directManagerName.contains(currentNm) ||
+            currentNm.contains(directManagerName)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    if (directManagerName != null &&
+        directManagerName.isNotEmpty &&
+        directManagerName != '-') {
+      if (currentNm.isNotEmpty &&
+          (directManagerName == currentNm ||
+              directManagerName.contains(currentNm) ||
+              currentNm.contains(directManagerName))) {
+        return true;
+      }
+      return false;
+    }
+
+    return userRole == 'Admin' || userRole == 'Supervisor';
+  }
+
+  int get pendingCount => allRequests.where(isActionableForMe).length;
 
   Future<void> initRole() async {
     userRole = await sessionStorage.readUserRole() ?? 'Employee';
