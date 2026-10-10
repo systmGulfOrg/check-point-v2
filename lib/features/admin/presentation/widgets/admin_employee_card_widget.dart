@@ -43,7 +43,7 @@ class AdminEmployeeCardWidget extends StatelessWidget {
       return AppColors.softYellowBackground;
     }
     if (lower.contains('hr')) {
-      return const Color(0xFFF3E8FF);
+      return AppColors.softPurpleBackground;
     }
     return AppColors.softGreenBackground;
   }
@@ -57,7 +57,7 @@ class AdminEmployeeCardWidget extends StatelessWidget {
       return AppColors.warningOrange;
     }
     if (lower.contains('hr')) {
-      return const Color(0xFF7E22CE);
+      return AppColors.purpleText;
     }
     return AppColors.success;
   }

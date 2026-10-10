@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_customer_visits_repo.dart';
 import 'admin_customer_visits_state.dart';
@@ -13,23 +12,19 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
   Future<void> loadCustomerVisits(String customerId) async {
     emit(const AdminCustomerVisitsState.loading());
     final result = await visitsRepo.getCustomerVisits(customerId);
-    switch (result) {
-      case Success(:final data):
-        emit(AdminCustomerVisitsState.success(data));
-      case Failure(:final failure):
-        emit(AdminCustomerVisitsState.error(failure.messageKey));
-    }
+    result.when(
+      success: (data) => emit(AdminCustomerVisitsState.success(data)),
+      failure: (failure) => emit(AdminCustomerVisitsState.error(failure.messageKey)),
+    );
   }
 
   Future<void> loadAllVisits() async {
     emit(const AdminCustomerVisitsState.loading());
     final result = await visitsRepo.getAllVisits();
-    switch (result) {
-      case Success(:final data):
-        emit(AdminCustomerVisitsState.success(data));
-      case Failure(:final failure):
-        emit(AdminCustomerVisitsState.error(failure.messageKey));
-    }
+    result.when(
+      success: (data) => emit(AdminCustomerVisitsState.success(data)),
+      failure: (failure) => emit(AdminCustomerVisitsState.error(failure.messageKey)),
+    );
   }
 
   String? lastErrorKey;
@@ -38,22 +33,21 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
     final previous = state;
     emit(const AdminCustomerVisitsState.loading());
     final result = await visitsRepo.addVisitPlan(visit);
-    switch (result) {
-      case Success():
+    return result.when(
+      success: (_) async {
         if (visit.customerId != null && visit.customerId!.isNotEmpty) {
           await loadCustomerVisits(visit.customerId!);
         } else {
           await loadAllVisits();
         }
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         lastErrorKey = failure.messageKey;
         emit(previous);
         return false;
-      default:
-        emit(previous);
-        return false;
-    }
+      },
+    );
   }
 
   Future<bool> updateVisitOutcome({
@@ -74,22 +68,21 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
       documentName: documentName,
       documentUrl: documentUrl,
     );
-    switch (result) {
-      case Success():
+    return result.when(
+      success: (_) async {
         if (customerId.isNotEmpty) {
           await loadCustomerVisits(customerId);
         } else {
           await loadAllVisits();
         }
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         lastErrorKey = failure.messageKey;
         emit(previous);
         return false;
-      default:
-        emit(previous);
-        return false;
-    }
+      },
+    );
   }
 
   Future<bool> cancelVisit({
@@ -102,22 +95,21 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
       visitId: visitId,
       reason: reason,
     );
-    switch (result) {
-      case Success():
+    return result.when(
+      success: (_) async {
         if (customerId.isNotEmpty) {
           await loadCustomerVisits(customerId);
         } else {
           await loadAllVisits();
         }
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         lastErrorKey = failure.messageKey;
         emit(previous);
         return false;
-      default:
-        emit(previous);
-        return false;
-    }
+      },
+    );
   }
 
   Future<bool> rescheduleVisit({
@@ -134,21 +126,20 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
       visitTime: visitTime,
       reason: reason,
     );
-    switch (result) {
-      case Success():
+    return result.when(
+      success: (_) async {
         if (customerId.isNotEmpty) {
           await loadCustomerVisits(customerId);
         } else {
           await loadAllVisits();
         }
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         lastErrorKey = failure.messageKey;
         emit(previous);
         return false;
-      default:
-        emit(previous);
-        return false;
-    }
+      },
+    );
   }
 }

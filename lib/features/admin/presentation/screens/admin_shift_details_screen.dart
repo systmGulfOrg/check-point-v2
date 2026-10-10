@@ -69,7 +69,7 @@ class AdminShiftDetailsScreen extends StatelessWidget {
                     success: (shifts, policies) {
                       if (policies.isEmpty) {
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 24),
+                          padding: EdgeInsets.symmetric(vertical: 24.h),
                           child: Center(
                             child: Text(
                               'admin.shifts.policies.empty'.tr(

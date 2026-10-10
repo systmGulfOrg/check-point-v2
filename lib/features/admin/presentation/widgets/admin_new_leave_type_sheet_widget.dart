@@ -130,29 +130,10 @@ class _AdminNewLeaveTypeSheetWidgetState
                 style: AppTextStyles.font13SemiBold,
               ),
               hSpace(6),
-              TextFormField(
+              CustomTextFormField(
                 controller: _typeNameController,
-                decoration: InputDecoration(
-                  hintText: 'admin.leaveManagement.typeNameHint'.tr(
-                    context: context,
-                  ),
-                  hintStyle: AppTextStyles.font14Regular.copyWith(
-                    color: AppColors.placeholder,
-                  ),
-                  filled: true,
-                  fillColor: AppColors.cardBackground,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 14.w,
-                    vertical: 12.h,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                    borderSide: BorderSide(color: AppColors.border),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                    borderSide: BorderSide(color: AppColors.border),
-                  ),
+                hintText: 'admin.leaveManagement.typeNameHint'.tr(
+                  context: context,
                 ),
                 validator: AppValidators.required(
                   message: 'validation.required'.tr(context: context),
@@ -165,30 +146,11 @@ class _AdminNewLeaveTypeSheetWidgetState
                 style: AppTextStyles.font13SemiBold,
               ),
               hSpace(6),
-              TextFormField(
+              CustomTextFormField(
                 controller: _maxDaysController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'admin.leaveManagement.maxDaysHint'.tr(
-                    context: context,
-                  ),
-                  hintStyle: AppTextStyles.font14Regular.copyWith(
-                    color: AppColors.placeholder,
-                  ),
-                  filled: true,
-                  fillColor: AppColors.cardBackground,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 14.w,
-                    vertical: 12.h,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                    borderSide: BorderSide(color: AppColors.border),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                    borderSide: BorderSide(color: AppColors.border),
-                  ),
+                hintText: 'admin.leaveManagement.maxDaysHint'.tr(
+                  context: context,
                 ),
                 validator: AppValidators.positiveNumber(
                   context: context,

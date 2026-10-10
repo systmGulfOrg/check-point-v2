@@ -106,7 +106,7 @@ class AdminPlansScreen extends StatelessWidget {
                           hSpace(12),
                           if (plans.isEmpty)
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 32),
+                              padding: EdgeInsets.symmetric(vertical: 32.h),
                               child: Center(
                                 child: Text(
                                   'admin.requests.emptyAll'.tr(

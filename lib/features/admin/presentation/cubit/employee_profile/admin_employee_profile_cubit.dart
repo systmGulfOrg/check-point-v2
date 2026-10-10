@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/device/pending_device_model.dart';
@@ -38,15 +37,18 @@ class AdminEmployeeProfileCubit extends Cubit<AdminEmployeeProfileState> {
     emit(const AdminEmployeeProfileState.loading());
 
     final profileResult = await attendanceRepo.getEmployeeById(employeeId);
-    if (profileResult is Success<EmployeeModel>) {
-      employee = profileResult.data;
-    }
+    profileResult.when(
+      success: (data) => employee = data,
+      failure: (_) {},
+    );
 
     if (employee == null) {
-      if (profileResult case Failure(:final failure)) {
-        emit(AdminEmployeeProfileState.error(failure.messageKey));
-        return;
-      }
+      profileResult.when(
+        success: (_) {},
+        failure: (failure) =>
+            emit(AdminEmployeeProfileState.error(failure.messageKey)),
+      );
+      return;
     }
 
     // Load Devices
@@ -87,9 +89,10 @@ class AdminEmployeeProfileCubit extends Cubit<AdminEmployeeProfileState> {
       pageIndex: 0,
       itemCount: 150,
     );
-    if (attendanceResult is Success<List<AdminAttendanceModel>>) {
-      allAttendance = attendanceResult.data;
-    }
+    attendanceResult.when(
+      success: (data) => allAttendance = data,
+      failure: (_) {},
+    );
 
     _computeAndEmit();
   }

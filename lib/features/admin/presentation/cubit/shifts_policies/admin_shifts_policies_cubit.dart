@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/police_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_shifts_policies_repo.dart';
@@ -17,8 +16,8 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
   Future<void> load({int? shiftId}) async {
     emit(const AdminShiftsPoliciesState.loading());
     final result = await shiftsPoliciesRepo.getShifts();
-    switch (result) {
-      case Success(:final data):
+    await result.when(
+      success: (data) async {
         shifts = data;
         final selectedShiftId =
             shiftId ?? (shifts.isNotEmpty ? shifts.first.id : null);
@@ -32,84 +31,86 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
             ),
           );
         }
-      case Failure(:final failure):
-        emit(AdminShiftsPoliciesState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) async =>
+          emit(AdminShiftsPoliciesState.error(failure.messageKey)),
+    );
   }
 
   Future<void> loadPoliciesForShift(int shiftId) async {
     final result = await shiftsPoliciesRepo.getPoliciesByShift(
       shiftId: shiftId,
     );
-    switch (result) {
-      case Success(:final data):
+    result.when(
+      success: (data) {
         policies = data;
         emit(
           AdminShiftsPoliciesState.success(shifts: shifts, policies: policies),
         );
-      case Failure(:final failure):
-        emit(AdminShiftsPoliciesState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) =>
+          emit(AdminShiftsPoliciesState.error(failure.messageKey)),
+    );
   }
 
   Future<bool> addShift(AddShiftRequestBody body) async {
     emit(const AdminShiftsPoliciesState.loading());
     final result = await shiftsPoliciesRepo.addShift(body);
-    switch (result) {
-      case Success():
+    return result.when(
+      success: (_) async {
         await load();
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
-      default:
-        return false;
-    }
+      },
+    );
   }
 
   Future<bool> editShift(int id, AddShiftRequestBody body) async {
     emit(const AdminShiftsPoliciesState.loading());
     final result = await shiftsPoliciesRepo.editShift(id: id, body: body);
-    switch (result) {
-      case Success():
+    return result.when(
+      success: (_) async {
         await load();
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
-      default:
-        return false;
-    }
+      },
+    );
   }
 
   Future<bool> deleteShift(int id) async {
     emit(const AdminShiftsPoliciesState.loading());
     final result = await shiftsPoliciesRepo.deleteShift(id: id);
-    switch (result) {
-      case Success():
+    return result.when(
+      success: (_) async {
         await load();
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
-      default:
-        return false;
-    }
+      },
+    );
   }
 
   Future<bool> addPolicy(AddPoliceRequestBody body) async {
     emit(const AdminShiftsPoliciesState.loading());
     final result = await shiftsPoliciesRepo.addPolicy(body);
-    switch (result) {
-      case Success():
+    return result.when(
+      success: (_) async {
         await loadPoliciesForShift(body.shiftId);
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
-      default:
-        return false;
-    }
+      },
+    );
   }
 
   Future<bool> assignEmployees({
@@ -121,16 +122,16 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     final result = await shiftsPoliciesRepo.assignPolicy(
       AssignPoliceRequestBody(policyId: policyId, employeeIds: employeeIds),
     );
-    switch (result) {
-      case Success():
+    return result.when(
+      success: (_) async {
         await loadPoliciesForShift(shiftId);
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
-      default:
-        return false;
-    }
+      },
+    );
   }
 
   Future<bool> transferEmployee({
@@ -142,37 +143,42 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     final removeResult = await shiftsPoliciesRepo.removeAssignPolicy(
       RemoveAssignPolicyRequestBody(employeeId: employeeId),
     );
-    if (removeResult case Failure(:final failure)) {
-      emit(AdminShiftsPoliciesState.error(failure.messageKey));
-      return false;
-    }
+    final removeSucceeded = removeResult.when(
+      success: (_) => true,
+      failure: (failure) {
+        emit(AdminShiftsPoliciesState.error(failure.messageKey));
+        return false;
+      },
+    );
+    if (!removeSucceeded) return false;
+
     final assignResult = await shiftsPoliciesRepo.assignPolicy(
       AssignPoliceRequestBody(policyId: policyId, employeeIds: [employeeId]),
     );
-    switch (assignResult) {
-      case Success():
+    return assignResult.when(
+      success: (_) async {
         await loadPoliciesForShift(shiftId);
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
-      default:
-        return false;
-    }
+      },
+    );
   }
 
   Future<bool> deletePolicy(int id, int shiftId) async {
     emit(const AdminShiftsPoliciesState.loading());
     final result = await shiftsPoliciesRepo.deletePolicy(id: id);
-    switch (result) {
-      case Success():
+    return result.when(
+      success: (_) async {
         await loadPoliciesForShift(shiftId);
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         emit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
-      default:
-        return false;
-    }
+      },
+    );
   }
 }

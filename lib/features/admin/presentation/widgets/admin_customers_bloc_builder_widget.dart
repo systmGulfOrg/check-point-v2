@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
@@ -177,7 +178,7 @@ class _AdminCustomersBlocBuilderWidgetState
           AdminCustomersInitial() => const AdminLocationsSkeletonWidget(),
           AdminCustomersLoading() => const AdminLocationsSkeletonWidget(),
           AdminCustomersError(:final messageKey) => Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(24.r),
             child: Text(
               messageKey.tr(context: context),
               style: AppTextStyles.font14Regular,
@@ -187,7 +188,7 @@ class _AdminCustomersBlocBuilderWidgetState
             final visibleCustomers = _filterCustomers(customers);
             return visibleCustomers.isEmpty
                 ? Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(24.r),
                     child: Text(
                       'admin.locations.empty'.tr(context: context),
                       style: AppTextStyles.font14Regular,

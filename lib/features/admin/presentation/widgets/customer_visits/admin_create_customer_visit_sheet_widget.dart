@@ -94,15 +94,18 @@ class _AdminCreateCustomerVisitSheetWidgetState
     setState(() => isLoadingCustomers = true);
     final result = await sl<AdminLocationsRepo>().getCustomersByType('Customer');
     if (!mounted) return;
-    if (result case Success(:final data)) {
-      setState(() {
-        customersList = data;
-        selectedCustomer ??= data.firstOrNull;
-        isLoadingCustomers = false;
-      });
-    } else {
-      setState(() => isLoadingCustomers = false);
-    }
+    result.when(
+      success: (data) {
+        setState(() {
+          customersList = data;
+          selectedCustomer ??= data.firstOrNull;
+          isLoadingCustomers = false;
+        });
+      },
+      failure: (_) {
+        setState(() => isLoadingCustomers = false);
+      },
+    );
   }
 
   Future<void> _loadSystemEmployees() async {
@@ -112,15 +115,17 @@ class _AdminCreateCustomerVisitSheetWidgetState
       pageSize: 100,
     );
     if (!mounted) return;
-    switch (result) {
-      case Success(:final data):
+    result.when(
+      success: (data) {
         setState(() {
           availableEmployees = data;
           isLoadingEmployees = false;
         });
-      case Failure():
+      },
+      failure: (_) {
         setState(() => isLoadingEmployees = false);
-    }
+      },
+    );
   }
 
   @override
@@ -226,8 +231,8 @@ class _AdminCreateCustomerVisitSheetWidgetState
         context: context,
         builder: (ctx) => CustomDialogWidget(
           icon: Icons.warning_amber_rounded,
-          iconColor: const Color(0xFFD97706),
-          iconBackgroundColor: const Color(0xFFFEF3C7),
+          iconColor: AppColors.amberStatus,
+          iconBackgroundColor: AppColors.softYellowBackground,
           title: 'تنبيه موعد الزيارة',
           message:
               'التاريخ المحدد يوافق عطلة أسبوعية (إجازة).\nهل ترغب في المتابعة وتأكيد جدولة زيارة العميل في يوم الإجازة؟',

@@ -211,20 +211,20 @@ class _AdminMyVisitsBlocBuilderWidgetState
     return BlocBuilder<AdminCustomerVisitsCubit, AdminCustomerVisitsState>(
       builder: (context, state) {
         return state.when(
-          initial: () => const Center(
+          initial: () => Center(
             child: Padding(
-              padding: EdgeInsets.all(32),
-              child: CircularProgressIndicator(),
+              padding: EdgeInsets.all(32.r),
+              child: const CircularProgressIndicator(),
             ),
           ),
-          loading: () => const Center(
+          loading: () => Center(
             child: Padding(
-              padding: EdgeInsets.all(32),
-              child: CircularProgressIndicator(),
+              padding: EdgeInsets.all(32.r),
+              child: const CircularProgressIndicator(),
             ),
           ),
           error: (message) => Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(24.r),
             child: Center(
               child: Text(
                 message.tr(context: context),

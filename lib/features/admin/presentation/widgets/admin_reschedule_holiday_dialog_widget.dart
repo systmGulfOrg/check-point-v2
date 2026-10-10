@@ -169,7 +169,7 @@ class _AdminRescheduleHolidayDialogWidgetState
                       Container(
                         padding: EdgeInsets.all(8.r),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFEDD5),
+                          color: AppColors.softOrangeBackground,
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                         child: Icon(
@@ -198,9 +198,9 @@ class _AdminRescheduleHolidayDialogWidgetState
               Container(
                 padding: EdgeInsets.all(12.r),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFF7ED),
+                  color: AppColors.softOrangeLightBackground,
                   borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: const Color(0xFFFED7AA)),
+                  border: Border.all(color: AppColors.orangeBorder),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,7 +295,7 @@ class _AdminRescheduleHolidayDialogWidgetState
                       vertical: 12.h,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFF7ED),
+                      color: AppColors.softOrangeLightBackground,
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(color: AppColors.brandPrimary),
                     ),
@@ -499,7 +499,7 @@ class _AdminRescheduleHolidayDialogWidgetState
                         return FilterChip(
                           label: Text(dept.departmentName ?? '-'),
                           selected: isSelected,
-                          selectedColor: const Color(0xFFFFEDD5),
+                          selectedColor: AppColors.softOrangeBackground,
                           checkmarkColor: AppColors.brandPrimary,
                           labelStyle: AppTextStyles.font12Medium.copyWith(
                             color: isSelected
@@ -557,7 +557,7 @@ class _AdminRescheduleHolidayDialogWidgetState
                         return FilterChip(
                           label: Text(emp.name ?? '-'),
                           selected: isSelected,
-                          selectedColor: const Color(0xFFFFEDD5),
+                          selectedColor: AppColors.softOrangeBackground,
                           checkmarkColor: AppColors.brandPrimary,
                           labelStyle: AppTextStyles.font12Medium.copyWith(
                             color: isSelected

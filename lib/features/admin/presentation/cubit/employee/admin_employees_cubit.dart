@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
@@ -19,8 +18,8 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
   Future<void> loadEmployees() async {
     emit(const AdminEmployeesState.loading());
     final result = await employeeRepo.getEmployees(page: 0, pageSize: 50);
-    switch (result) {
-      case Success(:final data):
+    result.when(
+      success: (data) {
         allEmployees = data;
         emit(
           AdminEmployeesState.success(
@@ -28,9 +27,9 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
             roleFilter: roleFilter,
           ),
         );
-      case Failure(:final failure):
-        emit(AdminEmployeesState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) => emit(AdminEmployeesState.error(failure.messageKey)),
+    );
   }
 
   Future<void> search(String value) async {
@@ -41,8 +40,8 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     }
     emit(const AdminEmployeesState.loading());
     final result = await employeeRepo.searchEmployees(searchKey: query);
-    switch (result) {
-      case Success(:final data):
+    result.when(
+      success: (data) {
         allEmployees = data;
         emit(
           AdminEmployeesState.success(
@@ -50,9 +49,9 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
             roleFilter: roleFilter,
           ),
         );
-      case Failure(:final failure):
-        emit(AdminEmployeesState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) => emit(AdminEmployeesState.error(failure.messageKey)),
+    );
   }
 
   void setRoleFilter(String? value) {

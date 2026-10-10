@@ -87,15 +87,15 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
 
         final cardBackground = isCancelled
             ? AppColors.softRedBackground
-            : (isRescheduled ? const Color(0xFFFFF7ED) : AppColors.cardBackground);
+            : (isRescheduled ? AppColors.softOrangeLightBackground : AppColors.cardBackground);
 
         final borderColor = isCancelled
             ? AppColors.error.withValues(alpha: 0.3)
-            : (isRescheduled ? const Color(0xFFFED7AA) : AppColors.border);
+            : (isRescheduled ? AppColors.orangeBorder : AppColors.border);
 
         final iconBoxBg = isCancelled
             ? AppColors.softRedBackground
-            : (isRescheduled ? const Color(0xFFFFEDD5) : AppColors.pageBackground);
+            : (isRescheduled ? AppColors.softOrangeBackground : AppColors.pageBackground);
 
         final iconColor = isCancelled
             ? AppColors.error
@@ -122,7 +122,7 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isCancelled
                           ? AppColors.softRedBackground
-                          : const Color(0xFFFFEDD5),
+                          : AppColors.softOrangeBackground,
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                     child: Icon(
@@ -205,7 +205,7 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
                                 'الرسمي: ${DateFormat('d MMMM yyyy', context.locale.languageCode).format(holiday.originalDate!)}',
                                 style: AppTextStyles.font12Regular.copyWith(
                                   decoration: TextDecoration.lineThrough,
-                                  color: const Color(0xFF9CA3AF),
+                                  color: AppColors.placeholder,
                                 ),
                               ),
                               Icon(

@@ -138,7 +138,7 @@ class AdminEmployeeContactDialogWidget extends StatelessWidget {
               subtitle: 'employee.profile.actionWhatsAppDesc'.tr(
                 context: context,
               ),
-              color: const Color(0xFF25D366),
+              color: AppColors.whatsApp,
               onTap: () => _openWhatsApp(context),
             ),
             hSpace(10),

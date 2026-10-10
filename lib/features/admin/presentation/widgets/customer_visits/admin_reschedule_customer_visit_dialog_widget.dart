@@ -132,8 +132,8 @@ class _AdminRescheduleCustomerVisitDialogWidgetState
         context: context,
         builder: (ctx) => CustomDialogWidget(
           icon: Icons.warning_amber_rounded,
-          iconColor: const Color(0xFFD97706),
-          iconBackgroundColor: const Color(0xFFFEF3C7),
+          iconColor: AppColors.amberStatus,
+          iconBackgroundColor: AppColors.softYellowBackground,
           title: 'تنبيه موعد الزيارة',
           message:
               'التاريخ المحدد يوافق عطلة أسبوعية (إجازة).\nهل ترغب في المتابعة وتأكيد تعديل موعد الزيارة في يوم الإجازة؟',
@@ -298,15 +298,15 @@ class _AdminRescheduleCustomerVisitDialogWidgetState
                     vertical: 6.h,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFEF3C7),
+                    color: AppColors.softYellowBackground,
                     borderRadius: BorderRadius.circular(8.r),
-                    border: Border.all(color: const Color(0xFFFDE68A)),
+                    border: Border.all(color: AppColors.amberBorder),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         Icons.info_outline_rounded,
-                        color: const Color(0xFFD97706),
+                        color: AppColors.amberStatus,
                         size: 14.r,
                       ),
                       SizedBox(width: 6.w),

@@ -160,7 +160,7 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
       statusText = 'admin.visits.statusCompleted'.tr(context: context);
       statusIcon = Icons.check_circle_rounded;
     } else if (isVisitedPendingReport) {
-      statusColor = const Color(0xFFD97706);
+      statusColor = AppColors.amberStatus;
       statusText =
           'admin.visits.statusVisitedPendingReport'.tr(context: context);
       statusIcon = Icons.pending_actions_rounded;
@@ -637,17 +637,17 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.all(10.r),
               decoration: BoxDecoration(
-                color: const Color(0xFFFFFBEB),
+                color: AppColors.amberSoftBg,
                 borderRadius: BorderRadius.circular(8.r),
                 border: Border.all(
-                  color: const Color(0xFFF59E0B).withValues(alpha: 0.35),
+                  color: AppColors.warning.withValues(alpha: 0.35),
                 ),
               ),
               child: Row(
                 children: [
                   Icon(
                     Icons.info_outline_rounded,
-                    color: const Color(0xFFD97706),
+                    color: AppColors.amberStatus,
                     size: 16.r,
                   ),
                   SizedBox(width: 6.w),
@@ -655,7 +655,7 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                     child: Text(
                       'admin.visits.pendingReportNotice'.tr(context: context),
                       style: AppTextStyles.font12Medium.copyWith(
-                        color: const Color(0xFFB45309),
+                        color: AppColors.amberDark,
                       ),
                     ),
                   ),
@@ -799,7 +799,7 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                         : Icons.assignment_turned_in_rounded,
                     size: 16.r,
                     color: isVisitedPendingReport
-                        ? const Color(0xFFD97706)
+                        ? AppColors.amberStatus
                         : AppColors.brandPrimary,
                   ),
                   label: Text(
@@ -808,7 +808,7 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                         : 'admin.visits.recordOutcome'.tr(context: context),
                     style: AppTextStyles.font12Bold.copyWith(
                       color: isVisitedPendingReport
-                          ? const Color(0xFFD97706)
+                          ? AppColors.amberStatus
                           : AppColors.brandPrimary,
                     ),
                   ),

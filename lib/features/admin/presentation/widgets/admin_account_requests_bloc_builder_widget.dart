@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
@@ -65,7 +66,7 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
           AdminAccountRequestsStateLoading() =>
             const AdminAccountRequestsSkeletonWidget(),
           AdminAccountRequestsStateError(:final messageKey) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 28),
+            padding: EdgeInsets.symmetric(vertical: 28.h),
             child: Text(
               messageKey.tr(context: context),
               textAlign: TextAlign.center,
@@ -75,7 +76,7 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
           AdminAccountRequestsStateSuccess(:final requests) =>
             requests.isEmpty
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 28),
+                    padding: EdgeInsets.symmetric(vertical: 28.h),
                     child: Text(
                       'admin.requests.emptyAll'.tr(context: context),
                       textAlign: TextAlign.center,

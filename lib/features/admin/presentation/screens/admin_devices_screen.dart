@@ -157,7 +157,9 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
               error: (state) => Center(
                 child: Text(
                   state.message,
-                  style: const TextStyle(color: AppColors.error),
+                  style: AppTextStyles.font14Medium.copyWith(
+                    color: AppColors.error,
+                  ),
                 ),
               ),
               success: (state) {
@@ -312,7 +314,7 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
                                       'admin.devices.approve'.tr(
                                         context: context,
                                       ),
-                                      style: const TextStyle(
+                                      style: AppTextStyles.font14Bold.copyWith(
                                         color: AppColors.white,
                                       ),
                                     ),

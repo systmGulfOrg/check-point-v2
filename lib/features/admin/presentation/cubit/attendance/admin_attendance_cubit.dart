@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo.dart';
@@ -139,15 +138,17 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
     _isLoadingAttendance = true;
     emit(const AdminAttendanceState.loading());
     final result = await attendanceRepo.getAdminAttendance();
-    switch (result) {
-      case Success(:final data):
+    result.when(
+      success: (data) {
         _allRecords = data;
         _isLoadingAttendance = false;
         _emitFiltered();
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         _isLoadingAttendance = false;
         emit(AdminAttendanceState.error(failure.messageKey));
-    }
+      },
+    );
   }
 
   Future<void> setDateFilter(
@@ -283,30 +284,30 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
       status: status,
       reason: reason,
     );
-    switch (result) {
-      case Success():
+    return result.when(
+      success: (_) async {
         await loadAttendance();
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         emit(AdminAttendanceState.error(failure.messageKey));
         return false;
-      default:
-        return false;
-    }
+      },
+    );
   }
 
   Future<bool> deleteAttendance(int id) async {
     emit(const AdminAttendanceState.loading());
     final result = await attendanceRepo.deleteAttendance(id);
-    switch (result) {
-      case Success():
+    return result.when(
+      success: (_) async {
         await loadAttendance();
         return true;
-      case Failure(:final failure):
+      },
+      failure: (failure) {
         emit(AdminAttendanceState.error(failure.messageKey));
         return false;
-      default:
-        return false;
-    }
+      },
+    );
   }
 }

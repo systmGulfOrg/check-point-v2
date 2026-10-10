@@ -466,7 +466,9 @@ class _AdminEmployeeProfileEditFormWidgetState
                 required: false,
                 child: CustomTextFormField(
                   controller: _mobileIdController,
-                  hintText: 'Device Hardware UUID',
+                  hintText: 'admin.employeeWizard.mobileHint'.tr(
+                    context: context,
+                  ),
                   prefixIcon: Icon(
                     Icons.smartphone_rounded,
                     size: 20.r,

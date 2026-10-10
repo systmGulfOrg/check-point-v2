@@ -59,8 +59,10 @@ class _AdminEmployeeProfileScreenState
 
     if (error == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Employee updated successfully'),
+        SnackBar(
+          content: Text(
+            'admin.employees.updateSuccess'.tr(context: context),
+          ),
           backgroundColor: AppColors.success,
         ),
       );

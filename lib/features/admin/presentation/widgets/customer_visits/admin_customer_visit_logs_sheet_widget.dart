@@ -45,28 +45,28 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
 
     switch (action.toLowerCase()) {
       case 'created':
-        bg = const Color(0xFFEFF6FF);
-        fg = const Color(0xFF2563EB);
+        bg = AppColors.softBlueBackground;
+        fg = AppColors.info;
         label = 'إنشاء الزيارة';
         icon = Icons.add_circle_outline_rounded;
       case 'rescheduled':
-        bg = const Color(0xFFFEF3C7);
-        fg = const Color(0xFFD97706);
+        bg = AppColors.softYellowBackground;
+        fg = AppColors.amberStatus;
         label = 'تعديل الموعد';
         icon = Icons.edit_calendar_rounded;
       case 'visited':
-        bg = const Color(0xFFECFDF5);
-        fg = const Color(0xFF059669);
+        bg = AppColors.softGreenBackground;
+        fg = AppColors.success;
         label = 'تسجيل الحضور';
         icon = Icons.location_on_rounded;
       case 'completed':
-        bg = const Color(0xFFF0FDF4);
-        fg = const Color(0xFF16A34A);
+        bg = AppColors.softGreenBackground;
+        fg = AppColors.success;
         label = 'تسجيل التقرير';
         icon = Icons.assignment_turned_in_rounded;
       case 'cancelled':
-        bg = const Color(0xFFFEF2F2);
-        fg = const Color(0xFFDC2626);
+        bg = AppColors.softRedBackground;
+        fg = AppColors.error;
         label = 'إلغاء الزيارة';
         icon = Icons.cancel_outlined;
       default:
