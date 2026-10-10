@@ -13,6 +13,9 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
     super.key,
     this.userRole = 'Employee',
     this.isOwnRequest = false,
+    this.currentUserId = '',
+    this.currentEmployeeId = '',
+    this.currentUserName = '',
     this.onApprove,
     this.onReject,
   });
@@ -20,6 +23,9 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
   final AdminLeaveRequestModel request;
   final String userRole;
   final bool isOwnRequest;
+  final String currentUserId;
+  final String currentEmployeeId;
+  final String currentUserName;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
 
@@ -74,11 +80,48 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
         ),
     };
 
+    // Only the designated direct manager for this employee can approve Stage 1.
+    final bool isDirectManager = () {
+      final directManagerId = request.directManagerId?.trim().toLowerCase();
+      final directManagerName = request.directManagerName?.trim().toLowerCase();
+      final currentEmp = currentEmployeeId.trim().toLowerCase();
+      final currentUsr = currentUserId.trim().toLowerCase();
+      final currentNm = currentUserName.trim().toLowerCase();
+
+      if (directManagerId != null && directManagerId.isNotEmpty) {
+        if (currentEmp.isNotEmpty && directManagerId == currentEmp) return true;
+        if (currentUsr.isNotEmpty && directManagerId == currentUsr) return true;
+        if (currentNm.isNotEmpty &&
+            directManagerName != null &&
+            directManagerName.isNotEmpty) {
+          if (directManagerName == currentNm ||
+              directManagerName.contains(currentNm) ||
+              currentNm.contains(directManagerName)) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      if (directManagerName != null &&
+          directManagerName.isNotEmpty &&
+          directManagerName != '-') {
+        if (currentNm.isNotEmpty &&
+            (directManagerName == currentNm ||
+                directManagerName.contains(currentNm) ||
+                currentNm.contains(directManagerName))) {
+          return true;
+        }
+        return false;
+      }
+
+      // If the employee has NO direct manager assigned, any Supervisor/Admin can act
+      return userRole == 'Admin' || userRole == 'Supervisor';
+    }();
+
     // In supervisor management, the direct manager acts ONLY on Stage 1 (isPending).
     // Once approved by manager (status is PendingHR), it moves to HR/Admin stage and manager buttons must not show.
-    final bool canApprove = !isOwnRequest &&
-        isPending &&
-        (userRole == 'Admin' || userRole == 'Supervisor');
+    final bool canApprove = !isOwnRequest && isPending && isDirectManager;
     const String approveLabel = 'leaves.approval.approveAsManager';
 
     final start = AppDateFormatter.formatDateString(request.startDate);
