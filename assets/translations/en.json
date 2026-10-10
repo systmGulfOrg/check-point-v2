@@ -1051,6 +1051,7 @@
   "errors.deviceLoginAccess": "This device does not have access to log in.",
   "errors.employeeNotFound": "Employee profile was not found.",
   "errors.employeeUnavailable": "Your employee profile could not be loaded.",
+  "errors.entityTooLarge": "The image or file size is too large. Please select a smaller file.",
   "errors.forbidden": "You do not have permission to perform this action.",
   "errors.invalidCredentials": "Invalid username or password. Please try again.",
   "errors.locationUnavailable": "Location is unavailable. Enable GPS and try again.",

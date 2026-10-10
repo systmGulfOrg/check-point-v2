@@ -110,6 +110,9 @@ class ApiFailureMapper {
               ? messages.join(' ')
               : 'errors.validation',
         ),
+        _ when status == 413 => const ApiFailure(
+          messageKey: 'errors.entityTooLarge',
+        ),
         _ when status == 429 => ApiFailure(
           messageKey: messages.isNotEmpty
               ? messages.join(' ')

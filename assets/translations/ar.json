@@ -1051,6 +1051,7 @@
   "errors.deviceLoginAccess": "هذا الجهاز ليس لديه صلاحية لتسجيل الدخول.",
   "errors.employeeNotFound": "ملف الموظف مش موجود.",
   "errors.employeeUnavailable": "مش قادرين نحمل بياناتك.",
+  "errors.entityTooLarge": "حجم الصورة أو الملف كبير جداً. يرجى اختيار ملف أصغر.",
   "errors.forbidden": "ليس لديك صلاحية لتنفيذ هذه العملية.",
   "errors.invalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.",
   "errors.locationUnavailable": "الموقع مش متاح. شغل الـ GPS وجرب تاني.",
