@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:check_point_v2/core/network/device_identity_provider.dart';
-import 'package:check_point_v2/core/auth/auth_session_storage.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/data/models/account_request/account_request_model.dart';
 import 'package:check_point_v2/features/auth/data/repos/auth_repo.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_state.dart';
@@ -42,7 +40,10 @@ class RequestAccountCubit extends Cubit<RequestAccountState> {
           final bytes = await file.readAsBytes();
           final ext = photoPath.split('.').last.toLowerCase();
           final mime = ext == 'png' ? 'image/png' : 'image/jpeg';
-          effectivePhoto = 'data:$mime;base64,${base64Encode(bytes)}';
+          effectivePhoto = await AppImageCompressor.compressAndEncodeBase64(
+            bytes,
+            mimeType: mime,
+          );
         }
       } catch (_) {}
     }

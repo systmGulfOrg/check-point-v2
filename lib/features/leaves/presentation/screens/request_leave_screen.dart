@@ -85,6 +85,7 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
         String? base64Data;
         if (file.bytes != null) {
           final ext = file.extension?.toLowerCase() ?? 'pdf';
+          final isImage = ext == 'png' || ext == 'jpg' || ext == 'jpeg';
           final mimeType = ext == 'png'
               ? 'image/png'
               : (ext == 'jpg' || ext == 'jpeg')
@@ -92,10 +93,19 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
               : ext == 'pdf'
               ? 'application/pdf'
               : 'application/octet-stream';
-          base64Data = 'data:$mimeType;base64,${base64Encode(file.bytes!)}';
+          if (isImage) {
+            base64Data = await AppImageCompressor.compressAndEncodeBase64(
+              file.bytes!,
+              maxDimension: 1024,
+              mimeType: mimeType,
+            );
+          } else {
+            base64Data = 'data:$mimeType;base64,${base64Encode(file.bytes!)}';
+          }
         } else if (file.path != null) {
           final bytes = await File(file.path!).readAsBytes();
           final ext = file.extension?.toLowerCase() ?? 'pdf';
+          final isImage = ext == 'png' || ext == 'jpg' || ext == 'jpeg';
           final mimeType = ext == 'png'
               ? 'image/png'
               : (ext == 'jpg' || ext == 'jpeg')
@@ -103,7 +113,15 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
               : ext == 'pdf'
               ? 'application/pdf'
               : 'application/octet-stream';
-          base64Data = 'data:$mimeType;base64,${base64Encode(bytes)}';
+          if (isImage) {
+            base64Data = await AppImageCompressor.compressAndEncodeBase64(
+              bytes,
+              maxDimension: 1024,
+              mimeType: mimeType,
+            );
+          } else {
+            base64Data = 'data:$mimeType;base64,${base64Encode(bytes)}';
+          }
         }
 
         setState(() {
