@@ -15,9 +15,9 @@ class DioFactory {
       ..interceptors.add(
         PrettyDioLogger(
           enabled: kDebugMode,
-          requestHeader: true,
+          requestHeader: false,
           requestBody: true,
-          responseHeader: true,
+          responseHeader: false,
           responseBody: true,
           error: true,
           compact: true,

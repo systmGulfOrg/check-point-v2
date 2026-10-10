@@ -19,4 +19,16 @@ class AuthTokenInterceptor extends QueuedInterceptor {
     }
     handler.next(options);
   }
+
+  @override
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
+    final status = err.response?.statusCode;
+    if (status == 401 || status == 403) {
+      await secureStorage.delete(key: AppConfig.authTokenKey);
+    }
+    handler.next(err);
+  }
 }

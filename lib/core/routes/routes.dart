@@ -30,6 +30,7 @@ class AppRoutes {
   static const String adminShiftDetails = '/admin/shifts-policies/details';
   static const String employee = '/employee';
   static const String projects = '/projects';
+  static const String projectBoard = '/projects/board';
   static const String employeeSettings = '/employee/settings';
   static const String adminDeletedEmployees = '/admin/employees/deleted';
 }

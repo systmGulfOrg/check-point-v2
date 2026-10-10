@@ -34,7 +34,7 @@ class DeviceIdentityProvider {
     return mobileId;
   }
 
-  String get deviceToken => AppConfig.deviceToken;
+  String get deviceToken => AppConfig.deviceTokenKey;
 
   static String _generateUuidV4() {
     final random = Random.secure();

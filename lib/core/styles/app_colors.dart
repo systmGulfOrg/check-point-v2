@@ -66,6 +66,17 @@ class AppColors {
   static const Color darkStatusBlueBg = Color(0xFF0D2847);
   static const Color darkStatusBlueText = Color(0xFF3B82F6);
   static const Color darkIconBoxPink = Color(0xFF2A1526);
-  static const Color darkIconBoxPinkText = Color(0xFFEC4899);
-  static const Color darkIconBoxYellowText = Color(0xFFEAB308);
+  // Role & action semantic colors
+  static const Color whatsApp = Color(0xFF25D366);
+  static const Color softPurpleBackground = Color(0xFFF3E8FF);
+  static const Color purpleText = Color(0xFF7E22CE);
+  static const Color softOrangeBackground = Color(0xFFFFEDD5);
+  static const Color softOrangeLightBackground = Color(0xFFFFF7ED);
+  static const Color orangeBorder = Color(0xFFFED7AA);
+  static const Color amberStatus = Color(0xFFD97706);
+  static const Color amberDark = Color(0xFFB45309);
+  static const Color amberSoftBg = Color(0xFFFFFBEB);
+  static const Color amberBorder = Color(0xFFFDE68A);
+  static const Color wordDocBlue = Color(0xFF2B579A);
+  static const Color excelSheetGreen = Color(0xFF217346);
 }

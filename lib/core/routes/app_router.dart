@@ -69,6 +69,8 @@ import 'package:check_point_v2/features/remote_work/presentation/cubit/remote_wo
 import 'package:check_point_v2/features/remote_work/presentation/cubit/employee_work_access_cubit.dart';
 import 'package:check_point_v2/features/projects/presentation/cubit/projects_cubit.dart';
 import 'package:check_point_v2/features/projects/presentation/screens/projects_screen.dart';
+import 'package:check_point_v2/features/projects/presentation/screens/project_board_screen.dart';
+import 'package:check_point_v2/features/leaves/presentation/screens/leaves_dashboard_screen.dart';
 import 'package:check_point_v2/features/remote_work/presentation/screens/remote_work_screen.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/core/styles/app_motion.dart';
@@ -146,7 +148,15 @@ class AppRouter {
   static Route<void> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.adminEmployeeAudit:
-        final employeeId = settings.arguments as String;
+        final employeeId = settings.arguments;
+        if (employeeId is! String) {
+          return _fadeRoute(
+            settings: settings,
+            child: const Scaffold(
+              body: Center(child: Text('Invalid employee ID')),
+            ),
+          );
+        }
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => BlocProvider(
@@ -660,9 +670,45 @@ class AppRouter {
       case AppRoutes.leavesRequest:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.leavesRequest),
-          child: BlocProvider.value(
-            value: sl<LeavesCubit>(),
+          child: BlocProvider<LeavesCubit>(
+            create: (_) => sl<LeavesCubit>(),
             child: const RequestLeaveScreen(),
+          ),
+        );
+      case AppRoutes.leavesDashboard:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.leavesDashboard),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<LeavesCubit>(
+                create: (_) => sl<LeavesCubit>()..loadLeavesData(),
+              ),
+              BlocProvider<UpcomingHolidayCubit>(
+                create: (_) =>
+                    sl<UpcomingHolidayCubit>()..loadUpcomingHoliday(),
+              ),
+            ],
+            child: const LeavesDashboardScreen(),
+          ),
+        );
+      case AppRoutes.projectBoard:
+        final args = settings.arguments;
+        if (args is! ProjectBoardScreenArgs) {
+          return _fadeRoute(
+            settings: settings,
+            child: const Scaffold(
+              body: Center(child: Text('Invalid project board arguments')),
+            ),
+          );
+        }
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.projectBoard),
+          child: BlocProvider<ProjectsCubit>(
+            create: (_) => sl<ProjectsCubit>()..openProject(args.project),
+            child: ProjectBoardScreen(
+              project: args.project,
+              canManage: args.canManage,
+            ),
           ),
         );
       default:

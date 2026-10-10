@@ -11,5 +11,4 @@ class AppConfig {
   static String get googlePlacesApiKey => Env.googlePlacesApiKey;
   static String get authTokenKey => Env.authTokenKey;
   static String get deviceTokenKey => Env.deviceTokenKey;
-  static String get deviceToken => Env.deviceTokenKey;
 }

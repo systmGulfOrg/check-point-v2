@@ -67,12 +67,14 @@ import 'package:check_point_v2/features/employee/presentation/cubit/tasks/employ
 import 'package:check_point_v2/features/leaves/data/apis/leaves_api_service.dart';
 import 'package:check_point_v2/features/leaves/data/repos/leaves_repo_impl.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
+import 'package:check_point_v2/features/leaves/domain/repos/leaves_repo.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_permissions_repo.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_permissions_repo_impl.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/permissions/admin_permissions_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/permit_cubit.dart';
 import 'package:check_point_v2/features/notifications/data/apis/notifications_api_service.dart';
+import 'package:check_point_v2/features/notifications/domain/repos/notifications_repo.dart';
 import 'package:check_point_v2/features/notifications/data/repos/notifications_repo_impl.dart';
 import 'package:check_point_v2/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:check_point_v2/features/remote_work/data/apis/remote_work_api_service.dart';
@@ -248,13 +250,13 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<EmployeeActionRepo>(
     () => EmployeeActionRepoImpl(api: sl<EmployeeApiService>()),
   );
-  sl.registerLazySingleton<LeavesRepoImpl>(
+  sl.registerLazySingleton<LeavesRepo>(
     () => LeavesRepoImpl(
       api: sl<LeavesApiService>(),
       sessionStorage: sl<AuthSessionStorage>(),
     ),
   );
-  sl.registerLazySingleton<NotificationsRepoImpl>(
+  sl.registerLazySingleton<NotificationsRepo>(
     () => NotificationsRepoImpl(api: sl<NotificationsApiService>()),
   );
   sl.registerLazySingleton<RemoteWorkRepo>(
@@ -448,18 +450,20 @@ Future<void> setupServiceLocator() async {
     ),
   );
   sl.registerFactory<LeavesCubit>(
-    () => LeavesCubit(leavesRepo: sl<LeavesRepoImpl>()),
+    () => LeavesCubit(leavesRepo: sl<LeavesRepo>()),
   );
   sl.registerFactory<UpcomingHolidayCubit>(
-    () => UpcomingHolidayCubit(leavesRepo: sl<LeavesRepoImpl>()),
+    () => UpcomingHolidayCubit(leavesRepo: sl<LeavesRepo>()),
   );
   sl.registerFactory<PermitCubit>(
-    () => PermitCubit(leavesRepo: sl<LeavesRepoImpl>()),
+    () => PermitCubit(leavesRepo: sl<LeavesRepo>()),
   );
   sl.registerFactory<NotificationsCubit>(
-    () => NotificationsCubit(notificationsRepo: sl<NotificationsRepoImpl>()),
+    () => NotificationsCubit(notificationsRepo: sl<NotificationsRepo>()),
   );
-  sl.registerFactory(() => AdminEmployeeAuditCubit(api: sl()));
+  sl.registerFactory<AdminEmployeeAuditCubit>(
+    () => AdminEmployeeAuditCubit(api: sl<AdminApiService>()),
+  );
   sl.registerFactory<AdminPermissionsCubit>(
     () => AdminPermissionsCubit(permissionsRepo: sl<AdminPermissionsRepo>()),
   );

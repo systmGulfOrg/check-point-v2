@@ -308,6 +308,7 @@
   "admin.employees.title": "الموظفين",
   "admin.employees.unknown": "غير معروف",
   "admin.employees.username": "اسم المستخدم",
+  "admin.employees.updateSuccess": "تم تحديث بيانات الموظف بنجاح",
   "admin.employees.viewActivityLog": "عرض سجل التدقيق (Audit Log)",
   "admin.leaveManagement.addType": "+ إضافة نوع إجازة",
   "admin.leaveManagement.all": "الكل",

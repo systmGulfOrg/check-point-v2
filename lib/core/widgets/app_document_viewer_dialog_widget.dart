@@ -116,11 +116,11 @@ class AppDocumentViewerDialogWidget extends StatelessWidget {
         return AppColors.brandPrimary;
       case 'doc':
       case 'docx':
-        return const Color(0xFF2B579A);
+        return AppColors.wordDocBlue;
       case 'xls':
       case 'xlsx':
       case 'csv':
-        return const Color(0xFF217346);
+        return AppColors.excelSheetGreen;
       default:
         return AppColors.brandPrimary;
     }

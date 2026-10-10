@@ -308,6 +308,7 @@
   "admin.employees.title": "Employees",
   "admin.employees.unknown": "Unknown",
   "admin.employees.username": "Username",
+  "admin.employees.updateSuccess": "Employee updated successfully",
   "admin.employees.viewActivityLog": "View Audit Log",
   "admin.leaveManagement.addType": "+ Add Leave Type",
   "admin.leaveManagement.all": "All",
