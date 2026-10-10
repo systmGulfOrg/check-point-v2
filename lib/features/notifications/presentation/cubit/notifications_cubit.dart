@@ -1,13 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../data/repos/notifications_repo_impl.dart';
+import '../../domain/repos/notifications_repo.dart';
 import 'notifications_state.dart';
 
 class NotificationsCubit extends Cubit<NotificationsState> {
   NotificationsCubit({required this.notificationsRepo})
     : super(const NotificationsState.initial());
 
-  final NotificationsRepoImpl notificationsRepo;
+  final NotificationsRepo notificationsRepo;
 
   Future<void> load() async {
     emit(const NotificationsState.loading());

@@ -1,14 +1,15 @@
-import '../../../../core/network/api_failure_mapper.dart';
-import '../../../../core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
+import '../../domain/repos/notifications_repo.dart';
 import '../apis/notifications_api_service.dart';
 import '../models/notification_model.dart';
 import '../models/notification_page_model.dart';
 
-class NotificationsRepoImpl {
+class NotificationsRepoImpl implements NotificationsRepo {
   NotificationsRepoImpl({required this.api});
 
   final NotificationsApiService api;
 
+  @override
   Future<ApiResult<NotificationPageModel>> getNotifications() async {
     try {
       final response = await api.getNotifications();
@@ -32,6 +33,7 @@ class NotificationsRepoImpl {
     }
   }
 
+  @override
   Future<ApiResult<void>> markRead(String id) async {
     try {
       await api.markRead(id);
@@ -41,6 +43,7 @@ class NotificationsRepoImpl {
     }
   }
 
+  @override
   Future<ApiResult<void>> markAllRead() async {
     try {
       await api.markAllRead();

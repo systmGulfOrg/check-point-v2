@@ -246,7 +246,11 @@ class LeaveRequestCardWidget extends StatelessWidget {
           ),
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 14.w, right: 14.w, bottom: 14.h),
+              padding: EdgeInsetsDirectional.only(
+                start: 14.w,
+                end: 14.w,
+                bottom: 14.h,
+              ),
               child: LeaveApprovalTimelineWidget.fromModel(request: request),
             ),
           ],

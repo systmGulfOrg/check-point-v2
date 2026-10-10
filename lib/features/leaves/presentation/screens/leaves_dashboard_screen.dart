@@ -166,8 +166,12 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
                       separatorBuilder: (_, _) => hSpace(12),
                       itemBuilder: (_, _) => Card(
                         child: ListTile(
-                          title: const Text('Annual Leave Balance Placeholder'),
-                          subtitle: const Text('14 / 21 Days Available'),
+                          title: Text(
+                            'employee.leaves.leaveType'.tr(context: context),
+                          ),
+                          subtitle: Text(
+                            'employee.leaves.count'.tr(context: context),
+                          ),
                           trailing: const Icon(Icons.arrow_forward_ios),
                         ),
                       ),

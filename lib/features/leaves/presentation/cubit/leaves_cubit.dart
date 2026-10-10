@@ -1,18 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
 import '../../data/models/leave_balance_model.dart';
 import '../../data/models/leave_request_body.dart';
 import '../../data/models/leave_request_model.dart';
 import '../../data/models/leave_type_model.dart';
-import '../../data/repos/leaves_repo_impl.dart';
+import '../../domain/repos/leaves_repo.dart';
 import 'leaves_state.dart';
 
 class LeavesCubit extends Cubit<LeavesState> {
   LeavesCubit({required this.leavesRepo}) : super(const LeavesState.initial());
 
-  final LeavesRepoImpl leavesRepo;
+  final LeavesRepo leavesRepo;
 
   Future<void> loadMyLeaveRequests() => loadLeavesData();
 
@@ -94,42 +93,42 @@ class LeavesCubit extends Cubit<LeavesState> {
   Future<void> submitLeave(LeaveRequestBody body) async {
     emit(const LeavesState.submitting());
     final result = await leavesRepo.submitLeaveRequest(body);
-    switch (result) {
-      case Success():
+    await result.when(
+      success: (_) async {
         emit(const LeavesState.submitSuccess());
         await loadLeavesData();
-      case Failure(:final failure):
-        emit(LeavesState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) async => emit(LeavesState.error(failure.messageKey)),
+    );
   }
 
   Future<void> cancelLeave(String id) async {
     emit(const LeavesState.loading());
     final result = await leavesRepo.cancelLeaveRequest(id);
-    switch (result) {
-      case Success():
+    await result.when(
+      success: (_) async {
         emit(
           const LeavesState.actionSuccess(
             'Leave request cancelled successfully',
           ),
         );
         await loadLeavesData();
-      case Failure(:final failure):
-        emit(LeavesState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) async => emit(LeavesState.error(failure.messageKey)),
+    );
   }
 
   Future<void> deleteLeaveRequest(dynamic id) async {
     emit(const LeavesState.loading());
     final result = await leavesRepo.deleteLeaveRequest(id);
-    switch (result) {
-      case Success():
+    await result.when(
+      success: (_) async {
         emit(
           const LeavesState.actionSuccess('Leave request deleted successfully'),
         );
         await loadLeavesData();
-      case Failure(:final failure):
-        emit(LeavesState.error(failure.messageKey));
-    }
+      },
+      failure: (failure) async => emit(LeavesState.error(failure.messageKey)),
+    );
   }
 }

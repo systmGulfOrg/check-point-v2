@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/models/short_leave_request_body.dart';
-import '../../data/repos/leaves_repo_impl.dart';
+import '../../domain/repos/leaves_repo.dart';
 import 'permit_state.dart';
 
 class PermitCubit extends Cubit<PermitState> {
   PermitCubit({required this.leavesRepo}) : super(const PermitState.initial());
 
-  final LeavesRepoImpl leavesRepo;
+  final LeavesRepo leavesRepo;
 
   Future<bool> submit(ShortLeaveRequestBody body) async {
     emit(const PermitState.submitting());

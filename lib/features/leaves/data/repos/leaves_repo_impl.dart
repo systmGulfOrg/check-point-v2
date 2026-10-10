@@ -2,6 +2,7 @@ import '../../../../core/auth/auth_session_storage.dart';
 import '../../../../core/network/api_failure_mapper.dart';
 import '../../../../core/network/api_result.dart';
 import '../../../../core/utils/app_date_formatter.dart';
+import '../../domain/repos/leaves_repo.dart';
 import '../apis/leaves_api_service.dart';
 import '../models/leave_balance_model.dart';
 import '../models/leave_request_body.dart';
@@ -11,12 +12,13 @@ import '../models/official_holiday_model.dart';
 import '../models/short_leave_model.dart';
 import '../models/short_leave_request_body.dart';
 
-class LeavesRepoImpl {
+class LeavesRepoImpl implements LeavesRepo {
   LeavesRepoImpl({required this.api, required this.sessionStorage});
 
   final LeavesApiService api;
   final AuthSessionStorage sessionStorage;
 
+  @override
   Future<ApiResult<List<LeaveBalanceModel>>> getLeaveBalances({
     List<LeaveTypeModel>? types,
     List<LeaveRequestModel>? requests,
@@ -78,6 +80,7 @@ class LeavesRepoImpl {
     }
   }
 
+  @override
   Future<ApiResult<List<LeaveTypeModel>>> getLeaveTypes() async {
     try {
       final response = await api.getBackendLeaveTypes();
@@ -103,6 +106,7 @@ class LeavesRepoImpl {
     }
   }
 
+  @override
   Future<ApiResult<List<OfficialHolidayModel>>> getOfficialHolidays({
     int? year,
   }) async {
@@ -114,6 +118,7 @@ class LeavesRepoImpl {
     }
   }
 
+  @override
   Future<ApiResult<void>> rescheduleHoliday({
     required String holidayId,
     required String holidayName,
@@ -144,6 +149,7 @@ class LeavesRepoImpl {
     }
   }
 
+  @override
   Future<ApiResult<LeaveRequestModel>> submitLeaveRequest(
     LeaveRequestBody body,
   ) async {
@@ -181,6 +187,7 @@ class LeavesRepoImpl {
     }
   }
 
+  @override
   Future<ApiResult<List<LeaveRequestModel>>> getLeaveRequests() async {
     try {
       final response = await api.getBackendLeaveRequests();
@@ -257,6 +264,7 @@ class LeavesRepoImpl {
     }
   }
 
+  @override
   Future<ApiResult<dynamic>> updateLeaveStatus(String id, String status) async {
     try {
       final model = await api.updateLeaveStatus(id, {'status': status});
@@ -266,6 +274,7 @@ class LeavesRepoImpl {
     }
   }
 
+  @override
   Future<ApiResult<void>> cancelLeaveRequest(String id) async {
     try {
       await api.cancelLeaveRequest(id);
@@ -275,6 +284,7 @@ class LeavesRepoImpl {
     }
   }
 
+  @override
   Future<ApiResult<void>> deleteLeaveRequest(dynamic id) async {
     try {
       await api.deleteLeaveRequest(id);
@@ -284,6 +294,7 @@ class LeavesRepoImpl {
     }
   }
 
+  @override
   Future<ApiResult<List<ShortLeaveModel>>> getShortLeaves() async {
     try {
       return ApiResult.success(await api.getShortLeaves());
@@ -292,6 +303,7 @@ class LeavesRepoImpl {
     }
   }
 
+  @override
   Future<ApiResult<ShortLeaveModel>> submitShortLeaveRequest(
     ShortLeaveRequestBody body,
   ) async {

@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/features/leaves/data/models/official_holiday_model.dart';
-import 'package:check_point_v2/features/leaves/data/repos/leaves_repo_impl.dart';
+import 'package:check_point_v2/features/leaves/domain/repos/leaves_repo.dart';
 import 'upcoming_holiday_state.dart';
 
 class UpcomingHolidayCubit extends Cubit<UpcomingHolidayState> {
   UpcomingHolidayCubit({required this.leavesRepo})
     : super(const UpcomingHolidayState.initial());
 
-  final LeavesRepoImpl leavesRepo;
+  final LeavesRepo leavesRepo;
 
   Future<void> loadUpcomingHoliday({int? year}) async {
     emit(const UpcomingHolidayState.loading());
