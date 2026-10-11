@@ -40,8 +40,9 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
   })? onRescheduleVisit;
   final Future<void> Function(String? reason)? onCancelVisit;
 
-  void _openAttendanceCheckIn(BuildContext context) {
-    showModalBottomSheet<void>(
+  void _openAttendanceCheckIn(BuildContext context) async {
+    final visitsCubit = context.read<AdminCustomerVisitsCubit?>();
+    await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -54,6 +55,13 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
         ),
       ),
     );
+    if (context.mounted && visitsCubit != null) {
+      if (visit.customerId != null && visit.customerId!.isNotEmpty) {
+        await visitsCubit.loadCustomerVisits(visit.customerId!);
+      } else {
+        await visitsCubit.loadAllVisits();
+      }
+    }
   }
 
   void _openRescheduleDialog(BuildContext context) {
