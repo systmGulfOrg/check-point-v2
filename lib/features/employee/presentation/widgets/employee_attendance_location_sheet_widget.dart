@@ -171,7 +171,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
     setState(() {
       isWorkScheduleLoading = false;
       todayVisits = visits;
-      todayScheduledVisit = activeVisit;
+      todayScheduledVisit = activeVisit ?? todayScheduledVisit ?? widget.initialVisit;
     });
 
     final mode = profile?.todayWorkMode ?? 'onsite';
@@ -422,27 +422,28 @@ class _EmployeeAttendanceLocationSheetWidgetState
         targetCenter: targetCenter,
         targetPolygon: targetCenter == null ? targetPoints : const [],
       );
-      if (type == 'Customer' && todayScheduledVisit != null) {
-        final visitId = todayScheduledVisit?.id;
+      if (type == 'Customer') {
+        final targetVisit = todayScheduledVisit ??
+            (customer != null
+                ? todayVisits
+                    .where((v) => v.customerId == customer!.id)
+                    .firstOrNull
+                : null) ??
+            widget.initialVisit;
+        final visitId = targetVisit?.id;
         if (visitId != null && visitId.isNotEmpty) {
           unawaited(
             sl<AdminCustomerVisitsRepo>().updateVisitOutcome(
               visitId: visitId,
-              outcome: todayScheduledVisit?.outcome ?? '',
+              outcome: targetVisit?.outcome ?? '',
               status: 'visited',
-              notes: todayScheduledVisit?.notes,
-              documentName: todayScheduledVisit?.documentName,
-              documentUrl: todayScheduledVisit?.documentUrl,
+              notes: targetVisit?.notes,
+              documentName: targetVisit?.documentName,
+              documentUrl: targetVisit?.documentUrl,
             ),
           );
         }
       }
-    }
-    if (!mounted) return;
-    final state = cubit.state;
-    if (state is EmployeeAttendanceStateCheckInSuccess ||
-        state is EmployeeAttendanceStateCheckOutSuccess) {
-      Navigator.pop(context);
     }
   }
 
@@ -451,6 +452,11 @@ class _EmployeeAttendanceLocationSheetWidgetState
     return BlocListener<EmployeeAttendanceCubit, EmployeeAttendanceState>(
       listener: (context, state) {
         switch (state) {
+          case EmployeeAttendanceStateCheckInSuccess():
+          case EmployeeAttendanceStateCheckOutSuccess():
+            if (mounted && Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
           case EmployeeAttendanceStateError(:final messageKey):
             CustomSnackBar.showError(
               context,
