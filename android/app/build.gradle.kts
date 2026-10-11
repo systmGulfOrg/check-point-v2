@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.check_point_v2"
+    namespace = "com.systmgulf.checkpoint"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "28.2.13676358"
 
@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.check_point_v2"
+        applicationId = "com.systmgulf.checkpoint"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
