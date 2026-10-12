@@ -4,12 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/app/app_spaces.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/core/services/location_service.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/core/widgets/custom_button.dart';
 import 'package:check_point_v2/core/widgets/custom_dialog_widget.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_batch_models.dart';
+import 'package:check_point_v2/features/contractor/data/models/contractor_company_model.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_worker_model.dart';
 import 'package:check_point_v2/features/contractor/data/models/site_boundary_model.dart';
 import '../cubit/contractor_cubit.dart';
@@ -19,12 +21,14 @@ class ContractorBatchAttendanceSheetWidget extends StatefulWidget {
     required this.workers,
     required this.sites,
     required this.contractorId,
+    this.contractors = const [],
     super.key,
   });
 
   final List<ContractorWorkerModel> workers;
   final List<SiteBoundaryModel> sites;
   final String contractorId;
+  final List<ContractorCompanyModel> contractors;
 
   @override
   State<ContractorBatchAttendanceSheetWidget> createState() =>
@@ -35,6 +39,7 @@ class _ContractorBatchAttendanceSheetWidgetState
     extends State<ContractorBatchAttendanceSheetWidget> {
   final Set<String> _selectedWorkerIds = {};
   String? _selectedSiteId;
+  String? _selectedContractorFilterId;
   bool _isSubmitting = false;
 
   @override
@@ -43,14 +48,29 @@ class _ContractorBatchAttendanceSheetWidgetState
     if (widget.sites.isNotEmpty) {
       _selectedSiteId = widget.sites.first.siteId;
     }
+    if (widget.contractorId.isNotEmpty) {
+      _selectedContractorFilterId = widget.contractorId;
+    }
+  }
+
+  List<ContractorWorkerModel> get _filteredWorkers {
+    return widget.workers.where((w) {
+      if (_selectedContractorFilterId == null ||
+          _selectedContractorFilterId!.isEmpty) {
+        return true;
+      }
+      return w.contractorId == _selectedContractorFilterId;
+    }).toList();
   }
 
   void _toggleSelectAll() {
+    final filtered = _filteredWorkers;
+    final allIds = filtered.map((w) => w.id).toSet();
     setState(() {
-      if (_selectedWorkerIds.length == widget.workers.length) {
-        _selectedWorkerIds.clear();
+      if (_selectedWorkerIds.containsAll(allIds)) {
+        _selectedWorkerIds.removeAll(allIds);
       } else {
-        _selectedWorkerIds.addAll(widget.workers.map((w) => w.id));
+        _selectedWorkerIds.addAll(allIds);
       }
     });
   }
@@ -60,13 +80,25 @@ class _ContractorBatchAttendanceSheetWidgetState
     setState(() => _isSubmitting = true);
 
     final cubit = context.read<ContractorCubit>();
-    final locationService = context.read<LocationService>();
+    final locationService = sl<LocationService>();
     final pos = await locationService.getCurrentPositionDetails();
 
-    final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final today = DateTime.now().toIso8601String().split('T')[0];
+    final effectiveContractorId = _selectedContractorFilterId?.isNotEmpty == true
+        ? _selectedContractorFilterId!
+        : (widget.contractorId.isNotEmpty
+            ? widget.contractorId
+            : (widget.workers
+                    .firstWhere(
+                      (w) => _selectedWorkerIds.contains(w.id),
+                      orElse: () => widget.workers.first,
+                    )
+                    .contractorId ??
+                ''));
+
     final summary = await cubit.recordSamcoBatchWorkerAttendance(
       siteId: _selectedSiteId!,
-      contractorId: widget.contractorId,
+      contractorId: effectiveContractorId,
       date: today,
       workerIds: _selectedWorkerIds.toList(),
       latitude: pos?.latitude,
@@ -78,6 +110,15 @@ class _ContractorBatchAttendanceSheetWidgetState
 
     if (summary != null) {
       _showResultDialog(summary);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'تعذر تسجيل الحضور الجماعي، يرجى التحقق من الاتصال والمحاولة مرة أخرى',
+          ),
+          backgroundColor: AppColors.error,
+        ),
+      );
     }
   }
 
@@ -97,17 +138,26 @@ class _ContractorBatchAttendanceSheetWidgetState
           Navigator.of(ctx).pop();
           Navigator.of(context).pop();
         },
-        icon: hasFailures ? Icons.warning_amber_rounded : Icons.check_circle_outline_rounded,
+        icon: hasFailures
+            ? Icons.warning_amber_rounded
+            : Icons.check_circle_outline_rounded,
         iconColor: hasFailures ? AppColors.warning : AppColors.success,
-        confirmButtonColor: hasFailures ? AppColors.brandPrimary : AppColors.success,
+        confirmButtonColor:
+            hasFailures ? AppColors.brandPrimary : AppColors.success,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final contractorNameMap = <String, String>{};
+    for (final c in widget.contractors) {
+      contractorNameMap[c.id] = c.name;
+    }
+    final filtered = _filteredWorkers;
+
     return Container(
-      height: 0.85.sh,
+      height: 0.88.sh,
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
@@ -138,7 +188,7 @@ class _ContractorBatchAttendanceSheetWidgetState
             isExpanded: true,
             initialValue: _selectedSiteId,
             decoration: InputDecoration(
-              labelText: 'الموقع المخصص',
+              labelText: 'الموقع المخصص للتسجيل',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
               ),
@@ -153,20 +203,56 @@ class _ContractorBatchAttendanceSheetWidgetState
                 .toList(),
             onChanged: (val) => setState(() => _selectedSiteId = val),
           ),
-          hSpace(12),
+          hSpace(10),
+          if (widget.contractors.isNotEmpty) ...[
+            DropdownButtonFormField<String?>(
+              isExpanded: true,
+              initialValue: _selectedContractorFilterId,
+              decoration: InputDecoration(
+                labelText: 'تصفية حسب المقاول التابع له',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+              items: [
+                const DropdownMenuItem<String?>(
+                  value: null,
+                  child: Text('جميع المقاولين'),
+                ),
+                ...widget.contractors.map(
+                  (c) => DropdownMenuItem<String?>(
+                    value: c.id,
+                    child: Text('${c.name} (${c.code})'),
+                  ),
+                ),
+              ],
+              onChanged: (val) {
+                setState(() {
+                  _selectedContractorFilterId = val;
+                  _selectedWorkerIds.clear();
+                });
+              },
+            ),
+            hSpace(10),
+          ],
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'المحدد: ${_selectedWorkerIds.length} من ${widget.workers.length}',
-                style: AppTextStyles.font13Medium.copyWith(
-                  color: AppColors.textSecondary,
+              Expanded(
+                child: Text(
+                  'المحدد: ${_selectedWorkerIds.length} من ${filtered.length}',
+                  style: AppTextStyles.font13Medium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ),
               TextButton(
                 onPressed: _toggleSelectAll,
                 child: Text(
-                  _selectedWorkerIds.length == widget.workers.length
+                  filtered.isNotEmpty &&
+                          _selectedWorkerIds.containsAll(
+                            filtered.map((w) => w.id),
+                          )
                       ? 'إلغاء تحديد الكل'
                       : 'تحديد الكل',
                   style: AppTextStyles.font13SemiBold.copyWith(
@@ -178,33 +264,87 @@ class _ContractorBatchAttendanceSheetWidgetState
           ),
           const Divider(),
           Expanded(
-            child: ListView.builder(
-              itemCount: widget.workers.length,
-              itemBuilder: (context, index) {
-                final worker = widget.workers[index];
-                final isSelected = _selectedWorkerIds.contains(worker.id);
-                return CheckboxListTile(
-                  value: isSelected,
-                  title: Text(worker.displayName, style: AppTextStyles.font14Medium),
-                  subtitle: Text(
-                    'كود: ${worker.displayCode} • ${worker.position ?? "عامل"}',
-                    style: AppTextStyles.font12Regular.copyWith(
-                      color: AppColors.textSecondary,
+            child: filtered.isEmpty
+                ? Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 30.h),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.person_off_rounded,
+                            size: 44.r,
+                            color: AppColors.border,
+                          ),
+                          hSpace(8),
+                          Text(
+                            'لا توجد عمالة مسجلة تحت هذا التصنيف',
+                            style: AppTextStyles.font13Medium.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                  )
+                : ListView.builder(
+                    itemCount: filtered.length,
+                    itemBuilder: (context, index) {
+                      final worker = filtered[index];
+                      final isSelected = _selectedWorkerIds.contains(worker.id);
+                      final cName = worker.contractorName ??
+                          contractorNameMap[worker.contractorId] ??
+                          'غير محدد';
+
+                      return CheckboxListTile(
+                        value: isSelected,
+                        title: Text(
+                          worker.displayName,
+                          style: AppTextStyles.font14Medium,
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            hSpace(2),
+                            Text(
+                              'كود: ${worker.displayCode} • ${worker.position ?? "عامل"}',
+                              style: AppTextStyles.font12Regular.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            hSpace(4),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.w,
+                                vertical: 2.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.softBrandBackground,
+                                borderRadius: BorderRadius.circular(6.r),
+                              ),
+                              child: Text(
+                                'المقاول: $cName',
+                                style: AppTextStyles.font11Medium.copyWith(
+                                  color: AppColors.brandPrimaryDark,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        activeColor: AppColors.brandPrimary,
+                        onChanged: (checked) {
+                          setState(() {
+                            if (checked == true) {
+                              _selectedWorkerIds.add(worker.id);
+                            } else {
+                              _selectedWorkerIds.remove(worker.id);
+                            }
+                          });
+                        },
+                      );
+                    },
                   ),
-                  activeColor: AppColors.brandPrimary,
-                  onChanged: (checked) {
-                    setState(() {
-                      if (checked == true) {
-                        _selectedWorkerIds.add(worker.id);
-                      } else {
-                        _selectedWorkerIds.remove(worker.id);
-                      }
-                    });
-                  },
-                );
-              },
-            ),
           ),
           hSpace(12),
           CustomButton(

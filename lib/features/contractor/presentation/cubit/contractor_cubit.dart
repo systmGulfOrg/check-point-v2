@@ -393,7 +393,6 @@ class ContractorCubit extends Cubit<ContractorState> {
     double? latitude,
     double? longitude,
   }) async {
-    emit(const ContractorState.loading());
     final body = BatchWorkerAttendanceRequestBody(
       siteId: siteId,
       contractorId: contractorId,
@@ -405,11 +404,10 @@ class ContractorCubit extends Cubit<ContractorState> {
     final result = await contractorRepo.recordSamcoBatchWorkerAttendance(body);
     return result.when(
       success: (summary) {
-        loadDashboardData(contractorId: contractorId);
+        loadDashboardData(contractorId: contractorId.isNotEmpty ? contractorId : null);
         return summary;
       },
       failure: (failure) {
-        emit(ContractorState.error(failure.messageKey));
         return null;
       },
     );
