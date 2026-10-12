@@ -307,6 +307,17 @@ class _AdminFullMapPickerDialogWidgetState
   }
 
   void _onDone() {
+    if (_points.isNotEmpty && _points.length < 3) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'admin.locations.create.polygonMinPointsError'.tr(context: context),
+          ),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
     Navigator.pop(context, {'points': _points, 'address': _selectedAddress});
   }
 
@@ -352,11 +363,32 @@ class _AdminFullMapPickerDialogWidgetState
         backgroundColor: AppColors.white,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
-        title: Text(
-          'admin.locations.create.geofenceTitle'.tr(context: context),
-          style: AppTextStyles.font18Bold,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'admin.locations.create.geofenceTitle'.tr(context: context),
+              style: AppTextStyles.font18Bold,
+            ),
+            if (_points.isNotEmpty)
+              Text(
+                'admin.locations.create.pointsCount'.tr(
+                  context: context,
+                  args: ['${_points.length}'],
+                ),
+                style: AppTextStyles.font11Medium.copyWith(
+                  color: _points.length >= 3 ? AppColors.success : AppColors.brandPrimary,
+                ),
+              ),
+          ],
         ),
         actions: [
+          if (_points.isNotEmpty)
+            IconButton(
+              icon: Icon(Icons.filter_center_focus_rounded, size: 22.r, color: AppColors.brandPrimary),
+              tooltip: 'admin.locations.create.focus'.tr(context: context),
+              onPressed: _centerOnPoints,
+            ),
           TextButton(
             onPressed: _onDone,
             child: Text(

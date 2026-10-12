@@ -26,7 +26,7 @@ class EmployeeAttendanceTargetDropdownWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isBranch = type == 'Branch';
+    final isBranch = type == 'Branch' || type == 'Site';
     final branchId = selectedBranch?.id?.toString();
     final customerId = selectedCustomer?.id;
     final hasBranch = branchId != null &&

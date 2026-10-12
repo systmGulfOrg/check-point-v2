@@ -33,7 +33,7 @@ class EmployeeAttendanceLocationSheetWidget extends StatefulWidget {
 
 class _EmployeeAttendanceLocationSheetWidgetState
     extends State<EmployeeAttendanceLocationSheetWidget> {
-  String type = 'Branch';
+  String type = 'Site';
   BranchModel? branch;
   CustomerModel? customer;
   LatLng? userLocation;
@@ -61,32 +61,12 @@ class _EmployeeAttendanceLocationSheetWidgetState
   }
 
   Future<void> _loadWorkSchedule() async {
-    final profile = await context
-        .read<EmployeeAttendanceCubit>()
-        .loadEmployeeProfile();
+    await context.read<EmployeeAttendanceCubit>().loadEmployeeProfile();
     if (!mounted) return;
     setState(() => isWorkScheduleLoading = false);
-    final mode = profile?.todayWorkMode;
-    if (mode == 'remote') {
-      _changeType('Remote');
-    } else if (mode == 'onsite' && type == 'Remote') {
-      _changeType('Branch');
-    }
   }
 
-  Set<String> get allowedTypes {
-    if (widget.isCheckOut || isWorkScheduleLoading) {
-      return const {'Branch', 'Customer', 'Site', 'Remote'};
-    }
-    return switch (context
-        .read<EmployeeAttendanceCubit>()
-        .employeeProfile
-        ?.todayWorkMode) {
-      'remote' => const {'Remote'},
-      'onsite' => const {'Branch', 'Customer', 'Site'},
-      _ => const <String>{},
-    };
-  }
+  Set<String> get allowedTypes => const {'Site'};
 
   void _showDisabledTypeMessage(String value) {
     final mode = context
@@ -132,7 +112,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
 
   List<LatLng> get targetPoints {
     if (type == 'Remote') return const [];
-    if (type == 'Branch') {
+    if (type == 'Branch' || type == 'Site') {
       return (branch?.coordinates ?? [])
           .map((point) => LatLng(point.latitude, point.longitude))
           .toList();
@@ -342,7 +322,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
                                 assignedSiteIds.contains(customer.id),
                           )
                           .toList();
-                if (type == 'Branch' &&
+                if ((type == 'Branch' || type == 'Site') &&
                     branch == null &&
                     branchOptions.isNotEmpty) {
                   final primaryBranchId = context
@@ -359,6 +339,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
                   });
                 }
                 if (type != 'Branch' &&
+                    type != 'Site' &&
                     customer == null &&
                     filteredCustomerOptions.isNotEmpty) {
                   customer = filteredCustomerOptions.first;
