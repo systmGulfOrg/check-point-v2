@@ -6,10 +6,13 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/contractor/data/models/contractor_company_model.dart';
+import 'package:check_point_v2/features/contractor/data/models/contractor_worker_model.dart';
+import 'package:check_point_v2/features/contractor/data/models/contractor_attendance_model.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_cubit.dart';
 import 'package:check_point_v2/features/contractor/presentation/cubit/contractor_state.dart';
 import '../widgets/admin_add_contractor_sheet_widget.dart';
 import '../widgets/admin_contractor_card_widget.dart';
+import '../widgets/admin_contractor_details_sheet_widget.dart';
 
 class AdminContractorsScreen extends StatefulWidget {
   const AdminContractorsScreen({super.key});
@@ -43,6 +46,26 @@ class _AdminContractorsScreenState extends State<AdminContractorsScreen> {
       builder: (_) => BlocProvider.value(
         value: context.read<ContractorCubit>(),
         child: const AdminAddContractorSheetWidget(),
+      ),
+    );
+  }
+
+  void _openContractorDetails({
+    required ContractorCompanyModel contractor,
+    required List<ContractorWorkerModel> workers,
+    required List<ContractorAttendanceModel> attendanceLogs,
+  }) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => BlocProvider.value(
+        value: context.read<ContractorCubit>(),
+        child: AdminContractorDetailsSheetWidget(
+          contractor: contractor,
+          workers: workers,
+          attendanceLogs: attendanceLogs,
+        ),
       ),
     );
   }
@@ -168,6 +191,14 @@ class _AdminContractorsScreenState extends State<AdminContractorsScreen> {
                           success: (s) => s.contractors,
                         ) ??
                         const [];
+                    final allWorkers = state.mapOrNull(
+                          success: (s) => s.workers,
+                        ) ??
+                        const [];
+                    final allAttendance = state.mapOrNull(
+                          success: (s) => s.attendanceLogs,
+                        ) ??
+                        const [];
 
                     final filtered = contractors.where((c) {
                       if (_searchQuery.isEmpty) return true;
@@ -201,7 +232,21 @@ class _AdminContractorsScreenState extends State<AdminContractorsScreen> {
                       separatorBuilder: (context, index) => hSpace(12),
                       itemBuilder: (context, index) {
                         final item = filtered[index];
-                        return AdminContractorCardWidget(contractor: item);
+                        final contractorWorkers = allWorkers
+                            .where((w) => w.contractorId == item.id)
+                            .toList();
+                        final contractorAttendance = allAttendance
+                            .where((a) => a.contractorId == item.id)
+                            .toList();
+
+                        return AdminContractorCardWidget(
+                          contractor: item,
+                          onTap: () => _openContractorDetails(
+                            contractor: item,
+                            workers: contractorWorkers,
+                            attendanceLogs: contractorAttendance,
+                          ),
+                        );
                       },
                     );
                   },

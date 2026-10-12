@@ -18,7 +18,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
 
   Future<void> loadEmployees() async {
     emit(const AdminEmployeesState.loading());
-    final result = await employeeRepo.getEmployees(page: 0, pageSize: 50);
+    final result = await employeeRepo.getEmployees(page: 0, pageSize: 200);
     switch (result) {
       case Success(:final data):
         allEmployees = data;

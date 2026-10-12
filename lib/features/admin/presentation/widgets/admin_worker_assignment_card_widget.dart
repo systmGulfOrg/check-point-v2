@@ -81,10 +81,14 @@ class AdminWorkerAssignmentCardWidget extends StatelessWidget {
                 color: AppColors.brandPrimary,
               ),
               vSpace(6),
-              Text(
-                '${'admin.assignments.site'.tr()}: ${assignment.siteName}',
-                style: AppTextStyles.font13Medium.copyWith(
-                  color: AppColors.textPrimary,
+              Expanded(
+                child: Text(
+                  '${'admin.assignments.site'.tr()}: ${assignment.siteName}',
+                  style: AppTextStyles.font13Medium.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -98,10 +102,14 @@ class AdminWorkerAssignmentCardWidget extends StatelessWidget {
                 color: AppColors.textSecondary,
               ),
               vSpace(6),
-              Text(
-                '${'admin.assignments.validFrom'.tr()}: ${assignment.validFrom ?? '-'}  →  ${'admin.assignments.validUntil'.tr()}: ${assignment.validUntil ?? '-'}',
-                style: AppTextStyles.font12Regular.copyWith(
-                  color: AppColors.textSecondary,
+              Expanded(
+                child: Text(
+                  '${'admin.assignments.validFrom'.tr()}: ${_formatDate(assignment.validFrom)}  →  ${'admin.assignments.validUntil'.tr()}: ${_formatDate(assignment.validUntil)}',
+                  style: AppTextStyles.font12Regular.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -109,5 +117,13 @@ class AdminWorkerAssignmentCardWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _formatDate(String? raw) {
+    if (raw == null || raw.isEmpty) return '-';
+    if (raw.contains('T')) {
+      return raw.split('T').first;
+    }
+    return raw;
   }
 }
