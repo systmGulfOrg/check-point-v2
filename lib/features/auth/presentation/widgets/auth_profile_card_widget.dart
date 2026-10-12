@@ -7,6 +7,7 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_state.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/edit_profile_sheet_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/role_switch_dialog_widget.dart';
 
 class AuthProfileCardWidget extends StatelessWidget {
   const AuthProfileCardWidget({super.key, this.onTap});
@@ -40,6 +41,7 @@ class AuthProfileCardWidget extends StatelessWidget {
             :final userId,
             :final role,
             :final username,
+            :final roles,
           ) =>
             InkWell(
               onTap: onTap ?? () => showEditProfileSheet(context),
@@ -85,19 +87,48 @@ class AuthProfileCardWidget extends StatelessWidget {
                       spacing: 8.w,
                       runSpacing: 6.h,
                       children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12.w,
-                            vertical: 4.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.softBrandBackground,
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Text(
-                            role.isEmpty ? '-' : role,
-                            style: AppTextStyles.font12Bold.copyWith(
-                              color: AppColors.brandPrimary,
+                        InkWell(
+                          onTap: roles.length > 1
+                              ? () => RoleSwitchDialogWidget.show(
+                                  context,
+                                  currentRole: role,
+                                  availableRoles: roles,
+                                )
+                              : null,
+                          borderRadius: BorderRadius.circular(12.r),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 4.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.softBrandBackground,
+                              borderRadius: BorderRadius.circular(12.r),
+                              border: roles.length > 1
+                                  ? Border.all(
+                                      color: AppColors.brandPrimary
+                                          .withValues(alpha: 0.3),
+                                    )
+                                  : null,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  role.isEmpty ? '-' : role,
+                                  style: AppTextStyles.font12Bold.copyWith(
+                                    color: AppColors.brandPrimary,
+                                  ),
+                                ),
+                                if (roles.length > 1) ...[
+                                  wSpace(4),
+                                  Icon(
+                                    Icons.swap_horiz_rounded,
+                                    size: 14.r,
+                                    color: AppColors.brandPrimary,
+                                  ),
+                                ],
+                              ],
                             ),
                           ),
                         ),

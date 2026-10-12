@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'employee_settings_tile_widget.dart';
 
 class EmployeeSettingsSectionCardWidget extends StatelessWidget {
   const EmployeeSettingsSectionCardWidget({
@@ -13,7 +12,7 @@ class EmployeeSettingsSectionCardWidget extends StatelessWidget {
   });
 
   final String sectionTitleKey;
-  final List<EmployeeSettingsTileWidget> tiles;
+  final List<Widget> tiles;
 
   @override
   Widget build(BuildContext context) {

@@ -5,8 +5,10 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/edit_profile_sheet_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/role_switch_dialog_widget.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/widgets/leave_profile_sheet_widget.dart';
 
@@ -76,6 +78,33 @@ class SupervisorProfileOptionsWidget extends StatelessWidget {
           );
         },
       ),
+      if (context.watch<AuthProfileCubit>().state.maybeWhen(
+            success: (name, userId, role, username, permissions, roles) =>
+                roles.length > 1,
+            orElse: () => false,
+          ))
+        (
+          Icons.swap_horiz_rounded,
+          'auth.role.switchRole',
+          context.watch<AuthProfileCubit>().state.maybeWhen(
+                success: (name, userId, role, username, permissions, roles) =>
+                    role,
+                orElse: () => null,
+              ),
+          () {
+            final state = context.read<AuthProfileCubit>().state;
+            state.maybeWhen(
+              success: (name, userId, role, username, permissions, roles) {
+                RoleSwitchDialogWidget.show(
+                  context,
+                  currentRole: role,
+                  availableRoles: roles,
+                );
+              },
+              orElse: () {},
+            );
+          },
+        ),
     ];
 
     return Container(

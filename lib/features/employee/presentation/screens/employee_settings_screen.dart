@@ -1,12 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_state.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_profile_card_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/edit_profile_sheet_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/role_switch_dialog_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/user_permissions_sheet_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_section_card_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_sign_out_button_widget.dart';
@@ -76,6 +80,32 @@ class EmployeeSettingsScreen extends StatelessWidget {
                     titleKey: 'admin.settings.permissions',
                     valueKey: 'admin.settings.roleBased',
                     onTap: () => showUserPermissionsSheet(context),
+                  ),
+                  BlocBuilder<AuthProfileCubit, AuthProfileState>(
+                    builder: (context, state) {
+                      final (role, roles) = state.maybeWhen(
+                        success: (
+                          name,
+                          userId,
+                          role,
+                          username,
+                          permissions,
+                          roles,
+                        ) => (role, roles),
+                        orElse: () => ('', const <String>[]),
+                      );
+                      if (roles.length <= 1) return const SizedBox.shrink();
+                      return EmployeeSettingsTileWidget(
+                        icon: Icons.swap_horiz_rounded,
+                        titleKey: 'auth.role.switchRole',
+                        valueKey: role,
+                        onTap: () => RoleSwitchDialogWidget.show(
+                          context,
+                          currentRole: role,
+                          availableRoles: roles,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

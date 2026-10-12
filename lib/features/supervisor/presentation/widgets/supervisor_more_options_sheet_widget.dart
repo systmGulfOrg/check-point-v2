@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/role_switch_dialog_widget.dart';
 import 'supervisor_more_option_widget.dart';
 
 class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
@@ -140,6 +143,40 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                     onProfileTap();
                   },
                 ),
+                if (context.watch<AuthProfileCubit>().state.maybeWhen(
+                      success:
+                          (name, userId, role, username, permissions, roles) =>
+                              roles.length > 1,
+                      orElse: () => false,
+                    ))
+                  SupervisorMoreOptionWidget(
+                    icon: Icons.swap_horiz_rounded,
+                    labelKey: 'auth.role.switchRole',
+                    subtitleKey: 'auth.role.currentRole',
+                    backgroundColor: AppColors.softBrandBackground,
+                    iconColor: AppColors.brandPrimary,
+                    onTap: () {
+                      Navigator.pop(context);
+                      final state = context.read<AuthProfileCubit>().state;
+                      state.maybeWhen(
+                        success: (
+                          name,
+                          userId,
+                          role,
+                          username,
+                          permissions,
+                          roles,
+                        ) {
+                          RoleSwitchDialogWidget.show(
+                            context,
+                            currentRole: role,
+                            availableRoles: roles,
+                          );
+                        },
+                        orElse: () {},
+                      );
+                    },
+                  ),
               ],
             ),
           ],
