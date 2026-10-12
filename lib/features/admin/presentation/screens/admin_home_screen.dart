@@ -125,6 +125,22 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 isAttendanceLoading: isAttendanceLoading,
                 isLeaveLoading: isLeaveLoading,
                 isTasksLoading: isTasksLoading,
+                onTotalStaffTap: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.adminAttendance,
+                ),
+                onPresentTodayTap: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.adminAttendance,
+                ),
+                onPendingLeavesTap: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.adminLeaveManagement,
+                ),
+                onOpenTasksTap: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.adminTasks,
+                ),
               ),
               hSpace(16),
               const AdminWeeklyAttendanceChartWidget(),

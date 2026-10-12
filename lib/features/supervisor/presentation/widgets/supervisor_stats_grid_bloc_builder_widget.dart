@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_stats_grid_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_state.dart';
@@ -80,6 +81,22 @@ class SupervisorStatsGridBlocBuilderWidget extends StatelessWidget {
                       isAttendanceLoading: isAttendanceLoading,
                       isLeaveLoading: isLeaveLoading,
                       isTasksLoading: isTasksLoading,
+                      onTotalStaffTap: () => Navigator.pushNamed(
+                        context,
+                        AppRoutes.supervisorTeam,
+                      ),
+                      onPresentTodayTap: () => Navigator.pushNamed(
+                        context,
+                        AppRoutes.supervisorAttendance,
+                      ),
+                      onPendingLeavesTap: () => Navigator.pushNamed(
+                        context,
+                        AppRoutes.supervisorLeaveManagement,
+                      ),
+                      onOpenTasksTap: () => Navigator.pushNamed(
+                        context,
+                        AppRoutes.supervisorTasks,
+                      ),
                     );
                   },
                 );

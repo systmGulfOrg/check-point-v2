@@ -15,6 +15,10 @@ class AdminStatsGridWidget extends StatelessWidget {
     this.isAttendanceLoading = false,
     this.isLeaveLoading = false,
     this.isTasksLoading = false,
+    this.onTotalStaffTap,
+    this.onPresentTodayTap,
+    this.onPendingLeavesTap,
+    this.onOpenTasksTap,
     super.key,
   });
 
@@ -26,6 +30,10 @@ class AdminStatsGridWidget extends StatelessWidget {
   final bool isAttendanceLoading;
   final bool isLeaveLoading;
   final bool isTasksLoading;
+  final VoidCallback? onTotalStaffTap;
+  final VoidCallback? onPresentTodayTap;
+  final VoidCallback? onPendingLeavesTap;
+  final VoidCallback? onOpenTasksTap;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +55,7 @@ class AdminStatsGridWidget extends StatelessWidget {
               iconBackgroundColor: AppColors.softBrandBackground,
               value: '$totalStaff',
               labelKey: 'admin.dashboard.totalStaff',
+              onTap: onTotalStaffTap,
             ),
           ),
         ),
@@ -60,6 +69,7 @@ class AdminStatsGridWidget extends StatelessWidget {
               iconBackgroundColor: AppColors.softGreenBackground,
               value: '$presentToday',
               labelKey: 'admin.dashboard.presentToday',
+              onTap: onPresentTodayTap,
             ),
           ),
         ),
@@ -73,6 +83,7 @@ class AdminStatsGridWidget extends StatelessWidget {
               iconBackgroundColor: AppColors.softYellowBackground,
               value: '$pendingLeaves',
               labelKey: 'admin.dashboard.pendingLeaves',
+              onTap: onPendingLeavesTap,
             ),
           ),
         ),
@@ -86,6 +97,7 @@ class AdminStatsGridWidget extends StatelessWidget {
               iconBackgroundColor: AppColors.softBlueBackground,
               value: '$openTasks',
               labelKey: 'admin.dashboard.openTasks',
+              onTap: onOpenTasksTap,
             ),
           ),
         ),

@@ -60,11 +60,14 @@ import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requ
 import 'package:check_point_v2/features/supervisor/presentation/cubit/plans/supervisor_plans_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_attendance_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_leave_management_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_main_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_notifications_screen.dart';
 import 'package:check_point_v2/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_plans_screen.dart';
+import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_tasks_screen.dart';
+import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_team_screen.dart';
 import 'package:check_point_v2/features/remote_work/presentation/cubit/remote_work_cubit.dart';
 import 'package:check_point_v2/features/remote_work/presentation/cubit/employee_work_access_cubit.dart';
 import 'package:check_point_v2/features/projects/presentation/cubit/projects_cubit.dart';
@@ -73,6 +76,7 @@ import 'package:check_point_v2/features/projects/presentation/screens/project_bo
 import 'package:check_point_v2/features/leaves/presentation/screens/leaves_dashboard_screen.dart';
 import 'package:check_point_v2/features/remote_work/presentation/screens/remote_work_screen.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_motion.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/deleted_employees/admin_deleted_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_deleted_employees_screen.dart';
@@ -607,6 +611,90 @@ class AppRouter {
           child: BlocProvider<NotificationsCubit>(
             create: (_) => sl<NotificationsCubit>()..load(),
             child: const SupervisorNotificationsScreen(),
+          ),
+        );
+
+      case AppRoutes.supervisorAttendance:
+        return _slideRoute(
+          settings: const RouteSettings(
+            name: AppRoutes.supervisorAttendance,
+          ),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<SupervisorAttendanceCubit>(
+                create: (_) => sl<SupervisorAttendanceCubit>()..loadAttendance(),
+              ),
+              BlocProvider<SupervisorTeamCubit>(
+                create: (_) => sl<SupervisorTeamCubit>()..loadTeam(),
+              ),
+              BlocProvider<AuthProfileCubit>(
+                create: (_) => sl<AuthProfileCubit>()..loadProfile(),
+              ),
+            ],
+            child: Scaffold(
+              backgroundColor: AppColors.white,
+              appBar: AppBar(
+                backgroundColor: AppColors.white,
+                foregroundColor: AppColors.textPrimary,
+                elevation: 0,
+              ),
+              body: const SupervisorAttendanceScreen(),
+            ),
+          ),
+        );
+
+      case AppRoutes.supervisorTasks:
+        return _slideRoute(
+          settings: const RouteSettings(
+            name: AppRoutes.supervisorTasks,
+          ),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<SupervisorTasksCubit>(
+                create: (_) => sl<SupervisorTasksCubit>()..loadTasks(),
+              ),
+              BlocProvider<SupervisorTeamCubit>(
+                create: (_) => sl<SupervisorTeamCubit>()..loadTeam(),
+              ),
+              BlocProvider<AuthProfileCubit>(
+                create: (_) => sl<AuthProfileCubit>()..loadProfile(),
+              ),
+            ],
+            child: Scaffold(
+              backgroundColor: AppColors.white,
+              appBar: AppBar(
+                backgroundColor: AppColors.white,
+                foregroundColor: AppColors.textPrimary,
+                elevation: 0,
+              ),
+              body: const SupervisorTasksScreen(),
+            ),
+          ),
+        );
+
+      case AppRoutes.supervisorTeam:
+        return _slideRoute(
+          settings: const RouteSettings(
+            name: AppRoutes.supervisorTeam,
+          ),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<SupervisorTeamCubit>(
+                create: (_) => sl<SupervisorTeamCubit>()..loadTeam(),
+              ),
+              BlocProvider<AuthProfileCubit>(
+                create: (_) => sl<AuthProfileCubit>()..loadProfile(),
+              ),
+            ],
+            child: Scaffold(
+              backgroundColor: AppColors.white,
+              appBar: AppBar(
+                backgroundColor: AppColors.white,
+                foregroundColor: AppColors.textPrimary,
+                elevation: 0,
+              ),
+              body: const SupervisorTeamScreen(),
+            ),
           ),
         );
 

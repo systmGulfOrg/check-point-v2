@@ -15,6 +15,9 @@ class AppRoutes {
   static const String supervisorLeaveManagement =
       '/supervisor/leave-management';
   static const String supervisorPlans = '/supervisor/plans';
+  static const String supervisorAttendance = '/supervisor/attendance';
+  static const String supervisorTasks = '/supervisor/tasks';
+  static const String supervisorTeam = '/supervisor/team';
   static const String adminDepartments = '/admin/departments';
   static const String adminLocations = '/admin/locations';
   static const String adminShiftsPolicies = '/admin/shifts-policies';

@@ -11,6 +11,7 @@ class AdminStatCardWidget extends StatelessWidget {
     required this.iconBackgroundColor,
     required this.value,
     required this.labelKey,
+    this.onTap,
     super.key,
   });
 
@@ -19,10 +20,16 @@ class AdminStatCardWidget extends StatelessWidget {
   final Color iconBackgroundColor;
   final String value;
   final String labelKey;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16.r),
+        child: Container(
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
@@ -72,6 +79,8 @@ class AdminStatCardWidget extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    ),
       ),
     );
   }
