@@ -57,7 +57,8 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
     );
     final permissions = context.select<AuthProfileCubit, List<String>>(
       (cubit) => cubit.state.maybeWhen(
-        success: (name, userId, role, username, permissions) => permissions,
+        success:
+            (name, userId, role, username, permissions, roles) => permissions,
         orElse: () => const [],
       ),
     );

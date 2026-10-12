@@ -84,6 +84,7 @@ class _FakeAuthSessionStorage extends AuthSessionStorage {
     int? branchId,
     String? userName,
     String? role,
+    List<String> roles = const [],
     List<String> permissions = const [],
   }) async {
     _storage[AuthSessionStorage.tokenKey] = token;

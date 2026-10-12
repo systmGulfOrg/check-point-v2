@@ -79,15 +79,20 @@ class AdminEmployeesBlocBuilderWidget extends StatelessWidget {
     builder: (context, state) {
       final canEdit = context.select<AuthProfileCubit, bool>(
         (cubit) => cubit.state.maybeWhen(
-          success: (name, userId, role, username, permissions) =>
-              AppPermissions.has(permissions, AppPermissions.employeeEdit),
+          success:
+              (name, userId, role, username, permissions, roles) =>
+                  AppPermissions.has(permissions, AppPermissions.employeeEdit),
           orElse: () => false,
         ),
       );
       final canDelete = context.select<AuthProfileCubit, bool>(
         (cubit) => cubit.state.maybeWhen(
-          success: (name, userId, role, username, permissions) =>
-              AppPermissions.has(permissions, AppPermissions.employeeDelete),
+          success:
+              (name, userId, role, username, permissions, roles) =>
+                  AppPermissions.has(
+                    permissions,
+                    AppPermissions.employeeDelete,
+                  ),
           orElse: () => false,
         ),
       );

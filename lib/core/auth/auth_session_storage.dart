@@ -13,6 +13,7 @@ class AuthSessionStorage {
   static const branchIdKey = 'branch_id';
   static const userNameKey = 'user_name';
   static const userRoleKey = 'user_role';
+  static const userRolesKey = 'user_roles';
   static const permissionsKey = 'user_permissions';
   static const biometricEnabledKey = 'biometric_login_enabled';
   static const biometricRoleKey = 'biometric_login_role';
@@ -44,6 +45,7 @@ class AuthSessionStorage {
     int? branchId,
     String? userName,
     String? role,
+    List<String> roles = const [],
     List<String> permissions = const [],
   }) async {
     await secureStorage.write(key: tokenKey, value: token);
@@ -72,6 +74,9 @@ class AuthSessionStorage {
     }
     if (role != null && role.isNotEmpty) {
       await secureStorage.write(key: userRoleKey, value: role);
+    }
+    if (roles.isNotEmpty) {
+      await secureStorage.write(key: userRolesKey, value: roles.join(','));
     }
     await secureStorage.write(
       key: permissionsKey,
@@ -120,6 +125,35 @@ class AuthSessionStorage {
   Future<String?> readUserName() => secureStorage.read(key: userNameKey);
 
   Future<String?> readUserRole() => secureStorage.read(key: userRoleKey);
+
+  Future<void> saveUserRole(String role) =>
+      secureStorage.write(key: userRoleKey, value: role);
+
+  Future<List<String>> readUserRoles() async {
+    final direct = await secureStorage.read(key: userRolesKey);
+    if (direct != null && direct.isNotEmpty) {
+      return direct
+          .split(',')
+          .map((r) => r.trim())
+          .where((r) => r.isNotEmpty)
+          .toSet()
+          .toList();
+    }
+    final token = await readToken();
+    if (token != null) {
+      final payload = decodeJwtPayload(token);
+      final rawRoles = payload?['roles'] ?? payload?['Roles'];
+      if (rawRoles is List) {
+        final list = rawRoles.map((r) => r.toString().trim()).toList();
+        if (list.isNotEmpty) {
+          await secureStorage.write(key: userRolesKey, value: list.join(','));
+          return list;
+        }
+      }
+    }
+    final singleRole = await readUserRole();
+    return singleRole != null && singleRole.isNotEmpty ? [singleRole] : const [];
+  }
 
   Future<List<String>> readPermissions() async {
     final raw = await secureStorage.read(key: permissionsKey);
@@ -205,6 +239,7 @@ class AuthSessionStorage {
     await secureStorage.delete(key: branchIdKey);
     await secureStorage.delete(key: userNameKey);
     await secureStorage.delete(key: userRoleKey);
+    await secureStorage.delete(key: userRolesKey);
     await secureStorage.delete(key: permissionsKey);
   }
 }

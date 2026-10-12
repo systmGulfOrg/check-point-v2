@@ -12,6 +12,7 @@ abstract class AuthProfileState with _$AuthProfileState {
     required String role,
     required String username,
     required List<String> permissions,
+    @Default([]) List<String> roles,
   }) = AuthProfileSuccess;
   const factory AuthProfileState.error(String messageKey) = AuthProfileError;
 }

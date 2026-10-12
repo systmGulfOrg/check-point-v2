@@ -80,8 +80,9 @@ class _AdminEmployeeProfileScreenState
   Widget build(BuildContext context) {
     final canEdit = context.select<AuthProfileCubit, bool>(
       (cubit) => cubit.state.maybeWhen(
-        success: (name, userId, role, username, permissions) =>
-            AppPermissions.has(permissions, AppPermissions.employeeEdit),
+        success:
+            (name, userId, role, username, permissions, roles) =>
+                AppPermissions.has(permissions, AppPermissions.employeeEdit),
         orElse: () => true,
       ),
     );

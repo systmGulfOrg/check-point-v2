@@ -52,6 +52,7 @@ class LoginUseCase {
           userId: data.id,
           userName: data.userName ?? data.name,
           role: role,
+          roles: data.allRoles,
           branchId: data.branchId,
           permissions: data.permissions ?? const [],
         );
