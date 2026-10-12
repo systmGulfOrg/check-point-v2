@@ -85,6 +85,8 @@ class EmployeeModel {
     this.socialInsuranceNumber,
     this.documents,
     this.customFields,
+    this.contractorId,
+    this.contractorName,
     this.deletedAt,
   });
 
@@ -167,7 +169,11 @@ class EmployeeModel {
   final String? socialInsuranceNumber;
   final List<dynamic>? documents;
   final Map<String, dynamic>? customFields;
+  final String? contractorId;
+  final String? contractorName;
   final String? deletedAt;
+
+  bool get isWorker => contractorId != null && contractorId!.isNotEmpty;
 
   String? get resolvedDirectManagerId => directManagerId ?? managerId;
   String? get resolvedDirectManagerName => directManagerName ?? managerName;

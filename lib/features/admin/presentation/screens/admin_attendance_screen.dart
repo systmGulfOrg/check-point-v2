@@ -14,6 +14,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_absent_employees_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_action_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_advanced_filter_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_export_button_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_filter_bar_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_record_card_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_record_data.dart';
@@ -95,6 +96,17 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
           style: AppTextStyles.font18Bold,
         ),
         actions: [
+          BlocBuilder<AdminAttendanceCubit, AdminAttendanceState>(
+            builder: (context, state) {
+              final records = state.maybeWhen(
+                success: (records) => records,
+                orElse: () => const <AdminAttendanceModel>[],
+              );
+              return AdminAttendanceExportButtonWidget(
+                attendanceRecords: records,
+              );
+            },
+          ),
           Padding(
             padding: EdgeInsetsDirectional.only(end: 8.w),
             child: IconButton(

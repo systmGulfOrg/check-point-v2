@@ -109,6 +109,8 @@ EmployeeModel _$EmployeeModelFromJson(Map<String, dynamic> json) =>
       socialInsuranceNumber: json['socialInsuranceNumber'] as String?,
       documents: json['documents'] as List<dynamic>?,
       customFields: json['customFields'] as Map<String, dynamic>?,
+      contractorId: json['contractorId'] as String?,
+      contractorName: json['contractorName'] as String?,
       deletedAt: json['deletedAt'] as String?,
     );
 
@@ -191,5 +193,7 @@ Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
       'socialInsuranceNumber': instance.socialInsuranceNumber,
       'documents': instance.documents,
       'customFields': instance.customFields,
+      'contractorId': instance.contractorId,
+      'contractorName': instance.contractorName,
       'deletedAt': instance.deletedAt,
     };

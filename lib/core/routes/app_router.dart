@@ -509,6 +509,12 @@ class AppRouter {
               BlocProvider<AdminDepartmentsCubit>(
                 create: (_) => sl<AdminDepartmentsCubit>()..load(),
               ),
+              BlocProvider<AdminBranchesCubit>(
+                create: (_) => sl<AdminBranchesCubit>()..load(),
+              ),
+              BlocProvider<ContractorCubit>(
+                create: (_) => sl<ContractorCubit>()..loadDashboardData(),
+              ),
               BlocProvider<AdminAttendanceCubit>(
                 create: (_) => sl<AdminAttendanceCubit>()..loadAttendance(),
               ),

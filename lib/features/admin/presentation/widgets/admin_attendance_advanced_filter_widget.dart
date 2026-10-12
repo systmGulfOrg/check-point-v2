@@ -11,6 +11,8 @@ import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_contractor_filter_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_site_filter_widget.dart';
 
 class AdminAttendanceAdvancedFilterWidget extends StatelessWidget {
   const AdminAttendanceAdvancedFilterWidget({super.key});
@@ -27,7 +29,15 @@ class AdminAttendanceAdvancedFilterWidget extends StatelessWidget {
       AdminDepartmentsSuccess(:final departments) => departments,
       _ => const <DepartmentModel>[],
     };
+    final isContractorSelected = attendanceCubit.selectedContractorId != null;
+    final targetEmployees = isContractorSelected
+        ? employees
+            .where((e) => e.contractorId == attendanceCubit.selectedContractorId)
+            .toList()
+        : employees;
     final activeFilters = [
+      if (attendanceCubit.selectedSiteId != null) 1,
+      if (attendanceCubit.selectedContractorId != null) 1,
       if (attendanceCubit.selectedEmployeeId != null) 1,
       if (attendanceCubit.selectedDepartmentId != null) 1,
       if (attendanceCubit.selectedStatus != 'all') 1,
@@ -70,6 +80,10 @@ class AdminAttendanceAdvancedFilterWidget extends StatelessWidget {
             style: AppTextStyles.font11Regular,
           ),
           children: [
+            const AdminAttendanceSiteFilterWidget(),
+            hSpace(10),
+            const AdminAttendanceContractorFilterWidget(),
+            hSpace(10),
             InkWell(
               borderRadius: BorderRadius.circular(12.r),
               onTap: () {
@@ -81,7 +95,7 @@ class AdminAttendanceAdvancedFilterWidget extends StatelessWidget {
                   builder: (sheetContext) => StatefulBuilder(
                     builder: (sheetContext, setSheetState) {
                       final query = controller.text.trim().toLowerCase();
-                      final filtered = employees.where((employee) {
+                      final filtered = targetEmployees.where((employee) {
                         final name =
                             '${employee.name ?? ''} ${employee.userName ?? ''}'
                                 .toLowerCase();
@@ -100,9 +114,10 @@ class AdminAttendanceAdvancedFilterWidget extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'admin.attendance.employee'.tr(
-                                  context: context,
-                                ),
+                                (isContractorSelected
+                                        ? 'admin.attendance.contractorWorkers'
+                                        : 'admin.attendance.employee')
+                                    .tr(context: context),
                                 style: AppTextStyles.font16Bold,
                               ),
                               hSpace(10),
@@ -132,9 +147,10 @@ class AdminAttendanceAdvancedFilterWidget extends StatelessWidget {
                                         ),
                                       ),
                                       title: Text(
-                                        'admin.attendance.allEmployees'.tr(
-                                          context: context,
-                                        ),
+                                        (isContractorSelected
+                                                ? 'admin.attendance.allContractorWorkers'
+                                                : 'admin.attendance.allEmployees')
+                                            .tr(context: context),
                                       ),
                                       onTap: () {
                                         attendanceCubit.setEmployeeFilter(null);
@@ -187,7 +203,10 @@ class AdminAttendanceAdvancedFilterWidget extends StatelessWidget {
                 child: InputDecorator(
                   decoration: InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: 'admin.attendance.employee'.tr(context: context),
+                    labelText: (isContractorSelected
+                            ? 'admin.attendance.contractorWorkers'
+                            : 'admin.attendance.employee')
+                        .tr(context: context),
                     labelStyle: AppTextStyles.font11Regular.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -198,7 +217,7 @@ class AdminAttendanceAdvancedFilterWidget extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    employees
+                    targetEmployees
                             .where(
                               (employee) =>
                                   employee.id ==
@@ -209,7 +228,10 @@ class AdminAttendanceAdvancedFilterWidget extends StatelessWidget {
                                   employee.name ?? employee.userName ?? '-',
                             )
                             .firstOrNull ??
-                        'admin.attendance.allEmployees'.tr(context: context),
+                        (isContractorSelected
+                                ? 'admin.attendance.allContractorWorkers'
+                                : 'admin.attendance.allEmployees')
+                            .tr(context: context),
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.font14Medium,
                   ),

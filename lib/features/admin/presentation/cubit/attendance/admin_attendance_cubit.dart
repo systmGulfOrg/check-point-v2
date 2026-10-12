@@ -29,9 +29,13 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
   DateTime? _customEndDate;
   String _searchQuery = '';
   String? _selectedEmployeeId;
+  String? _selectedSiteId;
+  String? _selectedContractorId;
   int? _selectedDepartmentId;
   String _selectedStatus = 'all';
   Map<String, int?> _employeeDepartmentById = const {};
+  Map<String, String?> _employeeContractorById = const {};
+  Map<String, String> _siteNamesById = const {};
   bool _isLoadingAttendance = false;
 
   AdminAttendanceDateFilter get selectedDateFilter => _selectedDateFilter;
@@ -39,6 +43,8 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
   DateTime? get customEndDate => _customEndDate;
   String get searchQuery => _searchQuery;
   String? get selectedEmployeeId => _selectedEmployeeId;
+  String? get selectedSiteId => _selectedSiteId;
+  String? get selectedContractorId => _selectedContractorId;
   int? get selectedDepartmentId => _selectedDepartmentId;
   String get selectedStatus => _selectedStatus;
   List<EmployeeModel> get employees => _employees;
@@ -109,7 +115,30 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
       for (final employee in employees)
         if (employee.id != null) employee.id!: employee.departmentId,
     };
+    _employeeContractorById = {
+      for (final employee in employees)
+        if (employee.id != null) employee.id!: employee.contractorId,
+    };
     if (!_isLoadingAttendance) _emitFiltered();
+  }
+
+  void setSiteNames(Map<String, String> sites) {
+    _siteNamesById = sites;
+  }
+
+  void setSiteFilter(String? siteId) {
+    _selectedSiteId = siteId;
+    _emitFiltered();
+  }
+
+  void setContractorFilter(String? contractorId) {
+    _selectedContractorId = contractorId;
+    if (_selectedContractorId != null && _selectedEmployeeId != null) {
+      if (_employeeContractorById[_selectedEmployeeId] != _selectedContractorId) {
+        _selectedEmployeeId = null;
+      }
+    }
+    _emitFiltered();
   }
 
   void setEmployeeFilter(String? employeeId) {
@@ -128,6 +157,8 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
   }
 
   void clearAdvancedFilters() {
+    _selectedSiteId = null;
+    _selectedContractorId = null;
     _selectedEmployeeId = null;
     _selectedDepartmentId = null;
     _selectedStatus = 'all';
@@ -180,6 +211,26 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
         if (!name.contains(_searchQuery) &&
             !area.contains(_searchQuery) &&
             !date.contains(_searchQuery)) {
+          return false;
+        }
+      }
+
+      if (_selectedSiteId != null) {
+        final matchesRecordSite = record.siteId == _selectedSiteId;
+        final siteName = _siteNamesById[_selectedSiteId]?.trim().toLowerCase();
+        final matchesAreaName = siteName != null &&
+            siteName.isNotEmpty &&
+            record.area != null &&
+            record.area!.trim().toLowerCase() == siteName;
+        if (!matchesRecordSite && !matchesAreaName) {
+          return false;
+        }
+      }
+
+      if (_selectedContractorId != null) {
+        final recContractor =
+            record.contractorId ?? _employeeContractorById[record.employeeId];
+        if (recContractor != _selectedContractorId) {
           return false;
         }
       }

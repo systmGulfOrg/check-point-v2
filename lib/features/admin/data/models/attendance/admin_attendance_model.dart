@@ -33,6 +33,8 @@ class AdminAttendanceModel {
     this.checkOutMockLocation,
     this.earlyLeaveMinutes,
     this.workedMinutes,
+    this.siteId,
+    this.contractorId,
   });
 
   final int? id;
@@ -64,6 +66,8 @@ class AdminAttendanceModel {
   final bool? checkOutMockLocation;
   final int? earlyLeaveMinutes;
   final int? workedMinutes;
+  final String? siteId;
+  final String? contractorId;
 
   factory AdminAttendanceModel.fromJson(Map<String, dynamic> json) =>
       _$AdminAttendanceModelFromJson(json);

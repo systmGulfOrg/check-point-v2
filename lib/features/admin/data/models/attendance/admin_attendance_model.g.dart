@@ -34,6 +34,8 @@ AdminAttendanceModel _$AdminAttendanceModelFromJson(
   checkOutMockLocation: json['checkOutMockLocation'] as bool?,
   earlyLeaveMinutes: (json['earlyLeaveMinutes'] as num?)?.toInt(),
   workedMinutes: (json['workedMinutes'] as num?)?.toInt(),
+  siteId: json['siteId'] as String?,
+  contractorId: json['contractorId'] as String?,
 );
 
 Map<String, dynamic> _$AdminAttendanceModelToJson(
@@ -64,6 +66,8 @@ Map<String, dynamic> _$AdminAttendanceModelToJson(
   'checkOutMockLocation': instance.checkOutMockLocation,
   'earlyLeaveMinutes': instance.earlyLeaveMinutes,
   'workedMinutes': instance.workedMinutes,
+  'siteId': instance.siteId,
+  'contractorId': instance.contractorId,
 };
 
 AttendanceResponseModel _$AttendanceResponseModelFromJson(
