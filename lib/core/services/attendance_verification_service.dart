@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../auth/biometric_auth_service.dart';
+import 'location_integrity_result.dart';
+import 'location_integrity_service.dart';
 import 'location_service.dart';
 
 class AttendanceVerificationResult {
@@ -10,21 +12,28 @@ class AttendanceVerificationResult {
     required this.isAllowed,
     this.location,
     this.messageKey,
+    this.integrityResult,
   });
 
   final bool isAllowed;
   final LatLng? location;
   final String? messageKey;
+
+  /// The integrity assessment for this verification attempt. May be null if
+  /// the location was unavailable before integrity could be checked.
+  final LocationIntegrityResult? integrityResult;
 }
 
 class AttendanceVerificationService {
   AttendanceVerificationService({
     required this.locationService,
     required this.biometricAuthService,
+    required this.locationIntegrityService,
   });
 
   final LocationService locationService;
   final BiometricAuthService biometricAuthService;
+  final LocationIntegrityService locationIntegrityService;
 
   Future<AttendanceVerificationResult> verify({
     required String biometricReason,
@@ -32,41 +41,62 @@ class AttendanceVerificationService {
     double radiusMeters = 150,
     List<LatLng> polygon = const [],
   }) async {
-    final location = await locationService.getCurrentPosition();
-    if (location == null) {
+    // 1. Obtain an enriched location sample
+    final sample = await locationService.getCurrentSample();
+    if (sample == null) {
       return const AttendanceVerificationResult(
         isAllowed: false,
         messageKey: 'errors.locationUnavailable',
       );
     }
 
+    // 2. Location integrity check (mock detection + anomaly analysis)
+    final integrityResult = await locationIntegrityService.assess(sample);
+    if (!integrityResult.isAllowed) {
+      return AttendanceVerificationResult(
+        isAllowed: false,
+        messageKey: integrityResult.messageKey,
+        integrityResult: integrityResult,
+      );
+    }
+
+    final location = sample.position;
+
+    // 3. Geofence check
     if (!isWithinArea(
       point: location,
       center: center,
       radiusMeters: radiusMeters,
       polygon: polygon,
     )) {
-      return const AttendanceVerificationResult(
+      return AttendanceVerificationResult(
         isAllowed: false,
         location: null,
         messageKey: 'errors.outsideAttendanceArea',
+        integrityResult: integrityResult,
       );
     }
 
+    // 4. Biometric authentication
     final isBiometricAvailable = await biometricAuthService.isAvailable();
     if (isBiometricAvailable) {
       final authenticated = await biometricAuthService.authenticate(
         localizedReason: biometricReason,
       );
       if (!authenticated) {
-        return const AttendanceVerificationResult(
+        return AttendanceVerificationResult(
           isAllowed: false,
           messageKey: 'errors.biometricRequired',
+          integrityResult: integrityResult,
         );
       }
     }
 
-    return AttendanceVerificationResult(isAllowed: true, location: location);
+    return AttendanceVerificationResult(
+      isAllowed: true,
+      location: location,
+      integrityResult: integrityResult,
+    );
   }
 
   bool isWithinArea({

@@ -2,6 +2,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'location_sample.dart';
+
 class LocationService {
   Future<bool> handleLocationPermission() async {
     bool serviceEnabled;
@@ -27,7 +29,17 @@ class LocationService {
     return true;
   }
 
+  /// Returns the current position as a plain [LatLng] for backwards
+  /// compatibility with code that does not yet use integrity checks.
   Future<LatLng?> getCurrentPosition() async {
+    final sample = await getCurrentSample();
+    return sample?.position;
+  }
+
+  /// Returns an enriched [LocationSample] with all metadata needed for
+  /// integrity analysis. Returns null if permission is denied or an error
+  /// occurs.
+  Future<LocationSample?> getCurrentSample() async {
     try {
       final hasPermission = await handleLocationPermission();
       if (!hasPermission) return null;
@@ -39,7 +51,14 @@ class LocationService {
         ),
       );
 
-      return LatLng(position.latitude, position.longitude);
+      return LocationSample(
+        position: LatLng(position.latitude, position.longitude),
+        accuracy: position.accuracy,
+        timestampMs: position.timestamp.millisecondsSinceEpoch,
+        speed: position.speed < 0 ? 0.0 : position.speed,
+        provider: 'fused', // Geolocator uses the fused provider on Android
+        isMockFromNative: position.isMocked,
+      );
     } catch (_) {
       return null;
     }
