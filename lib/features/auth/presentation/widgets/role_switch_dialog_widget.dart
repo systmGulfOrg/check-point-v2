@@ -58,7 +58,7 @@ class RoleSwitchDialogWidget extends StatelessWidget {
 
   void _onSelectRole(BuildContext context, String selectedRole) {
     if (selectedRole.trim().toLowerCase() == currentRole.trim().toLowerCase()) {
-      Navigator.pop(context);
+      Navigator.of(context).pop();
       return;
     }
 
@@ -68,11 +68,19 @@ class RoleSwitchDialogWidget extends StatelessWidget {
       _ => AppRoutes.employee,
     };
 
-    context.read<AuthProfileCubit>().switchRole(selectedRole);
-    Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
-      targetRoute,
-      (route) => false,
-    );
+    final profileCubit = context.read<AuthProfileCubit>();
+    final navigator = Navigator.of(context, rootNavigator: true);
+
+    // Pop the bottom sheet first so all its descendants are deactivated cleanly
+    Navigator.of(context).pop();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await profileCubit.switchRole(selectedRole);
+      navigator.pushNamedAndRemoveUntil(
+        targetRoute,
+        (route) => false,
+      );
+    });
   }
 
   @override
