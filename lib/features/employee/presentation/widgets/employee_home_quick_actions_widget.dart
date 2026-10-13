@@ -10,6 +10,7 @@ class EmployeeHomeQuickActionsWidget extends StatelessWidget {
     required this.onRequestPermission,
     this.onWorkLocationTap,
     this.onCustomerVisitsTap,
+    this.onOvertimeTap,
     super.key,
   });
 
@@ -17,6 +18,7 @@ class EmployeeHomeQuickActionsWidget extends StatelessWidget {
   final VoidCallback onRequestPermission;
   final VoidCallback? onWorkLocationTap;
   final VoidCallback? onCustomerVisitsTap;
+  final VoidCallback? onOvertimeTap;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,37 @@ class EmployeeHomeQuickActionsWidget extends StatelessWidget {
             ),
           ],
         ),
+        if (onWorkLocationTap != null || onOvertimeTap != null) ...[
+          hSpace(10),
+          Row(
+            children: [
+              if (onWorkLocationTap != null)
+                Expanded(
+                  child: EmployeeQuickActionButtonWidget(
+                    icon: Icons.swap_horiz_rounded,
+                    title: 'remoteWork.requestLocation'.tr(context: context),
+                    iconColor: AppColors.info,
+                    backgroundColor: AppColors.softBlueBackground,
+                    borderColor: AppColors.info.withValues(alpha: 0.2),
+                    onTap: onWorkLocationTap!,
+                  ),
+                ),
+              if (onWorkLocationTap != null && onOvertimeTap != null)
+                wSpace(10),
+              if (onOvertimeTap != null)
+                Expanded(
+                  child: EmployeeQuickActionButtonWidget(
+                    icon: Icons.more_time_rounded,
+                    title: 'overtime.title'.tr(context: context),
+                    iconColor: AppColors.warning,
+                    backgroundColor: AppColors.softYellowBackground,
+                    borderColor: AppColors.warning.withValues(alpha: 0.2),
+                    onTap: onOvertimeTap!,
+                  ),
+                ),
+            ],
+          ),
+        ],
         if (onCustomerVisitsTap != null) ...[
           hSpace(10),
           EmployeeQuickActionButtonWidget(
@@ -62,17 +95,6 @@ class EmployeeHomeQuickActionsWidget extends StatelessWidget {
             backgroundColor: AppColors.softYellowBackground,
             borderColor: AppColors.warning.withValues(alpha: 0.25),
             onTap: onCustomerVisitsTap!,
-          ),
-        ],
-        if (onWorkLocationTap != null) ...[
-          hSpace(10),
-          EmployeeQuickActionButtonWidget(
-            icon: Icons.swap_horiz_rounded,
-            title: 'remoteWork.requestToSupervisor'.tr(context: context),
-            iconColor: AppColors.info,
-            backgroundColor: AppColors.softBlueBackground,
-            borderColor: AppColors.info.withValues(alpha: 0.2),
-            onTap: onWorkLocationTap!,
           ),
         ],
       ],

@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:check_point_v2/core/core.dart';
 import '../widgets/remote_work_access_gate_widget.dart';
 import '../widgets/remote_work_bloc_listener_widget.dart';
+import '../widgets/remote_work_my_requests_bloc_builder_widget.dart';
 
 class RemoteWorkScreen extends StatelessWidget {
   const RemoteWorkScreen({required this.sessionStorage, super.key});
@@ -19,7 +20,7 @@ class RemoteWorkScreen extends StatelessWidget {
         final role = snapshot.data?[0];
         final employeeId = snapshot.data?[1];
         final isAdmin = role == 'Admin';
-        final canReview = isAdmin || role == 'Supervisor';
+        final canReview = role == 'Supervisor';
         return DefaultTabController(
           length: 2,
           child: Scaffold(
@@ -34,11 +35,18 @@ class RemoteWorkScreen extends StatelessWidget {
               ),
             ),
             body: RemoteWorkBlocListenerWidget(
-              child: RemoteWorkAccessGateWidget(
-                isAdmin: isAdmin,
-                canReview: canReview,
-                canRequest: !isAdmin,
-                currentEmployeeId: employeeId,
+              child: Column(
+                children: [
+                  RemoteWorkMyRequestsBlocBuilderWidget(employeeId: employeeId),
+                  Expanded(
+                    child: RemoteWorkAccessGateWidget(
+                      isAdmin: isAdmin,
+                      canReview: canReview,
+                      canRequest: !isAdmin,
+                      currentEmployeeId: employeeId,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

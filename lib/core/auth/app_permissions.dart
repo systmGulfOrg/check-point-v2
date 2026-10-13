@@ -18,6 +18,8 @@ class AppPermissions {
   static const remoteRequest = 'remote.request';
   static const remoteApprove = 'remote.approve';
   static const remotePolicyManage = 'remote.policy_manage';
+  static const overtimeRequest = 'overtime.request';
+  static const overtimeApprove = 'overtime.approve';
   static const leaveRequest = 'leave.request';
   static const leaveApprove = 'leave.approve';
   static const leaveManagerApprove = 'leave.manager_approve';
@@ -65,6 +67,8 @@ class AppPermissions {
           remoteRequest,
           remoteApprove,
           remotePolicyManage,
+          overtimeRequest,
+          overtimeApprove,
           leaveRequest,
           leaveApprove,
           leaveManagerApprove,
@@ -84,10 +88,18 @@ class AppPermissions {
           permitApprove,
           remoteRequest,
           remoteApprove,
+          overtimeRequest,
+          overtimeApprove,
           reportView,
         ];
       default:
-        return [attendanceViewOwn, taskView, leaveRequest, remoteRequest];
+        return [
+          attendanceViewOwn,
+          taskView,
+          leaveRequest,
+          remoteRequest,
+          overtimeRequest,
+        ];
     }
   }
 }

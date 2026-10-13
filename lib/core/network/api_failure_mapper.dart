@@ -47,6 +47,16 @@ class ApiFailureMapper {
               item['errorMessage'] as String,
       ];
       final message = messages.join(' ').toLowerCase();
+      if (message.contains('overtime must be at least')) {
+        return const ApiFailure(messageKey: 'overtime.minDuration');
+      }
+      if (message.contains('overtime end time') ||
+          message.contains('endtime must be later')) {
+        return const ApiFailure(messageKey: 'overtime.invalidTimeRange');
+      }
+      if (message.contains('requestdate must be a valid date')) {
+        return const ApiFailure(messageKey: 'overtime.invalidDate');
+      }
       if ((message.contains('device') || message.contains('devise')) &&
           message.contains('access') &&
           message.contains('login')) {
@@ -75,7 +85,8 @@ class ApiFailureMapper {
           message.contains('invalid user') ||
           message.contains('invalid password') ||
           (message.contains('invalid') && status == 401) ||
-          (error.requestOptions.path.toLowerCase().contains('login') && status == 401)) {
+          (error.requestOptions.path.toLowerCase().contains('login') &&
+              status == 401)) {
         return const ApiFailure(messageKey: 'errors.invalidCredentials');
       }
       return switch (error.type) {

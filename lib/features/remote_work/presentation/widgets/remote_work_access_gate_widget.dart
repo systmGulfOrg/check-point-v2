@@ -4,6 +4,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:check_point_v2/core/core.dart';
 import '../cubit/employee_work_access_cubit.dart';
 import '../cubit/employee_work_access_state.dart';
+import '../cubit/remote_work_cubit.dart';
 import 'remote_work_tabs_widget.dart';
 
 class RemoteWorkAccessGateWidget extends StatelessWidget {
@@ -22,12 +23,24 @@ class RemoteWorkAccessGateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isAdmin || canReview) {
+    final availablePolicyTypes = context
+        .watch<RemoteWorkCubit>()
+        .state
+        .maybeWhen(
+          success: (policies, _) =>
+              policies.map((policy) => policy.effectivePolicyType).toSet(),
+          orElse: () => null,
+        );
+
+    if (isAdmin) {
       return RemoteWorkTabsWidget(
         isAdmin: isAdmin,
         canReview: canReview,
         canRequest: canRequest,
         currentEmployeeId: currentEmployeeId,
+        // Admins must be able to open every system tab even before a policy
+        // of that type exists, so they can add the first onsite/hybrid policy.
+        availablePolicyTypes: null,
         showOnsite: true,
         showRemote: true,
         showHybrid: true,
@@ -45,6 +58,7 @@ class RemoteWorkAccessGateWidget extends StatelessWidget {
             canRequest: canRequest,
             currentEmployeeId: currentEmployeeId,
             assignedPolicyId: null,
+            availablePolicyTypes: availablePolicyTypes,
             showOnsite: true,
             showRemote: true,
             showHybrid: false,
@@ -57,6 +71,7 @@ class RemoteWorkAccessGateWidget extends StatelessWidget {
             canRequest: canRequest,
             currentEmployeeId: currentEmployeeId,
             assignedPolicyId: policyId,
+            availablePolicyTypes: availablePolicyTypes,
             showOnsite: workSystem == 'onsite',
             showRemote: workSystem == 'remote',
             showHybrid: workSystem == 'hybrid',

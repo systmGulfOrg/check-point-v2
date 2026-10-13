@@ -18,6 +18,7 @@ import 'package:check_point_v2/features/employee/presentation/widgets/employee_a
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_header_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_leaves_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_quick_actions_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_request_shortcuts_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_today_card_widget.dart';
 import 'package:check_point_v2/features/leaves/data/models/leave_request_body.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
@@ -335,6 +336,8 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                     );
                   },
                 ),
+                hSpace(12),
+                const EmployeeHomeRequestShortcutsWidget(),
                 BlocBuilder<PointsCubit, PointsState>(
                   builder: (context, state) {
                     if (state is PointsLoaded) {
@@ -355,8 +358,6 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                 EmployeeHomeQuickActionsWidget(
                   onRequestLeave: () => _showApplyLeaveSheet(context),
                   onRequestPermission: () => _showApplyPermissionSheet(context),
-                  onWorkLocationTap: () =>
-                      Navigator.pushNamed(context, AppRoutes.remoteWork),
                   onCustomerVisitsTap: () =>
                       Navigator.pushNamed(context, AppRoutes.adminLocations),
                 ),

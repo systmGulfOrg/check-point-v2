@@ -61,6 +61,15 @@ class AdminManageScreen extends StatelessWidget {
             ),
             hSpace(10),
             AdminManageCardWidget(
+              icon: Icons.more_time_rounded,
+              iconColor: AppColors.warningOrange,
+              iconBackgroundColor: AppColors.softYellowBackground,
+              titleKey: 'overtime.title',
+              subtitleKey: 'overtime.requests',
+              onTap: () => Navigator.pushNamed(context, AppRoutes.overtime),
+            ),
+            hSpace(10),
+            AdminManageCardWidget(
               icon: Icons.shield_outlined,
               iconColor: AppColors.info,
               iconBackgroundColor: AppColors.softBlueBackground,

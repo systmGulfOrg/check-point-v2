@@ -86,6 +86,8 @@ import 'package:check_point_v2/features/projects/presentation/screens/projects_s
 import 'package:check_point_v2/features/projects/presentation/screens/project_board_screen.dart';
 import 'package:check_point_v2/features/leaves/presentation/screens/leaves_dashboard_screen.dart';
 import 'package:check_point_v2/features/remote_work/presentation/screens/remote_work_screen.dart';
+import 'package:check_point_v2/features/overtime/presentation/cubit/overtime_cubit.dart';
+import 'package:check_point_v2/features/overtime/presentation/screens/overtime_screen.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_motion.dart';
@@ -523,6 +525,14 @@ class AppRouter {
               ),
             ],
             child: RemoteWorkScreen(sessionStorage: sl()),
+          ),
+        );
+      case AppRoutes.overtime:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.overtime),
+          child: BlocProvider<OvertimeCubit>(
+            create: (_) => sl<OvertimeCubit>()..load(),
+            child: const OvertimeScreen(),
           ),
         );
       case AppRoutes.projects:

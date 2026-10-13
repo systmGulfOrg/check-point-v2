@@ -13,11 +13,13 @@ class RemoteWorkPolicyCardWidget extends StatelessWidget {
   const RemoteWorkPolicyCardWidget({
     required this.policy,
     required this.isAdmin,
+    this.canViewEmployees = false,
     super.key,
   });
 
   final RemoteWorkPolicyModel policy;
   final bool isAdmin;
+  final bool canViewEmployees;
 
   void _showEditPolicyDialog(BuildContext context) {
     final cubit = context.read<RemoteWorkCubit>();
@@ -152,70 +154,72 @@ class RemoteWorkPolicyCardWidget extends StatelessWidget {
               '${policy.workingHoursStart ?? '--'} - ${policy.workingHoursEnd ?? '--'}  •  ${'remoteWork.gracePeriod'.tr(context: context)}: ${policy.allowedDelayTime ?? 0}',
               style: AppTextStyles.font12Regular,
             ),
-            const Divider(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () => _showEmployeesSheet(context),
-                  borderRadius: BorderRadius.circular(8.r),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 6.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.pageBackground,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.people_alt_outlined,
-                          size: 16.r,
-                          color: AppColors.brandPrimary,
-                        ),
-                        wSpace(6),
-                        Text(
-                          'remoteWork.viewEmployeesCount'.tr(
-                            context: context,
-                            args: ['${policy.employeeCount}'],
-                          ),
-                          style: AppTextStyles.font12Medium.copyWith(
+            if (canViewEmployees || isAdmin) ...[
+              const Divider(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () => _showEmployeesSheet(context),
+                    borderRadius: BorderRadius.circular(8.r),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.pageBackground,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.people_alt_outlined,
+                            size: 16.r,
                             color: AppColors.brandPrimary,
                           ),
+                          wSpace(6),
+                          Text(
+                            'remoteWork.viewEmployeesCount'.tr(
+                              context: context,
+                              args: ['${policy.employeeCount}'],
+                            ),
+                            style: AppTextStyles.font12Medium.copyWith(
+                              color: AppColors.brandPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (isAdmin)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () => _showEditPolicyDialog(context),
+                          icon: Icon(
+                            Icons.edit_outlined,
+                            size: 20.r,
+                            color: AppColors.brandPrimary,
+                          ),
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        IconButton(
+                          onPressed: () => _showDeletePolicyDialog(context),
+                          icon: Icon(
+                            Icons.delete_outline_rounded,
+                            size: 20.r,
+                            color: AppColors.error,
+                          ),
+                          visualDensity: VisualDensity.compact,
                         ),
                       ],
                     ),
-                  ),
-                ),
-                if (isAdmin)
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: () => _showEditPolicyDialog(context),
-                        icon: Icon(
-                          Icons.edit_outlined,
-                          size: 20.r,
-                          color: AppColors.brandPrimary,
-                        ),
-                        visualDensity: VisualDensity.compact,
-                      ),
-                      IconButton(
-                        onPressed: () => _showDeletePolicyDialog(context),
-                        icon: Icon(
-                          Icons.delete_outline_rounded,
-                          size: 20.r,
-                          color: AppColors.error,
-                        ),
-                        visualDensity: VisualDensity.compact,
-                      ),
-                    ],
-                  ),
-              ],
-            ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

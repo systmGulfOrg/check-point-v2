@@ -11,6 +11,10 @@ import 'package:check_point_v2/features/attendance_points/data/repos/attendance_
 import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_cubit.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/cubit/admin_points_cubit.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/cubit/exchange_cubit.dart';
+import 'package:check_point_v2/features/overtime/data/apis/overtime_api_service.dart';
+import 'package:check_point_v2/features/overtime/data/repos/overtime_repo.dart';
+import 'package:check_point_v2/features/overtime/data/repos/overtime_repo_impl.dart';
+import 'package:check_point_v2/features/overtime/presentation/cubit/overtime_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo.dart';
@@ -187,6 +191,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<RemoteWorkApiService>(
     () => RemoteWorkApiService(sl<Dio>()),
   );
+  sl.registerLazySingleton<OvertimeApiService>(
+    () => OvertimeApiService(sl<Dio>()),
+  );
   sl.registerLazySingleton<ProjectsApiService>(
     () => ProjectsApiService(sl<Dio>()),
   );
@@ -279,6 +286,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<RemoteWorkRepo>(
     () => RemoteWorkRepoImpl(api: sl<RemoteWorkApiService>()),
   );
+  sl.registerLazySingleton<OvertimeRepo>(
+    () => OvertimeRepoImpl(api: sl<OvertimeApiService>()),
+  );
 
   // UseCases
   sl.registerLazySingleton<LoginUseCase>(
@@ -339,6 +349,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<RemoteWorkCubit>(
     () => RemoteWorkCubit(repo: sl<RemoteWorkRepo>()),
+  );
+  sl.registerFactory<OvertimeCubit>(
+    () => OvertimeCubit(repo: sl<OvertimeRepo>()),
   );
   sl.registerFactory<ProjectsCubit>(
     () => ProjectsCubit(repo: sl<ProjectsRepo>()),

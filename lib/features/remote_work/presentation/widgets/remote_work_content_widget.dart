@@ -11,7 +11,7 @@ import 'remote_work_action_button_widget.dart';
 import 'remote_work_policy_card_widget.dart';
 import 'remote_work_policy_sheet_widget.dart';
 import 'remote_work_request_sheet_widget.dart';
-import 'remote_work_request_card_widget.dart';
+import 'remote_work_review_requests_card_widget.dart';
 import 'remote_work_section_title_widget.dart';
 
 class RemoteWorkContentWidget extends StatelessWidget {
@@ -63,6 +63,44 @@ class RemoteWorkContentWidget extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.all(16.w),
         children: [
+          if (canRequest && policyType == 'hybrid') ...[
+            RemoteWorkActionButtonWidget(
+              label: canReview
+                  ? 'remoteWork.requestLocation'.tr(context: context)
+                  : 'remoteWork.requestToSupervisor'.tr(context: context),
+              icon: Icons.swap_horiz_rounded,
+              onTap: () => _showRequestDialog(context),
+            ),
+            hSpace(16),
+          ],
+          if (canReview && policyType == 'hybrid') ...[
+            RemoteWorkSectionTitleWidget(
+              title: 'remoteWork.requestsForReview'.tr(context: context),
+            ),
+            hSpace(8),
+            if (requests.isEmpty)
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                child: Text(
+                  'remoteWork.noRequests'.tr(context: context),
+                  style: AppTextStyles.font13Regular,
+                ),
+              )
+            else
+              RemoteWorkReviewRequestsCardWidget(
+                requests: requests,
+                currentEmployeeId: currentEmployeeId,
+                onApprove: (id) => context.read<RemoteWorkCubit>().updateStatus(
+                  id: id,
+                  status: 'Approved',
+                ),
+                onReject: (id) => context.read<RemoteWorkCubit>().updateStatus(
+                  id: id,
+                  status: 'Rejected',
+                ),
+              ),
+            hSpace(16),
+          ],
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -75,75 +113,6 @@ class RemoteWorkContentWidget extends StatelessWidget {
                 ),
             ],
           ),
-          if (canRequest && policyType == 'hybrid') ...[
-            hSpace(12),
-            RemoteWorkActionButtonWidget(
-              label: canReview
-                  ? 'remoteWork.requestLocation'.tr(context: context)
-                  : 'remoteWork.requestToSupervisor'.tr(context: context),
-              icon: Icons.swap_horiz_rounded,
-              onTap: () => _showRequestDialog(context),
-            ),
-          ],
-          if (canRequest && policyType == 'hybrid' && requests.isNotEmpty) ...[
-            hSpace(16),
-            RemoteWorkSectionTitleWidget(
-              title: 'remoteWork.myRequests'.tr(context: context),
-            ),
-            ...requests.map(
-              (request) => ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Icon(Icons.schedule_outlined, size: 20.r),
-                title: Text(
-                  request.requestDate.split('T').first,
-                  style: AppTextStyles.font13SemiBold,
-                ),
-                subtitle: Text(
-                  request.targetWorkSystem == 'onsite'
-                      ? 'remoteWork.onsiteTab'.tr(context: context)
-                      : 'remoteWork.remoteTab'.tr(context: context),
-                ),
-                trailing: Text(
-                  'remoteWork.status.${request.status.toLowerCase()}'.tr(
-                    context: context,
-                  ),
-                  style: AppTextStyles.font12Medium,
-                ),
-              ),
-            ),
-          ],
-          if (canReview && policyType == 'hybrid') ...[
-            hSpace(16),
-            RemoteWorkSectionTitleWidget(
-              title: 'remoteWork.requestsForReview'.tr(context: context),
-            ),
-            if (requests.isEmpty)
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 18.h),
-                child: Text(
-                  'remoteWork.noRequests'.tr(context: context),
-                  style: AppTextStyles.font13Regular.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              )
-            else
-              ...requests.map(
-                (request) => RemoteWorkRequestCardWidget(
-                  request: request,
-                  canReview: canReview,
-                  isOwnRequest: request.employeeId == currentEmployeeId,
-                  onApprove: () => context.read<RemoteWorkCubit>().updateStatus(
-                    id: request.id,
-                    status: 'Approved',
-                  ),
-                  onReject: () => context.read<RemoteWorkCubit>().updateStatus(
-                    id: request.id,
-                    status: 'Rejected',
-                  ),
-                ),
-              ),
-          ],
           if (visiblePolicies.isEmpty)
             Padding(
               padding: EdgeInsets.symmetric(vertical: 40.h),
@@ -163,6 +132,7 @@ class RemoteWorkContentWidget extends StatelessWidget {
                 child: RemoteWorkPolicyCardWidget(
                   policy: entry.value,
                   isAdmin: isAdmin,
+                  canViewEmployees: isAdmin || canReview,
                 ),
               ),
             ),

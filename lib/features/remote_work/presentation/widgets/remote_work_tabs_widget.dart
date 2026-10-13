@@ -10,6 +10,7 @@ class RemoteWorkTabsWidget extends StatelessWidget {
     required this.canRequest,
     this.currentEmployeeId,
     this.assignedPolicyId,
+    this.availablePolicyTypes,
     this.showOnsite = true,
     this.showRemote = true,
     this.showHybrid = true,
@@ -21,6 +22,7 @@ class RemoteWorkTabsWidget extends StatelessWidget {
   final bool canRequest;
   final String? currentEmployeeId;
   final String? assignedPolicyId;
+  final Set<String>? availablePolicyTypes;
   final bool showOnsite;
   final bool showRemote;
   final bool showHybrid;
@@ -30,7 +32,9 @@ class RemoteWorkTabsWidget extends StatelessWidget {
     final tabs = <Tab>[];
     final views = <Widget>[];
 
-    if (showOnsite) {
+    if (showOnsite &&
+        (availablePolicyTypes == null ||
+            availablePolicyTypes!.contains('onsite'))) {
       tabs.add(Tab(text: 'remoteWork.onsiteTab'.tr(context: context)));
       views.add(
         RemoteWorkBlocBuilderWidget(
@@ -43,7 +47,9 @@ class RemoteWorkTabsWidget extends StatelessWidget {
         ),
       );
     }
-    if (showRemote) {
+    if (showRemote &&
+        (availablePolicyTypes == null ||
+            availablePolicyTypes!.contains('remote'))) {
       tabs.add(Tab(text: 'remoteWork.remoteTab'.tr(context: context)));
       views.add(
         RemoteWorkBlocBuilderWidget(
@@ -56,7 +62,9 @@ class RemoteWorkTabsWidget extends StatelessWidget {
         ),
       );
     }
-    if (showHybrid) {
+    if (showHybrid &&
+        (availablePolicyTypes == null ||
+            availablePolicyTypes!.contains('hybrid'))) {
       tabs.add(Tab(text: 'remoteWork.hybridTab'.tr(context: context)));
       views.add(
         RemoteWorkBlocBuilderWidget(
@@ -70,6 +78,8 @@ class RemoteWorkTabsWidget extends StatelessWidget {
       );
     }
 
+    if (tabs.isEmpty) return const SizedBox.shrink();
+
     return DefaultTabController(
       length: tabs.length,
       child: Column(
@@ -82,11 +92,7 @@ class RemoteWorkTabsWidget extends StatelessWidget {
               tabs: tabs,
             ),
           Expanded(
-            child: tabs.isEmpty
-                ? const SizedBox.shrink()
-                : (tabs.length == 1
-                      ? views.first
-                      : TabBarView(children: views)),
+            child: tabs.length == 1 ? views.first : TabBarView(children: views),
           ),
         ],
       ),
