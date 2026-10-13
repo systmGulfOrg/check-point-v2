@@ -13,6 +13,7 @@ LeaveTypeModel _$LeaveTypeModelFromJson(Map<String, dynamic> json) =>
       maxDaysPerYear: (json['maxDaysPerYear'] as num?)?.toInt(),
       isPaid: json['isPaid'] as bool?,
       requiresAttachment: json['requiresAttachment'] as bool?,
+      isCasual: json['isCasual'] as bool?,
     );
 
 Map<String, dynamic> _$LeaveTypeModelToJson(LeaveTypeModel instance) =>
@@ -22,6 +23,7 @@ Map<String, dynamic> _$LeaveTypeModelToJson(LeaveTypeModel instance) =>
       'maxDaysPerYear': instance.maxDaysPerYear,
       'isPaid': instance.isPaid,
       'requiresAttachment': instance.requiresAttachment,
+      'isCasual': instance.isCasual,
     };
 
 LeaveTypesResponseModel _$LeaveTypesResponseModelFromJson(

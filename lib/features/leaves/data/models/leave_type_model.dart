@@ -11,6 +11,7 @@ class LeaveTypeModel with _$LeaveTypeModel {
     required bool isPaid,
     required bool requiresAttachment,
     int? maxDaysPerYear,
+    bool? isCasual,
   }) = _LeaveTypeModel;
 
   factory LeaveTypeModel.fromJson(Map<String, dynamic> json) =>

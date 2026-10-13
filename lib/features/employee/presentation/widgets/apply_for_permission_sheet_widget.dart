@@ -3,17 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/leaves/domain/validators/leave_request_policy.dart';
 import 'package:check_point_v2/features/leaves/data/models/short_leave_request_body.dart';
 
 class ApplyForPermissionSheetWidget extends StatefulWidget {
   const ApplyForPermissionSheetWidget({
     required this.onSubmit,
     this.isLoading = false,
+    this.shiftStart,
+    this.shiftEnd,
+    this.allowedLateMinutes,
     super.key,
   });
 
   final Future<void> Function(ShortLeaveRequestBody body) onSubmit;
   final bool isLoading;
+  final String? shiftStart;
+  final String? shiftEnd;
+  final int? allowedLateMinutes;
 
   @override
   State<ApplyForPermissionSheetWidget> createState() =>
@@ -73,6 +80,10 @@ class _ApplyForPermissionSheetWidgetState
   }
 
   Future<void> _selectTime(bool isStart) async {
+    if ((_selectedPermitType == 'LateArrival' && isStart) ||
+        (_selectedPermitType == 'EarlyDeparture' && !isStart)) {
+      return;
+    }
     final time = await showTimePicker(
       context: context,
       initialTime: isStart
@@ -80,6 +91,24 @@ class _ApplyForPermissionSheetWidgetState
           : (_endTime ?? TimeOfDay.now()),
     );
     if (time != null && mounted) {
+      final windowStart = _permissionWindowStart();
+      final windowEnd = _permissionWindowEnd();
+      if (_selectedPermitType != 'TemporaryExit' &&
+          windowStart != null &&
+          windowEnd != null) {
+        final selectedMinutes = time.hour * 60 + time.minute;
+        final startMinutes = windowStart.hour * 60 + windowStart.minute;
+        final endMinutes = windowEnd.hour * 60 + windowEnd.minute;
+        if (selectedMinutes < startMinutes || selectedMinutes > endMinutes) {
+          CustomSnackBar.showError(
+            context,
+            message: 'permissions.request.outsideShiftWindow'.tr(
+              context: context,
+            ),
+          );
+          return;
+        }
+      }
       setState(() {
         if (isStart) {
           _startTime = time;
@@ -105,6 +134,59 @@ class _ApplyForPermissionSheetWidgetState
     return duration > 0 ? duration : null;
   }
 
+  TimeOfDay? _parseTime(String? value) {
+    if (value == null) return null;
+    final parts = value.split(':');
+    if (parts.length != 2) return null;
+    final hour = int.tryParse(parts[0]);
+    final minute = int.tryParse(parts[1]);
+    if (hour == null || minute == null) return null;
+    return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  int _minutes(TimeOfDay time) => time.hour * 60 + time.minute;
+
+  TimeOfDay? _timeFromMinutes(int minutes) {
+    final normalized = minutes % 1440;
+    return TimeOfDay(hour: normalized ~/ 60, minute: normalized % 60);
+  }
+
+  TimeOfDay? _permissionWindowStart() {
+    if (_selectedPermitType == 'TemporaryExit') return null;
+    if (_selectedPermitType == 'LateArrival') {
+      return _parseTime(widget.shiftStart);
+    }
+    final shiftEnd = _parseTime(widget.shiftEnd);
+    if (shiftEnd == null || widget.allowedLateMinutes == null) return null;
+    return _timeFromMinutes(_minutes(shiftEnd) - widget.allowedLateMinutes!);
+  }
+
+  TimeOfDay? _permissionWindowEnd() {
+    if (_selectedPermitType == 'TemporaryExit') return null;
+    if (_selectedPermitType == 'EarlyDeparture') {
+      return _parseTime(widget.shiftEnd);
+    }
+    final shiftStart = _parseTime(widget.shiftStart);
+    if (shiftStart == null || widget.allowedLateMinutes == null) return null;
+    return _timeFromMinutes(_minutes(shiftStart) + widget.allowedLateMinutes!);
+  }
+
+  TimeOfDay? _resolvedStartTime() {
+    if (_selectedPermitType == 'TemporaryExit') return _startTime;
+    if (_selectedPermitType == 'LateArrival') {
+      return _permissionWindowStart();
+    }
+    return _startTime ?? _permissionWindowStart();
+  }
+
+  TimeOfDay? _resolvedEndTime() {
+    if (_selectedPermitType == 'TemporaryExit') return _endTime;
+    if (_selectedPermitType == 'EarlyDeparture') {
+      return _permissionWindowEnd();
+    }
+    return _endTime ?? _permissionWindowEnd();
+  }
+
   String _formatDuration(int minutes) {
     final hours = minutes ~/ 60;
     final remainingMinutes = minutes % 60;
@@ -120,19 +202,43 @@ class _ApplyForPermissionSheetWidgetState
   Future<void> _handleSubmit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
-    if (_startTime == null || _endTime == null) {
+    final requestStartTime = _resolvedStartTime();
+    final requestEndTime = _resolvedEndTime();
+    if (requestStartTime == null || requestEndTime == null) {
       CustomSnackBar.showError(
         context,
-        message: 'permissions.request.timeRequired'.tr(context: context),
+        message: _selectedPermitType == 'TemporaryExit'
+            ? 'permissions.request.timeRequired'.tr(context: context)
+            : 'permissions.request.shiftTimesUnavailable'.tr(context: context),
       );
       return;
     }
 
-    final duration = _durationMinutes();
-    if (duration == null || duration <= 0) {
+    final startMinutes = requestStartTime.hour * 60 + requestStartTime.minute;
+    final endMinutes = requestEndTime.hour * 60 + requestEndTime.minute;
+    final rawDuration = endMinutes - startMinutes;
+    final duration = rawDuration > 0 ? rawDuration : rawDuration + 1440;
+    if (duration <= 0) {
       CustomSnackBar.showError(
         context,
         message: 'permissions.request.invalidTimeRange'.tr(context: context),
+      );
+      return;
+    }
+
+    final timingError = LeaveRequestPolicy.validatePermissionTiming(
+      permitType: _selectedPermitType,
+      selectedDate: _selectedDate,
+      now: DateTime.now(),
+      shiftStart: widget.shiftStart,
+      shiftEnd: widget.shiftEnd,
+      allowedLateMinutes: widget.allowedLateMinutes,
+      requestedDurationMinutes: duration,
+    );
+    if (timingError != null) {
+      CustomSnackBar.showError(
+        context,
+        message: timingError.tr(context: context),
       );
       return;
     }
@@ -150,8 +256,8 @@ class _ApplyForPermissionSheetWidgetState
 
     final body = ShortLeaveRequestBody(
       date: _selectedDate,
-      startTime: _formatTime(_startTime),
-      endTime: _formatTime(_endTime),
+      startTime: _formatTime(requestStartTime),
+      endTime: _formatTime(requestEndTime),
       permitType: _selectedPermitType,
       durationMinutes: duration,
       reason: _reasonController.text.trim(),
@@ -172,7 +278,9 @@ class _ApplyForPermissionSheetWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final duration = _durationMinutes();
+    final duration = _selectedPermitType == 'TemporaryExit'
+        ? _durationMinutes()
+        : null;
 
     return Container(
       padding: EdgeInsets.only(
@@ -200,7 +308,9 @@ class _ApplyForPermissionSheetWidgetState
                       Container(
                         padding: EdgeInsets.all(8.r),
                         decoration: BoxDecoration(
-                          color: AppColors.brandSecondary.withValues(alpha: 0.1),
+                          color: AppColors.brandSecondary.withValues(
+                            alpha: 0.1,
+                          ),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -262,7 +372,11 @@ class _ApplyForPermissionSheetWidgetState
                     }).toList(),
                     onChanged: (val) {
                       if (val != null) {
-                        setState(() => _selectedPermitType = val);
+                        setState(() {
+                          _selectedPermitType = val;
+                          _startTime = _permissionWindowStart();
+                          _endTime = _permissionWindowEnd();
+                        });
                       }
                     },
                   ),
@@ -295,7 +409,10 @@ class _ApplyForPermissionSheetWidgetState
                   _selectedDate.weekday == DateTime.saturday) ...[
                 hSpace(6),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 6.h,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.softYellowBackground,
                     borderRadius: BorderRadius.circular(8.r),
@@ -325,7 +442,23 @@ class _ApplyForPermissionSheetWidgetState
               ],
               hSpace(14),
 
-              // Time Range Pickers
+              if (_selectedPermitType != 'TemporaryExit' &&
+                  _permissionWindowStart() != null &&
+                  _permissionWindowEnd() != null) ...[
+                Text(
+                  'permissions.request.allowedTimeRange'.tr(
+                    context: context,
+                    namedArgs: {
+                      'from': _permissionWindowStart()!.format(context),
+                      'to': _permissionWindowEnd()!.format(context),
+                    },
+                  ),
+                  style: AppTextStyles.font11Medium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                hSpace(6),
+              ],
               Row(
                 children: [
                   Expanded(

@@ -12,6 +12,7 @@ class LeaveTypeModel {
     this.maxDaysPerYear,
     this.isPaid,
     this.requiresAttachment,
+    this.isCasual,
   });
 
   final int? id;
@@ -19,6 +20,7 @@ class LeaveTypeModel {
   final int? maxDaysPerYear;
   final bool? isPaid;
   final bool? requiresAttachment;
+  final bool? isCasual;
 
   factory LeaveTypeModel.fromJson(Map<String, dynamic> json) =>
       _$LeaveTypeModelFromJson(json);

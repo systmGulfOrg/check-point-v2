@@ -13,6 +13,7 @@ _$LeaveTypeModelImpl _$$LeaveTypeModelImplFromJson(Map<String, dynamic> json) =>
       isPaid: json['isPaid'] as bool,
       requiresAttachment: json['requiresAttachment'] as bool,
       maxDaysPerYear: (json['maxDaysPerYear'] as num?)?.toInt(),
+      isCasual: json['isCasual'] as bool?,
     );
 
 Map<String, dynamic> _$$LeaveTypeModelImplToJson(
@@ -23,4 +24,5 @@ Map<String, dynamic> _$$LeaveTypeModelImplToJson(
   'isPaid': instance.isPaid,
   'requiresAttachment': instance.requiresAttachment,
   'maxDaysPerYear': instance.maxDaysPerYear,
+  'isCasual': instance.isCasual,
 };

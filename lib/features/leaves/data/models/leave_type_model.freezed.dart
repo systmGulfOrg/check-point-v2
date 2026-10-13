@@ -26,6 +26,7 @@ mixin _$LeaveTypeModel {
   bool get isPaid => throw _privateConstructorUsedError;
   bool get requiresAttachment => throw _privateConstructorUsedError;
   int? get maxDaysPerYear => throw _privateConstructorUsedError;
+  bool? get isCasual => throw _privateConstructorUsedError;
 
   /// Serializes this LeaveTypeModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -50,6 +51,7 @@ abstract class $LeaveTypeModelCopyWith<$Res> {
     bool isPaid,
     bool requiresAttachment,
     int? maxDaysPerYear,
+    bool? isCasual,
   });
 }
 
@@ -73,6 +75,7 @@ class _$LeaveTypeModelCopyWithImpl<$Res, $Val extends LeaveTypeModel>
     Object? isPaid = null,
     Object? requiresAttachment = null,
     Object? maxDaysPerYear = freezed,
+    Object? isCasual = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -96,6 +99,10 @@ class _$LeaveTypeModelCopyWithImpl<$Res, $Val extends LeaveTypeModel>
                 ? _value.maxDaysPerYear
                 : maxDaysPerYear // ignore: cast_nullable_to_non_nullable
                       as int?,
+            isCasual: freezed == isCasual
+                ? _value.isCasual
+                : isCasual // ignore: cast_nullable_to_non_nullable
+                      as bool?,
           )
           as $Val,
     );
@@ -117,6 +124,7 @@ abstract class _$$LeaveTypeModelImplCopyWith<$Res>
     bool isPaid,
     bool requiresAttachment,
     int? maxDaysPerYear,
+    bool? isCasual,
   });
 }
 
@@ -139,6 +147,7 @@ class __$$LeaveTypeModelImplCopyWithImpl<$Res>
     Object? isPaid = null,
     Object? requiresAttachment = null,
     Object? maxDaysPerYear = freezed,
+    Object? isCasual = freezed,
   }) {
     return _then(
       _$LeaveTypeModelImpl(
@@ -162,6 +171,10 @@ class __$$LeaveTypeModelImplCopyWithImpl<$Res>
             ? _value.maxDaysPerYear
             : maxDaysPerYear // ignore: cast_nullable_to_non_nullable
                   as int?,
+        isCasual: freezed == isCasual
+            ? _value.isCasual
+            : isCasual // ignore: cast_nullable_to_non_nullable
+                  as bool?,
       ),
     );
   }
@@ -176,6 +189,7 @@ class _$LeaveTypeModelImpl implements _LeaveTypeModel {
     required this.isPaid,
     required this.requiresAttachment,
     this.maxDaysPerYear,
+    this.isCasual,
   });
 
   factory _$LeaveTypeModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -191,10 +205,12 @@ class _$LeaveTypeModelImpl implements _LeaveTypeModel {
   final bool requiresAttachment;
   @override
   final int? maxDaysPerYear;
+  @override
+  final bool? isCasual;
 
   @override
   String toString() {
-    return 'LeaveTypeModel(id: $id, typeName: $typeName, isPaid: $isPaid, requiresAttachment: $requiresAttachment, maxDaysPerYear: $maxDaysPerYear)';
+    return 'LeaveTypeModel(id: $id, typeName: $typeName, isPaid: $isPaid, requiresAttachment: $requiresAttachment, maxDaysPerYear: $maxDaysPerYear, isCasual: $isCasual)';
   }
 
   @override
@@ -209,7 +225,9 @@ class _$LeaveTypeModelImpl implements _LeaveTypeModel {
             (identical(other.requiresAttachment, requiresAttachment) ||
                 other.requiresAttachment == requiresAttachment) &&
             (identical(other.maxDaysPerYear, maxDaysPerYear) ||
-                other.maxDaysPerYear == maxDaysPerYear));
+                other.maxDaysPerYear == maxDaysPerYear) &&
+            (identical(other.isCasual, isCasual) ||
+                other.isCasual == isCasual));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -221,6 +239,7 @@ class _$LeaveTypeModelImpl implements _LeaveTypeModel {
     isPaid,
     requiresAttachment,
     maxDaysPerYear,
+    isCasual,
   );
 
   /// Create a copy of LeaveTypeModel
@@ -247,6 +266,7 @@ abstract class _LeaveTypeModel implements LeaveTypeModel {
     required final bool isPaid,
     required final bool requiresAttachment,
     final int? maxDaysPerYear,
+    final bool? isCasual,
   }) = _$LeaveTypeModelImpl;
 
   factory _LeaveTypeModel.fromJson(Map<String, dynamic> json) =
@@ -262,6 +282,8 @@ abstract class _LeaveTypeModel implements LeaveTypeModel {
   bool get requiresAttachment;
   @override
   int? get maxDaysPerYear;
+  @override
+  bool? get isCasual;
 
   /// Create a copy of LeaveTypeModel
   /// with the given fields replaced by the non-null parameter values.

@@ -59,6 +59,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                 isPaid: t.isPaid,
                 requiresAttachment: t.requiresAttachment,
                 maxDaysPerYear: t.maxDaysPerYear,
+                isCasual: t.isCasual,
               ),
             )
             .toList(),
@@ -86,11 +87,18 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
   }
 
   void _showApplyPermissionSheet(BuildContext context) {
+    final profile = context.read<EmployeeAttendanceCubit>().employeeProfile;
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.transparent,
       builder: (_) => ApplyForPermissionSheetWidget(
+        shiftStart:
+            profile?.todayWorkStart ?? profile?.workPolicy?.workingHoursStart,
+        shiftEnd: profile?.todayWorkEnd ?? profile?.workPolicy?.workingHoursEnd,
+        allowedLateMinutes:
+            profile?.todayAllowedDelayTime ??
+            profile?.workPolicy?.allowedDelayTime,
         onSubmit: (body) async {
           final permitCubit = sl<PermitCubit>();
           final success = await permitCubit.submit(body);
@@ -347,17 +355,15 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                 EmployeeHomeQuickActionsWidget(
                   onRequestLeave: () => _showApplyLeaveSheet(context),
                   onRequestPermission: () => _showApplyPermissionSheet(context),
-                  onCustomerVisitsTap: () => Navigator.pushNamed(
-                    context,
-                    AppRoutes.adminLocations,
-                  ),
+                  onWorkLocationTap: () =>
+                      Navigator.pushNamed(context, AppRoutes.remoteWork),
+                  onCustomerVisitsTap: () =>
+                      Navigator.pushNamed(context, AppRoutes.adminLocations),
                 ),
                 hSpace(20),
                 EmployeeHomeLeavesBlocBuilderWidget(
-                  onViewAllLeaves: () => Navigator.pushNamed(
-                    context,
-                    AppRoutes.leavesDashboard,
-                  ),
+                  onViewAllLeaves: () =>
+                      Navigator.pushNamed(context, AppRoutes.leavesDashboard),
                   onRequestLeave: () => _showApplyLeaveSheet(context),
                 ),
               ],
@@ -368,4 +374,3 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
     );
   }
 }
-

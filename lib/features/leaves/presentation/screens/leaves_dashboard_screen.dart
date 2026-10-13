@@ -10,6 +10,7 @@ import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_t
     as admin_lt;
 import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_leave_sheet_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_permission_sheet_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import '../cubit/leaves_cubit.dart';
 import '../cubit/leaves_state.dart';
 import '../cubit/permit_cubit.dart';
@@ -52,6 +53,7 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
                 isPaid: t.isPaid,
                 requiresAttachment: t.requiresAttachment,
                 maxDaysPerYear: t.maxDaysPerYear,
+                isCasual: t.isCasual,
               ),
             )
             .toList(),
@@ -83,11 +85,18 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
 
   Future<void> _showApplyPermissionSheet(BuildContext context) async {
     final cubit = context.read<LeavesCubit>();
+    final profile = context.read<EmployeeAttendanceCubit>().employeeProfile;
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.transparent,
       builder: (_) => ApplyForPermissionSheetWidget(
+        shiftStart:
+            profile?.todayWorkStart ?? profile?.workPolicy?.workingHoursStart,
+        shiftEnd: profile?.todayWorkEnd ?? profile?.workPolicy?.workingHoursEnd,
+        allowedLateMinutes:
+            profile?.todayAllowedDelayTime ??
+            profile?.workPolicy?.allowedDelayTime,
         onSubmit: (body) async {
           final permitCubit = sl<PermitCubit>();
           final success = await permitCubit.submit(body);
@@ -199,7 +208,8 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
                           ),
                           hSpace(16),
                           OutlinedButton(
-                            onPressed: () => context.read<LeavesCubit>().loadLeavesData(),
+                            onPressed: () =>
+                                context.read<LeavesCubit>().loadLeavesData(),
                             child: Text('common.retry'.tr(context: context)),
                           ),
                         ],

@@ -95,6 +95,7 @@ class LeavesRepoImpl implements LeavesRepo {
                 isPaid: t.isPaid ?? true,
                 requiresAttachment: t.requiresAttachment ?? false,
                 maxDaysPerYear: t.maxDaysPerYear ?? 21,
+                isCasual: t.isCasual ?? false,
               ),
             )
             .toList();

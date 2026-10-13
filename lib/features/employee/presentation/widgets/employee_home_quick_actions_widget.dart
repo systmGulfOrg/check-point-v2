@@ -8,12 +8,14 @@ class EmployeeHomeQuickActionsWidget extends StatelessWidget {
   const EmployeeHomeQuickActionsWidget({
     required this.onRequestLeave,
     required this.onRequestPermission,
+    this.onWorkLocationTap,
     this.onCustomerVisitsTap,
     super.key,
   });
 
   final VoidCallback onRequestLeave;
   final VoidCallback onRequestPermission;
+  final VoidCallback? onWorkLocationTap;
   final VoidCallback? onCustomerVisitsTap;
 
   @override
@@ -60,6 +62,17 @@ class EmployeeHomeQuickActionsWidget extends StatelessWidget {
             backgroundColor: AppColors.softYellowBackground,
             borderColor: AppColors.warning.withValues(alpha: 0.25),
             onTap: onCustomerVisitsTap!,
+          ),
+        ],
+        if (onWorkLocationTap != null) ...[
+          hSpace(10),
+          EmployeeQuickActionButtonWidget(
+            icon: Icons.swap_horiz_rounded,
+            title: 'remoteWork.requestToSupervisor'.tr(context: context),
+            iconColor: AppColors.info,
+            backgroundColor: AppColors.softBlueBackground,
+            borderColor: AppColors.info.withValues(alpha: 0.2),
+            onTap: onWorkLocationTap!,
           ),
         ],
       ],

@@ -164,6 +164,21 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
       if (isStartDate) {
         _startDate = selected;
         _startDateController.text = formatted;
+        final today = DateTime.now();
+        if (selected.year == today.year &&
+            selected.month == today.month &&
+            selected.day == today.day) {
+          final casualType = widget.leaveTypes.where((type) {
+            final name = (type.typeName ?? '').toLowerCase();
+            return type.isCasual == true ||
+                name.contains('casual') ||
+                name.contains('عارض');
+          }).firstOrNull;
+          if (casualType != null) {
+            _selectedLeaveRequestType =
+                casualType.id?.toString() ?? casualType.typeName ?? '';
+          }
+        }
       } else {
         _endDate = selected;
         _endDateController.text = formatted;
