@@ -744,6 +744,9 @@ class AppRouter {
                 create: (_) =>
                     sl<UpcomingHolidayCubit>()..loadUpcomingHoliday(),
               ),
+              BlocProvider<PointsCubit>(
+                create: (_) => sl<PointsCubit>()..loadAllPointsData(),
+              ),
             ],
             child: const EmployeeMainScreen(),
           ),
