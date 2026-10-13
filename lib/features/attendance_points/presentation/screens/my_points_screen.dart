@@ -156,11 +156,18 @@ class _LevelProgressCard extends StatelessWidget {
     final streak = summary.streak;
 
     return Container(
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.border),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,21 +178,37 @@ class _LevelProgressCard extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(10.r),
+                    width: 48.r,
+                    height: 48.r,
                     decoration: BoxDecoration(
-                      color: AppColors.brandPrimary.withValues(alpha: 0.12),
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.brandPrimary.withValues(alpha: 0.2),
+                          AppColors.brandPrimary.withValues(alpha: 0.05),
+                        ],
+                        begin: AlignmentDirectional.topStart,
+                        end: AlignmentDirectional.bottomEnd,
+                      ),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.stars_rounded, color: AppColors.brandPrimary, size: 24.r),
+                    child: Icon(Icons.stars_rounded, color: AppColors.brandPrimary, size: 28.r),
                   ),
-                  wSpace(12),
+                  wSpace(14),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(level.tier, style: AppTextStyles.font18Bold),
+                      Text(
+                        level.tier.toUpperCase(),
+                        style: AppTextStyles.font18Bold.copyWith(
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                      hSpace(2),
                       Text(
                         '${level.currentPoints} pts',
-                        style: AppTextStyles.font13Regular.copyWith(color: AppColors.textSecondary),
+                        style: AppTextStyles.font12Regular.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ],
                   ),
@@ -193,14 +216,17 @@ class _LevelProgressCard extends StatelessWidget {
               ),
               if (streak.currentStreak > 0)
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                   decoration: BoxDecoration(
-                    color: AppColors.warningOrange.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12.r),
+                    color: AppColors.warningOrange.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(
+                      color: AppColors.warningOrange.withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.local_fire_department_rounded, size: 16.r, color: AppColors.warningOrange),
+                      Icon(Icons.local_fire_department_rounded, size: 18.r, color: AppColors.warningOrange),
                       wSpace(4),
                       Text(
                         'points.streakDays'.tr(context: context, args: [streak.currentStreak.toString()]),
@@ -211,23 +237,32 @@ class _LevelProgressCard extends StatelessWidget {
                 ),
             ],
           ),
-          hSpace(16),
+          hSpace(20),
           ClipRRect(
-            borderRadius: BorderRadius.circular(6.r),
+            borderRadius: BorderRadius.circular(8.r),
             child: LinearProgressIndicator(
               value: level.progress.clamp(0.0, 1.0),
-              minHeight: 8.h,
-              backgroundColor: AppColors.border,
+              minHeight: 10.h,
+              backgroundColor: AppColors.border.withValues(alpha: 0.4),
               valueColor: const AlwaysStoppedAnimation<Color>(AppColors.brandPrimary),
             ),
           ),
-          hSpace(8),
-          Text(
-            'points.nextLevel'.tr(
-              context: context,
-              args: [(level.nextLevelPoints - level.currentPoints).toString()],
-            ),
-            style: AppTextStyles.font11Regular.copyWith(color: AppColors.textSecondary),
+          hSpace(10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'points.nextLevel'.tr(
+                  context: context,
+                  args: [(level.nextLevelPoints - level.currentPoints).toString()],
+                ),
+                style: AppTextStyles.font11Medium.copyWith(color: AppColors.textSecondary),
+              ),
+              Text(
+                '${(level.progress * 100).toInt()}%',
+                style: AppTextStyles.font11Bold.copyWith(color: AppColors.brandPrimary),
+              ),
+            ],
           ),
         ],
       ),
@@ -251,7 +286,8 @@ class _BalancesGrid extends StatelessWidget {
                 title: 'points.greenConfirmed'.tr(context: context),
                 count: '+${balances.greenConfirmed}',
                 color: AppColors.success,
-                icon: Icons.check_circle_outline_rounded,
+                icon: Icons.check_circle_rounded,
+                bgColor: AppColors.success.withValues(alpha: 0.05),
               ),
             ),
             wSpace(12),
@@ -261,6 +297,7 @@ class _BalancesGrid extends StatelessWidget {
                 count: '+${balances.greenPending}',
                 color: AppColors.info,
                 icon: Icons.hourglass_top_rounded,
+                bgColor: AppColors.info.withValues(alpha: 0.05),
               ),
             ),
           ],
@@ -273,7 +310,8 @@ class _BalancesGrid extends StatelessWidget {
                 title: 'points.red'.tr(context: context),
                 count: '-${balances.red}',
                 color: AppColors.error,
-                icon: Icons.remove_circle_outline_rounded,
+                icon: Icons.remove_circle_rounded,
+                bgColor: AppColors.error.withValues(alpha: 0.05),
               ),
             ),
             wSpace(12),
@@ -281,8 +319,9 @@ class _BalancesGrid extends StatelessWidget {
               child: _StatCard(
                 title: 'points.black'.tr(context: context),
                 count: '-${balances.black}',
-                color: Colors.black87,
+                color: AppColors.brandInk,
                 icon: Icons.warning_amber_rounded,
+                bgColor: AppColors.brandInk.withValues(alpha: 0.05),
               ),
             ),
           ],
@@ -298,21 +337,30 @@ class _StatCard extends StatelessWidget {
     required this.count,
     required this.color,
     required this.icon,
+    required this.bgColor,
   });
 
   final String title;
   final String count;
   final Color color;
   final IconData icon;
+  final Color bgColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(14.r),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.border),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,12 +368,34 @@ class _StatCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: AppTextStyles.font12Medium.copyWith(color: AppColors.textSecondary)),
-              Icon(icon, size: 18.r, color: color),
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppTextStyles.font12Medium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(6.r),
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 16.r, color: color),
+              ),
             ],
           ),
-          hSpace(8),
-          Text(count, style: AppTextStyles.font20Bold.copyWith(color: color)),
+          hSpace(12),
+          Text(
+            count,
+            style: AppTextStyles.font24Bold.copyWith(
+              color: color,
+              letterSpacing: 0.5,
+            ),
+          ),
         ],
       ),
     );
@@ -349,29 +419,39 @@ class _ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(14.r),
+      borderRadius: BorderRadius.circular(16.r),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: AppColors.border),
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(8.r),
+              width: 40.r,
+              height: 40.r,
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
+                color: color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, size: 18.r, color: color),
+              child: Icon(icon, size: 20.r, color: color),
             ),
-            wSpace(10),
+            wSpace(12),
             Expanded(
               child: Text(
                 title,
-                style: AppTextStyles.font13Bold.copyWith(color: AppColors.textPrimary),
+                style: AppTextStyles.font14Bold.copyWith(
+                  color: AppColors.textPrimary,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
