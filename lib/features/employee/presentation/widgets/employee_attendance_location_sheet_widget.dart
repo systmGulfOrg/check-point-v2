@@ -68,17 +68,18 @@ class _EmployeeAttendanceLocationSheetWidgetState
     final hasClockOut = cubit.hasClockOut(cubit.todayAttendance);
     final mode = cubit.employeeProfile?.todayWorkMode ?? 'onsite';
 
-    if (widget.initialVisit != null) {
+    if (widget.initialVisit != null &&
+        _isToday(widget.initialVisit!.visitDate)) {
       type = widget.initialType ?? 'Customer';
       todayScheduledVisit = widget.initialVisit;
       cubit.loadCustomersByType('Customer');
-    } else if (widget.initialCustomer != null) {
-      type = widget.initialType ?? 'Customer';
-      customer = widget.initialCustomer;
-      cubit.loadCustomersByType('Customer');
     } else if (!widget.isCheckOut && (hasClockIn || hasClockOut)) {
-      type = 'Customer';
-      cubit.loadCustomersByType('Customer');
+      // Customer attendance is enabled only after today's visits are loaded
+      // and a visit dated today is found.
+      type = mode == 'remote' ? 'Remote' : 'Branch';
+      if (type == 'Branch') {
+        cubit.loadBranches();
+      }
     } else if (mode == 'remote') {
       type = 'Remote';
     } else {
@@ -92,6 +93,16 @@ class _EmployeeAttendanceLocationSheetWidgetState
       const Duration(seconds: 5),
       (_) => _refreshLocation(),
     );
+  }
+
+  bool _isToday(String? rawDate) {
+    if (rawDate == null || rawDate.trim().isEmpty) return false;
+    final parsed = DateTime.tryParse(rawDate)?.toLocal();
+    if (parsed == null) return false;
+    final now = DateTime.now();
+    return parsed.year == now.year &&
+        parsed.month == now.month &&
+        parsed.day == now.day;
   }
 
   int _compareVisitTimes(String? a, String? b) {
@@ -142,18 +153,22 @@ class _EmployeeAttendanceLocationSheetWidgetState
           final currentEmpName = profile?.name?.trim().toLowerCase();
 
           visits = data.where((v) {
-          if (v.status == 'cancelled') return false;
-          final isToday = v.visitDate == todayStr ||
-              v.visitDate?.startsWith(todayStr) == true;
-          if (!isToday) return false;
+            if (v.status == 'cancelled') return false;
+            final isToday =
+                v.visitDate == todayStr ||
+                v.visitDate?.startsWith(todayStr) == true;
+            if (!isToday) return false;
 
-          final isAttendeeId = currentEmpId != null &&
-              v.attendees.contains(currentEmpId);
-          final isAttendeeName = currentEmpName != null &&
-              v.attendees.any((a) => a.toLowerCase().contains(currentEmpName));
-          final isCreator = v.createdBy == currentEmpId;
-          return isAttendeeId || isAttendeeName || isCreator;
-        }).toList();
+            final isAttendeeId =
+                currentEmpId != null && v.attendees.contains(currentEmpId);
+            final isAttendeeName =
+                currentEmpName != null &&
+                v.attendees.any(
+                  (a) => a.toLowerCase().contains(currentEmpName),
+                );
+            final isCreator = v.createdBy == currentEmpId;
+            return isAttendeeId || isAttendeeName || isCreator;
+          }).toList();
 
           visits.sort((a, b) => _compareVisitTimes(a.visitTime, b.visitTime));
         },
@@ -163,7 +178,8 @@ class _EmployeeAttendanceLocationSheetWidgetState
 
     if (!mounted) return;
 
-    final activeVisit = visits
+    final activeVisit =
+        visits
             .where((v) => v.status != 'visited' && v.status != 'completed')
             .firstOrNull ??
         visits.firstOrNull;
@@ -171,20 +187,22 @@ class _EmployeeAttendanceLocationSheetWidgetState
     setState(() {
       isWorkScheduleLoading = false;
       todayVisits = visits;
-      todayScheduledVisit = activeVisit ?? todayScheduledVisit ?? widget.initialVisit;
+      todayScheduledVisit = activeVisit ?? todayScheduledVisit;
     });
 
     final mode = profile?.todayWorkMode ?? 'onsite';
-    final hasClockIn = context
-        .read<EmployeeAttendanceCubit>()
-        .hasClockIn(context.read<EmployeeAttendanceCubit>().todayAttendance);
-    final hasClockOut = context
-        .read<EmployeeAttendanceCubit>()
-        .hasClockOut(context.read<EmployeeAttendanceCubit>().todayAttendance);
+    final hasClockIn = context.read<EmployeeAttendanceCubit>().hasClockIn(
+      context.read<EmployeeAttendanceCubit>().todayAttendance,
+    );
+    final hasClockOut = context.read<EmployeeAttendanceCubit>().hasClockOut(
+      context.read<EmployeeAttendanceCubit>().todayAttendance,
+    );
 
-    if (!widget.isCheckOut && (hasClockIn || hasClockOut)) {
+    if (!widget.isCheckOut &&
+        (hasClockIn || hasClockOut) &&
+        todayVisits.isNotEmpty) {
       _changeType('Customer');
-    } else if (activeVisit != null) {
+    } else if (activeVisit != null && todayVisits.isNotEmpty) {
       _changeType('Customer');
     } else if (mode == 'remote') {
       _changeType('Remote');
@@ -207,7 +225,9 @@ class _EmployeeAttendanceLocationSheetWidgetState
       } else {
         types.add('Branch');
       }
-      types.add('Customer');
+      if (todayVisits.isNotEmpty) {
+        types.add('Customer');
+      }
       return types;
     }
 
@@ -219,7 +239,9 @@ class _EmployeeAttendanceLocationSheetWidgetState
       }
     }
 
-    types.add('Customer');
+    if (todayVisits.isNotEmpty) {
+      types.add('Customer');
+    }
 
     return types;
   }
@@ -229,7 +251,9 @@ class _EmployeeAttendanceLocationSheetWidgetState
     final hasClockIn = cubit.hasClockIn(cubit.todayAttendance);
     final hasClockOut = cubit.hasClockOut(cubit.todayAttendance);
 
-    if (!widget.isCheckOut && (hasClockIn || hasClockOut) && (value == 'Branch' || value == 'Remote')) {
+    if (!widget.isCheckOut &&
+        (hasClockIn || hasClockOut) &&
+        (value == 'Branch' || value == 'Remote')) {
       CustomSnackBar.showError(
         context,
         message: 'attendance.alreadyCheckedInOffice'.tr(context: context),
@@ -237,7 +261,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
       return;
     }
 
-    if (value == 'Customer' && todayScheduledVisit == null && availableCustomers.isEmpty) {
+    if (value == 'Customer' && todayVisits.isEmpty) {
       CustomSnackBar.showError(
         context,
         message: 'attendance.noCustomerVisitToday'.tr(context: context),
@@ -251,10 +275,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
       'onsite' => 'attendance.onsiteWorkDayLocationMessage',
       _ => 'attendance.unscheduledWorkDayLocationMessage',
     };
-    CustomSnackBar.showError(
-      context,
-      message: messageKey.tr(context: context),
-    );
+    CustomSnackBar.showError(context, message: messageKey.tr(context: context));
   }
 
   @override
@@ -423,13 +444,13 @@ class _EmployeeAttendanceLocationSheetWidgetState
         targetPolygon: targetCenter == null ? targetPoints : const [],
       );
       if (type == 'Customer') {
-        final targetVisit = todayScheduledVisit ??
+        final targetVisit =
+            todayScheduledVisit ??
             (customer != null
                 ? todayVisits
-                    .where((v) => v.customerId == customer!.id)
-                    .firstOrNull
-                : null) ??
-            widget.initialVisit;
+                      .where((v) => v.customerId == customer!.id)
+                      .firstOrNull
+                : null);
         final visitId = targetVisit?.id;
         if (visitId != null && visitId.isNotEmpty) {
           unawaited(
@@ -501,7 +522,15 @@ class _EmployeeAttendanceLocationSheetWidgetState
                   final customerOptions = availableCustomers.isNotEmpty
                       ? availableCustomers
                       : customers;
-                  final sortedCustomerOptions = List<CustomerModel>.from(customerOptions);
+                  final todayCustomerIds = todayVisits
+                      .map((visit) => visit.customerId)
+                      .whereType<String>()
+                      .toSet();
+                  final sortedCustomerOptions = todayCustomerIds.isEmpty
+                      ? <CustomerModel>[]
+                      : customerOptions
+                            .where((item) => todayCustomerIds.contains(item.id))
+                            .toList();
                   sortedCustomerOptions.sort((a, b) {
                     final visitA = todayVisits
                         .where((v) => v.customerId == a.id)
@@ -586,566 +615,622 @@ class _EmployeeAttendanceLocationSheetWidgetState
                       ),
                       if (todayVisits.isNotEmpty) ...[
                         hSpace(8),
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(12.r),
-                        decoration: BoxDecoration(
-                          color: AppColors.softBrandBackground,
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
-                            color: AppColors.brandPrimary.withValues(
-                              alpha: 0.4,
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(12.r),
+                          decoration: BoxDecoration(
+                            color: AppColors.softBrandBackground,
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
+                              color: AppColors.brandPrimary.withValues(
+                                alpha: 0.4,
+                              ),
                             ),
                           ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(6.r),
-                                  decoration: const BoxDecoration(
-                                    color: AppColors.brandPrimary,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    Icons.route_rounded,
-                                    color: AppColors.white,
-                                    size: 15.r,
-                                  ),
-                                ),
-                                wSpace(8),
-                                Expanded(
-                                  child: Text(
-                                    todayVisits.length == 1
-                                        ? 'زيارة عميل مجدولة اليوم'
-                                        : 'جدول زيارات اليوم (${todayVisits.length} زيارات مرتبة بالوقت)',
-                                    style: AppTextStyles.font12Bold.copyWith(
-                                      color: AppColors.brandPrimaryDark,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(6.r),
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.brandPrimary,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.route_rounded,
+                                      color: AppColors.white,
+                                      size: 15.r,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            hSpace(8),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  for (int i = 0; i < todayVisits.length; i++) ...[
-                                    if (i > 0)
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 4.w,
-                                        ),
-                                        child: Icon(
-                                          Icons.arrow_back_rounded,
-                                          size: 14.r,
-                                          color: AppColors.placeholder,
-                                        ),
+                                  wSpace(8),
+                                  Expanded(
+                                    child: Text(
+                                      todayVisits.length == 1
+                                          ? 'زيارة عميل مجدولة اليوم'
+                                          : 'جدول زيارات اليوم (${todayVisits.length} زيارات مرتبة بالوقت)',
+                                      style: AppTextStyles.font12Bold.copyWith(
+                                        color: AppColors.brandPrimaryDark,
                                       ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          todayScheduledVisit = todayVisits[i];
-                                          final matchingCust =
-                                              sortedCustomerOptions
-                                                  .where(
-                                                    (c) =>
-                                                        c.id ==
-                                                        todayVisits[i].customerId,
-                                                  )
-                                                  .firstOrNull;
-                                          if (matchingCust != null) {
-                                            customer = matchingCust;
-                                          }
-                                        });
-                                        WidgetsBinding.instance
-                                            .addPostFrameCallback((_) {
-                                          _focusTarget();
-                                          _loadTargetAddress();
-                                        });
-                                      },
-                                      borderRadius: BorderRadius.circular(8.r),
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 10.w,
-                                          vertical: 6.h,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color:
-                                              todayScheduledVisit?.id ==
-                                                      todayVisits[i].id
-                                                  ? AppColors.brandPrimary
-                                                  : AppColors.cardBackground,
-                                          borderRadius: BorderRadius.circular(
-                                            8.r,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              hSpace(8),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    for (
+                                      int i = 0;
+                                      i < todayVisits.length;
+                                      i++
+                                    ) ...[
+                                      if (i > 0)
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 4.w,
                                           ),
-                                          border: Border.all(
+                                          child: Icon(
+                                            Icons.arrow_back_rounded,
+                                            size: 14.r,
+                                            color: AppColors.placeholder,
+                                          ),
+                                        ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            todayScheduledVisit =
+                                                todayVisits[i];
+                                            final matchingCust =
+                                                sortedCustomerOptions
+                                                    .where(
+                                                      (c) =>
+                                                          c.id ==
+                                                          todayVisits[i]
+                                                              .customerId,
+                                                    )
+                                                    .firstOrNull;
+                                            if (matchingCust != null) {
+                                              customer = matchingCust;
+                                            }
+                                          });
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                                _focusTarget();
+                                                _loadTargetAddress();
+                                              });
+                                        },
+                                        borderRadius: BorderRadius.circular(
+                                          8.r,
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 10.w,
+                                            vertical: 6.h,
+                                          ),
+                                          decoration: BoxDecoration(
                                             color:
                                                 todayScheduledVisit?.id ==
-                                                        todayVisits[i].id
-                                                    ? AppColors.brandPrimary
-                                                    : AppColors.border,
+                                                    todayVisits[i].id
+                                                ? AppColors.brandPrimary
+                                                : AppColors.cardBackground,
+                                            borderRadius: BorderRadius.circular(
+                                              8.r,
+                                            ),
+                                            border: Border.all(
+                                              color:
+                                                  todayScheduledVisit?.id ==
+                                                      todayVisits[i].id
+                                                  ? AppColors.brandPrimary
+                                                  : AppColors.border,
+                                            ),
                                           ),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              todayVisits[i].visitTime !=
-                                                          null &&
-                                                      todayVisits[i]
-                                                          .visitTime!
-                                                          .isNotEmpty
-                                                  ? '🕒 ${todayVisits[i].visitTime} '
-                                                  : '',
-                                              style: AppTextStyles.font11Bold
-                                                  .copyWith(
-                                                    color:
-                                                        todayScheduledVisit
-                                                                    ?.id ==
-                                                                todayVisits[i]
-                                                                    .id
-                                                            ? AppColors.white
-                                                            : AppColors
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                todayVisits[i].visitTime !=
+                                                            null &&
+                                                        todayVisits[i]
+                                                            .visitTime!
+                                                            .isNotEmpty
+                                                    ? '🕒 ${todayVisits[i].visitTime} '
+                                                    : '',
+                                                style: AppTextStyles.font11Bold
+                                                    .copyWith(
+                                                      color:
+                                                          todayScheduledVisit
+                                                                  ?.id ==
+                                                              todayVisits[i].id
+                                                          ? AppColors.white
+                                                          : AppColors
                                                                 .brandPrimary,
-                                                  ),
-                                            ),
-                                            Text(
-                                              todayVisits[i].customerName ??
-                                                  'عميل',
-                                              style: AppTextStyles.font11Medium
-                                                  .copyWith(
-                                                    color:
-                                                        todayScheduledVisit
-                                                                    ?.id ==
-                                                                todayVisits[i]
-                                                                    .id
-                                                            ? AppColors.white
-                                                            : AppColors
+                                                    ),
+                                              ),
+                                              Text(
+                                                todayVisits[i].customerName ??
+                                                    'عميل',
+                                                style: AppTextStyles
+                                                    .font11Medium
+                                                    .copyWith(
+                                                      color:
+                                                          todayScheduledVisit
+                                                                  ?.id ==
+                                                              todayVisits[i].id
+                                                          ? AppColors.white
+                                                          : AppColors
                                                                 .textPrimary,
-                                                  ),
-                                            ),
-                                            if (todayVisits[i].status ==
-                                                'completed') ...[
-                                              wSpace(4),
-                                              Icon(
-                                                Icons.check_circle_rounded,
-                                                size: 12.r,
-                                                color:
-                                                    todayScheduledVisit?.id ==
-                                                            todayVisits[i].id
-                                                        ? AppColors.white
-                                                        : AppColors.success,
+                                                    ),
                                               ),
-                                            ] else if (todayVisits[i].status ==
-                                                'visited') ...[
-                                              wSpace(4),
-                                              Icon(
-                                                Icons.pending_actions_rounded,
-                                                size: 12.r,
-                                                color:
-                                                    todayScheduledVisit?.id ==
-                                                            todayVisits[i].id
-                                                        ? AppColors.white
-                                                        : AppColors.warning,
-                                              ),
+                                              if (todayVisits[i].status ==
+                                                  'completed') ...[
+                                                wSpace(4),
+                                                Icon(
+                                                  Icons.check_circle_rounded,
+                                                  size: 12.r,
+                                                  color:
+                                                      todayScheduledVisit?.id ==
+                                                          todayVisits[i].id
+                                                      ? AppColors.white
+                                                      : AppColors.success,
+                                                ),
+                                              ] else if (todayVisits[i]
+                                                      .status ==
+                                                  'visited') ...[
+                                                wSpace(4),
+                                                Icon(
+                                                  Icons.pending_actions_rounded,
+                                                  size: 12.r,
+                                                  color:
+                                                      todayScheduledVisit?.id ==
+                                                          todayVisits[i].id
+                                                      ? AppColors.white
+                                                      : AppColors.warning,
+                                                ),
+                                              ],
                                             ],
-                                          ],
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ],
-                                ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
+                      ],
+                      hSpace(12),
+                      Text(
+                        'attendance.locationType'.tr(),
+                        style: AppTextStyles.font14SemiBold,
                       ),
-                    ],
-                    hSpace(12),
-                    Text(
-                      'attendance.locationType'.tr(),
-                      style: AppTextStyles.font14SemiBold,
-                    ),
-                    hSpace(6),
-                    EmployeeAttendanceLocationTypeSelectorWidget(
-                      selectedType: type,
-                      onTypeChanged: _changeType,
-                      allowedTypes: allowedTypes,
-                      onDisabledTypeTap: _showDisabledTypeMessage,
-                    ),
-                    if (!widget.isCheckOut) ...[
-                      hSpace(8),
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(12.r),
-                        decoration: BoxDecoration(
-                          color: AppColors.pageBackground,
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(color: AppColors.border),
-                        ),
-                        child: isWorkScheduleLoading
-                            ? Text('attendance.loadingWorkSchedule'.tr())
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (context
-                                          .read<EmployeeAttendanceCubit>()
-                                          .employeeProfile
-                                          ?.todayWorkMode ==
-                                      'remote')
-                                    Text(
-                                      'attendance.todayWorkFromHome'.tr(
-                                        context: context,
+                      hSpace(6),
+                      EmployeeAttendanceLocationTypeSelectorWidget(
+                        selectedType: type,
+                        onTypeChanged: _changeType,
+                        allowedTypes: allowedTypes,
+                        onDisabledTypeTap: _showDisabledTypeMessage,
+                      ),
+                      if (!widget.isCheckOut) ...[
+                        hSpace(8),
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(12.r),
+                          decoration: BoxDecoration(
+                            color: AppColors.pageBackground,
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(color: AppColors.border),
+                          ),
+                          child: isWorkScheduleLoading
+                              ? Text('attendance.loadingWorkSchedule'.tr())
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (context
+                                            .read<EmployeeAttendanceCubit>()
+                                            .employeeProfile
+                                            ?.todayWorkMode ==
+                                        'remote')
+                                      Text(
+                                        'attendance.todayWorkFromHome'.tr(
+                                          context: context,
+                                        ),
+                                        style: AppTextStyles.font14SemiBold
+                                            .copyWith(color: AppColors.info),
                                       ),
-                                      style: AppTextStyles.font14SemiBold
-                                          .copyWith(color: AppColors.info),
-                                    ),
-                                  if (context
-                                          .read<EmployeeAttendanceCubit>()
-                                          .employeeProfile
-                                          ?.todayWorkMode ==
-                                      'onsite')
-                                    Text(
-                                      'attendance.todayWorkFromOffice'.tr(
-                                        context: context,
+                                    if (context
+                                            .read<EmployeeAttendanceCubit>()
+                                            .employeeProfile
+                                            ?.todayWorkMode ==
+                                        'onsite')
+                                      Text(
+                                        'attendance.todayWorkFromOffice'.tr(
+                                          context: context,
+                                        ),
+                                        style: AppTextStyles.font14SemiBold
+                                            .copyWith(
+                                              color: AppColors.brandPrimaryDark,
+                                            ),
                                       ),
-                                      style: AppTextStyles.font14SemiBold
-                                          .copyWith(
-                                            color: AppColors.brandPrimaryDark,
-                                          ),
-                                    ),
-                                  if (context
-                                              .read<EmployeeAttendanceCubit>()
-                                              .employeeProfile
-                                              ?.todayWorkMode ==
-                                          'remote' ||
-                                      context
-                                              .read<EmployeeAttendanceCubit>()
-                                              .employeeProfile
-                                              ?.todayWorkMode ==
-                                          'onsite')
-                                    hSpace(4),
-                                  Text(
-                                    'attendance.workScheduleSummary'.tr(
-                                      namedArgs: {
-                                        'system':
-                                            (context
-                                                        .read<
-                                                          EmployeeAttendanceCubit
-                                                        >()
-                                                        .employeeProfile
-                                                        ?.workSystem ??
-                                                    'onsite')
-                                                .tr(),
-                                        'mode':
-                                            (context
-                                                        .read<
-                                                          EmployeeAttendanceCubit
-                                                        >()
-                                                        .employeeProfile
-                                                        ?.todayWorkMode ??
-                                                    'off')
-                                                .tr(),
-                                        'day':
-                                            context
+                                    if (context
                                                 .read<EmployeeAttendanceCubit>()
                                                 .employeeProfile
-                                                ?.todayWorkDay ??
-                                            '--',
-                                        'start':
-                                            AppDateFormatter.formatTimeString(
+                                                ?.todayWorkMode ==
+                                            'remote' ||
+                                        context
+                                                .read<EmployeeAttendanceCubit>()
+                                                .employeeProfile
+                                                ?.todayWorkMode ==
+                                            'onsite')
+                                      hSpace(4),
+                                    Text(
+                                      'attendance.workScheduleSummary'.tr(
+                                        namedArgs: {
+                                          'system':
+                                              (context
+                                                          .read<
+                                                            EmployeeAttendanceCubit
+                                                          >()
+                                                          .employeeProfile
+                                                          ?.workSystem ??
+                                                      'onsite')
+                                                  .tr(),
+                                          'mode':
+                                              (context
+                                                          .read<
+                                                            EmployeeAttendanceCubit
+                                                          >()
+                                                          .employeeProfile
+                                                          ?.todayWorkMode ??
+                                                      'off')
+                                                  .tr(),
+                                          'day':
                                               context
-                                                  .read<EmployeeAttendanceCubit>()
+                                                  .read<
+                                                    EmployeeAttendanceCubit
+                                                  >()
                                                   .employeeProfile
-                                                  ?.todayWorkStart ??
-                                              context
-                                                  .read<EmployeeAttendanceCubit>()
-                                                  .employeeProfile
-                                                  ?.workPolicy
-                                                  ?.workingHoursStart,
-                                            ),
-                                        'end':
-                                            AppDateFormatter.formatTimeString(
-                                              context
-                                                  .read<EmployeeAttendanceCubit>()
-                                                  .employeeProfile
-                                                  ?.todayWorkEnd ??
-                                              context
-                                                  .read<EmployeeAttendanceCubit>()
-                                                  .employeeProfile
-                                                  ?.workPolicy
-                                                  ?.workingHoursEnd,
-                                            ),
-                                      },
+                                                  ?.todayWorkDay ??
+                                              '--',
+                                          'start':
+                                              AppDateFormatter.formatTimeString(
+                                                context
+                                                        .read<
+                                                          EmployeeAttendanceCubit
+                                                        >()
+                                                        .employeeProfile
+                                                        ?.todayWorkStart ??
+                                                    context
+                                                        .read<
+                                                          EmployeeAttendanceCubit
+                                                        >()
+                                                        .employeeProfile
+                                                        ?.workPolicy
+                                                        ?.workingHoursStart,
+                                              ),
+                                          'end':
+                                              AppDateFormatter.formatTimeString(
+                                                context
+                                                        .read<
+                                                          EmployeeAttendanceCubit
+                                                        >()
+                                                        .employeeProfile
+                                                        ?.todayWorkEnd ??
+                                                    context
+                                                        .read<
+                                                          EmployeeAttendanceCubit
+                                                        >()
+                                                        .employeeProfile
+                                                        ?.workPolicy
+                                                        ?.workingHoursEnd,
+                                              ),
+                                        },
+                                      ),
+                                      style: AppTextStyles.font12Regular,
                                     ),
-                                    style: AppTextStyles.font12Regular,
-                                  ),
-                                ],
-                              ),
-                      ),
-                    ],
-                    hSpace(8),
-                    if (type != 'Remote')
-                      EmployeeAttendanceTargetDropdownWidget(
-                        type: type,
-                        branches: branchOptions,
-                        customers: sortedCustomerOptions,
-                        todayVisits: todayVisits,
-                        selectedBranch: branch,
-                        selectedCustomer: customer,
-                        onBranchChanged: (selected) {
-                          setState(() => branch = selected);
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _focusTarget();
-                            _loadTargetAddress();
-                          });
-                        },
-                        onCustomerChanged: (selected) {
-                          setState(() {
-                            customer = selected;
-                            final matchingVisits = todayVisits
-                                .where((v) => v.customerId == selected.id)
-                                .toList();
-                            final active = matchingVisits
-                                    .where((v) =>
-                                        v.status != 'visited' &&
-                                        v.status != 'completed')
-                                    .firstOrNull ??
-                                matchingVisits.firstOrNull;
-                            todayScheduledVisit = active;
-                          });
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _focusTarget();
-                            _loadTargetAddress();
-                          });
-                        },
-                      ),
-                    if (type == 'Remote') ...[
-                      hSpace(18),
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(16.r),
-                        decoration: BoxDecoration(
-                          color: AppColors.softBlueBackground,
-                          borderRadius: BorderRadius.circular(14.r),
-                        ),
-                        child: Text(
-                          'attendance.remoteDescription'.tr(context: context),
-                        ),
-                      ),
-                      hSpace(12),
-                      CustomButton(
-                        text: widget.isCheckOut
-                            ? 'employee.home.checkOutAction'.tr()
-                            : 'employee.home.checkInAction'.tr(),
-                        isLoading: state is EmployeeAttendanceStateLoading,
-                        enabled: true,
-                        onTap: _submit,
-                      ),
-                    ] else if (type == 'Customer' &&
-                        (todayScheduledVisit ??
-                                (customer != null
-                                    ? todayVisits
-                                        .where((v) =>
-                                            v.customerId == customer!.id)
-                                        .firstOrNull
-                                    : null)) !=
-                            null &&
-                        ((todayScheduledVisit ??
-                                    todayVisits
-                                        .where((v) =>
-                                            v.customerId == customer!.id)
-                                        .first)
-                                .status ==
-                            'visited' ||
-                            (todayScheduledVisit ??
-                                    todayVisits
-                                        .where((v) =>
-                                            v.customerId == customer!.id)
-                                        .first)
-                                .status ==
-                            'completed')) ...[
-                      hSpace(14),
-                      Builder(
-                        builder: (context) {
-                          final matchingVisit = todayScheduledVisit ??
-                              todayVisits
-                                  .where((v) => v.customerId == customer!.id)
-                                  .first;
-                          final nextPendingVisit = todayVisits
-                              .where((v) =>
-                                  v.id != matchingVisit.id &&
-                                  v.status != 'visited' &&
-                                  v.status != 'completed')
-                              .firstOrNull;
-
-                          return EmployeeAttendedVisitCardWidget(
-                            visit: matchingVisit,
-                            nextVisit: nextPendingVisit,
-                            onNextVisitTap: nextPendingVisit == null
-                                ? null
-                                : () {
-                                    setState(() {
-                                      todayScheduledVisit = nextPendingVisit;
-                                      final matchingCust =
-                                          sortedCustomerOptions
-                                              .where((c) =>
-                                                  c.id ==
-                                                  nextPendingVisit.customerId)
-                                              .firstOrNull;
-                                      if (matchingCust != null) {
-                                        customer = matchingCust;
-                                      }
-                                    });
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                      _focusTarget();
-                                      _loadTargetAddress();
-                                    });
-                                  },
-                            onRecordOutcomeTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (ctx) =>
-                                    AdminRecordVisitOutcomeDialogWidget(
-                                  visit: matchingVisit,
-                                  onSubmit: (
-                                    outcome,
-                                    status,
-                                    notes,
-                                    docName,
-                                    docUrl,
-                                  ) async {
-                                    final visitId = matchingVisit.id;
-                                    if (visitId == null || visitId.isEmpty) return;
-                                    final res = await sl<AdminCustomerVisitsRepo>()
-                                        .updateVisitOutcome(
-                                      visitId: visitId,
-                                      outcome: outcome,
-                                      status: status,
-                                      notes: notes,
-                                      documentName: docName,
-                                      documentUrl: docUrl,
-                                    );
-                                    if (!mounted) return;
-                                    res.when(
-                                      success: (_) {
-                                        setState(() {
-                                          final updated = matchingVisit.copyWith(
-                                            outcome: outcome,
-                                            status: status,
-                                            notes: notes,
-                                            outcomeDocumentName: docName,
-                                            outcomeDocumentUrl: docUrl,
-                                            documentName:
-                                                matchingVisit.documentName ??
-                                                    docName,
-                                            documentUrl:
-                                                matchingVisit.documentUrl ??
-                                                    docUrl,
-                                          );
-                                          todayVisits = todayVisits
-                                              .map((v) =>
-                                                  v.id == updated.id
-                                                      ? updated
-                                                      : v)
-                                              .toList();
-                                          todayScheduledVisit = updated;
-                                        });
-                                        if (context.mounted) {
-                                          CustomSnackBar.showSuccess(
-                                            context,
-                                            message: 'admin.visits.outcomeSuccess'
-                                                .tr(context: context),
-                                          );
-                                        }
-                                      },
-                                      failure: (failure) {
-                                        if (context.mounted) {
-                                          CustomSnackBar.showError(
-                                            context,
-                                            message: failure.messageKey.tr(context: context),
-                                          );
-                                        }
-                                      },
-                                    );
-                                  },
+                                  ],
                                 ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ] else if (points.isEmpty) ...[
-                      hSpace(20),
-                      Center(
-                        child: state is EmployeeAttendanceStateLoading
-                            ? const CircularProgressIndicator()
-                            : Text(
-                                'attendance.noLocationData'.tr(),
-                                style: AppTextStyles.font14SemiBold,
-                                textAlign: TextAlign.center,
-                              ),
-                      ),
-                    ] else ...[
-                      hSpace(12),
-                      EmployeeAttendanceLocationMapWidget(
-                        isExpanded: isMapExpanded,
-                        mapCenter: mapCenter,
-                        userLocation: userLocation,
-                        targetPoints: points,
-                        targetCenter: targetCenter,
-                        targetType: type,
-                        targetName: branch?.name ?? customer?.name,
-                        onMapCreated: (controller) =>
-                            mapController = controller,
-                        onToggleExpanded: () =>
-                            setState(() => isMapExpanded = !isMapExpanded),
-                      ),
-                      hSpace(10),
-                      AttendanceTargetDetailsWidget(
-                        name: branch?.name ?? customer?.name ?? type,
-                        address:
-                            targetAddress ??
-                            branch?.location ??
-                            customer?.location,
-                        isAddressLoading: isAddressLoading,
-                        onCopyAddress: _copyTargetAddress,
-                      ),
-                      hSpace(10),
-                      EmployeeAttendanceLocationStatusWidget(
-                        userLocation: userLocation,
-                        isInside: isInside,
-                      ),
-                      hSpace(8),
-                      Text(
-                        'attendance.securityNote'.tr(),
-                        style: AppTextStyles.font12Regular.copyWith(
-                          color: AppColors.textSecondary,
                         ),
-                      ),
-                      hSpace(10),
-                      CustomButton(
-                        text: widget.isCheckOut
-                            ? 'employee.home.checkOutAction'.tr()
-                            : 'employee.home.checkInAction'.tr(),
-                        isLoading: state is EmployeeAttendanceStateLoading,
-                        enabled: userLocation != null && isInside,
-                        onTap: _submit,
-                      ),
+                      ],
+                      hSpace(8),
+                      if (type != 'Remote')
+                        EmployeeAttendanceTargetDropdownWidget(
+                          type: type,
+                          branches: branchOptions,
+                          customers: sortedCustomerOptions,
+                          todayVisits: todayVisits,
+                          selectedBranch: branch,
+                          selectedCustomer: customer,
+                          onBranchChanged: (selected) {
+                            setState(() => branch = selected);
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _focusTarget();
+                              _loadTargetAddress();
+                            });
+                          },
+                          onCustomerChanged: (selected) {
+                            setState(() {
+                              customer = selected;
+                              final matchingVisits = todayVisits
+                                  .where((v) => v.customerId == selected.id)
+                                  .toList();
+                              final active =
+                                  matchingVisits
+                                      .where(
+                                        (v) =>
+                                            v.status != 'visited' &&
+                                            v.status != 'completed',
+                                      )
+                                      .firstOrNull ??
+                                  matchingVisits.firstOrNull;
+                              todayScheduledVisit = active;
+                            });
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _focusTarget();
+                              _loadTargetAddress();
+                            });
+                          },
+                        ),
+                      if (type == 'Remote') ...[
+                        hSpace(18),
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(16.r),
+                          decoration: BoxDecoration(
+                            color: AppColors.softBlueBackground,
+                            borderRadius: BorderRadius.circular(14.r),
+                          ),
+                          child: Text(
+                            'attendance.remoteDescription'.tr(context: context),
+                          ),
+                        ),
+                        hSpace(12),
+                        CustomButton(
+                          text: widget.isCheckOut
+                              ? 'employee.home.checkOutAction'.tr()
+                              : 'employee.home.checkInAction'.tr(),
+                          isLoading: state is EmployeeAttendanceStateLoading,
+                          enabled: true,
+                          onTap: _submit,
+                        ),
+                      ] else if (type == 'Customer' &&
+                          (todayScheduledVisit ??
+                                  (customer != null
+                                      ? todayVisits
+                                            .where(
+                                              (v) =>
+                                                  v.customerId == customer!.id,
+                                            )
+                                            .firstOrNull
+                                      : null)) !=
+                              null &&
+                          ((todayScheduledVisit ??
+                                          todayVisits
+                                              .where(
+                                                (v) =>
+                                                    v.customerId ==
+                                                    customer!.id,
+                                              )
+                                              .first)
+                                      .status ==
+                                  'visited' ||
+                              (todayScheduledVisit ??
+                                          todayVisits
+                                              .where(
+                                                (v) =>
+                                                    v.customerId ==
+                                                    customer!.id,
+                                              )
+                                              .first)
+                                      .status ==
+                                  'completed')) ...[
+                        hSpace(14),
+                        Builder(
+                          builder: (context) {
+                            final matchingVisit =
+                                todayScheduledVisit ??
+                                todayVisits
+                                    .where((v) => v.customerId == customer!.id)
+                                    .first;
+                            final nextPendingVisit = todayVisits
+                                .where(
+                                  (v) =>
+                                      v.id != matchingVisit.id &&
+                                      v.status != 'visited' &&
+                                      v.status != 'completed',
+                                )
+                                .firstOrNull;
+
+                            return EmployeeAttendedVisitCardWidget(
+                              visit: matchingVisit,
+                              nextVisit: nextPendingVisit,
+                              onNextVisitTap: nextPendingVisit == null
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        todayScheduledVisit = nextPendingVisit;
+                                        final matchingCust =
+                                            sortedCustomerOptions
+                                                .where(
+                                                  (c) =>
+                                                      c.id ==
+                                                      nextPendingVisit
+                                                          .customerId,
+                                                )
+                                                .firstOrNull;
+                                        if (matchingCust != null) {
+                                          customer = matchingCust;
+                                        }
+                                      });
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                            _focusTarget();
+                                            _loadTargetAddress();
+                                          });
+                                    },
+                              onRecordOutcomeTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (ctx) =>
+                                      AdminRecordVisitOutcomeDialogWidget(
+                                        visit: matchingVisit,
+                                        onSubmit:
+                                            (
+                                              outcome,
+                                              status,
+                                              notes,
+                                              docName,
+                                              docUrl,
+                                            ) async {
+                                              final visitId = matchingVisit.id;
+                                              if (visitId == null ||
+                                                  visitId.isEmpty) {
+                                                return;
+                                              }
+                                              final res =
+                                                  await sl<
+                                                        AdminCustomerVisitsRepo
+                                                      >()
+                                                      .updateVisitOutcome(
+                                                        visitId: visitId,
+                                                        outcome: outcome,
+                                                        status: status,
+                                                        notes: notes,
+                                                        documentName: docName,
+                                                        documentUrl: docUrl,
+                                                      );
+                                              if (!mounted) return;
+                                              res.when(
+                                                success: (_) {
+                                                  setState(() {
+                                                    final updated =
+                                                        matchingVisit.copyWith(
+                                                          outcome: outcome,
+                                                          status: status,
+                                                          notes: notes,
+                                                          outcomeDocumentName:
+                                                              docName,
+                                                          outcomeDocumentUrl:
+                                                              docUrl,
+                                                          documentName:
+                                                              matchingVisit
+                                                                  .documentName ??
+                                                              docName,
+                                                          documentUrl:
+                                                              matchingVisit
+                                                                  .documentUrl ??
+                                                              docUrl,
+                                                        );
+                                                    todayVisits = todayVisits
+                                                        .map(
+                                                          (v) =>
+                                                              v.id == updated.id
+                                                              ? updated
+                                                              : v,
+                                                        )
+                                                        .toList();
+                                                    todayScheduledVisit =
+                                                        updated;
+                                                  });
+                                                  if (context.mounted) {
+                                                    CustomSnackBar.showSuccess(
+                                                      context,
+                                                      message:
+                                                          'admin.visits.outcomeSuccess'
+                                                              .tr(
+                                                                context:
+                                                                    context,
+                                                              ),
+                                                    );
+                                                  }
+                                                },
+                                                failure: (failure) {
+                                                  if (context.mounted) {
+                                                    CustomSnackBar.showError(
+                                                      context,
+                                                      message: failure
+                                                          .messageKey
+                                                          .tr(context: context),
+                                                    );
+                                                  }
+                                                },
+                                              );
+                                            },
+                                      ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ] else if (points.isEmpty) ...[
+                        hSpace(20),
+                        Center(
+                          child: state is EmployeeAttendanceStateLoading
+                              ? const CircularProgressIndicator()
+                              : Text(
+                                  'attendance.noLocationData'.tr(),
+                                  style: AppTextStyles.font14SemiBold,
+                                  textAlign: TextAlign.center,
+                                ),
+                        ),
+                      ] else ...[
+                        hSpace(12),
+                        EmployeeAttendanceLocationMapWidget(
+                          isExpanded: isMapExpanded,
+                          mapCenter: mapCenter,
+                          userLocation: userLocation,
+                          targetPoints: points,
+                          targetCenter: targetCenter,
+                          targetType: type,
+                          targetName: branch?.name ?? customer?.name,
+                          onMapCreated: (controller) =>
+                              mapController = controller,
+                          onToggleExpanded: () =>
+                              setState(() => isMapExpanded = !isMapExpanded),
+                        ),
+                        hSpace(10),
+                        AttendanceTargetDetailsWidget(
+                          name: branch?.name ?? customer?.name ?? type,
+                          address:
+                              targetAddress ??
+                              branch?.location ??
+                              customer?.location,
+                          isAddressLoading: isAddressLoading,
+                          onCopyAddress: _copyTargetAddress,
+                        ),
+                        hSpace(10),
+                        EmployeeAttendanceLocationStatusWidget(
+                          userLocation: userLocation,
+                          isInside: isInside,
+                        ),
+                        hSpace(8),
+                        Text(
+                          'attendance.securityNote'.tr(),
+                          style: AppTextStyles.font12Regular.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                        hSpace(10),
+                        CustomButton(
+                          text: widget.isCheckOut
+                              ? 'employee.home.checkOutAction'.tr()
+                              : 'employee.home.checkInAction'.tr(),
+                          isLoading: state is EmployeeAttendanceStateLoading,
+                          enabled: userLocation != null && isInside,
+                          onTap: _submit,
+                        ),
+                      ],
                     ],
-                  ],
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
