@@ -261,6 +261,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
   }
 
   void _applyFilters() {
+    if (isClosed) return;
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
 
@@ -352,7 +353,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     } else {
       emit(
         const EmployeeAttendanceState.areaValidationError(
-          'You are outside the required area boundary',
+          'You are outsidehttp://137.184.223.222 the required area boundary',
         ),
       );
     }

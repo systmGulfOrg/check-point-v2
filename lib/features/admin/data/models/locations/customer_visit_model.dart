@@ -9,6 +9,7 @@ class CustomerVisitModel {
     this.id,
     this.customerId,
     this.customerName,
+    this.employeeId,
     this.title,
     this.visitDate,
     this.visitTime,
@@ -31,6 +32,7 @@ class CustomerVisitModel {
   final String? id;
   final String? customerId;
   final String? customerName;
+  final String? employeeId;
   final String? title;
   final String? visitDate;
   final String? visitTime;
@@ -61,6 +63,7 @@ class CustomerVisitModel {
     String? id,
     String? customerId,
     String? customerName,
+    String? employeeId,
     String? title,
     String? visitDate,
     String? visitTime,
@@ -83,6 +86,7 @@ class CustomerVisitModel {
       id: id ?? this.id,
       customerId: customerId ?? this.customerId,
       customerName: customerName ?? this.customerName,
+      employeeId: employeeId ?? this.employeeId,
       title: title ?? this.title,
       visitDate: visitDate ?? this.visitDate,
       visitTime: visitTime ?? this.visitTime,
@@ -181,10 +185,8 @@ class SingleCustomerVisitResponseModel {
 
   factory SingleCustomerVisitResponseModel.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$SingleCustomerVisitResponseModelFromJson(json);
+  ) => _$SingleCustomerVisitResponseModelFromJson(json);
 
   Map<String, dynamic> toJson() =>
       _$SingleCustomerVisitResponseModelToJson(this);
 }
-

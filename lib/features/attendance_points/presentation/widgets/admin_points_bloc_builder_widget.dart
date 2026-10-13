@@ -7,6 +7,7 @@ import 'package:check_point_v2/core/core.dart';
 import '../cubit/admin_points_cubit.dart';
 import '../cubit/admin_points_state.dart';
 import 'admin_points_employee_card_widget.dart';
+import 'admin_points_skeleton_widget.dart';
 
 class AdminPointsBlocBuilderWidget extends StatelessWidget {
   const AdminPointsBlocBuilderWidget({required this.onEmployeeTap, super.key});
@@ -17,9 +18,8 @@ class AdminPointsBlocBuilderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AdminPointsCubit, AdminPointsState>(
       builder: (context, state) => switch (state) {
-        AdminPointsInitial() || AdminPointsLoading() => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        AdminPointsInitial() ||
+        AdminPointsLoading() => const AdminPointsSkeletonWidget(),
         AdminPointsError(:final messageKey) => Center(
           child: Padding(
             padding: EdgeInsets.all(24.r),

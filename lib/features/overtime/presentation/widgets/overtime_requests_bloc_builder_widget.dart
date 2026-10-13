@@ -40,6 +40,12 @@ class OvertimeRequestsBlocBuilderWidget extends StatelessWidget {
                         canReview: canReview,
                         isOwnRequest:
                             currentEmployeeId == requests[index].employeeId,
+                        canDelete:
+                            currentEmployeeId == requests[index].employeeId &&
+                            requests[index].status == 'Pending',
+                        onDelete: () => context
+                            .read<OvertimeCubit>()
+                            .deleteRequest(id: requests[index].id),
                       ),
                     ),
                   ),

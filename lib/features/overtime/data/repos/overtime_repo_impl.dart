@@ -51,6 +51,10 @@ class OvertimeRepoImpl implements OvertimeRepo {
     () => api.updateStatus(id, {'status': status, 'reviewNote': reviewNote}),
   );
 
+  @override
+  Future<ApiResult<void>> deleteRequest({required String id}) =>
+      _run(() => api.deleteRequest(id));
+
   Future<ApiResult<void>> _run(Future<Object?> Function() action) async {
     try {
       await action();

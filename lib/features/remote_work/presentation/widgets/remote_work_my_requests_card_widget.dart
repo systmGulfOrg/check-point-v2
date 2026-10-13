@@ -6,9 +6,14 @@ import 'package:check_point_v2/core/core.dart';
 import '../../data/models/remote_work_request_model.dart';
 
 class RemoteWorkMyRequestsCardWidget extends StatelessWidget {
-  const RemoteWorkMyRequestsCardWidget({required this.requests, super.key});
+  const RemoteWorkMyRequestsCardWidget({
+    required this.requests,
+    required this.onDelete,
+    super.key,
+  });
 
   final List<RemoteWorkRequestModel> requests;
+  final ValueChanged<String> onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +54,30 @@ class RemoteWorkMyRequestsCardWidget extends StatelessWidget {
                     color: AppColors.textSecondary,
                   ),
                 ),
-                trailing: Text(
-                  statusKey.tr(context: context),
-                  style: AppTextStyles.font12Medium.copyWith(
-                    color: request.status.toLowerCase() == 'approved'
-                        ? AppColors.success
-                        : request.status.toLowerCase() == 'rejected'
-                        ? AppColors.error
-                        : AppColors.warningOrange,
-                  ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      statusKey.tr(context: context),
+                      style: AppTextStyles.font12Medium.copyWith(
+                        color: request.status.toLowerCase() == 'approved'
+                            ? AppColors.success
+                            : request.status.toLowerCase() == 'rejected'
+                            ? AppColors.error
+                            : AppColors.warningOrange,
+                      ),
+                    ),
+                    if (request.status.toLowerCase() == 'pending')
+                      IconButton(
+                        tooltip: 'common.delete'.tr(context: context),
+                        onPressed: () => onDelete(request.id),
+                        icon: Icon(
+                          Icons.delete_outline_rounded,
+                          color: AppColors.error,
+                          size: 20.r,
+                        ),
+                      ),
+                  ],
                 ),
               ),
               if (!isLast) const Divider(height: 1),

@@ -11,11 +11,15 @@ class OvertimeRequestCardWidget extends StatelessWidget {
     required this.request,
     required this.canReview,
     required this.isOwnRequest,
+    required this.canDelete,
+    required this.onDelete,
     super.key,
   });
   final OvertimeRequestModel request;
   final bool canReview;
   final bool isOwnRequest;
+  final bool canDelete;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +64,16 @@ class OvertimeRequestCardWidget extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (canDelete)
+                  IconButton(
+                    tooltip: 'common.delete'.tr(context: context),
+                    onPressed: onDelete,
+                    icon: Icon(
+                      Icons.delete_outline_rounded,
+                      color: AppColors.error,
+                      size: 20.r,
+                    ),
+                  ),
               ],
             ),
             hSpace(8),

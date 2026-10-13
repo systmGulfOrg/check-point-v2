@@ -37,7 +37,11 @@ class RemoteWorkMyRequestsBlocBuilderWidget extends StatelessWidget {
                 RemoteWorkSectionTitleWidget(
                   title: 'remoteWork.myRequests'.tr(context: context),
                 ),
-                RemoteWorkMyRequestsCardWidget(requests: myRequests),
+                RemoteWorkMyRequestsCardWidget(
+                  requests: myRequests,
+                  onDelete: (id) =>
+                      context.read<RemoteWorkCubit>().deleteRequest(id: id),
+                ),
               ],
             ),
           );

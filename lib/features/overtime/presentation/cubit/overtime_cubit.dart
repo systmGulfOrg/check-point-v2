@@ -67,4 +67,18 @@ class OvertimeCubit extends Cubit<OvertimeState> {
       },
     );
   }
+
+  Future<bool> deleteRequest({required String id}) async {
+    final result = await repo.deleteRequest(id: id);
+    return result.when(
+      success: (_) async {
+        await load();
+        return true;
+      },
+      failure: (failure) {
+        if (!isClosed) emit(OvertimeState.error(failure.messageKey));
+        return false;
+      },
+    );
+  }
 }

@@ -98,22 +98,30 @@ class _AdminMyVisitsBlocBuilderWidgetState
     final userName = _currentUserName?.trim().toLowerCase() ?? '';
     final userId = _currentUserId?.trim().toLowerCase() ?? '';
     final empId = _currentEmployeeId?.trim().toLowerCase() ?? '';
+    final identities = [userName, userId, empId]
+        .map(_normalizeVisitIdentity)
+        .where((identity) => identity.length >= 3)
+        .toSet();
+
+    // Prefer the stable employee identifier when the API provides it. Names
+    // are only a fallback because the visit form may store a display label.
+    final visitEmployeeId = visit.employeeId?.trim().toLowerCase() ?? '';
+    if (visitEmployeeId.isNotEmpty &&
+        ((empId.isNotEmpty && visitEmployeeId == empId) ||
+            (userId.isNotEmpty && visitEmployeeId == userId))) {
+      return true;
+    }
 
     // 1. Check if the current user created the visit
     if (visit.createdBy != null && visit.createdBy!.isNotEmpty) {
       final createdByLower = visit.createdBy!.trim().toLowerCase();
-      if ((userId.isNotEmpty && createdByLower == userId) ||
-          (empId.isNotEmpty && createdByLower == empId) ||
-          (userName.isNotEmpty && createdByLower == userName)) {
+      if (_matchesVisitIdentity(createdByLower, identities)) {
         return true;
       }
     }
     if (visit.createdByName != null && visit.createdByName!.isNotEmpty) {
       final createdByNameLower = visit.createdByName!.trim().toLowerCase();
-      if (userName.isNotEmpty &&
-          (createdByNameLower == userName ||
-              createdByNameLower.contains(userName) ||
-              userName.contains(createdByNameLower))) {
+      if (_matchesVisitIdentity(createdByNameLower, identities)) {
         return true;
       }
     }
@@ -123,41 +131,15 @@ class _AdminMyVisitsBlocBuilderWidgetState
       final cleanAttendee = attendee.trim().toLowerCase();
       if (cleanAttendee.isEmpty) continue;
 
+      if (_matchesVisitIdentity(cleanAttendee, identities)) return true;
+
       if (cleanAttendee.startsWith('أنا') || cleanAttendee.startsWith('me')) {
         final match = RegExp(r'[\(（]([^\)）]+)[\)）]').firstMatch(cleanAttendee);
         if (match != null) {
           final inner = match.group(1)?.trim().toLowerCase() ?? '';
-          if (userName.isNotEmpty &&
-              (inner == userName ||
-                  inner.contains(userName) ||
-                  userName.contains(inner))) {
-            return true;
-          }
-          if (userId.isNotEmpty && inner == userId) return true;
-          if (empId.isNotEmpty && inner == empId) return true;
+          if (_matchesVisitIdentity(inner, identities)) return true;
         }
         continue;
-      }
-
-      if (userName.isNotEmpty &&
-          (cleanAttendee.contains(userName) ||
-              userName.contains(cleanAttendee))) {
-        return true;
-      }
-      if (userId.isNotEmpty && cleanAttendee.contains(userId)) {
-        return true;
-      }
-      if (empId.isNotEmpty && cleanAttendee.contains(empId)) {
-        return true;
-      }
-
-      final tokens = userName
-          .split(RegExp(r'\s+'))
-          .where((t) => t.length > 2);
-      for (final token in tokens) {
-        if (cleanAttendee.contains(token)) {
-          return true;
-        }
       }
     }
 
@@ -180,7 +162,27 @@ class _AdminMyVisitsBlocBuilderWidgetState
     return false;
   }
 
-  void _openCreateVisitSheet(BuildContext context, List<CustomerModel> customers) {
+  String _normalizeVisitIdentity(String value) => value
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^a-z0-9\u0600-\u06ff]+'), ' ')
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
+
+  bool _matchesVisitIdentity(String value, Set<String> identities) {
+    final normalizedValue = _normalizeVisitIdentity(value);
+    if (normalizedValue.length < 3) return false;
+    return identities.any(
+      (identity) =>
+          normalizedValue == identity ||
+          normalizedValue.contains(identity) ||
+          identity.contains(normalizedValue),
+    );
+  }
+
+  void _openCreateVisitSheet(
+    BuildContext context,
+    List<CustomerModel> customers,
+  ) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -251,10 +253,8 @@ class _AdminMyVisitsBlocBuilderWidgetState
                       style: AppTextStyles.font12Regular,
                     ),
                     TextButton.icon(
-                      onPressed: () => _openCreateVisitSheet(
-                        context,
-                        accessibleCustomers,
-                      ),
+                      onPressed: () =>
+                          _openCreateVisitSheet(context, accessibleCustomers),
                       icon: const Icon(Icons.add_rounded, size: 16),
                       label: Text(
                         'admin.visits.planVisit'.tr(context: context),

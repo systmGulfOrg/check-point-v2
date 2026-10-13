@@ -14,4 +14,5 @@ abstract class OvertimeRepo {
     required String status,
     String? reviewNote,
   });
+  Future<ApiResult<void>> deleteRequest({required String id});
 }

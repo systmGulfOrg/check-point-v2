@@ -40,4 +40,5 @@ abstract class RemoteWorkRepo {
     required String status,
     String? reviewNote,
   });
+  Future<ApiResult<void>> deleteRequest({required String id});
 }

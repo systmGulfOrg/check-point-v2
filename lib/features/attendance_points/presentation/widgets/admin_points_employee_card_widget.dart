@@ -95,36 +95,48 @@ class AdminPointsEmployeeCardWidget extends StatelessWidget {
               ],
             ),
             hSpace(12),
-            Row(
+            Wrap(
+              spacing: 8.w,
+              runSpacing: 6.h,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 AdminPointsMetricWidget(
                   label: 'points.greenConfirmed',
                   value: employee.balances.greenConfirmed,
                   color: AppColors.success,
                 ),
-                wSpace(8),
                 AdminPointsMetricWidget(
                   label: 'points.red',
                   value: employee.balances.red,
                   color: AppColors.error,
                 ),
-                wSpace(8),
                 AdminPointsMetricWidget(
                   label: 'points.black',
                   value: employee.balances.black,
                   color: AppColors.textPrimary,
                 ),
-                const Spacer(),
-                Icon(
-                  Icons.local_fire_department_rounded,
-                  size: 16.r,
-                  color: AppColors.warningOrange,
-                ),
-                wSpace(3),
-                Text(
-                  '${employee.streak.currentStreak}',
-                  style: AppTextStyles.font12Bold.copyWith(
-                    color: AppColors.warningOrange,
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.warningOrange.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.local_fire_department_rounded,
+                        size: 16.r,
+                        color: AppColors.warningOrange,
+                      ),
+                      wSpace(3),
+                      Text(
+                        '${employee.streak.currentStreak}',
+                        style: AppTextStyles.font12Bold.copyWith(
+                          color: AppColors.warningOrange,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

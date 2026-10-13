@@ -18,4 +18,7 @@ abstract class OvertimeApiService {
     @Path('id') String id,
     @Body() Map<String, dynamic> body,
   );
+
+  @DELETE('/api/v2/overtime-requests/{id}')
+  Future<dynamic> deleteRequest(@Path('id') String id);
 }

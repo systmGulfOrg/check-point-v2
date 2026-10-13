@@ -89,6 +89,22 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
     );
   }
 
+  Future<bool> deleteRequest({required String id}) async {
+    if (isClosed) return false;
+    final result = await repo.deleteRequest(id: id);
+    if (isClosed) return false;
+    return result.when(
+      success: (_) async {
+        await load();
+        return true;
+      },
+      failure: (failure) {
+        if (!isClosed) emit(RemoteWorkState.error(failure.messageKey));
+        return false;
+      },
+    );
+  }
+
   Future<bool> createPolicy({
     required String name,
     required List<String> allowedDays,

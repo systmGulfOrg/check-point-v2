@@ -155,6 +155,10 @@ class RemoteWorkRepoImpl implements RemoteWorkRepo {
     }),
   );
 
+  @override
+  Future<ApiResult<void>> deleteRequest({required String id}) =>
+      _run(() => api.deleteRequest(id));
+
   Future<ApiResult<void>> _run(Future<Object?> Function() action) async {
     try {
       await action();

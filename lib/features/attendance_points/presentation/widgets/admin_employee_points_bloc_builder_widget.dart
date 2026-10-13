@@ -9,6 +9,7 @@ import '../cubit/points_cubit.dart';
 import 'points_balances_grid_widget.dart';
 import 'points_history_item_card_widget.dart';
 import 'points_level_progress_card_widget.dart';
+import 'admin_employee_points_skeleton_widget.dart';
 
 class AdminEmployeePointsBlocBuilderWidget extends StatelessWidget {
   const AdminEmployeePointsBlocBuilderWidget({super.key});
@@ -18,7 +19,7 @@ class AdminEmployeePointsBlocBuilderWidget extends StatelessWidget {
     return BlocBuilder<PointsCubit, PointsState>(
       builder: (context, state) => switch (state) {
         PointsInitial() ||
-        PointsLoading() => const Center(child: CircularProgressIndicator()),
+        PointsLoading() => const AdminEmployeePointsSkeletonWidget(),
         PointsError(:final message) => Center(
           child: Text(message, style: AppTextStyles.font14Regular),
         ),
