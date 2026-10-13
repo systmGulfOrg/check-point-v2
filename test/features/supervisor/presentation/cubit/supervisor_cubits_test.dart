@@ -2,6 +2,7 @@ import 'package:local_auth/local_auth.dart';
 
 import 'package:check_point_v2/core/auth/biometric_auth_service.dart';
 import 'package:check_point_v2/core/services/attendance_verification_service.dart';
+import 'package:check_point_v2/core/services/location_integrity_service.dart';
 import 'package:check_point_v2/core/services/location_service.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
@@ -228,6 +229,7 @@ void main() {
           biometricAuthService: BiometricAuthService(
             localAuthentication: LocalAuthentication(),
           ),
+          locationIntegrityService: LocationIntegrityService(),
         ),
       );
 
