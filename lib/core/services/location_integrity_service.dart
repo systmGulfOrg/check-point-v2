@@ -175,12 +175,10 @@ class LocationIntegrityService {
 
       return null; // native check passed
     } on MissingPluginException {
-      // Running on a non-Android platform (e.g. iOS, web) — treat as unknown
-      return LocationIntegrityResult(
-        status: LocationIntegrityStatus.unknown,
-        reasonCode: 'platform_not_supported',
-        details: 'MethodChannel not available on this platform',
-      );
+      // The native mock-location channel is Android-only. A missing channel
+      // on iOS must not invalidate an otherwise valid GPS sample; the
+      // accuracy, freshness, speed, and geofence checks still apply.
+      return null;
     } catch (e) {
       // Any other failure is unknown, not safe
       return LocationIntegrityResult(
