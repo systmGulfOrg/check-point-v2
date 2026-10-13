@@ -86,7 +86,8 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     }
     result.when(
       success: (data) => emit(EmployeeAttendanceState.branchesLoaded(data)),
-      failure: (failure) => emit(EmployeeAttendanceState.error(failure.messageKey)),
+      failure: (failure) =>
+          emit(EmployeeAttendanceState.error(failure.messageKey)),
     );
   }
 
