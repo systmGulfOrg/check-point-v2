@@ -16,6 +16,13 @@ class SupervisorPersonalSummaryWidget extends StatelessWidget {
     required this.checkIn,
     required this.checkOut,
     required this.leaveBalance,
+    this.isCheckedIn = false,
+    this.hasCheckedOut = false,
+    this.onToggleCheckInOut,
+    this.workedHours,
+    this.isTodayHoliday = false,
+    this.holidayGreeting,
+    this.holidayName,
     super.key,
   });
 
@@ -27,6 +34,13 @@ class SupervisorPersonalSummaryWidget extends StatelessWidget {
   final String checkIn;
   final String checkOut;
   final String leaveBalance;
+  final bool isCheckedIn;
+  final bool hasCheckedOut;
+  final VoidCallback? onToggleCheckInOut;
+  final String? workedHours;
+  final bool isTodayHoliday;
+  final String? holidayGreeting;
+  final String? holidayName;
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +149,97 @@ class SupervisorPersonalSummaryWidget extends StatelessWidget {
               color: AppColors.textSecondary,
             ),
           ),
+          if (onToggleCheckInOut != null) ...[
+            hSpace(14),
+            if (isTodayHoliday)
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 14.w),
+                decoration: BoxDecoration(
+                  color: AppColors.softGreenBackground,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: AppColors.success.withValues(alpha: 0.35),
+                    width: 1.2,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.celebration_rounded,
+                      color: AppColors.success,
+                      size: 20.r,
+                    ),
+                    wSpace(8),
+                    Expanded(
+                      child: Text(
+                        holidayGreeting ??
+                            '${'holidays.todayHolidayTitle'.tr(context: context)}: ${holidayName ?? ''} - ${'holidays.todayHolidayGreeting'.tr(context: context)}',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.font12SemiBold.copyWith(
+                          color: AppColors.success,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            else if (hasCheckedOut && !isCheckedIn)
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4.h),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.check_circle_outline_rounded,
+                        color: AppColors.success,
+                        size: 18.r,
+                      ),
+                      wSpace(6),
+                      Text(
+                        'employee.clock.checkedOutSuccess'.tr(context: context),
+                        style: AppTextStyles.font13Medium.copyWith(
+                          color: AppColors.success,
+                        ),
+                      ),
+                      if (workedHours != null) ...[
+                        wSpace(8),
+                        Text(
+                          '($workedHours)',
+                          style: AppTextStyles.font12Regular.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              )
+            else
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                transitionBuilder: (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: SizeTransition(
+                    sizeFactor: animation,
+                    axisAlignment: 0.0,
+                    child: child,
+                  ),
+                ),
+                child: CustomButton(
+                  key: ValueKey<bool>(isCheckedIn),
+                  text: isCheckedIn
+                      ? 'employee.home.checkOutAction'.tr(context: context)
+                      : 'employee.home.checkInAction'.tr(context: context),
+                  backgroundColor: isCheckedIn
+                      ? AppColors.error
+                      : AppColors.brandPrimary,
+                  onTap: onToggleCheckInOut!,
+                ),
+              ),
+          ],
         ],
       ),
     );
