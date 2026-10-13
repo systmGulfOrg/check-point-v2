@@ -17,20 +17,38 @@ class PointsCubit extends Cubit<PointsState> {
   List<PointsLeaderboardEntryModel> currentLeaderboard = [];
 
   Future<void> loadAllPointsData({String? employeeId}) async {
+    if (isClosed) return;
     emit(const PointsState.loading());
-    final summaryResult = await pointsRepo.getPointsSummary(employeeId: employeeId);
+    final summaryResult = await pointsRepo.getPointsSummary(
+      employeeId: employeeId,
+    );
+    if (isClosed) return;
 
     summaryResult.when(
       success: (summary) async {
+        if (isClosed) return;
         currentSummary = summary;
-        final historyResult = await pointsRepo.getPointsHistory(employeeId: employeeId);
+        final historyResult = await pointsRepo.getPointsHistory(
+          employeeId: employeeId,
+        );
         final badgesResult = await pointsRepo.getBadges(employeeId: employeeId);
         final leaderboardResult = await pointsRepo.getLeaderboard();
+        if (isClosed) return;
 
-        currentHistory = historyResult.when(success: (d) => d, failure: (_) => []);
-        currentBadges = badgesResult.when(success: (d) => d, failure: (_) => []);
-        currentLeaderboard = leaderboardResult.when(success: (d) => d, failure: (_) => []);
+        currentHistory = historyResult.when(
+          success: (d) => d,
+          failure: (_) => [],
+        );
+        currentBadges = badgesResult.when(
+          success: (d) => d,
+          failure: (_) => [],
+        );
+        currentLeaderboard = leaderboardResult.when(
+          success: (d) => d,
+          failure: (_) => [],
+        );
 
+        if (isClosed) return;
         emit(
           PointsState.loaded(
             summary: summary,
@@ -41,15 +59,21 @@ class PointsCubit extends Cubit<PointsState> {
         );
       },
       failure: (failure) {
+        if (isClosed) return;
         emit(PointsState.error(failure.messageKey));
       },
     );
   }
 
   Future<void> refreshSummary({String? employeeId}) async {
-    final summaryResult = await pointsRepo.getPointsSummary(employeeId: employeeId);
+    if (isClosed) return;
+    final summaryResult = await pointsRepo.getPointsSummary(
+      employeeId: employeeId,
+    );
+    if (isClosed) return;
     summaryResult.when(
       success: (summary) {
+        if (isClosed) return;
         currentSummary = summary;
         emit(
           PointsState.loaded(
