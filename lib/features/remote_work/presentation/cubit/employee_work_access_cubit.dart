@@ -26,11 +26,21 @@ class EmployeeWorkAccessCubit extends Cubit<EmployeeWorkAccessState> {
       success: (data) {
         final workSystem = data.workSystem?.trim().toLowerCase();
         if (workSystem == 'remote') {
-          emit(const EmployeeWorkAccessState.allowed(workSystem: 'remote'));
+          emit(
+            EmployeeWorkAccessState.allowed(
+              workSystem: 'remote',
+              policyId: data.remoteWorkPolicyId,
+            ),
+          );
           return;
         }
         if (workSystem == 'hybrid') {
-          emit(const EmployeeWorkAccessState.allowed(workSystem: 'hybrid'));
+          emit(
+            EmployeeWorkAccessState.allowed(
+              workSystem: 'hybrid',
+              policyId: data.remoteWorkPolicyId,
+            ),
+          );
           return;
         }
         emit(const EmployeeWorkAccessState.denied('remoteWork.accessDenied'));

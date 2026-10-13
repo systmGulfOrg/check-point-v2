@@ -10,11 +10,15 @@ class RemoteWorkAccessGateWidget extends StatelessWidget {
   const RemoteWorkAccessGateWidget({
     required this.isAdmin,
     required this.canReview,
+    required this.canRequest,
+    this.currentEmployeeId,
     super.key,
   });
 
   final bool isAdmin;
   final bool canReview;
+  final bool canRequest;
+  final String? currentEmployeeId;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +26,8 @@ class RemoteWorkAccessGateWidget extends StatelessWidget {
       return RemoteWorkTabsWidget(
         isAdmin: isAdmin,
         canReview: canReview,
+        canRequest: canRequest,
+        currentEmployeeId: currentEmployeeId,
         showOnsite: true,
         showRemote: true,
         showHybrid: true,
@@ -36,18 +42,25 @@ class RemoteWorkAccessGateWidget extends StatelessWidget {
           child: RemoteWorkTabsWidget(
             isAdmin: isAdmin,
             canReview: canReview,
+            canRequest: canRequest,
+            currentEmployeeId: currentEmployeeId,
+            assignedPolicyId: null,
             showOnsite: true,
             showRemote: true,
             showHybrid: false,
           ),
         ),
-        EmployeeWorkAccessAllowed(:final workSystem) => RemoteWorkTabsWidget(
-          isAdmin: isAdmin,
-          canReview: canReview,
-          showOnsite: workSystem == 'onsite',
-          showRemote: workSystem == 'remote',
-          showHybrid: workSystem == 'hybrid',
-        ),
+        EmployeeWorkAccessAllowed(:final workSystem, :final policyId) =>
+          RemoteWorkTabsWidget(
+            isAdmin: isAdmin,
+            canReview: canReview,
+            canRequest: canRequest,
+            currentEmployeeId: currentEmployeeId,
+            assignedPolicyId: policyId,
+            showOnsite: workSystem == 'onsite',
+            showRemote: workSystem == 'remote',
+            showHybrid: workSystem == 'hybrid',
+          ),
         EmployeeWorkAccessDenied(:final messageKey) => Center(
           child: AppMessageWidget(
             messageKey: messageKey,

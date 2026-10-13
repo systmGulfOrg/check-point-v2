@@ -31,6 +31,7 @@ abstract class RemoteWorkRepo {
   Future<ApiResult<List<EmployeeModel>>> getPolicyEmployees(String policyId);
   Future<ApiResult<void>> createRequest({
     required String requestDate,
+    required String targetWorkSystem,
     String? policyId,
     String? reason,
   });

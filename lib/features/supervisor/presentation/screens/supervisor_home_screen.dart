@@ -12,6 +12,7 @@ import 'package:check_point_v2/features/supervisor/presentation/widgets/supervis
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_alert_banner_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_stats_grid_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_team_today_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_work_location_quick_action_widget.dart';
 
 class SupervisorHomeScreen extends StatelessWidget {
   const SupervisorHomeScreen({super.key});
@@ -33,6 +34,8 @@ class SupervisorHomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SupervisorTopBarWidget(),
+              hSpace(16),
+              const SupervisorWorkLocationQuickActionWidget(),
               hSpace(16),
               const UpcomingHolidayCardBlocBuilderWidget(),
               hSpace(16),

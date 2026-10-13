@@ -13,6 +13,7 @@ RemoteWorkRequestModel _$RemoteWorkRequestModelFromJson(
   employeeId: json['employeeId'] as String,
   requestDate: json['requestDate'] as String,
   status: json['status'] as String,
+  targetWorkSystem: json['targetWorkSystem'] as String? ?? 'remote',
   reason: json['reason'] as String?,
   employeeName: json['employee'] as String?,
   employeeCode: json['employeeCode'] as String?,

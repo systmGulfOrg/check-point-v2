@@ -115,61 +115,63 @@ class _RemoteWorkPolicyEmployeesSheetWidgetState
                   ),
                   success: (employees) {
                     if (employees.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.people_outline_rounded,
-                          size: 48.r,
-                          color: AppColors.placeholder,
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.people_outline_rounded,
+                              size: 48.r,
+                              color: AppColors.placeholder,
+                            ),
+                            hSpace(12),
+                            Text(
+                              'remoteWork.noEmployeesInPolicy'.tr(
+                                context: context,
+                              ),
+                              style: AppTextStyles.font14Medium.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
                         ),
-                        hSpace(12),
-                        Text(
-                          'remoteWork.noEmployeesInPolicy'.tr(context: context),
-                          style: AppTextStyles.font14Medium.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
+                      );
+                    }
 
-                return ListView.separated(
-                  itemCount: employees.length,
-                  separatorBuilder: (_, _) => const Divider(height: 12),
-                  itemBuilder: (context, index) {
-                    final emp = employees[index];
-                    return ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: AppAvatarWidget(
-                        imageUrl: emp.imageUrl,
-                        name: emp.name ?? emp.userName,
-                        subtitle: emp.employeeCode,
-                        radius: 20.r,
-                        enablePreview: true,
-                      ),
-                      title: Text(
-                        emp.name ?? '',
-                        style: AppTextStyles.font14SemiBold,
-                      ),
-                      subtitle: Text(
-                        '${emp.employeeCode ?? ''} • ${emp.position ?? emp.departmentName ?? ''}',
-                        style: AppTextStyles.font12Regular.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
+                    return ListView.separated(
+                      itemCount: employees.length,
+                      separatorBuilder: (_, _) => const Divider(height: 12),
+                      itemBuilder: (context, index) {
+                        final emp = employees[index];
+                        return ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: AppAvatarWidget(
+                            imageUrl: emp.imageUrl,
+                            name: emp.name ?? emp.userName,
+                            subtitle: emp.employeeCode,
+                            radius: 20.r,
+                            enablePreview: true,
+                          ),
+                          title: Text(
+                            emp.name ?? '',
+                            style: AppTextStyles.font14SemiBold,
+                          ),
+                          subtitle: Text(
+                            '${emp.employeeCode ?? ''} • ${emp.position ?? emp.departmentName ?? ''}',
+                            style: AppTextStyles.font12Regular.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
                 );
               },
-            );
-          },
-        ),
+            ),
+          ),
+        ],
       ),
-    ],
-  ),
-);
+    );
   }
 }

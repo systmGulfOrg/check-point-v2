@@ -45,11 +45,13 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
 
   Future<bool> createRequest({
     required String requestDate,
+    required String targetWorkSystem,
     String? policyId,
     String? reason,
   }) async {
     final result = await repo.createRequest(
       requestDate: requestDate,
+      targetWorkSystem: targetWorkSystem,
       policyId: policyId,
       reason: reason,
     );

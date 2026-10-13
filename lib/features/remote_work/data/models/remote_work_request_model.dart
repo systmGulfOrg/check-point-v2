@@ -9,6 +9,7 @@ class RemoteWorkRequestModel {
     required this.employeeId,
     required this.requestDate,
     required this.status,
+    this.targetWorkSystem = 'remote',
     this.reason,
     this.employeeName,
     this.employeeCode,
@@ -21,6 +22,7 @@ class RemoteWorkRequestModel {
   final String employeeId;
   final String requestDate;
   final String status;
+  final String targetWorkSystem;
   final String? reason;
   @JsonKey(name: 'employee')
   final String? employeeName;
@@ -38,6 +40,11 @@ class RemoteWorkRequestModel {
       employeeId: json['employeeId'] as String? ?? '',
       requestDate: json['requestDate'] as String? ?? '',
       status: json['status'] as String? ?? 'Pending',
+      targetWorkSystem:
+          json['targetWorkSystem'] as String? ??
+          (policy is Map<String, dynamic> && policy['policyType'] == 'onsite'
+              ? 'onsite'
+              : 'remote'),
       reason: json['reason'] as String?,
       employeeName: employee is Map<String, dynamic>
           ? employee['name'] as String?

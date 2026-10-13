@@ -131,11 +131,13 @@ class RemoteWorkRepoImpl implements RemoteWorkRepo {
   @override
   Future<ApiResult<void>> createRequest({
     required String requestDate,
+    required String targetWorkSystem,
     String? policyId,
     String? reason,
   }) => _run(
     () => api.createRequest({
       'requestDate': requestDate,
+      'targetWorkSystem': targetWorkSystem,
       'policyId': policyId,
       'reason': reason,
     }),

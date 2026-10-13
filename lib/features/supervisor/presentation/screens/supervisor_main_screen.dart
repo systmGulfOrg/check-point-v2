@@ -4,6 +4,7 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/styles/app_motion.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';
@@ -93,35 +94,39 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
         onTabSelected: (index) {
           if (index == 4) {
             setState(() => _selectedNavIndex = index);
+            final authProfileCubit = context.read<AuthProfileCubit>();
             showModalBottomSheet<void>(
               context: context,
               backgroundColor: AppColors.cardBackground,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
-              builder: (_) => SupervisorMoreOptionsSheetWidget(
-                onLeavesTap: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.supervisorLeaveManagement,
+              builder: (_) => BlocProvider.value(
+                value: authProfileCubit,
+                child: SupervisorMoreOptionsSheetWidget(
+                  onLeavesTap: () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.supervisorLeaveManagement,
+                  ),
+                  onNotificationsTap: () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.supervisorNotifications,
+                  ),
+                  onProfileTap: () {
+                    setState(() {
+                      _selectedIndex = 4;
+                      _selectedNavIndex = 4;
+                    });
+                  },
+                  onCustomersTap: () {
+                    setState(() {
+                      _selectedIndex = 1;
+                      _selectedNavIndex = 1;
+                    });
+                  },
+                  onRemoteWorkTap: () =>
+                      Navigator.pushNamed(context, AppRoutes.remoteWork),
                 ),
-                onNotificationsTap: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.supervisorNotifications,
-                ),
-                onProfileTap: () {
-                  setState(() {
-                    _selectedIndex = 4;
-                    _selectedNavIndex = 4;
-                  });
-                },
-                onCustomersTap: () {
-                  setState(() {
-                    _selectedIndex = 1;
-                    _selectedNavIndex = 1;
-                  });
-                },
-                onRemoteWorkTap: () =>
-                    Navigator.pushNamed(context, AppRoutes.remoteWork),
               ),
             );
             return;

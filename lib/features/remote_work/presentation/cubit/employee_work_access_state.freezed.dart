@@ -21,21 +21,21 @@ mixin _$EmployeeWorkAccessState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String workSystem) allowed,
+    required TResult Function(String workSystem, String? policyId) allowed,
     required TResult Function(String messageKey) denied,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String workSystem)? allowed,
+    TResult? Function(String workSystem, String? policyId)? allowed,
     TResult? Function(String messageKey)? denied,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String workSystem)? allowed,
+    TResult Function(String workSystem, String? policyId)? allowed,
     TResult Function(String messageKey)? denied,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
@@ -138,7 +138,7 @@ class _$EmployeeWorkAccessInitialImpl implements EmployeeWorkAccessInitial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String workSystem) allowed,
+    required TResult Function(String workSystem, String? policyId) allowed,
     required TResult Function(String messageKey) denied,
   }) {
     return initial();
@@ -149,7 +149,7 @@ class _$EmployeeWorkAccessInitialImpl implements EmployeeWorkAccessInitial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String workSystem)? allowed,
+    TResult? Function(String workSystem, String? policyId)? allowed,
     TResult? Function(String messageKey)? denied,
   }) {
     return initial?.call();
@@ -160,7 +160,7 @@ class _$EmployeeWorkAccessInitialImpl implements EmployeeWorkAccessInitial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String workSystem)? allowed,
+    TResult Function(String workSystem, String? policyId)? allowed,
     TResult Function(String messageKey)? denied,
     required TResult orElse(),
   }) {
@@ -262,7 +262,7 @@ class _$EmployeeWorkAccessLoadingImpl implements EmployeeWorkAccessLoading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String workSystem) allowed,
+    required TResult Function(String workSystem, String? policyId) allowed,
     required TResult Function(String messageKey) denied,
   }) {
     return loading();
@@ -273,7 +273,7 @@ class _$EmployeeWorkAccessLoadingImpl implements EmployeeWorkAccessLoading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String workSystem)? allowed,
+    TResult? Function(String workSystem, String? policyId)? allowed,
     TResult? Function(String messageKey)? denied,
   }) {
     return loading?.call();
@@ -284,7 +284,7 @@ class _$EmployeeWorkAccessLoadingImpl implements EmployeeWorkAccessLoading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String workSystem)? allowed,
+    TResult Function(String workSystem, String? policyId)? allowed,
     TResult Function(String messageKey)? denied,
     required TResult orElse(),
   }) {
@@ -343,7 +343,7 @@ abstract class _$$EmployeeWorkAccessAllowedImplCopyWith<$Res> {
     $Res Function(_$EmployeeWorkAccessAllowedImpl) then,
   ) = __$$EmployeeWorkAccessAllowedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String workSystem});
+  $Res call({String workSystem, String? policyId});
 }
 
 /// @nodoc
@@ -363,13 +363,17 @@ class __$$EmployeeWorkAccessAllowedImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? workSystem = null}) {
+  $Res call({Object? workSystem = null, Object? policyId = freezed}) {
     return _then(
       _$EmployeeWorkAccessAllowedImpl(
         workSystem: null == workSystem
             ? _value.workSystem
             : workSystem // ignore: cast_nullable_to_non_nullable
                   as String,
+        policyId: freezed == policyId
+            ? _value.policyId
+            : policyId // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -378,14 +382,19 @@ class __$$EmployeeWorkAccessAllowedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$EmployeeWorkAccessAllowedImpl implements EmployeeWorkAccessAllowed {
-  const _$EmployeeWorkAccessAllowedImpl({required this.workSystem});
+  const _$EmployeeWorkAccessAllowedImpl({
+    required this.workSystem,
+    this.policyId,
+  });
 
   @override
   final String workSystem;
+  @override
+  final String? policyId;
 
   @override
   String toString() {
-    return 'EmployeeWorkAccessState.allowed(workSystem: $workSystem)';
+    return 'EmployeeWorkAccessState.allowed(workSystem: $workSystem, policyId: $policyId)';
   }
 
   @override
@@ -394,11 +403,13 @@ class _$EmployeeWorkAccessAllowedImpl implements EmployeeWorkAccessAllowed {
         (other.runtimeType == runtimeType &&
             other is _$EmployeeWorkAccessAllowedImpl &&
             (identical(other.workSystem, workSystem) ||
-                other.workSystem == workSystem));
+                other.workSystem == workSystem) &&
+            (identical(other.policyId, policyId) ||
+                other.policyId == policyId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, workSystem);
+  int get hashCode => Object.hash(runtimeType, workSystem, policyId);
 
   /// Create a copy of EmployeeWorkAccessState
   /// with the given fields replaced by the non-null parameter values.
@@ -416,10 +427,10 @@ class _$EmployeeWorkAccessAllowedImpl implements EmployeeWorkAccessAllowed {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String workSystem) allowed,
+    required TResult Function(String workSystem, String? policyId) allowed,
     required TResult Function(String messageKey) denied,
   }) {
-    return allowed(workSystem);
+    return allowed(workSystem, policyId);
   }
 
   @override
@@ -427,10 +438,10 @@ class _$EmployeeWorkAccessAllowedImpl implements EmployeeWorkAccessAllowed {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String workSystem)? allowed,
+    TResult? Function(String workSystem, String? policyId)? allowed,
     TResult? Function(String messageKey)? denied,
   }) {
-    return allowed?.call(workSystem);
+    return allowed?.call(workSystem, policyId);
   }
 
   @override
@@ -438,12 +449,12 @@ class _$EmployeeWorkAccessAllowedImpl implements EmployeeWorkAccessAllowed {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String workSystem)? allowed,
+    TResult Function(String workSystem, String? policyId)? allowed,
     TResult Function(String messageKey)? denied,
     required TResult orElse(),
   }) {
     if (allowed != null) {
-      return allowed(workSystem);
+      return allowed(workSystem, policyId);
     }
     return orElse();
   }
@@ -487,10 +498,13 @@ class _$EmployeeWorkAccessAllowedImpl implements EmployeeWorkAccessAllowed {
 }
 
 abstract class EmployeeWorkAccessAllowed implements EmployeeWorkAccessState {
-  const factory EmployeeWorkAccessAllowed({required final String workSystem}) =
-      _$EmployeeWorkAccessAllowedImpl;
+  const factory EmployeeWorkAccessAllowed({
+    required final String workSystem,
+    final String? policyId,
+  }) = _$EmployeeWorkAccessAllowedImpl;
 
   String get workSystem;
+  String? get policyId;
 
   /// Create a copy of EmployeeWorkAccessState
   /// with the given fields replaced by the non-null parameter values.
@@ -579,7 +593,7 @@ class _$EmployeeWorkAccessDeniedImpl implements EmployeeWorkAccessDenied {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String workSystem) allowed,
+    required TResult Function(String workSystem, String? policyId) allowed,
     required TResult Function(String messageKey) denied,
   }) {
     return denied(messageKey);
@@ -590,7 +604,7 @@ class _$EmployeeWorkAccessDeniedImpl implements EmployeeWorkAccessDenied {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String workSystem)? allowed,
+    TResult? Function(String workSystem, String? policyId)? allowed,
     TResult? Function(String messageKey)? denied,
   }) {
     return denied?.call(messageKey);
@@ -601,7 +615,7 @@ class _$EmployeeWorkAccessDeniedImpl implements EmployeeWorkAccessDenied {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String workSystem)? allowed,
+    TResult Function(String workSystem, String? policyId)? allowed,
     TResult Function(String messageKey)? denied,
     required TResult orElse(),
   }) {

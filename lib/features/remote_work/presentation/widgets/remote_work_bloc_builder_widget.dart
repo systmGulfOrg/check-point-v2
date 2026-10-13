@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -12,12 +11,18 @@ class RemoteWorkBlocBuilderWidget extends StatelessWidget {
   const RemoteWorkBlocBuilderWidget({
     required this.isAdmin,
     required this.canReview,
+    required this.canRequest,
+    this.currentEmployeeId,
+    this.assignedPolicyId,
     required this.policyType,
     super.key,
   });
 
   final bool isAdmin;
   final bool canReview;
+  final bool canRequest;
+  final String? currentEmployeeId;
+  final String? assignedPolicyId;
   final String policyType;
 
   @override
@@ -30,6 +35,9 @@ class RemoteWorkBlocBuilderWidget extends StatelessWidget {
           child: RemoteWorkContentWidget(
             isAdmin: isAdmin,
             canReview: canReview,
+            canRequest: canRequest,
+            currentEmployeeId: currentEmployeeId,
+            assignedPolicyId: assignedPolicyId,
             policyType: policyType,
             policies: const [
               RemoteWorkPolicyModel(
@@ -56,10 +64,13 @@ class RemoteWorkBlocBuilderWidget extends StatelessWidget {
             requests: const [],
           ),
         ),
-        error: (messageKey) => Center(child: Text(messageKey.tr())),
+        error: (_) => const SizedBox.shrink(),
         success: (policies, requests) => RemoteWorkContentWidget(
           isAdmin: isAdmin,
           canReview: canReview,
+          canRequest: canRequest,
+          currentEmployeeId: currentEmployeeId,
+          assignedPolicyId: assignedPolicyId,
           policyType: policyType,
           policies: policies,
           requests: requests,

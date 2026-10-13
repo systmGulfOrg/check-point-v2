@@ -7,6 +7,9 @@ class RemoteWorkTabsWidget extends StatelessWidget {
   const RemoteWorkTabsWidget({
     required this.isAdmin,
     required this.canReview,
+    required this.canRequest,
+    this.currentEmployeeId,
+    this.assignedPolicyId,
     this.showOnsite = true,
     this.showRemote = true,
     this.showHybrid = true,
@@ -15,6 +18,9 @@ class RemoteWorkTabsWidget extends StatelessWidget {
 
   final bool isAdmin;
   final bool canReview;
+  final bool canRequest;
+  final String? currentEmployeeId;
+  final String? assignedPolicyId;
   final bool showOnsite;
   final bool showRemote;
   final bool showHybrid;
@@ -30,6 +36,9 @@ class RemoteWorkTabsWidget extends StatelessWidget {
         RemoteWorkBlocBuilderWidget(
           isAdmin: isAdmin,
           canReview: canReview,
+          canRequest: canRequest,
+          currentEmployeeId: currentEmployeeId,
+          assignedPolicyId: assignedPolicyId,
           policyType: 'onsite',
         ),
       );
@@ -40,6 +49,9 @@ class RemoteWorkTabsWidget extends StatelessWidget {
         RemoteWorkBlocBuilderWidget(
           isAdmin: isAdmin,
           canReview: canReview,
+          canRequest: canRequest,
+          currentEmployeeId: currentEmployeeId,
+          assignedPolicyId: assignedPolicyId,
           policyType: 'remote',
         ),
       );
@@ -50,6 +62,9 @@ class RemoteWorkTabsWidget extends StatelessWidget {
         RemoteWorkBlocBuilderWidget(
           isAdmin: isAdmin,
           canReview: canReview,
+          canRequest: canRequest,
+          currentEmployeeId: currentEmployeeId,
+          assignedPolicyId: assignedPolicyId,
           policyType: 'hybrid',
         ),
       );

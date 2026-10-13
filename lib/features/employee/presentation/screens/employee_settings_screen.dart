@@ -9,12 +9,12 @@ import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_pro
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_state.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_profile_card_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
-import 'package:check_point_v2/features/auth/presentation/widgets/edit_profile_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/role_switch_dialog_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/user_permissions_sheet_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_section_card_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_sign_out_button_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_tile_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_profile_name_tile_bloc_builder_widget.dart';
 
 class EmployeeSettingsScreen extends StatelessWidget {
   const EmployeeSettingsScreen({super.key});
@@ -58,12 +58,7 @@ class EmployeeSettingsScreen extends StatelessWidget {
               EmployeeSettingsSectionCardWidget(
                 sectionTitleKey: 'employee.settings.sectionAccount',
                 tiles: [
-                  EmployeeSettingsTileWidget(
-                    icon: Icons.person_outline_rounded,
-                    titleKey: 'employee.settings.profileInfo',
-                    valueKey: 'employee.settings.userName',
-                    onTap: () => showEditProfileSheet(context),
-                  ),
+                  const EmployeeProfileNameTileBlocBuilderWidget(),
                   EmployeeSettingsTileWidget(
                     icon: Icons.key_outlined,
                     titleKey: 'employee.settings.changePassword',
@@ -84,14 +79,15 @@ class EmployeeSettingsScreen extends StatelessWidget {
                   BlocBuilder<AuthProfileCubit, AuthProfileState>(
                     builder: (context, state) {
                       final (role, roles) = state.maybeWhen(
-                        success: (
-                          name,
-                          userId,
-                          role,
-                          username,
-                          permissions,
-                          roles,
-                        ) => (role, roles),
+                        success:
+                            (
+                              name,
+                              userId,
+                              role,
+                              username,
+                              permissions,
+                              roles,
+                            ) => (role, roles),
                         orElse: () => ('', const <String>[]),
                       );
                       if (roles.length <= 1) return const SizedBox.shrink();
