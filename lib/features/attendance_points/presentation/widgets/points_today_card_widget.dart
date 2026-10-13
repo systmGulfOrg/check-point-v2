@@ -4,6 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import '../../data/models/points_summary_model.dart';
+import 'points_balance_chip_widget.dart';
 
 class PointsTodayCardWidget extends StatelessWidget {
   const PointsTodayCardWidget({
@@ -110,7 +111,7 @@ class PointsTodayCardWidget extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: _BalanceChip(
+                  child: PointsBalanceChipWidget(
                     label: 'points.greenConfirmed'.tr(context: context),
                     value: '+${balances.greenConfirmed}',
                     color: AppColors.success,
@@ -119,7 +120,7 @@ class PointsTodayCardWidget extends StatelessWidget {
                 ),
                 wSpace(8),
                 Expanded(
-                  child: _BalanceChip(
+                  child: PointsBalanceChipWidget(
                     label: 'points.red'.tr(context: context),
                     value: '-${balances.red}',
                     color: AppColors.error,
@@ -129,7 +130,7 @@ class PointsTodayCardWidget extends StatelessWidget {
                 if (balances.black > 0) ...[
                   wSpace(8),
                   Expanded(
-                    child: _BalanceChip(
+                    child: PointsBalanceChipWidget(
                       label: 'points.black'.tr(context: context),
                       value: '-${balances.black}',
                       color: Colors.black87,
@@ -168,44 +169,6 @@ class PointsTodayCardWidget extends StatelessWidget {
             ],
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _BalanceChip extends StatelessWidget {
-  const _BalanceChip({
-    required this.label,
-    required this.value,
-    required this.color,
-    required this.icon,
-  });
-
-  final String label;
-  final String value;
-  final Color color;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(10.r),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 16.r, color: color),
-          wSpace(6),
-          Expanded(
-            child: Text(
-              value,
-              style: AppTextStyles.font14Bold.copyWith(color: color),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
       ),
     );
   }
