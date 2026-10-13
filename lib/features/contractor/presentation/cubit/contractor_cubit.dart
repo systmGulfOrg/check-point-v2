@@ -24,6 +24,13 @@ class ContractorCubit extends Cubit<ContractorState> {
   final OfflineAttendanceSyncService offlineSyncService;
   final LocationService locationService;
 
+  @override
+  void emit(ContractorState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   Future<void> punchWorkerAtCurrentLocation({
     required String workerId,
     required String siteId,
