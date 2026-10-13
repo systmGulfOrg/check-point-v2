@@ -486,6 +486,319 @@ abstract class _PointsHistoryItemModel implements PointsHistoryItemModel {
   get copyWith => throw _privateConstructorUsedError;
 }
 
+PointsHistoryPageModel _$PointsHistoryPageModelFromJson(
+  Map<String, dynamic> json,
+) {
+  return _PointsHistoryPageModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PointsHistoryPageModel {
+  List<PointsHistoryItemModel> get items => throw _privateConstructorUsedError;
+  int? get totalCount => throw _privateConstructorUsedError;
+  int? get index => throw _privateConstructorUsedError;
+  int? get itemCount => throw _privateConstructorUsedError;
+  int? get totalPages => throw _privateConstructorUsedError;
+  bool? get hasNext => throw _privateConstructorUsedError;
+  bool? get hasPrevious => throw _privateConstructorUsedError;
+
+  /// Serializes this PointsHistoryPageModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PointsHistoryPageModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PointsHistoryPageModelCopyWith<PointsHistoryPageModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PointsHistoryPageModelCopyWith<$Res> {
+  factory $PointsHistoryPageModelCopyWith(
+    PointsHistoryPageModel value,
+    $Res Function(PointsHistoryPageModel) then,
+  ) = _$PointsHistoryPageModelCopyWithImpl<$Res, PointsHistoryPageModel>;
+  @useResult
+  $Res call({
+    List<PointsHistoryItemModel> items,
+    int? totalCount,
+    int? index,
+    int? itemCount,
+    int? totalPages,
+    bool? hasNext,
+    bool? hasPrevious,
+  });
+}
+
+/// @nodoc
+class _$PointsHistoryPageModelCopyWithImpl<
+  $Res,
+  $Val extends PointsHistoryPageModel
+>
+    implements $PointsHistoryPageModelCopyWith<$Res> {
+  _$PointsHistoryPageModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PointsHistoryPageModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? items = null,
+    Object? totalCount = freezed,
+    Object? index = freezed,
+    Object? itemCount = freezed,
+    Object? totalPages = freezed,
+    Object? hasNext = freezed,
+    Object? hasPrevious = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            items: null == items
+                ? _value.items
+                : items // ignore: cast_nullable_to_non_nullable
+                      as List<PointsHistoryItemModel>,
+            totalCount: freezed == totalCount
+                ? _value.totalCount
+                : totalCount // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            index: freezed == index
+                ? _value.index
+                : index // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            itemCount: freezed == itemCount
+                ? _value.itemCount
+                : itemCount // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            totalPages: freezed == totalPages
+                ? _value.totalPages
+                : totalPages // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            hasNext: freezed == hasNext
+                ? _value.hasNext
+                : hasNext // ignore: cast_nullable_to_non_nullable
+                      as bool?,
+            hasPrevious: freezed == hasPrevious
+                ? _value.hasPrevious
+                : hasPrevious // ignore: cast_nullable_to_non_nullable
+                      as bool?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$PointsHistoryPageModelImplCopyWith<$Res>
+    implements $PointsHistoryPageModelCopyWith<$Res> {
+  factory _$$PointsHistoryPageModelImplCopyWith(
+    _$PointsHistoryPageModelImpl value,
+    $Res Function(_$PointsHistoryPageModelImpl) then,
+  ) = __$$PointsHistoryPageModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    List<PointsHistoryItemModel> items,
+    int? totalCount,
+    int? index,
+    int? itemCount,
+    int? totalPages,
+    bool? hasNext,
+    bool? hasPrevious,
+  });
+}
+
+/// @nodoc
+class __$$PointsHistoryPageModelImplCopyWithImpl<$Res>
+    extends
+        _$PointsHistoryPageModelCopyWithImpl<$Res, _$PointsHistoryPageModelImpl>
+    implements _$$PointsHistoryPageModelImplCopyWith<$Res> {
+  __$$PointsHistoryPageModelImplCopyWithImpl(
+    _$PointsHistoryPageModelImpl _value,
+    $Res Function(_$PointsHistoryPageModelImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of PointsHistoryPageModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? items = null,
+    Object? totalCount = freezed,
+    Object? index = freezed,
+    Object? itemCount = freezed,
+    Object? totalPages = freezed,
+    Object? hasNext = freezed,
+    Object? hasPrevious = freezed,
+  }) {
+    return _then(
+      _$PointsHistoryPageModelImpl(
+        items: null == items
+            ? _value._items
+            : items // ignore: cast_nullable_to_non_nullable
+                  as List<PointsHistoryItemModel>,
+        totalCount: freezed == totalCount
+            ? _value.totalCount
+            : totalCount // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        index: freezed == index
+            ? _value.index
+            : index // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        itemCount: freezed == itemCount
+            ? _value.itemCount
+            : itemCount // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        totalPages: freezed == totalPages
+            ? _value.totalPages
+            : totalPages // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        hasNext: freezed == hasNext
+            ? _value.hasNext
+            : hasNext // ignore: cast_nullable_to_non_nullable
+                  as bool?,
+        hasPrevious: freezed == hasPrevious
+            ? _value.hasPrevious
+            : hasPrevious // ignore: cast_nullable_to_non_nullable
+                  as bool?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PointsHistoryPageModelImpl implements _PointsHistoryPageModel {
+  const _$PointsHistoryPageModelImpl({
+    final List<PointsHistoryItemModel> items = const <PointsHistoryItemModel>[],
+    this.totalCount,
+    this.index,
+    this.itemCount,
+    this.totalPages,
+    this.hasNext,
+    this.hasPrevious,
+  }) : _items = items;
+
+  factory _$PointsHistoryPageModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PointsHistoryPageModelImplFromJson(json);
+
+  final List<PointsHistoryItemModel> _items;
+  @override
+  @JsonKey()
+  List<PointsHistoryItemModel> get items {
+    if (_items is EqualUnmodifiableListView) return _items;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_items);
+  }
+
+  @override
+  final int? totalCount;
+  @override
+  final int? index;
+  @override
+  final int? itemCount;
+  @override
+  final int? totalPages;
+  @override
+  final bool? hasNext;
+  @override
+  final bool? hasPrevious;
+
+  @override
+  String toString() {
+    return 'PointsHistoryPageModel(items: $items, totalCount: $totalCount, index: $index, itemCount: $itemCount, totalPages: $totalPages, hasNext: $hasNext, hasPrevious: $hasPrevious)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PointsHistoryPageModelImpl &&
+            const DeepCollectionEquality().equals(other._items, _items) &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount) &&
+            (identical(other.index, index) || other.index == index) &&
+            (identical(other.itemCount, itemCount) ||
+                other.itemCount == itemCount) &&
+            (identical(other.totalPages, totalPages) ||
+                other.totalPages == totalPages) &&
+            (identical(other.hasNext, hasNext) || other.hasNext == hasNext) &&
+            (identical(other.hasPrevious, hasPrevious) ||
+                other.hasPrevious == hasPrevious));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    const DeepCollectionEquality().hash(_items),
+    totalCount,
+    index,
+    itemCount,
+    totalPages,
+    hasNext,
+    hasPrevious,
+  );
+
+  /// Create a copy of PointsHistoryPageModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PointsHistoryPageModelImplCopyWith<_$PointsHistoryPageModelImpl>
+  get copyWith =>
+      __$$PointsHistoryPageModelImplCopyWithImpl<_$PointsHistoryPageModelImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PointsHistoryPageModelImplToJson(this);
+  }
+}
+
+abstract class _PointsHistoryPageModel implements PointsHistoryPageModel {
+  const factory _PointsHistoryPageModel({
+    final List<PointsHistoryItemModel> items,
+    final int? totalCount,
+    final int? index,
+    final int? itemCount,
+    final int? totalPages,
+    final bool? hasNext,
+    final bool? hasPrevious,
+  }) = _$PointsHistoryPageModelImpl;
+
+  factory _PointsHistoryPageModel.fromJson(Map<String, dynamic> json) =
+      _$PointsHistoryPageModelImpl.fromJson;
+
+  @override
+  List<PointsHistoryItemModel> get items;
+  @override
+  int? get totalCount;
+  @override
+  int? get index;
+  @override
+  int? get itemCount;
+  @override
+  int? get totalPages;
+  @override
+  bool? get hasNext;
+  @override
+  bool? get hasPrevious;
+
+  /// Create a copy of PointsHistoryPageModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PointsHistoryPageModelImplCopyWith<_$PointsHistoryPageModelImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
 PointsHistoryResponseModel _$PointsHistoryResponseModelFromJson(
   Map<String, dynamic> json,
 ) {
@@ -494,7 +807,7 @@ PointsHistoryResponseModel _$PointsHistoryResponseModelFromJson(
 
 /// @nodoc
 mixin _$PointsHistoryResponseModel {
-  List<PointsHistoryItemModel> get value => throw _privateConstructorUsedError;
+  PointsHistoryPageModel? get value => throw _privateConstructorUsedError;
   int? get total => throw _privateConstructorUsedError;
   int? get page => throw _privateConstructorUsedError;
   int? get limit => throw _privateConstructorUsedError;
@@ -524,7 +837,7 @@ abstract class $PointsHistoryResponseModelCopyWith<$Res> {
       >;
   @useResult
   $Res call({
-    List<PointsHistoryItemModel> value,
+    PointsHistoryPageModel? value,
     int? total,
     int? page,
     int? limit,
@@ -532,6 +845,8 @@ abstract class $PointsHistoryResponseModelCopyWith<$Res> {
     String? successMessage,
     List<String>? errors,
   });
+
+  $PointsHistoryPageModelCopyWith<$Res>? get value;
 }
 
 /// @nodoc
@@ -552,7 +867,7 @@ class _$PointsHistoryResponseModelCopyWithImpl<
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? value = null,
+    Object? value = freezed,
     Object? total = freezed,
     Object? page = freezed,
     Object? limit = freezed,
@@ -562,10 +877,10 @@ class _$PointsHistoryResponseModelCopyWithImpl<
   }) {
     return _then(
       _value.copyWith(
-            value: null == value
+            value: freezed == value
                 ? _value.value
                 : value // ignore: cast_nullable_to_non_nullable
-                      as List<PointsHistoryItemModel>,
+                      as PointsHistoryPageModel?,
             total: freezed == total
                 ? _value.total
                 : total // ignore: cast_nullable_to_non_nullable
@@ -594,6 +909,20 @@ class _$PointsHistoryResponseModelCopyWithImpl<
           as $Val,
     );
   }
+
+  /// Create a copy of PointsHistoryResponseModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PointsHistoryPageModelCopyWith<$Res>? get value {
+    if (_value.value == null) {
+      return null;
+    }
+
+    return $PointsHistoryPageModelCopyWith<$Res>(_value.value!, (value) {
+      return _then(_value.copyWith(value: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -606,7 +935,7 @@ abstract class _$$PointsHistoryResponseModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    List<PointsHistoryItemModel> value,
+    PointsHistoryPageModel? value,
     int? total,
     int? page,
     int? limit,
@@ -614,6 +943,9 @@ abstract class _$$PointsHistoryResponseModelImplCopyWith<$Res>
     String? successMessage,
     List<String>? errors,
   });
+
+  @override
+  $PointsHistoryPageModelCopyWith<$Res>? get value;
 }
 
 /// @nodoc
@@ -634,7 +966,7 @@ class __$$PointsHistoryResponseModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? value = null,
+    Object? value = freezed,
     Object? total = freezed,
     Object? page = freezed,
     Object? limit = freezed,
@@ -644,10 +976,10 @@ class __$$PointsHistoryResponseModelImplCopyWithImpl<$Res>
   }) {
     return _then(
       _$PointsHistoryResponseModelImpl(
-        value: null == value
-            ? _value._value
+        value: freezed == value
+            ? _value.value
             : value // ignore: cast_nullable_to_non_nullable
-                  as List<PointsHistoryItemModel>,
+                  as PointsHistoryPageModel?,
         total: freezed == total
             ? _value.total
             : total // ignore: cast_nullable_to_non_nullable
@@ -681,29 +1013,21 @@ class __$$PointsHistoryResponseModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$PointsHistoryResponseModelImpl implements _PointsHistoryResponseModel {
   const _$PointsHistoryResponseModelImpl({
-    final List<PointsHistoryItemModel> value = const <PointsHistoryItemModel>[],
+    this.value,
     this.total,
     this.page,
     this.limit,
     this.isSuccess,
     this.successMessage,
     final List<String>? errors,
-  }) : _value = value,
-       _errors = errors;
+  }) : _errors = errors;
 
   factory _$PointsHistoryResponseModelImpl.fromJson(
     Map<String, dynamic> json,
   ) => _$$PointsHistoryResponseModelImplFromJson(json);
 
-  final List<PointsHistoryItemModel> _value;
   @override
-  @JsonKey()
-  List<PointsHistoryItemModel> get value {
-    if (_value is EqualUnmodifiableListView) return _value;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_value);
-  }
-
+  final PointsHistoryPageModel? value;
   @override
   final int? total;
   @override
@@ -734,7 +1058,7 @@ class _$PointsHistoryResponseModelImpl implements _PointsHistoryResponseModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PointsHistoryResponseModelImpl &&
-            const DeepCollectionEquality().equals(other._value, _value) &&
+            (identical(other.value, value) || other.value == value) &&
             (identical(other.total, total) || other.total == total) &&
             (identical(other.page, page) || other.page == page) &&
             (identical(other.limit, limit) || other.limit == limit) &&
@@ -749,7 +1073,7 @@ class _$PointsHistoryResponseModelImpl implements _PointsHistoryResponseModel {
   @override
   int get hashCode => Object.hash(
     runtimeType,
-    const DeepCollectionEquality().hash(_value),
+    value,
     total,
     page,
     limit,
@@ -778,7 +1102,7 @@ class _$PointsHistoryResponseModelImpl implements _PointsHistoryResponseModel {
 abstract class _PointsHistoryResponseModel
     implements PointsHistoryResponseModel {
   const factory _PointsHistoryResponseModel({
-    final List<PointsHistoryItemModel> value,
+    final PointsHistoryPageModel? value,
     final int? total,
     final int? page,
     final int? limit,
@@ -791,7 +1115,7 @@ abstract class _PointsHistoryResponseModel
       _$PointsHistoryResponseModelImpl.fromJson;
 
   @override
-  List<PointsHistoryItemModel> get value;
+  PointsHistoryPageModel? get value;
   @override
   int? get total;
   @override

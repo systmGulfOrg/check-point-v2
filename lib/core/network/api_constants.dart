@@ -44,4 +44,5 @@ class ApiConstants {
   static const String pointsBadges = '/api/points/badges';
   static const String pointsLeaderboard = '/api/points/leaderboard';
   static const String pointsPreview = '/api/points/preview';
+  static const String adminPointsEmployees = '/api/admin/points/employees';
 }

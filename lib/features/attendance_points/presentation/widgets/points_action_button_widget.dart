@@ -23,7 +23,7 @@ class PointsActionButtonWidget extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(16.r),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(16.r),
@@ -39,21 +39,23 @@ class PointsActionButtonWidget extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 40.r,
-              height: 40.r,
+              width: 38.r,
+              height: 38.r,
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, size: 20.r, color: color),
             ),
-            wSpace(12),
+            wSpace(10),
             Expanded(
               child: Text(
                 title,
-                style: AppTextStyles.font14Bold.copyWith(
+                style: AppTextStyles.font13Bold.copyWith(
                   color: AppColors.textPrimary,
+                  height: 1.2,
                 ),
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

@@ -46,8 +46,9 @@ class PointsStatCardWidget extends StatelessWidget {
                   title,
                   style: AppTextStyles.font12Medium.copyWith(
                     color: AppColors.textSecondary,
+                    height: 1.2,
                   ),
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

@@ -6,6 +6,7 @@ import '../models/points_history_model.dart';
 import '../models/points_exchange_model.dart';
 import '../models/points_badge_model.dart';
 import '../models/points_leaderboard_model.dart';
+import '../models/admin_points_employee_model.dart';
 import 'attendance_points_repo.dart';
 
 class AttendancePointsRepoImpl implements AttendancePointsRepo {
@@ -42,7 +43,7 @@ class AttendancePointsRepoImpl implements AttendancePointsRepo {
         page: page,
         limit: limit,
       );
-      return ApiResult.success(response.value);
+      return ApiResult.success(response.value?.items ?? const []);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
@@ -53,7 +54,7 @@ class AttendancePointsRepoImpl implements AttendancePointsRepo {
     PointsExchangeRequestBody body,
   ) async {
     try {
-      final response = await api.exchangePoints(body);
+      final response = await api.exchangePoints(body.toJson());
       if (response.value != null) {
         return ApiResult.success(response.value!);
       }
@@ -87,6 +88,28 @@ class AttendancePointsRepoImpl implements AttendancePointsRepo {
     try {
       final response = await api.getLeaderboard(scope: scope);
       return ApiResult.success(response.value);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<AdminPointsEmployeesPageModel>> getAdminPointsEmployees({
+    String? departmentId,
+    String? search,
+    int page = 1,
+    int limit = 50,
+  }) async {
+    try {
+      final response = await api.getAdminPointsEmployees(
+        departmentId: departmentId,
+        search: search?.trim().isEmpty == true ? null : search?.trim(),
+        page: page,
+        limit: limit,
+      );
+      return ApiResult.success(
+        response.value ?? const AdminPointsEmployeesPageModel(),
+      );
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

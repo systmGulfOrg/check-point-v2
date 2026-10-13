@@ -62,13 +62,17 @@ import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supe
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_attendance_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_leave_management_screen.dart';
+import 'package:check_point_v2/features/attendance_points/data/models/points_summary_model.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_cubit.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/cubit/admin_points_cubit.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/cubit/exchange_cubit.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/screens/my_points_screen.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/screens/point_exchange_screen.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/screens/points_history_screen.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/screens/badges_screen.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/screens/leaderboard_screen.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/screens/admin_points_screen.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/screens/admin_employee_points_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_main_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_notifications_screen.dart';
 import 'package:check_point_v2/features/notifications/presentation/cubit/notifications_cubit.dart';
@@ -330,6 +334,34 @@ class AppRouter {
           ),
         );
 
+      case AppRoutes.adminPoints:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.adminPoints),
+          child: BlocProvider<AdminPointsCubit>(
+            create: (_) => sl<AdminPointsCubit>()..loadEmployees(),
+            child: const AdminPointsScreen(),
+          ),
+        );
+
+      case AppRoutes.adminEmployeePoints:
+        final employeeId = settings.arguments;
+        if (employeeId is! String || employeeId.isEmpty) {
+          return _fadeRoute(
+            settings: settings,
+            child: const Scaffold(
+              body: Center(child: Text('Invalid employee ID')),
+            ),
+          );
+        }
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.adminEmployeePoints),
+          child: BlocProvider<PointsCubit>(
+            create: (_) =>
+                sl<PointsCubit>()..loadAllPointsData(employeeId: employeeId),
+            child: AdminEmployeePointsScreen(employeeId: employeeId),
+          ),
+        );
+
       case AppRoutes.adminDepartments:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminDepartments),
@@ -572,6 +604,9 @@ class AppRouter {
                 create: (_) =>
                     sl<UpcomingHolidayCubit>()..loadUpcomingHoliday(),
               ),
+              BlocProvider<PointsCubit>(
+                create: (_) => sl<PointsCubit>()..loadAllPointsData(),
+              ),
             ],
             child: const SupervisorMainScreen(),
           ),
@@ -623,13 +658,12 @@ class AppRouter {
 
       case AppRoutes.supervisorAttendance:
         return _slideRoute(
-          settings: const RouteSettings(
-            name: AppRoutes.supervisorAttendance,
-          ),
+          settings: const RouteSettings(name: AppRoutes.supervisorAttendance),
           child: MultiBlocProvider(
             providers: [
               BlocProvider<SupervisorAttendanceCubit>(
-                create: (_) => sl<SupervisorAttendanceCubit>()..loadAttendance(),
+                create: (_) =>
+                    sl<SupervisorAttendanceCubit>()..loadAttendance(),
               ),
               BlocProvider<SupervisorTeamCubit>(
                 create: (_) => sl<SupervisorTeamCubit>()..loadTeam(),
@@ -652,9 +686,7 @@ class AppRouter {
 
       case AppRoutes.supervisorTasks:
         return _slideRoute(
-          settings: const RouteSettings(
-            name: AppRoutes.supervisorTasks,
-          ),
+          settings: const RouteSettings(name: AppRoutes.supervisorTasks),
           child: MultiBlocProvider(
             providers: [
               BlocProvider<SupervisorTasksCubit>(
@@ -681,9 +713,7 @@ class AppRouter {
 
       case AppRoutes.supervisorTeam:
         return _slideRoute(
-          settings: const RouteSettings(
-            name: AppRoutes.supervisorTeam,
-          ),
+          settings: const RouteSettings(name: AppRoutes.supervisorTeam),
           child: MultiBlocProvider(
             providers: [
               BlocProvider<SupervisorTeamCubit>(
@@ -818,25 +848,24 @@ class AppRouter {
           ),
         );
       case AppRoutes.pointExchange:
+        final initialSummary = settings.arguments as PointsSummaryModel?;
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.pointExchange),
           child: MultiBlocProvider(
             providers: [
               BlocProvider<PointsCubit>(
-                create: (_) => sl<PointsCubit>(),
+                create: (_) => sl<PointsCubit>()..loadAllPointsData(),
               ),
-              BlocProvider<ExchangeCubit>(
-                create: (_) => sl<ExchangeCubit>(),
-              ),
+              BlocProvider<ExchangeCubit>(create: (_) => sl<ExchangeCubit>()),
             ],
-            child: const PointExchangeScreen(),
+            child: PointExchangeScreen(initialSummary: initialSummary),
           ),
         );
       case AppRoutes.pointsHistory:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.pointsHistory),
           child: BlocProvider<PointsCubit>(
-            create: (_) => sl<PointsCubit>(),
+            create: (_) => sl<PointsCubit>()..loadAllPointsData(),
             child: const PointsHistoryScreen(),
           ),
         );
@@ -844,7 +873,7 @@ class AppRouter {
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.pointsBadges),
           child: BlocProvider<PointsCubit>(
-            create: (_) => sl<PointsCubit>(),
+            create: (_) => sl<PointsCubit>()..loadAllPointsData(),
             child: const BadgesScreen(),
           ),
         );
@@ -852,7 +881,7 @@ class AppRouter {
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.pointsLeaderboard),
           child: BlocProvider<PointsCubit>(
-            create: (_) => sl<PointsCubit>(),
+            create: (_) => sl<PointsCubit>()..loadAllPointsData(),
             child: const LeaderboardScreen(),
           ),
         );

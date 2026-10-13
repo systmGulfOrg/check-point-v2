@@ -89,6 +89,15 @@ class AdminManageScreen extends StatelessWidget {
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.adminAttendance),
             ),
+            hSpace(10),
+            AdminManageCardWidget(
+              icon: Icons.workspace_premium_rounded,
+              iconColor: AppColors.warningOrange,
+              iconBackgroundColor: AppColors.softYellowBackground,
+              titleKey: 'admin.manage.points',
+              subtitleKey: 'admin.manage.pointsSub',
+              onTap: () => Navigator.pushNamed(context, AppRoutes.adminPoints),
+            ),
           ],
         ),
       ),

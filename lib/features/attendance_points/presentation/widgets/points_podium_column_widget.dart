@@ -37,7 +37,7 @@ class PointsPodiumColumnWidget extends StatelessWidget {
               ),
               hSpace(2),
               Text(
-                '${entry.points} pts',
+                '${entry.effectivePoints} pts',
                 style: AppTextStyles.font10Medium.copyWith(
                   color: AppColors.brandPrimary,
                   fontWeight: FontWeight.bold,

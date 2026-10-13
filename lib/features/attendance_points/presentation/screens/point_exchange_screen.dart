@@ -4,12 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import '../../data/models/points_summary_model.dart';
 import '../cubit/exchange_cubit.dart';
 import '../cubit/exchange_state.dart';
 import '../cubit/points_cubit.dart';
 
 class PointExchangeScreen extends StatefulWidget {
-  const PointExchangeScreen({super.key});
+  const PointExchangeScreen({super.key, this.initialSummary});
+
+  final PointsSummaryModel? initialSummary;
 
   @override
   State<PointExchangeScreen> createState() => _PointExchangeScreenState();
@@ -22,7 +25,8 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
   @override
   Widget build(BuildContext context) {
     final pointsCubit = context.watch<PointsCubit>();
-    final balances = pointsCubit.currentSummary?.balances;
+    final summary = pointsCubit.currentSummary ?? widget.initialSummary;
+    final balances = summary?.balances;
     final confirmedGreen = balances?.greenConfirmed ?? 0;
     final redBalance = balances?.red ?? 0;
     final blackBalance = balances?.black ?? 0;
@@ -388,7 +392,7 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
                   height: 50.h,
                   child: ElevatedButton(
                     onPressed: canExchange && !isLoading
-                        ? () => _submitExchange(context)
+                        ? () => _submitExchange(context, employeeId: summary?.employeeId)
                         : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.brandPrimary,
@@ -415,12 +419,13 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
     );
   }
 
-  void _submitExchange(BuildContext context) {
+  void _submitExchange(BuildContext context, {String? employeeId}) {
     final idempotencyKey = 'exch_${DateTime.now().millisecondsSinceEpoch}_${_selectedTarget}_$_quantity';
     context.read<ExchangeCubit>().exchange(
       target: _selectedTarget,
       quantity: _quantity,
       idempotencyKey: idempotencyKey,
+      employeeId: employeeId,
     );
   }
 }

@@ -5,19 +5,32 @@ part 'points_badge_model.g.dart';
 
 @freezed
 class PointsBadgeItemModel with _$PointsBadgeItemModel {
+  const PointsBadgeItemModel._();
+
   const factory PointsBadgeItemModel({
     required String key,
-    required String title,
-    required String titleAr,
-    required String description,
-    required String descriptionAr,
-    required String icon,
+    String? nameEn,
+    String? nameAr,
+    String? title,
+    String? titleAr,
+    String? descriptionEn,
+    String? descriptionAr,
+    String? description,
+    String? icon,
+    int? threshold,
     @Default(false) bool isUnlocked,
     String? unlockedAt,
+    double? progress,
     @Default(0) int currentProgress,
     @Default(0) int targetProgress,
     @Default(0.0) double progressPercentage,
   }) = _PointsBadgeItemModel;
+
+  String get displayTitleEn => nameEn ?? title ?? key;
+  String get displayTitleAr => nameAr ?? titleAr ?? displayTitleEn;
+  String get displayDescEn => descriptionEn ?? description ?? '';
+  String get displayDescAr => descriptionAr ?? displayDescEn;
+  double get effectiveProgress => progress ?? progressPercentage;
 
   factory PointsBadgeItemModel.fromJson(Map<String, dynamic> json) =>
       _$PointsBadgeItemModelFromJson(json);

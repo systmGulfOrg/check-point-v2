@@ -27,9 +27,25 @@ class PointsHistoryItemModel with _$PointsHistoryItemModel {
 }
 
 @freezed
+class PointsHistoryPageModel with _$PointsHistoryPageModel {
+  const factory PointsHistoryPageModel({
+    @Default(<PointsHistoryItemModel>[]) List<PointsHistoryItemModel> items,
+    int? totalCount,
+    int? index,
+    int? itemCount,
+    int? totalPages,
+    bool? hasNext,
+    bool? hasPrevious,
+  }) = _PointsHistoryPageModel;
+
+  factory PointsHistoryPageModel.fromJson(Map<String, dynamic> json) =>
+      _$PointsHistoryPageModelFromJson(json);
+}
+
+@freezed
 class PointsHistoryResponseModel with _$PointsHistoryResponseModel {
   const factory PointsHistoryResponseModel({
-    @Default(<PointsHistoryItemModel>[]) List<PointsHistoryItemModel> value,
+    PointsHistoryPageModel? value,
     int? total,
     int? page,
     int? limit,

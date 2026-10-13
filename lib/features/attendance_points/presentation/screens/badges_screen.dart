@@ -2,8 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import '../../data/models/points_badge_model.dart';
 import '../cubit/points_cubit.dart';
 import '../cubit/points_state.dart';
 import '../widgets/points_badge_card_widget.dart';
@@ -35,48 +37,89 @@ class BadgesScreen extends StatelessWidget {
       body: BlocBuilder<PointsCubit, PointsState>(
         builder: (context, state) {
           return switch (state) {
-            PointsLoading() => const Center(
-              child: CircularProgressIndicator(),
-            ),
+            PointsLoading() => BadgesSkeletonWidget(isArabic: isArabic),
             PointsError(:final message) => Center(
               child: Padding(
                 padding: EdgeInsets.all(24.r),
                 child: Text(message, style: AppTextStyles.font14Regular),
               ),
             ),
-            PointsLoaded(:final badges) => badges.isEmpty
-                ? Center(
-                    child: Text(
-                      'points.emptyBadges'.tr(context: context),
-                      style: AppTextStyles.font14Regular.copyWith(
-                        color: AppColors.textSecondary,
+            PointsLoaded(:final badges) =>
+              badges.isEmpty
+                  ? Center(
+                      child: Text(
+                        'points.emptyBadges'.tr(context: context),
+                        style: AppTextStyles.font14Regular.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () =>
+                          context.read<PointsCubit>().loadAllPointsData(),
+                      child: GridView.builder(
+                        padding: EdgeInsets.all(16.r),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12.w,
+                          mainAxisSpacing: 12.h,
+                          childAspectRatio: 0.78,
+                        ),
+                        itemCount: badges.length,
+                        itemBuilder: (context, index) {
+                          final badge = badges[index];
+                          return PointsBadgeCardWidget(
+                            badge: badge,
+                            isArabic: isArabic,
+                          );
+                        },
                       ),
                     ),
-                  )
-                : RefreshIndicator(
-                    onRefresh: () =>
-                        context.read<PointsCubit>().loadAllPointsData(),
-                    child: GridView.builder(
-                      padding: EdgeInsets.all(16.r),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 12.w,
-                        mainAxisSpacing: 12.h,
-                        childAspectRatio: 0.78,
-                      ),
-                      itemCount: badges.length,
-                      itemBuilder: (context, index) {
-                        final badge = badges[index];
-                        return PointsBadgeCardWidget(
-                          badge: badge,
-                          isArabic: isArabic,
-                        );
-                      },
-                    ),
-                  ),
             _ => const SizedBox.shrink(),
           };
         },
+      ),
+    );
+  }
+}
+
+class BadgesSkeletonWidget extends StatelessWidget {
+  const BadgesSkeletonWidget({required this.isArabic, super.key});
+
+  final bool isArabic;
+
+  static List<PointsBadgeItemModel> get _fakeBadges => List.generate(
+    4,
+    (i) => PointsBadgeItemModel(
+      key: 'fake_$i',
+      titleAr: 'عنوان الشارة',
+
+      descriptionAr: 'وصف الشارة المزيف هنا',
+      descriptionEn: 'A placeholder badge description',
+      icon: 'shield',
+      isUnlocked: i.isEven,
+
+      threshold: 10,
+      unlockedAt: i.isEven ? '2024-01-01' : null,
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      child: GridView.builder(
+        padding: EdgeInsets.all(16.r),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12.w,
+          mainAxisSpacing: 12.h,
+          childAspectRatio: 0.78,
+        ),
+        itemCount: _fakeBadges.length,
+        itemBuilder: (context, index) => PointsBadgeCardWidget(
+          badge: _fakeBadges[index],
+          isArabic: isArabic,
+        ),
       ),
     );
   }

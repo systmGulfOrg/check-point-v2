@@ -43,4 +43,6 @@ class AppRoutes {
   static const String pointsHistory = '/employee/points/history';
   static const String pointsBadges = '/employee/points/badges';
   static const String pointsLeaderboard = '/employee/points/leaderboard';
+  static const String adminPoints = '/admin/points';
+  static const String adminEmployeePoints = '/admin/points/employee';
 }

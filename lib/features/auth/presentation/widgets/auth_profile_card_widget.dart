@@ -8,6 +8,9 @@ import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_pro
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_state.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/edit_profile_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/role_switch_dialog_widget.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_cubit.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_state.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/widgets/profile_points_badge_widget.dart';
 
 class AuthProfileCardWidget extends StatelessWidget {
   const AuthProfileCardWidget({super.key, this.onTap});
@@ -16,6 +19,8 @@ class AuthProfileCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final pointsState = context.watch<PointsCubit?>()?.state;
+
     return BlocBuilder<AuthProfileCubit, AuthProfileState>(
       builder: (context, state) {
         return switch (state) {
@@ -63,11 +68,25 @@ class AuthProfileCardWidget extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    AppAvatarWidget(
-                      name: name,
-                      subtitle: username,
-                      radius: 32.r,
-                      enablePreview: true,
+                    Stack(
+                      clipBehavior: Clip.none,
+                      alignment: Alignment.center,
+                      children: [
+                        AppAvatarWidget(
+                          name: name,
+                          subtitle: username,
+                          radius: 32.r,
+                          enablePreview: true,
+                        ),
+                        if (pointsState case PointsLoaded(:final summary))
+                          Positioned(
+                            top: -28.h,
+                            child: ProfilePointsBadgeWidget(
+                              tier: summary.level.tier,
+                              points: summary.level.currentPoints,
+                            ),
+                          ),
+                      ],
                     ),
                     hSpace(12),
                     Text(
@@ -106,8 +125,9 @@ class AuthProfileCardWidget extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12.r),
                               border: roles.length > 1
                                   ? Border.all(
-                                      color: AppColors.brandPrimary
-                                          .withValues(alpha: 0.3),
+                                      color: AppColors.brandPrimary.withValues(
+                                        alpha: 0.3,
+                                      ),
                                     )
                                   : null,
                             ),

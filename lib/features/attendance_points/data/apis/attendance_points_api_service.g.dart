@@ -89,12 +89,13 @@ class _AttendancePointsApiService implements AttendancePointsApiService {
 
   @override
   Future<PointsExchangeResponseModel> exchangePoints(
-    PointsExchangeRequestBody body,
+    Map<String, dynamic> body,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = body;
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
     final _options = _setStreamType<PointsExchangeResponseModel>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
@@ -166,6 +167,44 @@ class _AttendancePointsApiService implements AttendancePointsApiService {
     late PointsLeaderboardResponseModel _value;
     try {
       _value = PointsLeaderboardResponseModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<AdminPointsEmployeesResponseModel> getAdminPointsEmployees({
+    String? departmentId,
+    String? search,
+    int page = 1,
+    int limit = 50,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'departmentId': departmentId,
+      r'search': search,
+      r'page': page,
+      r'limit': limit,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<AdminPointsEmployeesResponseModel>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/admin/points/employees',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late AdminPointsEmployeesResponseModel _value;
+    try {
+      _value = AdminPointsEmployeesResponseModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

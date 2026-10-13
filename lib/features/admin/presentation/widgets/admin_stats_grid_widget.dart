@@ -11,6 +11,7 @@ class AdminStatsGridWidget extends StatelessWidget {
     required this.presentToday,
     required this.pendingLeaves,
     required this.openTasks,
+    this.showTasks = true,
     this.isStaffLoading = false,
     this.isAttendanceLoading = false,
     this.isLeaveLoading = false,
@@ -26,6 +27,7 @@ class AdminStatsGridWidget extends StatelessWidget {
   final int presentToday;
   final int pendingLeaves;
   final int openTasks;
+  final bool showTasks;
   final bool isStaffLoading;
   final bool isAttendanceLoading;
   final bool isLeaveLoading;
@@ -87,20 +89,21 @@ class AdminStatsGridWidget extends StatelessWidget {
             ),
           ),
         ),
-        AnimatedListItemWidget(
-          index: 3,
-          child: Skeletonizer(
-            enabled: isTasksLoading,
-            child: AdminStatCardWidget(
-              icon: Icons.assignment_outlined,
-              iconColor: AppColors.info,
-              iconBackgroundColor: AppColors.softBlueBackground,
-              value: '$openTasks',
-              labelKey: 'admin.dashboard.openTasks',
-              onTap: onOpenTasksTap,
+        if (showTasks)
+          AnimatedListItemWidget(
+            index: 3,
+            child: Skeletonizer(
+              enabled: isTasksLoading,
+              child: AdminStatCardWidget(
+                icon: Icons.assignment_outlined,
+                iconColor: AppColors.info,
+                iconBackgroundColor: AppColors.softBlueBackground,
+                value: '$openTasks',
+                labelKey: 'admin.dashboard.openTasks',
+                onTap: onOpenTasksTap,
+              ),
             ),
           ),
-        ),
       ],
     );
   }

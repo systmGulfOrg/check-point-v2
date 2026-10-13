@@ -106,7 +106,7 @@ class PointsLeaderboardItemTileWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '${entry.points} pts',
+                '${entry.effectivePoints} pts',
                 style: AppTextStyles.font14Bold.copyWith(
                   color: AppColors.success,
                 ),

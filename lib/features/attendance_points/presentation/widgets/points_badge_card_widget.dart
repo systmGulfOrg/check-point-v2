@@ -18,8 +18,8 @@ class PointsBadgeCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isUnlocked = badge.isUnlocked;
-    final title = isArabic ? badge.titleAr : badge.title;
-    final description = isArabic ? badge.descriptionAr : badge.description;
+    final title = isArabic ? badge.displayTitleAr : badge.displayTitleEn;
+    final description = isArabic ? badge.displayDescAr : badge.displayDescEn;
 
     return Container(
       padding: EdgeInsets.all(12.r),
@@ -47,20 +47,40 @@ class PointsBadgeCardWidget extends StatelessWidget {
         children: [
           // Icon
           Container(
-            width: 56.r,
-            height: 56.r,
+            width: 68.r,
+            height: 68.r,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isUnlocked
-                  ? AppColors.warningOrange.withValues(alpha: 0.15)
-                  : AppColors.border.withValues(alpha: 0.3),
+              gradient: isUnlocked
+                  ? AppColors.brandGradient
+                  : LinearGradient(
+                      colors: [
+                        AppColors.border.withValues(alpha: 0.45),
+                        AppColors.pageBackground,
+                      ],
+                      begin: AlignmentDirectional.topStart,
+                      end: AlignmentDirectional.bottomEnd,
+                    ),
+              boxShadow: isUnlocked
+                  ? [
+                      BoxShadow(
+                        color: AppColors.brandPrimary.withValues(alpha: 0.25),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ]
+                  : null,
+              border: Border.all(
+                color: isUnlocked
+                    ? AppColors.white.withValues(alpha: 0.8)
+                    : AppColors.border,
+                width: 2,
+              ),
             ),
             child: Icon(
               _getBadgeIcon(badge.icon),
-              size: 30.r,
-              color: isUnlocked
-                  ? AppColors.warningOrange
-                  : AppColors.textSecondary,
+              size: 34.r,
+              color: isUnlocked ? AppColors.white : AppColors.textSecondary,
             ),
           ),
           hSpace(10),
@@ -114,7 +134,7 @@ class PointsBadgeCardWidget extends StatelessWidget {
           ] else ...[
             // Progress Bar
             LinearProgressIndicator(
-              value: badge.progressPercentage.clamp(0.0, 1.0),
+              value: badge.effectiveProgress.clamp(0.0, 1.0),
               backgroundColor: AppColors.border,
               valueColor: const AlwaysStoppedAnimation<Color>(
                 AppColors.brandPrimary,
@@ -124,10 +144,15 @@ class PointsBadgeCardWidget extends StatelessWidget {
             ),
             hSpace(4),
             Text(
-              'points.progress'.tr(
-                context: context,
-                args: ['${badge.currentProgress}', '${badge.targetProgress}'],
-              ),
+              badge.threshold != null
+                  ? 'points.progress'.tr(
+                      context: context,
+                      args: [
+                        '${(badge.effectiveProgress * badge.threshold!).round()}',
+                        '${badge.threshold}',
+                      ],
+                    )
+                  : '${(badge.effectiveProgress * 100).round()}%',
               style: AppTextStyles.font10Medium.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -138,8 +163,9 @@ class PointsBadgeCardWidget extends StatelessWidget {
     );
   }
 
-  IconData _getBadgeIcon(String iconKey) {
-    return switch (iconKey.toLowerCase()) {
+  IconData _getBadgeIcon(String? iconKey) {
+    final key = (iconKey ?? badge.key).toLowerCase();
+    return switch (key) {
       'falcon' || 'flight' => Icons.flight_takeoff_rounded,
       'shield' || 'disciplined' => Icons.verified_rounded,
       'life_ring' || 'rescuer' => Icons.healing_rounded,

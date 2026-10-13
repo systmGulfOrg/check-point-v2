@@ -9,6 +9,7 @@ import 'package:check_point_v2/features/attendance_points/data/apis/attendance_p
 import 'package:check_point_v2/features/attendance_points/data/repos/attendance_points_repo.dart';
 import 'package:check_point_v2/features/attendance_points/data/repos/attendance_points_repo_impl.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_cubit.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/cubit/admin_points_cubit.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/cubit/exchange_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
@@ -113,6 +114,7 @@ import 'package:check_point_v2/core/auth/biometric_auth_service.dart';
 import 'package:check_point_v2/core/network/dio_factory.dart';
 import 'package:check_point_v2/core/network/device_identity_provider.dart';
 import 'package:check_point_v2/core/services/google_places_service.dart';
+import 'package:check_point_v2/core/services/location_integrity_service.dart';
 import 'package:check_point_v2/core/services/location_service.dart';
 
 final sl = GetIt.instance;
@@ -146,10 +148,14 @@ Future<void> setupServiceLocator() async {
     instanceName: 'external',
   );
   sl.registerLazySingleton<LocationService>(LocationService.new);
+  sl.registerLazySingleton<LocationIntegrityService>(
+    () => LocationIntegrityService(),
+  );
   sl.registerLazySingleton<AttendanceVerificationService>(
     () => AttendanceVerificationService(
       locationService: sl<LocationService>(),
       biometricAuthService: sl<BiometricAuthService>(),
+      locationIntegrityService: sl<LocationIntegrityService>(),
     ),
   );
   sl.registerLazySingleton<GooglePlacesService>(
@@ -481,7 +487,13 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<PointsCubit>(
     () => PointsCubit(pointsRepo: sl<AttendancePointsRepo>()),
   );
+  sl.registerFactory<AdminPointsCubit>(
+    () => AdminPointsCubit(pointsRepo: sl<AttendancePointsRepo>()),
+  );
   sl.registerFactory<ExchangeCubit>(
-    () => ExchangeCubit(pointsRepo: sl<AttendancePointsRepo>()),
+    () => ExchangeCubit(
+      pointsRepo: sl<AttendancePointsRepo>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+    ),
   );
 }

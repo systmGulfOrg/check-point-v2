@@ -22,13 +22,18 @@ PointsBadgeItemModel _$PointsBadgeItemModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$PointsBadgeItemModel {
   String get key => throw _privateConstructorUsedError;
-  String get title => throw _privateConstructorUsedError;
-  String get titleAr => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
-  String get descriptionAr => throw _privateConstructorUsedError;
-  String get icon => throw _privateConstructorUsedError;
+  String? get nameEn => throw _privateConstructorUsedError;
+  String? get nameAr => throw _privateConstructorUsedError;
+  String? get title => throw _privateConstructorUsedError;
+  String? get titleAr => throw _privateConstructorUsedError;
+  String? get descriptionEn => throw _privateConstructorUsedError;
+  String? get descriptionAr => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  String? get icon => throw _privateConstructorUsedError;
+  int? get threshold => throw _privateConstructorUsedError;
   bool get isUnlocked => throw _privateConstructorUsedError;
   String? get unlockedAt => throw _privateConstructorUsedError;
+  double? get progress => throw _privateConstructorUsedError;
   int get currentProgress => throw _privateConstructorUsedError;
   int get targetProgress => throw _privateConstructorUsedError;
   double get progressPercentage => throw _privateConstructorUsedError;
@@ -52,13 +57,18 @@ abstract class $PointsBadgeItemModelCopyWith<$Res> {
   @useResult
   $Res call({
     String key,
-    String title,
-    String titleAr,
-    String description,
-    String descriptionAr,
-    String icon,
+    String? nameEn,
+    String? nameAr,
+    String? title,
+    String? titleAr,
+    String? descriptionEn,
+    String? descriptionAr,
+    String? description,
+    String? icon,
+    int? threshold,
     bool isUnlocked,
     String? unlockedAt,
+    double? progress,
     int currentProgress,
     int targetProgress,
     double progressPercentage,
@@ -84,13 +94,18 @@ class _$PointsBadgeItemModelCopyWithImpl<
   @override
   $Res call({
     Object? key = null,
-    Object? title = null,
-    Object? titleAr = null,
-    Object? description = null,
-    Object? descriptionAr = null,
-    Object? icon = null,
+    Object? nameEn = freezed,
+    Object? nameAr = freezed,
+    Object? title = freezed,
+    Object? titleAr = freezed,
+    Object? descriptionEn = freezed,
+    Object? descriptionAr = freezed,
+    Object? description = freezed,
+    Object? icon = freezed,
+    Object? threshold = freezed,
     Object? isUnlocked = null,
     Object? unlockedAt = freezed,
+    Object? progress = freezed,
     Object? currentProgress = null,
     Object? targetProgress = null,
     Object? progressPercentage = null,
@@ -101,26 +116,42 @@ class _$PointsBadgeItemModelCopyWithImpl<
                 ? _value.key
                 : key // ignore: cast_nullable_to_non_nullable
                       as String,
-            title: null == title
+            nameEn: freezed == nameEn
+                ? _value.nameEn
+                : nameEn // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            nameAr: freezed == nameAr
+                ? _value.nameAr
+                : nameAr // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            title: freezed == title
                 ? _value.title
                 : title // ignore: cast_nullable_to_non_nullable
-                      as String,
-            titleAr: null == titleAr
+                      as String?,
+            titleAr: freezed == titleAr
                 ? _value.titleAr
                 : titleAr // ignore: cast_nullable_to_non_nullable
-                      as String,
-            description: null == description
-                ? _value.description
-                : description // ignore: cast_nullable_to_non_nullable
-                      as String,
-            descriptionAr: null == descriptionAr
+                      as String?,
+            descriptionEn: freezed == descriptionEn
+                ? _value.descriptionEn
+                : descriptionEn // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            descriptionAr: freezed == descriptionAr
                 ? _value.descriptionAr
                 : descriptionAr // ignore: cast_nullable_to_non_nullable
-                      as String,
-            icon: null == icon
+                      as String?,
+            description: freezed == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            icon: freezed == icon
                 ? _value.icon
                 : icon // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
+            threshold: freezed == threshold
+                ? _value.threshold
+                : threshold // ignore: cast_nullable_to_non_nullable
+                      as int?,
             isUnlocked: null == isUnlocked
                 ? _value.isUnlocked
                 : isUnlocked // ignore: cast_nullable_to_non_nullable
@@ -129,6 +160,10 @@ class _$PointsBadgeItemModelCopyWithImpl<
                 ? _value.unlockedAt
                 : unlockedAt // ignore: cast_nullable_to_non_nullable
                       as String?,
+            progress: freezed == progress
+                ? _value.progress
+                : progress // ignore: cast_nullable_to_non_nullable
+                      as double?,
             currentProgress: null == currentProgress
                 ? _value.currentProgress
                 : currentProgress // ignore: cast_nullable_to_non_nullable
@@ -158,13 +193,18 @@ abstract class _$$PointsBadgeItemModelImplCopyWith<$Res>
   @useResult
   $Res call({
     String key,
-    String title,
-    String titleAr,
-    String description,
-    String descriptionAr,
-    String icon,
+    String? nameEn,
+    String? nameAr,
+    String? title,
+    String? titleAr,
+    String? descriptionEn,
+    String? descriptionAr,
+    String? description,
+    String? icon,
+    int? threshold,
     bool isUnlocked,
     String? unlockedAt,
+    double? progress,
     int currentProgress,
     int targetProgress,
     double progressPercentage,
@@ -186,13 +226,18 @@ class __$$PointsBadgeItemModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? key = null,
-    Object? title = null,
-    Object? titleAr = null,
-    Object? description = null,
-    Object? descriptionAr = null,
-    Object? icon = null,
+    Object? nameEn = freezed,
+    Object? nameAr = freezed,
+    Object? title = freezed,
+    Object? titleAr = freezed,
+    Object? descriptionEn = freezed,
+    Object? descriptionAr = freezed,
+    Object? description = freezed,
+    Object? icon = freezed,
+    Object? threshold = freezed,
     Object? isUnlocked = null,
     Object? unlockedAt = freezed,
+    Object? progress = freezed,
     Object? currentProgress = null,
     Object? targetProgress = null,
     Object? progressPercentage = null,
@@ -203,26 +248,42 @@ class __$$PointsBadgeItemModelImplCopyWithImpl<$Res>
             ? _value.key
             : key // ignore: cast_nullable_to_non_nullable
                   as String,
-        title: null == title
+        nameEn: freezed == nameEn
+            ? _value.nameEn
+            : nameEn // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        nameAr: freezed == nameAr
+            ? _value.nameAr
+            : nameAr // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        title: freezed == title
             ? _value.title
             : title // ignore: cast_nullable_to_non_nullable
-                  as String,
-        titleAr: null == titleAr
+                  as String?,
+        titleAr: freezed == titleAr
             ? _value.titleAr
             : titleAr // ignore: cast_nullable_to_non_nullable
-                  as String,
-        description: null == description
-            ? _value.description
-            : description // ignore: cast_nullable_to_non_nullable
-                  as String,
-        descriptionAr: null == descriptionAr
+                  as String?,
+        descriptionEn: freezed == descriptionEn
+            ? _value.descriptionEn
+            : descriptionEn // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        descriptionAr: freezed == descriptionAr
             ? _value.descriptionAr
             : descriptionAr // ignore: cast_nullable_to_non_nullable
-                  as String,
-        icon: null == icon
+                  as String?,
+        description: freezed == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        icon: freezed == icon
             ? _value.icon
             : icon // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
+        threshold: freezed == threshold
+            ? _value.threshold
+            : threshold // ignore: cast_nullable_to_non_nullable
+                  as int?,
         isUnlocked: null == isUnlocked
             ? _value.isUnlocked
             : isUnlocked // ignore: cast_nullable_to_non_nullable
@@ -231,6 +292,10 @@ class __$$PointsBadgeItemModelImplCopyWithImpl<$Res>
             ? _value.unlockedAt
             : unlockedAt // ignore: cast_nullable_to_non_nullable
                   as String?,
+        progress: freezed == progress
+            ? _value.progress
+            : progress // ignore: cast_nullable_to_non_nullable
+                  as double?,
         currentProgress: null == currentProgress
             ? _value.currentProgress
             : currentProgress // ignore: cast_nullable_to_non_nullable
@@ -250,20 +315,25 @@ class __$$PointsBadgeItemModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PointsBadgeItemModelImpl implements _PointsBadgeItemModel {
+class _$PointsBadgeItemModelImpl extends _PointsBadgeItemModel {
   const _$PointsBadgeItemModelImpl({
     required this.key,
-    required this.title,
-    required this.titleAr,
-    required this.description,
-    required this.descriptionAr,
-    required this.icon,
+    this.nameEn,
+    this.nameAr,
+    this.title,
+    this.titleAr,
+    this.descriptionEn,
+    this.descriptionAr,
+    this.description,
+    this.icon,
+    this.threshold,
     this.isUnlocked = false,
     this.unlockedAt,
+    this.progress,
     this.currentProgress = 0,
     this.targetProgress = 0,
     this.progressPercentage = 0.0,
-  });
+  }) : super._();
 
   factory _$PointsBadgeItemModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$PointsBadgeItemModelImplFromJson(json);
@@ -271,20 +341,30 @@ class _$PointsBadgeItemModelImpl implements _PointsBadgeItemModel {
   @override
   final String key;
   @override
-  final String title;
+  final String? nameEn;
   @override
-  final String titleAr;
+  final String? nameAr;
   @override
-  final String description;
+  final String? title;
   @override
-  final String descriptionAr;
+  final String? titleAr;
   @override
-  final String icon;
+  final String? descriptionEn;
+  @override
+  final String? descriptionAr;
+  @override
+  final String? description;
+  @override
+  final String? icon;
+  @override
+  final int? threshold;
   @override
   @JsonKey()
   final bool isUnlocked;
   @override
   final String? unlockedAt;
+  @override
+  final double? progress;
   @override
   @JsonKey()
   final int currentProgress;
@@ -297,7 +377,7 @@ class _$PointsBadgeItemModelImpl implements _PointsBadgeItemModel {
 
   @override
   String toString() {
-    return 'PointsBadgeItemModel(key: $key, title: $title, titleAr: $titleAr, description: $description, descriptionAr: $descriptionAr, icon: $icon, isUnlocked: $isUnlocked, unlockedAt: $unlockedAt, currentProgress: $currentProgress, targetProgress: $targetProgress, progressPercentage: $progressPercentage)';
+    return 'PointsBadgeItemModel(key: $key, nameEn: $nameEn, nameAr: $nameAr, title: $title, titleAr: $titleAr, descriptionEn: $descriptionEn, descriptionAr: $descriptionAr, description: $description, icon: $icon, threshold: $threshold, isUnlocked: $isUnlocked, unlockedAt: $unlockedAt, progress: $progress, currentProgress: $currentProgress, targetProgress: $targetProgress, progressPercentage: $progressPercentage)';
   }
 
   @override
@@ -306,17 +386,25 @@ class _$PointsBadgeItemModelImpl implements _PointsBadgeItemModel {
         (other.runtimeType == runtimeType &&
             other is _$PointsBadgeItemModelImpl &&
             (identical(other.key, key) || other.key == key) &&
+            (identical(other.nameEn, nameEn) || other.nameEn == nameEn) &&
+            (identical(other.nameAr, nameAr) || other.nameAr == nameAr) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.titleAr, titleAr) || other.titleAr == titleAr) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
+            (identical(other.descriptionEn, descriptionEn) ||
+                other.descriptionEn == descriptionEn) &&
             (identical(other.descriptionAr, descriptionAr) ||
                 other.descriptionAr == descriptionAr) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.icon, icon) || other.icon == icon) &&
+            (identical(other.threshold, threshold) ||
+                other.threshold == threshold) &&
             (identical(other.isUnlocked, isUnlocked) ||
                 other.isUnlocked == isUnlocked) &&
             (identical(other.unlockedAt, unlockedAt) ||
                 other.unlockedAt == unlockedAt) &&
+            (identical(other.progress, progress) ||
+                other.progress == progress) &&
             (identical(other.currentProgress, currentProgress) ||
                 other.currentProgress == currentProgress) &&
             (identical(other.targetProgress, targetProgress) ||
@@ -330,13 +418,18 @@ class _$PointsBadgeItemModelImpl implements _PointsBadgeItemModel {
   int get hashCode => Object.hash(
     runtimeType,
     key,
+    nameEn,
+    nameAr,
     title,
     titleAr,
-    description,
+    descriptionEn,
     descriptionAr,
+    description,
     icon,
+    threshold,
     isUnlocked,
     unlockedAt,
+    progress,
     currentProgress,
     targetProgress,
     progressPercentage,
@@ -360,20 +453,26 @@ class _$PointsBadgeItemModelImpl implements _PointsBadgeItemModel {
   }
 }
 
-abstract class _PointsBadgeItemModel implements PointsBadgeItemModel {
+abstract class _PointsBadgeItemModel extends PointsBadgeItemModel {
   const factory _PointsBadgeItemModel({
     required final String key,
-    required final String title,
-    required final String titleAr,
-    required final String description,
-    required final String descriptionAr,
-    required final String icon,
+    final String? nameEn,
+    final String? nameAr,
+    final String? title,
+    final String? titleAr,
+    final String? descriptionEn,
+    final String? descriptionAr,
+    final String? description,
+    final String? icon,
+    final int? threshold,
     final bool isUnlocked,
     final String? unlockedAt,
+    final double? progress,
     final int currentProgress,
     final int targetProgress,
     final double progressPercentage,
   }) = _$PointsBadgeItemModelImpl;
+  const _PointsBadgeItemModel._() : super._();
 
   factory _PointsBadgeItemModel.fromJson(Map<String, dynamic> json) =
       _$PointsBadgeItemModelImpl.fromJson;
@@ -381,19 +480,29 @@ abstract class _PointsBadgeItemModel implements PointsBadgeItemModel {
   @override
   String get key;
   @override
-  String get title;
+  String? get nameEn;
   @override
-  String get titleAr;
+  String? get nameAr;
   @override
-  String get description;
+  String? get title;
   @override
-  String get descriptionAr;
+  String? get titleAr;
   @override
-  String get icon;
+  String? get descriptionEn;
+  @override
+  String? get descriptionAr;
+  @override
+  String? get description;
+  @override
+  String? get icon;
+  @override
+  int? get threshold;
   @override
   bool get isUnlocked;
   @override
   String? get unlockedAt;
+  @override
+  double? get progress;
   @override
   int get currentProgress;
   @override

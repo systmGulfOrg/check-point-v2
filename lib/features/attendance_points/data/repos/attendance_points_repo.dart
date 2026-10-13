@@ -4,6 +4,7 @@ import '../models/points_history_model.dart';
 import '../models/points_exchange_model.dart';
 import '../models/points_badge_model.dart';
 import '../models/points_leaderboard_model.dart';
+import '../models/admin_points_employee_model.dart';
 
 abstract class AttendancePointsRepo {
   Future<ApiResult<PointsSummaryModel>> getPointsSummary({String? employeeId});
@@ -24,5 +25,12 @@ abstract class AttendancePointsRepo {
 
   Future<ApiResult<List<PointsLeaderboardEntryModel>>> getLeaderboard({
     String scope = 'company',
+  });
+
+  Future<ApiResult<AdminPointsEmployeesPageModel>> getAdminPointsEmployees({
+    String? departmentId,
+    String? search,
+    int page = 1,
+    int limit = 50,
   });
 }

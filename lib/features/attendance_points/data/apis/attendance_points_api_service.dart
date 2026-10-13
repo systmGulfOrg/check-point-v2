@@ -7,6 +7,7 @@ import '../models/points_history_model.dart';
 import '../models/points_exchange_model.dart';
 import '../models/points_badge_model.dart';
 import '../models/points_leaderboard_model.dart';
+import '../models/admin_points_employee_model.dart';
 
 part 'attendance_points_api_service.g.dart';
 
@@ -31,7 +32,7 @@ abstract class AttendancePointsApiService {
 
   @POST(ApiConstants.pointsExchange)
   Future<PointsExchangeResponseModel> exchangePoints(
-    @Body() PointsExchangeRequestBody body,
+    @Body() Map<String, dynamic> body,
   );
 
   @GET(ApiConstants.pointsBadges)
@@ -42,5 +43,13 @@ abstract class AttendancePointsApiService {
   @GET(ApiConstants.pointsLeaderboard)
   Future<PointsLeaderboardResponseModel> getLeaderboard({
     @Query('scope') String scope = 'company',
+  });
+
+  @GET(ApiConstants.adminPointsEmployees)
+  Future<AdminPointsEmployeesResponseModel> getAdminPointsEmployees({
+    @Query('departmentId') String? departmentId,
+    @Query('search') String? search,
+    @Query('page') int page = 1,
+    @Query('limit') int limit = 50,
   });
 }

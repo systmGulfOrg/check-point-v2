@@ -8,6 +8,7 @@ import '../cubit/points_cubit.dart';
 import '../cubit/points_state.dart';
 import '../widgets/points_leaderboard_item_tile_widget.dart';
 import '../widgets/points_leaderboard_podium_widget.dart';
+import '../widgets/points_leaderboard_skeleton_widget.dart';
 
 class LeaderboardScreen extends StatelessWidget {
   const LeaderboardScreen({super.key});
@@ -34,59 +35,58 @@ class LeaderboardScreen extends StatelessWidget {
       body: BlocBuilder<PointsCubit, PointsState>(
         builder: (context, state) {
           return switch (state) {
-            PointsLoading() => const Center(
-              child: CircularProgressIndicator(),
-            ),
+            PointsLoading() => const PointsLeaderboardSkeletonWidget(),
             PointsError(:final message) => Center(
               child: Padding(
                 padding: EdgeInsets.all(24.r),
                 child: Text(message, style: AppTextStyles.font14Regular),
               ),
             ),
-            PointsLoaded(:final leaderboard) => leaderboard.isEmpty
-                ? Center(
-                    child: Text(
-                      'points.emptyLeaderboard'.tr(context: context),
-                      style: AppTextStyles.font14Regular.copyWith(
-                        color: AppColors.textSecondary,
+            PointsLoaded(:final leaderboard) =>
+              leaderboard.isEmpty
+                  ? Center(
+                      child: Text(
+                        'points.emptyLeaderboard'.tr(context: context),
+                        style: AppTextStyles.font14Regular.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () =>
+                          context.read<PointsCubit>().loadAllPointsData(),
+                      child: Column(
+                        children: [
+                          // Podium for Top 3 if available
+                          if (leaderboard.length >= 3) ...[
+                            PointsLeaderboardPodiumWidget(
+                              first: leaderboard[0],
+                              second: leaderboard[1],
+                              third: leaderboard[2],
+                            ),
+                            hSpace(12),
+                          ],
+
+                          // Full rank list
+                          Expanded(
+                            child: ListView.separated(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 8.h,
+                              ),
+                              itemCount: leaderboard.length,
+                              separatorBuilder: (_, _) => hSpace(8),
+                              itemBuilder: (context, index) {
+                                final entry = leaderboard[index];
+                                return PointsLeaderboardItemTileWidget(
+                                  entry: entry,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  )
-                : RefreshIndicator(
-                    onRefresh: () =>
-                        context.read<PointsCubit>().loadAllPointsData(),
-                    child: Column(
-                      children: [
-                        // Podium for Top 3 if available
-                        if (leaderboard.length >= 3) ...[
-                          PointsLeaderboardPodiumWidget(
-                            first: leaderboard[0],
-                            second: leaderboard[1],
-                            third: leaderboard[2],
-                          ),
-                          hSpace(12),
-                        ],
-
-                        // Full rank list
-                        Expanded(
-                          child: ListView.separated(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16.w,
-                              vertical: 8.h,
-                            ),
-                            itemCount: leaderboard.length,
-                            separatorBuilder: (_, _) => hSpace(8),
-                            itemBuilder: (context, index) {
-                              final entry = leaderboard[index];
-                              return PointsLeaderboardItemTileWidget(
-                                entry: entry,
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
             _ => const SizedBox.shrink(),
           };
         },

@@ -8,6 +8,7 @@ import '../../data/models/points_history_model.dart';
 import '../cubit/points_cubit.dart';
 import '../cubit/points_state.dart';
 import '../widgets/points_history_item_card_widget.dart';
+import '../widgets/points_history_skeleton_widget.dart';
 
 class PointsHistoryScreen extends StatefulWidget {
   const PointsHistoryScreen({super.key});
@@ -41,9 +42,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
       body: BlocBuilder<PointsCubit, PointsState>(
         builder: (context, state) {
           return switch (state) {
-            PointsLoading() => const Center(
-              child: CircularProgressIndicator(),
-            ),
+            PointsLoading() => const PointsHistorySkeletonWidget(),
             PointsError(:final message) => Center(
               child: Padding(
                 padding: EdgeInsets.all(24.r),

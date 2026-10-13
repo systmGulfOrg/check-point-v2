@@ -27,8 +27,12 @@ mixin _$PointsLeaderboardEntryModel {
   String get employeeId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String? get avatar => throw _privateConstructorUsedError;
+  String? get position => throw _privateConstructorUsedError;
   String? get departmentName => throw _privateConstructorUsedError;
   int get points => throw _privateConstructorUsedError;
+  int? get netPoints => throw _privateConstructorUsedError;
+  int? get greenPoints => throw _privateConstructorUsedError;
+  int? get redPoints => throw _privateConstructorUsedError;
   int get currentStreak => throw _privateConstructorUsedError;
   String get level => throw _privateConstructorUsedError;
   bool get isCurrentUser => throw _privateConstructorUsedError;
@@ -59,8 +63,12 @@ abstract class $PointsLeaderboardEntryModelCopyWith<$Res> {
     String employeeId,
     String name,
     String? avatar,
+    String? position,
     String? departmentName,
     int points,
+    int? netPoints,
+    int? greenPoints,
+    int? redPoints,
     int currentStreak,
     String level,
     bool isCurrentUser,
@@ -89,8 +97,12 @@ class _$PointsLeaderboardEntryModelCopyWithImpl<
     Object? employeeId = null,
     Object? name = null,
     Object? avatar = freezed,
+    Object? position = freezed,
     Object? departmentName = freezed,
     Object? points = null,
+    Object? netPoints = freezed,
+    Object? greenPoints = freezed,
+    Object? redPoints = freezed,
     Object? currentStreak = null,
     Object? level = null,
     Object? isCurrentUser = null,
@@ -113,6 +125,10 @@ class _$PointsLeaderboardEntryModelCopyWithImpl<
                 ? _value.avatar
                 : avatar // ignore: cast_nullable_to_non_nullable
                       as String?,
+            position: freezed == position
+                ? _value.position
+                : position // ignore: cast_nullable_to_non_nullable
+                      as String?,
             departmentName: freezed == departmentName
                 ? _value.departmentName
                 : departmentName // ignore: cast_nullable_to_non_nullable
@@ -121,6 +137,18 @@ class _$PointsLeaderboardEntryModelCopyWithImpl<
                 ? _value.points
                 : points // ignore: cast_nullable_to_non_nullable
                       as int,
+            netPoints: freezed == netPoints
+                ? _value.netPoints
+                : netPoints // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            greenPoints: freezed == greenPoints
+                ? _value.greenPoints
+                : greenPoints // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            redPoints: freezed == redPoints
+                ? _value.redPoints
+                : redPoints // ignore: cast_nullable_to_non_nullable
+                      as int?,
             currentStreak: null == currentStreak
                 ? _value.currentStreak
                 : currentStreak // ignore: cast_nullable_to_non_nullable
@@ -153,8 +181,12 @@ abstract class _$$PointsLeaderboardEntryModelImplCopyWith<$Res>
     String employeeId,
     String name,
     String? avatar,
+    String? position,
     String? departmentName,
     int points,
+    int? netPoints,
+    int? greenPoints,
+    int? redPoints,
     int currentStreak,
     String level,
     bool isCurrentUser,
@@ -183,8 +215,12 @@ class __$$PointsLeaderboardEntryModelImplCopyWithImpl<$Res>
     Object? employeeId = null,
     Object? name = null,
     Object? avatar = freezed,
+    Object? position = freezed,
     Object? departmentName = freezed,
     Object? points = null,
+    Object? netPoints = freezed,
+    Object? greenPoints = freezed,
+    Object? redPoints = freezed,
     Object? currentStreak = null,
     Object? level = null,
     Object? isCurrentUser = null,
@@ -207,6 +243,10 @@ class __$$PointsLeaderboardEntryModelImplCopyWithImpl<$Res>
             ? _value.avatar
             : avatar // ignore: cast_nullable_to_non_nullable
                   as String?,
+        position: freezed == position
+            ? _value.position
+            : position // ignore: cast_nullable_to_non_nullable
+                  as String?,
         departmentName: freezed == departmentName
             ? _value.departmentName
             : departmentName // ignore: cast_nullable_to_non_nullable
@@ -215,6 +255,18 @@ class __$$PointsLeaderboardEntryModelImplCopyWithImpl<$Res>
             ? _value.points
             : points // ignore: cast_nullable_to_non_nullable
                   as int,
+        netPoints: freezed == netPoints
+            ? _value.netPoints
+            : netPoints // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        greenPoints: freezed == greenPoints
+            ? _value.greenPoints
+            : greenPoints // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        redPoints: freezed == redPoints
+            ? _value.redPoints
+            : redPoints // ignore: cast_nullable_to_non_nullable
+                  as int?,
         currentStreak: null == currentStreak
             ? _value.currentStreak
             : currentStreak // ignore: cast_nullable_to_non_nullable
@@ -234,19 +286,22 @@ class __$$PointsLeaderboardEntryModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PointsLeaderboardEntryModelImpl
-    implements _PointsLeaderboardEntryModel {
+class _$PointsLeaderboardEntryModelImpl extends _PointsLeaderboardEntryModel {
   const _$PointsLeaderboardEntryModelImpl({
     required this.rank,
     required this.employeeId,
     required this.name,
     this.avatar,
+    this.position,
     this.departmentName,
     this.points = 0,
+    this.netPoints,
+    this.greenPoints,
+    this.redPoints,
     this.currentStreak = 0,
     this.level = 'Bronze',
     this.isCurrentUser = false,
-  });
+  }) : super._();
 
   factory _$PointsLeaderboardEntryModelImpl.fromJson(
     Map<String, dynamic> json,
@@ -261,10 +316,18 @@ class _$PointsLeaderboardEntryModelImpl
   @override
   final String? avatar;
   @override
+  final String? position;
+  @override
   final String? departmentName;
   @override
   @JsonKey()
   final int points;
+  @override
+  final int? netPoints;
+  @override
+  final int? greenPoints;
+  @override
+  final int? redPoints;
   @override
   @JsonKey()
   final int currentStreak;
@@ -277,7 +340,7 @@ class _$PointsLeaderboardEntryModelImpl
 
   @override
   String toString() {
-    return 'PointsLeaderboardEntryModel(rank: $rank, employeeId: $employeeId, name: $name, avatar: $avatar, departmentName: $departmentName, points: $points, currentStreak: $currentStreak, level: $level, isCurrentUser: $isCurrentUser)';
+    return 'PointsLeaderboardEntryModel(rank: $rank, employeeId: $employeeId, name: $name, avatar: $avatar, position: $position, departmentName: $departmentName, points: $points, netPoints: $netPoints, greenPoints: $greenPoints, redPoints: $redPoints, currentStreak: $currentStreak, level: $level, isCurrentUser: $isCurrentUser)';
   }
 
   @override
@@ -290,9 +353,17 @@ class _$PointsLeaderboardEntryModelImpl
                 other.employeeId == employeeId) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
+            (identical(other.position, position) ||
+                other.position == position) &&
             (identical(other.departmentName, departmentName) ||
                 other.departmentName == departmentName) &&
             (identical(other.points, points) || other.points == points) &&
+            (identical(other.netPoints, netPoints) ||
+                other.netPoints == netPoints) &&
+            (identical(other.greenPoints, greenPoints) ||
+                other.greenPoints == greenPoints) &&
+            (identical(other.redPoints, redPoints) ||
+                other.redPoints == redPoints) &&
             (identical(other.currentStreak, currentStreak) ||
                 other.currentStreak == currentStreak) &&
             (identical(other.level, level) || other.level == level) &&
@@ -308,8 +379,12 @@ class _$PointsLeaderboardEntryModelImpl
     employeeId,
     name,
     avatar,
+    position,
     departmentName,
     points,
+    netPoints,
+    greenPoints,
+    redPoints,
     currentStreak,
     level,
     isCurrentUser,
@@ -333,18 +408,23 @@ class _$PointsLeaderboardEntryModelImpl
 }
 
 abstract class _PointsLeaderboardEntryModel
-    implements PointsLeaderboardEntryModel {
+    extends PointsLeaderboardEntryModel {
   const factory _PointsLeaderboardEntryModel({
     required final int rank,
     required final String employeeId,
     required final String name,
     final String? avatar,
+    final String? position,
     final String? departmentName,
     final int points,
+    final int? netPoints,
+    final int? greenPoints,
+    final int? redPoints,
     final int currentStreak,
     final String level,
     final bool isCurrentUser,
   }) = _$PointsLeaderboardEntryModelImpl;
+  const _PointsLeaderboardEntryModel._() : super._();
 
   factory _PointsLeaderboardEntryModel.fromJson(Map<String, dynamic> json) =
       _$PointsLeaderboardEntryModelImpl.fromJson;
@@ -358,9 +438,17 @@ abstract class _PointsLeaderboardEntryModel
   @override
   String? get avatar;
   @override
+  String? get position;
+  @override
   String? get departmentName;
   @override
   int get points;
+  @override
+  int? get netPoints;
+  @override
+  int? get greenPoints;
+  @override
+  int? get redPoints;
   @override
   int get currentStreak;
   @override
