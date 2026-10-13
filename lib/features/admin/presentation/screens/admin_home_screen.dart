@@ -7,7 +7,6 @@ import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_greeting_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_overview_card_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_stats_grid_widget.dart';
@@ -42,7 +41,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     final employeesState = context.watch<AdminEmployeesCubit>().state;
     final attendanceState = context.watch<AdminAttendanceCubit>().state;
     final leaveState = context.watch<AdminLeaveRequestsCubit>().state;
-    final tasksState = context.watch<AdminTasksCubit>().state;
 
     final isStaffLoading = employeesState.maybeWhen(
       loading: () => true,
@@ -57,12 +55,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     );
 
     final isLeaveLoading = leaveState.maybeWhen(
-      loading: () => true,
-      initial: () => true,
-      orElse: () => false,
-    );
-
-    final isTasksLoading = tasksState.maybeWhen(
       loading: () => true,
       initial: () => true,
       orElse: () => false,
@@ -84,11 +76,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       orElse: () => 0,
     );
 
-    final openTasks = tasksState.maybeWhen(
-      success: (tasks) => tasks.length,
-      orElse: () => 0,
-    );
-
     final now = DateTime.now();
     final dateFormatted =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
@@ -100,7 +87,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           context.read<AdminEmployeesCubit>().loadEmployees(),
           context.read<AdminAttendanceCubit>().loadAttendance(),
           context.read<AdminLeaveRequestsCubit>().loadRequests(),
-          context.read<AdminTasksCubit>().loadTasks(),
         ]),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -120,26 +106,18 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 totalStaff: totalStaff,
                 presentToday: presentToday,
                 pendingLeaves: pendingLeaves,
-                openTasks: openTasks,
+                openTasks: 0,
+                showTasks: false,
                 isStaffLoading: isStaffLoading,
                 isAttendanceLoading: isAttendanceLoading,
                 isLeaveLoading: isLeaveLoading,
-                isTasksLoading: isTasksLoading,
-                onTotalStaffTap: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.adminAttendance,
-                ),
-                onPresentTodayTap: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.adminAttendance,
-                ),
+                onTotalStaffTap: () =>
+                    Navigator.pushNamed(context, AppRoutes.adminAttendance),
+                onPresentTodayTap: () =>
+                    Navigator.pushNamed(context, AppRoutes.adminAttendance),
                 onPendingLeavesTap: () => Navigator.pushNamed(
                   context,
                   AppRoutes.adminLeaveManagement,
-                ),
-                onOpenTasksTap: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.adminTasks,
                 ),
               ),
               hSpace(16),
