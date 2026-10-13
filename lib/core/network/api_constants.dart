@@ -36,4 +36,12 @@ class ApiConstants {
   static const String planFeedback = '/api/Plan/planFeedback';
   static const String feedBackStatus = '/api/Plan/feedBackStatus';
   static const String customerPlans = '/api/CustomerPlan';
+
+  // Gamification Points
+  static const String pointsSummary = '/api/points/summary';
+  static const String pointsHistory = '/api/points/history';
+  static const String pointsExchange = '/api/points/exchange';
+  static const String pointsBadges = '/api/points/badges';
+  static const String pointsLeaderboard = '/api/points/leaderboard';
+  static const String pointsPreview = '/api/points/preview';
 }

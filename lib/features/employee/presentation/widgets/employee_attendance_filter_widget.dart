@@ -29,6 +29,7 @@ class EmployeeAttendanceFilterWidget extends StatelessWidget {
 
   static const _statusOptions = [
     ('attended', 'employee.clock.filter.attended', AppColors.success),
+    ('early_check_in', 'points.filterEarly', AppColors.success),
     ('late', 'employee.clock.filter.late', AppColors.warningOrange),
     ('early', 'employee.clock.filter.early', AppColors.info),
   ];

@@ -34,6 +34,29 @@ class EmployeeAttendanceRecordCardWidget extends StatelessWidget {
                       color: AppColors.textPrimary,
                     ),
                   ),
+                  if (record.pointsChip != null) ...[
+                    wSpace(6),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 2.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Color(
+                          record.pointsColor ?? AppColors.brandPrimary.value,
+                        ).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
+                      child: Text(
+                        record.pointsChip!,
+                        style: AppTextStyles.font11Bold.copyWith(
+                          color: Color(
+                            record.pointsColor ?? AppColors.brandPrimary.value,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
               EmployeeStatusBadgeWidget(status: record.status),

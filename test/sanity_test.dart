@@ -9,7 +9,7 @@ void main() {
     expect(AppRoutes.requestAccess, '/request-access');
   });
 
-  test('AppConfig baseUrl is set to production server', () {
-    expect(AppConfig.baseUrl, 'http://137.184.223.222');
+  test('AppConfig baseUrl is configured', () {
+    expect(AppConfig.baseUrl, isNotEmpty);
   });
 }

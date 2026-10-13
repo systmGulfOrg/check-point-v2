@@ -5,6 +5,11 @@ import 'package:get_it/get_it.dart';
 import 'package:local_auth/local_auth.dart';
 
 import 'package:check_point_v2/core/services/attendance_verification_service.dart';
+import 'package:check_point_v2/features/attendance_points/data/apis/attendance_points_api_service.dart';
+import 'package:check_point_v2/features/attendance_points/data/repos/attendance_points_repo.dart';
+import 'package:check_point_v2/features/attendance_points/data/repos/attendance_points_repo_impl.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_cubit.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/cubit/exchange_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo.dart';
@@ -163,6 +168,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<SupervisorApiService>(
     () => SupervisorApiService(sl<Dio>()),
   );
+  sl.registerLazySingleton<AttendancePointsApiService>(
+    () => AttendancePointsApiService(sl<Dio>()),
+  );
   sl.registerLazySingleton<EmployeeApiService>(
     () => EmployeeApiService(sl<Dio>()),
   );
@@ -246,6 +254,9 @@ Future<void> setupServiceLocator() async {
       api: sl<EmployeeApiService>(),
       odooAttendanceService: sl<OdooAttendanceService>(),
     ),
+  );
+  sl.registerLazySingleton<AttendancePointsRepo>(
+    () => AttendancePointsRepoImpl(api: sl<AttendancePointsApiService>()),
   );
   sl.registerLazySingleton<EmployeeActionRepo>(
     () => EmployeeActionRepoImpl(api: sl<EmployeeApiService>()),
@@ -466,5 +477,11 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<AdminPermissionsCubit>(
     () => AdminPermissionsCubit(permissionsRepo: sl<AdminPermissionsRepo>()),
+  );
+  sl.registerFactory<PointsCubit>(
+    () => PointsCubit(pointsRepo: sl<AttendancePointsRepo>()),
+  );
+  sl.registerFactory<ExchangeCubit>(
+    () => ExchangeCubit(pointsRepo: sl<AttendancePointsRepo>()),
   );
 }

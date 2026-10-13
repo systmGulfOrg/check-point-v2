@@ -17,6 +17,12 @@ import 'package:check_point_v2/features/employee/presentation/widgets/employee_a
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_state.dart';
 import 'package:check_point_v2/features/leaves/presentation/widgets/upcoming_holiday_card_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_cubit.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_state.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/widgets/points_today_card_widget.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/widgets/points_day_details_sheet_widget.dart';
+
+import '../../../attendance_points/data/models/points_history_model.dart';
 
 class EmployeeClockScreen extends StatefulWidget {
   const EmployeeClockScreen({super.key});
@@ -60,6 +66,7 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
   void initState() {
     super.initState();
     context.read<EmployeeAttendanceCubit>().loadAttendanceHistory();
+    context.read<PointsCubit?>()?.loadAllPointsData();
   }
 
   void _toggleCheckInOut() {
@@ -269,6 +276,22 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                     );
                   },
                 ),
+                BlocBuilder<PointsCubit, PointsState>(
+                  builder: (context, state) {
+                    if (state is PointsLoaded) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 16.h),
+                        child: PointsTodayCardWidget(
+                          summary: state.summary,
+                          onTap: () {
+                            Navigator.of(context).pushNamed(AppRoutes.myPoints);
+                          },
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
                 hSpace(20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,6 +380,13 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                                               : 'On Time'),
                                     isLate: item.isLate == true,
                                     isEarly: item.isEarly == true,
+                                    rawDate: item.attendanceDate,
+                                    pointsChip: item.isLate == true
+                                        ? '-5'
+                                        : (item.isEarly == true ? '-5' : '+5'),
+                                    pointsColor: item.isLate == true || item.isEarly == true
+                                        ? AppColors.error.value
+                                        : AppColors.success.value,
                                   ),
                                 )
                                 .toList(),
@@ -397,8 +427,25 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                                 i < historyRecords.length;
                                 i++
                               ) ...[
-                                EmployeeAttendanceRecordCardWidget(
-                                  record: historyRecords[i],
+                                InkWell(
+                                  onTap: () {
+                                    final pointsState = context.read<PointsCubit?>()?.state;
+                                    final pointsForDay = pointsState is PointsLoaded
+                                        ? pointsState.history.where((p) {
+                                            return p.attendanceDate.startsWith(
+                                              historyRecords[i].rawDate ?? '',
+                                            );
+                                          }).toList()
+                                        : <PointsHistoryItemModel>[];
+                                    PointsDayDetailsSheetWidget.show(
+                                      context,
+                                      recordDate: historyRecords[i].date,
+                                      dayPoints: pointsForDay,
+                                    );
+                                  },
+                                  child: EmployeeAttendanceRecordCardWidget(
+                                    record: historyRecords[i],
+                                  ),
                                 ),
                                 if (i < historyRecords.length - 1)
                                   const Divider(

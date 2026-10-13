@@ -62,6 +62,13 @@ import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supe
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_attendance_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_leave_management_screen.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_cubit.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/cubit/exchange_cubit.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/screens/my_points_screen.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/screens/point_exchange_screen.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/screens/points_history_screen.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/screens/badges_screen.dart';
+import 'package:check_point_v2/features/attendance_points/presentation/screens/leaderboard_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_main_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_notifications_screen.dart';
 import 'package:check_point_v2/features/notifications/presentation/cubit/notifications_cubit.dart';
@@ -797,6 +804,53 @@ class AppRouter {
               project: args.project,
               canManage: args.canManage,
             ),
+          ),
+        );
+      case AppRoutes.myPoints:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.myPoints),
+          child: BlocProvider<PointsCubit>(
+            create: (_) => sl<PointsCubit>(),
+            child: const MyPointsScreen(),
+          ),
+        );
+      case AppRoutes.pointExchange:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.pointExchange),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<PointsCubit>(
+                create: (_) => sl<PointsCubit>(),
+              ),
+              BlocProvider<ExchangeCubit>(
+                create: (_) => sl<ExchangeCubit>(),
+              ),
+            ],
+            child: const PointExchangeScreen(),
+          ),
+        );
+      case AppRoutes.pointsHistory:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.pointsHistory),
+          child: BlocProvider<PointsCubit>(
+            create: (_) => sl<PointsCubit>(),
+            child: const PointsHistoryScreen(),
+          ),
+        );
+      case AppRoutes.pointsBadges:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.pointsBadges),
+          child: BlocProvider<PointsCubit>(
+            create: (_) => sl<PointsCubit>(),
+            child: const BadgesScreen(),
+          ),
+        );
+      case AppRoutes.pointsLeaderboard:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.pointsLeaderboard),
+          child: BlocProvider<PointsCubit>(
+            create: (_) => sl<PointsCubit>(),
+            child: const LeaderboardScreen(),
           ),
         );
       default:

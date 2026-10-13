@@ -298,6 +298,9 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
       if (selectedStatusFilters.contains('attended') && isAttended) {
         matches = true;
       }
+      if (selectedStatusFilters.contains('early_check_in') && !isLate) {
+        matches = true;
+      }
       if (selectedStatusFilters.contains('late') && isLate) matches = true;
       if (selectedStatusFilters.contains('early') && isEarly) matches = true;
 

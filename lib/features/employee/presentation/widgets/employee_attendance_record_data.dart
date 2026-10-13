@@ -8,6 +8,9 @@ class EmployeeAttendanceRecordData {
     required this.status,
     this.isLate = false,
     this.isEarly = false,
+    this.rawDate,
+    this.pointsChip,
+    this.pointsColor,
   });
 
   final String date;
@@ -18,4 +21,7 @@ class EmployeeAttendanceRecordData {
   final String status;
   final bool isLate;
   final bool isEarly;
+  final String? rawDate;
+  final String? pointsChip;
+  final int? pointsColor;
 }
