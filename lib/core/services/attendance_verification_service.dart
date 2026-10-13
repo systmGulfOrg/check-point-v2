@@ -40,41 +40,47 @@ class AttendanceVerificationService {
     LatLng? center,
     double radiusMeters = 150,
     List<LatLng> polygon = const [],
+    bool requireLocation = true,
   }) async {
-    // 1. Obtain an enriched location sample
-    final sample = await locationService.getCurrentSample();
-    if (sample == null) {
-      return const AttendanceVerificationResult(
-        isAllowed: false,
-        messageKey: 'errors.locationUnavailable',
-      );
-    }
+    LocationIntegrityResult? integrityResult;
+    LatLng? location;
 
-    // 2. Location integrity check (mock detection + anomaly analysis)
-    final integrityResult = await locationIntegrityService.assess(sample);
-    if (!integrityResult.isAllowed) {
-      return AttendanceVerificationResult(
-        isAllowed: false,
-        messageKey: integrityResult.messageKey,
-        integrityResult: integrityResult,
-      );
-    }
+    if (requireLocation) {
+      // 1. Obtain an enriched location sample
+      final sample = await locationService.getCurrentSample();
+      if (sample == null) {
+        return const AttendanceVerificationResult(
+          isAllowed: false,
+          messageKey: 'errors.locationUnavailable',
+        );
+      }
 
-    final location = sample.position;
+      // 2. Location integrity check (mock detection + anomaly analysis)
+      integrityResult = await locationIntegrityService.assess(sample);
+      if (!integrityResult.isAllowed) {
+        return AttendanceVerificationResult(
+          isAllowed: false,
+          messageKey: integrityResult.messageKey,
+          integrityResult: integrityResult,
+        );
+      }
 
-    // 3. Geofence check
-    if (!isWithinArea(
-      point: location,
-      center: center,
-      radiusMeters: radiusMeters,
-      polygon: polygon,
-    )) {
-      return AttendanceVerificationResult(
-        isAllowed: false,
-        location: null,
-        messageKey: 'errors.outsideAttendanceArea',
-        integrityResult: integrityResult,
-      );
+      location = sample.position;
+
+      // 3. Geofence check
+      if (!isWithinArea(
+        point: location,
+        center: center,
+        radiusMeters: radiusMeters,
+        polygon: polygon,
+      )) {
+        return AttendanceVerificationResult(
+          isAllowed: false,
+          location: null,
+          messageKey: 'errors.outsideAttendanceArea',
+          integrityResult: integrityResult,
+        );
+      }
     }
 
     // 4. Biometric authentication

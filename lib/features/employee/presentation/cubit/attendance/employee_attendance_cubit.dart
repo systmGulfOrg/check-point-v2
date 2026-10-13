@@ -103,6 +103,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
       biometricReason: 'Verify your identity to check in',
       center: targetCenter,
       polygon: targetPolygon,
+      requireLocation: area != 'Remote',
     );
     if (!verification.isAllowed) {
       emit(EmployeeAttendanceState.error(verification.messageKey!));
@@ -152,6 +153,9 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
       biometricReason: 'Verify your identity to check out',
       center: targetCenter,
       polygon: targetPolygon,
+      requireLocation:
+          todayAttendance?.area != 'Remote' &&
+          employeeProfile?.todayWorkMode != 'remote',
     );
     if (!verification.isAllowed) {
       emit(EmployeeAttendanceState.error(verification.messageKey!));
