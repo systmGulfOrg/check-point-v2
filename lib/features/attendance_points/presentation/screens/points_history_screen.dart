@@ -21,14 +21,14 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text(
           'points.historyTitle'.tr(context: context),
           style: AppTextStyles.font18Bold,
         ),
         centerTitle: true,
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppColors.white,
         elevation: 0,
         actions: [
           IconButton(
@@ -144,7 +144,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.brandPrimary : AppColors.pageBackground,
+          color: isSelected ? AppColors.brandPrimary : AppColors.white,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
             color: isSelected ? AppColors.brandPrimary : AppColors.border,

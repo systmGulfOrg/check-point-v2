@@ -16,14 +16,14 @@ class BadgesScreen extends StatelessWidget {
     final isArabic = context.locale.languageCode == 'ar';
 
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text(
           'points.badgesTitle'.tr(context: context),
           style: AppTextStyles.font18Bold,
         ),
         centerTitle: true,
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppColors.white,
         elevation: 0,
         actions: [
           IconButton(

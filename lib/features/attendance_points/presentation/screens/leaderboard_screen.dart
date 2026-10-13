@@ -14,14 +14,14 @@ class LeaderboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text(
           'points.leaderboardTitle'.tr(context: context),
           style: AppTextStyles.font18Bold,
         ),
         centerTitle: true,
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppColors.white,
         elevation: 0,
         actions: [
           IconButton(

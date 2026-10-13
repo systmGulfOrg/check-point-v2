@@ -33,14 +33,14 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
     final canExchange = confirmedGreen >= totalGreenCost && maxPossible > 0 && _quantity > 0;
 
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text(
           'points.exchangeTitle'.tr(context: context),
           style: AppTextStyles.font18Bold,
         ),
         centerTitle: true,
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppColors.white,
         elevation: 0,
       ),
       body: BlocConsumer<ExchangeCubit, ExchangeState>(
