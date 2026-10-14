@@ -404,7 +404,7 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     if (currentLocation == null) {
       emit(
         const EmployeeAttendanceState.areaValidationError(
-          'Location unavailable',
+          'errors.locationUnavailable',
         ),
       );
       return;
@@ -418,7 +418,7 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     } else {
       emit(
         const EmployeeAttendanceState.areaValidationError(
-          'You are outsidehttp://137.184.223.222 the required area boundary',
+          'errors.outsideAttendanceArea',
         ),
       );
     }
@@ -428,7 +428,7 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     if (currentLocation == null) {
       emit(
         const EmployeeAttendanceState.areaValidationError(
-          'Location unavailable',
+          'errors.locationUnavailable',
         ),
       );
       return;
@@ -442,7 +442,7 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     } else {
       emit(
         const EmployeeAttendanceState.areaValidationError(
-          'You are outside the required area boundary',
+          'errors.outsideAttendanceArea',
         ),
       );
     }
