@@ -46,7 +46,7 @@ class _ProjectTaskDetailSheetWidgetState
   Future<void> _fetchEmployees() async {
     try {
       final repo = sl<AdminEmployeeRepo>();
-      final result = await repo.getEmployees(page: 0, pageSize: 100);
+      final result = await repo.getEmployees(page: 0, pageSize: 25);
       result.when(
         success: (list) {
           if (mounted) {

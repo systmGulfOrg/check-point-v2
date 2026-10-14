@@ -14,6 +14,7 @@ class LoginResponseModel {
     this.token,
     this.branchId,
     this.branchName,
+    this.imageUrl,
   });
 
   final String? id;
@@ -25,6 +26,7 @@ class LoginResponseModel {
   final String? token;
   final int? branchId;
   final String? branchName;
+  final String? imageUrl;
 
   List<String> get allRoles {
     final set = <String>{};

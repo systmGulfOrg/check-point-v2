@@ -12,6 +12,8 @@ import 'package:check_point_v2/features/admin/data/models/locations/branch_respo
 import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_check_in_use_case.dart';
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_check_out_use_case.dart';
+import 'package:check_point_v2/features/overtime/data/models/overtime_request_model.dart';
+import 'package:check_point_v2/features/overtime/data/repos/overtime_repo.dart';
 import 'employee_attendance_state.dart';
 
 class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
@@ -21,6 +23,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     required this.checkInUseCase,
     required this.checkOutUseCase,
     required this.attendanceVerificationService,
+    required this.overtimeRepo,
   }) : super(const EmployeeAttendanceState.initial());
 
   final EmployeeAttendanceRepo attendanceRepo;
@@ -28,9 +31,11 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
   final EmployeeCheckInUseCase checkInUseCase;
   final EmployeeCheckOutUseCase checkOutUseCase;
   final AttendanceVerificationService attendanceVerificationService;
+  final OvertimeRepo overtimeRepo;
 
   AdminAttendanceModel? todayAttendance;
   EmployeeModel? employeeProfile;
+  List<OvertimeRequestModel> todayOvertimeRequests = [];
 
   Future<EmployeeModel?> loadEmployeeProfile() async {
     final employeeId = await sessionStorage.readUserId();
@@ -209,6 +214,11 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     final result = await attendanceRepo.getAttendanceHistory(
       employeeId: employeeId,
     );
+    final overtimeResult = await overtimeRepo.getRequests();
+    overtimeResult.when(
+      success: (requests) => todayOvertimeRequests = requests,
+      failure: (_) => todayOvertimeRequests = [],
+    );
     result.when(
       success: (data) {
         _allHistoryRecords = data;
@@ -222,6 +232,59 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
         _applyFilters();
       },
     );
+  }
+
+  int get todayOvertimeMinutes {
+    final now = DateTime.now();
+    final todayStr =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    return todayOvertimeRequests
+        .where((r) =>
+            r.requestDate.startsWith(todayStr) &&
+            r.status.toLowerCase() != 'rejected')
+        .fold(0, (sum, r) => sum + r.durationMinutes);
+  }
+
+  String? get todayWorkedHoursWithOvertime {
+    final raw = todayAttendance?.dayHours;
+    var baseMinutes = 0;
+    if (raw != null && raw.trim().isNotEmpty && raw != 'null') {
+      if (raw.contains(':')) {
+        final parts = raw.split(':');
+        final hours = int.tryParse(parts[0]) ?? 0;
+        final mins = parts.length > 1 ? (int.tryParse(parts[1]) ?? 0) : 0;
+        baseMinutes = hours * 60 + mins;
+      } else {
+        final numValue = double.tryParse(raw);
+        if (numValue != null) {
+          baseMinutes = (numValue * 60).round();
+        }
+      }
+    } else if (todayAttendance?.clockInTime != null) {
+      final inTime = _parseDate(todayAttendance!.clockInTime);
+      if (inTime != null) {
+        final outTime =
+            _parseDate(todayAttendance!.clockOutTime) ?? DateTime.now();
+        final diff = outTime.difference(inTime).inMinutes;
+        if (diff > 0) baseMinutes = diff;
+      }
+    }
+
+    final overtime = todayOvertimeMinutes;
+    final totalMinutes = baseMinutes + overtime;
+    if (totalMinutes <= 0) {
+      return raw;
+    }
+
+    final hours = totalMinutes ~/ 60;
+    final mins = totalMinutes % 60;
+    if (hours > 0 && mins > 0) {
+      return '${hours}h ${mins}m';
+    } else if (hours > 0) {
+      return '${hours}h';
+    } else {
+      return '${mins}m';
+    }
   }
 
   AdminAttendanceModel? _findTodayRecord(List<AdminAttendanceModel> records) {

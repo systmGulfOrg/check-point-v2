@@ -47,6 +47,7 @@ class AuthProfileCardWidget extends StatelessWidget {
             :final role,
             :final username,
             :final roles,
+            :final imageUrl,
           ) =>
             InkWell(
               onTap: onTap ?? () => showEditProfileSheet(context),
@@ -73,6 +74,7 @@ class AuthProfileCardWidget extends StatelessWidget {
                       alignment: Alignment.center,
                       children: [
                         AppAvatarWidget(
+                          imageUrl: imageUrl,
                           name: name,
                           subtitle: username,
                           radius: 32.r,

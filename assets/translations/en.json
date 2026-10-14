@@ -1432,6 +1432,7 @@
   "remoteWork.requests": "Remote Work Requests",
   "remoteWork.submit": "Submit Request",
   "remoteWork.requestTarget": "Where do you want to work?",
+  "remoteWork.invalidRequestDay": "The selected day is not allowed by your work policy.",
   "remoteWork.myRequests": "My Requests",
   "remoteWork.requestsForReview": "Work Location Requests",
   "remoteWork.noRequests": "There are no work location requests.",

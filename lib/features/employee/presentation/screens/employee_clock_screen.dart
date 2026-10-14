@@ -157,6 +157,10 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
               context.read<EmployeeAttendanceCubit>().loadAttendanceHistory(),
               context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
             ]);
+            final pointsCubit = context.read<PointsCubit?>();
+            if (pointsCubit != null) {
+              await pointsCubit.loadAllPointsData();
+            }
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -177,6 +181,10 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                       case EmployeeAttendanceStateCheckInSuccess():
                         final cubit = context.read<EmployeeAttendanceCubit>();
                         unawaited(cubit.loadAttendanceHistory());
+                        final pointsCubit = context.read<PointsCubit?>();
+                        if (pointsCubit != null) {
+                          unawaited(pointsCubit.loadAllPointsData());
+                        }
                         CustomSnackBar.show(
                           context,
                           message: 'employee.clock.checkedInSuccess'.tr(
@@ -186,6 +194,10 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                       case EmployeeAttendanceStateCheckOutSuccess():
                         final cubit = context.read<EmployeeAttendanceCubit>();
                         unawaited(cubit.loadAttendanceHistory());
+                        final pointsCubit = context.read<PointsCubit?>();
+                        if (pointsCubit != null) {
+                          unawaited(pointsCubit.loadAllPointsData());
+                        }
                         CustomSnackBar.show(
                           context,
                           message: 'employee.clock.checkedOutSuccess'.tr(
@@ -266,7 +278,9 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                         ),
                         isCheckedIn: isCheckedIn,
                         hasCheckedOut: hasCheckedOut,
-                        workedHours: attendance?.dayHours,
+                        workedHours:
+                            cubit.todayWorkedHoursWithOvertime ??
+                            attendance?.dayHours,
                         onToggleCheckInOut: _toggleCheckInOut,
                         isTodayHoliday: isTodayHoliday,
                         isTodayWeeklyOff: isTodayWeeklyOff,

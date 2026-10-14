@@ -28,6 +28,7 @@ mixin _$AuthProfileState {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -43,6 +44,7 @@ mixin _$AuthProfileState {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -58,6 +60,7 @@ mixin _$AuthProfileState {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )?
     success,
     TResult Function(String messageKey)? error,
@@ -161,6 +164,7 @@ class _$AuthProfileInitialImpl implements AuthProfileInitial {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -180,6 +184,7 @@ class _$AuthProfileInitialImpl implements AuthProfileInitial {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -199,6 +204,7 @@ class _$AuthProfileInitialImpl implements AuthProfileInitial {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )?
     success,
     TResult Function(String messageKey)? error,
@@ -304,6 +310,7 @@ class _$AuthProfileLoadingImpl implements AuthProfileLoading {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -323,6 +330,7 @@ class _$AuthProfileLoadingImpl implements AuthProfileLoading {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -342,6 +350,7 @@ class _$AuthProfileLoadingImpl implements AuthProfileLoading {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )?
     success,
     TResult Function(String messageKey)? error,
@@ -409,6 +418,7 @@ abstract class _$$AuthProfileSuccessImplCopyWith<$Res> {
     String username,
     List<String> permissions,
     List<String> roles,
+    String? imageUrl,
   });
 }
 
@@ -432,6 +442,7 @@ class __$$AuthProfileSuccessImplCopyWithImpl<$Res>
     Object? username = null,
     Object? permissions = null,
     Object? roles = null,
+    Object? imageUrl = freezed,
   }) {
     return _then(
       _$AuthProfileSuccessImpl(
@@ -459,6 +470,10 @@ class __$$AuthProfileSuccessImplCopyWithImpl<$Res>
             ? _value._roles
             : roles // ignore: cast_nullable_to_non_nullable
                   as List<String>,
+        imageUrl: freezed == imageUrl
+            ? _value.imageUrl
+            : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -474,6 +489,7 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
     required this.username,
     required final List<String> permissions,
     final List<String> roles = const [],
+    this.imageUrl,
   }) : _permissions = permissions,
        _roles = roles;
 
@@ -503,8 +519,11 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
   }
 
   @override
+  final String? imageUrl;
+
+  @override
   String toString() {
-    return 'AuthProfileState.success(name: $name, userId: $userId, role: $role, username: $username, permissions: $permissions, roles: $roles)';
+    return 'AuthProfileState.success(name: $name, userId: $userId, role: $role, username: $username, permissions: $permissions, roles: $roles, imageUrl: $imageUrl)';
   }
 
   @override
@@ -521,7 +540,9 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
               other._permissions,
               _permissions,
             ) &&
-            const DeepCollectionEquality().equals(other._roles, _roles));
+            const DeepCollectionEquality().equals(other._roles, _roles) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl));
   }
 
   @override
@@ -533,6 +554,7 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
     username,
     const DeepCollectionEquality().hash(_permissions),
     const DeepCollectionEquality().hash(_roles),
+    imageUrl,
   );
 
   /// Create a copy of AuthProfileState
@@ -558,11 +580,12 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )
     success,
     required TResult Function(String messageKey) error,
   }) {
-    return success(name, userId, role, username, permissions, roles);
+    return success(name, userId, role, username, permissions, roles, imageUrl);
   }
 
   @override
@@ -577,11 +600,20 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )?
     success,
     TResult? Function(String messageKey)? error,
   }) {
-    return success?.call(name, userId, role, username, permissions, roles);
+    return success?.call(
+      name,
+      userId,
+      role,
+      username,
+      permissions,
+      roles,
+      imageUrl,
+    );
   }
 
   @override
@@ -596,13 +628,22 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )?
     success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success(name, userId, role, username, permissions, roles);
+      return success(
+        name,
+        userId,
+        role,
+        username,
+        permissions,
+        roles,
+        imageUrl,
+      );
     }
     return orElse();
   }
@@ -653,6 +694,7 @@ abstract class AuthProfileSuccess implements AuthProfileState {
     required final String username,
     required final List<String> permissions,
     final List<String> roles,
+    final String? imageUrl,
   }) = _$AuthProfileSuccessImpl;
 
   String get name;
@@ -661,6 +703,7 @@ abstract class AuthProfileSuccess implements AuthProfileState {
   String get username;
   List<String> get permissions;
   List<String> get roles;
+  String? get imageUrl;
 
   /// Create a copy of AuthProfileState
   /// with the given fields replaced by the non-null parameter values.
@@ -752,6 +795,7 @@ class _$AuthProfileErrorImpl implements AuthProfileError {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -771,6 +815,7 @@ class _$AuthProfileErrorImpl implements AuthProfileError {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -790,6 +835,7 @@ class _$AuthProfileErrorImpl implements AuthProfileError {
       String username,
       List<String> permissions,
       List<String> roles,
+      String? imageUrl,
     )?
     success,
     TResult Function(String messageKey)? error,

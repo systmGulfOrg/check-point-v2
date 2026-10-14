@@ -311,7 +311,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     try {
       final empRes = await sl<AdminEmployeeRepo>().getEmployees(
         page: 0,
-        pageSize: 100,
+        pageSize: 25,
       );
       empRes.when(success: (list) => employees = list, failure: (_) {});
     } catch (_) {}

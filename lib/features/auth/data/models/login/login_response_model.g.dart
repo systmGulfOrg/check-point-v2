@@ -21,6 +21,7 @@ LoginResponseModel _$LoginResponseModelFromJson(Map<String, dynamic> json) =>
       token: json['token'] as String?,
       branchId: (json['branchId'] as num?)?.toInt(),
       branchName: json['branchName'] as String?,
+      imageUrl: json['imageUrl'] as String?,
     );
 
 Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
@@ -34,4 +35,5 @@ Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
       'token': instance.token,
       'branchId': instance.branchId,
       'branchName': instance.branchName,
+      'imageUrl': instance.imageUrl,
     };

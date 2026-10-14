@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/styles/app_motion.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
@@ -25,6 +24,27 @@ class SupervisorMainScreen extends StatefulWidget {
 class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
   int _selectedIndex = 0;
   int _selectedNavIndex = 0;
+  late final List<Widget Function()> _screenBuilders = [
+    () => const SupervisorHomeScreen(),
+    () => MultiBlocProvider(
+      providers: [
+        BlocProvider<AdminCustomersCubit>(
+          create: (_) => sl<AdminCustomersCubit>()..load(type: 'Customer'),
+        ),
+        BlocProvider<AdminCustomerVisitsCubit>(
+          create: (_) => sl<AdminCustomerVisitsCubit>()..loadAllVisits(),
+        ),
+        BlocProvider<AdminBranchesCubit>(
+          create: (_) => sl<AdminBranchesCubit>()..load(),
+        ),
+      ],
+      child: const AdminLocationsScreen(),
+    ),
+    () => const EmployeeClockScreen(),
+    () => const SupervisorTeamScreen(),
+    () => const SupervisorProfileScreen(),
+  ];
+  final Map<int, Widget> _loadedScreens = {};
 
   static const _items = <NavBarItemData>[
     NavBarItemData(icon: Icons.home_outlined, labelKey: 'supervisor.nav.home'),
@@ -44,50 +64,21 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _loadedScreens[0] = _screenBuilders[0]();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final screens = <Widget>[
-      const SupervisorHomeScreen(),
-      MultiBlocProvider(
-        providers: [
-          BlocProvider<AdminCustomersCubit>(
-            create: (_) => sl<AdminCustomersCubit>()..load(type: 'Customer'),
-          ),
-          BlocProvider<AdminCustomerVisitsCubit>(
-            create: (_) => sl<AdminCustomerVisitsCubit>()..loadAllVisits(),
-          ),
-          BlocProvider<AdminBranchesCubit>(
-            create: (_) => sl<AdminBranchesCubit>()..load(),
-          ),
-        ],
-        child: const AdminLocationsScreen(),
-      ),
-      const EmployeeClockScreen(),
-      const SupervisorTeamScreen(),
-      const SupervisorProfileScreen(),
-    ];
+    final screens = List<Widget>.generate(
+      _screenBuilders.length,
+      (index) => _loadedScreens[index] ?? const SizedBox.shrink(),
+    );
 
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: AnimatedSwitcher(
-        duration: AppMotion.tabSwitch,
-        switchInCurve: AppMotion.enterCurve,
-        switchOutCurve: AppMotion.exitCurve,
-        transitionBuilder: (child, animation) => FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(
-            scale: Tween<double>(
-              begin: AppMotion.routeScaleBegin,
-              end: 1,
-            ).animate(animation),
-            child: child,
-          ),
-        ),
-        child: IndexedStack(
-          key: ValueKey<int>(_selectedIndex),
-          index: _selectedIndex,
-          children: screens,
-        ),
-      ),
+      body: IndexedStack(index: _selectedIndex, children: screens),
       bottomNavigationBar: CustomBottomNavBarWidget(
         items: _items,
         selectedIndex: _selectedNavIndex,
@@ -132,6 +123,7 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
             return;
           }
           setState(() {
+            _loadedScreens[index] ??= _screenBuilders[index]();
             _selectedIndex = index;
             _selectedNavIndex = index;
           });

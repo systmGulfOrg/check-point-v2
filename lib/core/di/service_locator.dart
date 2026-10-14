@@ -331,7 +331,10 @@ Future<void> setupServiceLocator() async {
     () => AuthSessionCubit(authSessionStorage: sl<AuthSessionStorage>()),
   );
   sl.registerFactory<AuthProfileCubit>(
-    () => AuthProfileCubit(sessionStorage: sl<AuthSessionStorage>()),
+    () => AuthProfileCubit(
+      sessionStorage: sl<AuthSessionStorage>(),
+      attendanceRepo: sl<EmployeeAttendanceRepo>(),
+    ),
   );
   sl.registerFactory<RequestAccountCubit>(
     () => RequestAccountCubit(
@@ -437,6 +440,7 @@ Future<void> setupServiceLocator() async {
       checkInUseCase: sl<EmployeeCheckInUseCase>(),
       checkOutUseCase: sl<EmployeeCheckOutUseCase>(),
       attendanceVerificationService: sl<AttendanceVerificationService>(),
+      overtimeRepo: sl<OvertimeRepo>(),
     ),
   );
   sl.registerFactory<EmployeeWorkAccessCubit>(

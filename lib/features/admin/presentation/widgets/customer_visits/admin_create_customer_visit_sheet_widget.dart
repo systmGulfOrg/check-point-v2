@@ -112,7 +112,7 @@ class _AdminCreateCustomerVisitSheetWidgetState
     setState(() => isLoadingEmployees = true);
     final result = await sl<AdminEmployeeRepo>().getEmployees(
       page: 0,
-      pageSize: 100,
+      pageSize: 20,
     );
     if (!mounted) return;
     result.when(

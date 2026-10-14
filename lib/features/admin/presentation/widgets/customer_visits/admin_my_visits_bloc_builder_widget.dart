@@ -13,6 +13,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_state.dart';
 import 'admin_create_customer_visit_sheet_widget.dart';
 import 'admin_customer_visit_card_widget.dart';
+import 'admin_customer_visits_skeleton_widget.dart';
 
 class AdminMyVisitsBlocBuilderWidget extends StatefulWidget {
   const AdminMyVisitsBlocBuilderWidget({super.key});
@@ -33,7 +34,14 @@ class _AdminMyVisitsBlocBuilderWidgetState
   void initState() {
     super.initState();
     _loadUserSession();
-    context.read<AdminCustomerVisitsCubit>().loadAllVisits();
+    final cubit = context.read<AdminCustomerVisitsCubit>();
+    final isAlreadyLoaded = cubit.state.maybeWhen(
+      success: (_) => true,
+      orElse: () => false,
+    );
+    if (!isAlreadyLoaded) {
+      cubit.loadAllVisits();
+    }
   }
 
   Future<void> _loadUserSession() async {
@@ -213,18 +221,8 @@ class _AdminMyVisitsBlocBuilderWidgetState
     return BlocBuilder<AdminCustomerVisitsCubit, AdminCustomerVisitsState>(
       builder: (context, state) {
         return state.when(
-          initial: () => Center(
-            child: Padding(
-              padding: EdgeInsets.all(32.r),
-              child: const CircularProgressIndicator(),
-            ),
-          ),
-          loading: () => Center(
-            child: Padding(
-              padding: EdgeInsets.all(32.r),
-              child: const CircularProgressIndicator(),
-            ),
-          ),
+          initial: () => const AdminCustomerVisitsSkeletonWidget(),
+          loading: () => const AdminCustomerVisitsSkeletonWidget(),
           error: (message) => Padding(
             padding: EdgeInsets.all(24.r),
             child: Center(

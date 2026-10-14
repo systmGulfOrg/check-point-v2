@@ -45,7 +45,7 @@ class _AssigneeMultiSelectWidgetState extends State<AssigneeMultiSelectWidget> {
     setState(() => _isLoading = true);
     try {
       final repo = sl<AdminEmployeeRepo>();
-      final result = await repo.getEmployees(page: 0, pageSize: 100);
+      final result = await repo.getEmployees(page: 0, pageSize: 25);
       result.when(
         success: (list) {
           if (mounted) {

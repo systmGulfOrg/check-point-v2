@@ -46,8 +46,15 @@ class AdminPointsBlocBuilderWidget extends StatelessWidget {
             ),
           ),
         ),
-        AdminPointsLoaded(:final page) =>
-          page.items.isEmpty
+        AdminPointsLoaded(:final page) => () {
+          final items = page.items.where((e) {
+            final name = e.name?.toLowerCase().trim() ?? '';
+            final code = e.employeeCode?.toLowerCase().trim() ?? '';
+            return name != 'demo administrator' &&
+                name != 'admin' &&
+                code != 'emp-0001';
+          }).toList();
+          return items.isEmpty
               ? Center(
                   child: Text(
                     'admin.points.empty'.tr(context: context),
@@ -57,16 +64,17 @@ class AdminPointsBlocBuilderWidget extends StatelessWidget {
               : ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: page.items.length,
+                  itemCount: items.length,
                   separatorBuilder: (_, index) => hSpace(10),
                   itemBuilder: (context, index) {
-                    final employee = page.items[index];
+                    final employee = items[index];
                     return AdminPointsEmployeeCardWidget(
                       employee: employee,
                       onTap: () => onEmployeeTap(employee.id),
                     );
                   },
-                ),
+                );
+        }(),
         _ => const SizedBox.shrink(),
       },
     );

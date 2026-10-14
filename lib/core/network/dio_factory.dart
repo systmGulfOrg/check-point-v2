@@ -10,7 +10,18 @@ class DioFactory {
   const DioFactory._();
 
   static Dio create({required FlutterSecureStorage secureStorage}) {
-    return Dio(BaseOptions(baseUrl: AppConfig.baseUrl))
+    return Dio(
+      BaseOptions(
+        baseUrl: AppConfig.baseUrl,
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 20),
+        sendTimeout: const Duration(seconds: 15),
+        headers: {
+          'Accept': 'application/json',
+          'Accept-Encoding': 'gzip, deflate',
+        },
+      ),
+    )
       ..interceptors.add(AuthTokenInterceptor(secureStorage: secureStorage))
       ..interceptors.add(
         PrettyDioLogger(
@@ -19,10 +30,10 @@ class DioFactory {
           // Never dump Base64 images/documents into Android Studio logs.
           requestBody: false,
           responseHeader: false,
-          responseBody: true,
+          responseBody: false,
           error: true,
           compact: true,
-          maxWidth: 120,
+          maxWidth: 90,
         ),
       );
   }

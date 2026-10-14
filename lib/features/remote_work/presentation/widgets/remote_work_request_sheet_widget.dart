@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import '../../data/models/remote_work_policy_model.dart';
 
 class RemoteWorkRequestSheetWidget extends StatefulWidget {
   const RemoteWorkRequestSheetWidget({
-    required this.policies,
     required this.onSubmit,
+    this.assignedPolicyId,
     super.key,
   });
 
-  final List<RemoteWorkPolicyModel> policies;
+  final String? assignedPolicyId;
   final Future<bool> Function({
     required String requestDate,
     required String targetWorkSystem,
@@ -38,6 +37,7 @@ class _RemoteWorkRequestSheetWidgetState
   @override
   void initState() {
     super.initState();
+    selectedPolicyId = widget.assignedPolicyId;
     selectedDate = DateTime.now().add(const Duration(days: 1));
     dateController = TextEditingController(
       text: DateFormat('dd/MM/yyyy').format(selectedDate),
@@ -131,7 +131,7 @@ class _RemoteWorkRequestSheetWidgetState
             selected: {targetWorkSystem},
             onSelectionChanged: (value) => setState(() {
               targetWorkSystem = value.first;
-              selectedPolicyId = null;
+              selectedPolicyId = widget.assignedPolicyId;
             }),
           ),
           hSpace(12),

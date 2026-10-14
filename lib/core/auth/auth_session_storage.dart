@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:check_point_v2/core/app/app_config.dart';
+import 'package:check_point_v2/core/network/auth_token_interceptor.dart';
 
 class AuthSessionStorage {
   AuthSessionStorage({required this.secureStorage});
@@ -15,6 +16,7 @@ class AuthSessionStorage {
   static const userRoleKey = 'user_role';
   static const userRolesKey = 'user_roles';
   static const permissionsKey = 'user_permissions';
+  static const userImageUrlKey = 'user_image_url';
   static const biometricEnabledKey = 'biometric_login_enabled';
   static const biometricRoleKey = 'biometric_login_role';
   static const biometricTokenKey = 'biometric_login_token';
@@ -45,9 +47,12 @@ class AuthSessionStorage {
     int? branchId,
     String? userName,
     String? role,
+    String? imageUrl,
     List<String> roles = const [],
     List<String> permissions = const [],
   }) async {
+    _cachedToken = token;
+    AuthTokenInterceptor.updateToken(token);
     await secureStorage.write(key: tokenKey, value: token);
     final payload = decodeJwtPayload(token);
     final resolvedEmployeeId =
@@ -75,6 +80,9 @@ class AuthSessionStorage {
     if (role != null && role.isNotEmpty) {
       await secureStorage.write(key: userRoleKey, value: role);
     }
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      await secureStorage.write(key: userImageUrlKey, value: imageUrl);
+    }
     if (roles.isNotEmpty) {
       await secureStorage.write(key: userRolesKey, value: roles.join(','));
     }
@@ -84,7 +92,17 @@ class AuthSessionStorage {
     );
   }
 
-  Future<String?> readToken() => secureStorage.read(key: tokenKey);
+  static String? _cachedToken;
+
+  Future<String?> readToken() async {
+    if (_cachedToken != null && _cachedToken!.isNotEmpty) {
+      return _cachedToken;
+    }
+    final token = await secureStorage.read(key: tokenKey);
+    _cachedToken = token;
+    AuthTokenInterceptor.updateToken(token);
+    return token;
+  }
 
   Future<String?> readUserId() => secureStorage.read(key: userIdKey);
 
@@ -123,6 +141,11 @@ class AuthSessionStorage {
       secureStorage.write(key: departmentIdKey, value: id.toString());
 
   Future<String?> readUserName() => secureStorage.read(key: userNameKey);
+
+  Future<String?> readUserImageUrl() => secureStorage.read(key: userImageUrlKey);
+
+  Future<void> saveUserImageUrl(String url) =>
+      secureStorage.write(key: userImageUrlKey, value: url);
 
   Future<String?> readUserRole() => secureStorage.read(key: userRoleKey);
 
@@ -233,6 +256,8 @@ class AuthSessionStorage {
       secureStorage.delete(key: accountRequestDismissedMobileIdKey);
 
   Future<void> clear() async {
+    _cachedToken = null;
+    AuthTokenInterceptor.updateToken(null);
     await secureStorage.delete(key: tokenKey);
     await secureStorage.delete(key: userIdKey);
     await secureStorage.delete(key: departmentIdKey);
@@ -241,5 +266,6 @@ class AuthSessionStorage {
     await secureStorage.delete(key: userRoleKey);
     await secureStorage.delete(key: userRolesKey);
     await secureStorage.delete(key: permissionsKey);
+    await secureStorage.delete(key: userImageUrlKey);
   }
 }

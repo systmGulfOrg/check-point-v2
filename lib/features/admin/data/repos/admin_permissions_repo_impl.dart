@@ -24,6 +24,15 @@ class AdminPermissionsRepoImpl implements AdminPermissionsRepo {
                 .whereType<Map<String, dynamic>>()
                 .where((item) => item['user'] is Map<String, dynamic>)
                 .map(AdminPermissionEmployeeModel.fromJson)
+                .where((e) {
+                  final name = e.name.toLowerCase().trim();
+                  final code = e.employeeCode?.toLowerCase().trim() ?? '';
+                  final email = e.email?.toLowerCase().trim() ?? '';
+                  return name != 'demo administrator' &&
+                      name != 'admin' &&
+                      !email.startsWith('admin@') &&
+                      code != 'emp-0001';
+                })
                 .toList()
           : <AdminPermissionEmployeeModel>[];
       return ApiResult.success(employees);

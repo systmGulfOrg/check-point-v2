@@ -87,7 +87,11 @@ class AttendancePointsRepoImpl implements AttendancePointsRepo {
   }) async {
     try {
       final response = await api.getLeaderboard(scope: scope);
-      return ApiResult.success(response.value);
+      final filtered = response.value.where((e) {
+        final name = e.name.toLowerCase().trim();
+        return name != 'demo administrator' && name != 'admin';
+      }).toList();
+      return ApiResult.success(filtered);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
@@ -107,9 +111,15 @@ class AttendancePointsRepoImpl implements AttendancePointsRepo {
         page: page,
         limit: limit,
       );
-      return ApiResult.success(
-        response.value ?? const AdminPointsEmployeesPageModel(),
-      );
+      final raw = response.value ?? const AdminPointsEmployeesPageModel();
+      final filteredItems = raw.items.where((e) {
+        final name = e.name?.toLowerCase().trim() ?? '';
+        final code = e.employeeCode?.toLowerCase().trim() ?? '';
+        return name != 'demo administrator' &&
+            name != 'admin' &&
+            code != 'emp-0001';
+      }).toList();
+      return ApiResult.success(raw.copyWith(items: filteredItems));
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

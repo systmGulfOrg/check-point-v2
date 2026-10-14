@@ -54,6 +54,7 @@ class LoginUseCase {
           role: role,
           roles: data.allRoles,
           branchId: data.branchId,
+          imageUrl: data.imageUrl,
           permissions: data.permissions ?? const [],
         );
 

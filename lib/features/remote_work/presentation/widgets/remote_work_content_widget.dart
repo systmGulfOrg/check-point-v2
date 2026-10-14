@@ -153,7 +153,7 @@ class RemoteWorkContentWidget extends StatelessWidget {
       builder: (_) => BlocProvider.value(
         value: cubit,
         child: RemoteWorkRequestSheetWidget(
-          policies: policies,
+          assignedPolicyId: assignedPolicyId,
           onSubmit: cubit.createRequest,
         ),
       ),

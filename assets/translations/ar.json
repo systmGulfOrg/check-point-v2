@@ -1425,6 +1425,7 @@
   "remoteWork.requests": "طلبات العمل عن بُعد",
   "remoteWork.submit": "إرسال الطلب",
   "remoteWork.requestTarget": "عايز تشتغل منين؟",
+  "remoteWork.invalidRequestDay": "اليوم المحدد غير مسموح به حسب سياسة العمل الخاصة بك.",
   "remoteWork.myRequests": "طلباتي",
   "remoteWork.requestsForReview": "طلبات تغيير مكان العمل",
   "remoteWork.noRequests": "لا توجد طلبات تغيير مكان عمل حاليًا.",

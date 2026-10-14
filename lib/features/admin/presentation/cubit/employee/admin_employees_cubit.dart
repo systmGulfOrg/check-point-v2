@@ -15,9 +15,9 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
   List<EmployeeModel> get employees => allEmployees;
   String? roleFilter;
 
-  Future<void> loadEmployees() async {
+  Future<void> loadEmployees({int page = 0, int pageSize = 20}) async {
     emit(const AdminEmployeesState.loading());
-    final result = await employeeRepo.getEmployees(page: 0, pageSize: 50);
+    final result = await employeeRepo.getEmployees(page: page, pageSize: pageSize);
     result.when(
       success: (data) {
         allEmployees = data;

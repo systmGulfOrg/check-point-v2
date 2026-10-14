@@ -323,7 +323,9 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                         ),
                         isCheckedIn: isCheckedIn,
                         hasCheckedOut: hasCheckedOut,
-                        workedHours: attendance?.dayHours,
+                        workedHours:
+                            cubit.todayWorkedHoursWithOvertime ??
+                            attendance?.dayHours,
                         leaveBalance: profile?.leaveBalance,
                         workModeText: workMode.tr(context: context),
                         workSystemText: workSystem.tr(context: context),

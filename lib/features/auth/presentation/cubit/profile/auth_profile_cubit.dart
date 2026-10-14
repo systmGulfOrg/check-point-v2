@@ -2,13 +2,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/auth/app_permissions.dart';
+import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
 import 'auth_profile_state.dart';
 
 class AuthProfileCubit extends Cubit<AuthProfileState> {
-  AuthProfileCubit({required this.sessionStorage})
-    : super(const AuthProfileState.initial());
+  AuthProfileCubit({
+    required this.sessionStorage,
+    this.attendanceRepo,
+  }) : super(const AuthProfileState.initial());
 
   final AuthSessionStorage sessionStorage;
+  final EmployeeAttendanceRepo? attendanceRepo;
 
   Future<void> loadProfile() async {
     emit(const AuthProfileState.loading());
@@ -23,6 +28,8 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
         ...await sessionStorage.readPermissions(),
       }.toList();
       final name = username.trim();
+      var imageUrl = await sessionStorage.readUserImageUrl();
+
       emit(
         AuthProfileState.success(
           name: name,
@@ -31,8 +38,35 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
           username: username,
           permissions: permissions,
           roles: effectiveRoles,
+          imageUrl: imageUrl,
         ),
       );
+
+      if (attendanceRepo != null) {
+        final employeeId = await sessionStorage.readEmployeeId() ?? userId;
+        if (employeeId.isNotEmpty) {
+          final profileResult = await attendanceRepo!.getEmployeeById(employeeId);
+          if (profileResult case Success(:final data)) {
+            final remoteImageUrl = data.imageUrl;
+            final remoteName = (data.name?.trim().isNotEmpty == true) ? data.name!.trim() : name;
+            if (remoteImageUrl != null && remoteImageUrl.isNotEmpty) {
+              await sessionStorage.saveUserImageUrl(remoteImageUrl);
+              imageUrl = remoteImageUrl;
+            }
+            emit(
+              AuthProfileState.success(
+                name: remoteName,
+                userId: userId,
+                role: role,
+                username: username,
+                permissions: permissions,
+                roles: effectiveRoles,
+                imageUrl: imageUrl,
+              ),
+            );
+          }
+        }
+      }
     } catch (_) {
       emit(const AuthProfileState.error('errors.profileLoadFailed'));
     }
@@ -49,6 +83,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
         ...await sessionStorage.readPermissions(),
       }.toList();
       final name = username.trim();
+      final imageUrl = await sessionStorage.readUserImageUrl();
       emit(
         AuthProfileState.success(
           name: name,
@@ -57,6 +92,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
           username: username,
           permissions: permissions,
           roles: roles,
+          imageUrl: imageUrl,
         ),
       );
     } catch (_) {
@@ -77,6 +113,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
       final branchId = await sessionStorage.readBranchId();
 
       final roles = await sessionStorage.readUserRoles();
+      final imageUrl = await sessionStorage.readUserImageUrl();
 
       await sessionStorage.saveUserSession(
         token: token,
@@ -86,6 +123,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
         userName: name.isNotEmpty ? name : username,
         role: role,
         roles: roles,
+        imageUrl: imageUrl,
         permissions: permissions,
       );
 
@@ -100,6 +138,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
             ...permissions,
           }.toList(),
           roles: roles,
+          imageUrl: imageUrl,
         ),
       );
     } catch (_) {

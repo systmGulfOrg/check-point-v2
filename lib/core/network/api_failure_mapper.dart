@@ -57,6 +57,10 @@ class ApiFailureMapper {
       if (message.contains('requestdate must be a valid date')) {
         return const ApiFailure(messageKey: 'overtime.invalidDate');
       }
+      if (message.contains('does not allow remote work') ||
+          message.contains('does not allow onsite work')) {
+        return const ApiFailure(messageKey: 'remoteWork.invalidRequestDay');
+      }
       if ((message.contains('device') || message.contains('devise')) &&
           message.contains('access') &&
           message.contains('login')) {
