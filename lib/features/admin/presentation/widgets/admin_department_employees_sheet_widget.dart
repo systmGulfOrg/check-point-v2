@@ -35,16 +35,7 @@ class AdminDepartmentEmployeesSheetWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: Container(
-              width: 40.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: AppColors.border,
-                borderRadius: BorderRadius.circular(2.r),
-              ),
-            ),
-          ),
+          const AppSheetHandleWidget(),
           hSpace(14),
           Row(
             children: [

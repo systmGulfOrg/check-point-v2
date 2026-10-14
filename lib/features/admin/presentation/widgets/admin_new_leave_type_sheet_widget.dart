@@ -98,16 +98,7 @@ class _AdminNewLeaveTypeSheetWidgetState
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Container(
-                  width: 40.w,
-                  height: 4.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.border,
-                    borderRadius: BorderRadius.circular(2.r),
-                  ),
-                ),
-              ),
+              const AppSheetHandleWidget(),
               hSpace(14),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,9 +143,7 @@ class _AdminNewLeaveTypeSheetWidgetState
                 hintText: 'admin.leaveManagement.maxDaysHint'.tr(
                   context: context,
                 ),
-                validator: AppValidators.positiveNumber(
-                  context: context,
-                ),
+                validator: AppValidators.positiveNumber(context: context),
               ),
               hSpace(14),
               SwitchListTile.adaptive(

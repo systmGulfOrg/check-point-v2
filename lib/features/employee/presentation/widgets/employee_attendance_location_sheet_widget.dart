@@ -583,16 +583,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(
-                        child: Container(
-                          width: 40.w,
-                          height: 4.h,
-                          decoration: BoxDecoration(
-                            color: AppColors.border,
-                            borderRadius: BorderRadius.circular(2.r),
-                          ),
-                        ),
-                      ),
+                      const AppSheetHandleWidget(),
                       SizedBox(height: 12.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

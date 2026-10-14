@@ -11,6 +11,8 @@ import 'package:check_point_v2/features/projects/data/models/project_models.dart
 import 'package:check_point_v2/features/projects/presentation/cubit/projects_cubit.dart';
 import 'package:check_point_v2/features/projects/presentation/cubit/projects_state.dart';
 import 'package:check_point_v2/features/projects/presentation/widgets/assignee_multi_select_widget.dart';
+import 'project_task_chip_widget.dart';
+import 'project_task_section_header_widget.dart';
 
 class ProjectTaskDetailSheetWidget extends StatefulWidget {
   const ProjectTaskDetailSheetWidget({
@@ -214,16 +216,7 @@ class _ProjectTaskDetailSheetWidgetState
         child: Column(
           children: [
             SizedBox(height: 12.h),
-            Center(
-              child: Container(
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: AppColors.border,
-                  borderRadius: BorderRadius.circular(2.r),
-                ),
-              ),
-            ),
+            const AppSheetHandleWidget(),
             SizedBox(height: 16.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -268,27 +261,27 @@ class _ProjectTaskDetailSheetWidgetState
                       spacing: 8.w,
                       runSpacing: 8.h,
                       children: [
-                        _buildChip(
+                        ProjectTaskChipWidget(
                           icon: Icons.flag_rounded,
                           label: statusName,
                           bg: AppColors.pageBackground,
                           textColor: AppColors.textPrimary,
                         ),
-                        _buildChip(
+                        ProjectTaskChipWidget(
                           icon: Icons.bolt_rounded,
                           label: widget.task.priority ?? 'NORMAL',
                           bg: _priorityBackground(widget.task.priority),
                           textColor: _priorityColor(widget.task.priority),
                         ),
                         if ((widget.task.estimatedMinutes ?? 0) > 0)
-                          _buildChip(
+                          ProjectTaskChipWidget(
                             icon: Icons.timer_outlined,
                             label: '${widget.task.estimatedMinutes} min',
                             bg: AppColors.pageBackground,
                             textColor: AppColors.textSecondary,
                           ),
                         if (widget.task.startDate?.isNotEmpty == true)
-                          _buildChip(
+                          ProjectTaskChipWidget(
                             icon: Icons.calendar_today_rounded,
                             label: AppDateFormatter.formatDateString(
                               widget.task.startDate,
@@ -297,7 +290,7 @@ class _ProjectTaskDetailSheetWidgetState
                             textColor: AppColors.textSecondary,
                           ),
                         if (widget.task.dueDate?.isNotEmpty == true)
-                          _buildChip(
+                          ProjectTaskChipWidget(
                             icon: Icons.event_rounded,
                             label: AppDateFormatter.formatDateString(
                               widget.task.dueDate,
@@ -308,7 +301,7 @@ class _ProjectTaskDetailSheetWidgetState
                       ],
                     ),
                     SizedBox(height: 20.h),
-                    _buildSectionHeader(
+                    ProjectTaskSectionHeaderWidget(
                       title: 'projects.description'.tr(context: context),
                       icon: Icons.subject_rounded,
                     ),
@@ -338,7 +331,7 @@ class _ProjectTaskDetailSheetWidgetState
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    _buildSectionHeader(
+                    ProjectTaskSectionHeaderWidget(
                       title: 'projects.assignees'.tr(context: context),
                       icon: Icons.people_alt_rounded,
                       action: widget.canManage
@@ -352,14 +345,14 @@ class _ProjectTaskDetailSheetWidgetState
                     SizedBox(height: 8.h),
                     _buildAssigneesList(),
                     SizedBox(height: 20.h),
-                    _buildSectionHeader(
+                    ProjectTaskSectionHeaderWidget(
                       title: 'projects.attachments'.tr(context: context),
                       icon: Icons.attach_file_rounded,
                     ),
                     SizedBox(height: 8.h),
                     _buildAttachmentsList(),
                     SizedBox(height: 20.h),
-                    _buildSectionHeader(
+                    ProjectTaskSectionHeaderWidget(
                       title: 'projects.activity'.tr(context: context),
                       icon: Icons.history_rounded,
                     ),
@@ -373,48 +366,6 @@ class _ProjectTaskDetailSheetWidgetState
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildChip({
-    required IconData icon,
-    required String label,
-    required Color bg,
-    required Color textColor,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14.r, color: textColor),
-          SizedBox(width: 5.w),
-          Text(
-            label,
-            style: AppTextStyles.font12Bold.copyWith(color: textColor),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader({
-    required String title,
-    required IconData icon,
-    Widget? action,
-  }) {
-    return Row(
-      children: [
-        Icon(icon, size: 20.r, color: AppColors.brandPrimary),
-        SizedBox(width: 8.w),
-        Text(title, style: AppTextStyles.font16Bold),
-        const Spacer(),
-        ?action,
-      ],
     );
   }
 

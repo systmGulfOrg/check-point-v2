@@ -7,6 +7,7 @@ import 'package:check_point_v2/core/app/app_spaces.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/core/utils/app_image_provider.dart';
+import 'package:check_point_v2/core/widgets/app_avatar_fallback_initials_widget.dart';
 
 class AppImagePreviewDialogWidget extends StatelessWidget {
   const AppImagePreviewDialogWidget({
@@ -150,10 +151,12 @@ class AppImagePreviewDialogWidget extends StatelessWidget {
                                 width: double.infinity,
                                 height: double.infinity,
                                 errorBuilder: (context, error, stackTrace) =>
-                                    _buildFallbackInitials(initials),
+                                    AppAvatarFallbackInitialsWidget(
+                                      initials: initials,
+                                    ),
                               ),
                             )
-                          : _buildFallbackInitials(initials),
+                          : AppAvatarFallbackInitialsWidget(initials: initials),
                     ),
                   ),
                 ),
@@ -164,23 +167,4 @@ class AppImagePreviewDialogWidget extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildFallbackInitials(String initials) => Center(
-    child: Container(
-      width: 180.r,
-      height: 180.r,
-      decoration: const BoxDecoration(
-        color: AppColors.softBrandBackground,
-        shape: BoxShape.circle,
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        initials,
-        style: AppTextStyles.font24Bold.copyWith(
-          color: AppColors.brandPrimary,
-          fontSize: 54.sp,
-        ),
-      ),
-    ),
-  );
 }

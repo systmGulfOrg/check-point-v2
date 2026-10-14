@@ -51,16 +51,7 @@ class UserPermissionsSheetWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Center(
-                    child: Container(
-                      width: 40.w,
-                      height: 4.h,
-                      decoration: BoxDecoration(
-                        color: AppColors.border,
-                        borderRadius: BorderRadius.circular(2.r),
-                      ),
-                    ),
-                  ),
+                  const AppSheetHandleWidget(),
                   hSpace(16),
                   Row(
                     children: [
