@@ -143,12 +143,10 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                     onProfileTap();
                   },
                 ),
-                if (context.watch<AuthProfileCubit>().state.maybeWhen(
-                      success:
-                          (name, userId, role, username, permissions, roles) =>
-                              roles.length > 1,
-                      orElse: () => false,
-                    ))
+                if (switch (context.watch<AuthProfileCubit>().state) {
+                  AuthProfileSuccess(:final roles) => roles.length > 1,
+                  _ => false,
+                })
                   SupervisorMoreOptionWidget(
                     icon: Icons.swap_horiz_rounded,
                     labelKey: 'auth.role.switchRole',
@@ -158,23 +156,16 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                     onTap: () {
                       Navigator.pop(context);
                       final state = context.read<AuthProfileCubit>().state;
-                      state.maybeWhen(
-                        success: (
-                          name,
-                          userId,
-                          role,
-                          username,
-                          permissions,
-                          roles,
-                        ) {
-                          RoleSwitchDialogWidget.show(
-                            context,
-                            currentRole: role,
-                            availableRoles: roles,
-                          );
-                        },
-                        orElse: () {},
-                      );
+                      if (state case AuthProfileSuccess(
+                        :final role,
+                        :final roles,
+                      )) {
+                        RoleSwitchDialogWidget.show(
+                          context,
+                          currentRole: role,
+                          availableRoles: roles,
+                        );
+                      }
                     },
                   ),
               ],
@@ -185,4 +176,3 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
     );
   }
 }
-

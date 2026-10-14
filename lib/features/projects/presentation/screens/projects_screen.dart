@@ -11,7 +11,6 @@ import 'package:check_point_v2/features/admin/data/models/locations/department_r
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_locations_repo.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
-import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_state.dart';
 import '../../data/models/project_models.dart';
 import '../cubit/projects_cubit.dart';
 import '../cubit/projects_state.dart';

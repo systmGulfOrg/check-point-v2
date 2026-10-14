@@ -4,7 +4,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
-import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_state.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/role_switch_dialog_widget.dart';
 
 class SupervisorTopBarWidget extends StatelessWidget {
@@ -21,10 +20,10 @@ class SupervisorTopBarWidget extends StatelessWidget {
           children: [
             BlocBuilder<AuthProfileCubit, AuthProfileState>(
               builder: (context, state) {
-                return state.maybeWhen(
-                  success: (name, userId, role, username, permissions, roles) {
-                    if (roles.length <= 1) return const SizedBox.shrink();
-                    return Padding(
+                return switch (state) {
+                  AuthProfileSuccess(:final roles, :final role)
+                      when roles.length > 1 =>
+                    Padding(
                       padding: EdgeInsetsDirectional.only(end: 8.w),
                       child: Container(
                         height: 40.r,
@@ -32,7 +31,9 @@ class SupervisorTopBarWidget extends StatelessWidget {
                           color: AppColors.softBrandBackground,
                           borderRadius: BorderRadius.circular(20.r),
                           border: Border.all(
-                            color: AppColors.brandPrimary.withValues(alpha: 0.3),
+                            color: AppColors.brandPrimary.withValues(
+                              alpha: 0.3,
+                            ),
                           ),
                         ),
                         child: Material(
@@ -67,10 +68,9 @@ class SupervisorTopBarWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                    );
-                  },
-                  orElse: () => const SizedBox.shrink(),
-                );
+                    ),
+                  _ => const SizedBox.shrink(),
+                };
               },
             ),
             Container(

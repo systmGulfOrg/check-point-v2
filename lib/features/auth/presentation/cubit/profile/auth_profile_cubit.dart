@@ -5,12 +5,11 @@ import 'package:check_point_v2/core/auth/app_permissions.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
 import 'auth_profile_state.dart';
+export 'auth_profile_state.dart';
 
 class AuthProfileCubit extends Cubit<AuthProfileState> {
-  AuthProfileCubit({
-    required this.sessionStorage,
-    this.attendanceRepo,
-  }) : super(const AuthProfileState.initial());
+  AuthProfileCubit({required this.sessionStorage, this.attendanceRepo})
+    : super(const AuthProfileState.initial());
 
   final AuthSessionStorage sessionStorage;
   final EmployeeAttendanceRepo? attendanceRepo;
@@ -22,7 +21,9 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
       final username = await sessionStorage.readUserName() ?? '';
       final role = await sessionStorage.readUserRole() ?? '';
       final roles = await sessionStorage.readUserRoles();
-      final effectiveRoles = roles.isNotEmpty ? roles : (role.isNotEmpty ? [role] : const <String>[]);
+      final effectiveRoles = roles.isNotEmpty
+          ? roles
+          : (role.isNotEmpty ? [role] : const <String>[]);
       final permissions = {
         ...AppPermissions.defaultsForRole(role),
         ...await sessionStorage.readPermissions(),
@@ -45,10 +46,14 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
       if (attendanceRepo != null) {
         final employeeId = await sessionStorage.readEmployeeId() ?? userId;
         if (employeeId.isNotEmpty) {
-          final profileResult = await attendanceRepo!.getEmployeeById(employeeId);
+          final profileResult = await attendanceRepo!.getEmployeeById(
+            employeeId,
+          );
           if (profileResult case Success(:final data)) {
             final remoteImageUrl = data.imageUrl;
-            final remoteName = (data.name?.trim().isNotEmpty == true) ? data.name!.trim() : name;
+            final remoteName = (data.name?.trim().isNotEmpty == true)
+                ? data.name!.trim()
+                : name;
             if (remoteImageUrl != null && remoteImageUrl.isNotEmpty) {
               await sessionStorage.saveUserImageUrl(remoteImageUrl);
               imageUrl = remoteImageUrl;

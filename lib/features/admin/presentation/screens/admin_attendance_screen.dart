@@ -57,11 +57,10 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     final permissions = context.select<AuthProfileCubit, List<String>>(
-      (cubit) => cubit.state.maybeWhen(
-        success:
-            (name, userId, role, username, permissions, roles) => permissions,
-        orElse: () => const [],
-      ),
+      (cubit) => switch (cubit.state) {
+        AuthProfileSuccess(:final permissions) => permissions,
+        _ => const [],
+      },
     );
     final canDeleteAttendance = AppPermissions.has(
       permissions,

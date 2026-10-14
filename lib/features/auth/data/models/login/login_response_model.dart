@@ -6,6 +6,7 @@ part 'login_response_model.g.dart';
 class LoginResponseModel {
   const LoginResponseModel({
     this.id,
+    this.employeeId,
     this.userName,
     this.name,
     this.role,
@@ -18,6 +19,7 @@ class LoginResponseModel {
   });
 
   final String? id;
+  final String? employeeId;
   final String? userName;
   final String? name;
   final String? role;

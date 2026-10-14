@@ -84,7 +84,6 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
         selectedIndex: _selectedNavIndex,
         onTabSelected: (index) {
           if (index == 4) {
-            setState(() => _selectedNavIndex = index);
             final authProfileCubit = context.read<AuthProfileCubit>();
             showModalBottomSheet<void>(
               context: context,
@@ -105,12 +104,14 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
                   ),
                   onProfileTap: () {
                     setState(() {
+                      _loadedScreens[4] ??= _screenBuilders[4]();
                       _selectedIndex = 4;
                       _selectedNavIndex = 4;
                     });
                   },
                   onCustomersTap: () {
                     setState(() {
+                      _loadedScreens[1] ??= _screenBuilders[1]();
                       _selectedIndex = 1;
                       _selectedNavIndex = 1;
                     });

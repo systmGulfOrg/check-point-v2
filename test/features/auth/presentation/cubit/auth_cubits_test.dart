@@ -34,11 +34,14 @@ class _FakeDeviceIdentityProvider extends DeviceIdentityProvider {
 
 class _FakeAuthRepo implements AuthRepo {
   @override
-  Future<ApiResult<AccountRequestStatusModel?>> getAccountRequestStatus(String mobileId) async =>
-      const ApiResult.success(null);
+  Future<ApiResult<AccountRequestStatusModel?>> getAccountRequestStatus(
+    String mobileId,
+  ) async => const ApiResult.success(null);
 
   @override
-  Future<ApiResult<bool>> requestDeviceTransfer(LoginRequestModel request) async => const ApiResult.success(true);
+  Future<ApiResult<bool>> requestDeviceTransfer(
+    LoginRequestModel request,
+  ) async => const ApiResult.success(true);
   _FakeAuthRepo({required this.loginResponse});
 
   final LoginResponseModel loginResponse;
@@ -84,6 +87,7 @@ class _FakeAuthSessionStorage extends AuthSessionStorage {
     int? branchId,
     String? userName,
     String? role,
+    String? imageUrl,
     List<String> roles = const [],
     List<String> permissions = const [],
   }) async {
@@ -226,7 +230,9 @@ void main() {
           fakeMobileId: 'mobile-456',
           fakeDeviceToken: 'device-token-456',
         ),
-        authSessionStorage: AuthSessionStorage(secureStorage: const FlutterSecureStorage()),
+        authSessionStorage: AuthSessionStorage(
+          secureStorage: const FlutterSecureStorage(),
+        ),
       );
       addTearDown(cubit.close);
 
