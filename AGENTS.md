@@ -363,6 +363,36 @@ class ProductScreen extends StatelessWidget {
 - One cubit per screen/feature concern. Do not build "god cubits".
 - Cubits must not import Flutter widgets (`material.dart`). `flutter/foundation.dart` is fine.
 
+### Safe emit after close (mandatory)
+
+Every Cubit extends **`SafeCubit`** (`lib/core/bloc/safe_cubit.dart`), not `Cubit` directly.
+
+A Cubit closes when its route is popped. Emitting after that throws
+`StateError: Cannot emit new states after calling close`. This is easy to hit:
+almost every Cubit method awaits a repository call and then emits, so if the
+user navigates away mid-request the response lands after `close()`.
+
+- **After any `await`, use `safeEmit(...)`.** It drops the state instead of throwing and returns `false` when it did.
+- **Before the first `await`, plain `emit(...)` is correct** — the Cubit cannot close between the call and that line. Do not add noise.
+- Do **not** write `if (isClosed) emit(...)` or `if (!isClosed) safeEmit(...)` — `safeEmit` already guards.
+- Keep a bare `if (isClosed) return;` **only** when it skips real work beyond the emit (further repo calls, expensive filtering), and only after an `await`. As a method's first line it is dead code.
+
+```dart
+class LeavesCubit extends SafeCubit<LeavesState> {
+  LeavesCubit({required this.leavesRepo}) : super(const LeavesState.initial());
+  final LeavesRepo leavesRepo;
+
+  Future<void> load() async {
+    emit(const LeavesState.loading());          // before await -> plain emit
+    final result = await leavesRepo.getLeaves();
+    result.when(                                 // after await -> safeEmit
+      success: (leaves) => safeEmit(LeavesState.success(leaves)),
+      failure: (f) => safeEmit(LeavesState.error(f.messageKey)),
+    );
+  }
+}
+```
+
 ### Example — Freezed state
 
 ```dart
@@ -878,7 +908,126 @@ feat(login): add otp verification step
 
 ---
 
-## 24. Final Reminder to AI Agents
+## 24. Loading, Empty, and Error States
+
+Every data-driven screen must handle **four** visual states explicitly. A screen that renders only the success path is incomplete.
+
+- **Loading:** use `skeletonizer` (`Skeletonizer` + a `*_skeleton_widget.dart`) for list and card layouts so the loading shape matches the loaded shape. Use a plain spinner only for short, blocking actions (button submit), never for full-page list loads.
+- **Empty:** a loaded-but-empty list gets a dedicated empty state with an icon, a localized title, and (when there is an action) one button. Never show a blank screen or a bare "0 items".
+- **Error:** render the localization key from the cubit's error state via `.tr()`. Always offer a retry affordance for failures the user can recover from.
+- **Success:** the normal content.
+
+Skeleton placeholder text inside a `Skeletonizer` is **exempt** from the localization rule in §12 — it is never read by a user. Keep it short and obviously fake.
+
+```dart
+// ✅ All four states handled, skeleton shape mirrors loaded shape
+return switch (state) {
+  CustomerVisitsLoading() => const AdminCustomerVisitsSkeletonWidget(),
+  CustomerVisitsFailure(:final failure) =>
+      AppMessageWidget(message: failure.messageKey.tr()),
+  CustomerVisitsSuccess(:final visits) when visits.isEmpty =>
+      const AdminCustomerVisitsEmptyWidget(),
+  CustomerVisitsSuccess(:final visits) =>
+      AdminCustomerVisitsListWidget(visits: visits),
+  _ => const SizedBox.shrink(),
+};
+```
+
+---
+
+## 25. Pull-to-Refresh
+
+- Wrap refreshable scroll views in `RefreshIndicator` whose `onRefresh` calls the cubit's load method and returns its `Future`.
+- The inner scrollable needs `physics: const AlwaysScrollableScrollPhysics()` so the gesture works when content is shorter than the viewport.
+- **Capture every cubit reference via `context.read` *before* the first `await`.** Reading from `context` after an await is a `use_build_context_synchronously` violation and can throw if the widget unmounts mid-refresh.
+- A refresh is a first load: pass `newResponse: true` (§15).
+
+```dart
+// ❌ BAD — context.read after an await
+onRefresh: () async {
+  await context.read<AttendanceCubit>().load();
+  context.read<PointsCubit>().loadPoints();   // unsafe across async gap
+},
+
+// ✅ GOOD — resolve dependencies first
+onRefresh: () async {
+  final pointsCubit = context.read<PointsCubit?>();
+  await context.read<AttendanceCubit>().load();
+  if (pointsCubit != null) {
+    await pointsCubit.loadAllPointsData();
+  }
+},
+```
+
+---
+
+## 26. Bottom Sheets and Dialogs
+
+- Every sheet/dialog body is a **named public widget in its own file**: `*_sheet_widget.dart` or `*_dialog_widget.dart`. Never build the body inline inside `showModalBottomSheet`.
+- Use `isScrollControlled: true` for any sheet containing text fields, and respect the keyboard inset with `EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom)`.
+- A sheet that needs a Cubit receives it from the caller's context (`BlocProvider.value`) — do **not** build a new cubit with `sl<>()` inside the sheet, or it will not share state with the screen that opened it.
+- Return results through the `Navigator.pop(context, result)` value or an `onConfirm` callback. Never mutate caller state from inside the sheet.
+- Confirmation and rejection flows reuse the core widgets: `AppDeleteConfirmationDialogWidget`, `AppRejectReasonDialogWidget`, `CustomDialogWidget`. Check `core/widgets/` before writing a new one (§4).
+
+---
+
+## 27. Network Images
+
+- Load remote images through one caching path. Raw `Image.network` is not cached and re-downloads on every rebuild.
+- Always supply both `loadingBuilder`/placeholder and `errorBuilder` — a broken avatar URL must never surface a red error box to the user.
+- Avatars go through `AppAvatarWidget`; it owns the fallback-initials behavior. Do not reimplement avatar fallback per feature.
+- Backend media paths are resolved to absolute URLs in one place. Do not concatenate base URL and path at the call site.
+
+> **Known gap (do not treat as resolved):** §15 requires `cached_network_image`, but it is **not currently in `pubspec.yaml`**, and 4 raw `Image.network` call sites remain (2 are local-file previews in edit forms, 2 are in `core/widgets/` viewers). Either add the dependency and migrate those sites, or amend §15. Until then, do not cite §15 as satisfied.
+
+---
+
+## 28. Dates, Times, and Numbers
+
+- Format through `intl` with the active locale — never string-concatenate or hand-slice a date.
+- Parse API dates in the data layer. A widget must never receive a raw `String` date and parse it in `build()` (§8: no heavy sync work in build).
+- The backend returns legacy .NET date/time shapes in places; those are normalized by `core/utils/legacy_api_json_converters.dart`. Route new legacy-shaped fields through that converter rather than special-casing in the widget.
+- Arabic locale uses Arabic-Indic digits by default in some formatters. If a screen must show Latin digits (IDs, codes, phone numbers), set the format explicitly instead of relying on the ambient locale.
+- Durations shown to users (work hours, overtime) are formatted by one shared helper, not re-derived per screen.
+
+---
+
+## 29. Permission Gating
+
+- Role and permission checks are **state**, not inline widget logic. The cubit exposes what the user may do; the widget renders accordingly.
+- Gate with a dedicated named widget (e.g. `SupervisorAttendancePermissionGateWidget`) rather than scattering `if (user.canX)` through a screen.
+- A gated action that the user lacks permission for is **hidden or disabled with an explanation** — never silently present and then failing on tap.
+- Never trust a client-side permission check as a security boundary. The server authorizes; the client only adjusts affordances (§17).
+
+---
+
+## 30. Localization Coverage
+
+Extends §12 with the rules that keep `ar.json` and `en.json` honest.
+
+- **Every** user-visible string is a key in **both** `ar.json` and `en.json`. A literal in Dart source — Arabic or English — is a violation. Arabic literals are the most common form of this mistake and are easy to miss in review; grep for them, not just for Latin text.
+- A key present in one file and missing from the other is a bug: the app falls back to the raw key and shows `admin.visits.title` to the user.
+- Both files mix **nested** objects and **flat dotted** keys. Both resolve correctly — do not "normalize" one style into the other as drive-by cleanup, and remember that naive key-diffing tools report false mismatches between the two styles.
+- Keys follow `feature.screen.element` (§12) and are added in the same commit as the widget that uses them.
+- Exempt from this rule: `Skeletonizer` placeholder text (§24), and developer-facing fallback strings in `app_router.dart` for invalid route arguments (a user should never reach them — but prefer translating anyway for consistency).
+- Before adding a key, search the translation files — a close equivalent usually already exists.
+
+```bash
+# Find hardcoded Arabic literals (run before every commit that touches UI)
+grep -rn "'[^']*[ء-ي][^']*'" lib --include="*.dart" | grep -v "\.tr()"
+
+# Find keys present in one translation file but missing from the other.
+# NOTE: this file mixes two equivalent key styles — nested objects
+# ("permits": {"type": {...}}) and flat dotted keys ("permits.type.lateArrival").
+# easy_localization resolves both, so the check must compare *effective* keys.
+# Use leaf_paths (not paths(scalars)) or you will get false positives.
+diff <(jq -r '[leaf_paths|join(".")]|.[]' assets/translations/ar.json | sort -u) \
+     <(jq -r '[leaf_paths|join(".")]|.[]' assets/translations/en.json | sort -u)
+```
+
+---
+
+## 31. Final Reminder to AI Agents
 
 - Do **not** skip rules to be "more helpful".
 - Do **not** invent new patterns when an existing one in this file applies.
