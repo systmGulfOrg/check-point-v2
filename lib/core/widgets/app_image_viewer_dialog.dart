@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 class AppImageViewerDialog extends StatelessWidget {
-  const AppImageViewerDialog({
-    required this.imageUrl,
-    this.title,
-    super.key,
-  });
+  const AppImageViewerDialog({required this.imageUrl, this.title, super.key});
 
   final String imageUrl;
   final String? title;
 
-  static void show(BuildContext context, {required String imageUrl, String? title}) {
+  static void show(
+    BuildContext context, {
+    required String imageUrl,
+    String? title,
+  }) {
     showDialog<void>(
       context: context,
       barrierColor: Colors.black87,
@@ -28,6 +28,8 @@ class AppImageViewerDialog extends StatelessWidget {
       imageWidget = Image.network(
         imageUrl,
         fit: BoxFit.contain,
+        cacheWidth: 1600,
+        cacheHeight: 1600,
         errorBuilder: (context, error, stackTrace) => const Icon(
           Icons.broken_image_outlined,
           size: 64,
@@ -38,6 +40,8 @@ class AppImageViewerDialog extends StatelessWidget {
       imageWidget = Image.file(
         File(imageUrl),
         fit: BoxFit.contain,
+        cacheWidth: 1600,
+        cacheHeight: 1600,
         errorBuilder: (context, error, stackTrace) => const Icon(
           Icons.broken_image_outlined,
           size: 64,

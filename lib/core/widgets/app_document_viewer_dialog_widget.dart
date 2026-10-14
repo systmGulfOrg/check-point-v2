@@ -9,6 +9,7 @@ import 'package:open_filex/open_filex.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:check_point_v2/core/app/app_spaces.dart';
+import 'package:check_point_v2/core/app/app_config.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/core/widgets/custom_button.dart';
@@ -43,7 +44,8 @@ class AppDocumentViewerDialogWidget extends StatelessWidget {
   }
 
   String get _cleanName {
-    if (fileName.trim().isNotEmpty && fileName != 'file') return fileName.trim();
+    if (fileName.trim().isNotEmpty && fileName != 'file')
+      return fileName.trim();
     if (fileUrl != null && fileUrl!.isNotEmpty) {
       final uriName = fileUrl!.split('/').last.split('?').first;
       if (uriName.isNotEmpty && uriName.contains('.')) return uriName;
@@ -58,11 +60,19 @@ class AppDocumentViewerDialogWidget extends StatelessWidget {
     }
     if (fileUrl != null) {
       final cleanUrl = fileUrl!.toLowerCase();
-      if (cleanUrl.contains('.pdf') || cleanUrl.startsWith('data:application/pdf')) return 'pdf';
-      if (cleanUrl.contains('.png') || cleanUrl.startsWith('data:image/png')) return 'png';
-      if (cleanUrl.contains('.jpg') || cleanUrl.contains('.jpeg') || cleanUrl.startsWith('data:image/jpeg')) return 'jpg';
-      if (cleanUrl.contains('.docx') || cleanUrl.contains('.doc')) return 'docx';
-      if (cleanUrl.contains('.xlsx') || cleanUrl.contains('.xls')) return 'xlsx';
+      if (cleanUrl.contains('.pdf') ||
+          cleanUrl.startsWith('data:application/pdf'))
+        return 'pdf';
+      if (cleanUrl.contains('.png') || cleanUrl.startsWith('data:image/png'))
+        return 'png';
+      if (cleanUrl.contains('.jpg') ||
+          cleanUrl.contains('.jpeg') ||
+          cleanUrl.startsWith('data:image/jpeg'))
+        return 'jpg';
+      if (cleanUrl.contains('.docx') || cleanUrl.contains('.doc'))
+        return 'docx';
+      if (cleanUrl.contains('.xlsx') || cleanUrl.contains('.xls'))
+        return 'xlsx';
     }
     return 'file';
   }
@@ -144,15 +154,24 @@ class AppDocumentViewerDialogWidget extends StatelessWidget {
 
   Future<void> _openFile(BuildContext context) async {
     if (fileUrl == null || fileUrl!.trim().isEmpty) {
-      CustomSnackBar.showError(context, message: 'لا يوجد مسار أو رابط للمستند');
+      CustomSnackBar.showError(
+        context,
+        message: 'لا يوجد مسار أو رابط للمستند',
+      );
       return;
     }
 
-    final trimmed = fileUrl!.trim();
+    final rawUrl = fileUrl!.trim();
+    final trimmed = rawUrl.startsWith('/api/')
+        ? '${AppConfig.baseUrl.replaceFirst(RegExp(r'/+$'), '')}$rawUrl'
+        : rawUrl;
     try {
       if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
         final uri = Uri.parse(trimmed);
-        final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+        final launched = await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
+        );
         if (!launched && context.mounted) {
           CustomSnackBar.showError(context, message: 'تعذر فتح رابط المستند');
         }
@@ -168,7 +187,8 @@ class AppDocumentViewerDialogWidget extends StatelessWidget {
         final fallbackFile = File('${tempDir.path}/$safeName');
         if (!fallbackFile.existsSync()) {
           if (_isPdf) {
-            final pdfContent = '''%PDF-1.4
+            final pdfContent =
+                '''%PDF-1.4
 1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
 2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
 3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj
@@ -197,7 +217,9 @@ startxref
 %%EOF''';
             await fallbackFile.writeAsString(pdfContent);
           } else {
-            await fallbackFile.writeAsString('Check Point HRM - Document: $_cleanName');
+            await fallbackFile.writeAsString(
+              'Check Point HRM - Document: $_cleanName',
+            );
           }
         }
         targetFile = fallbackFile;
@@ -212,7 +234,8 @@ startxref
         case ResultType.noAppToOpen:
           CustomSnackBar.showError(
             context,
-            message: 'لا يوجد تطبيق مثبت على جهازك لفتح هذا الملف (${_extension.toUpperCase()})',
+            message:
+                'لا يوجد تطبيق مثبت على جهازك لفتح هذا الملف (${_extension.toUpperCase()})',
           );
         case ResultType.fileNotFound:
           CustomSnackBar.showError(
@@ -263,11 +286,7 @@ startxref
                           color: _iconColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10.r),
                         ),
-                        child: Icon(
-                          _icon,
-                          color: _iconColor,
-                          size: 20.r,
-                        ),
+                        child: Icon(_icon, color: _iconColor, size: 20.r),
                       ),
                       wSpace(10),
                       Text(
@@ -365,8 +384,8 @@ startxref
                 text: _isPdf
                     ? 'فتح وقراءة ملف PDF'
                     : _isImage
-                        ? 'فتح الصورة بالحجم الكامل'
-                        : 'فتح / معاينة المستند المرفق',
+                    ? 'فتح الصورة بالحجم الكامل'
+                    : 'فتح / معاينة المستند المرفق',
                 icon: Icons.open_in_new_rounded,
                 backgroundColor: AppColors.brandPrimary,
                 textColor: AppColors.white,
@@ -384,10 +403,14 @@ startxref
       return _buildGenericFileCard(context);
     }
 
-    final trimmed = fileUrl!.trim();
+    final rawUrl = fileUrl!.trim();
+    final trimmed = rawUrl.startsWith('/api/')
+        ? '${AppConfig.baseUrl.replaceFirst(RegExp(r'/+$'), '')}$rawUrl'
+        : rawUrl;
 
     // 1. Local Image File
-    if (_isImage && (trimmed.startsWith('/') || trimmed.startsWith('file://'))) {
+    if (_isImage &&
+        (trimmed.startsWith('/') || trimmed.startsWith('file://'))) {
       try {
         final path = trimmed.replaceFirst('file://', '');
         final file = File(path);
@@ -413,9 +436,12 @@ startxref
     }
 
     // 2. Base64 Image
-    if (_isImage && (trimmed.startsWith('data:image/') || !trimmed.startsWith('http'))) {
+    if (_isImage &&
+        (trimmed.startsWith('data:image/') || !trimmed.startsWith('http'))) {
       try {
-        final cleanBase64 = trimmed.contains(',') ? trimmed.split(',').last : trimmed;
+        final cleanBase64 = trimmed.contains(',')
+            ? trimmed.split(',').last
+            : trimmed;
         final bytes = base64Decode(cleanBase64.trim());
         return ClipRRect(
           borderRadius: BorderRadius.circular(12.r),
@@ -437,7 +463,8 @@ startxref
     }
 
     // 3. Network Image
-    if (_isImage && (trimmed.startsWith('http://') || trimmed.startsWith('https://'))) {
+    if (_isImage &&
+        (trimmed.startsWith('http://') || trimmed.startsWith('https://'))) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(12.r),
         child: Container(

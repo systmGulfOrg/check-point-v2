@@ -99,7 +99,7 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
           if (isImage) {
             base64Data = await AppImageCompressor.compressAndEncodeBase64(
               file.bytes!,
-              maxDimension: 1024,
+              maxDimension: 768,
               mimeType: mimeType,
             );
           } else {
@@ -119,7 +119,7 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
           if (isImage) {
             base64Data = await AppImageCompressor.compressAndEncodeBase64(
               bytes,
-              maxDimension: 1024,
+              maxDimension: 768,
               mimeType: mimeType,
             );
           } else {

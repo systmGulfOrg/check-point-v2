@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import 'package:check_point_v2/core/app/app_config.dart';
+
 class AppImageProvider {
   AppImageProvider._();
 
@@ -13,11 +15,20 @@ class AppImageProvider {
 
     try {
       if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-        return NetworkImage(trimmed);
+        return ResizeImage(NetworkImage(trimmed), width: 800, height: 800);
       }
 
       if (trimmed.startsWith('assets/')) {
         return AssetImage(trimmed);
+      }
+
+      if (trimmed.startsWith('/api/')) {
+        final baseUrl = AppConfig.baseUrl.replaceFirst(RegExp(r'/+$'), '');
+        return ResizeImage(
+          NetworkImage('$baseUrl$trimmed'),
+          width: 800,
+          height: 800,
+        );
       }
 
       if (trimmed.startsWith('/') || trimmed.startsWith('file://')) {
@@ -36,13 +47,13 @@ class AppImageProvider {
             ? trimmed.substring(commaIndex + 1)
             : trimmed;
         final bytes = base64Decode(rawBase64.trim());
-        return MemoryImage(bytes);
+        return ResizeImage(MemoryImage(bytes), width: 800, height: 800);
       }
 
       // Check if it's a raw base64 string
       if (_looksLikeBase64(trimmed)) {
         final bytes = base64Decode(trimmed);
-        return MemoryImage(bytes);
+        return ResizeImage(MemoryImage(bytes), width: 800, height: 800);
       }
     } catch (_) {
       // Silently fallback to null if image parsing or decoding fails
