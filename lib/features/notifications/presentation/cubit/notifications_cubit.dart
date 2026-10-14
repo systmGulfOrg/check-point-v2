@@ -1,8 +1,8 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 import '../../domain/repos/notifications_repo.dart';
 import 'notifications_state.dart';
 
-class NotificationsCubit extends Cubit<NotificationsState> {
+class NotificationsCubit extends SafeCubit<NotificationsState> {
   NotificationsCubit({required this.notificationsRepo})
     : super(const NotificationsState.initial());
 
@@ -13,8 +13,9 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     final result = await notificationsRepo.getNotifications();
     result.when(
       success: (page) =>
-          emit(NotificationsState.success(page.items, page.unreadCount)),
-      failure: (failure) => emit(NotificationsState.error(failure.messageKey)),
+          safeEmit(NotificationsState.success(page.items, page.unreadCount)),
+      failure: (failure) =>
+          safeEmit(NotificationsState.error(failure.messageKey)),
     );
   }
 

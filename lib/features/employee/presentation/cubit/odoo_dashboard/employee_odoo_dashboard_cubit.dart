@@ -1,11 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/features/employee/data/services/odoo_timeoff_service.dart';
 import 'employee_odoo_dashboard_state.dart';
 
-class EmployeeOdooDashboardCubit extends Cubit<EmployeeOdooDashboardState> {
+class EmployeeOdooDashboardCubit extends SafeCubit<EmployeeOdooDashboardState> {
   EmployeeOdooDashboardCubit({
     required this.odooTimeOffService,
     required this.sessionStorage,
@@ -33,7 +33,7 @@ class EmployeeOdooDashboardCubit extends Cubit<EmployeeOdooDashboardState> {
       final attendanceData = results[1] as OdooMyAttendanceData;
       final leaveRequests = results[2] as List<OdooLeaveRequest>;
 
-      emit(
+      safeEmit(
         EmployeeOdooDashboardState.success(
           status: status,
           attendanceData: attendanceData,
@@ -42,7 +42,7 @@ class EmployeeOdooDashboardCubit extends Cubit<EmployeeOdooDashboardState> {
       );
     } catch (e) {
       final failure = ApiFailureMapper.map(e);
-      emit(EmployeeOdooDashboardState.error(failure.messageKey));
+      safeEmit(EmployeeOdooDashboardState.error(failure.messageKey));
     }
   }
 

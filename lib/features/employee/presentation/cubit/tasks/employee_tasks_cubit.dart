@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
@@ -9,7 +9,7 @@ import 'package:check_point_v2/features/employee/data/models/tasks/employee_task
 import 'package:check_point_v2/features/employee/data/repos/employee_action_repo.dart';
 import 'employee_tasks_state.dart';
 
-class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
+class EmployeeTasksCubit extends SafeCubit<EmployeeTasksState> {
   EmployeeTasksCubit({required this.actionRepo, required this.sessionStorage})
     : super(const EmployeeTasksState.initial());
 
@@ -23,8 +23,9 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
     final employeeId = await sessionStorage.readUserId() ?? '';
     final result = await actionRepo.getEmployeeTasks(employeeId);
     result.when(
-      success: (data) => emit(EmployeeTasksState.success(data)),
-      failure: (failure) => emit(EmployeeTasksState.error(failure.messageKey)),
+      success: (data) => safeEmit(EmployeeTasksState.success(data)),
+      failure: (failure) =>
+          safeEmit(EmployeeTasksState.error(failure.messageKey)),
     );
   }
 
@@ -64,7 +65,7 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
         return true;
       },
       failure: (failure) {
-        emit(EmployeeTasksState.error(failure.messageKey));
+        safeEmit(EmployeeTasksState.error(failure.messageKey));
         return false;
       },
     );
@@ -78,7 +79,7 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
         return true;
       },
       failure: (failure) {
-        emit(EmployeeTasksState.error(failure.messageKey));
+        safeEmit(EmployeeTasksState.error(failure.messageKey));
         return false;
       },
     );
@@ -92,7 +93,7 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
         return true;
       },
       failure: (failure) {
-        emit(EmployeeTasksState.error(failure.messageKey));
+        safeEmit(EmployeeTasksState.error(failure.messageKey));
         return false;
       },
     );
@@ -107,10 +108,10 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
     await result.when(
       success: (_) async {
         await loadMyTasks();
-        emit(const EmployeeTasksState.actionSuccess('tasks.statusUpdated'));
+        safeEmit(const EmployeeTasksState.actionSuccess('tasks.statusUpdated'));
       },
       failure: (failure) async =>
-          emit(EmployeeTasksState.error(failure.messageKey)),
+          safeEmit(EmployeeTasksState.error(failure.messageKey)),
     );
   }
 
@@ -125,10 +126,10 @@ class EmployeeTasksCubit extends Cubit<EmployeeTasksState> {
     await result.when(
       success: (_) async {
         await loadMyTasks();
-        emit(const EmployeeTasksState.actionSuccess('tasks.removed'));
+        safeEmit(const EmployeeTasksState.actionSuccess('tasks.removed'));
       },
       failure: (failure) async =>
-          emit(EmployeeTasksState.error(failure.messageKey)),
+          safeEmit(EmployeeTasksState.error(failure.messageKey)),
     );
   }
 }

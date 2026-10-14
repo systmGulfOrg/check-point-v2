@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
 import 'admin_department_employees_state.dart';
 
 class AdminDepartmentEmployeesCubit
-    extends Cubit<AdminDepartmentEmployeesState> {
+    extends SafeCubit<AdminDepartmentEmployeesState> {
   AdminDepartmentEmployeesCubit({required this.employeeRepo})
     : super(const AdminDepartmentEmployeesState.initial());
 
@@ -16,9 +16,9 @@ class AdminDepartmentEmployeesCubit
       departmentId: departmentId,
     );
     result.when(
-      success: (data) => emit(AdminDepartmentEmployeesState.success(data)),
+      success: (data) => safeEmit(AdminDepartmentEmployeesState.success(data)),
       failure: (failure) =>
-          emit(AdminDepartmentEmployeesState.error(failure.messageKey)),
+          safeEmit(AdminDepartmentEmployeesState.error(failure.messageKey)),
     );
   }
 }

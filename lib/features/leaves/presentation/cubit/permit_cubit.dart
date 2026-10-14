@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import '../../data/models/short_leave_request_body.dart';
 import '../../domain/repos/leaves_repo.dart';
 import 'permit_state.dart';
 
-class PermitCubit extends Cubit<PermitState> {
+class PermitCubit extends SafeCubit<PermitState> {
   PermitCubit({required this.leavesRepo}) : super(const PermitState.initial());
 
   final LeavesRepo leavesRepo;
@@ -14,11 +14,11 @@ class PermitCubit extends Cubit<PermitState> {
     final result = await leavesRepo.submitShortLeaveRequest(body);
     return result.when(
       success: (_) {
-        emit(const PermitState.success());
+        safeEmit(const PermitState.success());
         return true;
       },
       failure: (failure) {
-        emit(PermitState.error(failure.messageKey));
+        safeEmit(PermitState.error(failure.messageKey));
         return false;
       },
     );

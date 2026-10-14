@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
@@ -14,7 +14,7 @@ enum AdminAttendanceDateFilter {
   all,
 }
 
-class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
+class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
   AdminAttendanceCubit({required this.attendanceRepo})
     : super(const AdminAttendanceState.initial());
 
@@ -146,7 +146,7 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
       },
       failure: (failure) {
         _isLoadingAttendance = false;
-        emit(AdminAttendanceState.error(failure.messageKey));
+        safeEmit(AdminAttendanceState.error(failure.messageKey));
       },
     );
   }
@@ -290,7 +290,7 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminAttendanceState.error(failure.messageKey));
+        safeEmit(AdminAttendanceState.error(failure.messageKey));
         return false;
       },
     );
@@ -305,7 +305,7 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminAttendanceState.error(failure.messageKey));
+        safeEmit(AdminAttendanceState.error(failure.messageKey));
         return false;
       },
     );

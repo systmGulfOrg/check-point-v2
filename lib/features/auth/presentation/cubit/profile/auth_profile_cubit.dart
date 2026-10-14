@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/auth/app_permissions.dart';
@@ -7,7 +7,7 @@ import 'package:check_point_v2/features/employee/data/repos/employee_attendance_
 import 'auth_profile_state.dart';
 export 'auth_profile_state.dart';
 
-class AuthProfileCubit extends Cubit<AuthProfileState> {
+class AuthProfileCubit extends SafeCubit<AuthProfileState> {
   AuthProfileCubit({required this.sessionStorage, this.attendanceRepo})
     : super(const AuthProfileState.initial());
 
@@ -31,7 +31,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
       final name = username.trim();
       var imageUrl = await sessionStorage.readUserImageUrl();
 
-      emit(
+      safeEmit(
         AuthProfileState.success(
           name: name,
           userId: userId,
@@ -58,7 +58,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
               await sessionStorage.saveUserImageUrl(remoteImageUrl);
               imageUrl = remoteImageUrl;
             }
-            emit(
+            safeEmit(
               AuthProfileState.success(
                 name: remoteName,
                 userId: userId,
@@ -73,7 +73,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
         }
       }
     } catch (_) {
-      emit(const AuthProfileState.error('errors.profileLoadFailed'));
+      safeEmit(const AuthProfileState.error('errors.profileLoadFailed'));
     }
   }
 
@@ -89,7 +89,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
       }.toList();
       final name = username.trim();
       final imageUrl = await sessionStorage.readUserImageUrl();
-      emit(
+      safeEmit(
         AuthProfileState.success(
           name: name,
           userId: userId,
@@ -101,7 +101,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
         ),
       );
     } catch (_) {
-      emit(const AuthProfileState.error('errors.profileLoadFailed'));
+      safeEmit(const AuthProfileState.error('errors.profileLoadFailed'));
     }
   }
 
@@ -132,7 +132,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
         permissions: permissions,
       );
 
-      emit(
+      safeEmit(
         AuthProfileState.success(
           name: name,
           userId: userId,
@@ -147,7 +147,7 @@ class AuthProfileCubit extends Cubit<AuthProfileState> {
         ),
       );
     } catch (_) {
-      emit(const AuthProfileState.error('errors.profileLoadFailed'));
+      safeEmit(const AuthProfileState.error('errors.profileLoadFailed'));
     }
   }
 }

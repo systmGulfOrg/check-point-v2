@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/locations/customer_request_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_locations_repo.dart';
 import 'admin_customers_state.dart';
 
-class AdminCustomersCubit extends Cubit<AdminCustomersState> {
+class AdminCustomersCubit extends SafeCubit<AdminCustomersState> {
   AdminCustomersCubit({required this.locationsRepo})
     : super(const AdminCustomersState.initial());
   final AdminLocationsRepo locationsRepo;
@@ -15,8 +15,9 @@ class AdminCustomersCubit extends Cubit<AdminCustomersState> {
     emit(const AdminCustomersState.loading());
     final result = await locationsRepo.getCustomersByType(currentType);
     result.when(
-      success: (data) => emit(AdminCustomersState.success(data)),
-      failure: (failure) => emit(AdminCustomersState.error(failure.messageKey)),
+      success: (data) => safeEmit(AdminCustomersState.success(data)),
+      failure: (failure) =>
+          safeEmit(AdminCustomersState.error(failure.messageKey)),
     );
   }
 
@@ -28,7 +29,7 @@ class AdminCustomersCubit extends Cubit<AdminCustomersState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminCustomersState.error(failure.messageKey));
+        safeEmit(AdminCustomersState.error(failure.messageKey));
         return false;
       },
     );
@@ -42,7 +43,7 @@ class AdminCustomersCubit extends Cubit<AdminCustomersState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminCustomersState.error(failure.messageKey));
+        safeEmit(AdminCustomersState.error(failure.messageKey));
         return false;
       },
     );
@@ -53,7 +54,7 @@ class AdminCustomersCubit extends Cubit<AdminCustomersState> {
     await result.when(
       success: (_) async => await load(type: currentType),
       failure: (failure) async =>
-          emit(AdminCustomersState.error(failure.messageKey)),
+          safeEmit(AdminCustomersState.error(failure.messageKey)),
     );
   }
 }

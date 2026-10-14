@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model.dart';
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_plans_repo.dart';
 import 'supervisor_plans_state.dart';
 
-class SupervisorPlansCubit extends Cubit<SupervisorPlansState> {
+class SupervisorPlansCubit extends SafeCubit<SupervisorPlansState> {
   SupervisorPlansCubit({required this.plansRepo})
     : super(const SupervisorPlansState.initial());
 
@@ -14,9 +14,9 @@ class SupervisorPlansCubit extends Cubit<SupervisorPlansState> {
     emit(const SupervisorPlansState.loading());
     final result = await plansRepo.getPlans(departmentId: departmentId);
     result.when(
-      success: (data) => emit(SupervisorPlansState.success(data)),
+      success: (data) => safeEmit(SupervisorPlansState.success(data)),
       failure: (failure) =>
-          emit(SupervisorPlansState.error(failure.messageKey)),
+          safeEmit(SupervisorPlansState.error(failure.messageKey)),
     );
   }
 
@@ -28,7 +28,7 @@ class SupervisorPlansCubit extends Cubit<SupervisorPlansState> {
         return true;
       },
       failure: (failure) {
-        emit(SupervisorPlansState.error(failure.messageKey));
+        safeEmit(SupervisorPlansState.error(failure.messageKey));
         return false;
       },
     );
@@ -42,7 +42,7 @@ class SupervisorPlansCubit extends Cubit<SupervisorPlansState> {
         return true;
       },
       failure: (failure) {
-        emit(SupervisorPlansState.error(failure.messageKey));
+        safeEmit(SupervisorPlansState.error(failure.messageKey));
         return false;
       },
     );

@@ -1,11 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
 import 'package:check_point_v2/features/supervisor/data/models/tasks/supervisor_update_task_status_request_body.dart';
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_tasks_repo.dart';
 import 'supervisor_tasks_state.dart';
 
-class SupervisorTasksCubit extends Cubit<SupervisorTasksState> {
+class SupervisorTasksCubit extends SafeCubit<SupervisorTasksState> {
   SupervisorTasksCubit({required this.tasksRepo})
     : super(const SupervisorTasksState.initial());
 
@@ -22,7 +22,7 @@ class SupervisorTasksCubit extends Cubit<SupervisorTasksState> {
     result.when(
       success: (data) {
         allTasks = data;
-        emit(
+        safeEmit(
           SupervisorTasksState.success(
             tasks: _filteredTasks,
             statusFilter: statusFilter,
@@ -30,7 +30,7 @@ class SupervisorTasksCubit extends Cubit<SupervisorTasksState> {
         );
       },
       failure: (failure) {
-        emit(SupervisorTasksState.error(failure.messageKey));
+        safeEmit(SupervisorTasksState.error(failure.messageKey));
       },
     );
   }
@@ -66,7 +66,7 @@ class SupervisorTasksCubit extends Cubit<SupervisorTasksState> {
         return true;
       },
       failure: (failure) {
-        emit(SupervisorTasksState.error(failure.messageKey));
+        safeEmit(SupervisorTasksState.error(failure.messageKey));
         return false;
       },
     );
@@ -80,7 +80,7 @@ class SupervisorTasksCubit extends Cubit<SupervisorTasksState> {
         return true;
       },
       failure: (failure) {
-        emit(SupervisorTasksState.error(failure.messageKey));
+        safeEmit(SupervisorTasksState.error(failure.messageKey));
         return false;
       },
     );
@@ -94,7 +94,7 @@ class SupervisorTasksCubit extends Cubit<SupervisorTasksState> {
         return true;
       },
       failure: (failure) {
-        emit(SupervisorTasksState.error(failure.messageKey));
+        safeEmit(SupervisorTasksState.error(failure.messageKey));
         return false;
       },
     );
@@ -108,7 +108,7 @@ class SupervisorTasksCubit extends Cubit<SupervisorTasksState> {
         return true;
       },
       failure: (failure) {
-        emit(SupervisorTasksState.error(failure.messageKey));
+        safeEmit(SupervisorTasksState.error(failure.messageKey));
         return false;
       },
     );
@@ -124,7 +124,7 @@ class SupervisorTasksCubit extends Cubit<SupervisorTasksState> {
         return true;
       },
       failure: (failure) {
-        emit(SupervisorTasksState.error(failure.messageKey));
+        safeEmit(SupervisorTasksState.error(failure.messageKey));
         return false;
       },
     );

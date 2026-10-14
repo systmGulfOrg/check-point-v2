@@ -1,9 +1,9 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'auth_session_state.dart';
 
-class AuthSessionCubit extends Cubit<AuthSessionState> {
+class AuthSessionCubit extends SafeCubit<AuthSessionState> {
   AuthSessionCubit({required this.authSessionStorage})
     : super(const AuthSessionState.initial());
 
@@ -16,10 +16,10 @@ class AuthSessionCubit extends Cubit<AuthSessionState> {
     try {
       await authSessionStorage.disableBiometricLogin();
       await authSessionStorage.clear();
-      emit(const AuthSessionState.success());
+      safeEmit(const AuthSessionState.success());
       return true;
     } catch (_) {
-      emit(const AuthSessionState.error('errors.logoutFailed'));
+      safeEmit(const AuthSessionState.error('errors.logoutFailed'));
       return false;
     }
   }

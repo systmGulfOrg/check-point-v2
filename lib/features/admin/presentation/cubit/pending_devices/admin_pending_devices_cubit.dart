@@ -1,9 +1,9 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 import '../../../data/apis/admin_api_service.dart';
 import 'admin_pending_devices_state.dart';
 import '../../../../../core/network/api_failure_mapper.dart';
 
-class AdminPendingDevicesCubit extends Cubit<AdminPendingDevicesState> {
+class AdminPendingDevicesCubit extends SafeCubit<AdminPendingDevicesState> {
   Future<void> rejectDevice(String employeeId, String deviceId) async {
     emit(const AdminPendingDevicesState.loading());
     try {
@@ -11,13 +11,13 @@ class AdminPendingDevicesCubit extends Cubit<AdminPendingDevicesState> {
       if ((response.isSuccess ?? true) == true) {
         await loadDevices();
       } else {
-        emit(
+        safeEmit(
           const AdminPendingDevicesState.error('admin.devices.rejectFailed'),
         );
       }
     } catch (e) {
       final failure = ApiFailureMapper.map(e);
-      emit(AdminPendingDevicesState.error(failure.messageKey));
+      safeEmit(AdminPendingDevicesState.error(failure.messageKey));
     }
   }
 
@@ -31,13 +31,15 @@ class AdminPendingDevicesCubit extends Cubit<AdminPendingDevicesState> {
     try {
       final response = await api.getPendingDevices();
       if (response.isSuccess == true) {
-        emit(AdminPendingDevicesState.success(response.value));
+        safeEmit(AdminPendingDevicesState.success(response.value));
       } else {
-        emit(const AdminPendingDevicesState.error('admin.devices.loadFailed'));
+        safeEmit(
+          const AdminPendingDevicesState.error('admin.devices.loadFailed'),
+        );
       }
     } catch (e) {
       final failure = ApiFailureMapper.map(e);
-      emit(AdminPendingDevicesState.error(failure.messageKey));
+      safeEmit(AdminPendingDevicesState.error(failure.messageKey));
     }
   }
 
@@ -51,13 +53,13 @@ class AdminPendingDevicesCubit extends Cubit<AdminPendingDevicesState> {
       if ((response.isSuccess ?? true) == true) {
         await loadDevices();
       } else {
-        emit(
+        safeEmit(
           const AdminPendingDevicesState.error('admin.devices.approveFailed'),
         );
       }
     } catch (e) {
       final failure = ApiFailureMapper.map(e);
-      emit(AdminPendingDevicesState.error(failure.messageKey));
+      safeEmit(AdminPendingDevicesState.error(failure.messageKey));
     }
   }
 }

@@ -1,11 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/locations/department_request_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/department_response_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_locations_repo.dart';
 import 'admin_departments_state.dart';
 
-class AdminDepartmentsCubit extends Cubit<AdminDepartmentsState> {
+class AdminDepartmentsCubit extends SafeCubit<AdminDepartmentsState> {
   AdminDepartmentsCubit({required this.locationsRepo})
     : super(const AdminDepartmentsState.initial());
   final AdminLocationsRepo locationsRepo;
@@ -17,10 +17,10 @@ class AdminDepartmentsCubit extends Cubit<AdminDepartmentsState> {
     result.when(
       success: (data) {
         departments = data;
-        emit(AdminDepartmentsState.success(data));
+        safeEmit(AdminDepartmentsState.success(data));
       },
       failure: (failure) =>
-          emit(AdminDepartmentsState.error(failure.messageKey)),
+          safeEmit(AdminDepartmentsState.error(failure.messageKey)),
     );
   }
 
@@ -29,9 +29,9 @@ class AdminDepartmentsCubit extends Cubit<AdminDepartmentsState> {
     emit(const AdminDepartmentsState.loading());
     final result = await locationsRepo.searchDepartments(query.trim());
     result.when(
-      success: (data) => emit(AdminDepartmentsState.success(data)),
+      success: (data) => safeEmit(AdminDepartmentsState.success(data)),
       failure: (failure) =>
-          emit(AdminDepartmentsState.error(failure.messageKey)),
+          safeEmit(AdminDepartmentsState.error(failure.messageKey)),
     );
   }
 
@@ -40,7 +40,7 @@ class AdminDepartmentsCubit extends Cubit<AdminDepartmentsState> {
     await result.when(
       success: (_) async => await load(),
       failure: (failure) async =>
-          emit(AdminDepartmentsState.error(failure.messageKey)),
+          safeEmit(AdminDepartmentsState.error(failure.messageKey)),
     );
   }
 
@@ -49,7 +49,7 @@ class AdminDepartmentsCubit extends Cubit<AdminDepartmentsState> {
     await result.when(
       success: (_) async => await load(),
       failure: (failure) async =>
-          emit(AdminDepartmentsState.error(failure.messageKey)),
+          safeEmit(AdminDepartmentsState.error(failure.messageKey)),
     );
   }
 
@@ -58,7 +58,7 @@ class AdminDepartmentsCubit extends Cubit<AdminDepartmentsState> {
     await result.when(
       success: (_) async => await load(),
       failure: (failure) async =>
-          emit(AdminDepartmentsState.error(failure.messageKey)),
+          safeEmit(AdminDepartmentsState.error(failure.messageKey)),
     );
   }
 }

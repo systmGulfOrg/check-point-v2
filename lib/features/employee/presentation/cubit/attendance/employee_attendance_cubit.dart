@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
@@ -16,7 +16,7 @@ import 'package:check_point_v2/features/overtime/data/models/overtime_request_mo
 import 'package:check_point_v2/features/overtime/data/repos/overtime_repo.dart';
 import 'employee_attendance_state.dart';
 
-class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
+class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
   EmployeeAttendanceCubit({
     required this.attendanceRepo,
     required this.sessionStorage,
@@ -90,9 +90,9 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
       result = await attendanceRepo.getBranches();
     }
     result.when(
-      success: (data) => emit(EmployeeAttendanceState.branchesLoaded(data)),
+      success: (data) => safeEmit(EmployeeAttendanceState.branchesLoaded(data)),
       failure: (failure) =>
-          emit(EmployeeAttendanceState.error(failure.messageKey)),
+          safeEmit(EmployeeAttendanceState.error(failure.messageKey)),
     );
   }
 
@@ -111,7 +111,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
       requireLocation: area != 'Remote',
     );
     if (!verification.isAllowed) {
-      emit(EmployeeAttendanceState.error(verification.messageKey!));
+      safeEmit(EmployeeAttendanceState.error(verification.messageKey!));
       return;
     }
     currentLocation = verification.location;
@@ -126,10 +126,10 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     result.when(
       success: (data) {
         todayAttendance = data;
-        emit(EmployeeAttendanceState.checkInSuccess(data));
+        safeEmit(EmployeeAttendanceState.checkInSuccess(data));
       },
       failure: (failure) =>
-          emit(EmployeeAttendanceState.error(failure.messageKey)),
+          safeEmit(EmployeeAttendanceState.error(failure.messageKey)),
     );
   }
 
@@ -163,7 +163,7 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
           employeeProfile?.todayWorkMode != 'remote',
     );
     if (!verification.isAllowed) {
-      emit(EmployeeAttendanceState.error(verification.messageKey!));
+      safeEmit(EmployeeAttendanceState.error(verification.messageKey!));
       return;
     }
     currentLocation = verification.location;
@@ -175,10 +175,10 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     result.when(
       success: (data) {
         todayAttendance = data;
-        emit(EmployeeAttendanceState.checkOutSuccess(data));
+        safeEmit(EmployeeAttendanceState.checkOutSuccess(data));
       },
       failure: (failure) =>
-          emit(EmployeeAttendanceState.error(failure.messageKey)),
+          safeEmit(EmployeeAttendanceState.error(failure.messageKey)),
     );
   }
 
@@ -194,10 +194,10 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
         if (data.isNotEmpty) {
           selectedTarget = data.first;
         }
-        emit(EmployeeAttendanceState.targetsLoaded(data));
+        safeEmit(EmployeeAttendanceState.targetsLoaded(data));
       },
       failure: (failure) =>
-          emit(EmployeeAttendanceState.error(failure.messageKey)),
+          safeEmit(EmployeeAttendanceState.error(failure.messageKey)),
     );
   }
 
@@ -239,9 +239,11 @@ class EmployeeAttendanceCubit extends Cubit<EmployeeAttendanceState> {
     final todayStr =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
     return todayOvertimeRequests
-        .where((r) =>
-            r.requestDate.startsWith(todayStr) &&
-            r.status.toLowerCase() != 'rejected')
+        .where(
+          (r) =>
+              r.requestDate.startsWith(todayStr) &&
+              r.status.toLowerCase() != 'rejected',
+        )
         .fold(0, (sum, r) => sum + r.durationMinutes);
   }
 

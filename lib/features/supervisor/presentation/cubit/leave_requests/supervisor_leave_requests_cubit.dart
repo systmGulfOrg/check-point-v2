@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
@@ -7,7 +7,8 @@ import 'package:check_point_v2/features/employee/data/models/leave_requests/empl
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_leave_requests_repo.dart';
 import 'supervisor_leave_requests_state.dart';
 
-class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
+class SupervisorLeaveRequestsCubit
+    extends SafeCubit<SupervisorLeaveRequestsState> {
   SupervisorLeaveRequestsCubit({
     required this.leaveRequestsRepo,
     required this.sessionStorage,
@@ -119,8 +120,8 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
         return true;
       },
       failure: (failure) {
-        emit(SupervisorLeaveRequestsState.error(failure.messageKey));
-        emit(
+        safeEmit(SupervisorLeaveRequestsState.error(failure.messageKey));
+        safeEmit(
           SupervisorLeaveRequestsState.success(
             requests: _filteredRequests,
             statusFilter: statusFilter,
@@ -143,7 +144,7 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
     result.when(
       success: (data) {
         allRequests = data;
-        emit(
+        safeEmit(
           SupervisorLeaveRequestsState.success(
             requests: _filteredRequests,
             statusFilter: statusFilter,
@@ -151,9 +152,9 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
         );
       },
       failure: (failure) {
-        emit(SupervisorLeaveRequestsState.error(failure.messageKey));
+        safeEmit(SupervisorLeaveRequestsState.error(failure.messageKey));
         if (allRequests.isNotEmpty) {
-          emit(
+          safeEmit(
             SupervisorLeaveRequestsState.success(
               requests: _filteredRequests,
               statusFilter: statusFilter,
@@ -212,8 +213,8 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
         return true;
       },
       failure: (failure) {
-        emit(SupervisorLeaveRequestsState.error(failure.messageKey));
-        emit(
+        safeEmit(SupervisorLeaveRequestsState.error(failure.messageKey));
+        safeEmit(
           SupervisorLeaveRequestsState.success(
             requests: _filteredRequests,
             statusFilter: statusFilter,
@@ -248,8 +249,8 @@ class SupervisorLeaveRequestsCubit extends Cubit<SupervisorLeaveRequestsState> {
         return true;
       },
       failure: (failure) {
-        emit(SupervisorLeaveRequestsState.error(failure.messageKey));
-        emit(
+        safeEmit(SupervisorLeaveRequestsState.error(failure.messageKey));
+        safeEmit(
           SupervisorLeaveRequestsState.success(
             requests: _filteredRequests,
             statusFilter: statusFilter,

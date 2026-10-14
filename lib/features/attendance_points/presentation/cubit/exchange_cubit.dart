@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 
@@ -6,11 +6,9 @@ import '../../data/models/points_exchange_model.dart';
 import '../../data/repos/attendance_points_repo.dart';
 import 'exchange_state.dart';
 
-class ExchangeCubit extends Cubit<ExchangeState> {
-  ExchangeCubit({
-    required this.pointsRepo,
-    required this.sessionStorage,
-  }) : super(const ExchangeState.initial());
+class ExchangeCubit extends SafeCubit<ExchangeState> {
+  ExchangeCubit({required this.pointsRepo, required this.sessionStorage})
+    : super(const ExchangeState.initial());
 
   final AttendancePointsRepo pointsRepo;
   final AuthSessionStorage sessionStorage;
@@ -38,8 +36,8 @@ class ExchangeCubit extends Cubit<ExchangeState> {
     );
 
     result.when(
-      success: (data) => emit(ExchangeState.success(data)),
-      failure: (failure) => emit(ExchangeState.error(failure.messageKey)),
+      success: (data) => safeEmit(ExchangeState.success(data)),
+      failure: (failure) => safeEmit(ExchangeState.error(failure.messageKey)),
     );
   }
 
@@ -47,4 +45,3 @@ class ExchangeCubit extends Cubit<ExchangeState> {
     emit(const ExchangeState.initial());
   }
 }
-

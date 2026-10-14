@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 import '../../data/models/project_models.dart';
 import '../../data/repos/projects_repo.dart';
 import 'projects_state.dart';
 
-class ProjectsCubit extends Cubit<ProjectsState> {
+class ProjectsCubit extends SafeCubit<ProjectsState> {
   ProjectsCubit({required this.repo}) : super(const ProjectsState.initial());
   final ProjectsRepo repo;
 
@@ -13,8 +13,9 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     emit(const ProjectsState.loading());
     final result = await repo.getProjects();
     result.when(
-      success: (projects) => emit(ProjectsState.success(projects: projects)),
-      failure: (failure) => emit(ProjectsState.error(failure.messageKey)),
+      success: (projects) =>
+          safeEmit(ProjectsState.success(projects: projects)),
+      failure: (failure) => safeEmit(ProjectsState.error(failure.messageKey)),
     );
   }
 
@@ -22,7 +23,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     final result = await repo.createProject(body);
     result.when(
       success: (_) => loadProjects(),
-      failure: (failure) => emit(ProjectsState.error(failure.messageKey)),
+      failure: (failure) => safeEmit(ProjectsState.error(failure.messageKey)),
     );
   }
 
@@ -30,7 +31,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     final result = await repo.updateProject(id, body);
     result.when(
       success: (_) => loadProjects(),
-      failure: (failure) => emit(ProjectsState.error(failure.messageKey)),
+      failure: (failure) => safeEmit(ProjectsState.error(failure.messageKey)),
     );
   }
 
@@ -38,7 +39,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     final result = await repo.deleteProject(id);
     result.when(
       success: (_) => loadProjects(),
-      failure: (failure) => emit(ProjectsState.error(failure.messageKey)),
+      failure: (failure) => safeEmit(ProjectsState.error(failure.messageKey)),
     );
   }
 
@@ -54,14 +55,14 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     );
     final result = await repo.getTasks(project.id);
     result.when(
-      success: (tasks) => emit(
+      success: (tasks) => safeEmit(
         ProjectsState.success(
           projects: current.projects,
           selectedProjectId: project.id,
           tasks: tasks,
         ),
       ),
-      failure: (failure) => emit(ProjectsState.error(failure.messageKey)),
+      failure: (failure) => safeEmit(ProjectsState.error(failure.messageKey)),
     );
   }
 
@@ -78,7 +79,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
                   : project,
             )
             .toList();
-        emit(
+        safeEmit(
           ProjectsState.success(
             projects: projects,
             selectedProjectId: current.selectedProjectId,
@@ -87,7 +88,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
           ),
         );
       },
-      failure: (f) => emit(ProjectsState.error(f.messageKey)),
+      failure: (f) => safeEmit(ProjectsState.error(f.messageKey)),
     );
   }
 
@@ -112,7 +113,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
                   : item,
             )
             .toList();
-        emit(
+        safeEmit(
           ProjectsState.success(
             projects: projects,
             selectedProjectId: current.selectedProjectId,
@@ -121,7 +122,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
           ),
         );
       },
-      failure: (f) => emit(ProjectsState.error(f.messageKey)),
+      failure: (f) => safeEmit(ProjectsState.error(f.messageKey)),
     );
   }
 
@@ -129,7 +130,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     final result = await repo.createTask(projectId, body);
     result.when(
       success: (_) => openProject(_project(projectId)),
-      failure: (f) => emit(ProjectsState.error(f.messageKey)),
+      failure: (f) => safeEmit(ProjectsState.error(f.messageKey)),
     );
   }
 
@@ -137,7 +138,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     final result = await repo.updateTask(taskId, body);
     result.when(
       success: (_) => _reloadSelected(),
-      failure: (f) => emit(ProjectsState.error(f.messageKey)),
+      failure: (f) => safeEmit(ProjectsState.error(f.messageKey)),
     );
   }
 
@@ -147,7 +148,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     result.when(
       success: (audit) {
         if (current is ProjectsStateSuccess) {
-          emit(
+          safeEmit(
             ProjectsState.success(
               projects: current.projects,
               selectedProjectId: current.selectedProjectId,
@@ -165,7 +166,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     final result = await repo.updateTaskTags(taskId, tags);
     result.when(
       success: (_) => _reloadSelected(),
-      failure: (failure) => emit(ProjectsState.error(failure.messageKey)),
+      failure: (failure) => safeEmit(ProjectsState.error(failure.messageKey)),
     );
   }
 
@@ -173,7 +174,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     final result = await repo.updateTaskStatus(taskId, statusId);
     result.when(
       success: (_) => _reloadSelected(),
-      failure: (f) => emit(ProjectsState.error(f.messageKey)),
+      failure: (f) => safeEmit(ProjectsState.error(f.messageKey)),
     );
   }
 
@@ -181,7 +182,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     final result = await repo.assignTask(taskId, employeeIds);
     result.when(
       success: (_) => _reloadSelected(),
-      failure: (f) => emit(ProjectsState.error(f.messageKey)),
+      failure: (f) => safeEmit(ProjectsState.error(f.messageKey)),
     );
   }
 
@@ -189,7 +190,7 @@ class ProjectsCubit extends Cubit<ProjectsState> {
     final result = await repo.deleteTask(taskId);
     result.when(
       success: (_) => _reloadSelected(),
-      failure: (f) => emit(ProjectsState.error(f.messageKey)),
+      failure: (f) => safeEmit(ProjectsState.error(f.messageKey)),
     );
   }
 

@@ -1,9 +1,9 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
 import 'admin_deleted_employees_state.dart';
 
-class AdminDeletedEmployeesCubit extends Cubit<AdminDeletedEmployeesState> {
+class AdminDeletedEmployeesCubit extends SafeCubit<AdminDeletedEmployeesState> {
   AdminDeletedEmployeesCubit({required this.employeeRepo})
     : super(const AdminDeletedEmployeesState.initial());
 
@@ -14,9 +14,9 @@ class AdminDeletedEmployeesCubit extends Cubit<AdminDeletedEmployeesState> {
     final result = await employeeRepo.getDeletedEmployees();
     result.when(
       success: (data) =>
-          emit(AdminDeletedEmployeesState.success(employees: data)),
+          safeEmit(AdminDeletedEmployeesState.success(employees: data)),
       failure: (failure) =>
-          emit(AdminDeletedEmployeesState.error(failure.messageKey)),
+          safeEmit(AdminDeletedEmployeesState.error(failure.messageKey)),
     );
   }
 
@@ -26,7 +26,7 @@ class AdminDeletedEmployeesCubit extends Cubit<AdminDeletedEmployeesState> {
     await result.when(
       success: (_) async => await load(),
       failure: (failure) async =>
-          emit(AdminDeletedEmployeesState.error(failure.messageKey)),
+          safeEmit(AdminDeletedEmployeesState.error(failure.messageKey)),
     );
   }
 
@@ -36,7 +36,7 @@ class AdminDeletedEmployeesCubit extends Cubit<AdminDeletedEmployeesState> {
     await result.when(
       success: (_) async => await load(),
       failure: (failure) async =>
-          emit(AdminDeletedEmployeesState.error(failure.messageKey)),
+          safeEmit(AdminDeletedEmployeesState.error(failure.messageKey)),
     );
   }
 }

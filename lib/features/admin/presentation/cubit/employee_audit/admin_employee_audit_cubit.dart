@@ -1,9 +1,9 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 import '../../../../../core/network/api_failure_mapper.dart';
 import '../../../data/apis/admin_api_service.dart';
 import 'admin_employee_audit_state.dart';
 
-class AdminEmployeeAuditCubit extends Cubit<AdminEmployeeAuditState> {
+class AdminEmployeeAuditCubit extends SafeCubit<AdminEmployeeAuditState> {
   AdminEmployeeAuditCubit({required this.api})
     : super(const AdminEmployeeAuditState.initial());
 
@@ -14,13 +14,15 @@ class AdminEmployeeAuditCubit extends Cubit<AdminEmployeeAuditState> {
     try {
       final response = await api.getAuditLogs(employeeId);
       if (response.isSuccess == true) {
-        emit(AdminEmployeeAuditState.success(response.value.items));
+        safeEmit(AdminEmployeeAuditState.success(response.value.items));
       } else {
-        emit(const AdminEmployeeAuditState.error('Failed to load audit logs'));
+        safeEmit(
+          const AdminEmployeeAuditState.error('Failed to load audit logs'),
+        );
       }
     } catch (e) {
       final failure = ApiFailureMapper.map(e);
-      emit(AdminEmployeeAuditState.error(failure.messageKey));
+      safeEmit(AdminEmployeeAuditState.error(failure.messageKey));
     }
   }
 }

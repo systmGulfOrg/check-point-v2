@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 import '../../data/models/leave_balance_model.dart';
 import '../../data/models/leave_request_body.dart';
 import '../../data/models/leave_request_model.dart';
@@ -8,7 +8,7 @@ import '../../data/models/leave_type_model.dart';
 import '../../domain/repos/leaves_repo.dart';
 import 'leaves_state.dart';
 
-class LeavesCubit extends Cubit<LeavesState> {
+class LeavesCubit extends SafeCubit<LeavesState> {
   LeavesCubit({required this.leavesRepo}) : super(const LeavesState.initial());
 
   final LeavesRepo leavesRepo;
@@ -19,8 +19,8 @@ class LeavesCubit extends Cubit<LeavesState> {
     emit(const LeavesState.loading());
     final result = await leavesRepo.getOfficialHolidays(year: year);
     result.when(
-      success: (holidays) => emit(LeavesState.holidaysLoaded(holidays)),
-      failure: (failure) => emit(LeavesState.error(failure.messageKey)),
+      success: (holidays) => safeEmit(LeavesState.holidaysLoaded(holidays)),
+      failure: (failure) => safeEmit(LeavesState.error(failure.messageKey)),
     );
   }
 
@@ -52,7 +52,7 @@ class LeavesCubit extends Cubit<LeavesState> {
         return true;
       },
       failure: (failure) {
-        emit(LeavesState.error(failure.messageKey));
+        safeEmit(LeavesState.error(failure.messageKey));
         return false;
       },
     );
@@ -87,7 +87,7 @@ class LeavesCubit extends Cubit<LeavesState> {
       failure: (_) => const <LeaveBalanceModel>[],
     );
 
-    emit(LeavesState.success(balances, types, requests));
+    safeEmit(LeavesState.success(balances, types, requests));
   }
 
   Future<void> submitLeave(LeaveRequestBody body) async {
@@ -95,10 +95,11 @@ class LeavesCubit extends Cubit<LeavesState> {
     final result = await leavesRepo.submitLeaveRequest(body);
     await result.when(
       success: (_) async {
-        emit(const LeavesState.submitSuccess());
+        safeEmit(const LeavesState.submitSuccess());
         await loadLeavesData();
       },
-      failure: (failure) async => emit(LeavesState.error(failure.messageKey)),
+      failure: (failure) async =>
+          safeEmit(LeavesState.error(failure.messageKey)),
     );
   }
 
@@ -107,14 +108,15 @@ class LeavesCubit extends Cubit<LeavesState> {
     final result = await leavesRepo.cancelLeaveRequest(id);
     await result.when(
       success: (_) async {
-        emit(
+        safeEmit(
           const LeavesState.actionSuccess(
             'Leave request cancelled successfully',
           ),
         );
         await loadLeavesData();
       },
-      failure: (failure) async => emit(LeavesState.error(failure.messageKey)),
+      failure: (failure) async =>
+          safeEmit(LeavesState.error(failure.messageKey)),
     );
   }
 
@@ -123,12 +125,13 @@ class LeavesCubit extends Cubit<LeavesState> {
     final result = await leavesRepo.deleteLeaveRequest(id);
     await result.when(
       success: (_) async {
-        emit(
+        safeEmit(
           const LeavesState.actionSuccess('Leave request deleted successfully'),
         );
         await loadLeavesData();
       },
-      failure: (failure) async => emit(LeavesState.error(failure.messageKey)),
+      failure: (failure) async =>
+          safeEmit(LeavesState.error(failure.messageKey)),
     );
   }
 }

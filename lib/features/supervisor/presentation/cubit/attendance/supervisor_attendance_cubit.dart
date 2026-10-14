@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/core/services/attendance_verification_service.dart';
@@ -7,7 +7,7 @@ import 'package:check_point_v2/features/supervisor/data/models/attendance/superv
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_attendance_repo.dart';
 import 'supervisor_attendance_state.dart';
 
-class SupervisorAttendanceCubit extends Cubit<SupervisorAttendanceState> {
+class SupervisorAttendanceCubit extends SafeCubit<SupervisorAttendanceState> {
   SupervisorAttendanceCubit({
     required this.attendanceRepo,
     required this.attendanceVerificationService,
@@ -47,7 +47,7 @@ class SupervisorAttendanceCubit extends Cubit<SupervisorAttendanceState> {
       failure: (_) => const [],
     );
 
-    emit(
+    safeEmit(
       SupervisorAttendanceState.success(
         attendance: _allAttendance,
         lateComers: _lateComers,
@@ -74,7 +74,7 @@ class SupervisorAttendanceCubit extends Cubit<SupervisorAttendanceState> {
       biometricReason: 'Verify your identity to record attendance',
     );
     if (!verification.isAllowed) {
-      emit(SupervisorAttendanceState.error(verification.messageKey!));
+      safeEmit(SupervisorAttendanceState.error(verification.messageKey!));
       return false;
     }
     body = SupervisorAttendanceCheckInRequestBody(
@@ -94,7 +94,7 @@ class SupervisorAttendanceCubit extends Cubit<SupervisorAttendanceState> {
         return true;
       },
       failure: (failure) {
-        emit(SupervisorAttendanceState.error(failure.messageKey));
+        safeEmit(SupervisorAttendanceState.error(failure.messageKey));
         return false;
       },
     );
@@ -105,7 +105,7 @@ class SupervisorAttendanceCubit extends Cubit<SupervisorAttendanceState> {
       biometricReason: 'Verify your identity to record attendance',
     );
     if (!verification.isAllowed) {
-      emit(SupervisorAttendanceState.error(verification.messageKey!));
+      safeEmit(SupervisorAttendanceState.error(verification.messageKey!));
       return false;
     }
     final result = await attendanceRepo.checkOut(body);
@@ -115,7 +115,7 @@ class SupervisorAttendanceCubit extends Cubit<SupervisorAttendanceState> {
         return true;
       },
       failure: (failure) {
-        emit(SupervisorAttendanceState.error(failure.messageKey));
+        safeEmit(SupervisorAttendanceState.error(failure.messageKey));
         return false;
       },
     );
