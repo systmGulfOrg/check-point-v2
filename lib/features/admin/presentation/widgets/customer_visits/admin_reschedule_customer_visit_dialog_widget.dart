@@ -17,7 +17,8 @@ class AdminRescheduleCustomerVisitDialogWidget extends StatefulWidget {
     required String visitDate,
     String? visitTime,
     String? reason,
-  }) onConfirm;
+  })
+  onConfirm;
 
   @override
   State<AdminRescheduleCustomerVisitDialogWidget> createState() =>
@@ -184,9 +185,7 @@ class _AdminRescheduleCustomerVisitDialogWidgetState
 
     return Dialog(
       backgroundColor: AppColors.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       insetPadding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 24.h),
       child: SingleChildScrollView(
         child: Padding(
@@ -314,7 +313,7 @@ class _AdminRescheduleCustomerVisitDialogWidgetState
                         child: Text(
                           'تنبيه: اليوم المحدد يوافق عطلة أسبوعية رسمية.',
                           style: AppTextStyles.font11Medium.copyWith(
-                            color: const Color(0xFF92400E),
+                            color: AppColors.amberTextStrong,
                           ),
                         ),
                       ),

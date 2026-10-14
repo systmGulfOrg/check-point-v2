@@ -79,4 +79,10 @@ class AppColors {
   static const Color amberBorder = Color(0xFFFDE68A);
   static const Color wordDocBlue = Color(0xFF2B579A);
   static const Color excelSheetGreen = Color(0xFF217346);
+  // Leaderboard medal colors
+  static const Color medalGold = Color(0xFFFFD700);
+  static const Color medalSilver = Color(0xFFC0C0C0);
+  static const Color medalBronze = Color(0xFFCD7F32);
+  // Amber text on soft yellow surfaces
+  static const Color amberTextStrong = Color(0xFF92400E);
 }

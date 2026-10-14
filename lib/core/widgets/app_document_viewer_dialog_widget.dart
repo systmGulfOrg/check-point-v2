@@ -44,8 +44,9 @@ class AppDocumentViewerDialogWidget extends StatelessWidget {
   }
 
   String get _cleanName {
-    if (fileName.trim().isNotEmpty && fileName != 'file')
+    if (fileName.trim().isNotEmpty && fileName != 'file') {
       return fileName.trim();
+    }
     if (fileUrl != null && fileUrl!.isNotEmpty) {
       final uriName = fileUrl!.split('/').last.split('?').first;
       if (uriName.isNotEmpty && uriName.contains('.')) return uriName;
@@ -61,18 +62,23 @@ class AppDocumentViewerDialogWidget extends StatelessWidget {
     if (fileUrl != null) {
       final cleanUrl = fileUrl!.toLowerCase();
       if (cleanUrl.contains('.pdf') ||
-          cleanUrl.startsWith('data:application/pdf'))
+          cleanUrl.startsWith('data:application/pdf')) {
         return 'pdf';
-      if (cleanUrl.contains('.png') || cleanUrl.startsWith('data:image/png'))
+      }
+      if (cleanUrl.contains('.png') || cleanUrl.startsWith('data:image/png')) {
         return 'png';
+      }
       if (cleanUrl.contains('.jpg') ||
           cleanUrl.contains('.jpeg') ||
-          cleanUrl.startsWith('data:image/jpeg'))
+          cleanUrl.startsWith('data:image/jpeg')) {
         return 'jpg';
-      if (cleanUrl.contains('.docx') || cleanUrl.contains('.doc'))
+      }
+      if (cleanUrl.contains('.docx') || cleanUrl.contains('.doc')) {
         return 'docx';
-      if (cleanUrl.contains('.xlsx') || cleanUrl.contains('.xls'))
+      }
+      if (cleanUrl.contains('.xlsx') || cleanUrl.contains('.xls')) {
         return 'xlsx';
+      }
     }
     return 'file';
   }
