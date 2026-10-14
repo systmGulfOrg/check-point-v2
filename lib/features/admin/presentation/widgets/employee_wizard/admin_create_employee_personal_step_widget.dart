@@ -86,7 +86,8 @@ class _AdminCreateEmployeePersonalStepWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final hasPhoto = widget.selectedPhotoPath != null ||
+    final hasPhoto =
+        widget.selectedPhotoPath != null ||
         (widget.initialPhotoUrl != null && widget.initialPhotoUrl!.isNotEmpty);
 
     return Column(
@@ -121,10 +122,7 @@ class _AdminCreateEmployeePersonalStepWidgetState
                         widget.selectedPhotoPath ?? widget.initialPhotoUrl,
                       );
                       return provider != null
-                          ? DecorationImage(
-                              image: provider,
-                              fit: BoxFit.cover,
-                            )
+                          ? DecorationImage(image: provider, fit: BoxFit.cover)
                           : null;
                     }(),
                   ),
@@ -223,8 +221,9 @@ class _AdminCreateEmployeePersonalStepWidgetState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomTextFormField(
-                hintText:
-                    'admin.employeeWizard.passwordHint'.tr(context: context),
+                hintText: 'admin.employeeWizard.passwordHint'.tr(
+                  context: context,
+                ),
                 controller: widget.passwordController,
                 focusNode: widget.passwordFocusNode,
                 errorText: widget.passwordErrorText,
@@ -367,8 +366,9 @@ class _AdminCreateEmployeePersonalStepWidgetState
         AdminWizardFieldWidget(
           label: 'admin.employeeWizard.employeeCode'.tr(context: context),
           child: CustomTextFormField(
-            hintText:
-                'admin.employeeWizard.employeeCodeHint'.tr(context: context),
+            hintText: 'admin.employeeWizard.employeeCodeHint'.tr(
+              context: context,
+            ),
             controller: widget.employeeCodeController,
             prefixIcon: Icon(
               Icons.badge_outlined,

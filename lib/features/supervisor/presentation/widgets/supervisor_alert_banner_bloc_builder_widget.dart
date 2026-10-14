@@ -19,10 +19,8 @@ class SupervisorAlertBannerBlocBuilderWidget extends StatelessWidget {
 
     return SupervisorAlertBannerWidget(
       messageKey: 'supervisor.dashboard.alertPending',
-      onTap: () => Navigator.pushNamed(
-        context,
-        AppRoutes.supervisorLeaveManagement,
-      ),
+      onTap: () =>
+          Navigator.pushNamed(context, AppRoutes.supervisorLeaveManagement),
     );
   }
 }

@@ -116,9 +116,19 @@ class _AdminLeaveManagementScreenState extends State<AdminLeaveManagementScreen>
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               labelPadding: EdgeInsets.symmetric(horizontal: 14.w),
               tabs: [
-                Tab(text: 'admin.leaveManagement.tabRequests'.tr(context: context)),
-                Tab(text: 'admin.leaveManagement.tabTypes'.tr(context: context)),
-                Tab(text: 'admin.leaveManagement.tabHolidays'.tr(context: context)),
+                Tab(
+                  text: 'admin.leaveManagement.tabRequests'.tr(
+                    context: context,
+                  ),
+                ),
+                Tab(
+                  text: 'admin.leaveManagement.tabTypes'.tr(context: context),
+                ),
+                Tab(
+                  text: 'admin.leaveManagement.tabHolidays'.tr(
+                    context: context,
+                  ),
+                ),
               ],
             ),
           ),

@@ -19,8 +19,10 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
     final initials = _getInitials(employee.name);
     final status = employee.resolvedContractStatus;
     final isActive = status.toLowerCase() == 'active';
-    final hasPhone = employee.phone != null && employee.phone!.trim().isNotEmpty;
-    final hasEmail = employee.email != null && employee.email!.trim().isNotEmpty;
+    final hasPhone =
+        employee.phone != null && employee.phone!.trim().isNotEmpty;
+    final hasEmail =
+        employee.email != null && employee.email!.trim().isNotEmpty;
 
     return Container(
       width: double.infinity,
@@ -171,7 +173,7 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                                   Icons.badge_outlined,
                                   size: 14.r,
                                   color: AppColors.placeholder,
-                                  ),
+                                ),
                                 wSpace(4),
                                 Flexible(
                                   child: Text(
@@ -217,7 +219,9 @@ class AdminEmployeeProfileHeaderWidget extends StatelessWidget {
                 context,
                 icon: Icons.email_outlined,
                 label: 'employee.profile.emailAction'.tr(context: context),
-                color: hasEmail ? AppColors.brandPrimary : AppColors.placeholder,
+                color: hasEmail
+                    ? AppColors.brandPrimary
+                    : AppColors.placeholder,
                 isEnabled: hasEmail,
                 onTap: hasEmail
                     ? () async {

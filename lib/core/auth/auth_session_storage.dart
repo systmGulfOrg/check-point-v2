@@ -142,7 +142,8 @@ class AuthSessionStorage {
 
   Future<String?> readUserName() => secureStorage.read(key: userNameKey);
 
-  Future<String?> readUserImageUrl() => secureStorage.read(key: userImageUrlKey);
+  Future<String?> readUserImageUrl() =>
+      secureStorage.read(key: userImageUrlKey);
 
   Future<void> saveUserImageUrl(String url) =>
       secureStorage.write(key: userImageUrlKey, value: url);
@@ -175,7 +176,9 @@ class AuthSessionStorage {
       }
     }
     final singleRole = await readUserRole();
-    return singleRole != null && singleRole.isNotEmpty ? [singleRole] : const [];
+    return singleRole != null && singleRole.isNotEmpty
+        ? [singleRole]
+        : const [];
   }
 
   Future<List<String>> readPermissions() async {

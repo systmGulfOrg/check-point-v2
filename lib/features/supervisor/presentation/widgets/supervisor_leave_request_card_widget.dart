@@ -34,50 +34,50 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
     final name = request.employeeName ?? 'Employee';
     final initials = name.isNotEmpty
         ? name
-            .split(' ')
-            .take(2)
-            .map((e) => e.isNotEmpty ? e[0].toUpperCase() : '')
-            .join()
+              .split(' ')
+              .take(2)
+              .map((e) => e.isNotEmpty ? e[0].toUpperCase() : '')
+              .join()
         : 'EM';
     final status = request.status?.toLowerCase() ?? 'pending';
     final isPending = status == 'pending';
 
     final (statusKey, statusColor, statusBgColor) = switch (status) {
       'pending' => (
-          'leaves.status.pending',
-          AppColors.warningOrange,
-          AppColors.softYellowBackground,
-        ),
+        'leaves.status.pending',
+        AppColors.warningOrange,
+        AppColors.softYellowBackground,
+      ),
       'pendinghr' => (
-          'leaves.status.pendingHR',
-          AppColors.warningOrange,
-          AppColors.softYellowBackground,
-        ),
+        'leaves.status.pendingHR',
+        AppColors.warningOrange,
+        AppColors.softYellowBackground,
+      ),
       'approved' => (
-          'leaves.status.approved',
-          AppColors.success,
-          AppColors.softGreenBackground,
-        ),
+        'leaves.status.approved',
+        AppColors.success,
+        AppColors.softGreenBackground,
+      ),
       'rejectedbymanager' => (
-          'leaves.status.rejectedByManager',
-          AppColors.error,
-          AppColors.softBrandBackground,
-        ),
+        'leaves.status.rejectedByManager',
+        AppColors.error,
+        AppColors.softBrandBackground,
+      ),
       'rejectedbyhr' => (
-          'leaves.status.rejectedByHR',
-          AppColors.error,
-          AppColors.softBrandBackground,
-        ),
+        'leaves.status.rejectedByHR',
+        AppColors.error,
+        AppColors.softBrandBackground,
+      ),
       'cancelled' => (
-          'leaves.status.cancelled',
-          AppColors.placeholder,
-          AppColors.border,
-        ),
+        'leaves.status.cancelled',
+        AppColors.placeholder,
+        AppColors.border,
+      ),
       _ => (
-          'leaves.status.rejected',
-          AppColors.error,
-          AppColors.softBrandBackground,
-        ),
+        'leaves.status.rejected',
+        AppColors.error,
+        AppColors.softBrandBackground,
+      ),
     };
 
     // Only the designated direct manager for this employee can approve Stage 1.
@@ -211,7 +211,8 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
                       InkWell(
                         onTap: () => AppDocumentViewerDialogWidget.show(
                           context,
-                          fileName: 'مستند طلب الإجازة - ${request.employeeName}',
+                          fileName:
+                              'مستند طلب الإجازة - ${request.employeeName}',
                           fileUrl: request.attachmentUrl,
                         ),
                         borderRadius: BorderRadius.circular(4.r),

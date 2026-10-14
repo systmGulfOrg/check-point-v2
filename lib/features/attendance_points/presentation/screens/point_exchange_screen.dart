@@ -34,7 +34,8 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
     final maxPossible = _selectedTarget == 'RED' ? redBalance : blackBalance;
     final unitCost = _selectedTarget == 'RED' ? 1 : 30;
     final totalGreenCost = _quantity * unitCost;
-    final canExchange = confirmedGreen >= totalGreenCost && maxPossible > 0 && _quantity > 0;
+    final canExchange =
+        confirmedGreen >= totalGreenCost && maxPossible > 0 && _quantity > 0;
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -53,9 +54,7 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
             case ExchangeSuccess():
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                    'points.exchangeSuccess'.tr(context: context),
-                  ),
+                  content: Text('points.exchangeSuccess'.tr(context: context)),
                   backgroundColor: AppColors.success,
                 ),
               );
@@ -197,7 +196,10 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
                         },
                         borderRadius: BorderRadius.circular(10.r),
                         child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 10.w),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 12.h,
+                            horizontal: 10.w,
+                          ),
                           decoration: BoxDecoration(
                             color: _selectedTarget == 'RED'
                                 ? AppColors.error.withValues(alpha: 0.1)
@@ -248,7 +250,10 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
                         },
                         borderRadius: BorderRadius.circular(10.r),
                         child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 10.w),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 12.h,
+                            horizontal: 10.w,
+                          ),
                           decoration: BoxDecoration(
                             color: _selectedTarget == 'BLACK'
                                 ? AppColors.textPrimary.withValues(alpha: 0.1)
@@ -318,10 +323,7 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
                         iconSize: 32.r,
                         color: AppColors.brandPrimary,
                       ),
-                      Text(
-                        '$_quantity',
-                        style: AppTextStyles.font24Bold,
-                      ),
+                      Text('$_quantity', style: AppTextStyles.font24Bold),
                       IconButton(
                         onPressed: _quantity < maxPossible && !isLoading
                             ? () {
@@ -392,7 +394,10 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
                   height: 50.h,
                   child: ElevatedButton(
                     onPressed: canExchange && !isLoading
-                        ? () => _submitExchange(context, employeeId: summary?.employeeId)
+                        ? () => _submitExchange(
+                            context,
+                            employeeId: summary?.employeeId,
+                          )
                         : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.brandPrimary,
@@ -402,7 +407,9 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
                       ),
                     ),
                     child: isLoading
-                        ? const CircularProgressIndicator(color: AppColors.white)
+                        ? const CircularProgressIndicator(
+                            color: AppColors.white,
+                          )
                         : Text(
                             'points.confirmExchange'.tr(context: context),
                             style: AppTextStyles.font16Bold.copyWith(
@@ -420,7 +427,8 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
   }
 
   void _submitExchange(BuildContext context, {String? employeeId}) {
-    final idempotencyKey = 'exch_${DateTime.now().millisecondsSinceEpoch}_${_selectedTarget}_$_quantity';
+    final idempotencyKey =
+        'exch_${DateTime.now().millisecondsSinceEpoch}_${_selectedTarget}_$_quantity';
     context.read<ExchangeCubit>().exchange(
       target: _selectedTarget,
       quantity: _quantity,

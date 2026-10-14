@@ -113,7 +113,9 @@ class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
                           hSpace(12),
                           Expanded(
                             child: plans.isEmpty
-                                ? Center(child: Text('employee.plans.empty'.tr()))
+                                ? Center(
+                                    child: Text('employee.plans.empty'.tr()),
+                                  )
                                 : RefreshIndicator(
                                     color: AppColors.brandPrimary,
                                     onRefresh: context

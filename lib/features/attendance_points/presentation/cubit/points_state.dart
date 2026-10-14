@@ -14,7 +14,8 @@ class PointsState with _$PointsState {
     required PointsSummaryModel summary,
     @Default(<PointsHistoryItemModel>[]) List<PointsHistoryItemModel> history,
     @Default(<PointsBadgeItemModel>[]) List<PointsBadgeItemModel> badges,
-    @Default(<PointsLeaderboardEntryModel>[]) List<PointsLeaderboardEntryModel> leaderboard,
+    @Default(<PointsLeaderboardEntryModel>[])
+    List<PointsLeaderboardEntryModel> leaderboard,
   }) = PointsLoaded;
   const factory PointsState.error(String message) = PointsError;
 }

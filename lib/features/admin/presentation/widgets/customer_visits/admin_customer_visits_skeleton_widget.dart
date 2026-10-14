@@ -5,10 +5,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:check_point_v2/core/core.dart';
 
 class AdminCustomerVisitsSkeletonWidget extends StatelessWidget {
-  const AdminCustomerVisitsSkeletonWidget({
-    this.itemCount = 3,
-    super.key,
-  });
+  const AdminCustomerVisitsSkeletonWidget({this.itemCount = 3, super.key});
 
   final int itemCount;
 
@@ -22,10 +19,7 @@ class AdminCustomerVisitsSkeletonWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'سجل الزيارات',
-                style: AppTextStyles.font12Regular,
-              ),
+              Text('سجل الزيارات', style: AppTextStyles.font12Regular),
               Text(
                 '+ خطة زيارة جديدة',
                 style: AppTextStyles.font12Bold.copyWith(
@@ -77,10 +71,7 @@ class AdminCustomerVisitsSkeletonWidget extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              'مجدولة',
-                              style: AppTextStyles.font12SemiBold,
-                            ),
+                            Text('مجدولة', style: AppTextStyles.font12SemiBold),
                             wSpace(4),
                             Icon(Icons.schedule, size: 14.r),
                           ],

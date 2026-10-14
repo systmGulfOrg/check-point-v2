@@ -26,7 +26,8 @@ class AdminRescheduleHolidayDialogWidget extends StatefulWidget {
     required String? cancelReason,
     required List<String> excludedDepartmentIds,
     required List<String> excludedEmployeeIds,
-  }) onSave;
+  })
+  onSave;
 
   @override
   State<AdminRescheduleHolidayDialogWidget> createState() =>
@@ -386,8 +387,7 @@ class _AdminRescheduleHolidayDialogWidgetState
                 SizedBox(height: 6.h),
                 CustomTextFormField(
                   controller: noteController,
-                  hintText:
-                      'مثال: بقرار رسمي ترحيل الإجازة لنهاية الأسبوع',
+                  hintText: 'مثال: بقرار رسمي ترحيل الإجازة لنهاية الأسبوع',
                   maxLines: 2,
                 ),
               ],
@@ -402,9 +402,7 @@ class _AdminRescheduleHolidayDialogWidgetState
                         : AppColors.pageBackground,
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
-                      color: isCancelled
-                          ? AppColors.error
-                          : AppColors.border,
+                      color: isCancelled ? AppColors.error : AppColors.border,
                     ),
                   ),
                   child: Row(
@@ -536,7 +534,9 @@ class _AdminRescheduleHolidayDialogWidgetState
                         .read<AdminEmployeesCubit>()
                         .employees;
                     final validEmployees = employees
-                        .where((e) => e.id != null && (e.name?.isNotEmpty ?? false))
+                        .where(
+                          (e) => e.id != null && (e.name?.isNotEmpty ?? false),
+                        )
                         .take(20)
                         .toList();
                     if (validEmployees.isEmpty) {
@@ -552,8 +552,9 @@ class _AdminRescheduleHolidayDialogWidgetState
                       runSpacing: 6.h,
                       children: validEmployees.map((emp) {
                         final empId = emp.id!;
-                        final isSelected = selectedExcludedEmployeeIds
-                            .contains(empId);
+                        final isSelected = selectedExcludedEmployeeIds.contains(
+                          empId,
+                        );
                         return FilterChip(
                           label: Text(emp.name ?? '-'),
                           selected: isSelected,

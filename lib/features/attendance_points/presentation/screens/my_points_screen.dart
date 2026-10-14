@@ -27,10 +27,7 @@ class _MyPointsScreenState extends State<MyPointsScreen> {
       nextLevelPoints: 301,
       progress: 0.12,
     ),
-    streak: PointsStreakModel(
-      currentStreak: 12,
-      highestStreak: 20,
-    ),
+    streak: PointsStreakModel(currentStreak: 12, highestStreak: 20),
     balances: PointsBalancesModel(
       greenConfirmed: 125,
       greenPending: 5,
@@ -68,42 +65,42 @@ class _MyPointsScreenState extends State<MyPointsScreen> {
         builder: (context, state) {
           return switch (state) {
             PointsLoading() => Skeletonizer(
-                enabled: true,
-                child: _buildPointsContent(context, _dummySummary),
-              ),
+              enabled: true,
+              child: _buildPointsContent(context, _dummySummary),
+            ),
             PointsError(:final message) => Center(
-                child: Padding(
-                  padding: EdgeInsets.all(24.r),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.error_outline_rounded,
-                        size: 48.r,
-                        color: AppColors.error,
+              child: Padding(
+                padding: EdgeInsets.all(24.r),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.error_outline_rounded,
+                      size: 48.r,
+                      color: AppColors.error,
+                    ),
+                    hSpace(12),
+                    Text(
+                      message,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.font14Regular,
+                    ),
+                    hSpace(16),
+                    ElevatedButton(
+                      onPressed: () =>
+                          context.read<PointsCubit>().loadAllPointsData(),
+                      child: Text(
+                        'admin.attendance.tryAgain'.tr(context: context),
                       ),
-                      hSpace(12),
-                      Text(
-                        message,
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.font14Regular,
-                      ),
-                      hSpace(16),
-                      ElevatedButton(
-                        onPressed: () =>
-                            context.read<PointsCubit>().loadAllPointsData(),
-                        child: Text(
-                          'admin.attendance.tryAgain'.tr(context: context),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
+            ),
             PointsLoaded(:final summary) => RefreshIndicator(
-                onRefresh: () => context.read<PointsCubit>().loadAllPointsData(),
-                child: _buildPointsContent(context, summary),
-              ),
+              onRefresh: () => context.read<PointsCubit>().loadAllPointsData(),
+              child: _buildPointsContent(context, summary),
+            ),
             _ => const SizedBox.shrink(),
           };
         },
@@ -111,10 +108,7 @@ class _MyPointsScreenState extends State<MyPointsScreen> {
     );
   }
 
-  Widget _buildPointsContent(
-    BuildContext context,
-    PointsSummaryModel summary,
-  ) {
+  Widget _buildPointsContent(BuildContext context, PointsSummaryModel summary) {
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.all(16.r),
@@ -154,9 +148,7 @@ class _MyPointsScreenState extends State<MyPointsScreen> {
                   icon: Icons.history_rounded,
                   color: AppColors.textPrimary,
                   onTap: () {
-                    Navigator.of(
-                      context,
-                    ).pushNamed(AppRoutes.pointsHistory);
+                    Navigator.of(context).pushNamed(AppRoutes.pointsHistory);
                   },
                 ),
               ),
@@ -171,9 +163,7 @@ class _MyPointsScreenState extends State<MyPointsScreen> {
                   icon: Icons.military_tech_rounded,
                   color: AppColors.warningOrange,
                   onTap: () {
-                    Navigator.of(
-                      context,
-                    ).pushNamed(AppRoutes.pointsBadges);
+                    Navigator.of(context).pushNamed(AppRoutes.pointsBadges);
                   },
                 ),
               ),

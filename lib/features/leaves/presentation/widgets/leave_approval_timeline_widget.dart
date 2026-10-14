@@ -72,7 +72,9 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
       directManagerName: request.directManagerName ?? request.managerName,
       hasDirectManager: request.hasDirectManager,
       managerName: request.managerName,
-      managerActionAt: AppDateFormatter.formatDateString(request.managerActionAt),
+      managerActionAt: AppDateFormatter.formatDateString(
+        request.managerActionAt,
+      ),
       managerRejectionReason: request.managerRejectionReason,
       hrName: request.hrName,
       hrActionAt: AppDateFormatter.formatDateString(request.hrActionAt),
@@ -113,77 +115,78 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
     final submittedDate = createdAt ?? startDate ?? '-';
 
     // Direct manager check
-    final noManager = hasDirectManager == false ||
-        (directManagerName == null && managerName == null && hasDirectManager == null);
+    final noManager =
+        hasDirectManager == false ||
+        (directManagerName == null &&
+            managerName == null &&
+            hasDirectManager == null);
 
     // Stage 1: Direct Manager Approval
     final (managerStatus, managerActor) = switch (statusLower) {
       'rejectedbymanager' => (
-          LeaveStepStatus.rejected,
-          managerName != null
-              ? '${'leaves.rejection.managerRejected'.tr(context: context)}: $managerName'
-              : 'leaves.rejection.managerRejected'.tr(context: context),
-        ),
+        LeaveStepStatus.rejected,
+        managerName != null
+            ? '${'leaves.rejection.managerRejected'.tr(context: context)}: $managerName'
+            : 'leaves.rejection.managerRejected'.tr(context: context),
+      ),
       'pendinghr' || 'approved' || 'rejectedbyhr' => (
-          LeaveStepStatus.completed,
-          managerName != null
-              ? '✓ $managerName'
-              : (noManager
+        LeaveStepStatus.completed,
+        managerName != null
+            ? '✓ $managerName'
+            : (noManager
                   ? 'leaves.workflow.noDirectManager'.tr(context: context)
                   : 'leaves.approval.approved'.tr(context: context)),
-        ),
-      'pending' => noManager
-          ? (
-              LeaveStepStatus.completed,
-              'leaves.workflow.noDirectManager'.tr(context: context),
-            )
-          : (
-              LeaveStepStatus.inProgress,
-              'leaves.approval.pendingManagerReview'.tr(context: context),
-            ),
-      _ => (
-          LeaveStepStatus.completed,
-          managerName ?? directManagerName,
-        ),
+      ),
+      'pending' =>
+        noManager
+            ? (
+                LeaveStepStatus.completed,
+                'leaves.workflow.noDirectManager'.tr(context: context),
+              )
+            : (
+                LeaveStepStatus.inProgress,
+                'leaves.approval.pendingManagerReview'.tr(context: context),
+              ),
+      _ => (LeaveStepStatus.completed, managerName ?? directManagerName),
     };
 
     // Stage 2: HR / Admin Final Approval
     final (hrStatus, hrActor) = switch (statusLower) {
       'rejectedbymanager' => (
-          LeaveStepStatus.waiting,
-          'leaves.approval.skippedDueToManagerRejection'.tr(context: context),
-        ),
+        LeaveStepStatus.waiting,
+        'leaves.approval.skippedDueToManagerRejection'.tr(context: context),
+      ),
       'rejectedbyhr' || 'rejected' => (
-          LeaveStepStatus.rejected,
-          hrName != null
-              ? '${'leaves.rejection.hrRejected'.tr(context: context)}: $hrName'
-              : 'leaves.rejection.hrRejected'.tr(context: context),
-        ),
+        LeaveStepStatus.rejected,
+        hrName != null
+            ? '${'leaves.rejection.hrRejected'.tr(context: context)}: $hrName'
+            : 'leaves.rejection.hrRejected'.tr(context: context),
+      ),
       'approved' => (
-          LeaveStepStatus.completed,
-          hrName != null
-              ? '✓ $hrName'
-              : 'leaves.approval.approved'.tr(context: context),
-        ),
+        LeaveStepStatus.completed,
+        hrName != null
+            ? '✓ $hrName'
+            : 'leaves.approval.approved'.tr(context: context),
+      ),
       'pendinghr' => (
-          LeaveStepStatus.inProgress,
-          'leaves.approval.pendingHrReview'.tr(context: context),
-        ),
-      'pending' => noManager
-          ? (
-              LeaveStepStatus.inProgress,
-              'leaves.approval.pendingHrReview'.tr(context: context),
-            )
-          : (
-              LeaveStepStatus.waiting,
-              'leaves.approval.waitingForManagerFirst'.tr(context: context),
-            ),
+        LeaveStepStatus.inProgress,
+        'leaves.approval.pendingHrReview'.tr(context: context),
+      ),
+      'pending' =>
+        noManager
+            ? (
+                LeaveStepStatus.inProgress,
+                'leaves.approval.pendingHrReview'.tr(context: context),
+              )
+            : (
+                LeaveStepStatus.waiting,
+                'leaves.approval.waitingForManagerFirst'.tr(context: context),
+              ),
       _ => (LeaveStepStatus.waiting, null),
     };
 
-    final effectiveRejectionReason = rejectionReason ??
-        managerRejectionReason ??
-        hrRejectionReason;
+    final effectiveRejectionReason =
+        rejectionReason ?? managerRejectionReason ?? hrRejectionReason;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -292,18 +295,12 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.softRedBackground,
               borderRadius: BorderRadius.circular(8.r),
-              border: Border.all(
-                color: AppColors.error.withValues(alpha: 0.2),
-              ),
+              border: Border.all(color: AppColors.error.withValues(alpha: 0.2)),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.cancel_outlined,
-                  size: 16.r,
-                  color: AppColors.error,
-                ),
+                Icon(Icons.cancel_outlined, size: 16.r, color: AppColors.error),
                 SizedBox(width: 8.w),
                 Expanded(
                   child: Column(

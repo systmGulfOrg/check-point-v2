@@ -22,7 +22,8 @@ class AdminRecordVisitOutcomeDialogWidget extends StatefulWidget {
     String? notes,
     String? documentName,
     String? documentUrl,
-  ) onSubmit;
+  )
+  onSubmit;
 
   @override
   State<AdminRecordVisitOutcomeDialogWidget> createState() =>
@@ -45,8 +46,9 @@ class _AdminRecordVisitOutcomeDialogWidgetState
     notesController = TextEditingController(text: widget.visit.notes ?? '');
     attachedDocName = widget.visit.documentName;
     attachedDocUrl = widget.visit.documentUrl;
-    selectedStatus =
-        widget.visit.status == 'cancelled' ? 'cancelled' : 'completed';
+    selectedStatus = widget.visit.status == 'cancelled'
+        ? 'cancelled'
+        : 'completed';
   }
 
   @override
@@ -217,7 +219,8 @@ class _AdminRecordVisitOutcomeDialogWidgetState
             if (attachedDocName != null && attachedDocName!.isNotEmpty)
               Builder(
                 builder: (context) {
-                  final isImg = attachedDocName!.toLowerCase().endsWith('.png') ||
+                  final isImg =
+                      attachedDocName!.toLowerCase().endsWith('.png') ||
                       attachedDocName!.toLowerCase().endsWith('.jpg') ||
                       attachedDocName!.toLowerCase().endsWith('.jpeg');
                   final isPdf = attachedDocName!.toLowerCase().endsWith('.pdf');
@@ -233,7 +236,10 @@ class _AdminRecordVisitOutcomeDialogWidgetState
                       : AppColors.brandPrimary;
 
                   return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 8.h,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.selectedBackground,
                       borderRadius: BorderRadius.circular(10.r),
@@ -243,11 +249,7 @@ class _AdminRecordVisitOutcomeDialogWidgetState
                     ),
                     child: Row(
                       children: [
-                        Icon(
-                          docIcon,
-                          color: docIconColor,
-                          size: 20.r,
-                        ),
+                        Icon(docIcon, color: docIconColor, size: 20.r),
                         SizedBox(width: 8.w),
                         Expanded(
                           child: Directionality(
@@ -274,7 +276,9 @@ class _AdminRecordVisitOutcomeDialogWidgetState
                               attachedDocUrl = null;
                             });
                           },
-                          tooltip: 'admin.visits.removeDoc'.tr(context: context),
+                          tooltip: 'admin.visits.removeDoc'.tr(
+                            context: context,
+                          ),
                         ),
                       ],
                     ),
@@ -286,7 +290,10 @@ class _AdminRecordVisitOutcomeDialogWidgetState
                 onTap: _pickDocument,
                 borderRadius: BorderRadius.circular(10.r),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 14.w),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 12.h,
+                    horizontal: 14.w,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.fieldBackground,
                     borderRadius: BorderRadius.circular(10.r),

@@ -30,7 +30,9 @@ class LeaveRequestCardWidget extends StatelessWidget {
     if (lower == 'sick leave' || lower == 'sick' || lower == 'إجازة مرضية') {
       return 'leaves.dashboard.sickLeave'.tr();
     }
-    if (lower == 'casual leave' || lower == 'casual' || lower == 'إجازة عارضة') {
+    if (lower == 'casual leave' ||
+        lower == 'casual' ||
+        lower == 'إجازة عارضة') {
       return 'leaves.dashboard.casualLeave'.tr();
     }
     return name;
@@ -156,9 +158,13 @@ class LeaveRequestCardWidget extends StatelessWidget {
               SizedBox(height: 6.h),
               Builder(
                 builder: (context) {
-                  final isPermit = request.totalDays == 0 ||
+                  final isPermit =
+                      request.totalDays == 0 ||
                       (request.leaveTypeName?.contains('إذن') ?? false) ||
-                      (request.leaveTypeName?.toLowerCase().contains('permit') ?? false);
+                      (request.leaveTypeName?.toLowerCase().contains(
+                            'permit',
+                          ) ??
+                          false);
                   final dateText = isPermit
                       ? AppDateFormatter.formatDate(request.startDate)
                       : '${AppDateFormatter.formatDate(request.startDate)} - ${AppDateFormatter.formatDate(request.endDate)} (${request.totalDays} ${'leaves.dashboard.days'.tr()})';
@@ -166,7 +172,9 @@ class LeaveRequestCardWidget extends StatelessWidget {
                   return Row(
                     children: [
                       Icon(
-                        isPermit ? Icons.access_time_rounded : Icons.calendar_today_outlined,
+                        isPermit
+                            ? Icons.access_time_rounded
+                            : Icons.calendar_today_outlined,
                         size: 13.r,
                         color: AppColors.textSecondary,
                       ),

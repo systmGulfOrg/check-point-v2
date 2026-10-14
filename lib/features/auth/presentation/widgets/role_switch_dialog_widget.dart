@@ -76,10 +76,7 @@ class RoleSwitchDialogWidget extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await profileCubit.switchRole(selectedRole);
-      navigator.pushNamedAndRemoveUntil(
-        targetRoute,
-        (route) => false,
-      );
+      navigator.pushNamedAndRemoveUntil(targetRoute, (route) => false);
     });
   }
 
@@ -194,8 +191,7 @@ class RoleSwitchDialogWidget extends StatelessWidget {
                                   children: [
                                     Text(
                                       _roleName(context, role),
-                                      style: AppTextStyles.font16Bold
-                                          .copyWith(
+                                      style: AppTextStyles.font16Bold.copyWith(
                                         color: isSelected
                                             ? AppColors.brandPrimary
                                             : AppColors.textPrimary,
@@ -208,8 +204,8 @@ class RoleSwitchDialogWidget extends StatelessWidget {
                                         ),
                                         style: AppTextStyles.font11Regular
                                             .copyWith(
-                                          color: AppColors.brandPrimary,
-                                        ),
+                                              color: AppColors.brandPrimary,
+                                            ),
                                       ),
                                   ],
                                 ),

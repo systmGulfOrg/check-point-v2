@@ -141,8 +141,9 @@ class _AdminEmployeeProfileEditFormWidgetState
       if (result != null && result.files.single.path != null) {
         final filePath = result.files.single.path!;
         final bytes = await File(filePath).readAsBytes();
-        final base64String =
-            await AppImageCompressor.compressAndEncodeBase64(bytes);
+        final base64String = await AppImageCompressor.compressAndEncodeBase64(
+          bytes,
+        );
         setState(() {
           _selectedPhotoPath = filePath;
           _photoBase64 = base64String;
@@ -221,7 +222,8 @@ class _AdminEmployeeProfileEditFormWidgetState
         mobileId: _mobileIdController.text.trim().isNotEmpty
             ? _mobileIdController.text.trim()
             : null,
-        imageUrl: _photoBase64 ??
+        imageUrl:
+            _photoBase64 ??
             await AppImageCompressor.compressExistingBase64(
               widget.employee.imageUrl,
             ),
@@ -284,9 +286,7 @@ class _AdminEmployeeProfileEditFormWidgetState
                             ),
                           ],
                         ),
-                        child: ClipOval(
-                          child: _buildAvatarImage(),
-                        ),
+                        child: ClipOval(child: _buildAvatarImage()),
                       ),
                       Positioned(
                         bottom: 0,
@@ -503,9 +503,7 @@ class _AdminEmployeeProfileEditFormWidgetState
 
           // Section 3: Organization, Roles & Permissions
           AdminEmployeeProfileInfoCardWidget(
-            title: 'admin.employeeWizard.attendanceTitle'.tr(
-              context: context,
-            ),
+            title: 'admin.employeeWizard.attendanceTitle'.tr(context: context),
             icon: Icons.corporate_fare_rounded,
             children: [
               // Department Dropdown
@@ -516,7 +514,8 @@ class _AdminEmployeeProfileEditFormWidgetState
                     _ => <DepartmentModel>[],
                   };
                   return DropdownButtonFormField<int>(
-                    initialValue: _selectedDepartmentId != null &&
+                    initialValue:
+                        _selectedDepartmentId != null &&
                             depts.any((d) => d.id == _selectedDepartmentId)
                         ? _selectedDepartmentId
                         : null,
@@ -559,7 +558,8 @@ class _AdminEmployeeProfileEditFormWidgetState
                     _ => <BranchModel>[],
                   };
                   return DropdownButtonFormField<int>(
-                    initialValue: _selectedBranchId != null &&
+                    initialValue:
+                        _selectedBranchId != null &&
                             branches.any((b) => b.id == _selectedBranchId)
                         ? _selectedBranchId
                         : null,
@@ -587,8 +587,7 @@ class _AdminEmployeeProfileEditFormWidgetState
                           ),
                         )
                         .toList(),
-                    onChanged: (val) =>
-                        setState(() => _selectedBranchId = val),
+                    onChanged: (val) => setState(() => _selectedBranchId = val),
                   );
                 },
               ),
@@ -604,7 +603,8 @@ class _AdminEmployeeProfileEditFormWidgetState
                     orElse: () => <EmployeeModel>[],
                   );
                   return DropdownButtonFormField<String>(
-                    initialValue: _selectedDirectManagerId != null &&
+                    initialValue:
+                        _selectedDirectManagerId != null &&
                             employees.any(
                               (e) => e.id == _selectedDirectManagerId,
                             )
@@ -614,9 +614,7 @@ class _AdminEmployeeProfileEditFormWidgetState
                       labelText: 'admin.employeeWizard.selectDirectManager'.tr(
                         context: context,
                       ),
-                      prefixIcon: const Icon(
-                        Icons.supervisor_account_outlined,
-                      ),
+                      prefixIcon: const Icon(Icons.supervisor_account_outlined),
                       filled: true,
                       fillColor: AppColors.pageBackground,
                       border: OutlineInputBorder(

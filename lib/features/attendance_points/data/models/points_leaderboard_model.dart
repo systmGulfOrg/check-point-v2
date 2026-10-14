@@ -32,7 +32,8 @@ class PointsLeaderboardEntryModel with _$PointsLeaderboardEntryModel {
 @freezed
 class PointsLeaderboardResponseModel with _$PointsLeaderboardResponseModel {
   const factory PointsLeaderboardResponseModel({
-    @Default(<PointsLeaderboardEntryModel>[]) List<PointsLeaderboardEntryModel> value,
+    @Default(<PointsLeaderboardEntryModel>[])
+    List<PointsLeaderboardEntryModel> value,
     bool? isSuccess,
     String? successMessage,
     List<String>? errors,
