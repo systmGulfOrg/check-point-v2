@@ -5,15 +5,17 @@ platform :android do
   lane :build do |options|
     build_number = options[:build_number]
     build_flag = build_number ? "--build-number=#{build_number}" : ""
-    sh("cd ../.. && flutter build appbundle --release #{build_flag}")
+    root_dir = File.expand_path("../..", __dir__)
+    sh("cd '#{root_dir}' && flutter build appbundle --release #{build_flag}")
   end
 
   desc "Build and upload to Google Play Internal Testing track"
   lane :beta do |options|
     build(options) unless options[:skip_build]
 
-    aab_path = Dir["../../build/app/outputs/bundle/release/*.aab"].first
-    UI.user_error!("No AAB found in build/app/outputs/bundle/release/") unless aab_path
+    aab_dir = File.expand_path("../../build/app/outputs/bundle/release", __dir__)
+    aab_path = Dir["#{aab_dir}/*.aab"].first
+    UI.user_error!("No AAB found in #{aab_dir}") unless aab_path && File.exist?(aab_path)
 
     upload_to_play_store(
       track: 'internal',
@@ -28,8 +30,9 @@ platform :android do
   lane :distribute do |options|
     build(options) unless options[:skip_build]
 
-    aab_path = Dir["../../build/app/outputs/bundle/release/*.aab"].first
-    UI.user_error!("No AAB found in build/app/outputs/bundle/release/") unless aab_path
+    aab_dir = File.expand_path("../../build/app/outputs/bundle/release", __dir__)
+    aab_path = Dir["#{aab_dir}/*.aab"].first
+    UI.user_error!("No AAB found in #{aab_dir}") unless aab_path && File.exist?(aab_path)
 
     upload_to_play_store(
       track: 'production',

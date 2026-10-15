@@ -34,13 +34,15 @@ platform :ios do
     api_key = setup_api_key
     build_number = options[:build_number]
 
+    root_dir = File.expand_path("../..", __dir__)
     unless options[:skip_build]
       build_flag = build_number ? "--build-number=#{build_number}" : ""
-      sh("cd ../.. && flutter build ipa --release #{build_flag} --export-options-plist=ios/ExportOptions.plist")
+      sh("cd '#{root_dir}' && flutter build ipa --release #{build_flag} --export-options-plist=ios/ExportOptions.plist")
     end
 
-    ipa_path = Dir["../../build/ios/ipa/*.ipa"].first
-    UI.user_error!("No IPA found in build/ios/ipa/") unless ipa_path
+    ipa_dir = File.expand_path("../../build/ios/ipa", __dir__)
+    ipa_path = Dir["#{ipa_dir}/*.ipa"].first
+    UI.user_error!("No IPA found in #{ipa_dir}") unless ipa_path && File.exist?(ipa_path)
 
     upload_to_testflight(
       api_key: api_key,
@@ -54,13 +56,15 @@ platform :ios do
     api_key = setup_api_key
     build_number = options[:build_number]
 
+    root_dir = File.expand_path("../..", __dir__)
     unless options[:skip_build]
       build_flag = build_number ? "--build-number=#{build_number}" : ""
-      sh("cd ../.. && flutter build ipa --release #{build_flag} --export-options-plist=ios/ExportOptions.plist")
+      sh("cd '#{root_dir}' && flutter build ipa --release #{build_flag} --export-options-plist=ios/ExportOptions.plist")
     end
 
-    ipa_path = Dir["../../build/ios/ipa/*.ipa"].first
-    UI.user_error!("No IPA found in build/ios/ipa/") unless ipa_path
+    ipa_dir = File.expand_path("../../build/ios/ipa", __dir__)
+    ipa_path = Dir["#{ipa_dir}/*.ipa"].first
+    UI.user_error!("No IPA found in #{ipa_dir}") unless ipa_path && File.exist?(ipa_path)
 
     upload_to_app_store(
       api_key: api_key,
