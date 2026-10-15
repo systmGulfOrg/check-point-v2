@@ -71,6 +71,7 @@ platform :ios do
       ipa: ipa_path,
       skip_metadata: options[:skip_metadata] || false,
       skip_screenshots: options[:skip_screenshots] || false,
+      skip_waiting_for_build_processing: true,
       force: true,
       automatic_release: false
     )
