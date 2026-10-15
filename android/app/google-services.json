@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "647735685057",
+    "project_id": "check-point-70fd8",
+    "storage_bucket": "check-point-70fd8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:647735685057:android:b63f5705dbf3a022a54940",
+        "android_client_info": {
+          "package_name": "com.systmgulf.checkpoint"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBS1lyHUT-Is6oZTFJEnk-Fw0Ykh-CJffU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

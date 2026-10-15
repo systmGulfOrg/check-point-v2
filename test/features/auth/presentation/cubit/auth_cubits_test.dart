@@ -12,6 +12,7 @@ import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubi
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_state.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_state.dart';
+import 'package:check_point_v2/core/services/push_token_registrar.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
@@ -109,6 +110,17 @@ class _FakeBiometricAuthService extends BiometricAuthService {
   Future<bool> isAvailable() async => false;
 }
 
+/// LoginUseCase/AuthSessionCubit depend on the narrow
+/// PushTokenRegistrarContract, not the concrete PushTokenRegistrar — so this
+/// fake needs no FirebaseMessaging instance at all.
+class _NoopPushTokenRegistrar implements PushTokenRegistrarContract {
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> stop() async {}
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   FlutterSecureStorage.setMockInitialValues({});
@@ -135,6 +147,7 @@ void main() {
         deviceIdentityProvider: deviceIdentityProvider,
         authSessionStorage: sessionStorage,
         biometricAuthService: biometricAuthService,
+        pushTokenRegistrar: _NoopPushTokenRegistrar(),
       );
 
       final cubit = LoginCubit(
@@ -187,6 +200,7 @@ void main() {
           deviceIdentityProvider: deviceIdentityProvider,
           authSessionStorage: sessionStorage,
           biometricAuthService: biometricAuthService,
+          pushTokenRegistrar: _NoopPushTokenRegistrar(),
         );
 
         final cubit = LoginCubit(

@@ -10,6 +10,14 @@
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true">
+        <!-- FCM: icon + channel used for notifications delivered while the app is
+             in the background, so they match the in-app (foreground) ones. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="check_point_push" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBmhmNVQufGCy8Iruka77zE4C0Uq2YpDDI" />

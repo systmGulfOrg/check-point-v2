@@ -10,7 +10,9 @@ class _FakeLeavesRepo implements LeavesRepoImpl {
   List<OfficialHolidayModel> holidays = [];
 
   @override
-  Future<ApiResult<List<OfficialHolidayModel>>> getOfficialHolidays({int? year}) async {
+  Future<ApiResult<List<OfficialHolidayModel>>> getOfficialHolidays({
+    int? year,
+  }) async {
     return ApiResult.success(holidays);
   }
 
@@ -61,7 +63,11 @@ void main() {
         OfficialHolidayModel(
           id: '2',
           name: 'Sinai Liberation Day',
-          date: DateTime(now.year, now.month, now.day).add(const Duration(days: 5)),
+          date: DateTime(
+            now.year,
+            now.month,
+            now.day,
+          ).add(const Duration(days: 5)),
           isRecurring: false,
         ),
       ];

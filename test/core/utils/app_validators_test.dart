@@ -12,7 +12,10 @@ void main() {
     });
 
     test('name validator checks minimum length and empty', () {
-      final validator = AppValidators.name(minLength: 3, message: 'Invalid name');
+      final validator = AppValidators.name(
+        minLength: 3,
+        message: 'Invalid name',
+      );
       expect(validator(null), 'Invalid name');
       expect(validator(''), 'Invalid name');
       expect(validator('ab'), 'Invalid name');
@@ -27,7 +30,10 @@ void main() {
       expect(requiredValidator('test@'), 'Invalid email');
       expect(requiredValidator('test@company.com'), isNull);
 
-      final optionalValidator = AppValidators.email(isRequired: false, message: 'Invalid email');
+      final optionalValidator = AppValidators.email(
+        isRequired: false,
+        message: 'Invalid email',
+      );
       expect(optionalValidator(null), isNull);
       expect(optionalValidator(''), isNull);
       expect(optionalValidator('test@company.com'), isNull);
@@ -51,7 +57,10 @@ void main() {
     });
 
     test('password validator checks minimum length', () {
-      final validator = AppValidators.password(minLength: 6, message: 'Too short');
+      final validator = AppValidators.password(
+        minLength: 6,
+        message: 'Too short',
+      );
       expect(validator(null), 'Too short');
       expect(validator('12345'), 'Too short');
       expect(validator('123456'), isNull);
@@ -69,25 +78,37 @@ void main() {
     });
 
     test('number and positiveNumber validator check numerical values', () {
-      final numValidator = AppValidators.number(min: 1, max: 100, message: 'Invalid number');
+      final numValidator = AppValidators.number(
+        min: 1,
+        max: 100,
+        message: 'Invalid number',
+      );
       expect(numValidator(null), 'Invalid number');
       expect(numValidator('abc'), 'Invalid number');
       expect(numValidator('0'), 'Invalid number');
       expect(numValidator('150'), 'Invalid number');
       expect(numValidator('50'), isNull);
 
-      final posValidator = AppValidators.positiveNumber(message: 'Positive required');
+      final posValidator = AppValidators.positiveNumber(
+        message: 'Positive required',
+      );
       expect(posValidator('-5'), 'Positive required');
       expect(posValidator('10'), isNull);
     });
 
     test('coordinate validator checks lat/lng bounds', () {
-      final latValidator = AppValidators.coordinate(isLatitude: true, message: 'Invalid lat');
+      final latValidator = AppValidators.coordinate(
+        isLatitude: true,
+        message: 'Invalid lat',
+      );
       expect(latValidator('95'), 'Invalid lat');
       expect(latValidator('-95'), 'Invalid lat');
       expect(latValidator('30.0444'), isNull);
 
-      final lngValidator = AppValidators.coordinate(isLatitude: false, message: 'Invalid lng');
+      final lngValidator = AppValidators.coordinate(
+        isLatitude: false,
+        message: 'Invalid lng',
+      );
       expect(lngValidator('190'), 'Invalid lng');
       expect(lngValidator('31.2357'), isNull);
     });

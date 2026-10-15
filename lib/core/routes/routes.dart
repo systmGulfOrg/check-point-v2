@@ -31,6 +31,7 @@ class AppRoutes {
   static const String remoteWork = '/remote-work';
   static const String overtime = '/overtime';
   static const String supervisorNotifications = '/supervisor/notifications';
+  static const String notifications = '/notifications';
   static const String adminShiftDetails = '/admin/shifts-policies/details';
   static const String employee = '/employee';
   static const String projects = '/projects';

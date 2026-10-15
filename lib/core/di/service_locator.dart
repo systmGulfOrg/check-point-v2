@@ -1,5 +1,6 @@
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_audit/admin_employee_audit_cubit.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:local_auth/local_auth.dart';
@@ -119,7 +120,10 @@ import 'package:check_point_v2/core/network/dio_factory.dart';
 import 'package:check_point_v2/core/network/device_identity_provider.dart';
 import 'package:check_point_v2/core/services/google_places_service.dart';
 import 'package:check_point_v2/core/services/location_integrity_service.dart';
+import 'package:check_point_v2/core/services/local_notification_service.dart';
 import 'package:check_point_v2/core/services/location_service.dart';
+import 'package:check_point_v2/core/services/push_notification_service.dart';
+import 'package:check_point_v2/core/services/push_token_registrar.dart';
 
 final sl = GetIt.instance;
 
@@ -160,6 +164,16 @@ Future<void> setupServiceLocator() async {
       locationService: sl<LocationService>(),
       biometricAuthService: sl<BiometricAuthService>(),
       locationIntegrityService: sl<LocationIntegrityService>(),
+    ),
+  );
+  sl.registerLazySingleton<LocalNotificationService>(
+    LocalNotificationService.new,
+  );
+  sl.registerLazySingleton<FirebaseMessaging>(() => FirebaseMessaging.instance);
+  sl.registerLazySingleton<PushNotificationService>(
+    () => PushNotificationService(
+      messaging: sl<FirebaseMessaging>(),
+      localNotificationService: sl<LocalNotificationService>(),
     ),
   );
   sl.registerLazySingleton<GooglePlacesService>(
@@ -283,6 +297,12 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<NotificationsRepo>(
     () => NotificationsRepoImpl(api: sl<NotificationsApiService>()),
   );
+  sl.registerLazySingleton<PushTokenRegistrar>(
+    () => PushTokenRegistrar(
+      pushNotificationService: sl<PushNotificationService>(),
+      notificationsRepo: sl<NotificationsRepo>(),
+    ),
+  );
   sl.registerLazySingleton<RemoteWorkRepo>(
     () => RemoteWorkRepoImpl(api: sl<RemoteWorkApiService>()),
   );
@@ -297,6 +317,7 @@ Future<void> setupServiceLocator() async {
       deviceIdentityProvider: sl<DeviceIdentityProvider>(),
       authSessionStorage: sl<AuthSessionStorage>(),
       biometricAuthService: sl<BiometricAuthService>(),
+      pushTokenRegistrar: sl<PushTokenRegistrar>(),
     ),
   );
   sl.registerLazySingleton<EmployeeCheckInUseCase>(
@@ -328,7 +349,10 @@ Future<void> setupServiceLocator() async {
     ),
   );
   sl.registerFactory<AuthSessionCubit>(
-    () => AuthSessionCubit(authSessionStorage: sl<AuthSessionStorage>()),
+    () => AuthSessionCubit(
+      authSessionStorage: sl<AuthSessionStorage>(),
+      pushTokenRegistrar: sl<PushTokenRegistrar>(),
+    ),
   );
   sl.registerFactory<AuthProfileCubit>(
     () => AuthProfileCubit(

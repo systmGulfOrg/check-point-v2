@@ -13,6 +13,7 @@ import 'package:check_point_v2/features/auth/presentation/widgets/user_permissio
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_section_card_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_sign_out_button_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_tile_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_notifications_tile_bloc_selector_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_profile_name_tile_bloc_builder_widget.dart';
 
 class EmployeeSettingsScreen extends StatelessWidget {
@@ -64,11 +65,7 @@ class EmployeeSettingsScreen extends StatelessWidget {
                     valueKey: '••••••••',
                     onTap: () => showChangePasswordSheet(context),
                   ),
-                  EmployeeSettingsTileWidget(
-                    icon: Icons.notifications_none_rounded,
-                    titleKey: 'employee.settings.notifications',
-                    valueKey: 'employee.settings.enabled',
-                  ),
+                  const EmployeeSettingsNotificationsTileBlocSelectorWidget(),
                   EmployeeSettingsTileWidget(
                     icon: Icons.shield_outlined,
                     titleKey: 'admin.settings.permissions',

@@ -75,6 +75,7 @@ import 'package:check_point_v2/features/attendance_points/presentation/screens/a
 import 'package:check_point_v2/features/attendance_points/presentation/screens/admin_employee_points_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_main_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_notifications_screen.dart';
+import 'package:check_point_v2/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:check_point_v2/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_plans_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_tasks_screen.dart';
@@ -97,6 +98,10 @@ import 'routes.dart';
 
 class AppRouter {
   const AppRouter._();
+
+  /// Lets code outside the widget tree (the push-notification tap handler)
+  /// navigate without a BuildContext.
+  static final navigatorKey = GlobalKey<NavigatorState>();
 
   static Route<void> _fadeRoute({
     required Widget child,
@@ -666,6 +671,15 @@ class AppRouter {
           ),
         );
 
+      case AppRoutes.notifications:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.notifications),
+          child: BlocProvider<NotificationsCubit>(
+            create: (_) => sl<NotificationsCubit>()..load(),
+            child: const NotificationsScreen(),
+          ),
+        );
+
       case AppRoutes.supervisorAttendance:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.supervisorAttendance),
@@ -787,6 +801,9 @@ class AppRouter {
               BlocProvider<PointsCubit>(
                 create: (_) => sl<PointsCubit>()..loadAllPointsData(),
               ),
+              BlocProvider<NotificationsCubit>(
+                create: (_) => sl<NotificationsCubit>()..load(),
+              ),
             ],
             child: const EmployeeMainScreen(),
           ),
@@ -794,7 +811,10 @@ class AppRouter {
       case AppRoutes.employeeSettings:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.employeeSettings),
-          child: const EmployeeSettingsScreen(),
+          child: BlocProvider<NotificationsCubit>(
+            create: (_) => sl<NotificationsCubit>()..load(),
+            child: const EmployeeSettingsScreen(),
+          ),
         );
 
       case AppRoutes.permissionsRequest:
