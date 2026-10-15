@@ -1,0 +1,7 @@
+Check-Point HRM is an attendance and HR app used by companies for their own employees. Accounts are created by each company's admin; there is no public sign-up.
+
+Two demo accounts are provided: an Employee account (to test check-in/out, leave and overtime requests) and an Admin account (dashboard, attendance records, branches and geofences).
+
+Location is used only to confirm the employee is inside the work area set by their company when they check in or out. The demo Employee account is set to "Remote" so check-in works from any location.
+
+The app is available in Arabic and English.
