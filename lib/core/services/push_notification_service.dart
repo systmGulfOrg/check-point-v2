@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -66,14 +68,26 @@ class PushNotificationService implements PushTokenSource {
   }
 
   /// The FCM registration token identifying this device/install.
+  ///
+  /// On iOS, FCM's token is derived from the APNs token, which Apple can
+  /// take a moment to deliver after `requestPermission` — calling
+  /// `getToken()` before it arrives throws and registration is silently
+  /// skipped. Poll for the APNs token first so login does not race it.
   @override
   Future<String?> token() async {
     try {
+      if (Platform.isIOS) await _waitForApnsToken();
       return await messaging.getToken();
     } catch (e) {
-      // On iOS this throws until APNs is configured; it must not break startup.
       AppLogger.error('Could not read FCM token: $e');
       return null;
+    }
+  }
+
+  Future<void> _waitForApnsToken() async {
+    for (var attempt = 0; attempt < 5; attempt++) {
+      if (await messaging.getAPNSToken() != null) return;
+      await Future<void>.delayed(const Duration(seconds: 2));
     }
   }
 
