@@ -103,25 +103,6 @@ jobs:
           fi
           flutter build ipa --release $BUILD_FLAG --export-options-plist=ios/ExportOptions.plist
 
-      - name: Deploy Store Metadata and Screenshots with Fastlane
-        env:
-          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
-        run: |
-          cd ios
-          ACTION="${{ github.event.inputs.action }}"
-          if [ -z "$ACTION" ]; then
-            ACTION="distribute"
-          fi
-
-          if [ "$ACTION" = "beta" ]; then
-            echo "Skipping metadata upload for beta lane"
-          else
-            echo "Running fastlane upload_metadata..."
-            bundle exec fastlane upload_metadata
-          fi
-
       - name: Upload IPA to App Store Connect
         if: ${{ github.event.inputs.action != 'upload_metadata' }}
         env:
@@ -139,3 +120,24 @@ jobs:
             -t ios \
             --apiKey "$APP_STORE_CONNECT_KEY_ID" \
             --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID"
+
+      - name: Deploy Store Metadata and Screenshots with Fastlane
+        if: ${{ always() }}
+        continue-on-error: true
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+          cd ios
+          ACTION="${{ github.event.inputs.action }}"
+          if [ -z "$ACTION" ]; then
+            ACTION="distribute"
+          fi
+
+          if [ "$ACTION" = "beta" ]; then
+            echo "Skipping metadata upload for beta lane"
+          else
+            echo "Running fastlane upload_metadata..."
+            bundle exec fastlane upload_metadata || true
+          fi
