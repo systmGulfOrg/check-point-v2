@@ -138,6 +138,6 @@ jobs:
           if [ "$ACTION" = "beta" ]; then
             echo "Skipping metadata upload for beta lane"
           else
-            echo "Running fastlane upload_metadata..."
-            bundle exec fastlane upload_metadata || true
+            echo "Running fastlane upload_screenshots..."
+            bundle exec fastlane upload_screenshots || true
           fi
