@@ -1,0 +1,53 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build release Android App Bundle (AAB)"
+  lane :build do |options|
+    build_number = options[:build_number]
+    build_flag = build_number ? "--build-number=#{build_number}" : ""
+    sh("cd ../.. && flutter build appbundle --release #{build_flag}")
+  end
+
+  desc "Build and upload to Google Play Internal Testing track"
+  lane :beta do |options|
+    build(options) unless options[:skip_build]
+
+    aab_path = Dir["../../build/app/outputs/bundle/release/*.aab"].first
+    UI.user_error!("No AAB found in build/app/outputs/bundle/release/") unless aab_path
+
+    upload_to_play_store(
+      track: 'internal',
+      aab: aab_path,
+      skip_upload_metadata: options[:skip_metadata] || false,
+      skip_upload_images: options[:skip_images] || false,
+      skip_upload_screenshots: options[:skip_screenshots] || false
+    )
+  end
+
+  desc "Build and upload to Google Play Production track"
+  lane :distribute do |options|
+    build(options) unless options[:skip_build]
+
+    aab_path = Dir["../../build/app/outputs/bundle/release/*.aab"].first
+    UI.user_error!("No AAB found in build/app/outputs/bundle/release/") unless aab_path
+
+    upload_to_play_store(
+      track: 'production',
+      aab: aab_path,
+      skip_upload_metadata: options[:skip_metadata] || false,
+      skip_upload_images: options[:skip_images] || false,
+      skip_upload_screenshots: options[:skip_screenshots] || false
+    )
+  end
+
+  desc "Upload only metadata, screenshots, and graphics to Google Play"
+  lane :upload_metadata do
+    upload_to_play_store(
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false
+    )
+  end
+end

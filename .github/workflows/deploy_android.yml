@@ -1,0 +1,90 @@
+name: Deploy Android to Google Play
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action: "build" (compile AAB & upload artifact), "beta" (Internal track), "distribute" (Production), or "upload_metadata"'
+        required: true
+        default: 'build'
+        type: choice
+        options:
+          - build
+          - beta
+          - distribute
+          - upload_metadata
+      build_number:
+        description: 'Build Number (e.g. 5)'
+        required: false
+        default: ''
+
+jobs:
+  build-and-deploy:
+    name: Fastlane Android Deployment
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.5'
+          channel: 'stable'
+          cache: true
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: android
+
+      - name: Restore .env file
+        run: |
+          echo "${{ secrets.ENV_FILE_BASE64 }}" | base64 --decode > .env
+
+      - name: Install Dependencies
+        run: |
+          flutter pub get
+          dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build Android App Bundle (AAB)
+        if: ${{ github.event.inputs.action != 'upload_metadata' }}
+        run: |
+          BUILD_FLAG=""
+          if [ -n "${{ github.event.inputs.build_number }}" ]; then
+            BUILD_FLAG="--build-number=${{ github.event.inputs.build_number }}"
+          else
+            BUILD_FLAG="--build-number=${{ github.run_number }}"
+          fi
+          flutter build appbundle --release $BUILD_FLAG
+
+      - name: Upload AAB Artifact
+        if: ${{ github.event.inputs.action != 'upload_metadata' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-bundle
+          path: build/app/outputs/bundle/release/*.aab
+
+      - name: Deploy with Fastlane
+        if: ${{ env.GOOGLE_PLAY_KEY_FILE != '' }}
+        env:
+          GOOGLE_PLAY_KEY_FILE: ${{ secrets.GOOGLE_PLAY_KEY_FILE }}
+        run: |
+          cd android
+          ACTION="${{ github.event.inputs.action }}"
+          if [ "$ACTION" = "upload_metadata" ]; then
+            bundle exec fastlane upload_metadata
+          elif [ "$ACTION" = "beta" ]; then
+            bundle exec fastlane beta skip_build:true
+          elif [ "$ACTION" = "distribute" ]; then
+            bundle exec fastlane distribute skip_build:true
+          fi
