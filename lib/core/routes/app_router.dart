@@ -41,9 +41,11 @@ import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_pro
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account_status/request_account_status_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/tenant_lookup/tenant_lookup_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/trial_signup/trial_signup_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/screens/company_code_screen.dart';
 import 'package:check_point_v2/features/auth/presentation/screens/login_screen.dart';
 import 'package:check_point_v2/features/auth/presentation/screens/request_access_screen.dart';
+import 'package:check_point_v2/features/auth/presentation/screens/trial_signup_screen.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/leave_requests/employee_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/odoo_dashboard/employee_odoo_dashboard_cubit.dart';
@@ -243,6 +245,15 @@ class AppRouter {
           child: BlocProvider<TenantLookupCubit>(
             create: (_) => sl<TenantLookupCubit>(),
             child: const CompanyCodeScreen(),
+          ),
+        );
+
+      case AppRoutes.trialSignup:
+        return _fadeRoute(
+          settings: const RouteSettings(name: AppRoutes.trialSignup),
+          child: BlocProvider<TrialSignupCubit>(
+            create: (_) => sl<TrialSignupCubit>(),
+            child: const TrialSignupScreen(),
           ),
         );
 

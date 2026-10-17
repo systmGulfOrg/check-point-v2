@@ -7,6 +7,8 @@ import 'package:check_point_v2/features/auth/data/models/account_request/account
 import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_response_model.dart';
 import 'package:check_point_v2/features/auth/data/models/tenant/tenant_lookup_model.dart';
+import 'package:check_point_v2/features/auth/data/models/trial_signup/trial_signup_model.dart';
+import 'package:check_point_v2/features/auth/data/models/trial_signup/trial_signup_request_body.dart';
 import 'auth_repo.dart';
 
 class AuthRepoImpl implements AuthRepo {
@@ -99,6 +101,26 @@ class AuthRepoImpl implements AuthRepo {
     }
   }
 
+  @override
+  Future<ApiResult<TrialSignupModel>> createTrialSignup(
+    TrialSignupRequestBody request,
+  ) async {
+    try {
+      final response = await api.createTrialSignup(request);
+      final signup = response.value;
+      if (response.isSuccess != true || signup == null) {
+        return ApiResult.failure(
+          ApiFailureMapper.fromMessages(
+            response.errors,
+            fallbackMessageKey: 'errors.trialSignupFailed',
+          ),
+        );
+      }
+      return ApiResult.success(signup);
+    } catch (error) {
+      return ApiResult.failure(ApiFailureMapper.map(error));
+    }
+  }
 }
 
 String _tenantReasonMessageKey(String? reason) => switch (reason) {

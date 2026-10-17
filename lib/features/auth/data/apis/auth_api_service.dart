@@ -8,6 +8,8 @@ import 'package:check_point_v2/features/auth/data/models/login/login_request_mod
 import 'package:check_point_v2/features/auth/data/models/login/login_result_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/result_model.dart';
 import 'package:check_point_v2/features/auth/data/models/tenant/tenant_lookup_result_model.dart';
+import 'package:check_point_v2/features/auth/data/models/trial_signup/trial_signup_request_body.dart';
+import 'package:check_point_v2/features/auth/data/models/trial_signup/trial_signup_result_model.dart';
 
 part 'auth_api_service.g.dart';
 
@@ -32,5 +34,10 @@ abstract class AuthApiService {
   @GET(ApiConstants.tenantVerify)
   Future<TenantLookupResultModel> verifyTenant(
     @Query('tenantSlug') String tenantSlug,
+  );
+
+  @POST(ApiConstants.trialSignup)
+  Future<TrialSignupResultModel> createTrialSignup(
+    @Body() TrialSignupRequestBody request,
   );
 }

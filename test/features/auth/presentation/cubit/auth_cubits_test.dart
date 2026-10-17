@@ -7,6 +7,8 @@ import 'package:check_point_v2/features/auth/data/models/account_request/account
 import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_response_model.dart';
 import 'package:check_point_v2/features/auth/data/models/tenant/tenant_lookup_model.dart';
+import 'package:check_point_v2/features/auth/data/models/trial_signup/trial_signup_model.dart';
+import 'package:check_point_v2/features/auth/data/models/trial_signup/trial_signup_request_body.dart';
 import 'package:check_point_v2/features/auth/data/repos/auth_repo.dart';
 import 'package:check_point_v2/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
@@ -71,6 +73,13 @@ class _FakeAuthRepo implements AuthRepo {
           tenantSlug: tenantSlug,
         ),
       );
+
+  @override
+  Future<ApiResult<TrialSignupModel>> createTrialSignup(
+    TrialSignupRequestBody request,
+  ) async => ApiResult.success(
+    TrialSignupModel(companyName: request.companyName, slug: request.slug),
+  );
 }
 
 class _FakeAuthSessionStorage extends AuthSessionStorage {

@@ -8,6 +8,7 @@ import 'package:check_point_v2/features/auth/presentation/widgets/auth_card_widg
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_labeled_field_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_shell_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/brand_header_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/start_trial_banner_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/tenant_lookup_bloc_listener_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/tenant_lookup_submit_button_widget.dart';
 
@@ -41,6 +42,10 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen> {
               child: LanguageSwitcherWidget(),
             ),
             hSpace(12),
+            StartTrialBannerWidget(
+              onTap: () => context.pushNamed(AppRoutes.trialSignup),
+            ),
+            hSpace(16),
             AuthCardWidget(
               child: Form(
                 key: _formKey,
