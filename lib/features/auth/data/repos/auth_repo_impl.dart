@@ -6,6 +6,7 @@ import 'package:check_point_v2/features/auth/data/models/account_request/account
 import 'package:check_point_v2/features/auth/data/models/account_request/account_request_status_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_response_model.dart';
+import 'package:check_point_v2/features/auth/data/models/tenant/tenant_lookup_model.dart';
 import 'auth_repo.dart';
 
 class AuthRepoImpl implements AuthRepo {
@@ -76,4 +77,36 @@ class AuthRepoImpl implements AuthRepo {
       return ApiResult.failure(ApiFailureMapper.map(error));
     }
   }
+
+  @override
+  Future<ApiResult<TenantLookupModel>> verifyTenant(String tenantSlug) async {
+    try {
+      final response = await api.verifyTenant(tenantSlug);
+      final tenant = response.value;
+      if (tenant == null) {
+        return const ApiResult.failure(
+          ApiFailure(messageKey: 'errors.tenantNotFound'),
+        );
+      }
+      if (tenant.valid != true) {
+        return ApiResult.failure(
+          ApiFailure(messageKey: _tenantReasonMessageKey(tenant.reason)),
+        );
+      }
+      return ApiResult.success(tenant);
+    } catch (error) {
+      return ApiResult.failure(ApiFailureMapper.map(error));
+    }
+  }
+
 }
+
+String _tenantReasonMessageKey(String? reason) => switch (reason) {
+  'SUSPENDED' => 'errors.tenantSuspended',
+  'EXPIRED' => 'errors.tenantExpired',
+  'ARCHIVED' => 'errors.tenantArchived',
+  'PENDING_DELETION' => 'errors.tenantPendingDeletion',
+  'TRIAL_EXPIRED' => 'errors.tenantTrialExpired',
+  'DELETED' || 'TENANT_NOT_FOUND' => 'errors.tenantNotFound',
+  _ => 'errors.tenantNotFound',
+};

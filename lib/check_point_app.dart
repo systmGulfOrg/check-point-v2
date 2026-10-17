@@ -6,7 +6,9 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/widgets/push_tap_listener_widget.dart';
 
 class CheckPointApp extends StatelessWidget {
-  const CheckPointApp({super.key});
+  const CheckPointApp({required this.initialRoute, super.key});
+
+  final String initialRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class CheckPointApp extends StatelessWidget {
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
-            initialRoute: AppRoutes.login,
+            initialRoute: initialRoute,
             onGenerateRoute: AppRouter.onGenerateRoute,
           ),
         );

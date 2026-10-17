@@ -7,6 +7,7 @@ import 'package:check_point_v2/features/auth/data/models/account_request/account
 import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_result_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/result_model.dart';
+import 'package:check_point_v2/features/auth/data/models/tenant/tenant_lookup_result_model.dart';
 
 part 'auth_api_service.g.dart';
 
@@ -26,5 +27,10 @@ abstract class AuthApiService {
   @GET('/api/AccountRequest/status')
   Future<AccountRequestStatusResponseModel> getAccountRequestStatus(
     @Query('mobileId') String mobileId,
+  );
+
+  @GET(ApiConstants.tenantVerify)
+  Future<TenantLookupResultModel> verifyTenant(
+    @Query('tenantSlug') String tenantSlug,
   );
 }

@@ -24,6 +24,7 @@ class AuthSessionStorage {
   static const biometricPasswordKey = 'biometric_password';
   static const accountRequestDismissedMobileIdKey =
       'account_request_dismissed_mobile_id';
+  static const tenantSlugKey = 'tenant_slug';
 
   final FlutterSecureStorage secureStorage;
 
@@ -245,6 +246,22 @@ class AuthSessionStorage {
     await secureStorage.delete(key: biometricUsernameKey);
     await secureStorage.delete(key: biometricPasswordKey);
   }
+
+  Future<String?> readTenantSlug() async {
+    if (_cachedTenantSlug != null) return _cachedTenantSlug;
+    final slug = await secureStorage.read(key: tenantSlugKey);
+    _cachedTenantSlug = slug;
+    AuthTokenInterceptor.updateTenantSlug(slug);
+    return slug;
+  }
+
+  Future<void> saveTenantSlug(String slug) async {
+    _cachedTenantSlug = slug;
+    AuthTokenInterceptor.updateTenantSlug(slug);
+    await secureStorage.write(key: tenantSlugKey, value: slug);
+  }
+
+  static String? _cachedTenantSlug;
 
   Future<String?> readAccountRequestDismissedMobileId() =>
       secureStorage.read(key: accountRequestDismissedMobileIdKey);

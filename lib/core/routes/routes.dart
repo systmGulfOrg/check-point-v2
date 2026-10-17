@@ -1,6 +1,7 @@
 class AppRoutes {
   const AppRoutes._();
 
+  static const String companyCode = '/company-code';
   static const String login = '/login';
   static const String leavesDashboard = '/leaves/dashboard';
   static const String leavesRequest = '/leaves/request';

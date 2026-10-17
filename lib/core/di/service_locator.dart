@@ -58,6 +58,7 @@ import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubi
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account_status/request_account_status_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/tenant_lookup/tenant_lookup_cubit.dart';
 import 'package:check_point_v2/features/employee/data/apis/employee_api_service.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_action_repo.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_action_repo_impl.dart';
@@ -371,6 +372,12 @@ Future<void> setupServiceLocator() async {
     () => RequestAccountStatusCubit(
       authRepo: sl<AuthRepo>(),
       deviceIdentityProvider: sl<DeviceIdentityProvider>(),
+      authSessionStorage: sl<AuthSessionStorage>(),
+    ),
+  );
+  sl.registerFactory<TenantLookupCubit>(
+    () => TenantLookupCubit(
+      authRepo: sl<AuthRepo>(),
       authSessionStorage: sl<AuthSessionStorage>(),
     ),
   );
