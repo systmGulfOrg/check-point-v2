@@ -85,9 +85,11 @@ class PushNotificationService implements PushTokenSource {
   }
 
   Future<void> _waitForApnsToken() async {
-    for (var attempt = 0; attempt < 5; attempt++) {
+    // A fresh install's first APNs handshake can take well past 10s on a
+    // slow network; 12 attempts x 2.5s gives it 30s before giving up.
+    for (var attempt = 0; attempt < 12; attempt++) {
       if (await messaging.getAPNSToken() != null) return;
-      await Future<void>.delayed(const Duration(seconds: 2));
+      await Future<void>.delayed(const Duration(milliseconds: 2500));
     }
   }
 
