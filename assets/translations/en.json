@@ -91,6 +91,7 @@
   "admin.dashboard.lateArrivals": "Late arrivals",
   "admin.dashboard.openTasks": "Open Tasks",
   "admin.dashboard.pendingLeaveRequests": "Pending leave requests",
+  "admin.dashboard.onLeaveToday": "On Leave Today",
   "admin.dashboard.pendingLeaves": "Pending Leaves",
   "admin.dashboard.present": "Present",
   "admin.dashboard.presentToday": "Present Today",

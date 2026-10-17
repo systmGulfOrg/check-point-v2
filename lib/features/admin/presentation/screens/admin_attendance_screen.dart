@@ -11,6 +11,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admi
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_absent_employees_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_action_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_advanced_filter_widget.dart';
@@ -77,7 +78,11 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
       _ => const <EmployeeModel>[],
     };
     final attendanceCubit = context.watch<AdminAttendanceCubit>();
-    final absentEmployees = attendanceCubit.getAbsentEmployees(employees);
+    final leaveRequests = context.watch<AdminLeaveRequestsCubit>().requests;
+    final absentEmployees = attendanceCubit.getAbsentEmployees(
+      employees,
+      leaveRequests,
+    );
     final absentCount = absentEmployees.length;
     final presentCount = attendanceCubit.todayPresentCount;
 

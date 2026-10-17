@@ -4,6 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
@@ -70,15 +71,25 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       orElse: () => 0,
     );
 
-    final pendingLeaves = leaveState.maybeWhen(
-      success: (requests, leaveTypes) =>
-          requests.where((r) => r.status?.toLowerCase() == 'pending').length,
-      orElse: () => 0,
+    final leaveRequests = leaveState.maybeWhen(
+      success: (requests, leaveTypes) => requests,
+      orElse: () => const <AdminLeaveRequestModel>[],
     );
 
+    final pendingLeaves = leaveRequests
+        .where((r) => r.status?.toLowerCase() == 'pending')
+        .length;
+
     final now = DateTime.now();
+    final onLeaveToday = employeeIdsOnLeave(leaveRequests, now).length;
     final dateFormatted =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+
+    // Anyone with an approved leave covering today is "on leave", not
+    // "absent" — absent is strictly everyone else who hasn't clocked in.
+    final absentCount = totalStaff > presentToday + onLeaveToday
+        ? totalStaff - presentToday - onLeaveToday
+        : 0;
 
     return SafeArea(
       child: RefreshIndicator(
@@ -107,7 +118,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 presentToday: presentToday,
                 pendingLeaves: pendingLeaves,
                 openTasks: 0,
+                onLeaveToday: onLeaveToday,
                 showTasks: false,
+                showOnLeave: true,
                 isStaffLoading: isStaffLoading,
                 isAttendanceLoading: isAttendanceLoading,
                 isLeaveLoading: isLeaveLoading,
@@ -119,6 +132,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   context,
                   AppRoutes.adminLeaveManagement,
                 ),
+                onOnLeaveTap: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.adminLeaveManagement,
+                ),
               ),
               hSpace(16),
               const AdminWeeklyAttendanceChartWidget(),
@@ -127,9 +144,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 employeesOnDuty: presentToday,
                 totalStaff: totalStaff,
                 lateArrivals: 0,
-                absences: totalStaff > presentToday
-                    ? totalStaff - presentToday
-                    : 0,
+                absences: absentCount,
                 pendingLeaveRequests: pendingLeaves,
                 dateText: dateFormatted,
                 isLoading:

@@ -529,6 +529,9 @@ class AppRouter {
               BlocProvider<AdminAttendanceCubit>(
                 create: (_) => sl<AdminAttendanceCubit>()..loadAttendance(),
               ),
+              BlocProvider<AdminLeaveRequestsCubit>(
+                create: (_) => sl<AdminLeaveRequestsCubit>()..loadRequests(),
+              ),
               BlocProvider<AuthProfileCubit>(
                 create: (_) => sl<AuthProfileCubit>()..loadProfile(),
               ),
