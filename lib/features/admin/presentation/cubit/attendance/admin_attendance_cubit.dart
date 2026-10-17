@@ -110,6 +110,12 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
       if (id != null && onLeaveIds.contains(id)) {
         return false;
       }
+      // Covers both this employee's weekly off (todayWorkMode == 'off') and
+      // an official holiday — the backend already folds both into this one
+      // flag, so a day nobody has to clock in for never counts as absent.
+      if (emp.todayIsWorkingDay == false) {
+        return false;
+      }
       return true;
     }).toList();
   }

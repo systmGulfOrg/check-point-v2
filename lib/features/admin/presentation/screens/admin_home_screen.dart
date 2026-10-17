@@ -4,6 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
@@ -76,10 +77,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       orElse: () => false,
     );
 
-    final totalStaff = employeesState.maybeWhen(
-      success: (employees, filter) => employees.length,
-      orElse: () => 0,
+    final employees = employeesState.maybeWhen(
+      success: (employees, filter) => employees,
+      orElse: () => const <EmployeeModel>[],
     );
+    final totalStaff = employees.length;
 
     final presentToday = attendanceState.maybeWhen(
       success: (records) => records.length,
@@ -100,11 +102,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     final dateFormatted =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
-    // Anyone with an approved leave covering today is "on leave", not
-    // "absent" — absent is strictly everyone else who hasn't clocked in.
-    final absentCount = totalStaff > presentToday + onLeaveToday
-        ? totalStaff - presentToday - onLeaveToday
-        : 0;
+    // Excludes anyone on approved leave, plus anyone whose weekly off or an
+    // official holiday falls today — neither is "absent".
+    final absentCount = context
+        .read<AdminAttendanceCubit>()
+        .getAbsentEmployees(employees, leaveRequests)
+        .length;
 
     return SafeArea(
       child: RefreshIndicator(
