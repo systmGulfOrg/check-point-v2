@@ -14,6 +14,7 @@ import 'core/routes/routes.dart';
 import 'core/services/local_notification_service.dart';
 import 'core/services/push_notification_service.dart';
 import 'core/widgets/custom_snack_bar.dart';
+import 'features/auth/data/repos/auth_repo.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -48,10 +49,7 @@ Future<void> main() async {
     );
   };
 
-  final savedTenantSlug = await sl<AuthSessionStorage>().readTenantSlug();
-  final initialRoute = (savedTenantSlug != null && savedTenantSlug.isNotEmpty)
-      ? AppRoutes.login
-      : AppRoutes.companyCode;
+  final initialRoute = await _resolveInitialRoute();
 
   runApp(
     EasyLocalization(
@@ -62,6 +60,33 @@ Future<void> main() async {
       child: CheckPointApp(initialRoute: initialRoute),
     ),
   );
+}
+
+/// A saved tenant slug only means this device signed in here before — the
+/// company could have been suspended, expired, or deleted since. Re-verify
+/// it before ever letting a cold start skip the company-code screen, instead
+/// of trusting the cached slug blindly.
+Future<String> _resolveInitialRoute() async {
+  final sessionStorage = sl<AuthSessionStorage>();
+  final savedTenantSlug = await sessionStorage.readTenantSlug();
+  if (savedTenantSlug == null || savedTenantSlug.isEmpty) {
+    return AppRoutes.companyCode;
+  }
+
+  final result = await sl<AuthRepo>().verifyTenant(savedTenantSlug);
+  // A network/server hiccup is not proof the company is gone — fail open to
+  // the login screen rather than force a re-entry of the company code every
+  // time the device launches offline. A real rejection (suspended, expired,
+  // ...) always comes back as one of the errors.tenant* keys.
+  final isTenantRejection = result.when(
+    success: (_) => false,
+    failure: (f) => f.messageKey.startsWith('errors.tenant'),
+  );
+  if (isTenantRejection) {
+    await sessionStorage.clearTenant();
+    return AppRoutes.companyCode;
+  }
+  return AppRoutes.login;
 }
 
 String _tenantBlockedMessageKey(String errorCode) => switch (errorCode) {
