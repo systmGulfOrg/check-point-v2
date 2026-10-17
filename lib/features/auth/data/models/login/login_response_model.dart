@@ -16,6 +16,9 @@ class LoginResponseModel {
     this.branchId,
     this.branchName,
     this.imageUrl,
+    this.tenantStatus,
+    this.trialEndsAt,
+    this.seatLimit,
   });
 
   final String? id;
@@ -29,6 +32,11 @@ class LoginResponseModel {
   final int? branchId;
   final String? branchName;
   final String? imageUrl;
+
+  /// Set when the signed-in tenant is on a free trial; null otherwise.
+  final String? tenantStatus;
+  final DateTime? trialEndsAt;
+  final int? seatLimit;
 
   List<String> get allRoles {
     final set = <String>{};

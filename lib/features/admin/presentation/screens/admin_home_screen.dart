@@ -12,6 +12,7 @@ import 'package:check_point_v2/features/admin/presentation/widgets/admin_greetin
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_overview_card_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_stats_grid_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_top_bar_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_trial_banner_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_weekly_attendance_chart_widget.dart';
 
 class AdminHomeScreen extends StatefulWidget {
@@ -23,17 +24,31 @@ class AdminHomeScreen extends StatefulWidget {
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
   String? _adminName;
+  DateTime? _trialEndsAt;
+  int? _trialSeatLimit;
 
   @override
   void initState() {
     super.initState();
     _loadAdminName();
+    _loadTrialInfo();
   }
 
   Future<void> _loadAdminName() async {
     final name = await sl<AuthSessionStorage>().readUserName();
     if (mounted && name != null && name.isNotEmpty) {
       setState(() => _adminName = name);
+    }
+  }
+
+  Future<void> _loadTrialInfo() async {
+    final info = await sl<AuthSessionStorage>().readTrialInfo();
+    if (!mounted) return;
+    if (info.tenantStatus == 'Trial' && info.trialEndsAt != null) {
+      setState(() {
+        _trialEndsAt = info.trialEndsAt;
+        _trialSeatLimit = info.seatLimit;
+      });
     }
   }
 
@@ -107,6 +122,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             children: [
               const AdminTopBarWidget(),
               hSpace(12),
+              if (_trialEndsAt != null) ...[
+                AdminTrialBannerWidget(
+                  trialEndsAt: _trialEndsAt!,
+                  seatLimit: _trialSeatLimit,
+                ),
+                hSpace(12),
+              ],
               AdminGreetingWidget(
                 userNameKey: 'admin.dashboard.user',
                 userName: _adminName,

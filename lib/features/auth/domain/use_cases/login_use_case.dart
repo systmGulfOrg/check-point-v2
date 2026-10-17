@@ -63,6 +63,11 @@ class LoginUseCase {
           imageUrl: data.imageUrl,
           permissions: data.permissions ?? const [],
         );
+        await authSessionStorage.saveTrialInfo(
+          tenantStatus: data.tenantStatus,
+          trialEndsAt: data.trialEndsAt,
+          seatLimit: data.seatLimit,
+        );
 
         if (enableBiometricLogin && await biometricAuthService.isAvailable()) {
           await authSessionStorage.enableBiometricLogin(
