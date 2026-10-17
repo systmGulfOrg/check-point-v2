@@ -96,6 +96,19 @@ class AdminSettingsScreen extends StatelessWidget {
             ),
             hSpace(20),
             AdminSettingsSectionCardWidget(
+              sectionTitleKey: 'admin.settings.sectionSubscription',
+              tiles: [
+                AdminSettingsTileWidget(
+                  icon: Icons.workspace_premium_outlined,
+                  titleKey: 'admin.settings.subscriptionPlan',
+                  valueKey: 'admin.settings.manage',
+                  onTap: () =>
+                      Navigator.pushNamed(context, AppRoutes.adminSubscription),
+                ),
+              ],
+            ),
+            hSpace(20),
+            AdminSettingsSectionCardWidget(
               sectionTitleKey: 'admin.settings.sectionSystem',
               tiles: [
                 AdminSettingsTileWidget(

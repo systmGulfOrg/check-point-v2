@@ -18,6 +18,7 @@ import 'package:check_point_v2/features/overtime/data/repos/overtime_repo_impl.d
 import 'package:check_point_v2/features/overtime/presentation/cubit/overtime_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
+import 'package:check_point_v2/features/admin/data/apis/subscription_api_service.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo_impl.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_customer_visits_repo.dart';
@@ -34,6 +35,8 @@ import 'package:check_point_v2/features/admin/data/repos/admin_shifts_policies_r
 import 'package:check_point_v2/features/admin/data/repos/admin_shifts_policies_repo_impl.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_tasks_repo.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_tasks_repo_impl.dart';
+import 'package:check_point_v2/features/admin/data/repos/subscription_repo.dart';
+import 'package:check_point_v2/features/admin/data/repos/subscription_repo_impl.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/pending_devices/admin_pending_devices_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
@@ -47,6 +50,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/deleted_employe
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/plans/admin_plans_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/subscription/admin_subscription_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_profile/admin_employee_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/data/apis/auth_api_service.dart';
@@ -191,6 +195,9 @@ Future<void> setupServiceLocator() async {
   // API Services
   sl.registerLazySingleton<AuthApiService>(() => AuthApiService(sl<Dio>()));
   sl.registerLazySingleton<AdminApiService>(() => AdminApiService(sl<Dio>()));
+  sl.registerLazySingleton<SubscriptionApiService>(
+    () => SubscriptionApiService(sl<Dio>()),
+  );
   sl.registerLazySingleton<SupervisorApiService>(
     () => SupervisorApiService(sl<Dio>()),
   );
@@ -247,6 +254,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<AdminPlansRepo>(
     () => AdminPlansRepoImpl(api: sl<AdminApiService>()),
+  );
+  sl.registerLazySingleton<SubscriptionRepo>(
+    () => SubscriptionRepoImpl(api: sl<SubscriptionApiService>()),
   );
   sl.registerLazySingleton<SupervisorAttendanceRepo>(
     () => SupervisorAttendanceRepoImpl(
@@ -443,6 +453,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<AdminTasksCubit>(
     () => AdminTasksCubit(tasksRepo: sl<AdminTasksRepo>()),
+  );
+  sl.registerFactory<AdminSubscriptionCubit>(
+    () => AdminSubscriptionCubit(subscriptionRepo: sl<SubscriptionRepo>()),
   );
   sl.registerFactory<AdminPlansCubit>(
     () => AdminPlansCubit(plansRepo: sl<AdminPlansRepo>()),

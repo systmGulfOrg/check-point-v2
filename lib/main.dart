@@ -88,7 +88,8 @@ Future<({String route, String? messageKey})> _resolveInitialRoute() async {
   // ...) always comes back as one of the errors.tenant* keys.
   final rejectionMessageKey = result.when(
     success: (_) => null,
-    failure: (f) => f.messageKey.startsWith('errors.tenant') ? f.messageKey : null,
+    failure: (f) =>
+        f.messageKey.startsWith('errors.tenant') ? f.messageKey : null,
   );
   if (rejectionMessageKey != null) {
     await sessionStorage.clearTenant();

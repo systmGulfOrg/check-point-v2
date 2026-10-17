@@ -11,11 +11,13 @@ class AdminTrialBannerWidget extends StatelessWidget {
   const AdminTrialBannerWidget({
     required this.trialEndsAt,
     this.seatLimit,
+    this.onTap,
     super.key,
   });
 
   final DateTime trialEndsAt;
   final int? seatLimit;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -33,46 +35,59 @@ class AdminTrialBannerWidget extends StatelessWidget {
             args: ['$daysLeft'],
           );
 
-    return Container(
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 14.w,
-        vertical: 10.h,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.softBrandBackground,
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.brandPrimary.withValues(alpha: 0.2)),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.rocket_launch_rounded,
-            size: 18.r,
-            color: AppColors.brandPrimary,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14.r),
+      child: Container(
+        padding: EdgeInsetsDirectional.symmetric(
+          horizontal: 14.w,
+          vertical: 10.h,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.softBrandBackground,
+          borderRadius: BorderRadius.circular(14.r),
+          border: Border.all(
+            color: AppColors.brandPrimary.withValues(alpha: 0.2),
           ),
-          wSpace(8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'admin.dashboard.trialBanner.title'.tr(context: context),
-                  style: AppTextStyles.font13SemiBold.copyWith(
-                    color: AppColors.brandInk,
-                  ),
-                ),
-                Text(
-                  seatLimit != null
-                      ? '$daysText، ${'admin.dashboard.trialBanner.seatLimit'.tr(context: context, args: ['$seatLimit'])}'
-                      : daysText,
-                  style: AppTextStyles.font12Regular.copyWith(
-                    color: AppColors.placeholder,
-                  ),
-                ),
-              ],
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.rocket_launch_rounded,
+              size: 18.r,
+              color: AppColors.brandPrimary,
             ),
-          ),
-        ],
+            wSpace(8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'admin.dashboard.trialBanner.title'.tr(context: context),
+                    style: AppTextStyles.font13SemiBold.copyWith(
+                      color: AppColors.brandInk,
+                    ),
+                  ),
+                  Text(
+                    seatLimit != null
+                        ? '$daysText، ${'admin.dashboard.trialBanner.seatLimit'.tr(context: context, args: [
+                              '$seatLimit',
+                            ])}'
+                        : daysText,
+                    style: AppTextStyles.font12Regular.copyWith(
+                      color: AppColors.placeholder,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.chevron_right_rounded,
+              size: 18.r,
+              color: AppColors.placeholder,
+            ),
+          ],
+        ),
       ),
     );
   }

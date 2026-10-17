@@ -14,6 +14,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/plans/admin_plans_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/subscription/admin_subscription_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_attendance_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_create_employee_screen.dart';
@@ -30,6 +31,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/permissions/adm
 import 'package:check_point_v2/features/admin/presentation/screens/admin_permissions_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_plans_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_request_details_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/screens/admin_subscription_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_shift_details_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_shifts_policies_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_devices_screen.dart';
@@ -512,6 +514,15 @@ class AppRouter {
           child: BlocProvider<AdminPlansCubit>(
             create: (_) => sl<AdminPlansCubit>()..loadPlans(),
             child: const AdminPlansScreen(),
+          ),
+        );
+
+      case AppRoutes.adminSubscription:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.adminSubscription),
+          child: BlocProvider<AdminSubscriptionCubit>(
+            create: (_) => sl<AdminSubscriptionCubit>()..load(),
+            child: const AdminSubscriptionScreen(),
           ),
         );
 

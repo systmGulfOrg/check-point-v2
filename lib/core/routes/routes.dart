@@ -1,6 +1,7 @@
 class AppRoutes {
   const AppRoutes._();
 
+  static const String adminSubscription = '/admin/subscription';
   static const String companyCode = '/company-code';
   static const String trialSignup = '/trial-signup';
   static const String login = '/login';

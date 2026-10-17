@@ -129,6 +129,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 AdminTrialBannerWidget(
                   trialEndsAt: _trialEndsAt!,
                   seatLimit: _trialSeatLimit,
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.adminSubscription,
+                  ),
                 ),
                 hSpace(12),
               ],
