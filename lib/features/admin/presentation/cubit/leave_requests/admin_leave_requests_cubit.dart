@@ -1,11 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_leave_requests_repo.dart';
 import 'admin_leave_requests_state.dart';
 
-class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
+class AdminLeaveRequestsCubit extends SafeCubit<AdminLeaveRequestsState> {
   AdminLeaveRequestsCubit({required this.leaveRequestsRepo})
     : super(const AdminLeaveRequestsState.initial());
 
@@ -35,7 +35,7 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
       requestsResult.when(
         success: (_) {},
         failure: (failure) =>
-            emit(AdminLeaveRequestsState.error(failure.messageKey)),
+            safeEmit(AdminLeaveRequestsState.error(failure.messageKey)),
       );
       return;
     }
@@ -43,7 +43,7 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
     _cachedRequests = requests ?? const [];
     _cachedLeaveTypes = types ?? const [];
 
-    emit(
+    safeEmit(
       AdminLeaveRequestsState.success(
         requests: _cachedRequests,
         leaveTypes: _cachedLeaveTypes,
@@ -57,7 +57,7 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
     result.when(
       success: (data) {
         _cachedRequests = data;
-        emit(
+        safeEmit(
           AdminLeaveRequestsState.success(
             requests: _cachedRequests,
             leaveTypes: _cachedLeaveTypes,
@@ -65,7 +65,7 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
         );
       },
       failure: (failure) =>
-          emit(AdminLeaveRequestsState.error(failure.messageKey)),
+          safeEmit(AdminLeaveRequestsState.error(failure.messageKey)),
     );
   }
 
@@ -75,7 +75,7 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
     result.when(
       success: (data) {
         _cachedLeaveTypes = data;
-        emit(
+        safeEmit(
           AdminLeaveRequestsState.success(
             requests: _cachedRequests,
             leaveTypes: _cachedLeaveTypes,
@@ -83,7 +83,7 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
         );
       },
       failure: (failure) =>
-          emit(AdminLeaveRequestsState.error(failure.messageKey)),
+          safeEmit(AdminLeaveRequestsState.error(failure.messageKey)),
     );
   }
 
@@ -101,7 +101,7 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminLeaveRequestsState.error(failure.messageKey));
+        safeEmit(AdminLeaveRequestsState.error(failure.messageKey));
         return false;
       },
     );
@@ -116,7 +116,7 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminLeaveRequestsState.error(failure.messageKey));
+        safeEmit(AdminLeaveRequestsState.error(failure.messageKey));
         return false;
       },
     );
@@ -131,7 +131,7 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminLeaveRequestsState.error(failure.messageKey));
+        safeEmit(AdminLeaveRequestsState.error(failure.messageKey));
         return false;
       },
     );
@@ -146,7 +146,7 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminLeaveRequestsState.error(failure.messageKey));
+        safeEmit(AdminLeaveRequestsState.error(failure.messageKey));
         return false;
       },
     );
@@ -161,7 +161,7 @@ class AdminLeaveRequestsCubit extends Cubit<AdminLeaveRequestsState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminLeaveRequestsState.error(failure.messageKey));
+        safeEmit(AdminLeaveRequestsState.error(failure.messageKey));
         return false;
       },
     );

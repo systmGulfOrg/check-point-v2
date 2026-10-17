@@ -153,11 +153,11 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            final pointsCubit = context.read<PointsCubit?>();
             await Future.wait([
               context.read<EmployeeAttendanceCubit>().loadAttendanceHistory(),
               context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
             ]);
-            final pointsCubit = context.read<PointsCubit?>();
             if (pointsCubit != null) {
               await pointsCubit.loadAllPointsData();
             }
@@ -398,9 +398,11 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                                     pointsChip: item.isLate == true
                                         ? '-5'
                                         : (item.isEarly == true ? '-5' : '+5'),
-                                    pointsColor: item.isLate == true || item.isEarly == true
-                                        ? AppColors.error.value
-                                        : AppColors.success.value,
+                                    pointsColor:
+                                        item.isLate == true ||
+                                            item.isEarly == true
+                                        ? AppColors.error.toARGB32()
+                                        : AppColors.success.toARGB32(),
                                   ),
                                 )
                                 .toList(),
@@ -443,8 +445,11 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                               ) ...[
                                 InkWell(
                                   onTap: () {
-                                    final pointsState = context.read<PointsCubit?>()?.state;
-                                    final pointsForDay = pointsState is PointsLoaded
+                                    final pointsState = context
+                                        .read<PointsCubit?>()
+                                        ?.state;
+                                    final pointsForDay =
+                                        pointsState is PointsLoaded
                                         ? pointsState.history.where((p) {
                                             return p.attendanceDate.startsWith(
                                               historyRecords[i].rawDate ?? '',

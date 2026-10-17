@@ -1,11 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/police_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_shifts_policies_repo.dart';
 import 'admin_shifts_policies_state.dart';
 
-class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
+class AdminShiftsPoliciesCubit extends SafeCubit<AdminShiftsPoliciesState> {
   AdminShiftsPoliciesCubit({required this.shiftsPoliciesRepo})
     : super(const AdminShiftsPoliciesState.initial());
 
@@ -24,7 +24,7 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
         if (selectedShiftId != null) {
           await loadPoliciesForShift(selectedShiftId);
         } else {
-          emit(
+          safeEmit(
             AdminShiftsPoliciesState.success(
               shifts: shifts,
               policies: const [],
@@ -33,7 +33,7 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
         }
       },
       failure: (failure) async =>
-          emit(AdminShiftsPoliciesState.error(failure.messageKey)),
+          safeEmit(AdminShiftsPoliciesState.error(failure.messageKey)),
     );
   }
 
@@ -44,12 +44,12 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     result.when(
       success: (data) {
         policies = data;
-        emit(
+        safeEmit(
           AdminShiftsPoliciesState.success(shifts: shifts, policies: policies),
         );
       },
       failure: (failure) =>
-          emit(AdminShiftsPoliciesState.error(failure.messageKey)),
+          safeEmit(AdminShiftsPoliciesState.error(failure.messageKey)),
     );
   }
 
@@ -62,7 +62,7 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminShiftsPoliciesState.error(failure.messageKey));
+        safeEmit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
       },
     );
@@ -77,7 +77,7 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminShiftsPoliciesState.error(failure.messageKey));
+        safeEmit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
       },
     );
@@ -92,7 +92,7 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminShiftsPoliciesState.error(failure.messageKey));
+        safeEmit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
       },
     );
@@ -107,7 +107,7 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminShiftsPoliciesState.error(failure.messageKey));
+        safeEmit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
       },
     );
@@ -128,7 +128,7 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminShiftsPoliciesState.error(failure.messageKey));
+        safeEmit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
       },
     );
@@ -146,7 +146,7 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
     final removeSucceeded = removeResult.when(
       success: (_) => true,
       failure: (failure) {
-        emit(AdminShiftsPoliciesState.error(failure.messageKey));
+        safeEmit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
       },
     );
@@ -161,7 +161,7 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminShiftsPoliciesState.error(failure.messageKey));
+        safeEmit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
       },
     );
@@ -176,7 +176,7 @@ class AdminShiftsPoliciesCubit extends Cubit<AdminShiftsPoliciesState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminShiftsPoliciesState.error(failure.messageKey));
+        safeEmit(AdminShiftsPoliciesState.error(failure.messageKey));
         return false;
       },
     );

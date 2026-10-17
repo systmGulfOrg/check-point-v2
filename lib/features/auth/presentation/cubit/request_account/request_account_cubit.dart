@@ -1,13 +1,11 @@
 import 'dart:io';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/data/models/account_request/account_request_model.dart';
 import 'package:check_point_v2/features/auth/data/repos/auth_repo.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_state.dart';
 
-class RequestAccountCubit extends Cubit<RequestAccountState> {
+class RequestAccountCubit extends SafeCubit<RequestAccountState> {
   RequestAccountCubit({
     required this.authRepo,
     required this.deviceIdentityProvider,
@@ -66,9 +64,10 @@ class RequestAccountCubit extends Cubit<RequestAccountState> {
     result.when(
       success: (_) async {
         await authSessionStorage.clearAccountRequestDismissal();
-        emit(const RequestAccountState.success());
+        safeEmit(const RequestAccountState.success());
       },
-      failure: (failure) => emit(RequestAccountState.error(failure.messageKey)),
+      failure: (failure) =>
+          safeEmit(RequestAccountState.error(failure.messageKey)),
     );
   }
 }

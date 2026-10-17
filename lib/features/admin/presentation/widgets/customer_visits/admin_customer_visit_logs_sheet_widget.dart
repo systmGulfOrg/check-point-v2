@@ -5,10 +5,7 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 
 class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
-  const AdminCustomerVisitLogsSheetWidget({
-    required this.visit,
-    super.key,
-  });
+  const AdminCustomerVisitLogsSheetWidget({required this.visit, super.key});
 
   final CustomerVisitModel visit;
 
@@ -17,7 +14,11 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
     try {
       final dt = DateTime.parse(iso).toLocal();
       final dateStr = AppDateFormatter.formatDate(dt, pattern: 'yyyy-MM-dd');
-      final timeStr = AppDateFormatter.formatTime(dt, isArabic: true, fullPeriod: true);
+      final timeStr = AppDateFormatter.formatTime(
+        dt,
+        isArabic: true,
+        fullPeriod: true,
+      );
       return '$dateStr • $timeStr';
     } catch (_) {
       return iso;
@@ -88,10 +89,7 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
         children: [
           Icon(icon, size: 14.r, color: fg),
           SizedBox(width: 6.w),
-          Text(
-            label,
-            style: AppTextStyles.font12Bold.copyWith(color: fg),
-          ),
+          Text(label, style: AppTextStyles.font12Bold.copyWith(color: fg)),
         ],
       ),
     );
@@ -111,16 +109,7 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Center(
-            child: Container(
-              width: 40.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: AppColors.border,
-                borderRadius: BorderRadius.circular(2.r),
-              ),
-            ),
-          ),
+          const AppSheetHandleWidget(),
           SizedBox(height: 16.h),
           Row(
             children: [
@@ -205,14 +194,14 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final log = logs[index];
                   final action = log.action ?? 'updated';
-                  final hasPreviousSchedule = (log.previousDate != null &&
+                  final hasPreviousSchedule =
+                      (log.previousDate != null &&
                           log.previousDate!.trim().isNotEmpty) ||
                       (log.previousTime != null &&
                           log.previousTime!.trim().isNotEmpty);
-                  final hasNewSchedule = (log.newDate != null &&
-                          log.newDate!.trim().isNotEmpty) ||
-                      (log.newTime != null &&
-                          log.newTime!.trim().isNotEmpty);
+                  final hasNewSchedule =
+                      (log.newDate != null && log.newDate!.trim().isNotEmpty) ||
+                      (log.newTime != null && log.newTime!.trim().isNotEmpty);
 
                   return Container(
                     padding: EdgeInsets.all(12.r),
@@ -237,7 +226,8 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
                               ),
                           ],
                         ),
-                        if (log.actorName != null && log.actorName!.isNotEmpty) ...[
+                        if (log.actorName != null &&
+                            log.actorName!.isNotEmpty) ...[
                           SizedBox(height: 8.h),
                           Row(
                             children: [
@@ -277,10 +267,12 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
                                         log.previousDate,
                                         log.previousTime,
                                       ),
-                                      style: AppTextStyles.font12Medium.copyWith(
-                                        color: AppColors.textSecondary,
-                                        decoration: TextDecoration.lineThrough,
-                                      ),
+                                      style: AppTextStyles.font12Medium
+                                          .copyWith(
+                                            color: AppColors.textSecondary,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                          ),
                                     ),
                                   ),
                                   SizedBox(width: 8.w),

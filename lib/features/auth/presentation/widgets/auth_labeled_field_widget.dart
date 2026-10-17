@@ -14,6 +14,7 @@ class AuthLabeledFieldWidget extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.validator,
+    this.helperKey,
   });
 
   final String labelKey;
@@ -24,6 +25,10 @@ class AuthLabeledFieldWidget extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
+
+  /// Optional small note rendered below the field (e.g. clarifying what the
+  /// value will be used for).
+  final String? helperKey;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +49,15 @@ class AuthLabeledFieldWidget extends StatelessWidget {
           suffixIcon: suffixIcon,
           validator: validator,
         ),
+        if (helperKey != null) ...[
+          hSpace(6),
+          Text(
+            helperKey!.tr(context: context),
+            style: AppTextStyles.font12Regular.copyWith(
+              color: AppColors.placeholder,
+            ),
+          ),
+        ],
       ],
     );
   }

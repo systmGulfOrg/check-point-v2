@@ -1,9 +1,9 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_request_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_locations_repo.dart';
 import 'admin_branches_state.dart';
 
-class AdminBranchesCubit extends Cubit<AdminBranchesState> {
+class AdminBranchesCubit extends SafeCubit<AdminBranchesState> {
   AdminBranchesCubit({required this.locationsRepo})
     : super(const AdminBranchesState.initial());
   final AdminLocationsRepo locationsRepo;
@@ -12,8 +12,9 @@ class AdminBranchesCubit extends Cubit<AdminBranchesState> {
     emit(const AdminBranchesState.loading());
     final result = await locationsRepo.getBranches();
     result.when(
-      success: (data) => emit(AdminBranchesState.success(data)),
-      failure: (failure) => emit(AdminBranchesState.error(failure.messageKey)),
+      success: (data) => safeEmit(AdminBranchesState.success(data)),
+      failure: (failure) =>
+          safeEmit(AdminBranchesState.error(failure.messageKey)),
     );
   }
 
@@ -22,7 +23,7 @@ class AdminBranchesCubit extends Cubit<AdminBranchesState> {
     await result.when(
       success: (_) async => await load(),
       failure: (failure) async =>
-          emit(AdminBranchesState.error(failure.messageKey)),
+          safeEmit(AdminBranchesState.error(failure.messageKey)),
     );
   }
 
@@ -34,7 +35,7 @@ class AdminBranchesCubit extends Cubit<AdminBranchesState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminBranchesState.error(failure.messageKey));
+        safeEmit(AdminBranchesState.error(failure.messageKey));
         return false;
       },
     );
@@ -51,7 +52,7 @@ class AdminBranchesCubit extends Cubit<AdminBranchesState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminBranchesState.error(failure.messageKey));
+        safeEmit(AdminBranchesState.error(failure.messageKey));
         return false;
       },
     );

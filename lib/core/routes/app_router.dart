@@ -14,6 +14,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/plans/admin_plans_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/subscription/admin_subscription_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_attendance_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_create_employee_screen.dart';
@@ -30,6 +31,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/permissions/adm
 import 'package:check_point_v2/features/admin/presentation/screens/admin_permissions_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_plans_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_request_details_screen.dart';
+import 'package:check_point_v2/features/admin/presentation/screens/admin_subscription_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_shift_details_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_shifts_policies_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_devices_screen.dart';
@@ -40,8 +42,12 @@ import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubi
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account_status/request_account_status_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/tenant_lookup/tenant_lookup_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/trial_signup/trial_signup_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/screens/company_code_screen.dart';
 import 'package:check_point_v2/features/auth/presentation/screens/login_screen.dart';
 import 'package:check_point_v2/features/auth/presentation/screens/request_access_screen.dart';
+import 'package:check_point_v2/features/auth/presentation/screens/trial_signup_screen.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/leave_requests/employee_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/odoo_dashboard/employee_odoo_dashboard_cubit.dart';
@@ -75,6 +81,7 @@ import 'package:check_point_v2/features/attendance_points/presentation/screens/a
 import 'package:check_point_v2/features/attendance_points/presentation/screens/admin_employee_points_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_main_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_notifications_screen.dart';
+import 'package:check_point_v2/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:check_point_v2/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_plans_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_tasks_screen.dart';
@@ -97,6 +104,10 @@ import 'routes.dart';
 
 class AppRouter {
   const AppRouter._();
+
+  /// Lets code outside the widget tree (the push-notification tap handler)
+  /// navigate without a BuildContext.
+  static final navigatorKey = GlobalKey<NavigatorState>();
 
   static Route<void> _fadeRoute({
     required Widget child,
@@ -230,6 +241,24 @@ class AppRouter {
             child: AdminEmployeeProfileScreen(employee: employee),
           ),
         );
+      case AppRoutes.companyCode:
+        return _fadeRoute(
+          settings: const RouteSettings(name: AppRoutes.companyCode),
+          child: BlocProvider<TenantLookupCubit>(
+            create: (_) => sl<TenantLookupCubit>(),
+            child: const CompanyCodeScreen(),
+          ),
+        );
+
+      case AppRoutes.trialSignup:
+        return _fadeRoute(
+          settings: const RouteSettings(name: AppRoutes.trialSignup),
+          child: BlocProvider<TrialSignupCubit>(
+            create: (_) => sl<TrialSignupCubit>(),
+            child: const TrialSignupScreen(),
+          ),
+        );
+
       case AppRoutes.login:
         return _fadeRoute(
           settings: const RouteSettings(name: AppRoutes.login),
@@ -488,6 +517,15 @@ class AppRouter {
           ),
         );
 
+      case AppRoutes.adminSubscription:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.adminSubscription),
+          child: BlocProvider<AdminSubscriptionCubit>(
+            create: (_) => sl<AdminSubscriptionCubit>()..load(),
+            child: const AdminSubscriptionScreen(),
+          ),
+        );
+
       case AppRoutes.adminAttendance:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.adminAttendance),
@@ -501,6 +539,9 @@ class AppRouter {
               ),
               BlocProvider<AdminAttendanceCubit>(
                 create: (_) => sl<AdminAttendanceCubit>()..loadAttendance(),
+              ),
+              BlocProvider<AdminLeaveRequestsCubit>(
+                create: (_) => sl<AdminLeaveRequestsCubit>()..loadRequests(),
               ),
               BlocProvider<AuthProfileCubit>(
                 create: (_) => sl<AuthProfileCubit>()..loadProfile(),
@@ -666,6 +707,15 @@ class AppRouter {
           ),
         );
 
+      case AppRoutes.notifications:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.notifications),
+          child: BlocProvider<NotificationsCubit>(
+            create: (_) => sl<NotificationsCubit>()..load(),
+            child: const NotificationsScreen(),
+          ),
+        );
+
       case AppRoutes.supervisorAttendance:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.supervisorAttendance),
@@ -787,6 +837,9 @@ class AppRouter {
               BlocProvider<PointsCubit>(
                 create: (_) => sl<PointsCubit>()..loadAllPointsData(),
               ),
+              BlocProvider<NotificationsCubit>(
+                create: (_) => sl<NotificationsCubit>()..load(),
+              ),
             ],
             child: const EmployeeMainScreen(),
           ),
@@ -794,7 +847,10 @@ class AppRouter {
       case AppRoutes.employeeSettings:
         return _slideRoute(
           settings: const RouteSettings(name: AppRoutes.employeeSettings),
-          child: const EmployeeSettingsScreen(),
+          child: BlocProvider<NotificationsCubit>(
+            create: (_) => sl<NotificationsCubit>()..load(),
+            child: const EmployeeSettingsScreen(),
+          ),
         );
 
       case AppRoutes.permissionsRequest:

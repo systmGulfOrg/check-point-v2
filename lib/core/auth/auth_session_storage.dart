@@ -24,6 +24,10 @@ class AuthSessionStorage {
   static const biometricPasswordKey = 'biometric_password';
   static const accountRequestDismissedMobileIdKey =
       'account_request_dismissed_mobile_id';
+  static const tenantSlugKey = 'tenant_slug';
+  static const tenantStatusKey = 'tenant_status';
+  static const trialEndsAtKey = 'trial_ends_at';
+  static const seatLimitKey = 'seat_limit';
 
   final FlutterSecureStorage secureStorage;
 
@@ -142,7 +146,8 @@ class AuthSessionStorage {
 
   Future<String?> readUserName() => secureStorage.read(key: userNameKey);
 
-  Future<String?> readUserImageUrl() => secureStorage.read(key: userImageUrlKey);
+  Future<String?> readUserImageUrl() =>
+      secureStorage.read(key: userImageUrlKey);
 
   Future<void> saveUserImageUrl(String url) =>
       secureStorage.write(key: userImageUrlKey, value: url);
@@ -175,7 +180,9 @@ class AuthSessionStorage {
       }
     }
     final singleRole = await readUserRole();
-    return singleRole != null && singleRole.isNotEmpty ? [singleRole] : const [];
+    return singleRole != null && singleRole.isNotEmpty
+        ? [singleRole]
+        : const [];
   }
 
   Future<List<String>> readPermissions() async {
@@ -243,6 +250,68 @@ class AuthSessionStorage {
     await secureStorage.delete(key: biometricPasswordKey);
   }
 
+  Future<String?> readTenantSlug() async {
+    if (_cachedTenantSlug != null) return _cachedTenantSlug;
+    final slug = await secureStorage.read(key: tenantSlugKey);
+    _cachedTenantSlug = slug;
+    AuthTokenInterceptor.updateTenantSlug(slug);
+    return slug;
+  }
+
+  Future<void> saveTenantSlug(String slug) async {
+    _cachedTenantSlug = slug;
+    AuthTokenInterceptor.updateTenantSlug(slug);
+    await secureStorage.write(key: tenantSlugKey, value: slug);
+  }
+
+  static String? _cachedTenantSlug;
+
+  /// Trial banner info from the login response. [tenantStatus] is `'Trial'`
+  /// only while the company is actually on a trial; other fields are left
+  /// unset/cleared otherwise so a stale trial date never lingers after the
+  /// company converts to a paid plan.
+  Future<void> saveTrialInfo({
+    required String? tenantStatus,
+    required DateTime? trialEndsAt,
+    required int? seatLimit,
+  }) async {
+    if (tenantStatus != null) {
+      await secureStorage.write(key: tenantStatusKey, value: tenantStatus);
+    } else {
+      await secureStorage.delete(key: tenantStatusKey);
+    }
+    if (trialEndsAt != null) {
+      await secureStorage.write(
+        key: trialEndsAtKey,
+        value: trialEndsAt.toIso8601String(),
+      );
+    } else {
+      await secureStorage.delete(key: trialEndsAtKey);
+    }
+    if (seatLimit != null) {
+      await secureStorage.write(
+        key: seatLimitKey,
+        value: seatLimit.toString(),
+      );
+    } else {
+      await secureStorage.delete(key: seatLimitKey);
+    }
+  }
+
+  Future<({String? tenantStatus, DateTime? trialEndsAt, int? seatLimit})>
+  readTrialInfo() async {
+    final values = await secureStorage.readAll();
+    final rawTrialEndsAt = values[trialEndsAtKey];
+    final rawSeatLimit = values[seatLimitKey];
+    return (
+      tenantStatus: values[tenantStatusKey],
+      trialEndsAt: rawTrialEndsAt != null
+          ? DateTime.tryParse(rawTrialEndsAt)
+          : null,
+      seatLimit: rawSeatLimit != null ? int.tryParse(rawSeatLimit) : null,
+    );
+  }
+
   Future<String?> readAccountRequestDismissedMobileId() =>
       secureStorage.read(key: accountRequestDismissedMobileIdKey);
 
@@ -267,5 +336,21 @@ class AuthSessionStorage {
     await secureStorage.delete(key: userRolesKey);
     await secureStorage.delete(key: permissionsKey);
     await secureStorage.delete(key: userImageUrlKey);
+    await secureStorage.delete(key: tenantStatusKey);
+    await secureStorage.delete(key: trialEndsAtKey);
+    await secureStorage.delete(key: seatLimitKey);
+  }
+
+  /// Full reset for a tenant the backend has rejected (suspended, expired,
+  /// archived, ...). Unlike [clear] (plain sign-out), this also forgets the
+  /// company code and any saved biometric login — they are no longer valid
+  /// for this device, so the user must go through the company-code screen
+  /// again instead of landing straight on the login screen.
+  Future<void> clearTenant() async {
+    await clear();
+    await disableBiometricLogin();
+    _cachedTenantSlug = null;
+    AuthTokenInterceptor.updateTenantSlug(null);
+    await secureStorage.delete(key: tenantSlugKey);
   }
 }

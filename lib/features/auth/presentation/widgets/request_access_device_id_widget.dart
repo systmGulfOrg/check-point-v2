@@ -57,7 +57,9 @@ class RequestAccessDeviceIdWidget extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        'admin.employeeWizard.mobileCopied'.tr(context: context),
+                        'admin.employeeWizard.mobileCopied'.tr(
+                          context: context,
+                        ),
                       ),
                       duration: const Duration(seconds: 2),
                     ),

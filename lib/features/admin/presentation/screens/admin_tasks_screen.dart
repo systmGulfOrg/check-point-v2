@@ -56,11 +56,10 @@ class _AdminTasksScreenState extends State<AdminTasksScreen> {
       orElse: () => const <DepartmentModel>[],
     );
     final permissions = context.select<AuthProfileCubit, List<String>>(
-      (cubit) => cubit.state.maybeWhen(
-        success:
-            (name, userId, role, username, permissions, roles) => permissions,
-        orElse: () => const [],
-      ),
+      (cubit) => switch (cubit.state) {
+        AuthProfileSuccess(:final permissions) => permissions,
+        _ => const [],
+      },
     );
     final canManageTasks = AppPermissions.has(
       permissions,

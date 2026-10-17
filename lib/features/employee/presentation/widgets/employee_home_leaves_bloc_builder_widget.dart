@@ -28,21 +28,11 @@ class EmployeeHomeLeavesBlocBuilderWidget extends StatelessWidget {
     return BlocBuilder<LeavesCubit, LeavesState>(
       builder: (context, state) {
         final (balances, requests, isLoading) = state.maybeWhen(
-          success: (balances, types, requests) => (
-            balances,
-            requests,
-            false,
-          ),
-          loading: () => (
-            const <LeaveBalanceModel>[],
-            const <LeaveRequestModel>[],
-            true,
-          ),
-          orElse: () => (
-            const <LeaveBalanceModel>[],
-            const <LeaveRequestModel>[],
-            false,
-          ),
+          success: (balances, types, requests) => (balances, requests, false),
+          loading: () =>
+              (const <LeaveBalanceModel>[], const <LeaveRequestModel>[], true),
+          orElse: () =>
+              (const <LeaveBalanceModel>[], const <LeaveRequestModel>[], false),
         );
 
         if (isLoading) {
@@ -110,9 +100,7 @@ class EmployeeHomeLeavesBlocBuilderWidget extends StatelessWidget {
                 itemCount: requests.take(3).length,
                 separatorBuilder: (_, _) => hSpace(10),
                 itemBuilder: (context, index) {
-                  return LeaveRequestCardWidget(
-                    request: requests[index],
-                  );
+                  return LeaveRequestCardWidget(request: requests[index]);
                 },
               ),
           ],

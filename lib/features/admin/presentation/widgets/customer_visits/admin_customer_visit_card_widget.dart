@@ -32,12 +32,14 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
     String? notes,
     String? documentName,
     String? documentUrl,
-  ) onRecordOutcome;
+  )
+  onRecordOutcome;
   final Future<void> Function({
     required String visitDate,
     String? visitTime,
     String? reason,
-  })? onRescheduleVisit;
+  })?
+  onRescheduleVisit;
   final Future<void> Function(String? reason)? onCancelVisit;
 
   void _openAttendanceCheckIn(BuildContext context) async {
@@ -169,8 +171,9 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
       statusIcon = Icons.check_circle_rounded;
     } else if (isVisitedPendingReport) {
       statusColor = AppColors.amberStatus;
-      statusText =
-          'admin.visits.statusVisitedPendingReport'.tr(context: context);
+      statusText = 'admin.visits.statusVisitedPendingReport'.tr(
+        context: context,
+      );
       statusIcon = Icons.pending_actions_rounded;
     } else if (isCancelled) {
       statusColor = AppColors.error;
@@ -183,25 +186,30 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
     }
 
     final rawScheduledBy = visit.createdByName ?? visit.createdBy;
-    final isOpaqueId = rawScheduledBy != null &&
+    final isOpaqueId =
+        rawScheduledBy != null &&
         rawScheduledBy.length >= 15 &&
         !rawScheduledBy.contains(' ');
     final scheduledBy = isOpaqueId ? null : rawScheduledBy;
 
-    final planDocName = visit.planDocumentName ??
+    final planDocName =
+        visit.planDocumentName ??
         (visit.outcomeDocumentName != null &&
                 visit.outcomeDocumentName != visit.documentName
             ? visit.documentName
             : (visit.outcome == null ? visit.documentName : null));
-    final planDocUrl = visit.planDocumentUrl ??
+    final planDocUrl =
+        visit.planDocumentUrl ??
         (visit.outcomeDocumentUrl != null &&
                 visit.outcomeDocumentUrl != visit.documentUrl
             ? visit.documentUrl
             : (visit.outcome == null ? visit.documentUrl : null));
 
-    final outcomeDocName = visit.outcomeDocumentName ??
+    final outcomeDocName =
+        visit.outcomeDocumentName ??
         (visit.outcome != null ? visit.documentName : null);
-    final outcomeDocUrl = visit.outcomeDocumentUrl ??
+    final outcomeDocUrl =
+        visit.outcomeDocumentUrl ??
         (visit.outcome != null ? visit.documentUrl : null);
 
     return InkWell(
@@ -220,77 +228,121 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
             ),
           ],
         ),
-      padding: EdgeInsets.all(14.r),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header: Status badge & Date/Time & Options Menu
-          // Header: Status badge & Options Menu
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(8.r),
-                    border: Border.all(color: statusColor.withValues(alpha: 0.3)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(statusIcon, color: statusColor, size: 14.r),
-                      SizedBox(width: 4.w),
-                      Flexible(
-                        child: Text(
-                          statusText,
-                          style: AppTextStyles.font12Bold.copyWith(
-                            color: statusColor,
+        padding: EdgeInsets.all(14.r),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header: Status badge & Date/Time & Options Menu
+            // Header: Status badge & Options Menu
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 4.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: statusColor.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(8.r),
+                      border: Border.all(
+                        color: statusColor.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(statusIcon, color: statusColor, size: 14.r),
+                        SizedBox(width: 4.w),
+                        Flexible(
+                          child: Text(
+                            statusText,
+                            style: AppTextStyles.font12Bold.copyWith(
+                              color: statusColor,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                PopupMenuButton<String>(
+                  icon: Icon(
+                    Icons.more_vert_rounded,
+                    size: 18.r,
+                    color: AppColors.textSecondary,
+                  ),
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  onSelected: (action) {
+                    switch (action) {
+                      case 'reschedule':
+                        _openRescheduleDialog(context);
+                      case 'cancel':
+                        _openCancelDialog(context);
+                      case 'logs':
+                        _openLogsSheet(context);
+                    }
+                  },
+                  itemBuilder: (ctx) => [
+                    if (!isCancelled && !isCompleted) ...[
+                      PopupMenuItem<String>(
+                        value: 'reschedule',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.edit_calendar_rounded,
+                              size: 18.r,
+                              color: AppColors.brandPrimary,
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              'تعديل موعد الزيارة',
+                              style: AppTextStyles.font13Medium.copyWith(
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'cancel',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.event_busy_rounded,
+                              size: 18.r,
+                              color: AppColors.error,
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              'إلغاء الزيارة',
+                              style: AppTextStyles.font13Medium.copyWith(
+                                color: AppColors.error,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
-                  ),
-                ),
-              ),
-              PopupMenuButton<String>(
-                icon: Icon(
-                  Icons.more_vert_rounded,
-                  size: 18.r,
-                  color: AppColors.textSecondary,
-                ),
-                padding: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                onSelected: (action) {
-                  switch (action) {
-                    case 'reschedule':
-                      _openRescheduleDialog(context);
-                    case 'cancel':
-                      _openCancelDialog(context);
-                    case 'logs':
-                      _openLogsSheet(context);
-                  }
-                },
-                itemBuilder: (ctx) => [
-                  if (!isCancelled && !isCompleted) ...[
                     PopupMenuItem<String>(
-                      value: 'reschedule',
+                      value: 'logs',
                       child: Row(
                         children: [
                           Icon(
-                            Icons.edit_calendar_rounded,
+                            Icons.history_rounded,
                             size: 18.r,
-                            color: AppColors.brandPrimary,
+                            color: AppColors.textSecondary,
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            'تعديل موعد الزيارة',
+                            'سجل نشاط الزيارة (Log)',
                             style: AppTextStyles.font13Medium.copyWith(
                               color: AppColors.textPrimary,
                             ),
@@ -298,441 +350,141 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    PopupMenuItem<String>(
-                      value: 'cancel',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.event_busy_rounded,
-                            size: 18.r,
-                            color: AppColors.error,
-                          ),
-                          SizedBox(width: 8.w),
-                          Text(
-                            'إلغاء الزيارة',
-                            style: AppTextStyles.font13Medium.copyWith(
-                              color: AppColors.error,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
-                  PopupMenuItem<String>(
-                    value: 'logs',
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.history_rounded,
-                          size: 18.r,
-                          color: AppColors.textSecondary,
-                        ),
-                        SizedBox(width: 8.w),
-                        Text(
-                          'سجل نشاط الزيارة (Log)',
-                          style: AppTextStyles.font13Medium.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                      ],
+                ),
+              ],
+            ),
+            SizedBox(height: 8.h),
+
+            // Date / Time schedule row
+            if (visit.visitDate != null || visit.visitTime != null) ...[
+              Row(
+                children: [
+                  Icon(
+                    Icons.calendar_today_rounded,
+                    size: 13.r,
+                    color: AppColors.placeholder,
+                  ),
+                  SizedBox(width: 5.w),
+                  Expanded(
+                    child: Text(
+                      '${visit.visitDate != null ? AppDateFormatter.formatDateString(visit.visitDate) : ''}${visit.visitTime != null ? ' • ${AppDateFormatter.formatReadableTime(visit.visitTime)}' : ''}',
+                      style: AppTextStyles.font12Medium.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8.h),
+            ],
+
+            // Customer Name (if available)
+            if (visit.customerName != null &&
+                visit.customerName!.isNotEmpty) ...[
+              Row(
+                children: [
+                  Icon(
+                    Icons.business_rounded,
+                    size: 14.r,
+                    color: AppColors.info,
+                  ),
+                  SizedBox(width: 4.w),
+                  Expanded(
+                    child: Text(
+                      visit.customerName!,
+                      style: AppTextStyles.font12Bold.copyWith(
+                        color: AppColors.info,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 4.h),
+            ],
+
+            // Title
+            Text(
+              visit.title ?? 'admin.visits.title'.tr(context: context),
+              style: AppTextStyles.font14Bold,
+            ),
+
+            // Scheduled By (مين اللي جدول الزيارة)
+            if (scheduledBy != null && scheduledBy.trim().isNotEmpty) ...[
+              SizedBox(height: 6.h),
+              Row(
+                children: [
+                  Icon(
+                    Icons.person_outline_rounded,
+                    size: 14.r,
+                    color: AppColors.textSecondary,
+                  ),
+                  SizedBox(width: 5.w),
+                  Text(
+                    '${'admin.visits.scheduledBy'.tr(context: context)}: ',
+                    style: AppTextStyles.font12Medium.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      scheduledBy,
+                      style: AppTextStyles.font12Bold.copyWith(
+                        color: AppColors.brandPrimary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               ),
             ],
-          ),
-          SizedBox(height: 8.h),
 
-          // Date / Time schedule row
-          if (visit.visitDate != null || visit.visitTime != null) ...[
-            Row(
-              children: [
-                Icon(
-                  Icons.calendar_today_rounded,
-                  size: 13.r,
-                  color: AppColors.placeholder,
-                ),
-                SizedBox(width: 5.w),
-                Expanded(
-                  child: Text(
-                    '${visit.visitDate != null ? AppDateFormatter.formatDateString(visit.visitDate) : ''}${visit.visitTime != null ? ' • ${AppDateFormatter.formatReadableTime(visit.visitTime)}' : ''}',
-                    style: AppTextStyles.font12Medium.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8.h),
-          ],
-
-          // Customer Name (if available)
-          if (visit.customerName != null && visit.customerName!.isNotEmpty) ...[
-            Row(
-              children: [
-                Icon(
-                  Icons.business_rounded,
-                  size: 14.r,
-                  color: AppColors.info,
-                ),
-                SizedBox(width: 4.w),
-                Expanded(
-                  child: Text(
-                    visit.customerName!,
-                    style: AppTextStyles.font12Bold.copyWith(
-                      color: AppColors.info,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 4.h),
-          ],
-
-          // Title
-          Text(
-            visit.title ?? 'admin.visits.title'.tr(context: context),
-            style: AppTextStyles.font14Bold,
-          ),
-
-          // Scheduled By (مين اللي جدول الزيارة)
-          if (scheduledBy != null && scheduledBy.trim().isNotEmpty) ...[
-            SizedBox(height: 6.h),
-            Row(
-              children: [
-                Icon(
-                  Icons.person_outline_rounded,
-                  size: 14.r,
-                  color: AppColors.textSecondary,
-                ),
-                SizedBox(width: 5.w),
-                Text(
-                  '${'admin.visits.scheduledBy'.tr(context: context)}: ',
-                  style: AppTextStyles.font12Medium.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    scheduledBy,
-                    style: AppTextStyles.font12Bold.copyWith(
-                      color: AppColors.brandPrimary,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ],
-
-          // Attendees ("مين حضر / مين معايا")
-          if (visit.attendees.isNotEmpty) ...[
-            SizedBox(height: 8.h),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.people_alt_outlined,
-                  size: 15.r,
-                  color: AppColors.brandPrimary,
-                ),
-                SizedBox(width: 6.w),
-                Expanded(
-                  child: Text(
-                    '${'admin.visits.attendees'.tr(context: context)}: ${visit.attendees.join('، ')}',
-                    style: AppTextStyles.font12Regular.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-
-          // Plan Document preview chip (قبل الاجتماع)
-          if (planDocName != null && planDocName.isNotEmpty) ...[
-            SizedBox(height: 8.h),
-            InkWell(
-              onTap: () => AppDocumentViewerDialogWidget.show(
-                context,
-                fileName: planDocName,
-                fileUrl: planDocUrl,
-              ),
-              borderRadius: BorderRadius.circular(8.r),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  color: AppColors.selectedBackground,
-                  borderRadius: BorderRadius.circular(8.r),
-                  border: Border.all(color: AppColors.border),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.description_outlined,
-                      color: AppColors.brandPrimary,
-                      size: 16.r,
-                    ),
-                    SizedBox(width: 6.w),
-                    Text(
-                      '${'admin.visits.planDocTitle'.tr(context: context)}: ',
-                      style: AppTextStyles.font11Bold.copyWith(
-                        color: AppColors.brandPrimaryDark,
-                      ),
-                    ),
-                    Flexible(
-                      child: Directionality(
-                        textDirection: ui.TextDirection.ltr,
-                        child: Text(
-                          planDocName,
-                          style: AppTextStyles.font12Medium.copyWith(
-                            color: AppColors.brandPrimary,
-                            decoration: TextDecoration.underline,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 6.w),
-                    Icon(
-                      Icons.visibility_outlined,
-                      color: AppColors.brandPrimary,
-                      size: 14.r,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-
-          // Outcome Document preview chip (بعد الاجتماع)
-          if (outcomeDocName != null && outcomeDocName.isNotEmpty) ...[
-            SizedBox(height: 8.h),
-            InkWell(
-              onTap: () => AppDocumentViewerDialogWidget.show(
-                context,
-                fileName: outcomeDocName,
-                fileUrl: outcomeDocUrl,
-              ),
-              borderRadius: BorderRadius.circular(8.r),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  color: AppColors.softBlueBackground,
-                  borderRadius: BorderRadius.circular(8.r),
-                  border: Border.all(color: AppColors.info.withValues(alpha: 0.3)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.assignment_turned_in_outlined,
-                      color: AppColors.info,
-                      size: 16.r,
-                    ),
-                    SizedBox(width: 6.w),
-                    Text(
-                      '${'admin.visits.outcomeDocTitle'.tr(context: context)}: ',
-                      style: AppTextStyles.font11Bold.copyWith(
-                        color: AppColors.info,
-                      ),
-                    ),
-                    Flexible(
-                      child: Directionality(
-                        textDirection: ui.TextDirection.ltr,
-                        child: Text(
-                          outcomeDocName,
-                          style: AppTextStyles.font12Medium.copyWith(
-                            color: AppColors.info,
-                            decoration: TextDecoration.underline,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 6.w),
-                    Icon(
-                      Icons.visibility_outlined,
-                      color: AppColors.info,
-                      size: 14.r,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-
-          // Notes
-          if (visit.notes != null && visit.notes!.isNotEmpty) ...[
-            SizedBox(height: 8.h),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(8.r),
-              decoration: BoxDecoration(
-                color: AppColors.fieldBackground,
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Row(
+            // Attendees ("مين حضر / مين معايا")
+            if (visit.attendees.isNotEmpty) ...[
+              SizedBox(height: 8.h),
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(
-                    Icons.note_alt_outlined,
-                    size: 14.r,
-                    color: AppColors.placeholder,
+                    Icons.people_alt_outlined,
+                    size: 15.r,
+                    color: AppColors.brandPrimary,
                   ),
                   SizedBox(width: 6.w),
                   Expanded(
                     child: Text(
-                      visit.notes!,
+                      '${'admin.visits.attendees'.tr(context: context)}: ${visit.attendees.join('، ')}',
                       style: AppTextStyles.font12Regular.copyWith(
-                        color: AppColors.textSecondary,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
 
-          // Cancelled Notice
-          if (isCancelled) ...[
-            SizedBox(height: 8.h),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(10.r),
-              decoration: BoxDecoration(
-                color: AppColors.error.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(
-                  color: AppColors.error.withValues(alpha: 0.25),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.cancel_outlined,
-                    color: AppColors.error,
-                    size: 16.r,
-                  ),
-                  SizedBox(width: 6.w),
-                  Expanded(
-                    child: Text(
-                      visit.notes != null && visit.notes!.isNotEmpty
-                          ? 'الزيارة ملغاة: ${visit.notes}'
-                          : 'تم إلغاء هذه الزيارة',
-                      style: AppTextStyles.font12Medium.copyWith(
-                        color: AppColors.error,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-
-          // Notice for Visited Pending Report (تم الحضور - ناقص تقرير الزيارة)
-          if (isVisitedPendingReport) ...[
-            SizedBox(height: 8.h),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(10.r),
-              decoration: BoxDecoration(
-                color: AppColors.amberSoftBg,
-                borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(
-                  color: AppColors.warning.withValues(alpha: 0.35),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.info_outline_rounded,
-                    color: AppColors.amberStatus,
-                    size: 16.r,
-                  ),
-                  SizedBox(width: 6.w),
-                  Expanded(
-                    child: Text(
-                      'admin.visits.pendingReportNotice'.tr(context: context),
-                      style: AppTextStyles.font12Medium.copyWith(
-                        color: AppColors.amberDark,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-
-          // Outcome Report ("ما حدث في الزيارة")
-          if (isCompleted &&
-              visit.outcome != null &&
-              visit.outcome!.isNotEmpty) ...[
-            SizedBox(height: 8.h),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(10.r),
-              decoration: BoxDecoration(
-                color: AppColors.softGreenBackground,
-                borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(
-                  color: AppColors.success.withValues(alpha: 0.3),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.verified_rounded,
-                        color: AppColors.success,
-                        size: 15.r,
-                      ),
-                      SizedBox(width: 4.w),
-                      Text(
-                        'admin.visits.outcome'.tr(context: context),
-                        style: AppTextStyles.font12Bold.copyWith(
-                          color: AppColors.success,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    visit.outcome!,
-                    style: AppTextStyles.font12Medium.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-
-          // Footer Action buttons: Log & Check-in / Report
-          SizedBox(height: 12.h),
-          Row(
-            children: [
-              // Log history button
+            // Plan Document preview chip (قبل الاجتماع)
+            if (planDocName != null && planDocName.isNotEmpty) ...[
+              SizedBox(height: 8.h),
               InkWell(
-                onTap: () => _openLogsSheet(context),
+                onTap: () => AppDocumentViewerDialogWidget.show(
+                  context,
+                  fileName: planDocName,
+                  fileUrl: planDocUrl,
+                ),
                 borderRadius: BorderRadius.circular(8.r),
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 8.w,
-                    vertical: 5.h,
+                    horizontal: 10.w,
+                    vertical: 6.h,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.pageBackground,
+                    color: AppColors.selectedBackground,
                     borderRadius: BorderRadius.circular(8.r),
                     border: Border.all(color: AppColors.border),
                   ),
@@ -740,93 +492,370 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.history_rounded,
-                        size: 14.r,
-                        color: AppColors.textSecondary,
+                        Icons.description_outlined,
+                        color: AppColors.brandPrimary,
+                        size: 16.r,
                       ),
-                      SizedBox(width: 4.w),
+                      SizedBox(width: 6.w),
                       Text(
-                        'سجل النشاط (${visit.logs.length})',
-                        style: AppTextStyles.font11Medium.copyWith(
-                          color: AppColors.textSecondary,
+                        '${'admin.visits.planDocTitle'.tr(context: context)}: ',
+                        style: AppTextStyles.font11Bold.copyWith(
+                          color: AppColors.brandPrimaryDark,
                         ),
+                      ),
+                      Flexible(
+                        child: Directionality(
+                          textDirection: ui.TextDirection.ltr,
+                          child: Text(
+                            planDocName,
+                            style: AppTextStyles.font12Medium.copyWith(
+                              color: AppColors.brandPrimary,
+                              decoration: TextDecoration.underline,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 6.w),
+                      Icon(
+                        Icons.visibility_outlined,
+                        color: AppColors.brandPrimary,
+                        size: 14.r,
                       ),
                     ],
                   ),
                 ),
               ),
-              const Spacer(),
-              if (!isCancelled && !isCompleted && !isVisitedPendingReport) ...[
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.brandPrimary,
-                    foregroundColor: Colors.white,
+            ],
+
+            // Outcome Document preview chip (بعد الاجتماع)
+            if (outcomeDocName != null && outcomeDocName.isNotEmpty) ...[
+              SizedBox(height: 8.h),
+              InkWell(
+                onTap: () => AppDocumentViewerDialogWidget.show(
+                  context,
+                  fileName: outcomeDocName,
+                  fileUrl: outcomeDocUrl,
+                ),
+                borderRadius: BorderRadius.circular(8.r),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 6.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.softBlueBackground,
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(
+                      color: AppColors.info.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.assignment_turned_in_outlined,
+                        color: AppColors.info,
+                        size: 16.r,
+                      ),
+                      SizedBox(width: 6.w),
+                      Text(
+                        '${'admin.visits.outcomeDocTitle'.tr(context: context)}: ',
+                        style: AppTextStyles.font11Bold.copyWith(
+                          color: AppColors.info,
+                        ),
+                      ),
+                      Flexible(
+                        child: Directionality(
+                          textDirection: ui.TextDirection.ltr,
+                          child: Text(
+                            outcomeDocName,
+                            style: AppTextStyles.font12Medium.copyWith(
+                              color: AppColors.info,
+                              decoration: TextDecoration.underline,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 6.w),
+                      Icon(
+                        Icons.visibility_outlined,
+                        color: AppColors.info,
+                        size: 14.r,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+
+            // Notes
+            if (visit.notes != null && visit.notes!.isNotEmpty) ...[
+              SizedBox(height: 8.h),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(8.r),
+                decoration: BoxDecoration(
+                  color: AppColors.fieldBackground,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.note_alt_outlined,
+                      size: 14.r,
+                      color: AppColors.placeholder,
+                    ),
+                    SizedBox(width: 6.w),
+                    Expanded(
+                      child: Text(
+                        visit.notes!,
+                        style: AppTextStyles.font12Regular.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
+            // Cancelled Notice
+            if (isCancelled) ...[
+              SizedBox(height: 8.h),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(10.r),
+                decoration: BoxDecoration(
+                  color: AppColors.error.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(
+                    color: AppColors.error.withValues(alpha: 0.25),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.cancel_outlined,
+                      color: AppColors.error,
+                      size: 16.r,
+                    ),
+                    SizedBox(width: 6.w),
+                    Expanded(
+                      child: Text(
+                        visit.notes != null && visit.notes!.isNotEmpty
+                            ? 'الزيارة ملغاة: ${visit.notes}'
+                            : 'تم إلغاء هذه الزيارة',
+                        style: AppTextStyles.font12Medium.copyWith(
+                          color: AppColors.error,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
+            // Notice for Visited Pending Report (تم الحضور - ناقص تقرير الزيارة)
+            if (isVisitedPendingReport) ...[
+              SizedBox(height: 8.h),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(10.r),
+                decoration: BoxDecoration(
+                  color: AppColors.amberSoftBg,
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(
+                    color: AppColors.warning.withValues(alpha: 0.35),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline_rounded,
+                      color: AppColors.amberStatus,
+                      size: 16.r,
+                    ),
+                    SizedBox(width: 6.w),
+                    Expanded(
+                      child: Text(
+                        'admin.visits.pendingReportNotice'.tr(context: context),
+                        style: AppTextStyles.font12Medium.copyWith(
+                          color: AppColors.amberDark,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
+            // Outcome Report ("ما حدث في الزيارة")
+            if (isCompleted &&
+                visit.outcome != null &&
+                visit.outcome!.isNotEmpty) ...[
+              SizedBox(height: 8.h),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(10.r),
+                decoration: BoxDecoration(
+                  color: AppColors.softGreenBackground,
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(
+                    color: AppColors.success.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.verified_rounded,
+                          color: AppColors.success,
+                          size: 15.r,
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          'admin.visits.outcome'.tr(context: context),
+                          style: AppTextStyles.font12Bold.copyWith(
+                            color: AppColors.success,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      visit.outcome!,
+                      style: AppTextStyles.font12Medium.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
+            // Footer Action buttons: Log & Check-in / Report
+            SizedBox(height: 12.h),
+            Row(
+              children: [
+                // Log history button
+                InkWell(
+                  onTap: () => _openLogsSheet(context),
+                  borderRadius: BorderRadius.circular(8.r),
+                  child: Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 14.w,
-                      vertical: 8.h,
+                      horizontal: 8.w,
+                      vertical: 5.h,
                     ),
-                    shape: RoundedRectangleBorder(
+                    decoration: BoxDecoration(
+                      color: AppColors.pageBackground,
                       borderRadius: BorderRadius.circular(8.r),
+                      border: Border.all(color: AppColors.border),
                     ),
-                    elevation: 0,
-                  ),
-                  onPressed: () => _openAttendanceCheckIn(context),
-                  icon: Icon(
-                    Icons.location_on_rounded,
-                    size: 16.r,
-                    color: Colors.white,
-                  ),
-                  label: Text(
-                    'تسجيل حضور الزيارة',
-                    style: AppTextStyles.font12Bold.copyWith(
-                      color: Colors.white,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.history_rounded,
+                          size: 14.r,
+                          color: AppColors.textSecondary,
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          'سجل النشاط (${visit.logs.length})',
+                          style: AppTextStyles.font11Medium.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-              if (isVisitedPendingReport || isCompleted) ...[
-                TextButton.icon(
-                  onPressed: () => showDialog<void>(
-                    context: context,
-                    builder: (_) => AdminRecordVisitOutcomeDialogWidget(
-                      visit: visit,
-                      onSubmit:
-                          (outcome, status, notes, documentName, documentUrl) =>
-                              onRecordOutcome(
-                                outcome,
-                                status,
-                                notes,
-                                documentName,
-                                documentUrl,
-                              ),
+                const Spacer(),
+                if (!isCancelled &&
+                    !isCompleted &&
+                    !isVisitedPendingReport) ...[
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.brandPrimary,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14.w,
+                        vertical: 8.h,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      elevation: 0,
+                    ),
+                    onPressed: () => _openAttendanceCheckIn(context),
+                    icon: Icon(
+                      Icons.location_on_rounded,
+                      size: 16.r,
+                      color: Colors.white,
+                    ),
+                    label: Text(
+                      'تسجيل حضور الزيارة',
+                      style: AppTextStyles.font12Bold.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                  icon: Icon(
-                    isCompleted
-                        ? Icons.edit_note_rounded
-                        : Icons.assignment_turned_in_rounded,
-                    size: 16.r,
-                    color: isVisitedPendingReport
-                        ? AppColors.amberStatus
-                        : AppColors.brandPrimary,
-                  ),
-                  label: Text(
-                    isCompleted
-                        ? 'admin.visits.editOutcome'.tr(context: context)
-                        : 'admin.visits.recordOutcome'.tr(context: context),
-                    style: AppTextStyles.font12Bold.copyWith(
+                ],
+                if (isVisitedPendingReport || isCompleted) ...[
+                  TextButton.icon(
+                    onPressed: () => showDialog<void>(
+                      context: context,
+                      builder: (_) => AdminRecordVisitOutcomeDialogWidget(
+                        visit: visit,
+                        onSubmit:
+                            (
+                              outcome,
+                              status,
+                              notes,
+                              documentName,
+                              documentUrl,
+                            ) => onRecordOutcome(
+                              outcome,
+                              status,
+                              notes,
+                              documentName,
+                              documentUrl,
+                            ),
+                      ),
+                    ),
+                    icon: Icon(
+                      isCompleted
+                          ? Icons.edit_note_rounded
+                          : Icons.assignment_turned_in_rounded,
+                      size: 16.r,
                       color: isVisitedPendingReport
                           ? AppColors.amberStatus
                           : AppColors.brandPrimary,
                     ),
+                    label: Text(
+                      isCompleted
+                          ? 'admin.visits.editOutcome'.tr(context: context)
+                          : 'admin.visits.recordOutcome'.tr(context: context),
+                      style: AppTextStyles.font12Bold.copyWith(
+                        color: isVisitedPendingReport
+                            ? AppColors.amberStatus
+                            : AppColors.brandPrimary,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ],
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

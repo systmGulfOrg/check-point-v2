@@ -13,9 +13,6 @@ class AdminCustomerVisitDocViewerDialogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppDocumentViewerDialogWidget(
-      fileName: fileName,
-      fileUrl: fileUrl,
-    );
+    return AppDocumentViewerDialogWidget(fileName: fileName, fileUrl: fileUrl);
   }
 }

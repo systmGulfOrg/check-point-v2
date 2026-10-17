@@ -209,7 +209,9 @@ class SupervisorPersonalSummaryWidget extends StatelessWidget {
                   wSpace(8),
                   Expanded(
                     child: Text(
-                      'employee.home.todayWeeklyOffGreeting'.tr(context: context),
+                      'employee.home.todayWeeklyOffGreeting'.tr(
+                        context: context,
+                      ),
                       textAlign: TextAlign.center,
                       style: AppTextStyles.font13SemiBold.copyWith(
                         color: AppColors.info,
@@ -229,8 +231,8 @@ class SupervisorPersonalSummaryWidget extends StatelessWidget {
                   hasCheckedOut
                       ? Icons.check_circle_outline_rounded
                       : (isCheckedIn
-                          ? Icons.logout_rounded
-                          : Icons.login_rounded),
+                            ? Icons.logout_rounded
+                            : Icons.login_rounded),
                   size: 18.r,
                   color: AppColors.white,
                 ),
@@ -238,8 +240,12 @@ class SupervisorPersonalSummaryWidget extends StatelessWidget {
                   hasCheckedOut
                       ? 'employee.home.checkOutLabel'.tr(context: context)
                       : (isCheckedIn
-                          ? 'employee.home.checkOutAction'.tr(context: context)
-                          : 'employee.home.checkInAction'.tr(context: context)),
+                            ? 'employee.home.checkOutAction'.tr(
+                                context: context,
+                              )
+                            : 'employee.home.checkInAction'.tr(
+                                context: context,
+                              )),
                   style: AppTextStyles.font14Bold.copyWith(
                     color: AppColors.white,
                   ),
@@ -248,8 +254,9 @@ class SupervisorPersonalSummaryWidget extends StatelessWidget {
                   backgroundColor: hasCheckedOut
                       ? AppColors.textSecondary
                       : (isCheckedIn ? AppColors.info : AppColors.brandPrimary),
-                  disabledBackgroundColor:
-                      AppColors.textSecondary.withValues(alpha: 0.5),
+                  disabledBackgroundColor: AppColors.textSecondary.withValues(
+                    alpha: 0.5,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),

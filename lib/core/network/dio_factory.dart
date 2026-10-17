@@ -11,17 +11,17 @@ class DioFactory {
 
   static Dio create({required FlutterSecureStorage secureStorage}) {
     return Dio(
-      BaseOptions(
-        baseUrl: AppConfig.baseUrl,
-        connectTimeout: const Duration(seconds: 15),
-        receiveTimeout: const Duration(seconds: 20),
-        sendTimeout: const Duration(seconds: 15),
-        headers: {
-          'Accept': 'application/json',
-          'Accept-Encoding': 'gzip, deflate',
-        },
-      ),
-    )
+        BaseOptions(
+          baseUrl: AppConfig.baseUrl,
+          connectTimeout: const Duration(seconds: 15),
+          receiveTimeout: const Duration(seconds: 20),
+          sendTimeout: const Duration(seconds: 15),
+          headers: {
+            'Accept': 'application/json',
+            'Accept-Encoding': 'gzip, deflate',
+          },
+        ),
+      )
       ..interceptors.add(AuthTokenInterceptor(secureStorage: secureStorage))
       ..interceptors.add(
         PrettyDioLogger(

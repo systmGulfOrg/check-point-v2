@@ -147,7 +147,9 @@ class AppDateFormatter {
         final hStr = h12.toString().padLeft(2, '0');
         final String period;
         if (isArabic) {
-          period = fullPeriod ? (isPm ? 'مساءً' : 'صباحاً') : (isPm ? 'م' : 'ص');
+          period = fullPeriod
+              ? (isPm ? 'مساءً' : 'صباحاً')
+              : (isPm ? 'م' : 'ص');
         } else {
           period = isPm ? 'PM' : 'AM';
         }
@@ -178,7 +180,8 @@ class AppDateFormatter {
     bool isArabic = true,
   }) {
     final hasDate = rawDate != null && rawDate.trim().isNotEmpty;
-    final hasTime = rawTime != null &&
+    final hasTime =
+        rawTime != null &&
         rawTime.trim().isNotEmpty &&
         rawTime != '--:--' &&
         !rawTime.startsWith('00:00:00');

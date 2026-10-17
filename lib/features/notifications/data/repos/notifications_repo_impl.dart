@@ -3,6 +3,7 @@ import '../../domain/repos/notifications_repo.dart';
 import '../apis/notifications_api_service.dart';
 import '../models/notification_model.dart';
 import '../models/notification_page_model.dart';
+import '../models/push_token_request_body.dart';
 
 class NotificationsRepoImpl implements NotificationsRepo {
   NotificationsRepoImpl({required this.api});
@@ -47,6 +48,33 @@ class NotificationsRepoImpl implements NotificationsRepo {
   Future<ApiResult<void>> markAllRead() async {
     try {
       await api.markAllRead();
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<void>> registerPushToken({
+    required String token,
+    String? platform,
+  }) async {
+    try {
+      await api.registerPushToken(
+        PushTokenRequestBody(token: token, platform: platform),
+      );
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<void>> deregisterPushToken(String token) async {
+    try {
+      await api.deregisterPushToken(
+        DeregisterPushTokenRequestBody(token: token),
+      );
       return const ApiResult.success(null);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));

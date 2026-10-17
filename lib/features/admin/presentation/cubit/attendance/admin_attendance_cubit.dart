@@ -1,7 +1,8 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo.dart';
 import 'admin_attendance_state.dart';
 
@@ -14,7 +15,7 @@ enum AdminAttendanceDateFilter {
   all,
 }
 
-class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
+class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
   AdminAttendanceCubit({required this.attendanceRepo})
     : super(const AdminAttendanceState.initial());
 
@@ -71,7 +72,13 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
 
   List<EmployeeModel> get absentEmployeesToday => getAbsentEmployees();
 
-  List<EmployeeModel> getAbsentEmployees([List<EmployeeModel>? employeeList]) {
+  /// [leaveRequests] excludes anyone with an approved leave covering today —
+  /// without it, every employee who hasn't clocked in counts as absent even
+  /// while on approved leave.
+  List<EmployeeModel> getAbsentEmployees([
+    List<EmployeeModel>? employeeList,
+    List<AdminLeaveRequestModel>? leaveRequests,
+  ]) {
     final employeesToUse = employeeList != null && employeeList.isNotEmpty
         ? employeeList
         : _employees;
@@ -87,6 +94,10 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
       }
     }
 
+    final onLeaveIds = leaveRequests == null
+        ? const <String>{}
+        : employeeIdsOnLeave(leaveRequests, DateTime.now());
+
     return employeesToUse.where((emp) {
       final id = emp.id;
       final name = (emp.name ?? emp.userName ?? '').trim().toLowerCase();
@@ -94,6 +105,15 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
         return false;
       }
       if (name.isNotEmpty && presentNames.contains(name)) {
+        return false;
+      }
+      if (id != null && onLeaveIds.contains(id)) {
+        return false;
+      }
+      // Covers both this employee's weekly off (todayWorkMode == 'off') and
+      // an official holiday — the backend already folds both into this one
+      // flag, so a day nobody has to clock in for never counts as absent.
+      if (emp.todayIsWorkingDay == false) {
         return false;
       }
       return true;
@@ -146,7 +166,7 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
       },
       failure: (failure) {
         _isLoadingAttendance = false;
-        emit(AdminAttendanceState.error(failure.messageKey));
+        safeEmit(AdminAttendanceState.error(failure.messageKey));
       },
     );
   }
@@ -290,7 +310,7 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminAttendanceState.error(failure.messageKey));
+        safeEmit(AdminAttendanceState.error(failure.messageKey));
         return false;
       },
     );
@@ -305,7 +325,7 @@ class AdminAttendanceCubit extends Cubit<AdminAttendanceState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminAttendanceState.error(failure.messageKey));
+        safeEmit(AdminAttendanceState.error(failure.messageKey));
         return false;
       },
     );

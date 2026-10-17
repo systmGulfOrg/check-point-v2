@@ -28,7 +28,9 @@ class AdminLeaveRequestsListWidget extends StatelessWidget {
     if (lower == 'sick leave' || lower == 'sick' || lower == 'إجازة مرضية') {
       return 'leaves.dashboard.sickLeave'.tr();
     }
-    if (lower == 'casual leave' || lower == 'casual' || lower == 'إجازة عارضة') {
+    if (lower == 'casual leave' ||
+        lower == 'casual' ||
+        lower == 'إجازة عارضة') {
       return 'leaves.dashboard.casualLeave'.tr();
     }
     return name;

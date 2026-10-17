@@ -45,9 +45,7 @@ class SupervisorSegmentOptionWidget extends StatelessWidget {
           duration: const Duration(milliseconds: 180),
           curve: Curves.easeOut,
           style: isSelected
-              ? AppTextStyles.font12Bold.copyWith(
-                  color: AppColors.brandPrimary,
-                )
+              ? AppTextStyles.font12Bold.copyWith(color: AppColors.brandPrimary)
               : AppTextStyles.font12Regular.copyWith(
                   color: AppColors.textSecondary,
                 ),

@@ -1,9 +1,9 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_customer_visits_repo.dart';
 import 'admin_customer_visits_state.dart';
 
-class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
+class AdminCustomerVisitsCubit extends SafeCubit<AdminCustomerVisitsState> {
   AdminCustomerVisitsCubit({required this.visitsRepo})
     : super(const AdminCustomerVisitsState.initial());
 
@@ -13,8 +13,9 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
     emit(const AdminCustomerVisitsState.loading());
     final result = await visitsRepo.getCustomerVisits(customerId);
     result.when(
-      success: (data) => emit(AdminCustomerVisitsState.success(data)),
-      failure: (failure) => emit(AdminCustomerVisitsState.error(failure.messageKey)),
+      success: (data) => safeEmit(AdminCustomerVisitsState.success(data)),
+      failure: (failure) =>
+          safeEmit(AdminCustomerVisitsState.error(failure.messageKey)),
     );
   }
 
@@ -22,8 +23,9 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
     emit(const AdminCustomerVisitsState.loading());
     final result = await visitsRepo.getAllVisits();
     result.when(
-      success: (data) => emit(AdminCustomerVisitsState.success(data)),
-      failure: (failure) => emit(AdminCustomerVisitsState.error(failure.messageKey)),
+      success: (data) => safeEmit(AdminCustomerVisitsState.success(data)),
+      failure: (failure) =>
+          safeEmit(AdminCustomerVisitsState.error(failure.messageKey)),
     );
   }
 
@@ -44,7 +46,7 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
       },
       failure: (failure) {
         lastErrorKey = failure.messageKey;
-        emit(previous);
+        safeEmit(previous);
         return false;
       },
     );
@@ -79,7 +81,7 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
       },
       failure: (failure) {
         lastErrorKey = failure.messageKey;
-        emit(previous);
+        safeEmit(previous);
         return false;
       },
     );
@@ -106,7 +108,7 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
       },
       failure: (failure) {
         lastErrorKey = failure.messageKey;
-        emit(previous);
+        safeEmit(previous);
         return false;
       },
     );
@@ -137,7 +139,7 @@ class AdminCustomerVisitsCubit extends Cubit<AdminCustomerVisitsState> {
       },
       failure: (failure) {
         lastErrorKey = failure.messageKey;
-        emit(previous);
+        safeEmit(previous);
         return false;
       },
     );

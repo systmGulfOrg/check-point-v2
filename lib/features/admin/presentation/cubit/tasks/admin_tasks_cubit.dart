@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_tasks_repo.dart';
 import 'admin_tasks_state.dart';
 
-class AdminTasksCubit extends Cubit<AdminTasksState> {
+class AdminTasksCubit extends SafeCubit<AdminTasksState> {
   AdminTasksCubit({required this.tasksRepo})
     : super(const AdminTasksState.initial());
 
@@ -17,8 +17,8 @@ class AdminTasksCubit extends Cubit<AdminTasksState> {
       employeeId: employeeId,
     );
     result.when(
-      success: (data) => emit(AdminTasksState.success(data)),
-      failure: (failure) => emit(AdminTasksState.error(failure.messageKey)),
+      success: (data) => safeEmit(AdminTasksState.success(data)),
+      failure: (failure) => safeEmit(AdminTasksState.error(failure.messageKey)),
     );
   }
 
@@ -31,7 +31,7 @@ class AdminTasksCubit extends Cubit<AdminTasksState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminTasksState.error(failure.messageKey));
+        safeEmit(AdminTasksState.error(failure.messageKey));
         return false;
       },
     );
@@ -46,7 +46,7 @@ class AdminTasksCubit extends Cubit<AdminTasksState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminTasksState.error(failure.messageKey));
+        safeEmit(AdminTasksState.error(failure.messageKey));
         return false;
       },
     );
@@ -61,7 +61,7 @@ class AdminTasksCubit extends Cubit<AdminTasksState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminTasksState.error(failure.messageKey));
+        safeEmit(AdminTasksState.error(failure.messageKey));
         return false;
       },
     );
@@ -76,7 +76,7 @@ class AdminTasksCubit extends Cubit<AdminTasksState> {
         return true;
       },
       failure: (failure) {
-        emit(AdminTasksState.error(failure.messageKey));
+        safeEmit(AdminTasksState.error(failure.messageKey));
         return false;
       },
     );

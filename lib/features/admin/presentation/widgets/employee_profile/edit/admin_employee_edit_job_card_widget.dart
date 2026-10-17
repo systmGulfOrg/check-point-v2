@@ -225,7 +225,8 @@ class AdminEmployeeEditJobCardWidget extends StatelessWidget {
             );
             return DropdownButtonFormField<String>(
               isExpanded: true,
-              initialValue: employees.any((e) => e.id == selectedDirectManagerId)
+              initialValue:
+                  employees.any((e) => e.id == selectedDirectManagerId)
                   ? selectedDirectManagerId
                   : null,
               decoration: InputDecoration(

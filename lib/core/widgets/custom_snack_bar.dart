@@ -91,4 +91,3 @@ void showCustomSnackBar(
     duration: duration,
   );
 }
-

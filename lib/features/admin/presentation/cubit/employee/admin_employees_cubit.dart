@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';
@@ -6,7 +6,7 @@ import 'package:check_point_v2/features/admin/data/models/employee/employee_mode
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
 import 'admin_employees_state.dart';
 
-class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
+class AdminEmployeesCubit extends SafeCubit<AdminEmployeesState> {
   AdminEmployeesCubit({required this.employeeRepo})
     : super(const AdminEmployeesState.initial());
 
@@ -17,18 +17,22 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
 
   Future<void> loadEmployees({int page = 0, int pageSize = 20}) async {
     emit(const AdminEmployeesState.loading());
-    final result = await employeeRepo.getEmployees(page: page, pageSize: pageSize);
+    final result = await employeeRepo.getEmployees(
+      page: page,
+      pageSize: pageSize,
+    );
     result.when(
       success: (data) {
         allEmployees = data;
-        emit(
+        safeEmit(
           AdminEmployeesState.success(
             employees: _filteredEmployees,
             roleFilter: roleFilter,
           ),
         );
       },
-      failure: (failure) => emit(AdminEmployeesState.error(failure.messageKey)),
+      failure: (failure) =>
+          safeEmit(AdminEmployeesState.error(failure.messageKey)),
     );
   }
 
@@ -38,19 +42,20 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
       await loadEmployees();
       return;
     }
-    emit(const AdminEmployeesState.loading());
+    safeEmit(const AdminEmployeesState.loading());
     final result = await employeeRepo.searchEmployees(searchKey: query);
     result.when(
       success: (data) {
         allEmployees = data;
-        emit(
+        safeEmit(
           AdminEmployeesState.success(
             employees: _filteredEmployees,
             roleFilter: roleFilter,
           ),
         );
       },
-      failure: (failure) => emit(AdminEmployeesState.error(failure.messageKey)),
+      failure: (failure) =>
+          safeEmit(AdminEmployeesState.error(failure.messageKey)),
     );
   }
 
@@ -80,7 +85,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     return result.when(
       success: (_) async {
         await loadEmployees();
-        emit(
+        safeEmit(
           AdminEmployeesState.actionSuccess(
             message: 'Employee added successfully',
             employees: _filteredEmployees,
@@ -90,7 +95,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
         return null;
       },
       failure: (failure) {
-        emit(AdminEmployeesState.error(failure.messageKey));
+        safeEmit(AdminEmployeesState.error(failure.messageKey));
         return failure.messageKey;
       },
     );
@@ -102,7 +107,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     return result.when(
       success: (_) async {
         await loadEmployees();
-        emit(
+        safeEmit(
           AdminEmployeesState.actionSuccess(
             message: 'Employee updated successfully',
             employees: _filteredEmployees,
@@ -112,7 +117,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
         return null;
       },
       failure: (failure) {
-        emit(AdminEmployeesState.error(failure.messageKey));
+        safeEmit(AdminEmployeesState.error(failure.messageKey));
         return failure.messageKey;
       },
     );
@@ -124,7 +129,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     return result.when(
       success: (_) async {
         await loadEmployees();
-        emit(
+        safeEmit(
           AdminEmployeesState.actionSuccess(
             message: 'Employee deleted successfully',
             employees: _filteredEmployees,
@@ -134,7 +139,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
         return null;
       },
       failure: (failure) {
-        emit(AdminEmployeesState.error(failure.messageKey));
+        safeEmit(AdminEmployeesState.error(failure.messageKey));
         return failure.messageKey;
       },
     );
@@ -152,7 +157,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     return result.when(
       success: (_) async {
         await loadEmployees();
-        emit(
+        safeEmit(
           AdminEmployeesState.actionSuccess(
             message: 'Permission updated successfully',
             employees: _filteredEmployees,
@@ -162,7 +167,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
         return null;
       },
       failure: (failure) {
-        emit(AdminEmployeesState.error(failure.messageKey));
+        safeEmit(AdminEmployeesState.error(failure.messageKey));
         return failure.messageKey;
       },
     );
@@ -180,7 +185,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
     return result.when(
       success: (_) async {
         await loadEmployees();
-        emit(
+        safeEmit(
           AdminEmployeesState.actionSuccess(
             message: 'Permission updated successfully',
             employees: _filteredEmployees,
@@ -190,7 +195,7 @@ class AdminEmployeesCubit extends Cubit<AdminEmployeesState> {
         return null;
       },
       failure: (failure) {
-        emit(AdminEmployeesState.error(failure.messageKey));
+        safeEmit(AdminEmployeesState.error(failure.messageKey));
         return failure.messageKey;
       },
     );

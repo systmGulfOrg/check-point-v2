@@ -6,10 +6,7 @@ import '../../data/models/points_summary_model.dart';
 import 'points_stat_card_widget.dart';
 
 class PointsBalancesGridWidget extends StatelessWidget {
-  const PointsBalancesGridWidget({
-    required this.balances,
-    super.key,
-  });
+  const PointsBalancesGridWidget({required this.balances, super.key});
 
   final PointsBalancesModel balances;
 

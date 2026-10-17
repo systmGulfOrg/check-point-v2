@@ -56,7 +56,8 @@ class _AdminCreateCustomerVisitSheetWidgetState
   void initState() {
     super.initState();
     customersList = List.from(widget.availableCustomers);
-    selectedCustomer = widget.initialCustomer ??
+    selectedCustomer =
+        widget.initialCustomer ??
         (customersList.isNotEmpty ? customersList.first : null);
     titleController = TextEditingController();
     dateController = TextEditingController(
@@ -92,7 +93,9 @@ class _AdminCreateCustomerVisitSheetWidgetState
 
   Future<void> _loadCustomers() async {
     setState(() => isLoadingCustomers = true);
-    final result = await sl<AdminLocationsRepo>().getCustomersByType('Customer');
+    final result = await sl<AdminLocationsRepo>().getCustomersByType(
+      'Customer',
+    );
     if (!mounted) return;
     result.when(
       success: (data) {
@@ -458,7 +461,11 @@ class _AdminCreateCustomerVisitSheetWidgetState
                                 const Duration(days: 30),
                               ),
                               lastDate: DateTime(2030),
-                              initialDate: DateTime.tryParse(dateController.text.trim()) ?? DateTime.now(),
+                              initialDate:
+                                  DateTime.tryParse(
+                                    dateController.text.trim(),
+                                  ) ??
+                                  DateTime.now(),
                             );
                             if (date != null && mounted) {
                               setState(() {
@@ -511,7 +518,9 @@ class _AdminCreateCustomerVisitSheetWidgetState
               ),
               Builder(
                 builder: (context) {
-                  final parsedDate = DateTime.tryParse(dateController.text.trim());
+                  final parsedDate = DateTime.tryParse(
+                    dateController.text.trim(),
+                  );
                   if (parsedDate != null &&
                       (parsedDate.weekday == DateTime.friday ||
                           parsedDate.weekday == DateTime.saturday)) {
@@ -526,7 +535,9 @@ class _AdminCreateCustomerVisitSheetWidgetState
                           color: AppColors.softYellowBackground,
                           borderRadius: BorderRadius.circular(8.r),
                           border: Border.all(
-                            color: AppColors.warningOrange.withValues(alpha: 0.3),
+                            color: AppColors.warningOrange.withValues(
+                              alpha: 0.3,
+                            ),
                           ),
                         ),
                         child: Row(
@@ -616,7 +627,11 @@ class _AdminCreateCustomerVisitSheetWidgetState
                       ...(availableEmployees.isNotEmpty
                           ? availableEmployees.map((emp) {
                               final label =
-                                  '${emp.name ?? "موظف"}${emp.position != null && emp.position!.isNotEmpty ? " • ${emp.position}" : emp.departmentName != null && emp.departmentName!.isNotEmpty ? " • ${emp.departmentName}" : ""}';
+                                  '${emp.name ?? "موظف"}${emp.position != null && emp.position!.isNotEmpty
+                                      ? " • ${emp.position}"
+                                      : emp.departmentName != null && emp.departmentName!.isNotEmpty
+                                      ? " • ${emp.departmentName}"
+                                      : ""}';
                               return DropdownMenuItem<String>(
                                 value: label,
                                 child: Text(

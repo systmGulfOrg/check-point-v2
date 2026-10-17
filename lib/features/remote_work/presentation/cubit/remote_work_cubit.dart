@@ -1,11 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import '../../data/repos/remote_work_repo.dart';
 import '../../data/models/remote_work_policy_model.dart';
 import '../../data/models/remote_work_request_model.dart';
 import 'remote_work_state.dart';
 
-class RemoteWorkCubit extends Cubit<RemoteWorkState> {
+class RemoteWorkCubit extends SafeCubit<RemoteWorkState> {
   RemoteWorkCubit({required this.repo})
     : super(const RemoteWorkState.initial());
 
@@ -23,7 +23,7 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
     final loadedPolicies = policiesResult.when(
       success: (data) => data,
       failure: (failure) {
-        emit(RemoteWorkState.error(failure.messageKey));
+        safeEmit(RemoteWorkState.error(failure.messageKey));
         return null;
       },
     );
@@ -32,7 +32,7 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
     final loadedRequests = requestsResult.when(
       success: (data) => data,
       failure: (failure) {
-        emit(RemoteWorkState.error(failure.messageKey));
+        safeEmit(RemoteWorkState.error(failure.messageKey));
         return null;
       },
     );
@@ -40,7 +40,7 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
 
     policies = loadedPolicies;
     requests = loadedRequests;
-    emit(RemoteWorkState.success(policies: policies, requests: requests));
+    safeEmit(RemoteWorkState.success(policies: policies, requests: requests));
   }
 
   Future<bool> createRequest({
@@ -61,7 +61,7 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
         return true;
       },
       failure: (failure) {
-        emit(RemoteWorkState.error(failure.messageKey));
+        safeEmit(RemoteWorkState.error(failure.messageKey));
         return false;
       },
     );
@@ -83,14 +83,13 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
         return true;
       },
       failure: (failure) {
-        emit(RemoteWorkState.error(failure.messageKey));
+        safeEmit(RemoteWorkState.error(failure.messageKey));
         return false;
       },
     );
   }
 
   Future<bool> deleteRequest({required String id}) async {
-    if (isClosed) return false;
     final result = await repo.deleteRequest(id: id);
     if (isClosed) return false;
     return result.when(
@@ -99,7 +98,7 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
         return true;
       },
       failure: (failure) {
-        if (!isClosed) emit(RemoteWorkState.error(failure.messageKey));
+        safeEmit(RemoteWorkState.error(failure.messageKey));
         return false;
       },
     );
@@ -131,7 +130,7 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
         return true;
       },
       failure: (failure) {
-        emit(RemoteWorkState.error(failure.messageKey));
+        safeEmit(RemoteWorkState.error(failure.messageKey));
         return false;
       },
     );
@@ -144,7 +143,7 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
         await load();
       },
       failure: (failure) async {
-        emit(RemoteWorkState.error(failure.messageKey));
+        safeEmit(RemoteWorkState.error(failure.messageKey));
       },
     );
   }
@@ -177,7 +176,7 @@ class RemoteWorkCubit extends Cubit<RemoteWorkState> {
         return true;
       },
       failure: (failure) {
-        emit(RemoteWorkState.error(failure.messageKey));
+        safeEmit(RemoteWorkState.error(failure.messageKey));
         return false;
       },
     );

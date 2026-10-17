@@ -6,7 +6,7 @@ import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/core/utils/app_image_provider.dart';
 import 'package:check_point_v2/core/widgets/app_image_preview_dialog_widget.dart';
 
-class AppAvatarWidget extends StatelessWidget {
+class AppAvatarWidget extends StatefulWidget {
   const AppAvatarWidget({
     this.imageUrl,
     this.name,
@@ -37,56 +37,79 @@ class AppAvatarWidget extends StatelessWidget {
   final String? heroTag;
 
   @override
+  State<AppAvatarWidget> createState() => _AppAvatarWidgetState();
+}
+
+class _AppAvatarWidgetState extends State<AppAvatarWidget> {
+  bool _hasError = false;
+
+  @override
+  void didUpdateWidget(covariant AppAvatarWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.imageUrl != widget.imageUrl) {
+      _hasError = false;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final avatarRadius = radius ?? 22.r;
-    final imageProvider = AppImageProvider.resolve(imageUrl);
-    final displayInitials = (initials != null && initials!.isNotEmpty)
-        ? initials!
-        : AppImageProvider.getInitials(name);
+    final avatarRadius = widget.radius ?? 22.r;
+    final imageProvider = _hasError
+        ? null
+        : AppImageProvider.resolve(widget.imageUrl);
+    final displayInitials =
+        (widget.initials != null && widget.initials!.isNotEmpty)
+        ? widget.initials!
+        : AppImageProvider.getInitials(widget.name);
 
     final avatar = CircleAvatar(
       radius: avatarRadius,
-      backgroundColor: backgroundColor ?? AppColors.softBrandBackground,
+      backgroundColor: widget.backgroundColor ?? AppColors.softBrandBackground,
       backgroundImage: imageProvider,
+      onBackgroundImageError: imageProvider != null
+          ? (_, _) {
+              if (mounted) setState(() => _hasError = true);
+            }
+          : null,
       child: imageProvider == null
           ? Text(
               displayInitials,
               style:
-                  textStyle ??
+                  widget.textStyle ??
                   AppTextStyles.font14SemiBold.copyWith(
-                    color: textColor ?? AppColors.brandPrimary,
+                    color: widget.textColor ?? AppColors.brandPrimary,
                     fontSize: (avatarRadius * 0.7).clamp(10, 28).sp,
                   ),
             )
           : null,
     );
 
-    Widget result = badge != null
+    Widget result = widget.badge != null
         ? Stack(
             clipBehavior: Clip.none,
             children: [
               avatar,
-              PositionedDirectional(bottom: 0, end: 0, child: badge!),
+              PositionedDirectional(bottom: 0, end: 0, child: widget.badge!),
             ],
           )
         : avatar;
 
-    if (heroTag != null && heroTag!.isNotEmpty) {
-      result = Hero(tag: heroTag!, child: result);
+    if (widget.heroTag != null && widget.heroTag!.isNotEmpty) {
+      result = Hero(tag: widget.heroTag!, child: result);
     }
 
-    if (enablePreview || onTap != null) {
+    if (widget.enablePreview || widget.onTap != null) {
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          if (onTap != null) {
-            onTap!();
-          } else if (enablePreview) {
+          if (widget.onTap != null) {
+            widget.onTap!();
+          } else if (widget.enablePreview) {
             AppImagePreviewDialogWidget.show(
               context,
-              imageUrl: imageUrl,
-              name: name,
-              subtitle: subtitle,
+              imageUrl: widget.imageUrl,
+              name: widget.name,
+              subtitle: widget.subtitle,
             );
           }
         },

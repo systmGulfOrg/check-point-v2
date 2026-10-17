@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
@@ -11,7 +11,7 @@ import 'package:check_point_v2/features/leaves/data/models/leave_balance_model.d
 import 'package:check_point_v2/features/leaves/data/models/short_leave_model.dart';
 import 'admin_employee_profile_state.dart';
 
-class AdminEmployeeProfileCubit extends Cubit<AdminEmployeeProfileState> {
+class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
   AdminEmployeeProfileCubit({
     required this.attendanceRepo,
     required this.adminApiService,
@@ -37,16 +37,13 @@ class AdminEmployeeProfileCubit extends Cubit<AdminEmployeeProfileState> {
     emit(const AdminEmployeeProfileState.loading());
 
     final profileResult = await attendanceRepo.getEmployeeById(employeeId);
-    profileResult.when(
-      success: (data) => employee = data,
-      failure: (_) {},
-    );
+    profileResult.when(success: (data) => employee = data, failure: (_) {});
 
     if (employee == null) {
       profileResult.when(
         success: (_) {},
         failure: (failure) =>
-            emit(AdminEmployeeProfileState.error(failure.messageKey)),
+            safeEmit(AdminEmployeeProfileState.error(failure.messageKey)),
       );
       return;
     }

@@ -11,13 +11,16 @@ void main() {
     expect(failure.messageKey, 'errors.deviceLoginAccess');
   });
 
-  test('maps the account locked response from messages to errors.accountLocked', () {
-    final failure = ApiFailureMapper.fromMessages(const [
-      'Account locked due to repeated failed logins. Try again in 2 minute(s).',
-    ], fallbackMessageKey: 'errors.invalidCredentials');
+  test(
+    'maps the account locked response from messages to errors.accountLocked',
+    () {
+      final failure = ApiFailureMapper.fromMessages(const [
+        'Account locked due to repeated failed logins. Try again in 2 minute(s).',
+      ], fallbackMessageKey: 'errors.invalidCredentials');
 
-    expect(failure.messageKey, 'errors.accountLocked');
-  });
+      expect(failure.messageKey, 'errors.accountLocked');
+    },
+  );
 
   test('maps DioException with 403 status and account locked error payload', () {
     final dioError = DioException(
@@ -30,7 +33,7 @@ void main() {
           'status': 403,
           'isSuccess': false,
           'errors': [
-            'Account locked due to repeated failed logins. Try again in 2 minute(s).'
+            'Account locked due to repeated failed logins. Try again in 2 minute(s).',
           ],
         },
       ),

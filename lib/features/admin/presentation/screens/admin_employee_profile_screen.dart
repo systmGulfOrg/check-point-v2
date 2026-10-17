@@ -60,9 +60,7 @@ class _AdminEmployeeProfileScreenState
     if (error == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'admin.employees.updateSuccess'.tr(context: context),
-          ),
+          content: Text('admin.employees.updateSuccess'.tr(context: context)),
           backgroundColor: AppColors.success,
         ),
       );
@@ -79,12 +77,13 @@ class _AdminEmployeeProfileScreenState
   @override
   Widget build(BuildContext context) {
     final canEdit = context.select<AuthProfileCubit, bool>(
-      (cubit) => cubit.state.maybeWhen(
-        success:
-            (name, userId, role, username, permissions, roles) =>
-                AppPermissions.has(permissions, AppPermissions.employeeEdit),
-        orElse: () => true,
-      ),
+      (cubit) => switch (cubit.state) {
+        AuthProfileSuccess(:final permissions) => AppPermissions.has(
+          permissions,
+          AppPermissions.employeeEdit,
+        ),
+        _ => true,
+      },
     );
 
     final currentEmp = _resolveCurrentEmployee();

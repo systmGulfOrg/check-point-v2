@@ -31,21 +31,21 @@ class PointsLeaderboardPodiumWidget extends StatelessWidget {
             entry: second,
             rank: 2,
             height: 90.h,
-            color: const Color(0xFFC0C0C0), // Silver
+            color: AppColors.medalSilver,
           ),
           // 1st Place
           PointsPodiumColumnWidget(
             entry: first,
             rank: 1,
             height: 120.h,
-            color: const Color(0xFFFFD700), // Gold
+            color: AppColors.medalGold,
           ),
           // 3rd Place
           PointsPodiumColumnWidget(
             entry: third,
             rank: 3,
             height: 75.h,
-            color: const Color(0xFFCD7F32), // Bronze
+            color: AppColors.medalBronze,
           ),
         ],
       ),

@@ -6,6 +6,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'employee_detail_info_item_widget.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/details/employee_details_cubit.dart';
 import 'package:flutter/services.dart';
@@ -209,17 +210,17 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: _infoItem(
-                        context,
-                        'admin.employees.code'.tr(context: context),
-                        employee.employeeCode ?? employee.id ?? '-',
+                      child: EmployeeDetailInfoItemWidget(
+                        label: 'admin.employees.code'.tr(context: context),
+                        value: employee.employeeCode ?? employee.id ?? '-',
                       ),
                     ),
                     Expanded(
-                      child: _infoItem(
-                        context,
-                        'admin.employees.department'.tr(context: context),
-                        employee.departmentName ?? '-',
+                      child: EmployeeDetailInfoItemWidget(
+                        label: 'admin.employees.department'.tr(
+                          context: context,
+                        ),
+                        value: employee.departmentName ?? '-',
                       ),
                     ),
                   ],
@@ -228,17 +229,15 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: _infoItem(
-                        context,
-                        'admin.employees.branch'.tr(context: context),
-                        employee.branchName ?? '-',
+                      child: EmployeeDetailInfoItemWidget(
+                        label: 'admin.employees.branch'.tr(context: context),
+                        value: employee.branchName ?? '-',
                       ),
                     ),
                     Expanded(
-                      child: _infoItem(
-                        context,
-                        'admin.employees.shift'.tr(context: context),
-                        employee.shiftName ?? '-',
+                      child: EmployeeDetailInfoItemWidget(
+                        label: 'admin.employees.shift'.tr(context: context),
+                        value: employee.shiftName ?? '-',
                       ),
                     ),
                   ],
@@ -249,10 +248,11 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: _infoItem(
-                          context,
-                          'admin.employees.directManager'.tr(context: context),
-                          employee.resolvedDirectManagerName!,
+                        child: EmployeeDetailInfoItemWidget(
+                          label: 'admin.employees.directManager'.tr(
+                            context: context,
+                          ),
+                          value: employee.resolvedDirectManagerName!,
                         ),
                       ),
                     ],
@@ -263,17 +263,17 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: _infoItem(
-                          context,
-                          'admin.employees.phone'.tr(context: context),
-                          employee.phone!,
+                        child: EmployeeDetailInfoItemWidget(
+                          label: 'admin.employees.phone'.tr(context: context),
+                          value: employee.phone!,
                         ),
                       ),
                       Expanded(
-                        child: _infoItem(
-                          context,
-                          'admin.employees.mobileId'.tr(context: context),
-                          employee.mobileId ?? '-',
+                        child: EmployeeDetailInfoItemWidget(
+                          label: 'admin.employees.mobileId'.tr(
+                            context: context,
+                          ),
+                          value: employee.mobileId ?? '-',
                         ),
                       ),
                     ],
@@ -490,29 +490,6 @@ class EmployeeDetailsContentWidget extends StatelessWidget {
           ],
         ],
       ),
-    );
-  }
-
-  Widget _infoItem(BuildContext context, String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppTextStyles.font11Medium.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-        hSpace(2),
-        Text(
-          value,
-          style: AppTextStyles.font13SemiBold.copyWith(
-            color: AppColors.textPrimary,
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
     );
   }
 }

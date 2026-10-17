@@ -56,9 +56,7 @@ class _AdminCancelCustomerVisitDialogWidgetState
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: AppColors.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       insetPadding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 24.h),
       child: SingleChildScrollView(
         child: Padding(

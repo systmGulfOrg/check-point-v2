@@ -200,7 +200,9 @@ class EmployeeClockCardWidget extends StatelessWidget {
                   wSpace(8),
                   Expanded(
                     child: Text(
-                      'employee.home.todayWeeklyOffGreeting'.tr(context: context),
+                      'employee.home.todayWeeklyOffGreeting'.tr(
+                        context: context,
+                      ),
                       textAlign: TextAlign.center,
                       style: AppTextStyles.font13SemiBold.copyWith(
                         color: AppColors.info,

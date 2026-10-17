@@ -1,11 +1,12 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/features/employee/data/models/password/employee_change_password_request_body.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_action_repo.dart';
 import 'employee_change_password_state.dart';
 
-class EmployeeChangePasswordCubit extends Cubit<EmployeeChangePasswordState> {
+class EmployeeChangePasswordCubit
+    extends SafeCubit<EmployeeChangePasswordState> {
   EmployeeChangePasswordCubit({
     required this.actionRepo,
     required this.sessionStorage,
@@ -28,9 +29,9 @@ class EmployeeChangePasswordCubit extends Cubit<EmployeeChangePasswordState> {
 
     final result = await actionRepo.changePassword(requestBody);
     result.when(
-      success: (_) => emit(const EmployeeChangePasswordState.success()),
+      success: (_) => safeEmit(const EmployeeChangePasswordState.success()),
       failure: (failure) =>
-          emit(EmployeeChangePasswordState.error(failure.messageKey)),
+          safeEmit(EmployeeChangePasswordState.error(failure.messageKey)),
     );
   }
 }

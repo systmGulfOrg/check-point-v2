@@ -45,11 +45,20 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _hasSavedBiometric = false;
   bool _isBiometricSupported = false;
   String _selectedRole = _roles.first;
+  String? _tenantSlug;
 
   @override
   void initState() {
     super.initState();
     _checkBiometricSupport();
+    _loadTenantSlug();
+  }
+
+  Future<void> _loadTenantSlug() async {
+    final slug = await context.read<LoginCubit>().authSessionStorage
+        .readTenantSlug();
+    if (!mounted) return;
+    setState(() => _tenantSlug = slug);
   }
 
   Future<void> _checkBiometricSupport() async {
@@ -172,6 +181,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         titleKey: 'auth.login.title',
                         subtitleKey: 'auth.login.subtitle',
                       ),
+                      if (_tenantSlug != null && _tenantSlug!.isNotEmpty) ...[
+                        hSpace(8),
+                        Center(
+                          child: TextButton(
+                            onPressed: () => context.pushNamedAndRemoveUntil(
+                              AppRoutes.companyCode,
+                            ),
+                            child: Text(
+                              'auth.login.changeCompany'.tr(
+                                context: context,
+                                args: [_tenantSlug!],
+                              ),
+                              style: AppTextStyles.font13Regular,
+                            ),
+                          ),
+                        ),
+                      ],
                       hSpace(24),
                       RoleSwitcherWidget(
                         roles: _roles,

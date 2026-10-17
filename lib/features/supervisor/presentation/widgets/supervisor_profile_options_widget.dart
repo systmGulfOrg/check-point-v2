@@ -78,31 +78,26 @@ class SupervisorProfileOptionsWidget extends StatelessWidget {
           );
         },
       ),
-      if (context.watch<AuthProfileCubit>().state.maybeWhen(
-            success: (name, userId, role, username, permissions, roles) =>
-                roles.length > 1,
-            orElse: () => false,
-          ))
+      if (switch (context.watch<AuthProfileCubit>().state) {
+        AuthProfileSuccess(:final roles) => roles.length > 1,
+        _ => false,
+      })
         (
           Icons.swap_horiz_rounded,
           'auth.role.switchRole',
-          context.watch<AuthProfileCubit>().state.maybeWhen(
-                success: (name, userId, role, username, permissions, roles) =>
-                    role,
-                orElse: () => null,
-              ),
+          switch (context.watch<AuthProfileCubit>().state) {
+            AuthProfileSuccess(:final role) => role,
+            _ => null,
+          },
           () {
             final state = context.read<AuthProfileCubit>().state;
-            state.maybeWhen(
-              success: (name, userId, role, username, permissions, roles) {
-                RoleSwitchDialogWidget.show(
-                  context,
-                  currentRole: role,
-                  availableRoles: roles,
-                );
-              },
-              orElse: () {},
-            );
+            if (state case AuthProfileSuccess(:final role, :final roles)) {
+              RoleSwitchDialogWidget.show(
+                context,
+                currentRole: role,
+                availableRoles: roles,
+              );
+            }
           },
         ),
     ];

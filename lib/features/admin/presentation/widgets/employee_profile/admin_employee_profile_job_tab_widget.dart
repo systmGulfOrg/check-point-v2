@@ -82,7 +82,8 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
               ),
               AdminEmployeeProfileInfoRowWidget(
                 label: 'employee.profile.sectionBalances'.tr(context: context),
-                value: '${employee.leaveBalance ?? 21} ${'employee.profile.days'.tr(context: context)}',
+                value:
+                    '${employee.leaveBalance ?? 21} ${'employee.profile.days'.tr(context: context)}',
                 icon: Icons.beach_access_outlined,
               ),
             ],
@@ -108,13 +109,15 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
                 label: 'employee.profile.officialEmail'.tr(context: context),
                 value: employee.email ?? '-',
                 icon: Icons.mail_outline_rounded,
-                isCopyable: employee.email != null && employee.email!.isNotEmpty,
+                isCopyable:
+                    employee.email != null && employee.email!.isNotEmpty,
               ),
               AdminEmployeeProfileInfoRowWidget(
                 label: 'employee.profile.primaryPhone'.tr(context: context),
                 value: employee.phone ?? '-',
                 icon: Icons.phone_android_rounded,
-                isCopyable: employee.phone != null && employee.phone!.isNotEmpty,
+                isCopyable:
+                    employee.phone != null && employee.phone!.isNotEmpty,
               ),
               if (employee.mobileId != null && employee.mobileId!.isNotEmpty)
                 AdminEmployeeProfileInfoRowWidget(
@@ -123,7 +126,8 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
                   icon: Icons.smartphone_rounded,
                   isCopyable: true,
                 ),
-              if (employee.nationalId != null && employee.nationalId!.isNotEmpty)
+              if (employee.nationalId != null &&
+                  employee.nationalId!.isNotEmpty)
                 AdminEmployeeProfileInfoRowWidget(
                   label: 'employee.profile.nationalId'.tr(context: context),
                   value: employee.nationalId!,

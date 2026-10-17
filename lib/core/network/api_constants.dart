@@ -2,6 +2,8 @@ class ApiConstants {
   const ApiConstants._();
 
   static const String login = '/api/Auth/Login';
+  static const String tenantVerify = '/api/tenant/verify';
+  static const String trialSignup = '/api/v2/public/trial-signups';
   static const String accountRequest = '/api/AccountRequest';
   static const String employees = '/api/Employee';
   static const String deleteEmployee = '/api/Auth/DeleteUser';

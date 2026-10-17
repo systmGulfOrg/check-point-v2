@@ -41,83 +41,83 @@ class AdminLocationCardWidget extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                CircleAvatar(
-                  radius: 19.r,
-                  backgroundColor: location.iconBackgroundColor,
-                  child: Icon(
-                    location.icon,
-                    color: location.iconColor,
-                    size: 20.r,
-                  ),
-                ),
-                vSpace(12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                    CircleAvatar(
+                      radius: 19.r,
+                      backgroundColor: location.iconBackgroundColor,
+                      child: Icon(
+                        location.icon,
+                        color: location.iconColor,
+                        size: 20.r,
+                      ),
+                    ),
+                    vSpace(12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Text(
-                              location.nameKey.tr(context: context),
-                              style: AppTextStyles.font14SemiBold,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  location.nameKey.tr(context: context),
+                                  style: AppTextStyles.font14SemiBold,
+                                ),
+                              ),
+                              if (isActive)
+                                Text(
+                                  location.statusKey.tr(context: context),
+                                  style: AppTextStyles.font11Medium.copyWith(
+                                    color: AppColors.success,
+                                  ),
+                                )
+                              else
+                                Text(
+                                  location.statusKey.tr(context: context),
+                                  style: AppTextStyles.font11Medium.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              if (location.isGeofenced) ...[
+                                vSpace(8),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w,
+                                    vertical: 3.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.softBlueBackground,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: Text(
+                                    'admin.locations.geofenced'.tr(
+                                      context: context,
+                                    ),
+                                    style: AppTextStyles.font11Medium.copyWith(
+                                      color: AppColors.info,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                          hSpace(4),
+                          Text(
+                            location.descriptionKey.tr(context: context),
+                            style: AppTextStyles.font12Regular,
+                          ),
+                          hSpace(2),
+                          Text(
+                            location.addressKey.tr(context: context),
+                            style: AppTextStyles.font12Regular.copyWith(
+                              color: AppColors.placeholder,
                             ),
                           ),
-                          if (isActive)
-                            Text(
-                              location.statusKey.tr(context: context),
-                              style: AppTextStyles.font11Medium.copyWith(
-                                color: AppColors.success,
-                              ),
-                            )
-                          else
-                            Text(
-                              location.statusKey.tr(context: context),
-                              style: AppTextStyles.font11Medium.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                          if (location.isGeofenced) ...[
-                            vSpace(8),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8.w,
-                                vertical: 3.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.softBlueBackground,
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                              child: Text(
-                                'admin.locations.geofenced'.tr(
-                                  context: context,
-                                ),
-                                style: AppTextStyles.font11Medium.copyWith(
-                                  color: AppColors.info,
-                                ),
-                              ),
-                            ),
-                          ],
                         ],
                       ),
-                      hSpace(4),
-                      Text(
-                        location.descriptionKey.tr(context: context),
-                        style: AppTextStyles.font12Regular,
-                      ),
-                      hSpace(2),
-                      Text(
-                        location.addressKey.tr(context: context),
-                        style: AppTextStyles.font12Regular.copyWith(
-                          color: AppColors.placeholder,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
               Row(
                 children: [
                   Expanded(

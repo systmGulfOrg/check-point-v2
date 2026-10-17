@@ -6,10 +6,7 @@ import 'package:check_point_v2/core/core.dart';
 import '../../data/models/points_leaderboard_model.dart';
 
 class PointsLeaderboardItemTileWidget extends StatelessWidget {
-  const PointsLeaderboardItemTileWidget({
-    required this.entry,
-    super.key,
-  });
+  const PointsLeaderboardItemTileWidget({required this.entry, super.key});
 
   final PointsLeaderboardEntryModel entry;
 

@@ -38,7 +38,8 @@ class _RequestAccessScreenState extends State<RequestAccessScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
-                          onTap: () => context.pushNamedAndRemoveUntil(AppRoutes.login),
+                          onTap: () =>
+                              context.pushNamedAndRemoveUntil(AppRoutes.login),
                           borderRadius: BorderRadius.circular(12.r),
                           child: Container(
                             width: 40.r,

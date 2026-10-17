@@ -111,6 +111,42 @@ class LeaveRequestsPageModel {
   Map<String, dynamic> toJson() => _$LeaveRequestsPageModelToJson(this);
 }
 
+extension AdminLeaveRequestStatusX on AdminLeaveRequestModel {
+  /// True when this is an approved leave whose [startDate]..[endDate] span
+  /// covers [date] — used to tell "on leave" apart from "absent" in
+  /// attendance summaries, which otherwise treat every non-clocked-in
+  /// employee as absent regardless of an approved leave.
+  bool coversDate(DateTime date) {
+    if (status?.toLowerCase() != 'approved') return false;
+    final start = _parseLegacyDate(startDate);
+    final end = _parseLegacyDate(endDate);
+    if (start == null || end == null) return false;
+    final day = DateTime(date.year, date.month, date.day);
+    return !day.isBefore(start) && !day.isAfter(end);
+  }
+}
+
+DateTime? _parseLegacyDate(String? raw) {
+  if (raw == null || raw.trim().isEmpty) return null;
+  try {
+    final parsed = DateTime.parse(raw);
+    return DateTime(parsed.year, parsed.month, parsed.day);
+  } catch (_) {
+    return null;
+  }
+}
+
+/// Employee IDs with an approved leave covering [date], from [requests].
+Set<String> employeeIdsOnLeave(
+  List<AdminLeaveRequestModel> requests,
+  DateTime date,
+) {
+  return {
+    for (final r in requests)
+      if (r.employeeId != null && r.coversDate(date)) r.employeeId!,
+  };
+}
+
 @JsonSerializable()
 class ChangeRequestLeaveStatus {
   const ChangeRequestLeaveStatus({

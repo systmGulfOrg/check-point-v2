@@ -21,9 +21,7 @@ class SupervisorNotificationsScreen extends StatelessWidget {
           style: AppTextStyles.font18Bold,
         ),
       ),
-      body: const SafeArea(
-        child: SupervisorNotificationsBlocBuilderWidget(),
-      ),
+      body: const SafeArea(child: SupervisorNotificationsBlocBuilderWidget()),
     );
   }
 }

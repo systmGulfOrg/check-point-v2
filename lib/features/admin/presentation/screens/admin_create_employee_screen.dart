@@ -279,7 +279,8 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
 
   bool _validateStep(int step) {
     if (step == 0) {
-      final hasPhoto = selectedPhotoPath != null ||
+      final hasPhoto =
+          selectedPhotoPath != null ||
           (widget.accountRequest?.photoPath != null &&
               widget.accountRequest!.photoPath!.isNotEmpty);
       if (!hasPhoto) {
@@ -537,140 +538,142 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                   decoration: AppDecorations.card,
                   child: switch (currentStep) {
                     0 => AdminCreateEmployeePersonalStepWidget(
-                        nameController: nameController,
-                        usernameController: usernameController,
-                        passwordController: passwordController,
-                        mobileController: mobileController,
-                        phoneController: phoneController,
-                        emailController: emailController,
-                        employeeCodeController: employeeCodeController,
-                        selectedPhotoPath: selectedPhotoPath,
-                        initialPhotoUrl: widget.accountRequest?.photo,
-                        nameFocusNode: nameFocusNode,
-                        usernameFocusNode: usernameFocusNode,
-                        passwordFocusNode: passwordFocusNode,
-                        phoneFocusNode: phoneFocusNode,
-                        emailFocusNode: emailFocusNode,
-                        nameErrorText: nameErrorText,
-                        usernameErrorText: usernameErrorText,
-                        passwordErrorText: passwordErrorText,
-                        phoneErrorText: phoneErrorText,
-                        emailErrorText: emailErrorText,
-                        onNameChanged: (_) =>
-                            setState(() => nameErrorText = null),
-                        onUsernameChanged: (_) =>
-                            setState(() => usernameErrorText = null),
-                        onPasswordChanged: (_) =>
-                            setState(() => passwordErrorText = null),
-                        onPhoneChanged: (_) =>
-                            setState(() => phoneErrorText = null),
-                        onEmailChanged: (_) =>
-                            setState(() => emailErrorText = null),
-                        onPhotoSelected: (path) =>
-                            setState(() => selectedPhotoPath = path),
-                      ),
+                      nameController: nameController,
+                      usernameController: usernameController,
+                      passwordController: passwordController,
+                      mobileController: mobileController,
+                      phoneController: phoneController,
+                      emailController: emailController,
+                      employeeCodeController: employeeCodeController,
+                      selectedPhotoPath: selectedPhotoPath,
+                      initialPhotoUrl: widget.accountRequest?.photo,
+                      nameFocusNode: nameFocusNode,
+                      usernameFocusNode: usernameFocusNode,
+                      passwordFocusNode: passwordFocusNode,
+                      phoneFocusNode: phoneFocusNode,
+                      emailFocusNode: emailFocusNode,
+                      nameErrorText: nameErrorText,
+                      usernameErrorText: usernameErrorText,
+                      passwordErrorText: passwordErrorText,
+                      phoneErrorText: phoneErrorText,
+                      emailErrorText: emailErrorText,
+                      onNameChanged: (_) =>
+                          setState(() => nameErrorText = null),
+                      onUsernameChanged: (_) =>
+                          setState(() => usernameErrorText = null),
+                      onPasswordChanged: (_) =>
+                          setState(() => passwordErrorText = null),
+                      onPhoneChanged: (_) =>
+                          setState(() => phoneErrorText = null),
+                      onEmailChanged: (_) =>
+                          setState(() => emailErrorText = null),
+                      onPhotoSelected: (path) =>
+                          setState(() => selectedPhotoPath = path),
+                    ),
                     1 => AdminCreateEmployeeWorkStepWidget(
-                        positionController: positionController,
-                        positionFocusNode: positionFocusNode,
-                        positionErrorText: positionErrorText,
-                        onPositionChanged: (_) =>
-                            setState(() => positionErrorText = null),
-                        selectedRoles: selectedRoles,
-                        availableRoles: availableRoles,
-                        onRoleToggled: (role) => setState(() {
-                          if (selectedRoles.contains(role)) {
-                            if (selectedRoles.length > 1) {
-                              selectedRoles.remove(role);
-                            }
-                          } else {
-                            selectedRoles.add(role);
+                      positionController: positionController,
+                      positionFocusNode: positionFocusNode,
+                      positionErrorText: positionErrorText,
+                      onPositionChanged: (_) =>
+                          setState(() => positionErrorText = null),
+                      selectedRoles: selectedRoles,
+                      availableRoles: availableRoles,
+                      onRoleToggled: (role) => setState(() {
+                        if (selectedRoles.contains(role)) {
+                          if (selectedRoles.length > 1) {
+                            selectedRoles.remove(role);
                           }
-                        }),
-                        selectedWorkSystem: selectedWorkSystem,
-                        selectedRemoteWorkPolicyId: selectedRemoteWorkPolicyId,
-                        onWorkSystemChanged: (val) => setState(() {
-                          selectedWorkSystem = val;
-                          selectedRemoteWorkPolicyId = null;
-                        }),
-                        onWorkPolicyChanged: (val) =>
-                            setState(() => selectedRemoteWorkPolicyId = val),
-                        selectedPermissionsCount: selectedPermissions.length,
-                        onManagePermissionsPressed: _openPermissionsDialog,
-                      ),
+                        } else {
+                          selectedRoles.add(role);
+                        }
+                      }),
+                      selectedWorkSystem: selectedWorkSystem,
+                      selectedRemoteWorkPolicyId: selectedRemoteWorkPolicyId,
+                      onWorkSystemChanged: (val) => setState(() {
+                        selectedWorkSystem = val;
+                        selectedRemoteWorkPolicyId = null;
+                      }),
+                      onWorkPolicyChanged: (val) =>
+                          setState(() => selectedRemoteWorkPolicyId = val),
+                      selectedPermissionsCount: selectedPermissions.length,
+                      onManagePermissionsPressed: _openPermissionsDialog,
+                    ),
                     2 => AdminCreateEmployeeOrganizationStepWidget(
-                        selectedDepartmentId: selectedDepartmentId,
-                        selectedBranchId: selectedBranchId,
-                        selectedDirectManagerId: selectedDirectManagerId,
-                        onDepartmentChanged: (val) =>
-                            setState(() => selectedDepartmentId = val),
-                        onBranchChanged: (val) =>
-                            setState(() => selectedBranchId = val),
-                        onDirectManagerChanged: (val) =>
-                            setState(() => selectedDirectManagerId = val),
-                      ),
+                      selectedDepartmentId: selectedDepartmentId,
+                      selectedBranchId: selectedBranchId,
+                      selectedDirectManagerId: selectedDirectManagerId,
+                      onDepartmentChanged: (val) =>
+                          setState(() => selectedDepartmentId = val),
+                      onBranchChanged: (val) =>
+                          setState(() => selectedBranchId = val),
+                      onDirectManagerChanged: (val) =>
+                          setState(() => selectedDirectManagerId = val),
+                    ),
                     _ => Builder(
-                        builder: (context) {
-                          // Department name
-                          final deptState =
-                              context.watch<AdminDepartmentsCubit>().state;
-                          final departments = switch (deptState) {
-                            AdminDepartmentsSuccess(:final departments) =>
-                              departments,
-                            _ => const [],
-                          };
-                          final dept = departments
-                              .where((d) => d.id == selectedDepartmentId)
-                              .firstOrNull;
+                      builder: (context) {
+                        // Department name
+                        final deptState = context
+                            .watch<AdminDepartmentsCubit>()
+                            .state;
+                        final departments = switch (deptState) {
+                          AdminDepartmentsSuccess(:final departments) =>
+                            departments,
+                          _ => const [],
+                        };
+                        final dept = departments
+                            .where((d) => d.id == selectedDepartmentId)
+                            .firstOrNull;
 
-                          // Branch name
-                          final branchState =
-                              context.watch<AdminBranchesCubit>().state;
-                          final branches = switch (branchState) {
-                            AdminBranchesSuccess(:final branches) => branches,
-                            _ => const [],
-                          };
-                          final branch = branches
-                              .where((b) => b.id == selectedBranchId)
-                              .firstOrNull;
+                        // Branch name
+                        final branchState = context
+                            .watch<AdminBranchesCubit>()
+                            .state;
+                        final branches = switch (branchState) {
+                          AdminBranchesSuccess(:final branches) => branches,
+                          _ => const [],
+                        };
+                        final branch = branches
+                            .where((b) => b.id == selectedBranchId)
+                            .firstOrNull;
 
-                          // Manager name
-                          final employees =
-                              context.watch<AdminEmployeesCubit>().employees;
-                          final manager = employees
-                              .where((e) => e.id == selectedDirectManagerId)
-                              .firstOrNull;
+                        // Manager name
+                        final employees = context
+                            .watch<AdminEmployeesCubit>()
+                            .employees;
+                        final manager = employees
+                            .where((e) => e.id == selectedDirectManagerId)
+                            .firstOrNull;
 
-                          // Policy name
-                          final remoteWorkState =
-                              context.watch<RemoteWorkCubit>().state;
-                          final policies = remoteWorkState.maybeWhen(
-                            success: (items, _) => items,
-                            orElse: () => const [],
-                          );
-                          final policy = policies
-                              .where((p) => p.id == selectedRemoteWorkPolicyId)
-                              .firstOrNull;
+                        // Policy name
+                        final remoteWorkState = context
+                            .watch<RemoteWorkCubit>()
+                            .state;
+                        final policies = remoteWorkState.maybeWhen(
+                          success: (items, _) => items,
+                          orElse: () => const [],
+                        );
+                        final policy = policies
+                            .where((p) => p.id == selectedRemoteWorkPolicyId)
+                            .firstOrNull;
 
-                          return AdminCreateEmployeeReviewStepWidget(
-                            name: nameController.text,
-                            username: usernameController.text,
-                            position: positionController.text,
-                            mobileId: mobileController.text,
-                            phone: phoneController.text,
-                            email: emailController.text,
-                            employeeCode: employeeCodeController.text,
-                            roles: selectedRoles.toList(),
-                            workSystem: selectedWorkSystem,
-                            workPolicyName: policy?.name,
-                            departmentName: dept?.departmentName,
-                            branchName: branch?.name,
-                            directManagerName:
-                                manager?.name ?? manager?.userName,
-                            selectedPermissionsCount:
-                                selectedPermissions.length,
-                          );
-                        },
-                      ),
+                        return AdminCreateEmployeeReviewStepWidget(
+                          name: nameController.text,
+                          username: usernameController.text,
+                          position: positionController.text,
+                          mobileId: mobileController.text,
+                          phone: phoneController.text,
+                          email: emailController.text,
+                          employeeCode: employeeCodeController.text,
+                          roles: selectedRoles.toList(),
+                          workSystem: selectedWorkSystem,
+                          workPolicyName: policy?.name,
+                          departmentName: dept?.departmentName,
+                          branchName: branch?.name,
+                          directManagerName: manager?.name ?? manager?.userName,
+                          selectedPermissionsCount: selectedPermissions.length,
+                        );
+                      },
+                    ),
                   },
                 ),
               ),

@@ -4,6 +4,8 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
+import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
@@ -11,6 +13,7 @@ import 'package:check_point_v2/features/admin/presentation/widgets/admin_greetin
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_overview_card_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_stats_grid_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_top_bar_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_trial_banner_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_weekly_attendance_chart_widget.dart';
 
 class AdminHomeScreen extends StatefulWidget {
@@ -22,17 +25,31 @@ class AdminHomeScreen extends StatefulWidget {
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
   String? _adminName;
+  DateTime? _trialEndsAt;
+  int? _trialSeatLimit;
 
   @override
   void initState() {
     super.initState();
     _loadAdminName();
+    _loadTrialInfo();
   }
 
   Future<void> _loadAdminName() async {
     final name = await sl<AuthSessionStorage>().readUserName();
     if (mounted && name != null && name.isNotEmpty) {
       setState(() => _adminName = name);
+    }
+  }
+
+  Future<void> _loadTrialInfo() async {
+    final info = await sl<AuthSessionStorage>().readTrialInfo();
+    if (!mounted) return;
+    if (info.tenantStatus == 'Trial' && info.trialEndsAt != null) {
+      setState(() {
+        _trialEndsAt = info.trialEndsAt;
+        _trialSeatLimit = info.seatLimit;
+      });
     }
   }
 
@@ -60,25 +77,37 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       orElse: () => false,
     );
 
-    final totalStaff = employeesState.maybeWhen(
-      success: (employees, filter) => employees.length,
-      orElse: () => 0,
+    final employees = employeesState.maybeWhen(
+      success: (employees, filter) => employees,
+      orElse: () => const <EmployeeModel>[],
     );
+    final totalStaff = employees.length;
 
     final presentToday = attendanceState.maybeWhen(
       success: (records) => records.length,
       orElse: () => 0,
     );
 
-    final pendingLeaves = leaveState.maybeWhen(
-      success: (requests, leaveTypes) =>
-          requests.where((r) => r.status?.toLowerCase() == 'pending').length,
-      orElse: () => 0,
+    final leaveRequests = leaveState.maybeWhen(
+      success: (requests, leaveTypes) => requests,
+      orElse: () => const <AdminLeaveRequestModel>[],
     );
 
+    final pendingLeaves = leaveRequests
+        .where((r) => r.status?.toLowerCase() == 'pending')
+        .length;
+
     final now = DateTime.now();
+    final onLeaveToday = employeeIdsOnLeave(leaveRequests, now).length;
     final dateFormatted =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+
+    // Excludes anyone on approved leave, plus anyone whose weekly off or an
+    // official holiday falls today — neither is "absent".
+    final absentCount = context
+        .read<AdminAttendanceCubit>()
+        .getAbsentEmployees(employees, leaveRequests)
+        .length;
 
     return SafeArea(
       child: RefreshIndicator(
@@ -96,6 +125,17 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             children: [
               const AdminTopBarWidget(),
               hSpace(12),
+              if (_trialEndsAt != null) ...[
+                AdminTrialBannerWidget(
+                  trialEndsAt: _trialEndsAt!,
+                  seatLimit: _trialSeatLimit,
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.adminSubscription,
+                  ),
+                ),
+                hSpace(12),
+              ],
               AdminGreetingWidget(
                 userNameKey: 'admin.dashboard.user',
                 userName: _adminName,
@@ -107,7 +147,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 presentToday: presentToday,
                 pendingLeaves: pendingLeaves,
                 openTasks: 0,
+                onLeaveToday: onLeaveToday,
                 showTasks: false,
+                showOnLeave: true,
                 isStaffLoading: isStaffLoading,
                 isAttendanceLoading: isAttendanceLoading,
                 isLeaveLoading: isLeaveLoading,
@@ -119,6 +161,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   context,
                   AppRoutes.adminLeaveManagement,
                 ),
+                onOnLeaveTap: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.adminLeaveManagement,
+                ),
               ),
               hSpace(16),
               const AdminWeeklyAttendanceChartWidget(),
@@ -127,9 +173,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 employeesOnDuty: presentToday,
                 totalStaff: totalStaff,
                 lateArrivals: 0,
-                absences: totalStaff > presentToday
-                    ? totalStaff - presentToday
-                    : 0,
+                absences: absentCount,
                 pendingLeaveRequests: pendingLeaves,
                 dateText: dateFormatted,
                 isLoading:

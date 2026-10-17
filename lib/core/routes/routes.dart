@@ -1,6 +1,9 @@
 class AppRoutes {
   const AppRoutes._();
 
+  static const String adminSubscription = '/admin/subscription';
+  static const String companyCode = '/company-code';
+  static const String trialSignup = '/trial-signup';
   static const String login = '/login';
   static const String leavesDashboard = '/leaves/dashboard';
   static const String leavesRequest = '/leaves/request';
@@ -31,6 +34,7 @@ class AppRoutes {
   static const String remoteWork = '/remote-work';
   static const String overtime = '/overtime';
   static const String supervisorNotifications = '/supervisor/notifications';
+  static const String notifications = '/notifications';
   static const String adminShiftDetails = '/admin/shifts-policies/details';
   static const String employee = '/employee';
   static const String projects = '/projects';

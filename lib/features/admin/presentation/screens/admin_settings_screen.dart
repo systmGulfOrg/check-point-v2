@@ -6,7 +6,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
-import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_state.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_profile_card_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/edit_profile_sheet_widget.dart';
@@ -73,17 +72,13 @@ class AdminSettingsScreen extends StatelessWidget {
                 ),
                 BlocBuilder<AuthProfileCubit, AuthProfileState>(
                   builder: (context, state) {
-                    final (role, roles) = state.maybeWhen(
-                      success: (
-                        name,
-                        userId,
+                    final (role, roles) = switch (state) {
+                      AuthProfileSuccess(:final role, :final roles) => (
                         role,
-                        username,
-                        permissions,
                         roles,
-                      ) => (role, roles),
-                      orElse: () => ('', const <String>[]),
-                    );
+                      ),
+                      _ => ('', const <String>[]),
+                    };
                     if (roles.length <= 1) return const SizedBox.shrink();
                     return AdminSettingsTileWidget(
                       icon: Icons.swap_horiz_rounded,
@@ -96,6 +91,19 @@ class AdminSettingsScreen extends StatelessWidget {
                       ),
                     );
                   },
+                ),
+              ],
+            ),
+            hSpace(20),
+            AdminSettingsSectionCardWidget(
+              sectionTitleKey: 'admin.settings.sectionSubscription',
+              tiles: [
+                AdminSettingsTileWidget(
+                  icon: Icons.workspace_premium_outlined,
+                  titleKey: 'admin.settings.subscriptionPlan',
+                  valueKey: 'admin.settings.manage',
+                  onTap: () =>
+                      Navigator.pushNamed(context, AppRoutes.adminSubscription),
                 ),
               ],
             ),

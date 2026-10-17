@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_team_repo.dart';
 import 'supervisor_team_state.dart';
 
-class SupervisorTeamCubit extends Cubit<SupervisorTeamState> {
+class SupervisorTeamCubit extends SafeCubit<SupervisorTeamState> {
   SupervisorTeamCubit({required this.teamRepo})
     : super(const SupervisorTeamState.initial());
 
@@ -17,9 +17,10 @@ class SupervisorTeamCubit extends Cubit<SupervisorTeamState> {
     result.when(
       success: (data) {
         _allMembers = data;
-        emit(SupervisorTeamState.success(_allMembers));
+        safeEmit(SupervisorTeamState.success(_allMembers));
       },
-      failure: (failure) => emit(SupervisorTeamState.error(failure.messageKey)),
+      failure: (failure) =>
+          safeEmit(SupervisorTeamState.error(failure.messageKey)),
     );
   }
 

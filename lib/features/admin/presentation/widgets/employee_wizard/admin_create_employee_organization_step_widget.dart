@@ -136,10 +136,10 @@ class AdminCreateEmployeeOrganizationStepWidget extends StatelessWidget {
         // Direct Manager
         BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
           builder: (context, empState) {
-            final employees =
-                context.read<AdminEmployeesCubit>().employees;
-            final validEmployees =
-                employees.where((e) => e.id != null).toList();
+            final employees = context.read<AdminEmployeesCubit>().employees;
+            final validEmployees = employees
+                .where((e) => e.id != null)
+                .toList();
 
             return AdminWizardFieldWidget(
               label: 'admin.employeeWizard.directManager'.tr(context: context),

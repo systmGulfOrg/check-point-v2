@@ -11,7 +11,9 @@ class AdminStatsGridWidget extends StatelessWidget {
     required this.presentToday,
     required this.pendingLeaves,
     required this.openTasks,
+    this.onLeaveToday = 0,
     this.showTasks = true,
+    this.showOnLeave = false,
     this.isStaffLoading = false,
     this.isAttendanceLoading = false,
     this.isLeaveLoading = false,
@@ -20,6 +22,7 @@ class AdminStatsGridWidget extends StatelessWidget {
     this.onPresentTodayTap,
     this.onPendingLeavesTap,
     this.onOpenTasksTap,
+    this.onOnLeaveTap,
     super.key,
   });
 
@@ -27,7 +30,9 @@ class AdminStatsGridWidget extends StatelessWidget {
   final int presentToday;
   final int pendingLeaves;
   final int openTasks;
+  final int onLeaveToday;
   final bool showTasks;
+  final bool showOnLeave;
   final bool isStaffLoading;
   final bool isAttendanceLoading;
   final bool isLeaveLoading;
@@ -36,6 +41,7 @@ class AdminStatsGridWidget extends StatelessWidget {
   final VoidCallback? onPresentTodayTap;
   final VoidCallback? onPendingLeavesTap;
   final VoidCallback? onOpenTasksTap;
+  final VoidCallback? onOnLeaveTap;
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +107,21 @@ class AdminStatsGridWidget extends StatelessWidget {
                 value: '$openTasks',
                 labelKey: 'admin.dashboard.openTasks',
                 onTap: onOpenTasksTap,
+              ),
+            ),
+          ),
+        if (showOnLeave)
+          AnimatedListItemWidget(
+            index: 3,
+            child: Skeletonizer(
+              enabled: isLeaveLoading,
+              child: AdminStatCardWidget(
+                icon: Icons.beach_access_outlined,
+                iconColor: AppColors.info,
+                iconBackgroundColor: AppColors.softBlueBackground,
+                value: '$onLeaveToday',
+                labelKey: 'admin.dashboard.onLeaveToday',
+                onTap: onOnLeaveTap,
               ),
             ),
           ),

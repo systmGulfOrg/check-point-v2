@@ -5,7 +5,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
-import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_state.dart';
 
 void showEditProfileSheet(BuildContext context) {
   final profileCubit = context.read<AuthProfileCubit>();
@@ -96,16 +95,7 @@ class _EditProfileSheetWidgetState extends State<EditProfileSheetWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Center(
-                  child: Container(
-                    width: 40.w,
-                    height: 4.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.border,
-                      borderRadius: BorderRadius.circular(2.r),
-                    ),
-                  ),
-                ),
+                const AppSheetHandleWidget(),
                 hSpace(16),
                 Text(
                   'profile.edit.title'.tr(context: context),

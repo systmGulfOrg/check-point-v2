@@ -116,13 +116,15 @@ void main() {
     expect(result.reasonCode, 'native_mock_signal_unavailable');
   });
 
-  test('continues location validation when the native channel is unavailable',
-      () async {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+  test(
+    'continues location validation when the native channel is unavailable',
+    () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, null);
 
-    final result = await LocationIntegrityService().assess(sample());
+      final result = await LocationIntegrityService().assess(sample());
 
-    expect(result.status, LocationIntegrityStatus.trusted);
-  });
+      expect(result.status, LocationIntegrityStatus.trusted);
+    },
+  );
 }

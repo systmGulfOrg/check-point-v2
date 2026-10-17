@@ -1,3 +1,4 @@
+export 'bloc/safe_cubit.dart';
 export 'app/app_config.dart';
 export 'app/app_spaces.dart';
 export 'extensions/context_extensions.dart';
@@ -22,6 +23,8 @@ export 'services/attendance_verification_service.dart';
 export 'widgets/custom_button.dart';
 export 'widgets/app_message_widget.dart';
 export 'widgets/app_card_container_widget.dart';
+export 'widgets/app_sheet_handle_widget.dart';
+export 'widgets/app_avatar_fallback_initials_widget.dart';
 export 'widgets/custom_bottom_nav_bar_widget.dart';
 export 'widgets/custom_text_form_field.dart';
 export 'widgets/language_switcher_widget.dart';
@@ -38,5 +41,3 @@ export 'utils/app_date_formatter.dart';
 export 'utils/app_image_provider.dart';
 export 'utils/app_image_compressor.dart';
 export 'utils/app_validators.dart';
-
-

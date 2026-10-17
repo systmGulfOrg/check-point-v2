@@ -1,11 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/account_requests/approve_account_request_body.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
 import 'admin_account_requests_state.dart';
 
-class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
+class AdminAccountRequestsCubit extends SafeCubit<AdminAccountRequestsState> {
   AdminAccountRequestsCubit({required this.employeeRepo})
     : super(const AdminAccountRequestsState.initial());
 
@@ -27,7 +27,7 @@ class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
         _emitFiltered();
       },
       failure: (failure) {
-        emit(AdminAccountRequestsState.error(failure.messageKey));
+        safeEmit(AdminAccountRequestsState.error(failure.messageKey));
       },
     );
   }
@@ -91,7 +91,7 @@ class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
         return null;
       },
       failure: (failure) {
-        emit(AdminAccountRequestsState.error(failure.messageKey));
+        safeEmit(AdminAccountRequestsState.error(failure.messageKey));
         return failure.messageKey;
       },
     );
@@ -112,7 +112,7 @@ class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
         return null;
       },
       failure: (failure) {
-        emit(AdminAccountRequestsState.error(failure.messageKey));
+        safeEmit(AdminAccountRequestsState.error(failure.messageKey));
         return failure.messageKey;
       },
     );
@@ -127,7 +127,7 @@ class AdminAccountRequestsCubit extends Cubit<AdminAccountRequestsState> {
         return null;
       },
       failure: (failure) {
-        emit(AdminAccountRequestsState.error(failure.messageKey));
+        safeEmit(AdminAccountRequestsState.error(failure.messageKey));
         return failure.messageKey;
       },
     );

@@ -50,29 +50,29 @@ class EmployeeTaskLogsSheetWidget extends StatelessWidget {
             child: Text(failure.messageKey.tr()),
           ),
           success: (logs) => SafeArea(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 16.h),
-            child: logs.isEmpty
-                ? Text('employee.tasks.noLogs'.tr())
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'employee.tasks.logs'.tr(),
-                        style: AppTextStyles.font18Bold,
-                      ),
-                      hSpace(14),
-                      for (final log in logs)
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 10.h),
-                          child: Text(
-                            '${log.workDate} • ${log.durationMinutes} ${'employee.tasks.minutes'.tr()}${log.note == null ? '' : ' • ${log.note}'}',
-                            style: AppTextStyles.font13Regular,
-                          ),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 16.h),
+              child: logs.isEmpty
+                  ? Text('employee.tasks.noLogs'.tr())
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'employee.tasks.logs'.tr(),
+                          style: AppTextStyles.font18Bold,
                         ),
-                    ],
-              ),
+                        hSpace(14),
+                        for (final log in logs)
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 10.h),
+                            child: Text(
+                              '${log.workDate} • ${log.durationMinutes} ${'employee.tasks.minutes'.tr()}${log.note == null ? '' : ' • ${log.note}'}',
+                              style: AppTextStyles.font13Regular,
+                            ),
+                          ),
+                      ],
+                    ),
             ),
           ),
         );

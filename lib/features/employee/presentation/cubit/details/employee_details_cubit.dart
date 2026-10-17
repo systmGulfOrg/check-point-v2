@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
@@ -8,7 +8,7 @@ import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/models/device/pending_device_model.dart';
 
-class EmployeeDetailsCubit extends Cubit<EmployeeDetailsState> {
+class EmployeeDetailsCubit extends SafeCubit<EmployeeDetailsState> {
   EmployeeDetailsCubit({required this.attendanceRepo})
     : super(const EmployeeDetailsState.initial());
 
@@ -27,7 +27,7 @@ class EmployeeDetailsCubit extends Cubit<EmployeeDetailsState> {
         return true;
       },
       failure: (failure) {
-        emit(EmployeeDetailsState.error(failure.messageKey));
+        safeEmit(EmployeeDetailsState.error(failure.messageKey));
         return false;
       },
     );
@@ -52,7 +52,7 @@ class EmployeeDetailsCubit extends Cubit<EmployeeDetailsState> {
         _emitMonthlyDetails();
       },
       failure: (failure) =>
-          emit(EmployeeDetailsState.error(failure.messageKey)),
+          safeEmit(EmployeeDetailsState.error(failure.messageKey)),
     );
   }
 

@@ -134,10 +134,7 @@ class _AdminCustomersBlocBuilderWidgetState
     );
   }
 
-  void _openCustomerDetailsSheet(
-    BuildContext context,
-    CustomerModel customer,
-  ) {
+  void _openCustomerDetailsSheet(BuildContext context, CustomerModel customer) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -209,7 +206,8 @@ class _AdminCustomersBlocBuilderWidgetState
                             iconColor: AppColors.info,
                             iconBackgroundColor: AppColors.softBlueBackground,
                           ),
-                          onTap: () => _openCustomerDetailsSheet(context, customer),
+                          onTap: () =>
+                              _openCustomerDetailsSheet(context, customer),
                           onEdit: () {
                             if (customer.id != null) {
                               final points = (customer.coordinates ?? [])

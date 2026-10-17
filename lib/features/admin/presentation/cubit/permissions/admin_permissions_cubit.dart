@@ -1,11 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import '../../../data/models/permissions/admin_permission_employee_model.dart';
 import '../../../data/models/permissions/admin_permissions_catalogue_model.dart';
 import '../../../data/repos/admin_permissions_repo.dart';
 import 'admin_permissions_state.dart';
 
-class AdminPermissionsCubit extends Cubit<AdminPermissionsState> {
+class AdminPermissionsCubit extends SafeCubit<AdminPermissionsState> {
   AdminPermissionsCubit({required this.permissionsRepo})
     : super(const AdminPermissionsState.initial());
 
@@ -22,7 +22,7 @@ class AdminPermissionsCubit extends Cubit<AdminPermissionsState> {
         catalogueResult.when(
           success: (catalogue) async {
             final selected = findUser(selectedUserId);
-            emit(
+            safeEmit(
               AdminPermissionsState.success(
                 users: filterUsers(''),
                 catalogue: catalogue,
@@ -37,11 +37,11 @@ class AdminPermissionsCubit extends Cubit<AdminPermissionsState> {
             if (selected != null) await selectUser(selected);
           },
           failure: (failure) =>
-              emit(AdminPermissionsState.error(failure.messageKey)),
+              safeEmit(AdminPermissionsState.error(failure.messageKey)),
         );
       },
       failure: (failure) =>
-          emit(AdminPermissionsState.error(failure.messageKey)),
+          safeEmit(AdminPermissionsState.error(failure.messageKey)),
     );
   }
 
@@ -72,7 +72,7 @@ class AdminPermissionsCubit extends Cubit<AdminPermissionsState> {
       success: (details) {
         switch (state) {
           case AdminPermissionsSuccess current:
-            emit(
+            safeEmit(
               current.copyWith(
                 selectedPermissions: details.customPermissions,
                 loadingDetails: false,
@@ -85,7 +85,7 @@ class AdminPermissionsCubit extends Cubit<AdminPermissionsState> {
       failure: (_) {
         switch (state) {
           case AdminPermissionsSuccess current:
-            emit(current.copyWith(loadingDetails: false));
+            safeEmit(current.copyWith(loadingDetails: false));
           case _:
             return;
         }
@@ -109,14 +109,14 @@ class AdminPermissionsCubit extends Cubit<AdminPermissionsState> {
       success: (_) {
         switch (state) {
           case AdminPermissionsSuccess current:
-            emit(current.copyWith(saving: false));
+            safeEmit(current.copyWith(saving: false));
           case _:
             return true;
         }
         return true;
       },
       failure: (failure) {
-        emit(AdminPermissionsState.error(failure.messageKey));
+        safeEmit(AdminPermissionsState.error(failure.messageKey));
         return false;
       },
     );

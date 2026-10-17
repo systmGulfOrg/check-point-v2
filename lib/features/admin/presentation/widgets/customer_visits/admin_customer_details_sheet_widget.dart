@@ -124,9 +124,7 @@ class _AdminCustomerDetailsSheetWidgetState
         return true;
       }
 
-      final tokens = userName
-          .split(RegExp(r'\s+'))
-          .where((t) => t.length > 2);
+      final tokens = userName.split(RegExp(r'\s+')).where((t) => t.length > 2);
       for (final token in tokens) {
         if (cleanAttendee.contains(token)) {
           return true;
@@ -460,23 +458,18 @@ class _AdminCustomerDetailsSheetWidgetState
                   child: AdminCustomerVisitCardWidget(
                     visit: visit,
                     onRecordOutcome:
-                        (
-                          outcome,
-                          status,
-                          notes,
-                          documentName,
-                          documentUrl,
-                        ) => context
-                            .read<AdminCustomerVisitsCubit>()
-                            .updateVisitOutcome(
-                              visitId: visit.id ?? '',
-                              customerId: widget.customer.id ?? '',
-                              outcome: outcome,
-                              status: status,
-                              notes: notes,
-                              documentName: documentName,
-                              documentUrl: documentUrl,
-                            ),
+                        (outcome, status, notes, documentName, documentUrl) =>
+                            context
+                                .read<AdminCustomerVisitsCubit>()
+                                .updateVisitOutcome(
+                                  visitId: visit.id ?? '',
+                                  customerId: widget.customer.id ?? '',
+                                  outcome: outcome,
+                                  status: status,
+                                  notes: notes,
+                                  documentName: documentName,
+                                  documentUrl: documentUrl,
+                                ),
                   ),
                 );
               },

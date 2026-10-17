@@ -12,8 +12,8 @@ class BiometricAuthService {
       if (!canCheckBiometrics && !isDeviceSupported) {
         return false;
       }
-      final availableBiometrics =
-          await localAuthentication.getAvailableBiometrics();
+      final availableBiometrics = await localAuthentication
+          .getAvailableBiometrics();
       return availableBiometrics.isNotEmpty;
     } catch (_) {
       return false;

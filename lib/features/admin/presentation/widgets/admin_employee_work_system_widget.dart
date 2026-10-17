@@ -104,8 +104,8 @@ class AdminEmployeeWorkSystemWidget extends StatelessWidget {
                   selectedSystem == 'hybrid'
                       ? Icons.swap_horiz_rounded
                       : selectedSystem == 'onsite'
-                          ? Icons.business_rounded
-                          : Icons.home_work_outlined,
+                      ? Icons.business_rounded
+                      : Icons.home_work_outlined,
                   color: systemPolicies.isEmpty
                       ? AppColors.placeholder
                       : AppColors.info,

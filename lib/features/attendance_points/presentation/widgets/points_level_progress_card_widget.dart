@@ -6,10 +6,7 @@ import 'package:check_point_v2/core/core.dart';
 import '../../data/models/points_summary_model.dart';
 
 class PointsLevelProgressCardWidget extends StatelessWidget {
-  const PointsLevelProgressCardWidget({
-    required this.summary,
-    super.key,
-  });
+  const PointsLevelProgressCardWidget({required this.summary, super.key});
 
   final PointsSummaryModel summary;
 
@@ -83,7 +80,10 @@ class PointsLevelProgressCardWidget extends StatelessWidget {
               ),
               if (streak.currentStreak > 0)
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 6.h,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.warningOrange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20.r),

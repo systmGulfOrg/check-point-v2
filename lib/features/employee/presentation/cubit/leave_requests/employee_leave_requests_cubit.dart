@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
@@ -7,7 +7,7 @@ import 'package:check_point_v2/features/employee/data/services/odoo_timeoff_serv
 import 'package:check_point_v2/features/employee/domain/use_cases/employee_leave_requests_use_case.dart';
 import 'employee_leave_requests_state.dart';
 
-class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
+class EmployeeLeaveRequestsCubit extends SafeCubit<EmployeeLeaveRequestsState> {
   EmployeeLeaveRequestsCubit({
     required this.actionRepo,
     required this.odooTimeOffService,
@@ -27,9 +27,9 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
     emit(const EmployeeLeaveRequestsState.loading());
     final result = await leaveRequestsUseCase.getNativeLeaveRequests();
     result.when(
-      success: (data) => emit(EmployeeLeaveRequestsState.success(data)),
+      success: (data) => safeEmit(EmployeeLeaveRequestsState.success(data)),
       failure: (failure) =>
-          emit(EmployeeLeaveRequestsState.error(failure.messageKey)),
+          safeEmit(EmployeeLeaveRequestsState.error(failure.messageKey)),
     );
   }
 
@@ -52,10 +52,10 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
       if (types.isNotEmpty && selectedLeaveType == null) {
         selectedLeaveType = types.first;
       }
-      emit(EmployeeLeaveRequestsState.leaveTypesLoaded(types));
+      safeEmit(EmployeeLeaveRequestsState.leaveTypesLoaded(types));
     } catch (e) {
       final failure = ApiFailureMapper.map(e);
-      emit(EmployeeLeaveRequestsState.error(failure.messageKey));
+      safeEmit(EmployeeLeaveRequestsState.error(failure.messageKey));
     }
   }
 
@@ -67,10 +67,10 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
         dateTo: dateTo,
       );
       publicHolidays = holidays;
-      emit(EmployeeLeaveRequestsState.publicHolidaysLoaded(holidays));
+      safeEmit(EmployeeLeaveRequestsState.publicHolidaysLoaded(holidays));
     } catch (e) {
       final failure = ApiFailureMapper.map(e);
-      emit(EmployeeLeaveRequestsState.error(failure.messageKey));
+      safeEmit(EmployeeLeaveRequestsState.error(failure.messageKey));
     }
   }
 
@@ -93,7 +93,7 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
         dateTo: dateTo,
         reason: reason,
       );
-      emit(
+      safeEmit(
         const EmployeeLeaveRequestsState.actionSuccess(
           'Leave request submitted successfully',
         ),
@@ -101,7 +101,7 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
       await loadOdooLeaveRequests();
     } catch (e) {
       final failure = ApiFailureMapper.map(e);
-      emit(EmployeeLeaveRequestsState.error(failure.messageKey));
+      safeEmit(EmployeeLeaveRequestsState.error(failure.messageKey));
     }
   }
 
@@ -124,7 +124,7 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
     );
     await result.when(
       success: (_) async {
-        emit(
+        safeEmit(
           const EmployeeLeaveRequestsState.actionSuccess(
             'employee.leaves.submitSuccess',
           ),
@@ -132,7 +132,7 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
         await loadLeaveRequests();
       },
       failure: (failure) async =>
-          emit(EmployeeLeaveRequestsState.error(failure.messageKey)),
+          safeEmit(EmployeeLeaveRequestsState.error(failure.messageKey)),
     );
   }
 
@@ -142,10 +142,10 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
       final reqs = await leaveRequestsUseCase.getOdooLeaveRequests(
         stateFilter: stateFilter,
       );
-      emit(EmployeeLeaveRequestsState.odooSuccess(reqs));
+      safeEmit(EmployeeLeaveRequestsState.odooSuccess(reqs));
     } catch (e) {
       final failure = ApiFailureMapper.map(e);
-      emit(EmployeeLeaveRequestsState.error(failure.messageKey));
+      safeEmit(EmployeeLeaveRequestsState.error(failure.messageKey));
     }
   }
 
@@ -155,14 +155,14 @@ class EmployeeLeaveRequestsCubit extends Cubit<EmployeeLeaveRequestsState> {
     await result.when(
       success: (_) async {
         await loadLeaveRequests();
-        emit(
+        safeEmit(
           const EmployeeLeaveRequestsState.actionSuccess(
             'Leave request deleted successfully',
           ),
         );
       },
       failure: (failure) async =>
-          emit(EmployeeLeaveRequestsState.error(failure.messageKey)),
+          safeEmit(EmployeeLeaveRequestsState.error(failure.messageKey)),
     );
   }
 }

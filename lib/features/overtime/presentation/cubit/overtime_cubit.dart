@@ -1,24 +1,23 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 import '../../data/repos/overtime_repo.dart';
 import '../../data/models/overtime_request_model.dart';
 import 'overtime_state.dart';
 
-class OvertimeCubit extends Cubit<OvertimeState> {
+class OvertimeCubit extends SafeCubit<OvertimeState> {
   OvertimeCubit({required this.repo}) : super(const OvertimeState.initial());
   final OvertimeRepo repo;
   List<OvertimeRequestModel> requests = const [];
 
   Future<void> load() async {
-    if (isClosed) return;
     emit(const OvertimeState.loading());
     final result = await repo.getRequests();
     if (isClosed) return;
     result.when(
       success: (data) {
         requests = data;
-        emit(OvertimeState.success(requests: data));
+        safeEmit(OvertimeState.success(requests: data));
       },
-      failure: (failure) => emit(OvertimeState.error(failure.messageKey)),
+      failure: (failure) => safeEmit(OvertimeState.error(failure.messageKey)),
     );
   }
 
@@ -40,7 +39,7 @@ class OvertimeCubit extends Cubit<OvertimeState> {
         return true;
       },
       failure: (failure) {
-        if (!isClosed) emit(OvertimeState.error(failure.messageKey));
+        safeEmit(OvertimeState.error(failure.messageKey));
         return false;
       },
     );
@@ -62,7 +61,7 @@ class OvertimeCubit extends Cubit<OvertimeState> {
         return true;
       },
       failure: (failure) {
-        if (!isClosed) emit(OvertimeState.error(failure.messageKey));
+        safeEmit(OvertimeState.error(failure.messageKey));
         return false;
       },
     );
@@ -76,7 +75,7 @@ class OvertimeCubit extends Cubit<OvertimeState> {
         return true;
       },
       failure: (failure) {
-        if (!isClosed) emit(OvertimeState.error(failure.messageKey));
+        safeEmit(OvertimeState.error(failure.messageKey));
         return false;
       },
     );

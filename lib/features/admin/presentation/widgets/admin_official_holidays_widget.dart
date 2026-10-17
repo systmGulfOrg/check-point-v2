@@ -34,27 +34,28 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
         ],
         child: AdminRescheduleHolidayDialogWidget(
           holiday: holiday,
-          onSave: ({
-            required DateTime newDate,
-            required String? note,
-            required bool reset,
-            required bool isCancelled,
-            required String? cancelReason,
-            required List<String> excludedDepartmentIds,
-            required List<String> excludedEmployeeIds,
-          }) async {
-            await cubit.rescheduleHoliday(
-              holidayId: holiday.id,
-              holidayName: holiday.name,
-              newDate: newDate,
-              note: note,
-              reset: reset,
-              isCancelled: isCancelled,
-              cancelReason: cancelReason,
-              excludedDepartmentIds: excludedDepartmentIds,
-              excludedEmployeeIds: excludedEmployeeIds,
-            );
-          },
+          onSave:
+              ({
+                required DateTime newDate,
+                required String? note,
+                required bool reset,
+                required bool isCancelled,
+                required String? cancelReason,
+                required List<String> excludedDepartmentIds,
+                required List<String> excludedEmployeeIds,
+              }) async {
+                await cubit.rescheduleHoliday(
+                  holidayId: holiday.id,
+                  holidayName: holiday.name,
+                  newDate: newDate,
+                  note: note,
+                  reset: reset,
+                  isCancelled: isCancelled,
+                  cancelReason: cancelReason,
+                  excludedDepartmentIds: excludedDepartmentIds,
+                  excludedEmployeeIds: excludedEmployeeIds,
+                );
+              },
         ),
       ),
     );
@@ -87,7 +88,9 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
 
         final cardBackground = isCancelled
             ? AppColors.softRedBackground
-            : (isRescheduled ? AppColors.softOrangeLightBackground : AppColors.cardBackground);
+            : (isRescheduled
+                  ? AppColors.softOrangeLightBackground
+                  : AppColors.cardBackground);
 
         final borderColor = isCancelled
             ? AppColors.error.withValues(alpha: 0.3)
@@ -95,7 +98,9 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
 
         final iconBoxBg = isCancelled
             ? AppColors.softRedBackground
-            : (isRescheduled ? AppColors.softOrangeBackground : AppColors.pageBackground);
+            : (isRescheduled
+                  ? AppColors.softOrangeBackground
+                  : AppColors.pageBackground);
 
         final iconColor = isCancelled
             ? AppColors.error
@@ -128,7 +133,9 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
                     child: Icon(
                       Icons.edit_outlined,
                       size: 18.r,
-                      color: isCancelled ? AppColors.error : AppColors.brandPrimary,
+                      color: isCancelled
+                          ? AppColors.error
+                          : AppColors.brandPrimary,
                     ),
                   ),
                   SizedBox(width: 12.w),
@@ -294,8 +301,8 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
                       isCancelled
                           ? Icons.event_busy_rounded
                           : (isRescheduled
-                              ? Icons.edit_calendar_rounded
-                              : Icons.calendar_month_rounded),
+                                ? Icons.edit_calendar_rounded
+                                : Icons.calendar_month_rounded),
                       color: iconColor,
                       size: 22.r,
                     ),

@@ -6,6 +6,7 @@ part 'login_response_model.g.dart';
 class LoginResponseModel {
   const LoginResponseModel({
     this.id,
+    this.employeeId,
     this.userName,
     this.name,
     this.role,
@@ -15,9 +16,13 @@ class LoginResponseModel {
     this.branchId,
     this.branchName,
     this.imageUrl,
+    this.tenantStatus,
+    this.trialEndsAt,
+    this.seatLimit,
   });
 
   final String? id;
+  final String? employeeId;
   final String? userName;
   final String? name;
   final String? role;
@@ -27,6 +32,11 @@ class LoginResponseModel {
   final int? branchId;
   final String? branchName;
   final String? imageUrl;
+
+  /// Set when the signed-in tenant is on a free trial; null otherwise.
+  final String? tenantStatus;
+  final DateTime? trialEndsAt;
+  final int? seatLimit;
 
   List<String> get allRoles {
     final set = <String>{};

@@ -28,11 +28,13 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasDirectManager = rawModel?.hasDirectManager == true ||
+    final hasDirectManager =
+        rawModel?.hasDirectManager == true ||
         (rawModel?.directManagerName != null &&
             rawModel!.directManagerName!.isNotEmpty);
     final statusLower = (rawModel?.status ?? request.statusKey).toLowerCase();
-    final isWaitingForManager = hasDirectManager &&
+    final isWaitingForManager =
+        hasDirectManager &&
         rawModel?.managerActionAt == null &&
         (statusLower == 'pending' || statusLower == 'pendingmanager');
 
@@ -206,7 +208,8 @@ class AdminLeaveRequestCardWidget extends StatelessWidget {
                           InkWell(
                             onTap: () => AppDocumentViewerDialogWidget.show(
                               context,
-                              fileName: 'مستند طلب الإجازة - ${request.nameKey}',
+                              fileName:
+                                  'مستند طلب الإجازة - ${request.nameKey}',
                               fileUrl: request.attachmentUrl,
                             ),
                             borderRadius: BorderRadius.circular(6.r),

@@ -76,7 +76,9 @@ class _AdminLocationFormFieldsWidgetState
         if (isCustomer) ...[
           AssigneeMultiSelectWidget(
             title: 'admin.locations.create.workedAsLabel'.tr(context: context),
-            hintText: 'admin.locations.create.workedAsHint'.tr(context: context),
+            hintText: 'admin.locations.create.workedAsHint'.tr(
+              context: context,
+            ),
             selectedIds: _selectedAssignees,
             useNameAsKey: true,
             onChanged: (updatedList) {

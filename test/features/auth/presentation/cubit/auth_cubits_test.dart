@@ -6,12 +6,16 @@ import 'package:check_point_v2/features/auth/data/models/account_request/account
 import 'package:check_point_v2/features/auth/data/models/account_request/account_request_status_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_response_model.dart';
+import 'package:check_point_v2/features/auth/data/models/tenant/tenant_lookup_model.dart';
+import 'package:check_point_v2/features/auth/data/models/trial_signup/trial_signup_model.dart';
+import 'package:check_point_v2/features/auth/data/models/trial_signup/trial_signup_request_body.dart';
 import 'package:check_point_v2/features/auth/data/repos/auth_repo.dart';
 import 'package:check_point_v2/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_state.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_state.dart';
+import 'package:check_point_v2/core/services/push_token_registrar.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
@@ -34,11 +38,14 @@ class _FakeDeviceIdentityProvider extends DeviceIdentityProvider {
 
 class _FakeAuthRepo implements AuthRepo {
   @override
-  Future<ApiResult<AccountRequestStatusModel?>> getAccountRequestStatus(String mobileId) async =>
-      const ApiResult.success(null);
+  Future<ApiResult<AccountRequestStatusModel?>> getAccountRequestStatus(
+    String mobileId,
+  ) async => const ApiResult.success(null);
 
   @override
-  Future<ApiResult<bool>> requestDeviceTransfer(LoginRequestModel request) async => const ApiResult.success(true);
+  Future<ApiResult<bool>> requestDeviceTransfer(
+    LoginRequestModel request,
+  ) async => const ApiResult.success(true);
   _FakeAuthRepo({required this.loginResponse});
 
   final LoginResponseModel loginResponse;
@@ -56,6 +63,23 @@ class _FakeAuthRepo implements AuthRepo {
     accountRequests.add(request);
     return const ApiResult.success(null);
   }
+
+  @override
+  Future<ApiResult<TenantLookupModel>> verifyTenant(String tenantSlug) async =>
+      ApiResult.success(
+        TenantLookupModel(
+          valid: true,
+          tenantStatus: 'ACTIVE',
+          tenantSlug: tenantSlug,
+        ),
+      );
+
+  @override
+  Future<ApiResult<TrialSignupModel>> createTrialSignup(
+    TrialSignupRequestBody request,
+  ) async => ApiResult.success(
+    TrialSignupModel(companyName: request.companyName, slug: request.slug),
+  );
 }
 
 class _FakeAuthSessionStorage extends AuthSessionStorage {
@@ -84,6 +108,7 @@ class _FakeAuthSessionStorage extends AuthSessionStorage {
     int? branchId,
     String? userName,
     String? role,
+    String? imageUrl,
     List<String> roles = const [],
     List<String> permissions = const [],
   }) async {
@@ -103,6 +128,17 @@ class _FakeBiometricAuthService extends BiometricAuthService {
 
   @override
   Future<bool> isAvailable() async => false;
+}
+
+/// LoginUseCase/AuthSessionCubit depend on the narrow
+/// PushTokenRegistrarContract, not the concrete PushTokenRegistrar — so this
+/// fake needs no FirebaseMessaging instance at all.
+class _NoopPushTokenRegistrar implements PushTokenRegistrarContract {
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> stop() async {}
 }
 
 void main() {
@@ -131,6 +167,7 @@ void main() {
         deviceIdentityProvider: deviceIdentityProvider,
         authSessionStorage: sessionStorage,
         biometricAuthService: biometricAuthService,
+        pushTokenRegistrar: _NoopPushTokenRegistrar(),
       );
 
       final cubit = LoginCubit(
@@ -183,6 +220,7 @@ void main() {
           deviceIdentityProvider: deviceIdentityProvider,
           authSessionStorage: sessionStorage,
           biometricAuthService: biometricAuthService,
+          pushTokenRegistrar: _NoopPushTokenRegistrar(),
         );
 
         final cubit = LoginCubit(
@@ -226,7 +264,9 @@ void main() {
           fakeMobileId: 'mobile-456',
           fakeDeviceToken: 'device-token-456',
         ),
-        authSessionStorage: AuthSessionStorage(secureStorage: const FlutterSecureStorage()),
+        authSessionStorage: AuthSessionStorage(
+          secureStorage: const FlutterSecureStorage(),
+        ),
       );
       addTearDown(cubit.close);
 

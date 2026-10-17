@@ -196,7 +196,9 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                           hSpace(12),
                           Expanded(
                             child: filteredTasks.isEmpty
-                                ? Center(child: Text('employee.tasks.empty'.tr()))
+                                ? Center(
+                                    child: Text('employee.tasks.empty'.tr()),
+                                  )
                                 : RefreshIndicator(
                                     color: AppColors.brandPrimary,
                                     onRefresh: context
@@ -213,7 +215,8 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                                             child: EmployeeTaskDetailCardWidget(
                                               task: filteredTasks[index],
                                               onStatusToggle: () {
-                                                final task = filteredTasks[index];
+                                                final task =
+                                                    filteredTasks[index];
                                                 final isDone =
                                                     task.status.toLowerCase() ==
                                                         'completed' ||
@@ -222,7 +225,8 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                                                 context
                                                     .read<EmployeeTasksCubit>()
                                                     .updateTaskStatus(
-                                                      int.tryParse(task.id) ?? 0,
+                                                      int.tryParse(task.id) ??
+                                                          0,
                                                       isDone
                                                           ? 'In Progress'
                                                           : 'Completed',
@@ -235,7 +239,9 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                                                     AppColors.cardBackground,
                                                 builder: (_) => BlocProvider.value(
                                                   value: context
-                                                      .read<EmployeeTasksCubit>(),
+                                                      .read<
+                                                        EmployeeTasksCubit
+                                                      >(),
                                                   child:
                                                       EmployeeTaskLogsSheetWidget(
                                                         taskId:

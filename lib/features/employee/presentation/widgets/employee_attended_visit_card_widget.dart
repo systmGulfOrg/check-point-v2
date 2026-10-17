@@ -43,20 +43,24 @@ class EmployeeAttendedVisitCardWidget extends StatelessWidget {
     final isCompleted = visit.status == 'completed';
     final schedulerName = _getSchedulerDisplayName(visit);
 
-    final planDocName = visit.planDocumentName ??
+    final planDocName =
+        visit.planDocumentName ??
         (visit.outcomeDocumentName != null &&
                 visit.outcomeDocumentName != visit.documentName
             ? visit.documentName
             : (visit.outcome == null ? visit.documentName : null));
-    final planDocUrl = visit.planDocumentUrl ??
+    final planDocUrl =
+        visit.planDocumentUrl ??
         (visit.outcomeDocumentUrl != null &&
                 visit.outcomeDocumentUrl != visit.documentUrl
             ? visit.documentUrl
             : (visit.outcome == null ? visit.documentUrl : null));
 
-    final outcomeDocName = visit.outcomeDocumentName ??
+    final outcomeDocName =
+        visit.outcomeDocumentName ??
         (visit.outcome != null ? visit.documentName : null);
-    final outcomeDocUrl = visit.outcomeDocumentUrl ??
+    final outcomeDocUrl =
+        visit.outcomeDocumentUrl ??
         (visit.outcome != null ? visit.documentUrl : null);
 
     return Container(
@@ -99,7 +103,9 @@ class EmployeeAttendedVisitCardWidget extends StatelessWidget {
                   isCompleted
                       ? Icons.task_alt_rounded
                       : Icons.pending_actions_rounded,
-                  color: isCompleted ? AppColors.success : AppColors.brandPrimaryDark,
+                  color: isCompleted
+                      ? AppColors.success
+                      : AppColors.brandPrimaryDark,
                   size: 24.r,
                 ),
               ),
@@ -110,8 +116,12 @@ class EmployeeAttendedVisitCardWidget extends StatelessWidget {
                   children: [
                     Text(
                       isCompleted
-                          ? 'attendance.visitCompletedSuccess'.tr(context: context)
-                          : 'attendance.visitAttendedReportPending'.tr(context: context),
+                          ? 'attendance.visitCompletedSuccess'.tr(
+                              context: context,
+                            )
+                          : 'attendance.visitAttendedReportPending'.tr(
+                              context: context,
+                            ),
                       style: AppTextStyles.font14Bold.copyWith(
                         color: isCompleted
                             ? AppColors.success
@@ -121,8 +131,12 @@ class EmployeeAttendedVisitCardWidget extends StatelessWidget {
                     hSpace(4),
                     Text(
                       isCompleted
-                          ? 'attendance.visitCompletedSuccessDesc'.tr(context: context)
-                          : 'attendance.visitAttendedReportPendingDesc'.tr(context: context),
+                          ? 'attendance.visitCompletedSuccessDesc'.tr(
+                              context: context,
+                            )
+                          : 'attendance.visitAttendedReportPendingDesc'.tr(
+                              context: context,
+                            ),
                       style: AppTextStyles.font12Regular.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -214,8 +228,7 @@ class EmployeeAttendedVisitCardWidget extends StatelessWidget {
                     ],
                   ),
                 ],
-                if (visit.title != null &&
-                    visit.title!.trim().isNotEmpty) ...[
+                if (visit.title != null && visit.title!.trim().isNotEmpty) ...[
                   hSpace(8),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,7 +306,10 @@ class EmployeeAttendedVisitCardWidget extends StatelessWidget {
                 if (planDocName != null && planDocName.isNotEmpty) ...[
                   hSpace(8),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 8.h,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.softBrandBackground,
                       borderRadius: BorderRadius.circular(8.r),
@@ -339,9 +355,9 @@ class EmployeeAttendedVisitCardWidget extends StatelessWidget {
                                   context: context,
                                   builder: (_) =>
                                       AdminCustomerVisitDocViewerDialogWidget(
-                                    fileName: planDocName,
-                                    fileUrl: planDocUrl,
-                                  ),
+                                        fileName: planDocName,
+                                        fileUrl: planDocUrl,
+                                      ),
                                 );
                               },
                               child: Text(
@@ -360,7 +376,10 @@ class EmployeeAttendedVisitCardWidget extends StatelessWidget {
                 if (outcomeDocName != null && outcomeDocName.isNotEmpty) ...[
                   hSpace(8),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 8.h,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.softBlueBackground,
                       borderRadius: BorderRadius.circular(8.r),
@@ -406,9 +425,9 @@ class EmployeeAttendedVisitCardWidget extends StatelessWidget {
                                   context: context,
                                   builder: (_) =>
                                       AdminCustomerVisitDocViewerDialogWidget(
-                                    fileName: outcomeDocName,
-                                    fileUrl: outcomeDocUrl,
-                                  ),
+                                        fileName: outcomeDocName,
+                                        fileUrl: outcomeDocUrl,
+                                      ),
                                 );
                               },
                               child: Text(
@@ -440,7 +459,10 @@ class EmployeeAttendedVisitCardWidget extends StatelessWidget {
               onPressed: onNextVisitTap,
               style: OutlinedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
-                side: const BorderSide(color: AppColors.brandPrimary, width: 1.5),
+                side: const BorderSide(
+                  color: AppColors.brandPrimary,
+                  width: 1.5,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.r),
                 ),

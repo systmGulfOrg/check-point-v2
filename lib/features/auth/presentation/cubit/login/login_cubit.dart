@@ -1,5 +1,5 @@
 import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/auth/biometric_auth_service.dart';
@@ -7,7 +7,7 @@ import 'package:check_point_v2/features/auth/data/models/login/login_response_mo
 import 'package:check_point_v2/features/auth/domain/use_cases/login_use_case.dart';
 import 'login_state.dart';
 
-class LoginCubit extends Cubit<LoginState> {
+class LoginCubit extends SafeCubit<LoginState> {
   LoginCubit({
     required this.loginUseCase,
     required this.authSessionStorage,
@@ -36,13 +36,13 @@ class LoginCubit extends Cubit<LoginState> {
         await authSessionStorage.dismissAccountRequestForMobileId(
           loginUseCase.deviceIdentityProvider.mobileId,
         );
-        emit(LoginState.success(data, selectedRole: role));
+        safeEmit(LoginState.success(data, selectedRole: role));
       },
       failure: (failure) async {
         if (failure.messageKey == 'errors.deviceLoginAccess') {
-          emit(const LoginState.deviceTransferRequired());
+          safeEmit(const LoginState.deviceTransferRequired());
         } else {
-          emit(LoginState.error(failure.messageKey));
+          safeEmit(LoginState.error(failure.messageKey));
         }
       },
     );
@@ -61,12 +61,12 @@ class LoginCubit extends Cubit<LoginState> {
     final result = await loginUseCase.authRepo.requestDeviceTransfer(request);
     result.when(
       success: (_) {
-        emit(
+        safeEmit(
           const LoginState.error('deviceTransferSuccess'),
         ); // we can use error state just to show a snackbar, or create a specific state
       },
       failure: (failure) {
-        emit(LoginState.error(failure.messageKey));
+        safeEmit(LoginState.error(failure.messageKey));
       },
     );
   }
@@ -74,21 +74,21 @@ class LoginCubit extends Cubit<LoginState> {
   Future<bool> loginWithBiometrics({required String localizedReason}) async {
     final session = await authSessionStorage.readBiometricSession();
     if (session == null) {
-      emit(const LoginState.error('errors.biometricNotConfigured'));
+      safeEmit(const LoginState.error('errors.biometricNotConfigured'));
       return false;
     }
     final authenticated = await biometricAuthService.authenticate(
       localizedReason: localizedReason,
     );
     if (!authenticated) {
-      emit(const LoginState.error('errors.biometricFailed'));
+      safeEmit(const LoginState.error('errors.biometricFailed'));
       return false;
     }
     if (session.token.isNotEmpty) {
       await authSessionStorage.dismissAccountRequestForMobileId(
         loginUseCase.deviceIdentityProvider.mobileId,
       );
-      emit(
+      safeEmit(
         LoginState.success(
           LoginResponseModel(roles: [session.role], token: session.token),
           selectedRole: session.role,

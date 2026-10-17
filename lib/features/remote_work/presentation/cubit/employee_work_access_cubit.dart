@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
 import 'employee_work_access_state.dart';
 
-class EmployeeWorkAccessCubit extends Cubit<EmployeeWorkAccessState> {
+class EmployeeWorkAccessCubit extends SafeCubit<EmployeeWorkAccessState> {
   EmployeeWorkAccessCubit({
     required this.attendanceRepo,
     required this.sessionStorage,
@@ -17,7 +17,7 @@ class EmployeeWorkAccessCubit extends Cubit<EmployeeWorkAccessState> {
     emit(const EmployeeWorkAccessState.loading());
     final employeeId = await sessionStorage.readUserId();
     if (employeeId == null || employeeId.isEmpty) {
-      emit(const EmployeeWorkAccessState.denied('remoteWork.accessDenied'));
+      safeEmit(const EmployeeWorkAccessState.denied('remoteWork.accessDenied'));
       return;
     }
 
@@ -26,7 +26,7 @@ class EmployeeWorkAccessCubit extends Cubit<EmployeeWorkAccessState> {
       success: (data) {
         final workSystem = data.workSystem?.trim().toLowerCase();
         if (workSystem == 'remote') {
-          emit(
+          safeEmit(
             EmployeeWorkAccessState.allowed(
               workSystem: 'remote',
               policyId: data.remoteWorkPolicyId,
@@ -35,7 +35,7 @@ class EmployeeWorkAccessCubit extends Cubit<EmployeeWorkAccessState> {
           return;
         }
         if (workSystem == 'hybrid') {
-          emit(
+          safeEmit(
             EmployeeWorkAccessState.allowed(
               workSystem: 'hybrid',
               policyId: data.remoteWorkPolicyId,
@@ -43,10 +43,14 @@ class EmployeeWorkAccessCubit extends Cubit<EmployeeWorkAccessState> {
           );
           return;
         }
-        emit(const EmployeeWorkAccessState.denied('remoteWork.accessDenied'));
+        safeEmit(
+          const EmployeeWorkAccessState.denied('remoteWork.accessDenied'),
+        );
       },
       failure: (_) {
-        emit(const EmployeeWorkAccessState.denied('remoteWork.accessDenied'));
+        safeEmit(
+          const EmployeeWorkAccessState.denied('remoteWork.accessDenied'),
+        );
       },
     );
   }

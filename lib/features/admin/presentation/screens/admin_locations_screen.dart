@@ -42,7 +42,8 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
     }
   }
 
-  bool get _isAdmin => (_currentUserRole?.toLowerCase() ?? '').contains('admin');
+  bool get _isAdmin =>
+      (_currentUserRole?.toLowerCase() ?? '').contains('admin');
 
   List<String> get _tabLabels {
     if (_isAdmin) {
@@ -52,10 +53,7 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
         'admin.visits.title',
       ];
     } else {
-      return const [
-        'admin.locations.tabs.customers',
-        'admin.visits.myVisits',
-      ];
+      return const ['admin.locations.tabs.customers', 'admin.visits.myVisits'];
     }
   }
 
@@ -86,13 +84,17 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
               if (safeIndex == 0) {
                 await context.read<AdminBranchesCubit>().load();
               } else if (safeIndex == 1) {
-                await context.read<AdminCustomersCubit>().load(type: 'Customer');
+                await context.read<AdminCustomersCubit>().load(
+                  type: 'Customer',
+                );
               } else {
                 await context.read<AdminCustomerVisitsCubit>().loadAllVisits();
               }
             } else {
               if (safeIndex == 0) {
-                await context.read<AdminCustomersCubit>().load(type: 'Customer');
+                await context.read<AdminCustomersCubit>().load(
+                  type: 'Customer',
+                );
               } else {
                 await context.read<AdminCustomerVisitsCubit>().loadAllVisits();
               }
@@ -111,15 +113,23 @@ class _AdminLocationsScreenState extends State<AdminLocationsScreen> {
                     setState(() => selectedIndex = index);
                     if (isAdmin) {
                       if (index == 1) {
-                        context.read<AdminCustomersCubit>().load(type: 'Customer');
+                        context.read<AdminCustomersCubit>().load(
+                          type: 'Customer',
+                        );
                       } else if (index == 2) {
-                        context.read<AdminCustomerVisitsCubit>().loadAllVisits();
+                        context
+                            .read<AdminCustomerVisitsCubit>()
+                            .loadAllVisits();
                       }
                     } else {
                       if (index == 0) {
-                        context.read<AdminCustomersCubit>().load(type: 'Customer');
+                        context.read<AdminCustomersCubit>().load(
+                          type: 'Customer',
+                        );
                       } else if (index == 1) {
-                        context.read<AdminCustomerVisitsCubit>().loadAllVisits();
+                        context
+                            .read<AdminCustomerVisitsCubit>()
+                            .loadAllVisits();
                       }
                     }
                   },

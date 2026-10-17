@@ -1,5 +1,6 @@
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_audit/admin_employee_audit_cubit.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:local_auth/local_auth.dart';
@@ -17,6 +18,7 @@ import 'package:check_point_v2/features/overtime/data/repos/overtime_repo_impl.d
 import 'package:check_point_v2/features/overtime/presentation/cubit/overtime_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
+import 'package:check_point_v2/features/admin/data/apis/subscription_api_service.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_attendance_repo_impl.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_customer_visits_repo.dart';
@@ -33,6 +35,8 @@ import 'package:check_point_v2/features/admin/data/repos/admin_shifts_policies_r
 import 'package:check_point_v2/features/admin/data/repos/admin_shifts_policies_repo_impl.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_tasks_repo.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_tasks_repo_impl.dart';
+import 'package:check_point_v2/features/admin/data/repos/subscription_repo.dart';
+import 'package:check_point_v2/features/admin/data/repos/subscription_repo_impl.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/pending_devices/admin_pending_devices_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';
@@ -46,6 +50,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/deleted_employe
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/plans/admin_plans_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/subscription/admin_subscription_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_profile/admin_employee_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/data/apis/auth_api_service.dart';
@@ -57,6 +62,8 @@ import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubi
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account_status/request_account_status_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/tenant_lookup/tenant_lookup_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/trial_signup/trial_signup_cubit.dart';
 import 'package:check_point_v2/features/employee/data/apis/employee_api_service.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_action_repo.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_action_repo_impl.dart';
@@ -119,7 +126,10 @@ import 'package:check_point_v2/core/network/dio_factory.dart';
 import 'package:check_point_v2/core/network/device_identity_provider.dart';
 import 'package:check_point_v2/core/services/google_places_service.dart';
 import 'package:check_point_v2/core/services/location_integrity_service.dart';
+import 'package:check_point_v2/core/services/local_notification_service.dart';
 import 'package:check_point_v2/core/services/location_service.dart';
+import 'package:check_point_v2/core/services/push_notification_service.dart';
+import 'package:check_point_v2/core/services/push_token_registrar.dart';
 
 final sl = GetIt.instance;
 
@@ -162,6 +172,16 @@ Future<void> setupServiceLocator() async {
       locationIntegrityService: sl<LocationIntegrityService>(),
     ),
   );
+  sl.registerLazySingleton<LocalNotificationService>(
+    LocalNotificationService.new,
+  );
+  sl.registerLazySingleton<FirebaseMessaging>(() => FirebaseMessaging.instance);
+  sl.registerLazySingleton<PushNotificationService>(
+    () => PushNotificationService(
+      messaging: sl<FirebaseMessaging>(),
+      localNotificationService: sl<LocalNotificationService>(),
+    ),
+  );
   sl.registerLazySingleton<GooglePlacesService>(
     () => GooglePlacesService(dio: sl<Dio>(instanceName: 'external')),
   );
@@ -175,6 +195,9 @@ Future<void> setupServiceLocator() async {
   // API Services
   sl.registerLazySingleton<AuthApiService>(() => AuthApiService(sl<Dio>()));
   sl.registerLazySingleton<AdminApiService>(() => AdminApiService(sl<Dio>()));
+  sl.registerLazySingleton<SubscriptionApiService>(
+    () => SubscriptionApiService(sl<Dio>()),
+  );
   sl.registerLazySingleton<SupervisorApiService>(
     () => SupervisorApiService(sl<Dio>()),
   );
@@ -232,6 +255,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<AdminPlansRepo>(
     () => AdminPlansRepoImpl(api: sl<AdminApiService>()),
   );
+  sl.registerLazySingleton<SubscriptionRepo>(
+    () => SubscriptionRepoImpl(api: sl<SubscriptionApiService>()),
+  );
   sl.registerLazySingleton<SupervisorAttendanceRepo>(
     () => SupervisorAttendanceRepoImpl(
       api: sl<SupervisorApiService>(),
@@ -283,6 +309,12 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<NotificationsRepo>(
     () => NotificationsRepoImpl(api: sl<NotificationsApiService>()),
   );
+  sl.registerLazySingleton<PushTokenRegistrar>(
+    () => PushTokenRegistrar(
+      pushNotificationService: sl<PushNotificationService>(),
+      notificationsRepo: sl<NotificationsRepo>(),
+    ),
+  );
   sl.registerLazySingleton<RemoteWorkRepo>(
     () => RemoteWorkRepoImpl(api: sl<RemoteWorkApiService>()),
   );
@@ -297,6 +329,7 @@ Future<void> setupServiceLocator() async {
       deviceIdentityProvider: sl<DeviceIdentityProvider>(),
       authSessionStorage: sl<AuthSessionStorage>(),
       biometricAuthService: sl<BiometricAuthService>(),
+      pushTokenRegistrar: sl<PushTokenRegistrar>(),
     ),
   );
   sl.registerLazySingleton<EmployeeCheckInUseCase>(
@@ -328,7 +361,10 @@ Future<void> setupServiceLocator() async {
     ),
   );
   sl.registerFactory<AuthSessionCubit>(
-    () => AuthSessionCubit(authSessionStorage: sl<AuthSessionStorage>()),
+    () => AuthSessionCubit(
+      authSessionStorage: sl<AuthSessionStorage>(),
+      pushTokenRegistrar: sl<PushTokenRegistrar>(),
+    ),
   );
   sl.registerFactory<AuthProfileCubit>(
     () => AuthProfileCubit(
@@ -349,6 +385,15 @@ Future<void> setupServiceLocator() async {
       deviceIdentityProvider: sl<DeviceIdentityProvider>(),
       authSessionStorage: sl<AuthSessionStorage>(),
     ),
+  );
+  sl.registerFactory<TenantLookupCubit>(
+    () => TenantLookupCubit(
+      authRepo: sl<AuthRepo>(),
+      authSessionStorage: sl<AuthSessionStorage>(),
+    ),
+  );
+  sl.registerFactory<TrialSignupCubit>(
+    () => TrialSignupCubit(authRepo: sl<AuthRepo>()),
   );
   sl.registerFactory<RemoteWorkCubit>(
     () => RemoteWorkCubit(repo: sl<RemoteWorkRepo>()),
@@ -408,6 +453,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<AdminTasksCubit>(
     () => AdminTasksCubit(tasksRepo: sl<AdminTasksRepo>()),
+  );
+  sl.registerFactory<AdminSubscriptionCubit>(
+    () => AdminSubscriptionCubit(subscriptionRepo: sl<SubscriptionRepo>()),
   );
   sl.registerFactory<AdminPlansCubit>(
     () => AdminPlansCubit(plansRepo: sl<AdminPlansRepo>()),

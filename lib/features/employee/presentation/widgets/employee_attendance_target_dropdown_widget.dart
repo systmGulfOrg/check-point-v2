@@ -59,29 +59,26 @@ class EmployeeAttendanceTargetDropdownWidget extends StatelessWidget {
                   ),
                 )
                 .toList()
-          : customers
-                .where((item) => item.id != null)
-                .map((item) {
-                  final visit = todayVisits
-                      .where((v) => v.customerId == item.id)
-                      .firstOrNull;
-                  final timePrefix =
-                      visit?.visitTime != null && visit!.visitTime!.isNotEmpty
-                      ? '🕒 ${visit.visitTime} • '
-                      : '';
-                  final titleSuffix =
-                      visit?.title != null && visit!.title!.isNotEmpty
-                      ? ' (${visit.title})'
-                      : '';
-                  return DropdownMenuItem(
-                    value: item.id,
-                    child: Text(
-                      '$timePrefix${item.name ?? type}$titleSuffix',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  );
-                })
-                .toList(),
+          : customers.where((item) => item.id != null).map((item) {
+              final visit = todayVisits
+                  .where((v) => v.customerId == item.id)
+                  .firstOrNull;
+              final timePrefix =
+                  visit?.visitTime != null && visit!.visitTime!.isNotEmpty
+                  ? '🕒 ${visit.visitTime} • '
+                  : '';
+              final titleSuffix =
+                  visit?.title != null && visit!.title!.isNotEmpty
+                  ? ' (${visit.title})'
+                  : '';
+              return DropdownMenuItem(
+                value: item.id,
+                child: Text(
+                  '$timePrefix${item.name ?? type}$titleSuffix',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              );
+            }).toList(),
       onChanged: (value) {
         if (value == null) return;
         if (isBranch) {

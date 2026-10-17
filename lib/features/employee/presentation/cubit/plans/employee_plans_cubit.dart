@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/features/employee/data/models/plans/employee_plan_feedback_request_body.dart';
@@ -7,7 +7,7 @@ import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model
 import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
 import 'employee_plans_state.dart';
 
-class EmployeePlansCubit extends Cubit<EmployeePlansState> {
+class EmployeePlansCubit extends SafeCubit<EmployeePlansState> {
   EmployeePlansCubit({
     required this.attendanceRepo,
     required this.sessionStorage,
@@ -21,8 +21,8 @@ class EmployeePlansCubit extends Cubit<EmployeePlansState> {
     final employeeId = await sessionStorage.readUserId() ?? '';
     final result = await attendanceRepo.getCustomerPlansForEmployee(employeeId);
     result.when(
-      success: (data) => emit(EmployeePlansState.success(data)),
-      failure: (_) => emit(const EmployeePlansState.success([])),
+      success: (data) => safeEmit(EmployeePlansState.success(data)),
+      failure: (_) => safeEmit(const EmployeePlansState.success([])),
     );
   }
 
@@ -43,14 +43,14 @@ class EmployeePlansCubit extends Cubit<EmployeePlansState> {
     await result.when(
       success: (_) async {
         await loadMyPlans();
-        emit(
+        safeEmit(
           const EmployeePlansState.actionSuccess(
             'Plan feedback added successfully',
           ),
         );
       },
       failure: (failure) async =>
-          emit(EmployeePlansState.error(failure.messageKey)),
+          safeEmit(EmployeePlansState.error(failure.messageKey)),
     );
   }
 
@@ -76,7 +76,7 @@ class EmployeePlansCubit extends Cubit<EmployeePlansState> {
         return true;
       },
       failure: (failure) {
-        emit(EmployeePlansState.error(failure.messageKey));
+        safeEmit(EmployeePlansState.error(failure.messageKey));
         return false;
       },
     );
@@ -93,20 +93,21 @@ class EmployeePlansCubit extends Cubit<EmployeePlansState> {
     await result.when(
       success: (_) async {
         await loadMyPlans();
-        emit(
+        safeEmit(
           const EmployeePlansState.actionSuccess('Plan removed successfully'),
         );
       },
       failure: (failure) async =>
-          emit(EmployeePlansState.error(failure.messageKey)),
+          safeEmit(EmployeePlansState.error(failure.messageKey)),
     );
   }
 
   Future<void> loadFeedbackStatuses() async {
     final result = await attendanceRepo.getFeedbackStatuses();
     result.when(
-      success: (data) => emit(EmployeePlansState.statusesLoaded(data)),
-      failure: (failure) => emit(EmployeePlansState.error(failure.messageKey)),
+      success: (data) => safeEmit(EmployeePlansState.statusesLoaded(data)),
+      failure: (failure) =>
+          safeEmit(EmployeePlansState.error(failure.messageKey)),
     );
   }
 }

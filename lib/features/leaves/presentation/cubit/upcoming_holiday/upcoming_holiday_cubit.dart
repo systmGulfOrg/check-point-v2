@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/leaves/data/models/official_holiday_model.dart';
 import 'package:check_point_v2/features/leaves/domain/repos/leaves_repo.dart';
 import 'upcoming_holiday_state.dart';
 
-class UpcomingHolidayCubit extends Cubit<UpcomingHolidayState> {
+class UpcomingHolidayCubit extends SafeCubit<UpcomingHolidayState> {
   UpcomingHolidayCubit({required this.leavesRepo})
     : super(const UpcomingHolidayState.initial());
 
@@ -42,7 +42,7 @@ class UpcomingHolidayCubit extends Cubit<UpcomingHolidayState> {
           }
         }
 
-        emit(
+        safeEmit(
           UpcomingHolidayState.loaded(
             holidays: sorted,
             todayHoliday: todayHoliday,
@@ -53,7 +53,7 @@ class UpcomingHolidayCubit extends Cubit<UpcomingHolidayState> {
         );
       },
       failure: (failure) {
-        emit(UpcomingHolidayState.error(failure.messageKey));
+        safeEmit(UpcomingHolidayState.error(failure.messageKey));
       },
     );
   }
