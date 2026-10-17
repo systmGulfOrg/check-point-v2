@@ -751,6 +751,7 @@
   "auth.trialSignup.title": "ابدأ التجربة المجانية",
   "auth.trialSignup.trialBadge": "تجربة مجانية 7 أيام، لحد 10 مستخدمين",
   "auth.login.accountRequestApproved": "تمت الموافقة على طلبك. تقدر تسجل دخول دلوقتي.",
+  "auth.login.changeCompany": "مش {}؟ غيّر الشركة",
   "auth.login.accountRequestPending": "طلبك مستني موافقة الأدمن.",
   "auth.login.accountRequestReason": "السبب",
   "auth.login.accountRequestRejected": "تم رفض طلبك.",

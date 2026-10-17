@@ -10,9 +10,25 @@ class AuthTokenInterceptor extends Interceptor {
   // import between the two files.
   static const _tenantSlugKey = 'tenant_slug';
 
+  /// The x-error-code values that mean "this company is no longer usable",
+  /// as set by the backend's shared tenant-access gate (checked on every
+  /// authenticated request, not just login — see apps/api/core/tenant-access).
+  static const _tenantBlockedCodes = {
+    'TENANT_SUSPENDED',
+    'TENANT_EXPIRED',
+    'TENANT_ARCHIVED',
+    'TENANT_PENDING_DELETION',
+    'TENANT_TRIAL_EXPIRED',
+  };
+
   final FlutterSecureStorage secureStorage;
   static String? _inMemoryToken;
   static String? _inMemoryTenantSlug;
+
+  /// Set once at startup (service_locator) so this low-level interceptor can
+  /// react to a tenant being blocked mid-session without depending on
+  /// AuthSessionStorage or navigation directly.
+  static void Function(String errorCode)? onTenantBlocked;
 
   static void updateToken(String? token) {
     _inMemoryToken = token;
@@ -56,6 +72,11 @@ class AuthTokenInterceptor extends Interceptor {
     if (status == 401 || status == 403) {
       _inMemoryToken = null;
       await secureStorage.delete(key: AppConfig.authTokenKey);
+
+      final errorCode = err.response?.headers.value('x-error-code');
+      if (errorCode != null && _tenantBlockedCodes.contains(errorCode)) {
+        onTenantBlocked?.call(errorCode);
+      }
     }
     handler.next(err);
   }

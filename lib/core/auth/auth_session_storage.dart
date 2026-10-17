@@ -288,4 +288,17 @@ class AuthSessionStorage {
     await secureStorage.delete(key: permissionsKey);
     await secureStorage.delete(key: userImageUrlKey);
   }
+
+  /// Full reset for a tenant the backend has rejected (suspended, expired,
+  /// archived, ...). Unlike [clear] (plain sign-out), this also forgets the
+  /// company code and any saved biometric login — they are no longer valid
+  /// for this device, so the user must go through the company-code screen
+  /// again instead of landing straight on the login screen.
+  Future<void> clearTenant() async {
+    await clear();
+    await disableBiometricLogin();
+    _cachedTenantSlug = null;
+    AuthTokenInterceptor.updateTenantSlug(null);
+    await secureStorage.delete(key: tenantSlugKey);
+  }
 }

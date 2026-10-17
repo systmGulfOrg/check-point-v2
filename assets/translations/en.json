@@ -775,6 +775,7 @@
   "auth.trialSignup.title": "Start your free trial",
   "auth.trialSignup.trialBadge": "Free 7-day trial, up to 10 users",
   "auth.login.accountRequestApproved": "Your request was approved. You can log in now.",
+  "auth.login.changeCompany": "Not {}? Change company",
   "auth.login.accountRequestPending": "Your request is waiting for admin approval.",
   "auth.login.accountRequestReason": "Reason",
   "auth.login.accountRequestRejected": "Your request was rejected.",
