@@ -49,7 +49,8 @@ Future<void> main() async {
     );
   };
 
-  final initialRoute = await _resolveInitialRoute();
+  final resolved = await _resolveInitialRoute();
+  pendingStartupMessageKey = resolved.messageKey;
 
   runApp(
     EasyLocalization(
@@ -57,20 +58,27 @@ Future<void> main() async {
       path: 'assets/translations',
       startLocale: const Locale('ar'),
       fallbackLocale: const Locale('ar'),
-      child: CheckPointApp(initialRoute: initialRoute),
+      child: CheckPointApp(initialRoute: resolved.route),
     ),
   );
 }
+
+/// Set when [_resolveInitialRoute] bounces the user back to the company-code
+/// screen on cold start (a saved tenant turned out blocked). That screen
+/// reads and clears it on its first frame — `main()` runs before any
+/// Navigator/Overlay exists, so there is no BuildContext here to show a
+/// snackbar with.
+String? pendingStartupMessageKey;
 
 /// A saved tenant slug only means this device signed in here before — the
 /// company could have been suspended, expired, or deleted since. Re-verify
 /// it before ever letting a cold start skip the company-code screen, instead
 /// of trusting the cached slug blindly.
-Future<String> _resolveInitialRoute() async {
+Future<({String route, String? messageKey})> _resolveInitialRoute() async {
   final sessionStorage = sl<AuthSessionStorage>();
   final savedTenantSlug = await sessionStorage.readTenantSlug();
   if (savedTenantSlug == null || savedTenantSlug.isEmpty) {
-    return AppRoutes.companyCode;
+    return (route: AppRoutes.companyCode, messageKey: null);
   }
 
   final result = await sl<AuthRepo>().verifyTenant(savedTenantSlug);
@@ -78,15 +86,15 @@ Future<String> _resolveInitialRoute() async {
   // the login screen rather than force a re-entry of the company code every
   // time the device launches offline. A real rejection (suspended, expired,
   // ...) always comes back as one of the errors.tenant* keys.
-  final isTenantRejection = result.when(
-    success: (_) => false,
-    failure: (f) => f.messageKey.startsWith('errors.tenant'),
+  final rejectionMessageKey = result.when(
+    success: (_) => null,
+    failure: (f) => f.messageKey.startsWith('errors.tenant') ? f.messageKey : null,
   );
-  if (isTenantRejection) {
+  if (rejectionMessageKey != null) {
     await sessionStorage.clearTenant();
-    return AppRoutes.companyCode;
+    return (route: AppRoutes.companyCode, messageKey: rejectionMessageKey);
   }
-  return AppRoutes.login;
+  return (route: AppRoutes.login, messageKey: null);
 }
 
 String _tenantBlockedMessageKey(String errorCode) => switch (errorCode) {

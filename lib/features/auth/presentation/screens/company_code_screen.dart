@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -11,6 +12,7 @@ import 'package:check_point_v2/features/auth/presentation/widgets/brand_header_w
 import 'package:check_point_v2/features/auth/presentation/widgets/start_trial_banner_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/tenant_lookup_bloc_listener_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/tenant_lookup_submit_button_widget.dart';
+import 'package:check_point_v2/main.dart' show pendingStartupMessageKey;
 
 class CompanyCodeScreen extends StatefulWidget {
   const CompanyCodeScreen({super.key});
@@ -22,6 +24,23 @@ class CompanyCodeScreen extends StatefulWidget {
 class _CompanyCodeScreenState extends State<CompanyCodeScreen> {
   final _codeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    final messageKey = pendingStartupMessageKey;
+    if (messageKey != null) {
+      pendingStartupMessageKey = null;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        CustomSnackBar.showError(
+          context,
+          message: messageKey.tr(context: context),
+          duration: const Duration(seconds: 5),
+        );
+      });
+    }
+  }
 
   @override
   void dispose() {
