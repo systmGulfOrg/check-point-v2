@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:check_point_v2/core/app/app_config.dart';
+import 'package:check_point_v2/core/services/play_integrity_service.dart';
 
 class AuthTokenInterceptor extends Interceptor {
   AuthTokenInterceptor({required this.secureStorage});
@@ -60,6 +61,19 @@ class AuthTokenInterceptor extends Interceptor {
     if (tenantSlug != null && tenantSlug.isNotEmpty) {
       options.headers['X-Tenant-Slug'] = tenantSlug;
     }
+
+    // Automatically attach Google Play Integrity token & challenge to attendance endpoints
+    final path = options.path.toLowerCase();
+    if (path.contains('attendance') || path.contains('/in') || path.contains('/out')) {
+      final latest = PlayIntegrityService.currentPackage;
+      if (latest != null) {
+        options.headers['x-play-integrity-token'] = latest.token;
+        options.headers['x-play-integrity-challenge'] = latest.challenge;
+        // Also ensure headers for body serialization if needed
+        options.headers['x-play-integrity-hash'] = latest.requestHash;
+      }
+    }
+
     handler.next(options);
   }
 

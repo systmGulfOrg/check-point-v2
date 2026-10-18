@@ -1,11 +1,14 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../auth/biometric_auth_service.dart';
+import 'location_sample.dart';
 import 'location_integrity_result.dart';
 import 'location_integrity_service.dart';
 import 'location_service.dart';
+import 'play_integrity_service.dart';
 
 class AttendanceVerificationResult {
   const AttendanceVerificationResult({
@@ -13,6 +16,7 @@ class AttendanceVerificationResult {
     this.location,
     this.messageKey,
     this.integrityResult,
+    this.playIntegrityPackage,
   });
 
   final bool isAllowed;
@@ -22,6 +26,9 @@ class AttendanceVerificationResult {
   /// The integrity assessment for this verification attempt. May be null if
   /// the location was unavailable before integrity could be checked.
   final LocationIntegrityResult? integrityResult;
+
+  /// Cryptographic Play Integrity token and challenge package.
+  final IntegrityTokenPackage? playIntegrityPackage;
 }
 
 class AttendanceVerificationService {
@@ -29,25 +36,31 @@ class AttendanceVerificationService {
     required this.locationService,
     required this.biometricAuthService,
     required this.locationIntegrityService,
+    this.playIntegrityService,
   });
 
   final LocationService locationService;
   final BiometricAuthService biometricAuthService;
   final LocationIntegrityService locationIntegrityService;
+  final PlayIntegrityService? playIntegrityService;
 
   Future<AttendanceVerificationResult> verify({
     required String biometricReason,
+    String action = 'clock_in',
+    String? deviceId,
     LatLng? center,
     double radiusMeters = 150,
     List<LatLng> polygon = const [],
     bool requireLocation = true,
+    bool requirePlayIntegrity = true,
   }) async {
     LocationIntegrityResult? integrityResult;
     LatLng? location;
+    LocationSample? sample;
 
     if (requireLocation) {
       // 1. Obtain an enriched location sample
-      final sample = await locationService.getCurrentSample();
+      sample = await locationService.getCurrentSample();
       if (sample == null) {
         return const AttendanceVerificationResult(
           isAllowed: false,
@@ -83,7 +96,29 @@ class AttendanceVerificationService {
       }
     }
 
-    // 4. Biometric authentication
+    // 4. Play Integrity token acquisition (Android mandatory)
+    IntegrityTokenPackage? playIntegrityPackage;
+    if (Platform.isAndroid && requirePlayIntegrity && playIntegrityService != null) {
+      playIntegrityPackage = await playIntegrityService!.acquireTokenForAction(
+        action: action,
+        latitude: sample?.position.latitude,
+        longitude: sample?.position.longitude,
+        accuracy: sample?.accuracy,
+        deviceId: deviceId,
+        timestamp: sample?.timestampMs,
+      );
+
+      if (playIntegrityPackage == null) {
+        return AttendanceVerificationResult(
+          isAllowed: false,
+          location: location,
+          messageKey: 'errors.deviceIntegrityFailed',
+          integrityResult: integrityResult,
+        );
+      }
+    }
+
+    // 5. Biometric authentication
     final isBiometricAvailable = await biometricAuthService.isAvailable();
     if (isBiometricAvailable) {
       final authenticated = await biometricAuthService.authenticate(
@@ -94,6 +129,7 @@ class AttendanceVerificationService {
           isAllowed: false,
           messageKey: 'errors.biometricRequired',
           integrityResult: integrityResult,
+          playIntegrityPackage: playIntegrityPackage,
         );
       }
     }
@@ -102,6 +138,7 @@ class AttendanceVerificationService {
       isAllowed: true,
       location: location,
       integrityResult: integrityResult,
+      playIntegrityPackage: playIntegrityPackage,
     );
   }
 

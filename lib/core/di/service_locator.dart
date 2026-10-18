@@ -126,6 +126,7 @@ import 'package:check_point_v2/core/network/dio_factory.dart';
 import 'package:check_point_v2/core/network/device_identity_provider.dart';
 import 'package:check_point_v2/core/services/google_places_service.dart';
 import 'package:check_point_v2/core/services/location_integrity_service.dart';
+import 'package:check_point_v2/core/services/play_integrity_service.dart';
 import 'package:check_point_v2/core/services/local_notification_service.dart';
 import 'package:check_point_v2/core/services/location_service.dart';
 import 'package:check_point_v2/core/services/push_notification_service.dart';
@@ -165,11 +166,15 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<LocationIntegrityService>(
     () => LocationIntegrityService(),
   );
+  sl.registerLazySingleton<PlayIntegrityService>(
+    () => PlayIntegrityService(dio: sl<Dio>()),
+  );
   sl.registerLazySingleton<AttendanceVerificationService>(
     () => AttendanceVerificationService(
       locationService: sl<LocationService>(),
       biometricAuthService: sl<BiometricAuthService>(),
       locationIntegrityService: sl<LocationIntegrityService>(),
+      playIntegrityService: sl<PlayIntegrityService>(),
     ),
   );
   sl.registerLazySingleton<LocalNotificationService>(

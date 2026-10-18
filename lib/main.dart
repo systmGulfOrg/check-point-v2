@@ -13,6 +13,7 @@ import 'core/routes/app_router.dart';
 import 'core/routes/routes.dart';
 import 'core/services/local_notification_service.dart';
 import 'core/services/push_notification_service.dart';
+import 'core/services/play_integrity_service.dart';
 import 'core/widgets/custom_snack_bar.dart';
 import 'features/auth/data/repos/auth_repo.dart';
 import 'firebase_options.dart';
@@ -29,6 +30,7 @@ Future<void> main() async {
   await setupServiceLocator();
   await sl<LocalNotificationService>().initialize();
   await sl<PushNotificationService>().initialize();
+  unawaited(sl<PlayIntegrityService>().prepareIntegrityToken(retries: 2));
 
   // The backend's shared tenant-access gate runs on every authenticated
   // request, not just login, so a company can go from usable to blocked
