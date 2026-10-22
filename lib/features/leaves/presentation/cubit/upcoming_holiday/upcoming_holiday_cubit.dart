@@ -24,7 +24,6 @@ class UpcomingHolidayCubit extends SafeCubit<UpcomingHolidayState> {
         OfficialHolidayModel? nearestUpcomingHoliday;
         int? daysUntilNearest;
 
-        // Sort ascending by date
         final sorted = List<OfficialHolidayModel>.from(holidays)
           ..sort((a, b) => a.date.compareTo(b.date));
 

@@ -114,14 +114,12 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
     final statusLower = status.toLowerCase();
     final submittedDate = createdAt ?? startDate ?? '-';
 
-    // Direct manager check
     final noManager =
         hasDirectManager == false ||
         (directManagerName == null &&
             managerName == null &&
             hasDirectManager == null);
 
-    // Stage 1: Direct Manager Approval
     final (managerStatus, managerActor) = switch (statusLower) {
       'rejectedbymanager' => (
         LeaveStepStatus.rejected,
@@ -150,7 +148,6 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
       _ => (LeaveStepStatus.completed, managerName ?? directManagerName),
     };
 
-    // Stage 2: HR / Admin Final Approval
     final (hrStatus, hrActor) = switch (statusLower) {
       'rejectedbymanager' => (
         LeaveStepStatus.waiting,
@@ -191,7 +188,6 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Self-Approval Warning Banner
         if (isOwnRequest) ...[
           Container(
             padding: EdgeInsets.all(10.r),
@@ -225,7 +221,6 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
           ),
         ],
 
-        // Direct Manager Info Banner
         Container(
           padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
           margin: EdgeInsets.only(bottom: 12.h),
@@ -255,7 +250,6 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
           ),
         ),
 
-        // Timeline Stepper
         LeaveTimelineStepWidget(
           title: 'leaves.approval.stage0'.tr(context: context),
           actor: 'leaves.approval.submittedSuccessfully'.tr(context: context),
@@ -280,7 +274,6 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
           isLast: true,
         ),
 
-        // Rejection Reason Banner (only if not already displayed inside the timeline step)
         if (!((managerStatus == LeaveStepStatus.rejected &&
                     managerRejectionReason != null &&
                     managerRejectionReason!.isNotEmpty) ||
@@ -327,7 +320,6 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
           ),
         ],
 
-        // Attachment Button
         if (attachmentUrl != null && attachmentUrl!.isNotEmpty) ...[
           SizedBox(height: 10.h),
           InkWell(

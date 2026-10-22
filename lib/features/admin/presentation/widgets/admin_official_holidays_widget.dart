@@ -120,7 +120,6 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  // Left Edit Pencil Button in Soft Box (Trailing in RTL / Leading in LTR)
                   Container(
                     width: 38.r,
                     height: 38.r,
@@ -140,12 +139,10 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
                   ),
                   SizedBox(width: 12.w),
 
-                  // Middle Content
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Title + Status Badge
                         Row(
                           children: [
                             if (isCancelled) ...[
@@ -202,7 +199,6 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
                         ),
                         SizedBox(height: 5.h),
 
-                        // Date line
                         if (isRescheduled && holiday.originalDate != null)
                           Wrap(
                             crossAxisAlignment: WrapCrossAlignment.center,
@@ -252,7 +248,6 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
                             ),
                           ),
 
-                        // Reschedule Note
                         if (holiday.rescheduledNote != null &&
                             holiday.rescheduledNote!.isNotEmpty) ...[
                           SizedBox(height: 3.h),
@@ -264,7 +259,6 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
                           ),
                         ],
 
-                        // Exclusions tag
                         if (hasExclusions) ...[
                           SizedBox(height: 4.h),
                           Row(
@@ -289,7 +283,6 @@ class AdminOfficialHolidaysWidget extends StatelessWidget {
                   ),
                   SizedBox(width: 12.w),
 
-                  // Right Big Calendar Icon Box (Leading in RTL)
                   Container(
                     width: 46.r,
                     height: 46.r,
