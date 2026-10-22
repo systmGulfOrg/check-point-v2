@@ -13,54 +13,63 @@ class StartTrialBannerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16.r),
+      borderRadius: BorderRadius.circular(8.r),
       child: Container(
         padding: EdgeInsetsDirectional.symmetric(
-          horizontal: 16.w,
-          vertical: 12.h,
+          horizontal: 10.w,
+          vertical: 8.h,
         ),
         decoration: BoxDecoration(
-          color: AppColors.softBrandBackground,
-          borderRadius: BorderRadius.circular(16.r),
+          color: AppColors.infoBackground,
+          borderRadius: BorderRadius.circular(7.r),
           border: Border.all(
-            color: AppColors.brandPrimary.withValues(alpha: 0.2),
+            color: AppColors.brandPrimary.withValues(alpha: 0.25),
+            width: 1.3.w,
           ),
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
+            Row(
+              textDirection: Directionality.of(context),
+              children: [
+                Container(
+                  padding: EdgeInsetsDirectional.symmetric(
+                    horizontal: 8.w,
+                    vertical: 3.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.brandPrimary,
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Text(
+                    'auth.companyCode.trialFreeBadge'.tr(context: context),
+                    style: AppTextStyles.font11Bold.copyWith(
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+                wSpace(6),
+                Expanded(
+                  child: Text(
                     'auth.companyCode.startTrial'.tr(context: context),
                     style: AppTextStyles.font13SemiBold.copyWith(
                       color: AppColors.brandInk,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  hSpace(2),
-                  Text(
-                    'auth.trialSignup.trialBadge'.tr(context: context),
-                    style: AppTextStyles.font12Regular.copyWith(
-                      color: AppColors.placeholder,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            wSpace(10),
-            Container(
-              width: 36.r,
-              height: 36.r,
-              decoration: BoxDecoration(
-                color: AppColors.brandPrimary,
-                shape: BoxShape.circle,
+            hSpace(2),
+            Text(
+              'auth.trialSignup.trialBadge'.tr(context: context),
+              style: AppTextStyles.font11Regular.copyWith(
+                color: AppColors.placeholder,
               ),
-              child: Icon(
-                Icons.rocket_launch_rounded,
-                size: 18.r,
-                color: AppColors.white,
-              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

@@ -8,7 +8,6 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/tenant_lookup/tenant_lookup_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/tenant_lookup/tenant_lookup_state.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_card_widget.dart';
-import 'package:check_point_v2/features/auth/presentation/widgets/auth_help_support_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_shell_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/brand_header_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/start_trial_banner_widget.dart';
@@ -40,10 +39,7 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-    _fadeAnim = CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeOut,
-    );
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _slideAnim = Tween<Offset>(
       begin: const Offset(0, 0.12),
       end: Offset.zero,
@@ -77,6 +73,8 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.white,
+        surfaceTintColor: AppColors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
         ),
@@ -114,10 +112,7 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
   }
 
   Future<void> _launchSupport() async {
-    final uri = Uri(
-      scheme: 'mailto',
-      path: 'support@systmgulf.com',
-    );
+    final uri = Uri(scheme: 'mailto', path: 'support@systmgulf.com');
     if (await canLaunchUrl(uri)) await launchUrl(uri);
   }
 
@@ -133,36 +128,10 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // ── Top bar: help icon + language switcher ──
+                // ── Top bar: language switcher ──
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () => showAuthHelpSupportSheet(context),
-                      icon: Container(
-                        width: 34.r,
-                        height: 34.r,
-                        decoration: BoxDecoration(
-                          color: AppColors.softBrandBackground,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColors.brandPrimary.withValues(alpha: 0.2),
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.help_outline_rounded,
-                          size: 18.r,
-                          color: AppColors.brandPrimary,
-                        ),
-                      ),
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(
-                        minWidth: 34.r,
-                        minHeight: 34.r,
-                      ),
-                    ),
-                    const LanguageSwitcherWidget(),
-                  ],
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [const LanguageSwitcherWidget()],
                 ),
                 hSpace(12),
 
@@ -194,8 +163,9 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: 'auth.companyCode.codeLabel'
-                                        .tr(context: context),
+                                    text: 'auth.companyCode.codeLabel'.tr(
+                                      context: context,
+                                    ),
                                     style: AppTextStyles.font13SemiBold
                                         .copyWith(color: AppColors.textPrimary),
                                   ),
@@ -210,8 +180,9 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
                             GestureDetector(
                               onTap: _showWhereIsMyCode,
                               child: Text(
-                                'auth.companyCode.whereIsMyCode'
-                                    .tr(context: context),
+                                'auth.companyCode.whereIsMyCode'.tr(
+                                  context: context,
+                                ),
                                 style: AppTextStyles.font12Regular.copyWith(
                                   color: AppColors.brandPrimary,
                                   decoration: TextDecoration.underline,
@@ -226,8 +197,9 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
                         // Code input field
                         CustomTextFormField(
                           controller: _codeController,
-                          hintText: 'auth.companyCode.codeHint'
-                              .tr(context: context),
+                          hintText: 'auth.companyCode.codeHint'.tr(
+                            context: context,
+                          ),
                           keyboardType: TextInputType.text,
                           validator: AppValidators.required(context: context),
                           prefixIcon: Icon(
@@ -241,16 +213,17 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
                         // Continue button with arrow icon
                         BlocBuilder<TenantLookupCubit, TenantLookupState>(
                           builder: (ctx, state) => CustomButton(
-                            text: 'auth.companyCode.continueButton'
-                                .tr(context: context),
+                            text: 'auth.companyCode.continueButton'.tr(
+                              context: context,
+                            ),
                             onTap: () {
                               if (!(_formKey.currentState?.validate() ??
                                   false)) {
                                 return;
                               }
-                              context
-                                  .read<TenantLookupCubit>()
-                                  .verify(_codeController.text);
+                              context.read<TenantLookupCubit>().verify(
+                                _codeController.text,
+                              );
                             },
                             isLoading: state is TenantLookupLoading,
                             icon: Icons.arrow_back_ios_new_rounded,
@@ -272,8 +245,9 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
                                 horizontal: 12.w,
                               ),
                               child: Text(
-                                'auth.companyCode.orDivider'
-                                    .tr(context: context),
+                                'auth.companyCode.orDivider'.tr(
+                                  context: context,
+                                ),
                                 style: AppTextStyles.font13Regular.copyWith(
                                   color: AppColors.placeholder,
                                 ),
@@ -299,8 +273,9 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
                             color: AppColors.brandPrimary,
                           ),
                           label: Text(
-                            'auth.companyCode.registerNewCompany'
-                                .tr(context: context),
+                            'auth.companyCode.registerNewCompany'.tr(
+                              context: context,
+                            ),
                             style: AppTextStyles.font13SemiBold.copyWith(
                               color: AppColors.brandPrimary,
                             ),
@@ -360,9 +335,7 @@ class _FooterLinksWidget extends StatelessWidget {
               onTap: onPrivacy,
               child: Text(
                 'auth.companyCode.privacyPolicy'.tr(context: context),
-                style: linkStyle.copyWith(
-                  decoration: TextDecoration.underline,
-                ),
+                style: linkStyle.copyWith(decoration: TextDecoration.underline),
               ),
             ),
             dot,
@@ -370,9 +343,7 @@ class _FooterLinksWidget extends StatelessWidget {
               onTap: onTerms,
               child: Text(
                 'auth.companyCode.termsOfService'.tr(context: context),
-                style: linkStyle.copyWith(
-                  decoration: TextDecoration.underline,
-                ),
+                style: linkStyle.copyWith(decoration: TextDecoration.underline),
               ),
             ),
             dot,
@@ -380,9 +351,7 @@ class _FooterLinksWidget extends StatelessWidget {
               onTap: onSupport,
               child: Text(
                 'auth.companyCode.supportLink'.tr(context: context),
-                style: linkStyle.copyWith(
-                  decoration: TextDecoration.underline,
-                ),
+                style: linkStyle.copyWith(decoration: TextDecoration.underline),
               ),
             ),
           ],
@@ -391,7 +360,11 @@ class _FooterLinksWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.lock_outline_rounded, size: 11.r, color: AppColors.placeholder),
+            Icon(
+              Icons.lock_outline_rounded,
+              size: 11.r,
+              color: AppColors.placeholder,
+            ),
             wSpace(4),
             Text(
               'auth.companyCode.sslSecure'.tr(context: context),

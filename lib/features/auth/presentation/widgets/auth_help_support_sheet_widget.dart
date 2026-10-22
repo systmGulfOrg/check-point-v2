@@ -4,11 +4,13 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/support/presentation/support_ticket_dialog_widget.dart';
 
 /// Shows the Help & Support bottom sheet from the company code screen.
 void showAuthHelpSupportSheet(BuildContext context) {
+  final navigatorContext = AppRouter.navigatorKey.currentContext ?? context;
   showModalBottomSheet<void>(
-    context: context,
+    context: navigatorContext,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) => const _AuthHelpSupportSheet(),
@@ -86,16 +88,9 @@ class _AuthHelpSupportSheet extends StatelessWidget {
                   _HelpOptionTile(
                     icon: Icons.chat_bubble_outline_rounded,
                     labelKey: 'auth.companyCode.sendFeedback',
-                    onTap: () async {
+                    onTap: () {
                       Navigator.pop(context);
-                      final uri = Uri(
-                        scheme: 'mailto',
-                        path: 'support@systmgulf.com',
-                        query: 'subject=CHECK-POINT Feedback',
-                      );
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
-                      }
+                      showSupportTicketDialog(context, type: 'feedback');
                     },
                   ),
 
@@ -103,16 +98,9 @@ class _AuthHelpSupportSheet extends StatelessWidget {
                   _HelpOptionTile(
                     icon: Icons.bug_report_outlined,
                     labelKey: 'auth.companyCode.reportBug',
-                    onTap: () async {
+                    onTap: () {
                       Navigator.pop(context);
-                      final uri = Uri(
-                        scheme: 'mailto',
-                        path: 'support@systmgulf.com',
-                        query: 'subject=CHECK-POINT Bug Report',
-                      );
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
-                      }
+                      showSupportTicketDialog(context, type: 'bug');
                     },
                   ),
 
