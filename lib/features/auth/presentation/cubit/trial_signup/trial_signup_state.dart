@@ -10,6 +10,5 @@ abstract class TrialSignupState with _$TrialSignupState {
   const factory TrialSignupState.loading() = TrialSignupLoading;
   const factory TrialSignupState.success(TrialSignupModel signup) =
       TrialSignupSuccess;
-  const factory TrialSignupState.error(String messageKey) =
-      TrialSignupError;
+  const factory TrialSignupState.error(String messageKey) = TrialSignupError;
 }

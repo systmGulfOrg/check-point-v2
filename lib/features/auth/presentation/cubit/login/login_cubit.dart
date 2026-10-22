@@ -61,9 +61,7 @@ class LoginCubit extends SafeCubit<LoginState> {
     final result = await loginUseCase.authRepo.requestDeviceTransfer(request);
     result.when(
       success: (_) {
-        safeEmit(
-          const LoginState.error('deviceTransferSuccess'),
-        ); // we can use error state just to show a snackbar, or create a specific state
+        safeEmit(const LoginState.error('deviceTransferSuccess'));
       },
       failure: (failure) {
         safeEmit(LoginState.error(failure.messageKey));

@@ -22,7 +22,9 @@ class StartTrialBannerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.softBrandBackground,
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: AppColors.brandPrimary.withValues(alpha: 0.2)),
+          border: Border.all(
+            color: AppColors.brandPrimary.withValues(alpha: 0.2),
+          ),
         ),
         child: Row(
           children: [

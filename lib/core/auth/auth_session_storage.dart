@@ -266,10 +266,6 @@ class AuthSessionStorage {
 
   static String? _cachedTenantSlug;
 
-  /// Trial banner info from the login response. [tenantStatus] is `'Trial'`
-  /// only while the company is actually on a trial; other fields are left
-  /// unset/cleared otherwise so a stale trial date never lingers after the
-  /// company converts to a paid plan.
   Future<void> saveTrialInfo({
     required String? tenantStatus,
     required DateTime? trialEndsAt,
@@ -289,10 +285,7 @@ class AuthSessionStorage {
       await secureStorage.delete(key: trialEndsAtKey);
     }
     if (seatLimit != null) {
-      await secureStorage.write(
-        key: seatLimitKey,
-        value: seatLimit.toString(),
-      );
+      await secureStorage.write(key: seatLimitKey, value: seatLimit.toString());
     } else {
       await secureStorage.delete(key: seatLimitKey);
     }
@@ -341,11 +334,6 @@ class AuthSessionStorage {
     await secureStorage.delete(key: seatLimitKey);
   }
 
-  /// Full reset for a tenant the backend has rejected (suspended, expired,
-  /// archived, ...). Unlike [clear] (plain sign-out), this also forgets the
-  /// company code and any saved biometric login — they are no longer valid
-  /// for this device, so the user must go through the company-code screen
-  /// again instead of landing straight on the login screen.
   Future<void> clearTenant() async {
     await clear();
     await disableBiometricLogin();

@@ -33,7 +33,6 @@ class LoginResponseModel {
   final String? branchName;
   final String? imageUrl;
 
-  /// Set when the signed-in tenant is on a free trial; null otherwise.
   final String? tenantStatus;
   final DateTime? trialEndsAt;
   final int? seatLimit;

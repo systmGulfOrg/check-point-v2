@@ -58,7 +58,6 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Avatar Photo Picker at Top (Mandatory)
         Center(
           child: GestureDetector(
             onTap: _pickPhoto,
@@ -134,7 +133,6 @@ class _RequestAccessFormWidgetState extends State<RequestAccessFormWidget> {
         ),
         hSpace(24),
 
-        // Full Name
         Text(
           'auth.requestAccess.fullName'.tr(context: context),
           textAlign: TextAlign.start,

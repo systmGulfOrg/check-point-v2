@@ -71,7 +71,6 @@ class RoleSwitchDialogWidget extends StatelessWidget {
     final profileCubit = context.read<AuthProfileCubit>();
     final navigator = Navigator.of(context, rootNavigator: true);
 
-    // Pop the bottom sheet first so all its descendants are deactivated cleanly
     Navigator.of(context).pop();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {

@@ -8,6 +8,5 @@ abstract class TenantLookupState with _$TenantLookupState {
   const factory TenantLookupState.loading() = TenantLookupLoading;
   const factory TenantLookupState.success(String tenantSlug) =
       TenantLookupSuccess;
-  const factory TenantLookupState.error(String messageKey) =
-      TenantLookupError;
+  const factory TenantLookupState.error(String messageKey) = TenantLookupError;
 }
