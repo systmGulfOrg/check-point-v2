@@ -49,9 +49,9 @@ class AdminStatsGridWidget extends StatelessWidget {
       crossAxisCount: 2,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 12.w,
-      mainAxisSpacing: 12.h,
-      childAspectRatio: 1.5,
+      crossAxisSpacing: 16.w,
+      mainAxisSpacing: 16.h,
+      childAspectRatio: 1.18,
       children: [
         AnimatedListItemWidget(
           index: 0,
@@ -59,8 +59,8 @@ class AdminStatsGridWidget extends StatelessWidget {
             enabled: isStaffLoading,
             child: AdminStatCardWidget(
               icon: Icons.group_outlined,
-              iconColor: AppColors.brandPrimary,
-              iconBackgroundColor: AppColors.softBrandBackground,
+              iconColor: AppColors.warningOrange,
+              iconBackgroundColor: AppColors.softYellowBackground,
               value: '$totalStaff',
               labelKey: 'admin.dashboard.totalStaff',
               onTap: onTotalStaffTap,
@@ -86,7 +86,7 @@ class AdminStatsGridWidget extends StatelessWidget {
           child: Skeletonizer(
             enabled: isLeaveLoading,
             child: AdminStatCardWidget(
-              icon: Icons.calendar_today_rounded,
+              icon: Icons.error_outline_rounded,
               iconColor: AppColors.warningOrange,
               iconBackgroundColor: AppColors.softYellowBackground,
               value: '$pendingLeaves',
