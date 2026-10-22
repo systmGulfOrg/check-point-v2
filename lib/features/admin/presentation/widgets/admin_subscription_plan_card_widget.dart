@@ -75,9 +75,7 @@ class AdminSubscriptionPlanCardWidget extends StatelessWidget {
                               context: context,
                             )),
                   style: AppTextStyles.font12Medium.copyWith(
-                    color: isTrial
-                        ? AppColors.brandPrimary
-                        : AppColors.success,
+                    color: isTrial ? AppColors.brandPrimary : AppColors.success,
                   ),
                 ),
               ),

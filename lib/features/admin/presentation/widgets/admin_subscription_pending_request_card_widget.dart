@@ -21,7 +21,9 @@ class AdminSubscriptionPendingRequestCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.softYellowBackground,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.warningOrange.withValues(alpha: 0.3)),
+        border: Border.all(
+          color: AppColors.warningOrange.withValues(alpha: 0.3),
+        ),
       ),
       child: Row(
         children: [
@@ -36,9 +38,7 @@ class AdminSubscriptionPendingRequestCardWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'admin.subscription.pendingRequestTitle'.tr(
-                    context: context,
-                  ),
+                  'admin.subscription.pendingRequestTitle'.tr(context: context),
                   style: AppTextStyles.font13SemiBold,
                 ),
                 if (requestedLimit != null)

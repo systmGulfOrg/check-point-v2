@@ -7,7 +7,10 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/subscription/admin_subscription_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/subscription/admin_subscription_state.dart';
 
-void showRequestMoreSeatsSheet(BuildContext context, {required int currentLimit}) {
+void showRequestMoreSeatsSheet(
+  BuildContext context, {
+  required int currentLimit,
+}) {
   final cubit = context.read<AdminSubscriptionCubit>();
   showModalBottomSheet<void>(
     context: context,
@@ -24,7 +27,10 @@ void showRequestMoreSeatsSheet(BuildContext context, {required int currentLimit}
 }
 
 class AdminRequestMoreSeatsSheetWidget extends StatefulWidget {
-  const AdminRequestMoreSeatsSheetWidget({required this.currentLimit, super.key});
+  const AdminRequestMoreSeatsSheetWidget({
+    required this.currentLimit,
+    super.key,
+  });
 
   final int currentLimit;
 
@@ -145,7 +151,9 @@ class _AdminRequestMoreSeatsSheetWidgetState
                           return;
                         }
                         context.read<AdminSubscriptionCubit>().requestMoreSeats(
-                          requestedLimit: int.parse(limitController.text.trim()),
+                          requestedLimit: int.parse(
+                            limitController.text.trim(),
+                          ),
                           reason: reasonController.text.trim().isEmpty
                               ? null
                               : reasonController.text.trim(),

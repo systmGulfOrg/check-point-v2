@@ -114,7 +114,6 @@ class _AdminCancelCustomerVisitDialogWidgetState
               ),
               SizedBox(height: 16.h),
 
-              // Confirmation alert
               Container(
                 padding: EdgeInsets.all(12.r),
                 decoration: BoxDecoration(

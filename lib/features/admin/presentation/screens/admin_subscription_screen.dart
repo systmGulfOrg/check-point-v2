@@ -27,8 +27,7 @@ class AdminSubscriptionScreen extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<AdminSubscriptionCubit, AdminSubscriptionState>(
           builder: (context, state) => switch (state) {
-            AdminSubscriptionInitial() ||
-            AdminSubscriptionLoading() =>
+            AdminSubscriptionInitial() || AdminSubscriptionLoading() =>
               const AdminSubscriptionSkeletonWidget(),
             AdminSubscriptionError(:final messageKey) => AppMessageWidget(
               icon: Icons.error_outline_rounded,
@@ -36,9 +35,6 @@ class AdminSubscriptionScreen extends StatelessWidget {
             ),
             AdminSubscriptionSuccess(:final summary) =>
               AdminSubscriptionContentWidget(summary: summary),
-            // These two only ever follow a success (requestMoreSeats re-loads
-            // on success, and a failure keeps the last summary untouched) —
-            // SafeCubit guarantees `load()` already ran before either fires.
             _ => const SizedBox.shrink(),
           },
         ),

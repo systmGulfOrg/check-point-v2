@@ -111,8 +111,6 @@ class _AdminMyVisitsBlocBuilderWidgetState
         .where((identity) => identity.length >= 3)
         .toSet();
 
-    // Prefer the stable employee identifier when the API provides it. Names
-    // are only a fallback because the visit form may store a display label.
     final visitEmployeeId = visit.employeeId?.trim().toLowerCase() ?? '';
     if (visitEmployeeId.isNotEmpty &&
         ((empId.isNotEmpty && visitEmployeeId == empId) ||
@@ -120,7 +118,6 @@ class _AdminMyVisitsBlocBuilderWidgetState
       return true;
     }
 
-    // 1. Check if the current user created the visit
     if (visit.createdBy != null && visit.createdBy!.isNotEmpty) {
       final createdByLower = visit.createdBy!.trim().toLowerCase();
       if (_matchesVisitIdentity(createdByLower, identities)) {
@@ -134,7 +131,6 @@ class _AdminMyVisitsBlocBuilderWidgetState
       }
     }
 
-    // 2. Check if the current user is an attendee
     for (final attendee in visit.attendees) {
       final cleanAttendee = attendee.trim().toLowerCase();
       if (cleanAttendee.isEmpty) continue;
@@ -151,7 +147,6 @@ class _AdminMyVisitsBlocBuilderWidgetState
       }
     }
 
-    // 3. Check if the visit belongs to an accessible (assigned) customer
     if (visit.customerId != null && visit.customerId!.isNotEmpty) {
       final matchesCustomer = accessibleCustomers.any(
         (c) => c.id == visit.customerId,

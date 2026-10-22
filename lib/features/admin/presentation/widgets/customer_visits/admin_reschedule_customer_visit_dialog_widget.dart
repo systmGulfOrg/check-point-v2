@@ -243,7 +243,6 @@ class _AdminRescheduleCustomerVisitDialogWidgetState
               ),
               SizedBox(height: 18.h),
 
-              // Date picker field
               Text(
                 'التاريخ الجديد',
                 style: AppTextStyles.font14Bold.copyWith(
@@ -323,7 +322,6 @@ class _AdminRescheduleCustomerVisitDialogWidgetState
               ],
               SizedBox(height: 14.h),
 
-              // Time picker field
               Text(
                 'الوقت الجديد (اختياري)',
                 style: AppTextStyles.font14Bold.copyWith(

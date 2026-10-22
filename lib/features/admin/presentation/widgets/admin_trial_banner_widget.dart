@@ -4,9 +4,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 
-/// Shown above the admin dashboard while the tenant is on a free trial —
-/// mirrors the same banner on the web console so admins aren't surprised by
-/// the trial ending.
 class AdminTrialBannerWidget extends StatelessWidget {
   const AdminTrialBannerWidget({
     required this.trialEndsAt,
@@ -70,9 +67,7 @@ class AdminTrialBannerWidget extends StatelessWidget {
                   ),
                   Text(
                     seatLimit != null
-                        ? '$daysText، ${'admin.dashboard.trialBanner.seatLimit'.tr(context: context, args: [
-                              '$seatLimit',
-                            ])}'
+                        ? '$daysText، ${'admin.dashboard.trialBanner.seatLimit'.tr(context: context, args: ['$seatLimit'])}'
                         : daysText,
                     style: AppTextStyles.font12Regular.copyWith(
                       color: AppColors.placeholder,

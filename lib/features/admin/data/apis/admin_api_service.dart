@@ -54,7 +54,6 @@ abstract class AdminApiService {
     @Path('deviceId') String deviceId,
   );
 
-  // Employee Management
   @GET(ApiConstants.employees)
   Future<EmployeesResponseModel> getEmployees({
     @Query('itemCount') int itemCount = 20,
@@ -69,7 +68,6 @@ abstract class AdminApiService {
   @GET('${ApiConstants.employees}/departmentId/{id}')
   Future<EmployeesResponseModel> getEmployeesInDepartment(@Path('id') int id);
 
-  // Fine-grained permissions
   @GET('/api/v2/employees')
   Future<dynamic> getPermissionEmployees({
     @Query('itemCount') int itemCount = 200,
@@ -125,7 +123,6 @@ abstract class AdminApiService {
     @Path('permission') bool permission,
   );
 
-  // Account Requests
   @GET(ApiConstants.accountRequests)
   Future<AccountRequestsResponseModel> getAccountRequests({
     @Query('itemCount') int itemCount = 20,
@@ -141,7 +138,6 @@ abstract class AdminApiService {
   @DELETE(ApiConstants.accountRequests)
   Future<ResultModel> deleteAccountRequest(@Query('id') int id);
 
-  // Departments
   @GET(ApiConstants.departments)
   Future<DepartmentResponseModel> getDepartments({
     @Query('itemCount') int itemCount = 50,
@@ -165,7 +161,6 @@ abstract class AdminApiService {
   @DELETE(ApiConstants.departments)
   Future<ResultModel> deleteDepartment(@Query('id') int id);
 
-  // Branches
   @GET(ApiConstants.branches)
   Future<BranchResponseModel> getBranches();
 
@@ -181,7 +176,6 @@ abstract class AdminApiService {
   @DELETE('${ApiConstants.branches}/{id}')
   Future<ResultModel> deleteBranch(@Path('id') int id);
 
-  // Customers
   @GET('${ApiConstants.customers}/customerType/{type}')
   Future<CustomerResponseModel> getCustomersByType(@Path('type') String type);
 
@@ -197,7 +191,6 @@ abstract class AdminApiService {
   @DELETE(ApiConstants.customers)
   Future<ResultModel> deleteCustomer(@Query('id') String id);
 
-  // Shifts
   @GET(ApiConstants.shifts)
   Future<ShiftResponseModel> getShifts();
 
@@ -216,7 +209,6 @@ abstract class AdminApiService {
   @POST('${ApiConstants.shifts}/assignShift')
   Future<ResultModel> assignShift(@Body() AssignShiftsRequestBody body);
 
-  // Policies
   @GET('${ApiConstants.policies}/shift/{shiftId}')
   Future<PoliceResponseModel> getPoliciesByShift(@Path('shiftId') int shiftId);
 
@@ -240,7 +232,6 @@ abstract class AdminApiService {
     @Body() RemoveAssignPolicyRequestBody body,
   );
 
-  // Leave Requests
   @GET(ApiConstants.leaveRequests)
   Future<LeaveRequestsResponseModel> getAllLeaveRequests();
 
@@ -252,7 +243,6 @@ abstract class AdminApiService {
   @DELETE('${ApiConstants.leaveRequests}/{id}')
   Future<ResultModel> deleteLeaveRequest(@Path('id') dynamic id);
 
-  // Leave Types
   @GET(ApiConstants.leaveTypes)
   Future<LeaveTypesResponseModel> getLeaveTypes();
 
@@ -268,7 +258,6 @@ abstract class AdminApiService {
   @DELETE(ApiConstants.leaveTypes)
   Future<ResultModel> deleteLeaveType(@Query('id') int id);
 
-  // Attendance
   @GET(ApiConstants.attendance)
   Future<AttendanceResponseModel> getAdminAttendance({
     @Query('itemCount') int itemCount = 1000,
@@ -284,7 +273,6 @@ abstract class AdminApiService {
   @DELETE('${ApiConstants.attendance}/{id}')
   Future<ResultModel> deleteAttendance(@Path('id') int id);
 
-  // Tasks
   @GET(ApiConstants.tasks)
   Future<TasksResponseModel> getTasks({
     @Query('itemCount') int itemCount = 100,
@@ -316,14 +304,12 @@ abstract class AdminApiService {
   @POST('${ApiConstants.tasks}/assignTask')
   Future<ResultModel> assignTask(@Body() AssignTaskRequestBody body);
 
-  // Plans
   @GET(ApiConstants.plans)
   Future<PlansResponseModel> getPlans();
 
   @POST(ApiConstants.plans)
   Future<ResultModel> createPlan(@Body() CreatePlanRequestBody body);
 
-  // Customer Plans / Visits
   @GET('${ApiConstants.customerPlans}/customerPlans')
   Future<CustomerVisitsResponseModel> getCustomerPlans({
     @Query('customerId') String? customerId,

@@ -67,7 +67,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
     attendeeInputController = TextEditingController();
     notesController = TextEditingController();
 
-    // Default creator as attendee - user can remove themselves via 'x' chip
     attendees.add(creatorDisplayName);
     _resolveCurrentUserName();
     _loadSystemEmployees();
@@ -335,7 +334,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
               const Divider(color: AppColors.border),
               SizedBox(height: 14.h),
 
-              // Customer Selection if multiple
               if (widget.initialCustomer == null && isLoadingCustomers) ...[
                 const Center(child: CircularProgressIndicator.adaptive()),
                 SizedBox(height: 16.h),
@@ -422,7 +420,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
                 SizedBox(height: 16.h),
               ],
 
-              // Purpose / Title
               Text(
                 'admin.visits.purpose'.tr(context: context),
                 style: AppTextStyles.font12Medium,
@@ -434,7 +431,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
               ),
               SizedBox(height: 16.h),
 
-              // Date & Time Row
               Row(
                 children: [
                   Expanded(
@@ -566,7 +562,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
               ),
               SizedBox(height: 16.h),
 
-              // Attendees / Companions ("مين معايا")
               Text(
                 'admin.visits.attendees'.tr(context: context),
                 style: AppTextStyles.font12Medium,
@@ -715,7 +710,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
               ),
               SizedBox(height: 16.h),
 
-              // Document attachment ("الـ document اللي هرفعها")
               Text(
                 'admin.visits.document'.tr(context: context),
                 style: AppTextStyles.font12Medium,
@@ -821,7 +815,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
               ),
               SizedBox(height: 16.h),
 
-              // Notes & Objectives
               Text(
                 'admin.visits.notes'.tr(context: context),
                 style: AppTextStyles.font12Medium,
@@ -834,7 +827,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
               ),
               SizedBox(height: 24.h),
 
-              // Submit Button
               CustomButton(
                 text: 'admin.visits.planVisit'.tr(context: context),
                 isLoading: isSubmitting,

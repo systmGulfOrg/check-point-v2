@@ -14,9 +14,6 @@ abstract class AdminSubscriptionState with _$AdminSubscriptionState {
   const factory AdminSubscriptionState.error(String messageKey) =
       AdminSubscriptionError;
 
-  /// Emitted once after a successful seat request submission; the screen
-  /// shows a confirmation and the listener re-loads the summary so the
-  /// pending request appears.
   const factory AdminSubscriptionState.requestSent() =
       AdminSubscriptionRequestSent;
   const factory AdminSubscriptionState.requestFailed(String messageKey) =

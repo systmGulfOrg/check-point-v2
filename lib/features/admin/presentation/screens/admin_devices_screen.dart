@@ -53,8 +53,6 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
               deviceId,
             );
           } else {
-            // Call reject API if it exists (for now assuming approveDevice with isActive: false or a reject API is needed)
-            // Need to implement rejectDevice in Cubit
             context.read<AdminPendingDevicesCubit>().rejectDevice(
               employeeId,
               deviceId,

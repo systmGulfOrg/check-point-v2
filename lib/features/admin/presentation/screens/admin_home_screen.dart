@@ -102,8 +102,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     final dateFormatted =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
-    // Excludes anyone on approved leave, plus anyone whose weekly off or an
-    // official holiday falls today — neither is "absent".
     final absentCount = context
         .read<AdminAttendanceCubit>()
         .getAbsentEmployees(employees, leaveRequests)
@@ -129,10 +127,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 AdminTrialBannerWidget(
                   trialEndsAt: _trialEndsAt!,
                   seatLimit: _trialSeatLimit,
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    AppRoutes.adminSubscription,
-                  ),
+                  onTap: () =>
+                      Navigator.pushNamed(context, AppRoutes.adminSubscription),
                 ),
                 hSpace(12),
               ],
