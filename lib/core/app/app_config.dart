@@ -10,6 +10,7 @@ class AppConfig {
     }
     return url;
   }
+
   static String get odooBaseUrl =>
       Env.odooBaseUrl.isNotEmpty ? Env.odooBaseUrl : baseUrl;
   static String get odooApiKey => Env.odooApiKey;

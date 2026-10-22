@@ -19,23 +19,17 @@ class IntegrityTokenPackage {
   final String requestHash;
 }
 
-/// Service managing Google Play Integrity API requests on Android.
-///
-/// Uses the Standard Integrity API flow with cloud project number 481143074801.
 class PlayIntegrityService {
-  PlayIntegrityService({
-    required this.dio,
-    MethodChannel? channel,
-  }) : channel =
-           channel ??
-           const MethodChannel('com.systmgulf.checkpoint/play_integrity');
+  PlayIntegrityService({required this.dio, MethodChannel? channel})
+    : channel =
+          channel ??
+          const MethodChannel('com.systmgulf.checkpoint/play_integrity');
 
   final Dio dio;
   final MethodChannel channel;
   static IntegrityTokenPackage? currentPackage;
   IntegrityTokenPackage? get latestPackage => currentPackage;
 
-  /// Builds the canonical JSON with fixed key order and coordinate precision.
   static String computeCanonicalJson({
     required String action,
     double? latitude,
@@ -45,26 +39,22 @@ class PlayIntegrityService {
     int? timestamp,
   }) {
     final sorted = {
-      'accuracy':
-          accuracy != null && accuracy.isFinite
-              ? double.parse(accuracy.toStringAsFixed(1))
-              : 0,
+      'accuracy': accuracy != null && accuracy.isFinite
+          ? double.parse(accuracy.toStringAsFixed(1))
+          : 0,
       'action': action,
       'deviceId': deviceId ?? '',
-      'latitude':
-          latitude != null && latitude.isFinite
-              ? double.parse(latitude.toStringAsFixed(6))
-              : 0,
-      'longitude':
-          longitude != null && longitude.isFinite
-              ? double.parse(longitude.toStringAsFixed(6))
-              : 0,
+      'latitude': latitude != null && latitude.isFinite
+          ? double.parse(latitude.toStringAsFixed(6))
+          : 0,
+      'longitude': longitude != null && longitude.isFinite
+          ? double.parse(longitude.toStringAsFixed(6))
+          : 0,
       'timestamp': timestamp ?? 0,
     };
     return jsonEncode(sorted);
   }
 
-  /// Computes: base64url(SHA-256(challenge + SHA-256(canonical JSON)))
   static String computeRequestHash({
     required String challenge,
     required String canonicalJson,
@@ -74,16 +64,19 @@ class PlayIntegrityService {
     return base64Url.encode(outerBytes).replaceAll('=', '');
   }
 
-  /// Warms up the Standard Integrity token provider with retry.
   Future<bool> prepareIntegrityToken({int retries = 2}) async {
     if (!Platform.isAndroid) return false;
 
     for (var attempt = 0; attempt <= retries; attempt++) {
       try {
-        final success = await channel.invokeMethod<bool>('prepareIntegrityToken');
+        final success = await channel.invokeMethod<bool>(
+          'prepareIntegrityToken',
+        );
         if (success == true) return true;
       } catch (e) {
-        AppLogger.error('Attempt $attempt: Failed to prepare Play Integrity token: $e');
+        AppLogger.error(
+          'Attempt $attempt: Failed to prepare Play Integrity token: $e',
+        );
         if (attempt < retries) {
           await Future<void>.delayed(const Duration(milliseconds: 1000));
         }
@@ -92,7 +85,6 @@ class PlayIntegrityService {
     return false;
   }
 
-  /// Requests a fresh single-use challenge from the backend.
   Future<String?> requestChallenge({
     required String action,
     String? deviceId,
@@ -100,10 +92,7 @@ class PlayIntegrityService {
     try {
       final response = await dio.post<Map<String, dynamic>>(
         '/api/v2/integrity/challenge',
-        data: {
-          'action': action,
-          'deviceId': ?deviceId,
-        },
+        data: {'action': action, 'deviceId': ?deviceId},
       );
       final data = response.data;
       if (data == null) return null;
@@ -118,8 +107,6 @@ class PlayIntegrityService {
     }
   }
 
-  /// Acquires an integrity token bound to the request payload and challenge.
-  /// If provider is expired or fails, re-prepares and retries once.
   Future<IntegrityTokenPackage?> acquireTokenForAction({
     required String action,
     double? latitude,
@@ -130,9 +117,14 @@ class PlayIntegrityService {
   }) async {
     if (!Platform.isAndroid) return null;
 
-    final challenge = await requestChallenge(action: action, deviceId: deviceId);
+    final challenge = await requestChallenge(
+      action: action,
+      deviceId: deviceId,
+    );
     if (challenge == null) {
-      AppLogger.error('Cannot acquire integrity token: Challenge request failed');
+      AppLogger.error(
+        'Cannot acquire integrity token: Challenge request failed',
+      );
       return null;
     }
 
@@ -152,9 +144,10 @@ class PlayIntegrityService {
 
     var token = await _requestNativeToken(requestHash);
 
-    // If failed, re-prepare and retry once
     if (token == null) {
-      AppLogger.debug('Integrity token request failed; re-preparing provider and retrying...');
+      AppLogger.debug(
+        'Integrity token request failed; re-preparing provider and retrying...',
+      );
       await prepareIntegrityToken(retries: 1);
       token = await _requestNativeToken(requestHash);
     }
@@ -172,10 +165,9 @@ class PlayIntegrityService {
 
   Future<String?> _requestNativeToken(String requestHash) async {
     try {
-      return await channel.invokeMethod<String>(
-        'requestIntegrityToken',
-        {'requestHash': requestHash},
-      );
+      return await channel.invokeMethod<String>('requestIntegrityToken', {
+        'requestHash': requestHash,
+      });
     } catch (e) {
       AppLogger.error('Error invoking requestIntegrityToken: $e');
       return null;

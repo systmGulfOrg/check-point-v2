@@ -7,13 +7,8 @@ import 'package:check_point_v2/core/services/play_integrity_service.dart';
 class AuthTokenInterceptor extends Interceptor {
   AuthTokenInterceptor({required this.secureStorage});
 
-  // Mirrors AuthSessionStorage.tenantSlugKey; a literal avoids a circular
-  // import between the two files.
   static const _tenantSlugKey = 'tenant_slug';
 
-  /// The x-error-code values that mean "this company is no longer usable",
-  /// as set by the backend's shared tenant-access gate (checked on every
-  /// authenticated request, not just login — see apps/api/core/tenant-access).
   static const _tenantBlockedCodes = {
     'TENANT_SUSPENDED',
     'TENANT_EXPIRED',
@@ -26,9 +21,6 @@ class AuthTokenInterceptor extends Interceptor {
   static String? _inMemoryToken;
   static String? _inMemoryTenantSlug;
 
-  /// Set once at startup (service_locator) so this low-level interceptor can
-  /// react to a tenant being blocked mid-session without depending on
-  /// AuthSessionStorage or navigation directly.
   static void Function(String errorCode)? onTenantBlocked;
 
   static void updateToken(String? token) {
@@ -62,14 +54,14 @@ class AuthTokenInterceptor extends Interceptor {
       options.headers['X-Tenant-Slug'] = tenantSlug;
     }
 
-    // Automatically attach Google Play Integrity token & challenge to attendance endpoints
     final path = options.path.toLowerCase();
-    if (path.contains('attendance') || path.contains('/in') || path.contains('/out')) {
+    if (path.contains('attendance') ||
+        path.contains('/in') ||
+        path.contains('/out')) {
       final latest = PlayIntegrityService.currentPackage;
       if (latest != null) {
         options.headers['x-play-integrity-token'] = latest.token;
         options.headers['x-play-integrity-challenge'] = latest.challenge;
-        // Also ensure headers for body serialization if needed
         options.headers['x-play-integrity-hash'] = latest.requestHash;
       }
     }

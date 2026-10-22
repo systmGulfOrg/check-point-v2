@@ -23,11 +23,8 @@ class AttendanceVerificationResult {
   final LatLng? location;
   final String? messageKey;
 
-  /// The integrity assessment for this verification attempt. May be null if
-  /// the location was unavailable before integrity could be checked.
   final LocationIntegrityResult? integrityResult;
 
-  /// Cryptographic Play Integrity token and challenge package.
   final IntegrityTokenPackage? playIntegrityPackage;
 }
 
@@ -59,7 +56,6 @@ class AttendanceVerificationService {
     LocationSample? sample;
 
     if (requireLocation) {
-      // 1. Obtain an enriched location sample
       sample = await locationService.getCurrentSample();
       if (sample == null) {
         return const AttendanceVerificationResult(
@@ -68,7 +64,6 @@ class AttendanceVerificationService {
         );
       }
 
-      // 2. Location integrity check (mock detection + anomaly analysis)
       integrityResult = await locationIntegrityService.assess(sample);
       if (!integrityResult.isAllowed) {
         return AttendanceVerificationResult(
@@ -80,7 +75,6 @@ class AttendanceVerificationService {
 
       location = sample.position;
 
-      // 3. Geofence check
       if (!isWithinArea(
         point: location,
         center: center,
@@ -96,9 +90,10 @@ class AttendanceVerificationService {
       }
     }
 
-    // 4. Play Integrity token acquisition (Android mandatory)
     IntegrityTokenPackage? playIntegrityPackage;
-    if (Platform.isAndroid && requirePlayIntegrity && playIntegrityService != null) {
+    if (Platform.isAndroid &&
+        requirePlayIntegrity &&
+        playIntegrityService != null) {
       playIntegrityPackage = await playIntegrityService!.acquireTokenForAction(
         action: action,
         latitude: sample?.position.latitude,
@@ -118,7 +113,6 @@ class AttendanceVerificationService {
       }
     }
 
-    // 5. Biometric authentication
     final isBiometricAvailable = await biometricAuthService.isAvailable();
     if (isBiometricAvailable) {
       final authenticated = await biometricAuthService.authenticate(
