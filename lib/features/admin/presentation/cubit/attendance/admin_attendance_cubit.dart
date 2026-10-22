@@ -72,9 +72,6 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
 
   List<EmployeeModel> get absentEmployeesToday => getAbsentEmployees();
 
-  /// [leaveRequests] excludes anyone with an approved leave covering today —
-  /// without it, every employee who hasn't clocked in counts as absent even
-  /// while on approved leave.
   List<EmployeeModel> getAbsentEmployees([
     List<EmployeeModel>? employeeList,
     List<AdminLeaveRequestModel>? leaveRequests,
@@ -110,9 +107,6 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
       if (id != null && onLeaveIds.contains(id)) {
         return false;
       }
-      // Covers both this employee's weekly off (todayWorkMode == 'off') and
-      // an official holiday — the backend already folds both into this one
-      // flag, so a day nobody has to clock in for never counts as absent.
       if (emp.todayIsWorkingDay == false) {
         return false;
       }
@@ -194,7 +188,6 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
     final today = DateTime(now.year, now.month, now.day);
 
     final filtered = _allRecords.where((record) {
-      // 1. Search Query Filter
       if (_searchQuery.isNotEmpty) {
         final name = (record.employeeName ?? '').toLowerCase();
         final area = (record.area ?? '').toLowerCase();
@@ -225,7 +218,6 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
       };
       if (!statusMatches) return false;
 
-      // 2. Date Filter
       final recordDate = _parseDate(record.attendanceDate);
       if (recordDate == null) {
         return _selectedDateFilter == AdminAttendanceDateFilter.all;

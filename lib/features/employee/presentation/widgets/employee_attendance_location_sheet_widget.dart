@@ -74,8 +74,6 @@ class _EmployeeAttendanceLocationSheetWidgetState
       todayScheduledVisit = widget.initialVisit;
       cubit.loadCustomersByType('Customer');
     } else if (!widget.isCheckOut && (hasClockIn || hasClockOut)) {
-      // Customer attendance is enabled only after today's visits are loaded
-      // and a visit dated today is found.
       type = mode == 'remote' ? 'Remote' : 'Branch';
       if (type == 'Branch') {
         cubit.loadBranches();
@@ -296,9 +294,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
         if (controller != null) {
           try {
             await controller.animateCamera(CameraUpdate.newLatLng(location));
-          } catch (_) {
-            // The map can be disposed while a location request is in flight.
-          }
+          } catch (_) {}
         }
       }
     }
@@ -337,9 +333,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
       if (controller != null) {
         try {
           controller.animateCamera(CameraUpdate.newLatLngZoom(target, 16));
-        } catch (_) {
-          // The map controller is no longer valid after sheet disposal.
-        }
+        } catch (_) {}
       }
     }
   }

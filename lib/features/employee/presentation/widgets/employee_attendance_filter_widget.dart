@@ -42,7 +42,6 @@ class EmployeeAttendanceFilterWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Days Filter Row
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -75,7 +74,6 @@ class EmployeeAttendanceFilterWidget extends StatelessWidget {
           ),
         ),
         hSpace(8),
-        // Multi-Select Status Filter Row
         Row(
           children: [
             Expanded(

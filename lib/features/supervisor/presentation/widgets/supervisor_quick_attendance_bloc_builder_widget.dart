@@ -9,7 +9,6 @@ import 'package:check_point_v2/features/employee/presentation/widgets/employee_a
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_state.dart';
 
-/// Quick clock in / clock out button shown directly on the supervisor home.
 class SupervisorQuickAttendanceBlocBuilderWidget extends StatelessWidget {
   const SupervisorQuickAttendanceBlocBuilderWidget({super.key});
 
@@ -28,7 +27,6 @@ class SupervisorQuickAttendanceBlocBuilderWidget extends StatelessWidget {
             : (profile?.todayHoliday?.isHoliday == true);
         final isWeeklyOff = profile?.todayWorkMode == 'off' && !isHoliday;
 
-        // Hide quick attendance on holiday or weekly off if employee hasn't checked in yet
         if (!hasIn && (isHoliday || isWeeklyOff)) {
           return const SizedBox.shrink();
         }

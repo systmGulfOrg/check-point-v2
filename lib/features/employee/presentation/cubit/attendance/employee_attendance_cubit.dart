@@ -226,7 +226,6 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
         _applyFilters();
       },
       failure: (_) {
-        // Fallback to empty list instead of showing errors.unknown
         _allHistoryRecords = [];
         todayAttendance = null;
         _applyFilters();
@@ -331,7 +330,6 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     final today = DateTime(now.year, now.month, now.day);
 
     final filtered = _allHistoryRecords.where((record) {
-      // 1. Days Filter
       final recordDate = _parseDate(record.attendanceDate);
       if (recordDate != null) {
         final recordDay = DateTime(
@@ -358,7 +356,6 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
         }
       }
 
-      // 2. Multi-Select Status Filter
       if (selectedStatusFilters.isEmpty) return true;
 
       final isLate = record.isLate == true;

@@ -27,7 +27,6 @@ class AdminAttendanceTodaySummaryWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // 1. Present Card
           Expanded(
             child: Row(
               children: [
@@ -76,7 +75,6 @@ class AdminAttendanceTodaySummaryWidget extends StatelessWidget {
             color: AppColors.border,
             margin: EdgeInsets.symmetric(horizontal: 8.w),
           ),
-          // 2. Absent Card (Clickable)
           Expanded(
             child: InkWell(
               onTap: onTapAbsent,
