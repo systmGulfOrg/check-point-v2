@@ -75,7 +75,6 @@ class AppImageProvider {
         );
       }
 
-      // Check if it's a raw base64 string
       if (trimmed.length > 20) {
         try {
           final sanitized = trimmed.replaceAll(RegExp(r'\s+'), '');
@@ -87,7 +86,6 @@ class AppImageProvider {
         } catch (_) {}
       }
     } catch (_) {
-      // Silently fallback to null if image parsing or decoding fails
       return null;
     }
 

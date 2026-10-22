@@ -5,8 +5,6 @@ import 'dart:ui' as ui;
 class AppImageCompressor {
   const AppImageCompressor._();
 
-  /// Resizes and compresses image [bytes] to a max dimension of [maxDimension].
-  /// Returns a data URL string like `data:image/jpeg;base64,...`.
   static Future<String> compressAndEncodeBase64(
     Uint8List bytes, {
     int maxDimension = 768,
@@ -42,13 +40,10 @@ class AppImageCompressor {
         final resizedBytes = byteData.buffer.asUint8List();
         return 'data:$mimeType;base64,${base64Encode(resizedBytes)}';
       }
-    } catch (_) {
-      // Fallback to original bytes
-    }
+    } catch (_) {}
     return 'data:$mimeType;base64,${base64Encode(bytes)}';
   }
 
-  /// If [base64String] is a huge data URI or base64 string, compresses it.
   static Future<String?> compressExistingBase64(
     String? base64String, {
     int maxDimension = 768,

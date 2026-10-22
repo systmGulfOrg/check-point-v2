@@ -36,7 +36,6 @@ class AppColors {
   static const Color white = Color(0xFFFFFFFF);
   static const Color transparent = Colors.transparent;
 
-  // Admin dark theme & dashboard colors
   static const Color darkPageBackground = Color(0xFF090E1A);
   static const Color darkCardBackground = Color(0xFF101B35);
   static const Color darkCardBorder = Color(0xFF1E2D50);
@@ -51,14 +50,12 @@ class AppColors {
   static const Color darkIconBoxCyan = Color(0xFF0E2338);
   static const Color darkBadgeBackground = Color(0xFF1E293B);
 
-  // Soft light theme tile backgrounds
   static const Color softGreenBackground = Color(0xFFDCFCE7);
   static const Color softYellowBackground = Color(0xFFFEF3C7);
   static const Color softBlueBackground = Color(0xFFDBEAFE);
   static const Color softRedBackground = Color(0xFFFEE2E2);
   static const Color authShellGradientStart = Color(0xFFFFF7F0);
 
-  // Employee dark theme badges & tiles
   static const Color darkStatusGreenBg = Color(0xFF0B2E25);
   static const Color darkStatusGreenText = Color(0xFF10B981);
   static const Color darkStatusRedBg = Color(0xFF3B1219);
@@ -66,7 +63,6 @@ class AppColors {
   static const Color darkStatusBlueBg = Color(0xFF0D2847);
   static const Color darkStatusBlueText = Color(0xFF3B82F6);
   static const Color darkIconBoxPink = Color(0xFF2A1526);
-  // Role & action semantic colors
   static const Color whatsApp = Color(0xFF25D366);
   static const Color softPurpleBackground = Color(0xFFF3E8FF);
   static const Color purpleText = Color(0xFF7E22CE);
@@ -79,10 +75,8 @@ class AppColors {
   static const Color amberBorder = Color(0xFFFDE68A);
   static const Color wordDocBlue = Color(0xFF2B579A);
   static const Color excelSheetGreen = Color(0xFF217346);
-  // Leaderboard medal colors
   static const Color medalGold = Color(0xFFFFD700);
   static const Color medalSilver = Color(0xFFC0C0C0);
   static const Color medalBronze = Color(0xFFCD7F32);
-  // Amber text on soft yellow surfaces
   static const Color amberTextStrong = Color(0xFF92400E);
 }

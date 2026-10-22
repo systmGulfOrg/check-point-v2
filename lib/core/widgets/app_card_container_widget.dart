@@ -3,7 +3,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import '../styles/app_colors.dart';
 
-/// Shared surface for cards across the application.
 class AppCardContainerWidget extends StatelessWidget {
   const AppCardContainerWidget({
     required this.child,

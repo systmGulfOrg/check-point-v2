@@ -66,7 +66,6 @@ class AppImagePreviewDialogWidget extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Top Action Bar
                 Row(
                   children: [
                     if (name != null && name!.isNotEmpty) ...[
@@ -117,7 +116,6 @@ class AppImagePreviewDialogWidget extends StatelessWidget {
                   ],
                 ),
                 hSpace(16),
-                // Main Content / Zoomable Image
                 Flexible(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(24.r),
