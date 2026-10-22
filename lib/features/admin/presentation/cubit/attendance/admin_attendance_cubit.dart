@@ -60,14 +60,57 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
 
   List<AdminAttendanceModel> get todayPresentRecords {
     return todayRecords.where((r) {
-      final hasClockIn =
-          r.clockInTime != null &&
-          r.clockInTime!.trim().isNotEmpty &&
-          r.clockInTime != '--:--' &&
-          !r.clockInTime!.startsWith('00:00');
+      final hasClockIn = _hasClockIn(r);
       final isNotAbsent = r.status?.toLowerCase() != 'absent';
       return hasClockIn && isNotAbsent;
     }).toList();
+  }
+
+  List<({int present, int late, int absent})> get weeklyAttendanceSummary {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final weekStart = today.subtract(Duration(days: today.weekday - 1));
+
+    return List.generate(7, (index) {
+      final day = weekStart.add(Duration(days: index));
+      final records = _allRecords.where((record) {
+        final recordDate = _parseDate(record.attendanceDate);
+        return recordDate != null &&
+            recordDate.year == day.year &&
+            recordDate.month == day.month &&
+            recordDate.day == day.day;
+      });
+
+      return (
+        present: records
+            .where(
+              (record) =>
+                  _hasClockIn(record) &&
+                  record.isLate != true &&
+                  record.status?.toLowerCase() != 'absent',
+            )
+            .length,
+        late: records
+            .where(
+              (record) =>
+                  _hasClockIn(record) &&
+                  record.isLate == true &&
+                  record.status?.toLowerCase() != 'absent',
+            )
+            .length,
+        absent: records
+            .where((record) => record.status?.toLowerCase() == 'absent')
+            .length,
+      );
+    });
+  }
+
+  bool _hasClockIn(AdminAttendanceModel record) {
+    final clockInTime = record.clockInTime;
+    return clockInTime != null &&
+        clockInTime.trim().isNotEmpty &&
+        clockInTime != '--:--' &&
+        !clockInTime.startsWith('00:00');
   }
 
   bool get isAttendanceLoaded => state.maybeWhen(
@@ -78,7 +121,48 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
 
   List<EmployeeModel> get absentEmployeesToday => getAbsentEmployees();
 
-  List<EmployeeModel> getAbsentEmployees([
+  List<EmployeeModel> getPresentEmployees([List<EmployeeModel>? employeeList]) {
+    if (!isAttendanceLoaded) return const [];
+
+    final employeesToUse = employeeList != null && employeeList.isNotEmpty
+        ? employeeList
+        : _employees;
+    final presentIds = <String>{
+      for (final record in todayPresentRecords)
+        if (record.employeeId != null && record.employeeId!.isNotEmpty)
+          record.employeeId!,
+    };
+    final presentNames = <String>{
+      for (final record in todayPresentRecords)
+        if (record.employeeName != null &&
+            record.employeeName!.trim().isNotEmpty)
+          record.employeeName!.trim().toLowerCase(),
+    };
+
+    return employeesToUse.where((employee) {
+      final name = (employee.name ?? employee.userName ?? '')
+          .trim()
+          .toLowerCase();
+      return (employee.id != null && presentIds.contains(employee.id)) ||
+          (name.isNotEmpty && presentNames.contains(name));
+    }).toList();
+  }
+
+  List<EmployeeModel> getOnLeaveEmployees(
+    List<EmployeeModel> employeeList,
+    List<AdminLeaveRequestModel> leaveRequests,
+  ) {
+    final onLeaveIds = employeeIdsOnLeave(leaveRequests, DateTime.now());
+    return employeeList
+        .where(
+          (employee) => employee.id != null && onLeaveIds.contains(employee.id),
+        )
+        .toList();
+  }
+
+  /// Employees who have not clocked in yet today and are not on leave.
+  /// Split into "late" (shift hasn't ended yet) and "absent" (shift ended).
+  List<EmployeeModel> _getNotClockedInEmployees([
     List<EmployeeModel>? employeeList,
     List<AdminLeaveRequestModel>? leaveRequests,
   ]) {
@@ -124,9 +208,49 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
     }).toList();
   }
 
+  bool _hasShiftEnded(EmployeeModel employee) {
+    final end = _parseTodayTime(employee.todayWorkEnd);
+    if (end == null) return false;
+    return DateTime.now().isAfter(end);
+  }
+
+  DateTime? _parseTodayTime(String? raw) {
+    if (raw == null || raw.trim().isEmpty) return null;
+    final parts = raw.trim().split(':');
+    if (parts.length < 2) return null;
+    final hour = int.tryParse(parts[0]);
+    final minute = int.tryParse(parts[1]);
+    if (hour == null || minute == null) return null;
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day, hour, minute);
+  }
+
+  /// Employees who haven't clocked in yet but whose shift is still ongoing.
+  List<EmployeeModel> getLateEmployees([
+    List<EmployeeModel>? employeeList,
+    List<AdminLeaveRequestModel>? leaveRequests,
+  ]) {
+    return _getNotClockedInEmployees(
+      employeeList,
+      leaveRequests,
+    ).where((emp) => !_hasShiftEnded(emp)).toList();
+  }
+
+  /// Employees who didn't clock in and whose shift has already ended.
+  List<EmployeeModel> getAbsentEmployees([
+    List<EmployeeModel>? employeeList,
+    List<AdminLeaveRequestModel>? leaveRequests,
+  ]) {
+    return _getNotClockedInEmployees(
+      employeeList,
+      leaveRequests,
+    ).where(_hasShiftEnded).toList();
+  }
+
   int get todayPresentCount =>
       isAttendanceLoaded ? todayPresentRecords.length : 0;
   int get todayAbsentCount => absentEmployeesToday.length;
+  int get todayLateCount => getLateEmployees().length;
 
   void setEmployeeDirectory(List<EmployeeModel> employees) {
     _employees = employees;

@@ -5,13 +5,80 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 
+enum AdminAttendanceEmployeeStatus { present, late, absent, onLeave }
+
+extension AdminAttendanceEmployeeStatusX on AdminAttendanceEmployeeStatus {
+  String get titleKey => switch (this) {
+    AdminAttendanceEmployeeStatus.present => 'admin.attendance.presentTitle',
+    AdminAttendanceEmployeeStatus.late => 'admin.attendance.lateTitle',
+    AdminAttendanceEmployeeStatus.absent => 'admin.attendance.absentTitle',
+    AdminAttendanceEmployeeStatus.onLeave => 'admin.attendance.onLeaveTitle',
+  };
+
+  String get subtitleKey => switch (this) {
+    AdminAttendanceEmployeeStatus.present => 'admin.attendance.presentSubtitle',
+    AdminAttendanceEmployeeStatus.late => 'admin.attendance.lateSubtitle',
+    AdminAttendanceEmployeeStatus.absent => 'admin.attendance.absentSubtitle',
+    AdminAttendanceEmployeeStatus.onLeave => 'admin.attendance.onLeaveSubtitle',
+  };
+
+  String get labelKey => switch (this) {
+    AdminAttendanceEmployeeStatus.present => 'admin.attendance.checkedIn',
+    AdminAttendanceEmployeeStatus.late => 'admin.attendance.lateStatus',
+    AdminAttendanceEmployeeStatus.absent => 'admin.attendance.notCheckedIn',
+    AdminAttendanceEmployeeStatus.onLeave => 'admin.attendance.onLeaveStatus',
+  };
+
+  String get emptyTitleKey => switch (this) {
+    AdminAttendanceEmployeeStatus.present =>
+      'admin.attendance.noPresentEmployees',
+    AdminAttendanceEmployeeStatus.late => 'admin.attendance.noLateEmployees',
+    AdminAttendanceEmployeeStatus.absent => 'admin.attendance.allPresent',
+    AdminAttendanceEmployeeStatus.onLeave =>
+      'admin.attendance.noOnLeaveEmployees',
+  };
+
+  String get emptySubtitleKey => switch (this) {
+    AdminAttendanceEmployeeStatus.present =>
+      'admin.attendance.noPresentEmployeesDesc',
+    AdminAttendanceEmployeeStatus.late =>
+      'admin.attendance.noLateEmployeesDesc',
+    AdminAttendanceEmployeeStatus.absent => 'admin.attendance.allPresentDesc',
+    AdminAttendanceEmployeeStatus.onLeave =>
+      'admin.attendance.noOnLeaveEmployeesDesc',
+  };
+
+  Color get color => switch (this) {
+    AdminAttendanceEmployeeStatus.present => AppColors.success,
+    AdminAttendanceEmployeeStatus.late => AppColors.warning,
+    AdminAttendanceEmployeeStatus.absent => AppColors.error,
+    AdminAttendanceEmployeeStatus.onLeave => AppColors.brandPrimary,
+  };
+
+  Color get backgroundColor => switch (this) {
+    AdminAttendanceEmployeeStatus.present => AppColors.softGreenBackground,
+    AdminAttendanceEmployeeStatus.late => AppColors.softYellowBackground,
+    AdminAttendanceEmployeeStatus.absent => AppColors.softRedBackground,
+    AdminAttendanceEmployeeStatus.onLeave => AppColors.softBrandBackground,
+  };
+
+  IconData get icon => switch (this) {
+    AdminAttendanceEmployeeStatus.present => Icons.check_circle_outline_rounded,
+    AdminAttendanceEmployeeStatus.late => Icons.schedule_rounded,
+    AdminAttendanceEmployeeStatus.absent => Icons.cancel_outlined,
+    AdminAttendanceEmployeeStatus.onLeave => Icons.beach_access_outlined,
+  };
+}
+
 class AdminAbsentEmployeesSheetWidget extends StatefulWidget {
   const AdminAbsentEmployeesSheetWidget({
-    required this.absentEmployees,
+    required this.employees,
+    required this.status,
     super.key,
   });
 
-  final List<EmployeeModel> absentEmployees;
+  final List<EmployeeModel> employees;
+  final AdminAttendanceEmployeeStatus status;
 
   @override
   State<AdminAbsentEmployeesSheetWidget> createState() =>
@@ -31,7 +98,7 @@ class _AdminAbsentEmployeesSheetWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final filteredEmployees = widget.absentEmployees.where((employee) {
+    final filteredEmployees = widget.employees.where((employee) {
       if (_searchQuery.isEmpty) return true;
       final name = (employee.name ?? employee.userName ?? '').toLowerCase();
       final dept = (employee.departmentName ?? '').toLowerCase();
@@ -73,9 +140,7 @@ class _AdminAbsentEmployeesSheetWidgetState
                         Row(
                           children: [
                             Text(
-                              'admin.attendance.absentTitle'.tr(
-                                context: context,
-                              ),
+                              widget.status.titleKey.tr(context: context),
                               style: AppTextStyles.font18Bold,
                             ),
                             wSpace(8),
@@ -85,13 +150,13 @@ class _AdminAbsentEmployeesSheetWidgetState
                                 vertical: 2.h,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.softRedBackground,
+                                color: widget.status.backgroundColor,
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Text(
-                                '${widget.absentEmployees.length}',
+                                '${widget.employees.length}',
                                 style: AppTextStyles.font12Bold.copyWith(
-                                  color: AppColors.error,
+                                  color: widget.status.color,
                                 ),
                               ),
                             ),
@@ -99,9 +164,7 @@ class _AdminAbsentEmployeesSheetWidgetState
                         ),
                         hSpace(4),
                         Text(
-                          'admin.attendance.absentSubtitle'.tr(
-                            context: context,
-                          ),
+                          widget.status.subtitleKey.tr(context: context),
                           style: AppTextStyles.font12Regular.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -118,7 +181,7 @@ class _AdminAbsentEmployeesSheetWidgetState
               hSpace(14),
               CustomTextFormField(
                 controller: _searchController,
-                hintText: 'admin.attendance.searchAbsentHint'.tr(
+                hintText: 'admin.attendance.searchEmployeesHint'.tr(
                   context: context,
                 ),
                 prefixIcon: Icon(Icons.search_rounded, size: 20.r),
@@ -140,33 +203,33 @@ class _AdminAbsentEmployeesSheetWidgetState
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                widget.absentEmployees.isEmpty
-                                    ? Icons.celebration_rounded
+                                widget.employees.isEmpty
+                                    ? widget.status.icon
                                     : Icons.person_search_rounded,
                                 size: 48.r,
-                                color: widget.absentEmployees.isEmpty
-                                    ? AppColors.success
+                                color: widget.employees.isEmpty
+                                    ? widget.status.color
                                     : AppColors.placeholder,
                               ),
                               hSpace(12),
                               Text(
-                                widget.absentEmployees.isEmpty
-                                    ? 'admin.attendance.allPresent'.tr(
+                                widget.employees.isEmpty
+                                    ? widget.status.emptyTitleKey.tr(
                                         context: context,
                                       )
                                     : 'admin.attendance.empty'.tr(
                                         context: context,
                                       ),
                                 style: AppTextStyles.font16Bold.copyWith(
-                                  color: widget.absentEmployees.isEmpty
+                                  color: widget.employees.isEmpty
                                       ? AppColors.textPrimary
                                       : AppColors.textSecondary,
                                 ),
                               ),
-                              if (widget.absentEmployees.isEmpty) ...[
+                              if (widget.employees.isEmpty) ...[
                                 hSpace(6),
                                 Text(
-                                  'admin.attendance.allPresentDesc'.tr(
+                                  widget.status.emptySubtitleKey.tr(
                                     context: context,
                                   ),
                                   style: AppTextStyles.font13Regular.copyWith(
@@ -207,8 +270,9 @@ class _AdminAbsentEmployeesSheetWidgetState
                                   initials: initial,
                                   subtitle: employee.departmentName,
                                   radius: 20.r,
-                                  backgroundColor: AppColors.softRedBackground,
-                                  textColor: AppColors.error,
+                                  backgroundColor:
+                                      widget.status.backgroundColor,
+                                  textColor: widget.status.color,
                                   enablePreview: true,
                                 ),
                                 wSpace(12),
@@ -284,25 +348,25 @@ class _AdminAbsentEmployeesSheetWidgetState
                                     vertical: 4.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.softRedBackground,
+                                    color: widget.status.backgroundColor,
                                     borderRadius: BorderRadius.circular(8.r),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
-                                        Icons.cancel_outlined,
+                                        widget.status.icon,
                                         size: 13.r,
-                                        color: AppColors.error,
+                                        color: widget.status.color,
                                       ),
                                       wSpace(4),
                                       Text(
-                                        'admin.attendance.notCheckedIn'.tr(
+                                        widget.status.labelKey.tr(
                                           context: context,
                                         ),
                                         style: AppTextStyles.font11Medium
                                             .copyWith(
-                                              color: AppColors.error,
+                                              color: widget.status.color,
                                               fontWeight: FontWeight.w600,
                                             ),
                                       ),
