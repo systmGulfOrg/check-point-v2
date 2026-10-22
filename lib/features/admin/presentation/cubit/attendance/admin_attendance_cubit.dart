@@ -70,12 +70,22 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
     }).toList();
   }
 
+  bool get isAttendanceLoaded => state.maybeWhen(
+    success: (_) => true,
+    actionSuccess: (_) => true,
+    orElse: () => false,
+  );
+
   List<EmployeeModel> get absentEmployeesToday => getAbsentEmployees();
 
   List<EmployeeModel> getAbsentEmployees([
     List<EmployeeModel>? employeeList,
     List<AdminLeaveRequestModel>? leaveRequests,
   ]) {
+    if (!isAttendanceLoaded) {
+      return const [];
+    }
+
     final employeesToUse = employeeList != null && employeeList.isNotEmpty
         ? employeeList
         : _employees;
@@ -114,7 +124,8 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
     }).toList();
   }
 
-  int get todayPresentCount => todayPresentRecords.length;
+  int get todayPresentCount =>
+      isAttendanceLoaded ? todayPresentRecords.length : 0;
   int get todayAbsentCount => absentEmployeesToday.length;
 
   void setEmployeeDirectory(List<EmployeeModel> employees) {
