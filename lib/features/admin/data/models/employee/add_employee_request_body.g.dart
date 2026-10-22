@@ -35,6 +35,7 @@ AddEmployeeRequestBody _$AddEmployeeRequestBodyFromJson(
   customPermissions: (json['customPermissions'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
+  imageUrl: json['imageUrl'] as String?,
 );
 
 Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
@@ -62,4 +63,5 @@ Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
   'directManagerId': instance.directManagerId,
   'managerId': instance.managerId,
   'customPermissions': instance.customPermissions,
+  'imageUrl': instance.imageUrl,
 };

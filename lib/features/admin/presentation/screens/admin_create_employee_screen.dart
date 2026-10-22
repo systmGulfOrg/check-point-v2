@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -419,6 +420,15 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
         _navigateToErrorField(errorMessage);
       }
     } else {
+      String? compressedPhoto;
+      if (selectedPhotoPath != null && selectedPhotoPath!.isNotEmpty) {
+        final bytes = await File(selectedPhotoPath!).readAsBytes();
+        compressedPhoto = await AppImageCompressor.compressAndEncodeBase64(
+          bytes,
+        );
+      }
+      if (!mounted) return;
+
       final addBody = AddEmployeeRequestBody(
         name: nameController.text.trim(),
         username: usernameController.text.trim(),
@@ -443,6 +453,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
         directManagerId: selectedDirectManagerId,
         managerId: selectedDirectManagerId,
         customPermissions: selectedPermissions.toList(),
+        imageUrl: compressedPhoto,
       );
 
       final employeesCubit = context.read<AdminEmployeesCubit>();
