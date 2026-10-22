@@ -42,7 +42,6 @@ class AppRoutes {
   static const String employeeSettings = '/employee/settings';
   static const String adminDeletedEmployees = '/admin/employees/deleted';
 
-  // Gamification Points Routes
   static const String myPoints = '/employee/points';
   static const String pointExchange = '/employee/points/exchange';
   static const String pointsHistory = '/employee/points/history';
@@ -50,4 +49,5 @@ class AppRoutes {
   static const String pointsLeaderboard = '/employee/points/leaderboard';
   static const String adminPoints = '/admin/points';
   static const String adminEmployeePoints = '/admin/points/employee';
+  static const String aiChat = '/ai/chat';
 }

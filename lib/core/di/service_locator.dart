@@ -1,3 +1,7 @@
+import 'package:check_point_v2/features/ai/data/apis/ai_api_service.dart';
+import 'package:check_point_v2/features/ai/data/repos/ai_repo.dart';
+import 'package:check_point_v2/features/ai/data/repos/ai_repo_impl.dart';
+import 'package:check_point_v2/features/ai/presentation/cubit/ai_chat_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_audit/admin_employee_audit_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -150,8 +154,6 @@ Future<void> setupServiceLocator() async {
   );
   await sl<DeviceIdentityProvider>().initialize();
 
-  // Services
-  // External services must never receive the app's bearer token or log keys.
   sl.registerLazySingleton<Dio>(
     () => Dio(
       BaseOptions(
@@ -197,7 +199,6 @@ Future<void> setupServiceLocator() async {
     () => OdooTimeOffService(dio: sl<Dio>(instanceName: 'external')),
   );
 
-  // API Services
   sl.registerLazySingleton<AuthApiService>(() => AuthApiService(sl<Dio>()));
   sl.registerLazySingleton<AdminApiService>(() => AdminApiService(sl<Dio>()));
   sl.registerLazySingleton<SubscriptionApiService>(
@@ -225,8 +226,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<ProjectsApiService>(
     () => ProjectsApiService(sl<Dio>()),
   );
+  sl.registerLazySingleton<AiApiService>(() => AiApiService(sl<Dio>()));
+  sl.registerLazySingleton<AiRepo>(() => AiRepoImpl(api: sl<AiApiService>()));
 
-  // Repositories
   sl.registerLazySingleton<AuthRepo>(
     () => AuthRepoImpl(api: sl<AuthApiService>()),
   );
@@ -327,7 +329,6 @@ Future<void> setupServiceLocator() async {
     () => OvertimeRepoImpl(api: sl<OvertimeApiService>()),
   );
 
-  // UseCases
   sl.registerLazySingleton<LoginUseCase>(
     () => LoginUseCase(
       authRepo: sl<AuthRepo>(),
@@ -357,7 +358,6 @@ Future<void> setupServiceLocator() async {
     ),
   );
 
-  // Cubits
   sl.registerFactory<LoginCubit>(
     () => LoginCubit(
       loginUseCase: sl<LoginUseCase>(),
@@ -565,5 +565,8 @@ Future<void> setupServiceLocator() async {
       pointsRepo: sl<AttendancePointsRepo>(),
       sessionStorage: sl<AuthSessionStorage>(),
     ),
+  );
+  sl.registerFactory<AiChatCubit>(
+    () => AiChatCubit(repo: sl<AiRepo>()),
   );
 }
