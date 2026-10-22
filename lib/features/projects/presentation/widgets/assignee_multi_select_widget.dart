@@ -105,7 +105,6 @@ class _AssigneeMultiSelectWidgetState extends State<AssigneeMultiSelectWidget> {
                   builder: (sheetContext, setSheetState) {
                     final query = searchController.text.trim().toLowerCase();
 
-                    // Build item list combining fetched employees and fallback string options
                     final allItems = <Map<String, String>>[];
                     final addedKeys = <String>{};
 

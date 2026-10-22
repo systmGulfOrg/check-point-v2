@@ -121,7 +121,6 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                     padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 12.h),
                     child: Column(
                       children: [
-                        // Search Box
                         CustomTextFormField(
                           hintText: 'projects.searchProjectsHint'.tr(
                             context: context,

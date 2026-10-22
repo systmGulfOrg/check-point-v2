@@ -46,10 +46,6 @@ class SupervisorTasksRepoImpl implements SupervisorTasksRepo {
         return ApiResult.success(response.value?.list ?? []);
       }
 
-      // The legacy department endpoint currently fails on the API because it
-      // queries a removed Prisma relation. Fetching the regular task list and
-      // scoping it by the department's employee ids preserves supervisor
-      // visibility without exposing tasks from other departments.
       final responses = await Future.wait([
         api.getTasks(),
         api.getEmployeesInDepartment(deptId),

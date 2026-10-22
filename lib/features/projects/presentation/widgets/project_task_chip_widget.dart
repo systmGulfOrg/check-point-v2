@@ -3,7 +3,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 
-/// Small icon + label chip used in the project task detail sheet.
 class ProjectTaskChipWidget extends StatelessWidget {
   const ProjectTaskChipWidget({
     required this.icon,

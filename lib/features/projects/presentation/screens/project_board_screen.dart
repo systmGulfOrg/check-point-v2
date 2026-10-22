@@ -121,12 +121,10 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
 
           return Column(
             children: [
-              // Search & Quick Action Header
               Padding(
                 padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 8.h),
                 child: Column(
                   children: [
-                    // Search Bar
                     CustomTextFormField(
                       hintText: 'projects.searchTasksHint'.tr(context: context),
                       controller: _searchController,
@@ -205,7 +203,6 @@ class _ProjectBoardScreenState extends State<ProjectBoardScreen> {
                 ),
               ),
 
-              // Board Content
               Expanded(
                 child: isListView
                     ? _buildListView(
