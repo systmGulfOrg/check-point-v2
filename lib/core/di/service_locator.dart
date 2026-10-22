@@ -3,6 +3,7 @@ import 'package:check_point_v2/features/ai/data/repos/ai_repo.dart';
 import 'package:check_point_v2/features/ai/data/repos/ai_repo_impl.dart';
 import 'package:check_point_v2/features/ai/presentation/cubit/ai_chat_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_audit/admin_employee_audit_cubit.dart';
+import 'package:check_point_v2/features/support/data/apis/support_ticket_api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -228,6 +229,10 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<AiApiService>(() => AiApiService(sl<Dio>()));
   sl.registerLazySingleton<AiRepo>(() => AiRepoImpl(api: sl<AiApiService>()));
+
+  sl.registerLazySingleton<SupportTicketApiService>(
+    () => SupportTicketApiService(dio: sl<Dio>()),
+  );
 
   sl.registerLazySingleton<AuthRepo>(
     () => AuthRepoImpl(api: sl<AuthApiService>()),
@@ -566,7 +571,5 @@ Future<void> setupServiceLocator() async {
       sessionStorage: sl<AuthSessionStorage>(),
     ),
   );
-  sl.registerFactory<AiChatCubit>(
-    () => AiChatCubit(repo: sl<AiRepo>()),
-  );
+  sl.registerFactory<AiChatCubit>(() => AiChatCubit(repo: sl<AiRepo>()));
 }

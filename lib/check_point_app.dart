@@ -4,6 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/widgets/push_tap_listener_widget.dart';
+import 'package:check_point_v2/features/support/presentation/support_app_overlay_widget.dart';
 
 class CheckPointApp extends StatelessWidget {
   const CheckPointApp({required this.initialRoute, super.key});
@@ -27,6 +28,9 @@ class CheckPointApp extends StatelessWidget {
             locale: context.locale,
             initialRoute: initialRoute,
             onGenerateRoute: AppRouter.onGenerateRoute,
+            builder: (context, child) => SupportAppOverlayWidget(
+              child: child ?? const SizedBox.shrink(),
+            ),
           ),
         );
       },
