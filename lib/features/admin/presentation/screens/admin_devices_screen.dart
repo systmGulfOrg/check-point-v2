@@ -152,13 +152,10 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
             return state.map(
               initial: (_) => skeletonWidget,
               loading: (_) => skeletonWidget,
-              error: (state) => Center(
-                child: Text(
-                  state.message,
-                  style: AppTextStyles.font14Medium.copyWith(
-                    color: AppColors.error,
-                  ),
-                ),
+              error: (state) => AppErrorStateWidget(
+                messageKey: state.message,
+                onRetry: () =>
+                    context.read<AdminPendingDevicesCubit>().loadDevices(),
               ),
               success: (state) {
                 final devices = state.devices;

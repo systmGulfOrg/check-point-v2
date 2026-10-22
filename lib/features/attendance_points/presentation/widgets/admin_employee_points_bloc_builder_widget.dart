@@ -1,7 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import '../cubit/points_state.dart';
@@ -12,7 +12,12 @@ import 'points_level_progress_card_widget.dart';
 import 'admin_employee_points_skeleton_widget.dart';
 
 class AdminEmployeePointsBlocBuilderWidget extends StatelessWidget {
-  const AdminEmployeePointsBlocBuilderWidget({super.key});
+  const AdminEmployeePointsBlocBuilderWidget({
+    required this.employeeId,
+    super.key,
+  });
+
+  final String employeeId;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +25,11 @@ class AdminEmployeePointsBlocBuilderWidget extends StatelessWidget {
       builder: (context, state) => switch (state) {
         PointsInitial() ||
         PointsLoading() => const AdminEmployeePointsSkeletonWidget(),
-        PointsError(:final message) => Center(
-          child: Text(message, style: AppTextStyles.font14Regular),
+        PointsError(:final message) => AppErrorStateWidget(
+          messageKey: message,
+          onRetry: () => context.read<PointsCubit>().loadAllPointsData(
+            employeeId: employeeId,
+          ),
         ),
         PointsLoaded(:final summary, :final history) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -132,13 +132,9 @@ class SupervisorTasksBlocBuilderWidget extends StatelessWidget {
                   }
                 : null,
           ),
-          SupervisorTasksError(:final messageKey) => Center(
-            child: Text(
-              messageKey.tr(context: context),
-              style: AppTextStyles.font14Regular.copyWith(
-                color: AppColors.error,
-              ),
-            ),
+          SupervisorTasksError(:final messageKey) => AppErrorStateWidget(
+            messageKey: messageKey,
+            onRetry: () => cubit.loadTasks(),
           ),
           _ => const SupervisorTasksListWidget(tasks: []),
         };

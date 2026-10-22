@@ -66,13 +66,9 @@ class SupervisorPlansBlocBuilderWidget extends StatelessWidget {
               }
             },
           ),
-          SupervisorPlansError(:final messageKey) => Center(
-            child: Text(
-              messageKey.tr(context: context),
-              style: AppTextStyles.font14Regular.copyWith(
-                color: AppColors.error,
-              ),
-            ),
+          SupervisorPlansError(:final messageKey) => AppErrorStateWidget(
+            messageKey: messageKey,
+            onRetry: () => cubit.loadPlans(),
           ),
           _ => const SupervisorPlansListWidget(plans: []),
         };

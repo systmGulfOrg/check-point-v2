@@ -21,6 +21,7 @@ export 'auth/app_permissions.dart';
 export 'auth/biometric_auth_service.dart';
 export 'services/attendance_verification_service.dart';
 export 'widgets/custom_button.dart';
+export 'widgets/app_error_state_widget.dart';
 export 'widgets/app_message_widget.dart';
 export 'widgets/app_card_container_widget.dart';
 export 'widgets/app_sheet_handle_widget.dart';

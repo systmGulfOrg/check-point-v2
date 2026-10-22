@@ -17,6 +17,12 @@ class SupervisorStatsGridBlocBuilderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SupervisorTeamCubit, SupervisorTeamState>(
       builder: (context, teamState) {
+        if (teamState case SupervisorTeamError(:final messageKey)) {
+          return AppErrorStateWidget(
+            messageKey: messageKey,
+            onRetry: () => context.read<SupervisorTeamCubit>().loadTeam(),
+          );
+        }
         final (totalStaff, isStaffLoading) = switch (teamState) {
           SupervisorTeamLoading() => (0, true),
           SupervisorTeamSuccess(:final members) => (members.length, false),
@@ -28,6 +34,14 @@ class SupervisorStatsGridBlocBuilderWidget extends StatelessWidget {
           SupervisorAttendanceState
         >(
           builder: (context, attState) {
+            if (attState case SupervisorAttendanceError(:final messageKey)) {
+              return AppErrorStateWidget(
+                messageKey: messageKey,
+                onRetry: () => context
+                    .read<SupervisorAttendanceCubit>()
+                    .loadAttendance(),
+              );
+            }
             final (presentToday, isAttendanceLoading) = switch (attState) {
               SupervisorAttendanceLoading() => (0, true),
               SupervisorAttendanceSuccess(:final attendance) => (
@@ -42,6 +56,16 @@ class SupervisorStatsGridBlocBuilderWidget extends StatelessWidget {
               SupervisorLeaveRequestsState
             >(
               builder: (context, leaveState) {
+                if (leaveState case SupervisorLeaveRequestsError(
+                  :final messageKey,
+                )) {
+                  return AppErrorStateWidget(
+                    messageKey: messageKey,
+                    onRetry: () => context
+                        .read<SupervisorLeaveRequestsCubit>()
+                        .loadRequests(),
+                  );
+                }
                 final (pendingLeaves, isLeaveLoading) = switch (leaveState) {
                   SupervisorLeaveRequestsLoading() => (0, true),
                   SupervisorLeaveRequestsSuccess(:final requests) => (

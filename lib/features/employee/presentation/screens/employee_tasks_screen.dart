@@ -183,6 +183,13 @@ class _EmployeeTasksScreenState extends State<EmployeeTasksScreen> {
                         ),
                       ),
                     ),
+                    EmployeeTasksStateError(:final messageKey) => Expanded(
+                      child: AppErrorStateWidget(
+                        messageKey: messageKey,
+                        onRetry: () =>
+                            context.read<EmployeeTasksCubit>().loadMyTasks(),
+                      ),
+                    ),
                     _ => Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

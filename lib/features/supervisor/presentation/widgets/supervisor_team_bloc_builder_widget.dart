@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -52,23 +51,9 @@ class SupervisorTeamBlocBuilderWidget extends StatelessWidget {
             team: members,
             searchQuery: searchQuery,
           ),
-          SupervisorTeamError(:final messageKey) => Center(
-            child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 40.h),
-                  child: Center(
-                    child: Text(
-                      messageKey.tr(context: context),
-                      style: AppTextStyles.font14Regular.copyWith(
-                        color: AppColors.error,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          SupervisorTeamError(:final messageKey) => AppErrorStateWidget(
+            messageKey: messageKey,
+            onRetry: () => context.read<SupervisorTeamCubit>().loadTeam(),
           ),
           _ => ListView(
             physics: const AlwaysScrollableScrollPhysics(),

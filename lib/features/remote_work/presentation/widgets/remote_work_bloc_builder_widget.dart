@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import 'package:check_point_v2/core/core.dart';
 import '../../data/models/remote_work_policy_model.dart';
 import '../cubit/remote_work_cubit.dart';
 import '../cubit/remote_work_state.dart';
@@ -64,7 +65,10 @@ class RemoteWorkBlocBuilderWidget extends StatelessWidget {
             requests: const [],
           ),
         ),
-        error: (_) => const SizedBox.shrink(),
+        error: (messageKey) => AppErrorStateWidget(
+          messageKey: messageKey,
+          onRetry: () => context.read<RemoteWorkCubit>().load(),
+        ),
         success: (policies, requests) => RemoteWorkContentWidget(
           isAdmin: isAdmin,
           canReview: canReview,

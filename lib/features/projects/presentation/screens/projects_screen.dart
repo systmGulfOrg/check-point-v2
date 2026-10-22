@@ -240,8 +240,9 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
               ],
             ),
           ),
-          ProjectsStateError() => Center(
-            child: Text('errors.server'.tr(context: context)),
+          ProjectsStateError(:final messageKey) => AppErrorStateWidget(
+            messageKey: messageKey,
+            onRetry: () => context.read<ProjectsCubit>().loadProjects(),
           ),
           ProjectsStateInitial() => const SizedBox.shrink(),
           _ => const SizedBox.shrink(),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
@@ -77,6 +79,20 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       orElse: () => false,
     );
 
+    final dashboardErrorMessageKey =
+        employeesState.maybeWhen(
+          error: (messageKey) => messageKey,
+          orElse: () => null,
+        ) ??
+        attendanceState.maybeWhen(
+          error: (messageKey) => messageKey,
+          orElse: () => null,
+        ) ??
+        leaveState.maybeWhen(
+          error: (messageKey) => messageKey,
+          orElse: () => null,
+        );
+
     final employees = employeesState.maybeWhen(
       success: (employees, filter) => employees,
       orElse: () => const <EmployeeModel>[],
@@ -107,14 +123,16 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         .getAbsentEmployees(employees, leaveRequests)
         .length;
 
+    Future<void> onDashboardRetry() => Future.wait([
+      context.read<AdminEmployeesCubit>().loadEmployees(),
+      context.read<AdminAttendanceCubit>().loadAttendance(),
+      context.read<AdminLeaveRequestsCubit>().loadRequests(),
+    ]);
+
     return SafeArea(
       child: RefreshIndicator(
         color: AppColors.brandPrimary,
-        onRefresh: () => Future.wait([
-          context.read<AdminEmployeesCubit>().loadEmployees(),
-          context.read<AdminAttendanceCubit>().loadAttendance(),
-          context.read<AdminLeaveRequestsCubit>().loadRequests(),
-        ]),
+        onRefresh: onDashboardRetry,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
@@ -138,43 +156,56 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 dateText: dateFormatted,
               ),
               hSpace(12),
-              AdminStatsGridWidget(
-                totalStaff: totalStaff,
-                presentToday: presentToday,
-                pendingLeaves: pendingLeaves,
-                openTasks: 0,
-                onLeaveToday: onLeaveToday,
-                showTasks: false,
-                showOnLeave: true,
-                isStaffLoading: isStaffLoading,
-                isAttendanceLoading: isAttendanceLoading,
-                isLeaveLoading: isLeaveLoading,
-                onTotalStaffTap: () =>
-                    Navigator.pushNamed(context, AppRoutes.adminAttendance),
-                onPresentTodayTap: () =>
-                    Navigator.pushNamed(context, AppRoutes.adminAttendance),
-                onPendingLeavesTap: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.adminLeaveManagement,
+              if (dashboardErrorMessageKey != null)
+                AppErrorStateWidget(
+                  messageKey: dashboardErrorMessageKey,
+                  onRetry: () => unawaited(onDashboardRetry()),
+                )
+              else ...[
+                AdminStatsGridWidget(
+                  totalStaff: totalStaff,
+                  presentToday: presentToday,
+                  pendingLeaves: pendingLeaves,
+                  openTasks: 0,
+                  onLeaveToday: onLeaveToday,
+                  showTasks: false,
+                  showOnLeave: true,
+                  isStaffLoading: isStaffLoading,
+                  isAttendanceLoading: isAttendanceLoading,
+                  isLeaveLoading: isLeaveLoading,
+                  onTotalStaffTap: () =>
+                      Navigator.pushNamed(context, AppRoutes.adminAttendance),
+                  onPresentTodayTap: () =>
+                      Navigator.pushNamed(context, AppRoutes.adminAttendance),
+                  onPendingLeavesTap: () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.adminLeaveManagement,
+                  ),
+                  onOnLeaveTap: () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.adminLeaveManagement,
+                  ),
                 ),
-                onOnLeaveTap: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.adminLeaveManagement,
+                hSpace(16),
+                AdminWeeklyAttendanceChartWidget(
+                  weeklyData: isAttendanceLoading
+                      ? const []
+                      : context
+                            .read<AdminAttendanceCubit>()
+                            .weeklyAttendanceSummary,
                 ),
-              ),
-              hSpace(16),
-              const AdminWeeklyAttendanceChartWidget(),
-              hSpace(20),
-              AdminOverviewCardWidget(
-                employeesOnDuty: presentToday,
-                totalStaff: totalStaff,
-                lateArrivals: 0,
-                absences: absentCount,
-                pendingLeaveRequests: pendingLeaves,
-                dateText: dateFormatted,
-                isLoading:
-                    isStaffLoading || isAttendanceLoading || isLeaveLoading,
-              ),
+                hSpace(20),
+                AdminOverviewCardWidget(
+                  employeesOnDuty: presentToday,
+                  totalStaff: totalStaff,
+                  lateArrivals: 0,
+                  absences: absentCount,
+                  pendingLeaveRequests: pendingLeaves,
+                  dateText: dateFormatted,
+                  isLoading:
+                      isStaffLoading || isAttendanceLoading || isLeaveLoading,
+                ),
+              ],
             ],
           ),
         ),

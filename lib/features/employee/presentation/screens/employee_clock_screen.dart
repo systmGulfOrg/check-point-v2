@@ -409,6 +409,17 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                           _ => const <EmployeeAttendanceRecordData>[],
                         };
 
+                        if (state case EmployeeAttendanceStateError(
+                          :final messageKey,
+                        )) {
+                          return AppErrorStateWidget(
+                            messageKey: messageKey,
+                            onRetry: () => context
+                                .read<EmployeeAttendanceCubit>()
+                                .loadAttendanceHistory(),
+                          );
+                        }
+
                         if (historyRecords.isEmpty) {
                           return Container(
                             padding: EdgeInsets.all(16.r),

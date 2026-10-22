@@ -36,11 +36,9 @@ class LeaderboardScreen extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             PointsLoading() => const PointsLeaderboardSkeletonWidget(),
-            PointsError(:final message) => Center(
-              child: Padding(
-                padding: EdgeInsets.all(24.r),
-                child: Text(message, style: AppTextStyles.font14Regular),
-              ),
+            PointsError(:final message) => AppErrorStateWidget(
+              messageKey: message,
+              onRetry: () => context.read<PointsCubit>().loadAllPointsData(),
             ),
             PointsLoaded(:final leaderboard) =>
               leaderboard.isEmpty
