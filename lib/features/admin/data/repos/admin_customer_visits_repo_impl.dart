@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
@@ -115,5 +117,44 @@ class AdminCustomerVisitsRepoImpl implements AdminCustomerVisitsRepo {
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
+  }
+
+  @override
+  Future<ApiResult<({String documentName, String documentUrl})>>
+  uploadVisitDocument({required String visitId, required File file}) async {
+    try {
+      final response = await api.uploadCustomerPlanDocument(visitId, file);
+      return _parseUploadResponse(response);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<({String documentName, String documentUrl})>>
+  uploadNewVisitDocument(File file) async {
+    try {
+      final response = await api.uploadCustomerPlanDocumentStandalone(file);
+      return _parseUploadResponse(response);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  ApiResult<({String documentName, String documentUrl})> _parseUploadResponse(
+    dynamic response,
+  ) {
+    final value = (response as Map?)?['value'] as Map?;
+    final documentName = value?['documentName'] as String?;
+    final documentUrl = value?['documentUrl'] as String?;
+    if (documentName == null || documentUrl == null) {
+      return ApiResult.failure(
+        ApiFailureMapper.map(Exception('Malformed upload response')),
+      );
+    }
+    return ApiResult.success((
+      documentName: documentName,
+      documentUrl: documentUrl,
+    ));
   }
 }

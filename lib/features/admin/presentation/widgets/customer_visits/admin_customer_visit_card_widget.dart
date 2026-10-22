@@ -795,26 +795,34 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                 ],
                 if (isVisitedPendingReport || isCompleted) ...[
                   TextButton.icon(
-                    onPressed: () => showDialog<void>(
-                      context: context,
-                      builder: (_) => AdminRecordVisitOutcomeDialogWidget(
-                        visit: visit,
-                        onSubmit:
-                            (
-                              outcome,
-                              status,
-                              notes,
-                              documentName,
-                              documentUrl,
-                            ) => onRecordOutcome(
-                              outcome,
-                              status,
-                              notes,
-                              documentName,
-                              documentUrl,
+                    onPressed: () {
+                      final visitsCubit = context
+                          .read<AdminCustomerVisitsCubit>();
+                      showDialog<void>(
+                        context: context,
+                        builder: (_) =>
+                            BlocProvider<AdminCustomerVisitsCubit>.value(
+                              value: visitsCubit,
+                              child: AdminRecordVisitOutcomeDialogWidget(
+                                visit: visit,
+                                onSubmit:
+                                    (
+                                      outcome,
+                                      status,
+                                      notes,
+                                      documentName,
+                                      documentUrl,
+                                    ) => onRecordOutcome(
+                                      outcome,
+                                      status,
+                                      notes,
+                                      documentName,
+                                      documentUrl,
+                                    ),
+                              ),
                             ),
-                      ),
-                    ),
+                      );
+                    },
                     icon: Icon(
                       isCompleted
                           ? Icons.edit_note_rounded

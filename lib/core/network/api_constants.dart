@@ -38,6 +38,7 @@ class ApiConstants {
   static const String planFeedback = '/api/Plan/planFeedback';
   static const String feedBackStatus = '/api/Plan/feedBackStatus';
   static const String customerPlans = '/api/CustomerPlan';
+  static const String customerPlansV2 = '/api/v2/customer-plans';
 
   static const String pointsSummary = '/api/points/summary';
   static const String pointsHistory = '/api/points/history';
@@ -54,4 +55,6 @@ class ApiConstants {
   static const String aiChat = '/api/v2/ai/chat';
   static const String aiActionConfirm = '/api/v2/ai/action/confirm';
   static const String aiHistory = '/api/v2/ai/history';
+
+  static const String supportTickets = '/api/v2/support-tickets';
 }

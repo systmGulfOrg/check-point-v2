@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:check_point_v2/features/admin/data/models/audit/audit_log_model.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -335,4 +337,17 @@ abstract class AdminApiService {
 
   @DELETE('${ApiConstants.customerPlans}/customerPlan/{id}')
   Future<ResultModel> deleteCustomerPlan(@Path('id') String id);
+
+  @POST('${ApiConstants.customerPlansV2}/document')
+  @MultiPart()
+  Future<dynamic> uploadCustomerPlanDocumentStandalone(
+    @Part(name: 'file') File file,
+  );
+
+  @POST('${ApiConstants.customerPlansV2}/{id}/document')
+  @MultiPart()
+  Future<dynamic> uploadCustomerPlanDocument(
+    @Path('id') String id,
+    @Part(name: 'file') File file,
+  );
 }
