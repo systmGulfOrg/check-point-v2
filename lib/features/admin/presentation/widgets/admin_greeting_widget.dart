@@ -20,32 +20,44 @@ class AdminGreetingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text(
-          greetingKey.tr(context: context),
-          style: AppTextStyles.font14Regular.copyWith(
-            color: AppColors.textSecondary,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                greetingKey.tr(context: context),
+                style: AppTextStyles.font14Regular.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              hSpace(4),
+              Text(
+                userName ?? userNameKey.tr(context: context),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.font24Bold.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ],
           ),
         ),
-        hSpace(4),
-        Text(
-          userName ?? userNameKey.tr(context: context),
-          style: AppTextStyles.font24Bold.copyWith(
-            color: AppColors.textPrimary,
-          ),
-        ),
-        hSpace(6),
+        wSpace(12),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           decoration: BoxDecoration(
             color: AppColors.softBrandBackground,
-            borderRadius: BorderRadius.circular(6.r),
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: AppColors.brandPrimary.withValues(alpha: 0.25),
+            ),
           ),
           child: Text(
             dateText,
-            style: AppTextStyles.font12Bold.copyWith(
+            style: AppTextStyles.font13Bold.copyWith(
               color: AppColors.brandPrimary,
             ),
           ),

@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:check_point_v2/core/core.dart';
 
 class AdminWeeklyAttendanceChartPainter extends CustomPainter {
-  const AdminWeeklyAttendanceChartPainter();
+  const AdminWeeklyAttendanceChartPainter({
+    required this.weeklyData,
+    required this.maxValue,
+  });
+
+  final List<({int present, int late, int absent})> weeklyData;
+  final int maxValue;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -18,37 +24,80 @@ class AdminWeeklyAttendanceChartPainter extends CustomPainter {
       ..color = AppColors.border.withValues(alpha: 0.55)
       ..strokeWidth = 1;
     final linePaint = Paint()
-      ..color = AppColors.brandPrimary
       ..strokeWidth = 2.5
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
-    final dotPaint = Paint()..color = AppColors.brandPrimary;
 
     for (var index = 0; index < 5; index++) {
       final y = chartTop + (chartHeight / 4) * index;
       canvas.drawLine(Offset(chartLeft, y), Offset(chartRight, y), gridPaint);
     }
 
-    const values = <double>[0.45, 0.72, 0.58, 0.84, 0.5, 0.68, 0.92];
+    _drawSeries(
+      canvas,
+      values: [for (final day in weeklyData) day.present],
+      color: AppColors.success,
+      chartLeft: chartLeft,
+      chartBottom: chartBottom,
+      chartWidth: chartWidth,
+      chartHeight: chartHeight,
+      linePaint: linePaint,
+    );
+    _drawSeries(
+      canvas,
+      values: [for (final day in weeklyData) day.late],
+      color: AppColors.warningOrange,
+      chartLeft: chartLeft,
+      chartBottom: chartBottom,
+      chartWidth: chartWidth,
+      chartHeight: chartHeight,
+      linePaint: linePaint,
+    );
+    _drawSeries(
+      canvas,
+      values: [for (final day in weeklyData) day.absent],
+      color: AppColors.error,
+      chartLeft: chartLeft,
+      chartBottom: chartBottom,
+      chartWidth: chartWidth,
+      chartHeight: chartHeight,
+      linePaint: linePaint,
+    );
+  }
+
+  void _drawSeries(
+    Canvas canvas, {
+    required List<int> values,
+    required Color color,
+    required double chartLeft,
+    required double chartBottom,
+    required double chartWidth,
+    required double chartHeight,
+    required Paint linePaint,
+  }) {
+    if (values.isEmpty) return;
+
     final points = <Offset>[
       for (var index = 0; index < values.length; index++)
         Offset(
           chartLeft + (chartWidth / (values.length - 1)) * index,
-          chartBottom - chartHeight * values[index],
+          chartBottom - chartHeight * (values[index] / maxValue),
         ),
     ];
-
-    final linePath = Path()..moveTo(points.first.dx, points.first.dy);
+    final path = Path()..moveTo(points.first.dx, points.first.dy);
     for (var index = 1; index < points.length; index++) {
-      linePath.lineTo(points[index].dx, points[index].dy);
+      path.lineTo(points[index].dx, points[index].dy);
     }
-    canvas.drawPath(linePath, linePaint);
+    linePaint.color = color;
+    canvas.drawPath(path, linePaint);
+    final dotPaint = Paint()..color = color;
     for (final point in points) {
       canvas.drawCircle(point, 3.5, dotPaint);
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant AdminWeeklyAttendanceChartPainter oldDelegate) =>
+      oldDelegate.weeklyData != weeklyData || oldDelegate.maxValue != maxValue;
 }
