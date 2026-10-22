@@ -76,7 +76,7 @@ class AdminAccountRequestsCubit extends SafeCubit<AdminAccountRequestsState> {
       return newestFirst ? dateB.compareTo(dateA) : dateA.compareTo(dateB);
     });
 
-    emit(AdminAccountRequestsState.success(filtered));
+    safeEmit(AdminAccountRequestsState.success(filtered));
   }
 
   Future<String?> approveRequest({
