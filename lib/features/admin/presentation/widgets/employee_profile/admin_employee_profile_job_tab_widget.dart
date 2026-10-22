@@ -18,7 +18,6 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: Column(
         children: [
-          // Section 1: Employment & Organization Details
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.sectionJob'.tr(context: context),
             icon: Icons.work_outline_rounded,
@@ -89,7 +88,6 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
             ],
           ),
 
-          // Section 2: Personal & Contact Details
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.sectionPersonal'.tr(context: context),
             icon: Icons.person_outline_rounded,

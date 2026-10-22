@@ -97,7 +97,6 @@ class _AdminPermissionsPickerDialogWidgetState
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Header
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(20.w, 18.h, 14.w, 12.h),
               child: Row(
@@ -146,7 +145,6 @@ class _AdminPermissionsPickerDialogWidgetState
             ),
             const Divider(height: 1, color: AppColors.border),
 
-            // Search Bar & Quick Actions
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
               child: Column(
@@ -213,7 +211,6 @@ class _AdminPermissionsPickerDialogWidgetState
             ),
             const Divider(height: 1, color: AppColors.border),
 
-            // Permission Groups List
             Expanded(
               child: grouped.isEmpty
                   ? Center(
@@ -358,7 +355,6 @@ class _AdminPermissionsPickerDialogWidgetState
 
             const Divider(height: 1, color: AppColors.border),
 
-            // Bottom Actions
             Padding(
               padding: EdgeInsets.all(16.r),
               child: Row(

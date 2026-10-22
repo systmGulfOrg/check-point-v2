@@ -611,7 +611,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                     ),
                     _ => Builder(
                       builder: (context) {
-                        // Department name
                         final deptState = context
                             .watch<AdminDepartmentsCubit>()
                             .state;
@@ -624,7 +623,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                             .where((d) => d.id == selectedDepartmentId)
                             .firstOrNull;
 
-                        // Branch name
                         final branchState = context
                             .watch<AdminBranchesCubit>()
                             .state;
@@ -636,7 +634,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                             .where((b) => b.id == selectedBranchId)
                             .firstOrNull;
 
-                        // Manager name
                         final employees = context
                             .watch<AdminEmployeesCubit>()
                             .employees;
@@ -644,7 +641,6 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                             .where((e) => e.id == selectedDirectManagerId)
                             .firstOrNull;
 
-                        // Policy name
                         final remoteWorkState = context
                             .watch<RemoteWorkCubit>()
                             .state;

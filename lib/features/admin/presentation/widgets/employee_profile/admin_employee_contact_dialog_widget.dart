@@ -48,14 +48,12 @@ class AdminEmployeeContactDialogWidget extends StatelessWidget {
 
   Future<void> _openWhatsApp(BuildContext context) async {
     Navigator.of(context).pop();
-    // Clean non-numeric except leading plus
     String cleanNumber = phone.replaceAll(RegExp(r'[^\d+]'), '');
     if (cleanNumber.startsWith('00')) {
       cleanNumber = cleanNumber.substring(2);
     } else if (cleanNumber.startsWith('+')) {
       cleanNumber = cleanNumber.substring(1);
     } else if (cleanNumber.startsWith('01') && cleanNumber.length == 11) {
-      // Egyptian mobile number default format: 201xxxxxxxxx
       cleanNumber = '2$cleanNumber';
     }
 

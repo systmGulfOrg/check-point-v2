@@ -48,7 +48,6 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
       return;
     }
 
-    // Load Devices
     try {
       final devicesResponse = await adminApiService.getEmployeeDevices(
         employeeId,
@@ -58,7 +57,6 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
       }
     } catch (_) {}
 
-    // Load Leave Requests
     try {
       final leavesResponse = await adminApiService.getAllLeaveRequests();
       if (leavesResponse.isSuccess == true && leavesResponse.value != null) {
@@ -74,13 +72,11 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
       }
     } catch (_) {}
 
-    // Load Permissions / Short Leaves
     try {
       final allPerms = await leavesApiService.getShortLeaves();
       permissions = allPerms.where((p) => p.employeeId == employeeId).toList();
     } catch (_) {}
 
-    // Load Attendance History
     final attendanceResult = await attendanceRepo.getAttendanceHistory(
       employeeId: employeeId,
       pageIndex: 0,
@@ -129,7 +125,6 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
         ? now.day
         : DateTime(selectedMonth.year, selectedMonth.month + 1, 0).day;
 
-    // Build Default Leave Balances
     final totalAnnual = currentEmp.leaveBalance ?? 21;
     final usedAnnual = leaveRequests
         .where(

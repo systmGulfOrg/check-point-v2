@@ -23,7 +23,6 @@ class AdminEmployeeProfileSecurityTabWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: Column(
         children: [
-          // 1. System Access & RBAC Permissions
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.sectionRBAC'.tr(context: context),
             icon: Icons.admin_panel_settings_outlined,
@@ -115,7 +114,6 @@ class AdminEmployeeProfileSecurityTabWidget extends StatelessWidget {
             ],
           ),
 
-          // 3. Registered Devices
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.sectionDevices'.tr(context: context),
             icon: Icons.phone_android_rounded,

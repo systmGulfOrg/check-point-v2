@@ -49,7 +49,6 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
         ),
         hSpace(16),
 
-        // Position
         AdminWizardFieldWidget(
           label: 'admin.employeeWizard.position'.tr(context: context),
           child: CustomTextFormField(
@@ -72,7 +71,6 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
           ),
         ),
 
-        // Roles Selection
         Text(
           'admin.employeeWizard.roles'.tr(context: context),
           style: AppTextStyles.font13SemiBold,
@@ -110,7 +108,6 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
         ),
         hSpace(16),
 
-        // Work System & Work Policy
         AdminEmployeeWorkSystemWidget(
           selectedSystem: selectedWorkSystem,
           selectedPolicyId: selectedRemoteWorkPolicyId,
@@ -119,7 +116,6 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
         ),
         hSpace(20),
 
-        // Full Permissions Management Card
         Container(
           padding: EdgeInsets.all(16.r),
           decoration: BoxDecoration(

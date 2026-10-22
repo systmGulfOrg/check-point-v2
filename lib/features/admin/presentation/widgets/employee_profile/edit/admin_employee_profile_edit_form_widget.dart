@@ -258,12 +258,10 @@ class _AdminEmployeeProfileEditFormWidgetState
       child: ListView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         children: [
-          // Section 1: Personal & Account Details
           AdminEmployeeProfileInfoCardWidget(
             title: 'admin.employeeWizard.personalTitle'.tr(context: context),
             icon: Icons.person_outline_rounded,
             children: [
-              // Avatar Picker
               Center(
                 child: GestureDetector(
                   onTap: _pickPhoto,
@@ -484,7 +482,6 @@ class _AdminEmployeeProfileEditFormWidgetState
           ),
           hSpace(16),
 
-          // Section 2: Work System & Policy
           AdminEmployeeProfileInfoCardWidget(
             title: 'admin.employeeWizard.workTitle'.tr(context: context),
             icon: Icons.devices_other_outlined,
@@ -501,12 +498,10 @@ class _AdminEmployeeProfileEditFormWidgetState
           ),
           hSpace(16),
 
-          // Section 3: Organization, Roles & Permissions
           AdminEmployeeProfileInfoCardWidget(
             title: 'admin.employeeWizard.attendanceTitle'.tr(context: context),
             icon: Icons.corporate_fare_rounded,
             children: [
-              // Department Dropdown
               BlocBuilder<AdminDepartmentsCubit, AdminDepartmentsState>(
                 builder: (context, state) {
                   final depts = switch (state) {
@@ -550,7 +545,6 @@ class _AdminEmployeeProfileEditFormWidgetState
               ),
               hSpace(14),
 
-              // Branch Dropdown
               BlocBuilder<AdminBranchesCubit, AdminBranchesState>(
                 builder: (context, state) {
                   final branches = switch (state) {
@@ -593,7 +587,6 @@ class _AdminEmployeeProfileEditFormWidgetState
               ),
               hSpace(14),
 
-              // Direct Manager Dropdown
               BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
                 builder: (context, state) {
                   final employees = state.maybeWhen(
@@ -649,7 +642,6 @@ class _AdminEmployeeProfileEditFormWidgetState
               ),
               hSpace(16),
 
-              // Roles
               Text(
                 'admin.employeeWizard.roles'.tr(context: context),
                 style: AppTextStyles.font14SemiBold.copyWith(
@@ -692,7 +684,6 @@ class _AdminEmployeeProfileEditFormWidgetState
               ),
               hSpace(16),
 
-              // Permissions Dialog Button
               Container(
                 padding: EdgeInsets.all(14.r),
                 decoration: BoxDecoration(
@@ -768,7 +759,6 @@ class _AdminEmployeeProfileEditFormWidgetState
 
               hSpace(12),
 
-              // Leave Balance
               AdminWizardFieldWidget(
                 label: 'admin.employees.leaveBalance'.tr(context: context),
                 required: false,
@@ -787,7 +777,6 @@ class _AdminEmployeeProfileEditFormWidgetState
           ),
           hSpace(20),
 
-          // Bottom Action Buttons
           Row(
             children: [
               Expanded(

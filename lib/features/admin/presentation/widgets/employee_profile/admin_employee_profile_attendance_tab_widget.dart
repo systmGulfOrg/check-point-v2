@@ -46,7 +46,6 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: Column(
         children: [
-          // 1. Leave Balances Section
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.sectionBalances'.tr(context: context),
             icon: Icons.beach_access_rounded,
@@ -100,7 +99,6 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
             ],
           ),
 
-          // 2. Pending Requests Summary
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.sectionRequests'.tr(context: context),
             icon: Icons.pending_actions_rounded,
@@ -133,7 +131,6 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
             ],
           ),
 
-          // 3. Monthly Attendance Stats & Chart
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.sectionAttendance'.tr(context: context),
             icon: Icons.calendar_month_rounded,
@@ -223,7 +220,6 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
             ],
           ),
 
-          // 4. Daily Attendance Logs
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.attendanceLogs'.tr(context: context),
             icon: Icons.history_toggle_off_rounded,
