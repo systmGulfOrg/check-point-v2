@@ -86,8 +86,28 @@ class AdminWeeklyAttendanceChartPainter extends CustomPainter {
         ),
     ];
     final path = Path()..moveTo(points.first.dx, points.first.dy);
-    for (var index = 1; index < points.length; index++) {
-      path.lineTo(points[index].dx, points[index].dy);
+    for (var index = 0; index < points.length - 1; index++) {
+      final p0 = points[index == 0 ? index : index - 1];
+      final p1 = points[index];
+      final p2 = points[index + 1];
+      final p3 = points[index + 2 < points.length ? index + 2 : index + 1];
+
+      final control1 = Offset(
+        p1.dx + (p2.dx - p0.dx) / 6,
+        p1.dy + (p2.dy - p0.dy) / 6,
+      );
+      final control2 = Offset(
+        p2.dx - (p3.dx - p1.dx) / 6,
+        p2.dy - (p3.dy - p1.dy) / 6,
+      );
+      path.cubicTo(
+        control1.dx,
+        control1.dy,
+        control2.dx,
+        control2.dy,
+        p2.dx,
+        p2.dy,
+      );
     }
     linePaint.color = color;
     canvas.drawPath(path, linePaint);
