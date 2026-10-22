@@ -57,7 +57,6 @@ class LeaderboardScreen extends StatelessWidget {
                           context.read<PointsCubit>().loadAllPointsData(),
                       child: Column(
                         children: [
-                          // Podium for Top 3 if available
                           if (leaderboard.length >= 3) ...[
                             PointsLeaderboardPodiumWidget(
                               first: leaderboard[0],
@@ -67,7 +66,6 @@ class LeaderboardScreen extends StatelessWidget {
                             hSpace(12),
                           ],
 
-                          // Full rank list
                           Expanded(
                             child: ListView.separated(
                               padding: EdgeInsets.symmetric(

@@ -56,7 +56,6 @@ class PointsHistoryItemCardWidget extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Point type & amount
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                 decoration: BoxDecoration(
@@ -72,7 +71,6 @@ class PointsHistoryItemCardWidget extends StatelessWidget {
                 ),
               ),
               wSpace(10),
-              // Reason (flexibly taking available space)
               Expanded(
                 child: PointsHistoryReasonWidget(
                   item: item,
@@ -82,7 +80,6 @@ class PointsHistoryItemCardWidget extends StatelessWidget {
                 ),
               ),
               wSpace(8),
-              // Status Pill
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                 decoration: BoxDecoration(

@@ -19,7 +19,7 @@ class PointExchangeScreen extends StatefulWidget {
 }
 
 class _PointExchangeScreenState extends State<PointExchangeScreen> {
-  String _selectedTarget = 'RED'; // 'RED' or 'BLACK'
+  String _selectedTarget = 'RED';
   int _quantity = 1;
 
   @override
@@ -79,7 +79,6 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Info Banner
                 Container(
                   padding: EdgeInsets.all(16.r),
                   decoration: BoxDecoration(
@@ -110,7 +109,6 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
                 ),
                 hSpace(20),
 
-                // Balance summary chips
                 Row(
                   children: [
                     Expanded(
@@ -178,7 +176,6 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
                 ),
                 hSpace(24),
 
-                // Target penalty selector
                 Text(
                   'points.exchangeTarget'.tr(context: context),
                   style: AppTextStyles.font14Bold,
@@ -295,7 +292,6 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
                 ),
                 hSpace(24),
 
-                // Quantity Stepper
                 Text(
                   'points.exchangeQuantity'.tr(context: context),
                   style: AppTextStyles.font14Bold,
@@ -341,7 +337,6 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
                 ),
                 hSpace(24),
 
-                // Cost Summary Card
                 Container(
                   padding: EdgeInsets.all(16.r),
                   decoration: BoxDecoration(
@@ -388,7 +383,6 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
                 ),
                 hSpace(32),
 
-                // Submit button
                 SizedBox(
                   width: double.infinity,
                   height: 50.h,

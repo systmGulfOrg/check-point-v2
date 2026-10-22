@@ -45,7 +45,6 @@ class PointsBadgeCardWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Icon
           Container(
             width: 68.r,
             height: 68.r,
@@ -85,7 +84,6 @@ class PointsBadgeCardWidget extends StatelessWidget {
           ),
           hSpace(10),
 
-          // Title
           Text(
             title,
             style: AppTextStyles.font14Bold.copyWith(
@@ -99,7 +97,6 @@ class PointsBadgeCardWidget extends StatelessWidget {
           ),
           hSpace(4),
 
-          // Description
           Text(
             description,
             style: AppTextStyles.font10Medium.copyWith(
@@ -111,7 +108,6 @@ class PointsBadgeCardWidget extends StatelessWidget {
           ),
           hSpace(10),
 
-          // Status / Progress
           if (isUnlocked) ...[
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
@@ -132,7 +128,6 @@ class PointsBadgeCardWidget extends StatelessWidget {
               ),
             ),
           ] else ...[
-            // Progress Bar
             LinearProgressIndicator(
               value: badge.effectiveProgress.clamp(0.0, 1.0),
               backgroundColor: AppColors.border,

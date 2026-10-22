@@ -115,15 +115,12 @@ class _MyPointsScreenState extends State<MyPointsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Level & Progress Card
           PointsLevelProgressCardWidget(summary: summary),
           hSpace(16),
 
-          // Balances Grid
           PointsBalancesGridWidget(balances: summary.balances),
           hSpace(20),
 
-          // Quick Actions
           Row(
             children: [
               Expanded(

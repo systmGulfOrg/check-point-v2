@@ -23,7 +23,6 @@ class PointsPodiumColumnWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Name & points
         SizedBox(
           width: 85.w,
           child: Column(
@@ -47,7 +46,6 @@ class PointsPodiumColumnWidget extends StatelessWidget {
           ),
         ),
         hSpace(8),
-        // Column bar
         Container(
           width: 70.w,
           height: height,
