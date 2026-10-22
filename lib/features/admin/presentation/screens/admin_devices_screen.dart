@@ -53,8 +53,6 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
               deviceId,
             );
           } else {
-            // Call reject API if it exists (for now assuming approveDevice with isActive: false or a reject API is needed)
-            // Need to implement rejectDevice in Cubit
             context.read<AdminPendingDevicesCubit>().rejectDevice(
               employeeId,
               deviceId,
@@ -154,13 +152,10 @@ class _AdminDevicesScreenState extends State<AdminDevicesScreen> {
             return state.map(
               initial: (_) => skeletonWidget,
               loading: (_) => skeletonWidget,
-              error: (state) => Center(
-                child: Text(
-                  state.message,
-                  style: AppTextStyles.font14Medium.copyWith(
-                    color: AppColors.error,
-                  ),
-                ),
+              error: (state) => AppErrorStateWidget(
+                messageKey: state.message,
+                onRetry: () =>
+                    context.read<AdminPendingDevicesCubit>().loadDevices(),
               ),
               success: (state) {
                 final devices = state.devices;

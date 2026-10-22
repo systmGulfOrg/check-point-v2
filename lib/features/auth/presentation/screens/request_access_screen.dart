@@ -57,7 +57,7 @@ class _RequestAccessScreenState extends State<RequestAccessScreen> {
                           ),
                         ),
                         const RequestAccessBrandWidget(),
-                        wSpace(40), // Spacer for centering brand logo
+                        wSpace(40),
                       ],
                     ),
                     hSpace(24),

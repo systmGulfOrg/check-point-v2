@@ -121,7 +121,6 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                     padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 12.h),
                     child: Column(
                       children: [
-                        // Search Box
                         CustomTextFormField(
                           hintText: 'projects.searchProjectsHint'.tr(
                             context: context,
@@ -241,8 +240,9 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
               ],
             ),
           ),
-          ProjectsStateError() => Center(
-            child: Text('errors.server'.tr(context: context)),
+          ProjectsStateError(:final messageKey) => AppErrorStateWidget(
+            messageKey: messageKey,
+            onRetry: () => context.read<ProjectsCubit>().loadProjects(),
           ),
           ProjectsStateInitial() => const SizedBox.shrink(),
           _ => const SizedBox.shrink(),

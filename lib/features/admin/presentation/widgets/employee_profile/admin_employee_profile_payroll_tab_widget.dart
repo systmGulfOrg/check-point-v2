@@ -26,7 +26,6 @@ class AdminEmployeeProfilePayrollTabWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: Column(
         children: [
-          // 1. Gross Salary Summary Card
           Container(
             width: double.infinity,
             margin: EdgeInsets.only(bottom: 16.h),
@@ -133,7 +132,6 @@ class AdminEmployeeProfilePayrollTabWidget extends StatelessWidget {
             ),
           ),
 
-          // 2. Bank Details Card
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.sectionBank'.tr(context: context),
             icon: Icons.account_balance_outlined,
@@ -164,7 +162,6 @@ class AdminEmployeeProfilePayrollTabWidget extends StatelessWidget {
             ],
           ),
 
-          // 3. Social Insurance Details
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.sectionInsurance'.tr(context: context),
             icon: Icons.verified_user_outlined,

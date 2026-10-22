@@ -18,7 +18,7 @@ class PointsHistoryScreen extends StatefulWidget {
 }
 
 class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
-  String _selectedFilter = 'ALL'; // 'ALL', 'GREEN', 'RED', 'BLACK', 'PENDING'
+  String _selectedFilter = 'ALL';
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,6 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
 
     return Column(
       children: [
-        // Filter bar
         Container(
           color: AppColors.white,
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
@@ -133,7 +132,6 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
           ),
         ),
 
-        // List
         Expanded(
           child: filtered.isEmpty
               ? Center(

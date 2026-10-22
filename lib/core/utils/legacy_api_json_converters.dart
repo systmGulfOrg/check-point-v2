@@ -1,5 +1,3 @@
-/// Converts legacy .NET date/time objects and the newer string representation
-/// into the string shape consumed by the Flutter presentation models.
 String? legacyApiValueToString(Object? value) {
   if (value == null) return null;
   if (value is String) return value;

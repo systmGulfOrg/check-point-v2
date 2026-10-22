@@ -46,9 +46,6 @@ class EmployeeAttendanceLocationMapWidget extends StatelessWidget {
                 zoom: 15,
               ),
               onMapCreated: onMapCreated,
-              // The map lives inside a SingleChildScrollView. Give it the
-              // gesture arena priority so one-finger pan and map gestures are
-              // not consumed by the sheet's parent scroll view.
               gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
                 Factory<OneSequenceGestureRecognizer>(
                   EagerGestureRecognizer.new,

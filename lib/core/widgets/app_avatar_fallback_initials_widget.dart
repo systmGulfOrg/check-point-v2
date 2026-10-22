@@ -4,8 +4,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 
-/// Large circular initials shown when a previewed avatar image is missing or
-/// fails to load.
 class AppAvatarFallbackInitialsWidget extends StatelessWidget {
   const AppAvatarFallbackInitialsWidget({required this.initials, super.key});
 

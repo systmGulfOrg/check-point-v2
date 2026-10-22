@@ -11,7 +11,6 @@ class AppValidators {
   static final RegExp _phoneRegExp = RegExp(r'^\+?[0-9]{8,15}$');
   static final RegExp _nationalIdRegExp = RegExp(r'^[0-9]{14}$');
 
-  /// Validates that a string value is not null and not empty.
   static FormFieldValidator<String> required({
     String? message,
     BuildContext? context,
@@ -27,7 +26,6 @@ class AppValidators {
     };
   }
 
-  /// Validates name or text minimum length.
   static FormFieldValidator<String> name({
     int minLength = 2,
     String? message,
@@ -55,7 +53,6 @@ class AppValidators {
     };
   }
 
-  /// Validates email address format.
   static FormFieldValidator<String> email({
     String? message,
     bool isRequired = true,
@@ -80,7 +77,6 @@ class AppValidators {
     };
   }
 
-  /// Validates phone number format.
   static FormFieldValidator<String> phone({
     String? message,
     bool isRequired = true,
@@ -105,7 +101,6 @@ class AppValidators {
     };
   }
 
-  /// Validates 14-digit Egyptian National ID.
   static FormFieldValidator<String> nationalId({
     String? message,
     bool isRequired = true,
@@ -130,7 +125,6 @@ class AppValidators {
     };
   }
 
-  /// Validates password minimum length.
   static FormFieldValidator<String> password({
     int minLength = 6,
     String? message,
@@ -158,7 +152,6 @@ class AppValidators {
     };
   }
 
-  /// Validates password confirmation matches original password.
   static FormFieldValidator<String> confirmPassword({
     required String Function() passwordGetter,
     String? message,
@@ -181,7 +174,6 @@ class AppValidators {
     };
   }
 
-  /// Validates numeric values and optional range.
   static FormFieldValidator<String> number({
     double? min,
     double? max,
@@ -221,7 +213,6 @@ class AppValidators {
     };
   }
 
-  /// Validates positive numbers (> 0).
   static FormFieldValidator<String> positiveNumber({
     String? message,
     bool isRequired = true,
@@ -235,7 +226,6 @@ class AppValidators {
     );
   }
 
-  /// Validates geographic latitude (-90 to 90) or longitude (-180 to 180).
   static FormFieldValidator<String> coordinate({
     required bool isLatitude,
     String? message,
@@ -268,7 +258,6 @@ class AppValidators {
     };
   }
 
-  /// Combines multiple validators into one.
   static FormFieldValidator<String> combine(
     List<FormFieldValidator<String>> validators,
   ) {

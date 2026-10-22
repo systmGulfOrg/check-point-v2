@@ -11,9 +11,6 @@ class LocalNotificationService {
   static const int attendanceReminderId = 1001;
   static const int tasksReminderId = 1002;
 
-  /// Channel for FCM pushes shown while the app is in the foreground. Must stay
-  /// in sync with `default_notification_channel_id` in AndroidManifest.xml so a
-  /// push looks the same whether it arrives in the foreground or background.
   static const String pushChannelId = 'check_point_push';
 
   Future<void> initialize() async {
@@ -40,8 +37,6 @@ class LocalNotificationService {
     );
   }
 
-  /// Shows a push that arrived while the app was in the foreground. Android
-  /// suppresses the system notification in that case, so it is rendered here.
   Future<void> showPush({
     required int id,
     required String title,

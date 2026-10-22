@@ -162,6 +162,11 @@ class _SupervisorLeaveManagementScreenState
                                 ],
                               );
                             },
+                            error: (message) => AppErrorStateWidget(
+                              messageKey: message,
+                              onRetry: () =>
+                                  context.read<LeavesCubit>().loadLeavesData(),
+                            ),
                             orElse: () => const SizedBox.shrink(),
                           );
                         },

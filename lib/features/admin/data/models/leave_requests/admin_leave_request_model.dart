@@ -55,13 +55,11 @@ class AdminLeaveRequestModel {
   final bool? hasDirectManager;
   final String? rejectionReason;
   final List<dynamic>? timeline;
-  // Stage 1
   final String? managerId;
   final String? managerName;
   @JsonKey(fromJson: legacyApiValueToString)
   final String? managerActionAt;
   final String? managerRejectionReason;
-  // Stage 2
   final String? hrId;
   final String? hrName;
   @JsonKey(fromJson: legacyApiValueToString)
@@ -112,10 +110,6 @@ class LeaveRequestsPageModel {
 }
 
 extension AdminLeaveRequestStatusX on AdminLeaveRequestModel {
-  /// True when this is an approved leave whose [startDate]..[endDate] span
-  /// covers [date] — used to tell "on leave" apart from "absent" in
-  /// attendance summaries, which otherwise treat every non-clocked-in
-  /// employee as absent regardless of an approved leave.
   bool coversDate(DateTime date) {
     if (status?.toLowerCase() != 'approved') return false;
     final start = _parseLegacyDate(startDate);
@@ -136,7 +130,6 @@ DateTime? _parseLegacyDate(String? raw) {
   }
 }
 
-/// Employee IDs with an approved leave covering [date], from [requests].
 Set<String> employeeIdsOnLeave(
   List<AdminLeaveRequestModel> requests,
   DateTime date,

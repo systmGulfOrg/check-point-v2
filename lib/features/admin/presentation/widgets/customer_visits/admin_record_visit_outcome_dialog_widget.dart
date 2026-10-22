@@ -1,12 +1,15 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
 
 class AdminRecordVisitOutcomeDialogWidget extends StatefulWidget {
   const AdminRecordVisitOutcomeDialogWidget({
@@ -38,6 +41,7 @@ class _AdminRecordVisitOutcomeDialogWidgetState
   String? attachedDocName;
   String? attachedDocUrl;
   bool isSubmitting = false;
+  bool isUploadingDoc = false;
 
   @override
   void initState() {
@@ -59,6 +63,9 @@ class _AdminRecordVisitOutcomeDialogWidgetState
   }
 
   Future<void> _pickDocument() async {
+    final visitId = widget.visit.id;
+    if (visitId == null || visitId.isEmpty) return;
+    final visitsCubit = context.read<AdminCustomerVisitsCubit>();
     try {
       final result = await FilePicker.pickFiles(
         type: FileType.custom,
@@ -71,30 +78,45 @@ class _AdminRecordVisitOutcomeDialogWidgetState
           'docx',
           'xls',
           'xlsx',
-          'txt',
         ],
       );
 
-      if (result != null && result.files.isNotEmpty) {
-        final file = result.files.first;
+      if (result == null || result.files.isEmpty) return;
+      final filePath = result.files.single.path;
+      if (filePath == null) return;
+
+      setState(() => isUploadingDoc = true);
+      final uploaded = await visitsCubit.uploadVisitDocument(
+        visitId: visitId,
+        file: File(filePath),
+      );
+      if (!mounted) return;
+      setState(() => isUploadingDoc = false);
+
+      if (uploaded != null) {
         setState(() {
-          attachedDocName = file.name;
-          attachedDocUrl = file.path ?? 'file://${file.name}';
+          attachedDocName = uploaded.documentName;
+          attachedDocUrl = uploaded.documentUrl;
         });
-        if (mounted) {
-          CustomSnackBar.showSuccess(
-            context,
-            message: 'admin.visits.docAttached'.tr(context: context),
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) {
+        CustomSnackBar.showSuccess(
+          context,
+          message: 'admin.visits.docAttached'.tr(context: context),
+        );
+      } else {
         CustomSnackBar.showError(
           context,
-          message: 'حدث خطأ أثناء اختيار الملف'.tr(),
+          message: (visitsCubit.lastErrorKey ?? 'core.errors.loadFailed').tr(
+            context: context,
+          ),
         );
       }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => isUploadingDoc = false);
+      CustomSnackBar.showError(
+        context,
+        message: 'حدث خطأ أثناء اختيار الملف'.tr(),
+      );
     }
   }
 
@@ -287,7 +309,7 @@ class _AdminRecordVisitOutcomeDialogWidgetState
               )
             else
               InkWell(
-                onTap: _pickDocument,
+                onTap: isUploadingDoc ? null : _pickDocument,
                 borderRadius: BorderRadius.circular(10.r),
                 child: Container(
                   padding: EdgeInsets.symmetric(
@@ -305,11 +327,20 @@ class _AdminRecordVisitOutcomeDialogWidgetState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.attach_file_rounded,
-                        size: 18.r,
-                        color: AppColors.brandPrimary,
-                      ),
+                      if (isUploadingDoc)
+                        SizedBox(
+                          width: 16.r,
+                          height: 16.r,
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        )
+                      else
+                        Icon(
+                          Icons.attach_file_rounded,
+                          size: 18.r,
+                          color: AppColors.brandPrimary,
+                        ),
                       SizedBox(width: 6.w),
                       Text(
                         'admin.visits.attachOutcomeDoc'.tr(context: context),

@@ -42,7 +42,6 @@ class AdminCreateEmployeeOrganizationStepWidget extends StatelessWidget {
         ),
         hSpace(16),
 
-        // Department
         BlocBuilder<AdminDepartmentsCubit, AdminDepartmentsState>(
           builder: (context, deptState) {
             final rawDepartments = switch (deptState) {
@@ -90,7 +89,6 @@ class AdminCreateEmployeeOrganizationStepWidget extends StatelessWidget {
           },
         ),
 
-        // Branch
         BlocBuilder<AdminBranchesCubit, AdminBranchesState>(
           builder: (context, branchState) {
             final rawBranches = switch (branchState) {
@@ -133,7 +131,6 @@ class AdminCreateEmployeeOrganizationStepWidget extends StatelessWidget {
           },
         ),
 
-        // Direct Manager
         BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
           builder: (context, empState) {
             final employees = context.read<AdminEmployeesCubit>().employees;

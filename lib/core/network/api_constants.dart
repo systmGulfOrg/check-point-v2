@@ -38,8 +38,8 @@ class ApiConstants {
   static const String planFeedback = '/api/Plan/planFeedback';
   static const String feedBackStatus = '/api/Plan/feedBackStatus';
   static const String customerPlans = '/api/CustomerPlan';
+  static const String customerPlansV2 = '/api/v2/customer-plans';
 
-  // Gamification Points
   static const String pointsSummary = '/api/points/summary';
   static const String pointsHistory = '/api/points/history';
   static const String pointsExchange = '/api/points/exchange';
@@ -47,4 +47,14 @@ class ApiConstants {
   static const String pointsLeaderboard = '/api/points/leaderboard';
   static const String pointsPreview = '/api/points/preview';
   static const String adminPointsEmployees = '/api/admin/points/employees';
+
+  static const String aiAgentBaseUrl = 'http://159.223.150.240:8000';
+  static const String aiAgentChat = '$aiAgentBaseUrl/api/agent/chat';
+  static const String aiAgentActionConfirm = '$aiAgentBaseUrl/api/agents/task/confirm';
+
+  static const String aiChat = '/api/v2/ai/chat';
+  static const String aiActionConfirm = '/api/v2/ai/action/confirm';
+  static const String aiHistory = '/api/v2/ai/history';
+
+  static const String supportTickets = '/api/v2/support-tickets';
 }

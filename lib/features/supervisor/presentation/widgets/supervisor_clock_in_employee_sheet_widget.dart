@@ -22,7 +22,7 @@ class SupervisorClockInEmployeeSheetWidget extends StatefulWidget {
 class _SupervisorClockInEmployeeSheetWidgetState
     extends State<SupervisorClockInEmployeeSheetWidget> {
   String? selectedEmployeeId;
-  int actionIndex = 0; // 0: Check In, 1: Check Out
+  int actionIndex = 0;
   late final TextEditingController timeController;
   late final TextEditingController dateController;
   bool isSubmitting = false;

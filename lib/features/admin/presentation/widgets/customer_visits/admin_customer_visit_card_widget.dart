@@ -232,8 +232,6 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header: Status badge & Date/Time & Options Menu
-            // Header: Status badge & Options Menu
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -356,7 +354,6 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
 
-            // Date / Time schedule row
             if (visit.visitDate != null || visit.visitTime != null) ...[
               Row(
                 children: [
@@ -381,7 +378,6 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
               SizedBox(height: 8.h),
             ],
 
-            // Customer Name (if available)
             if (visit.customerName != null &&
                 visit.customerName!.isNotEmpty) ...[
               Row(
@@ -407,13 +403,11 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
               SizedBox(height: 4.h),
             ],
 
-            // Title
             Text(
               visit.title ?? 'admin.visits.title'.tr(context: context),
               style: AppTextStyles.font14Bold,
             ),
 
-            // Scheduled By (مين اللي جدول الزيارة)
             if (scheduledBy != null && scheduledBy.trim().isNotEmpty) ...[
               SizedBox(height: 6.h),
               Row(
@@ -444,7 +438,6 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
               ),
             ],
 
-            // Attendees ("مين حضر / مين معايا")
             if (visit.attendees.isNotEmpty) ...[
               SizedBox(height: 8.h),
               Row(
@@ -468,7 +461,6 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
               ),
             ],
 
-            // Plan Document preview chip (قبل الاجتماع)
             if (planDocName != null && planDocName.isNotEmpty) ...[
               SizedBox(height: 8.h),
               InkWell(
@@ -529,7 +521,6 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
               ),
             ],
 
-            // Outcome Document preview chip (بعد الاجتماع)
             if (outcomeDocName != null && outcomeDocName.isNotEmpty) ...[
               SizedBox(height: 8.h),
               InkWell(
@@ -592,7 +583,6 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
               ),
             ],
 
-            // Notes
             if (visit.notes != null && visit.notes!.isNotEmpty) ...[
               SizedBox(height: 8.h),
               Container(
@@ -624,7 +614,6 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
               ),
             ],
 
-            // Cancelled Notice
             if (isCancelled) ...[
               SizedBox(height: 8.h),
               Container(
@@ -660,7 +649,6 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
               ),
             ],
 
-            // Notice for Visited Pending Report (تم الحضور - ناقص تقرير الزيارة)
             if (isVisitedPendingReport) ...[
               SizedBox(height: 8.h),
               Container(
@@ -694,7 +682,6 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
               ),
             ],
 
-            // Outcome Report ("ما حدث في الزيارة")
             if (isCompleted &&
                 visit.outcome != null &&
                 visit.outcome!.isNotEmpty) ...[
@@ -740,11 +727,9 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
               ),
             ],
 
-            // Footer Action buttons: Log & Check-in / Report
             SizedBox(height: 12.h),
             Row(
               children: [
-                // Log history button
                 InkWell(
                   onTap: () => _openLogsSheet(context),
                   borderRadius: BorderRadius.circular(8.r),
@@ -810,26 +795,34 @@ class AdminCustomerVisitCardWidget extends StatelessWidget {
                 ],
                 if (isVisitedPendingReport || isCompleted) ...[
                   TextButton.icon(
-                    onPressed: () => showDialog<void>(
-                      context: context,
-                      builder: (_) => AdminRecordVisitOutcomeDialogWidget(
-                        visit: visit,
-                        onSubmit:
-                            (
-                              outcome,
-                              status,
-                              notes,
-                              documentName,
-                              documentUrl,
-                            ) => onRecordOutcome(
-                              outcome,
-                              status,
-                              notes,
-                              documentName,
-                              documentUrl,
+                    onPressed: () {
+                      final visitsCubit = context
+                          .read<AdminCustomerVisitsCubit>();
+                      showDialog<void>(
+                        context: context,
+                        builder: (_) =>
+                            BlocProvider<AdminCustomerVisitsCubit>.value(
+                              value: visitsCubit,
+                              child: AdminRecordVisitOutcomeDialogWidget(
+                                visit: visit,
+                                onSubmit:
+                                    (
+                                      outcome,
+                                      status,
+                                      notes,
+                                      documentName,
+                                      documentUrl,
+                                    ) => onRecordOutcome(
+                                      outcome,
+                                      status,
+                                      notes,
+                                      documentName,
+                                      documentUrl,
+                                    ),
+                              ),
                             ),
-                      ),
-                    ),
+                      );
+                    },
                     icon: Icon(
                       isCompleted
                           ? Icons.edit_note_rounded

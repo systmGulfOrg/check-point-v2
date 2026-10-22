@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:check_point_v2/core/core.dart';
 
-/// A stacked label/value pair used in the employee details sheet.
 class EmployeeDetailInfoItemWidget extends StatelessWidget {
   const EmployeeDetailInfoItemWidget({
     required this.label,

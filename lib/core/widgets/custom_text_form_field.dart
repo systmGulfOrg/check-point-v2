@@ -20,7 +20,12 @@ class CustomTextFormField extends StatelessWidget {
     this.initialValue,
     this.onChanged,
     this.onTap,
+    this.enabled = true,
+    this.minLines,
     this.maxLines = 1,
+    this.maxLength,
+    this.style,
+    this.decoration,
     this.inputFormatters,
   });
 
@@ -37,7 +42,12 @@ class CustomTextFormField extends StatelessWidget {
   final String? initialValue;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onTap;
+  final bool enabled;
+  final int? minLines;
   final int? maxLines;
+  final int? maxLength;
+  final TextStyle? style;
+  final InputDecoration? decoration;
   final List<TextInputFormatter>? inputFormatters;
 
   @override
@@ -55,18 +65,25 @@ class CustomTextFormField extends StatelessWidget {
       readOnly: readOnly,
       onChanged: onChanged,
       onTap: onTap,
+      enabled: enabled,
+      minLines: minLines,
       maxLines: maxLines,
+      maxLength: maxLength,
       inputFormatters: inputFormatters,
-      style: AppTextStyles.font14Regular.copyWith(
-        color: AppColors.textPrimary,
-        fontWeight: FontWeight.w500,
-      ),
-      decoration: InputDecoration(
-        hintText: hintText,
-        errorText: errorText,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
-      ),
+      style:
+          style ??
+          AppTextStyles.font14Regular.copyWith(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w500,
+          ),
+      decoration:
+          decoration ??
+          InputDecoration(
+            hintText: hintText,
+            errorText: errorText,
+            prefixIcon: prefixIcon,
+            suffixIcon: suffixIcon,
+          ),
       onTapOutside: (_) => FocusScope.of(context).unfocus(),
     );
   }

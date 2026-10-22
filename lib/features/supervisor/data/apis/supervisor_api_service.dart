@@ -22,7 +22,6 @@ abstract class SupervisorApiService {
   factory SupervisorApiService(Dio dio, {String? baseUrl}) =
       _SupervisorApiService;
 
-  // Attendance
   @GET(ApiConstants.attendance)
   Future<AttendanceResponseModel> getAttendance({
     @Query('itemCount') int itemCount = 1000,
@@ -51,7 +50,6 @@ abstract class SupervisorApiService {
     @Body() SupervisorAttendanceCheckOutRequestBody body,
   );
 
-  // Leave Requests
   @GET(ApiConstants.leaveRequests)
   Future<LeaveRequestsResponseModel> getLeaveRequests();
 
@@ -85,7 +83,6 @@ abstract class SupervisorApiService {
   @POST(ApiConstants.leaveRequests)
   Future<ResultModel> createLeaveRequest(@Body() EmployeeLeaveRequestBody body);
 
-  // Tasks
   @GET(ApiConstants.tasks)
   Future<TasksResponseModel> getTasks({
     @Query('itemCount') int itemCount = 100,
@@ -122,7 +119,6 @@ abstract class SupervisorApiService {
     @Body() SupervisorUpdateTaskStatusRequestBody body,
   );
 
-  // Plans
   @GET(ApiConstants.plans)
   Future<PlansResponseModel> getPlans();
 
@@ -142,7 +138,6 @@ abstract class SupervisorApiService {
   @DELETE('${ApiConstants.plans}/{id}')
   Future<ResultModel> deletePlan(@Path('id') int id);
 
-  // Team
   @GET(ApiConstants.employees)
   Future<EmployeesResponseModel> getEmployees({
     @Query('itemCount') int itemCount = 100,

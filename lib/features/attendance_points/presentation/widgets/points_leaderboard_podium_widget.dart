@@ -26,21 +26,18 @@ class PointsLeaderboardPodiumWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // 2nd Place
           PointsPodiumColumnWidget(
             entry: second,
             rank: 2,
             height: 90.h,
             color: AppColors.medalSilver,
           ),
-          // 1st Place
           PointsPodiumColumnWidget(
             entry: first,
             rank: 1,
             height: 120.h,
             color: AppColors.medalGold,
           ),
-          // 3rd Place
           PointsPodiumColumnWidget(
             entry: third,
             rank: 3,

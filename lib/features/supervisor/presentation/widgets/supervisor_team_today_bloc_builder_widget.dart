@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_state.dart';
@@ -42,6 +43,11 @@ class SupervisorTeamTodayBlocBuilderWidget extends StatelessWidget {
               attendance: attendance,
               onViewAll: onViewAll,
             ),
+          SupervisorAttendanceError(:final messageKey) => AppErrorStateWidget(
+            messageKey: messageKey,
+            onRetry: () =>
+                context.read<SupervisorAttendanceCubit>().loadAttendance(),
+          ),
           _ => SupervisorTeamTodayWidget(
             attendance: const [],
             onViewAll: onViewAll,

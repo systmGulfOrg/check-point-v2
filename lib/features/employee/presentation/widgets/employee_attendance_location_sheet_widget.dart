@@ -13,6 +13,7 @@ import 'package:check_point_v2/features/admin/data/models/locations/branch_respo
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_customer_visits_repo.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/customer_visits/admin_record_visit_outcome_dialog_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_state.dart';
@@ -74,8 +75,6 @@ class _EmployeeAttendanceLocationSheetWidgetState
       todayScheduledVisit = widget.initialVisit;
       cubit.loadCustomersByType('Customer');
     } else if (!widget.isCheckOut && (hasClockIn || hasClockOut)) {
-      // Customer attendance is enabled only after today's visits are loaded
-      // and a visit dated today is found.
       type = mode == 'remote' ? 'Remote' : 'Branch';
       if (type == 'Branch') {
         cubit.loadBranches();
@@ -296,9 +295,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
         if (controller != null) {
           try {
             await controller.animateCamera(CameraUpdate.newLatLng(location));
-          } catch (_) {
-            // The map can be disposed while a location request is in flight.
-          }
+          } catch (_) {}
         }
       }
     }
@@ -337,9 +334,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
       if (controller != null) {
         try {
           controller.animateCamera(CameraUpdate.newLatLngZoom(target, 16));
-        } catch (_) {
-          // The map controller is no longer valid after sheet disposal.
-        }
+        } catch (_) {}
       }
     }
   }
@@ -1065,92 +1060,92 @@ class _EmployeeAttendanceLocationSheetWidgetState
                               onRecordOutcomeTap: () {
                                 showDialog(
                                   context: context,
-                                  builder: (ctx) =>
-                                      AdminRecordVisitOutcomeDialogWidget(
-                                        visit: matchingVisit,
-                                        onSubmit:
-                                            (
-                                              outcome,
-                                              status,
-                                              notes,
-                                              docName,
-                                              docUrl,
-                                            ) async {
-                                              final visitId = matchingVisit.id;
-                                              if (visitId == null ||
-                                                  visitId.isEmpty) {
-                                                return;
-                                              }
-                                              final res =
-                                                  await sl<
-                                                        AdminCustomerVisitsRepo
-                                                      >()
-                                                      .updateVisitOutcome(
-                                                        visitId: visitId,
+                                  builder: (ctx) => BlocProvider<AdminCustomerVisitsCubit>(
+                                    create: (_) =>
+                                        sl<AdminCustomerVisitsCubit>(),
+                                    child: AdminRecordVisitOutcomeDialogWidget(
+                                      visit: matchingVisit,
+                                      onSubmit:
+                                          (
+                                            outcome,
+                                            status,
+                                            notes,
+                                            docName,
+                                            docUrl,
+                                          ) async {
+                                            final visitId = matchingVisit.id;
+                                            if (visitId == null ||
+                                                visitId.isEmpty) {
+                                              return;
+                                            }
+                                            final res =
+                                                await sl<
+                                                      AdminCustomerVisitsRepo
+                                                    >()
+                                                    .updateVisitOutcome(
+                                                      visitId: visitId,
+                                                      outcome: outcome,
+                                                      status: status,
+                                                      notes: notes,
+                                                      documentName: docName,
+                                                      documentUrl: docUrl,
+                                                    );
+                                            if (!mounted) return;
+                                            res.when(
+                                              success: (_) {
+                                                setState(() {
+                                                  final updated = matchingVisit
+                                                      .copyWith(
                                                         outcome: outcome,
                                                         status: status,
                                                         notes: notes,
-                                                        documentName: docName,
-                                                        documentUrl: docUrl,
+                                                        outcomeDocumentName:
+                                                            docName,
+                                                        outcomeDocumentUrl:
+                                                            docUrl,
+                                                        documentName:
+                                                            matchingVisit
+                                                                .documentName ??
+                                                            docName,
+                                                        documentUrl:
+                                                            matchingVisit
+                                                                .documentUrl ??
+                                                            docUrl,
                                                       );
-                                              if (!mounted) return;
-                                              res.when(
-                                                success: (_) {
-                                                  setState(() {
-                                                    final updated =
-                                                        matchingVisit.copyWith(
-                                                          outcome: outcome,
-                                                          status: status,
-                                                          notes: notes,
-                                                          outcomeDocumentName:
-                                                              docName,
-                                                          outcomeDocumentUrl:
-                                                              docUrl,
-                                                          documentName:
-                                                              matchingVisit
-                                                                  .documentName ??
-                                                              docName,
-                                                          documentUrl:
-                                                              matchingVisit
-                                                                  .documentUrl ??
-                                                              docUrl,
-                                                        );
-                                                    todayVisits = todayVisits
-                                                        .map(
-                                                          (v) =>
-                                                              v.id == updated.id
-                                                              ? updated
-                                                              : v,
-                                                        )
-                                                        .toList();
-                                                    todayScheduledVisit =
-                                                        updated;
-                                                  });
-                                                  if (context.mounted) {
-                                                    CustomSnackBar.showSuccess(
-                                                      context,
-                                                      message:
-                                                          'admin.visits.outcomeSuccess'
-                                                              .tr(
-                                                                context:
-                                                                    context,
-                                                              ),
-                                                    );
-                                                  }
-                                                },
-                                                failure: (failure) {
-                                                  if (context.mounted) {
-                                                    CustomSnackBar.showError(
-                                                      context,
-                                                      message: failure
-                                                          .messageKey
-                                                          .tr(context: context),
-                                                    );
-                                                  }
-                                                },
-                                              );
-                                            },
-                                      ),
+                                                  todayVisits = todayVisits
+                                                      .map(
+                                                        (v) =>
+                                                            v.id == updated.id
+                                                            ? updated
+                                                            : v,
+                                                      )
+                                                      .toList();
+                                                  todayScheduledVisit = updated;
+                                                });
+                                                if (context.mounted) {
+                                                  CustomSnackBar.showSuccess(
+                                                    context,
+                                                    message:
+                                                        'admin.visits.outcomeSuccess'
+                                                            .tr(
+                                                              context: context,
+                                                            ),
+                                                  );
+                                                }
+                                              },
+                                              failure: (failure) {
+                                                if (context.mounted) {
+                                                  CustomSnackBar.showError(
+                                                    context,
+                                                    message: failure.messageKey
+                                                        .tr(context: context),
+                                                  );
+                                                }
+                                              },
+                                            );
+                                          },
+                                    ),
+                                  ),
                                 );
                               },
                             );

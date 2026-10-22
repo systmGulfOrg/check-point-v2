@@ -3,7 +3,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 
-/// Icon + label/value pill used in the employee attendance tab.
 class AdminEmployeeStatPillWidget extends StatelessWidget {
   const AdminEmployeeStatPillWidget({
     required this.label,

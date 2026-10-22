@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:check_point_v2/core/core.dart';
 
-/// One value/label pair inside [LeaveBalanceCardWidget]'s stats row.
 class LeaveBalanceStatColumnWidget extends StatelessWidget {
   const LeaveBalanceStatColumnWidget({
     required this.label,

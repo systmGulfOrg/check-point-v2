@@ -80,7 +80,6 @@ class LoginUseCase {
           await authSessionStorage.disableBiometricLogin();
         }
 
-        // Best-effort: a push-registration failure must never fail login.
         unawaited(pushTokenRegistrar.start());
 
         return ApiResult.success(data);

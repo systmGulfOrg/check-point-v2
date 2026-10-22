@@ -27,7 +27,6 @@ class DioFactory {
         PrettyDioLogger(
           enabled: kDebugMode,
           requestHeader: false,
-          // Never dump Base64 images/documents into Android Studio logs.
           requestBody: false,
           responseHeader: false,
           responseBody: false,

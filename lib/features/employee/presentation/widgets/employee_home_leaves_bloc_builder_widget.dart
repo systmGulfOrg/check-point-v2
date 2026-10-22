@@ -27,6 +27,17 @@ class EmployeeHomeLeavesBlocBuilderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LeavesCubit, LeavesState>(
       builder: (context, state) {
+        final errorMessageKey = state.maybeWhen(
+          error: (message) => message,
+          orElse: () => null,
+        );
+        if (errorMessageKey != null) {
+          return AppErrorStateWidget(
+            messageKey: errorMessageKey,
+            onRetry: () => context.read<LeavesCubit>().loadLeavesData(),
+          );
+        }
+
         final (balances, requests, isLoading) = state.maybeWhen(
           success: (balances, types, requests) => (balances, requests, false),
           loading: () =>

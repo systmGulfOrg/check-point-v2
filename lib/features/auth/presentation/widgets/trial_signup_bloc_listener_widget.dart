@@ -26,9 +26,7 @@ class TrialSignupBlocListenerWidget extends StatelessWidget {
               }
               CustomSnackBar.showSuccess(
                 context,
-                message: 'auth.trialSignup.successMessage'.tr(
-                  context: context,
-                ),
+                message: 'auth.trialSignup.successMessage'.tr(context: context),
               );
               context.pushNamedAndRemoveUntil(AppRoutes.login);
             case TrialSignupError(:final messageKey):

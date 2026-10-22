@@ -36,13 +36,11 @@ mixin _$LeaveRequestModel {
   String? get directManagerName => throw _privateConstructorUsedError;
   bool? get hasDirectManager => throw _privateConstructorUsedError;
   String? get rejectionReason => throw _privateConstructorUsedError;
-  List<dynamic>? get timeline =>
-      throw _privateConstructorUsedError; // Stage 1 - Manager
+  List<dynamic>? get timeline => throw _privateConstructorUsedError;
   String? get managerId => throw _privateConstructorUsedError;
   String? get managerName => throw _privateConstructorUsedError;
   DateTime? get managerActionAt => throw _privateConstructorUsedError;
-  String? get managerRejectionReason =>
-      throw _privateConstructorUsedError; // Stage 2 - HR
+  String? get managerRejectionReason => throw _privateConstructorUsedError;
   String? get hrId => throw _privateConstructorUsedError;
   String? get hrName => throw _privateConstructorUsedError;
   DateTime? get hrActionAt => throw _privateConstructorUsedError;
@@ -489,7 +487,6 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
     return EqualUnmodifiableListView(value);
   }
 
-  // Stage 1 - Manager
   @override
   final String? managerId;
   @override
@@ -498,7 +495,6 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
   final DateTime? managerActionAt;
   @override
   final String? managerRejectionReason;
-  // Stage 2 - HR
   @override
   final String? hrId;
   @override
@@ -670,7 +666,7 @@ abstract class _LeaveRequestModel implements LeaveRequestModel {
   @override
   String? get rejectionReason;
   @override
-  List<dynamic>? get timeline; // Stage 1 - Manager
+  List<dynamic>? get timeline;
   @override
   String? get managerId;
   @override
@@ -678,7 +674,7 @@ abstract class _LeaveRequestModel implements LeaveRequestModel {
   @override
   DateTime? get managerActionAt;
   @override
-  String? get managerRejectionReason; // Stage 2 - HR
+  String? get managerRejectionReason;
   @override
   String? get hrId;
   @override

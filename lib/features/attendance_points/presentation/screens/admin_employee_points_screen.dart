@@ -33,7 +33,7 @@ class AdminEmployeePointsScreen extends StatelessWidget {
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.all(16.r),
-          child: const AdminEmployeePointsBlocBuilderWidget(),
+          child: AdminEmployeePointsBlocBuilderWidget(employeeId: employeeId),
         ),
       ),
     );

@@ -72,7 +72,6 @@ class _AdminCustomerDetailsSheetWidgetState
     final userId = _currentUserId?.trim().toLowerCase() ?? '';
     final empId = _currentEmployeeId?.trim().toLowerCase() ?? '';
 
-    // 1. Check if the current user created the visit
     if (visit.createdBy != null && visit.createdBy!.isNotEmpty) {
       final createdByLower = visit.createdBy!.trim().toLowerCase();
       if ((userId.isNotEmpty && createdByLower == userId) ||
@@ -91,7 +90,6 @@ class _AdminCustomerDetailsSheetWidgetState
       }
     }
 
-    // 2. Check if the current user is an attendee
     for (final attendee in visit.attendees) {
       final cleanAttendee = attendee.trim().toLowerCase();
       if (cleanAttendee.isEmpty) continue;
@@ -168,7 +166,6 @@ class _AdminCustomerDetailsSheetWidgetState
           ),
           child: Column(
             children: [
-              // Handle bar
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10.h),
                 width: 40.w,
@@ -179,7 +176,6 @@ class _AdminCustomerDetailsSheetWidgetState
                 ),
               ),
 
-              // Header info
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Row(
@@ -267,7 +263,6 @@ class _AdminCustomerDetailsSheetWidgetState
               ),
               SizedBox(height: 14.h),
 
-              // Segmented Tab Filter
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Container(
@@ -381,14 +376,12 @@ class _AdminCustomerDetailsSheetWidgetState
               ),
               SizedBox(height: 12.h),
 
-              // Content Area
               Expanded(
                 child: selectedTab == 0
                     ? _buildVisitsTab(scrollController)
                     : _buildOverviewTab(scrollController),
               ),
 
-              // Bottom button
               Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 16.h),
                 child: CustomButton(

@@ -23,8 +23,9 @@ class OvertimeRequestsBlocBuilderWidget extends StatelessWidget {
           OvertimeStateLoading() => const Center(
             child: CircularProgressIndicator(),
           ),
-          OvertimeStateError(:final messageKey) => Center(
-            child: Text(messageKey.tr(context: context)),
+          OvertimeStateError(:final messageKey) => AppErrorStateWidget(
+            messageKey: messageKey,
+            onRetry: () => context.read<OvertimeCubit>().load(),
           ),
           OvertimeStateSuccess(:final requests) =>
             requests.isEmpty

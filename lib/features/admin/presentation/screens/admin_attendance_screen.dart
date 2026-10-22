@@ -39,9 +39,10 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
     super.dispose();
   }
 
-  void _openAbsentEmployeesSheet(
+  void _openAttendanceEmployeesSheet(
     BuildContext context,
-    List<EmployeeModel> absentEmployees,
+    List<EmployeeModel> employees,
+    AdminAttendanceEmployeeStatus status,
   ) {
     showModalBottomSheet<void>(
       context: context,
@@ -51,7 +52,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (_) =>
-          AdminAbsentEmployeesSheetWidget(absentEmployees: absentEmployees),
+          AdminAbsentEmployeesSheetWidget(employees: employees, status: status),
     );
   }
 
@@ -72,19 +73,51 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
       AppPermissions.attendanceEdit,
     );
 
-    final employees = switch (context.watch<AdminEmployeesCubit>().state) {
+    final employeesState = context.watch<AdminEmployeesCubit>().state;
+    final employees = switch (employeesState) {
       AdminEmployeesStateSuccess(:final employees) => employees,
       AdminEmployeesStateActionSuccess(:final employees) => employees,
       _ => const <EmployeeModel>[],
     };
+    final isEmployeesLoading = switch (employeesState) {
+      AdminEmployeesStateInitial() || AdminEmployeesStateLoading() => true,
+      _ => false,
+    };
+
     final attendanceCubit = context.watch<AdminAttendanceCubit>();
-    final leaveRequests = context.watch<AdminLeaveRequestsCubit>().requests;
-    final absentEmployees = attendanceCubit.getAbsentEmployees(
-      employees,
-      leaveRequests,
+    final isAttendanceLoading = attendanceCubit.state.maybeWhen(
+      initial: () => true,
+      loading: () => true,
+      orElse: () => false,
     );
+
+    final leaveState = context.watch<AdminLeaveRequestsCubit>().state;
+    final isLeaveLoading = leaveState.maybeWhen(
+      initial: () => true,
+      loading: () => true,
+      orElse: () => false,
+    );
+
+    final isSummaryLoading =
+        isAttendanceLoading || isEmployeesLoading || isLeaveLoading;
+
+    final leaveRequests = context.watch<AdminLeaveRequestsCubit>().requests;
+    final absentEmployees = isSummaryLoading
+        ? const <EmployeeModel>[]
+        : attendanceCubit.getAbsentEmployees(employees, leaveRequests);
+    final lateEmployees = isSummaryLoading
+        ? const <EmployeeModel>[]
+        : attendanceCubit.getLateEmployees(employees, leaveRequests);
+    final presentEmployees = isSummaryLoading
+        ? const <EmployeeModel>[]
+        : attendanceCubit.getPresentEmployees(employees);
+    final onLeaveEmployees = isSummaryLoading
+        ? const <EmployeeModel>[]
+        : attendanceCubit.getOnLeaveEmployees(employees, leaveRequests);
     final absentCount = absentEmployees.length;
-    final presentCount = attendanceCubit.todayPresentCount;
+    final lateCount = lateEmployees.length;
+    final onLeaveCount = onLeaveEmployees.length;
+    final presentCount = presentEmployees.length;
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -100,17 +133,24 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
           Padding(
             padding: EdgeInsetsDirectional.only(end: 8.w),
             child: IconButton(
-              onPressed: () =>
-                  _openAbsentEmployeesSheet(context, absentEmployees),
+              onPressed: isSummaryLoading
+                  ? null
+                  : () => _openAttendanceEmployeesSheet(
+                      context,
+                      absentEmployees,
+                      AdminAttendanceEmployeeStatus.absent,
+                    ),
               tooltip: 'admin.attendance.absentTitle'.tr(context: context),
               icon: Badge(
-                isLabelVisible: absentCount > 0,
+                isLabelVisible: !isSummaryLoading && absentCount > 0,
                 label: Text('$absentCount'),
                 backgroundColor: AppColors.error,
                 child: Icon(
                   Icons.person_off_outlined,
                   size: 22.r,
-                  color: AppColors.textPrimary,
+                  color: isSummaryLoading
+                      ? AppColors.textSecondary.withValues(alpha: 0.35)
+                      : AppColors.textPrimary,
                 ),
               ),
             ),
@@ -123,6 +163,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
             await Future.wait([
               context.read<AdminAttendanceCubit>().loadAttendance(),
               context.read<AdminEmployeesCubit>().loadEmployees(),
+              context.read<AdminLeaveRequestsCubit>().loadRequests(),
             ]);
           },
           child: SingleChildScrollView(
@@ -148,9 +189,38 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                 hSpace(12),
                 AdminAttendanceTodaySummaryWidget(
                   presentCount: presentCount,
+                  lateCount: lateCount,
                   absentCount: absentCount,
-                  onTapAbsent: () =>
-                      _openAbsentEmployeesSheet(context, absentEmployees),
+                  onLeaveCount: onLeaveCount,
+                  isLoading: isSummaryLoading,
+                  onTapPresent: isSummaryLoading
+                      ? () {}
+                      : () => _openAttendanceEmployeesSheet(
+                          context,
+                          presentEmployees,
+                          AdminAttendanceEmployeeStatus.present,
+                        ),
+                  onTapLate: isSummaryLoading
+                      ? () {}
+                      : () => _openAttendanceEmployeesSheet(
+                          context,
+                          lateEmployees,
+                          AdminAttendanceEmployeeStatus.late,
+                        ),
+                  onTapAbsent: isSummaryLoading
+                      ? () {}
+                      : () => _openAttendanceEmployeesSheet(
+                          context,
+                          absentEmployees,
+                          AdminAttendanceEmployeeStatus.absent,
+                        ),
+                  onTapOnLeave: isSummaryLoading
+                      ? () {}
+                      : () => _openAttendanceEmployeesSheet(
+                          context,
+                          onLeaveEmployees,
+                          AdminAttendanceEmployeeStatus.onLeave,
+                        ),
                 ),
                 hSpace(14),
                 const AdminAttendanceAdvancedFilterWidget(),

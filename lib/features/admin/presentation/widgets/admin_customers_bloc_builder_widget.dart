@@ -54,7 +54,6 @@ class _AdminCustomersBlocBuilderWidgetState
 
   List<CustomerModel> _filterCustomers(List<CustomerModel> customers) {
     final role = _currentUserRole?.toLowerCase() ?? '';
-    // Admins and SuperAdmins see all customers
     if (role.contains('admin')) {
       return customers;
     }
@@ -63,7 +62,6 @@ class _AdminCustomersBlocBuilderWidgetState
 
     return customers.where((c) {
       final workesAs = c.workesAs?.trim().toLowerCase();
-      // If workesAs is empty, unrestricted, or not set, visible to all
       if (workesAs == null ||
           workesAs.isEmpty ||
           workesAs == '-' ||
@@ -74,7 +72,6 @@ class _AdminCustomersBlocBuilderWidgetState
       if (userName.isNotEmpty && workesAs.contains(userName)) {
         return true;
       }
-      // Also match by partial tokens (e.g. if workesAs is "أحمد، محمد" and user is "أحمد" or "Ahmed")
       final tokens = workesAs
           .split(RegExp(r'[,،/|&\s]+'))
           .map((t) => t.trim())

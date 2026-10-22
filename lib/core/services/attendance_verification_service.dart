@@ -1,11 +1,14 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../auth/biometric_auth_service.dart';
+import 'location_sample.dart';
 import 'location_integrity_result.dart';
 import 'location_integrity_service.dart';
 import 'location_service.dart';
+import 'play_integrity_service.dart';
 
 class AttendanceVerificationResult {
   const AttendanceVerificationResult({
@@ -13,15 +16,16 @@ class AttendanceVerificationResult {
     this.location,
     this.messageKey,
     this.integrityResult,
+    this.playIntegrityPackage,
   });
 
   final bool isAllowed;
   final LatLng? location;
   final String? messageKey;
 
-  /// The integrity assessment for this verification attempt. May be null if
-  /// the location was unavailable before integrity could be checked.
   final LocationIntegrityResult? integrityResult;
+
+  final IntegrityTokenPackage? playIntegrityPackage;
 }
 
 class AttendanceVerificationService {
@@ -29,25 +33,30 @@ class AttendanceVerificationService {
     required this.locationService,
     required this.biometricAuthService,
     required this.locationIntegrityService,
+    this.playIntegrityService,
   });
 
   final LocationService locationService;
   final BiometricAuthService biometricAuthService;
   final LocationIntegrityService locationIntegrityService;
+  final PlayIntegrityService? playIntegrityService;
 
   Future<AttendanceVerificationResult> verify({
     required String biometricReason,
+    String action = 'clock_in',
+    String? deviceId,
     LatLng? center,
     double radiusMeters = 150,
     List<LatLng> polygon = const [],
     bool requireLocation = true,
+    bool requirePlayIntegrity = true,
   }) async {
     LocationIntegrityResult? integrityResult;
     LatLng? location;
+    LocationSample? sample;
 
     if (requireLocation) {
-      // 1. Obtain an enriched location sample
-      final sample = await locationService.getCurrentSample();
+      sample = await locationService.getCurrentSample();
       if (sample == null) {
         return const AttendanceVerificationResult(
           isAllowed: false,
@@ -55,7 +64,6 @@ class AttendanceVerificationService {
         );
       }
 
-      // 2. Location integrity check (mock detection + anomaly analysis)
       integrityResult = await locationIntegrityService.assess(sample);
       if (!integrityResult.isAllowed) {
         return AttendanceVerificationResult(
@@ -67,7 +75,6 @@ class AttendanceVerificationService {
 
       location = sample.position;
 
-      // 3. Geofence check
       if (!isWithinArea(
         point: location,
         center: center,
@@ -83,7 +90,29 @@ class AttendanceVerificationService {
       }
     }
 
-    // 4. Biometric authentication
+    IntegrityTokenPackage? playIntegrityPackage;
+    if (Platform.isAndroid &&
+        requirePlayIntegrity &&
+        playIntegrityService != null) {
+      playIntegrityPackage = await playIntegrityService!.acquireTokenForAction(
+        action: action,
+        latitude: sample?.position.latitude,
+        longitude: sample?.position.longitude,
+        accuracy: sample?.accuracy,
+        deviceId: deviceId,
+        timestamp: sample?.timestampMs,
+      );
+
+      if (playIntegrityPackage == null) {
+        return AttendanceVerificationResult(
+          isAllowed: false,
+          location: location,
+          messageKey: 'errors.deviceIntegrityFailed',
+          integrityResult: integrityResult,
+        );
+      }
+    }
+
     final isBiometricAvailable = await biometricAuthService.isAvailable();
     if (isBiometricAvailable) {
       final authenticated = await biometricAuthService.authenticate(
@@ -94,6 +123,7 @@ class AttendanceVerificationService {
           isAllowed: false,
           messageKey: 'errors.biometricRequired',
           integrityResult: integrityResult,
+          playIntegrityPackage: playIntegrityPackage,
         );
       }
     }
@@ -102,6 +132,7 @@ class AttendanceVerificationService {
       isAllowed: true,
       location: location,
       integrityResult: integrityResult,
+      playIntegrityPackage: playIntegrityPackage,
     );
   }
 

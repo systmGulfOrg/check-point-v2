@@ -14,6 +14,10 @@ class AdminOverviewCardWidget extends StatelessWidget {
     required this.absences,
     required this.pendingLeaveRequests,
     required this.dateText,
+    this.onEmployeesOnDutyTap,
+    this.onLateArrivalsTap,
+    this.onAbsencesTap,
+    this.onPendingLeaveRequestsTap,
     this.isLoading = false,
     super.key,
   });
@@ -24,6 +28,10 @@ class AdminOverviewCardWidget extends StatelessWidget {
   final int absences;
   final int pendingLeaveRequests;
   final String dateText;
+  final VoidCallback? onEmployeesOnDutyTap;
+  final VoidCallback? onLateArrivalsTap;
+  final VoidCallback? onAbsencesTap;
+  final VoidCallback? onPendingLeaveRequestsTap;
   final bool isLoading;
 
   @override
@@ -80,24 +88,28 @@ class AdminOverviewCardWidget extends StatelessWidget {
               titleKey: 'admin.dashboard.employeesOnDuty',
               value: '$employeesOnDuty / $totalStaff',
               valueColor: AppColors.success,
+              onTap: onEmployeesOnDutyTap,
             ),
             const Divider(color: AppColors.border, height: 1),
             AdminOverviewRowWidget(
               titleKey: 'admin.dashboard.lateArrivals',
               value: '$lateArrivals',
               valueColor: AppColors.warningOrange,
+              onTap: onLateArrivalsTap,
             ),
             const Divider(color: AppColors.border, height: 1),
             AdminOverviewRowWidget(
               titleKey: 'admin.dashboard.absences',
               value: '$absences',
               valueColor: AppColors.error,
+              onTap: onAbsencesTap,
             ),
             const Divider(color: AppColors.border, height: 1),
             AdminOverviewRowWidget(
               titleKey: 'admin.dashboard.pendingLeaveRequests',
               value: '$pendingLeaveRequests',
               valueColor: AppColors.textPrimary,
+              onTap: onPendingLeaveRequestsTap,
             ),
           ],
         ),

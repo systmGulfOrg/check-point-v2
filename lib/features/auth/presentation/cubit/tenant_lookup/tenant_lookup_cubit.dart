@@ -21,7 +21,8 @@ class TenantLookupCubit extends SafeCubit<TenantLookupState> {
         );
         safeEmit(TenantLookupState.success(tenant.tenantSlug ?? tenantSlug));
       },
-      failure: (failure) => safeEmit(TenantLookupState.error(failure.messageKey)),
+      failure: (failure) =>
+          safeEmit(TenantLookupState.error(failure.messageKey)),
     );
   }
 }

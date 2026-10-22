@@ -1,5 +1,3 @@
-/// Normalizes legacy list responses so paged models can consume both:
-/// `{ value: [...] }` and `{ value: { items: [...] } }`.
 Map<String, dynamic> legacyPageValue(Object? value) {
   if (value is Map<String, dynamic>) return value;
   if (value is List) {

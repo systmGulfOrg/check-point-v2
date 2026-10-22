@@ -1,4 +1,9 @@
+import 'package:check_point_v2/features/ai/data/apis/ai_api_service.dart';
+import 'package:check_point_v2/features/ai/data/repos/ai_repo.dart';
+import 'package:check_point_v2/features/ai/data/repos/ai_repo_impl.dart';
+import 'package:check_point_v2/features/ai/presentation/cubit/ai_chat_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_audit/admin_employee_audit_cubit.dart';
+import 'package:check_point_v2/features/support/data/apis/support_ticket_api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -126,6 +131,7 @@ import 'package:check_point_v2/core/network/dio_factory.dart';
 import 'package:check_point_v2/core/network/device_identity_provider.dart';
 import 'package:check_point_v2/core/services/google_places_service.dart';
 import 'package:check_point_v2/core/services/location_integrity_service.dart';
+import 'package:check_point_v2/core/services/play_integrity_service.dart';
 import 'package:check_point_v2/core/services/local_notification_service.dart';
 import 'package:check_point_v2/core/services/location_service.dart';
 import 'package:check_point_v2/core/services/push_notification_service.dart';
@@ -149,8 +155,6 @@ Future<void> setupServiceLocator() async {
   );
   await sl<DeviceIdentityProvider>().initialize();
 
-  // Services
-  // External services must never receive the app's bearer token or log keys.
   sl.registerLazySingleton<Dio>(
     () => Dio(
       BaseOptions(
@@ -165,11 +169,15 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<LocationIntegrityService>(
     () => LocationIntegrityService(),
   );
+  sl.registerLazySingleton<PlayIntegrityService>(
+    () => PlayIntegrityService(dio: sl<Dio>()),
+  );
   sl.registerLazySingleton<AttendanceVerificationService>(
     () => AttendanceVerificationService(
       locationService: sl<LocationService>(),
       biometricAuthService: sl<BiometricAuthService>(),
       locationIntegrityService: sl<LocationIntegrityService>(),
+      playIntegrityService: sl<PlayIntegrityService>(),
     ),
   );
   sl.registerLazySingleton<LocalNotificationService>(
@@ -192,7 +200,6 @@ Future<void> setupServiceLocator() async {
     () => OdooTimeOffService(dio: sl<Dio>(instanceName: 'external')),
   );
 
-  // API Services
   sl.registerLazySingleton<AuthApiService>(() => AuthApiService(sl<Dio>()));
   sl.registerLazySingleton<AdminApiService>(() => AdminApiService(sl<Dio>()));
   sl.registerLazySingleton<SubscriptionApiService>(
@@ -220,8 +227,13 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<ProjectsApiService>(
     () => ProjectsApiService(sl<Dio>()),
   );
+  sl.registerLazySingleton<AiApiService>(() => AiApiService(sl<Dio>()));
+  sl.registerLazySingleton<AiRepo>(() => AiRepoImpl(api: sl<AiApiService>()));
 
-  // Repositories
+  sl.registerLazySingleton<SupportTicketApiService>(
+    () => SupportTicketApiService(dio: sl<Dio>()),
+  );
+
   sl.registerLazySingleton<AuthRepo>(
     () => AuthRepoImpl(api: sl<AuthApiService>()),
   );
@@ -322,7 +334,6 @@ Future<void> setupServiceLocator() async {
     () => OvertimeRepoImpl(api: sl<OvertimeApiService>()),
   );
 
-  // UseCases
   sl.registerLazySingleton<LoginUseCase>(
     () => LoginUseCase(
       authRepo: sl<AuthRepo>(),
@@ -352,7 +363,6 @@ Future<void> setupServiceLocator() async {
     ),
   );
 
-  // Cubits
   sl.registerFactory<LoginCubit>(
     () => LoginCubit(
       loginUseCase: sl<LoginUseCase>(),
@@ -561,4 +571,5 @@ Future<void> setupServiceLocator() async {
       sessionStorage: sl<AuthSessionStorage>(),
     ),
   );
+  sl.registerFactory<AiChatCubit>(() => AiChatCubit(repo: sl<AiRepo>()));
 }

@@ -33,8 +33,9 @@ class SupervisorNotificationsBlocBuilderWidget extends StatelessWidget {
             ),
           ),
         ),
-        NotificationsError(:final messageKey) => Center(
-          child: Text(messageKey.tr()),
+        NotificationsError(:final messageKey) => AppErrorStateWidget(
+          messageKey: messageKey,
+          onRetry: () => context.read<NotificationsCubit>().load(),
         ),
         NotificationsSuccess(:final notifications, :final unreadCount) =>
           notifications.isEmpty

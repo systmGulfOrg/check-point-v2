@@ -88,6 +88,11 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                         child: LeaveBalancesListWidget(balances: balances),
                       );
                     },
+                    error: (message) => AppErrorStateWidget(
+                      messageKey: message,
+                      onRetry: () =>
+                          context.read<LeavesCubit>().loadLeavesData(),
+                    ),
                     orElse: () => const SizedBox.shrink(),
                   );
                 },
@@ -219,8 +224,11 @@ class _EmployeeLeavesScreenState extends State<EmployeeLeavesScreen> {
                     :final messageKey,
                   )) {
                     return Expanded(
-                      child: Center(
-                        child: Text(messageKey.tr(context: context)),
+                      child: AppErrorStateWidget(
+                        messageKey: messageKey,
+                        onRetry: () => context
+                            .read<EmployeeLeaveRequestsCubit>()
+                            .loadLeaveRequests(),
                       ),
                     );
                   }

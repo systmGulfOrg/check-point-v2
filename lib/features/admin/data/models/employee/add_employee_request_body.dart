@@ -27,6 +27,7 @@ class AddEmployeeRequestBody {
     this.directManagerId,
     this.managerId,
     this.customPermissions,
+    this.imageUrl,
   });
 
   final String name;
@@ -51,6 +52,7 @@ class AddEmployeeRequestBody {
   final String? directManagerId;
   final String? managerId;
   final List<String>? customPermissions;
+  final String? imageUrl;
 
   factory AddEmployeeRequestBody.fromJson(Map<String, dynamic> json) =>
       _$AddEmployeeRequestBodyFromJson(json);

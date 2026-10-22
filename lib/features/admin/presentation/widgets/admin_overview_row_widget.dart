@@ -9,31 +9,50 @@ class AdminOverviewRowWidget extends StatelessWidget {
     required this.titleKey,
     required this.value,
     required this.valueColor,
+    this.onTap,
     super.key,
   });
 
   final String titleKey;
   final String value;
   final Color valueColor;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            titleKey.tr(context: context),
-            style: AppTextStyles.font14Regular.copyWith(
-              color: AppColors.textSecondary,
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              titleKey.tr(context: context),
+              style: AppTextStyles.font14Regular.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
-          ),
-          Text(
-            value,
-            style: AppTextStyles.font14SemiBold.copyWith(color: valueColor),
-          ),
-        ],
+            Row(
+              children: [
+                Text(
+                  value,
+                  style: AppTextStyles.font14SemiBold.copyWith(
+                    color: valueColor,
+                  ),
+                ),
+                if (onTap != null) ...[
+                  wSpace(4),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 12.r,
+                    color: AppColors.textSecondary,
+                  ),
+                ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

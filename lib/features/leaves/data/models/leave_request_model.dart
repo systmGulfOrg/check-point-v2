@@ -22,12 +22,10 @@ class LeaveRequestModel with _$LeaveRequestModel {
     bool? hasDirectManager,
     String? rejectionReason,
     List<dynamic>? timeline,
-    // Stage 1 - Manager
     String? managerId,
     String? managerName,
     DateTime? managerActionAt,
     String? managerRejectionReason,
-    // Stage 2 - HR
     String? hrId,
     String? hrName,
     DateTime? hrActionAt,

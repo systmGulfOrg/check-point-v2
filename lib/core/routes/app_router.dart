@@ -1,3 +1,5 @@
+import 'package:check_point_v2/features/ai/presentation/cubit/ai_chat_cubit.dart';
+import 'package:check_point_v2/features/ai/presentation/widgets/ai_chat_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_employee_audit_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_audit/admin_employee_audit_cubit.dart';
 import 'package:flutter/material.dart';
@@ -105,8 +107,6 @@ import 'routes.dart';
 class AppRouter {
   const AppRouter._();
 
-  /// Lets code outside the widget tree (the push-notification tap handler)
-  /// navigate without a BuildContext.
   static final navigatorKey = GlobalKey<NavigatorState>();
 
   static Route<void> _fadeRoute({
@@ -949,6 +949,23 @@ class AppRouter {
           child: BlocProvider<PointsCubit>(
             create: (_) => sl<PointsCubit>()..loadAllPointsData(),
             child: const LeaderboardScreen(),
+          ),
+        );
+      case AppRoutes.aiChat:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.aiChat),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: SafeArea(
+              bottom: false,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: BlocProvider<AiChatCubit>(
+                  create: (_) => sl<AiChatCubit>(),
+                  child: const AiChatSheetWidget(),
+                ),
+              ),
+            ),
           ),
         );
       default:

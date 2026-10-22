@@ -26,8 +26,6 @@ class AuthLabeledFieldWidget extends StatelessWidget {
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
 
-  /// Optional small note rendered below the field (e.g. clarifying what the
-  /// value will be used for).
   final String? helperKey;
 
   @override

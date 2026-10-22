@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Wraps a list item in a staggered fade + slide-up entrance animation.
-/// Pass the [index] to offset each item's animation delay.
 class AnimatedListItemWidget extends StatelessWidget {
   const AnimatedListItemWidget({
     required this.index,

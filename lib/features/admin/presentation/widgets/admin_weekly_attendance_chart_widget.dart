@@ -7,7 +7,9 @@ import 'admin_attendance_legend_item_widget.dart';
 import 'admin_weekly_attendance_chart_painter.dart';
 
 class AdminWeeklyAttendanceChartWidget extends StatelessWidget {
-  const AdminWeeklyAttendanceChartWidget({super.key});
+  const AdminWeeklyAttendanceChartWidget({required this.weeklyData, super.key});
+
+  final List<({int present, int late, int absent})> weeklyData;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,17 @@ class AdminWeeklyAttendanceChartWidget extends StatelessWidget {
       'admin.shifts.days.sun'.tr(context: context),
       'admin.shifts.days.mon'.tr(context: context),
     ];
-    const levels = <String>['3', '2.25', '1.5', '0.75', '0'];
+    final maxValue = weeklyData.fold(1, (currentMax, day) {
+      return [
+        day.present,
+        day.late,
+        day.absent,
+      ].fold(currentMax, (max, value) => value > max ? value : max);
+    });
+    final levels = List.generate(
+      5,
+      (index) => '${(maxValue * (4 - index) / 4).round()}',
+    );
 
     return Container(
       padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 12.h),
@@ -92,9 +104,12 @@ class AdminWeeklyAttendanceChartWidget extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: CustomPaint(
-                          painter: AdminWeeklyAttendanceChartPainter(),
+                          painter: AdminWeeklyAttendanceChartPainter(
+                            weeklyData: weeklyData,
+                            maxValue: maxValue,
+                          ),
                           child: SizedBox.expand(),
                         ),
                       ),

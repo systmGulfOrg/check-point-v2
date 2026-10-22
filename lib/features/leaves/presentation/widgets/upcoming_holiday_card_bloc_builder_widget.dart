@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_state.dart';
 import 'upcoming_holiday_card_widget.dart';
@@ -43,7 +44,11 @@ class UpcomingHolidayCardBlocBuilderWidget extends StatelessWidget {
                     daysRemaining: daysUntilNearest,
                   )
                 : const SizedBox.shrink(),
-          UpcomingHolidayStateError() => const SizedBox.shrink(),
+          UpcomingHolidayStateError(:final messageKey) => AppErrorStateWidget(
+            messageKey: messageKey,
+            onRetry: () =>
+                context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
+          ),
           _ => const SizedBox.shrink(),
         };
       },

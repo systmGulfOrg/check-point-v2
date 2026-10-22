@@ -28,18 +28,17 @@ class AdminStatCardWidget extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(26.r),
         child: Container(
-          padding: EdgeInsets.all(12.r),
+          padding: EdgeInsets.all(14.r),
           decoration: BoxDecoration(
             color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.border),
+            borderRadius: BorderRadius.circular(22.r),
             boxShadow: const [
               BoxShadow(
                 color: AppColors.shadow,
-                blurRadius: 10,
-                offset: Offset(0, 3),
+                blurRadius: 18,
+                offset: Offset(0, 6),
               ),
             ],
           ),
@@ -48,11 +47,11 @@ class AdminStatCardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                width: 36.r,
-                height: 36.r,
+                width: 40.r,
+                height: 40.r,
                 decoration: BoxDecoration(
                   color: iconBackgroundColor,
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(14.r),
                 ),
                 child: Icon(icon, color: iconColor, size: 20.r),
               ),
@@ -62,7 +61,7 @@ class AdminStatCardWidget extends StatelessWidget {
                 children: [
                   Text(
                     value,
-                    style: AppTextStyles.font24Bold.copyWith(
+                    style: AppTextStyles.font20Bold.copyWith(
                       color: AppColors.textPrimary,
                       height: 1.1,
                     ),
@@ -72,7 +71,7 @@ class AdminStatCardWidget extends StatelessWidget {
                     labelKey.tr(context: context),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.font13Regular.copyWith(
+                    style: AppTextStyles.font12Regular.copyWith(
                       color: AppColors.textSecondary,
                     ),
                   ),

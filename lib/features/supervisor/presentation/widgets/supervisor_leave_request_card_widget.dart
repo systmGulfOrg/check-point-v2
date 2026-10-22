@@ -80,7 +80,6 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
       ),
     };
 
-    // Only the designated direct manager for this employee can approve Stage 1.
     final bool isDirectManager = () {
       final directManagerId = request.directManagerId?.trim().toLowerCase();
       final directManagerName = request.directManagerName?.trim().toLowerCase();
@@ -115,12 +114,9 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
         return false;
       }
 
-      // If the employee has NO direct manager assigned, any Supervisor/Admin can act
       return userRole == 'Admin' || userRole == 'Supervisor';
     }();
 
-    // In supervisor management, the direct manager acts ONLY on Stage 1 (isPending).
-    // Once approved by manager (status is PendingHR), it moves to HR/Admin stage and manager buttons must not show.
     final bool canApprove = !isOwnRequest && isPending && isDirectManager;
     const String approveLabel = 'leaves.approval.approveAsManager';
 

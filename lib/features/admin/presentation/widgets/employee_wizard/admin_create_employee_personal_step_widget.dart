@@ -99,7 +99,6 @@ class _AdminCreateEmployeePersonalStepWidgetState
         ),
         hSpace(16),
 
-        // Avatar Photo Picker at Top
         Center(
           child: GestureDetector(
             onTap: _pickPhoto,
@@ -168,7 +167,6 @@ class _AdminCreateEmployeePersonalStepWidgetState
         ),
         hSpace(18),
 
-        // Full Name
         AdminWizardFieldWidget(
           label: 'admin.employeeWizard.fullName'.tr(context: context),
           child: CustomTextFormField(
@@ -191,7 +189,6 @@ class _AdminCreateEmployeePersonalStepWidgetState
           ),
         ),
 
-        // Username
         AdminWizardFieldWidget(
           label: 'admin.employeeWizard.username'.tr(context: context),
           child: CustomTextFormField(
@@ -214,7 +211,6 @@ class _AdminCreateEmployeePersonalStepWidgetState
           ),
         ),
 
-        // Password with Default Systm123! Note
         AdminWizardFieldWidget(
           label: 'admin.employeeWizard.password'.tr(context: context),
           child: Column(
@@ -283,7 +279,6 @@ class _AdminCreateEmployeePersonalStepWidgetState
           ),
         ),
 
-        // Mobile ID (Read-only + Copyable)
         AdminWizardFieldWidget(
           label: 'admin.employeeWizard.mobile'.tr(context: context),
           child: CustomTextFormField(
@@ -324,7 +319,6 @@ class _AdminCreateEmployeePersonalStepWidgetState
           ),
         ),
 
-        // Phone Number
         AdminWizardFieldWidget(
           label: 'admin.employeeWizard.phone'.tr(context: context),
           child: CustomTextFormField(
@@ -343,7 +337,6 @@ class _AdminCreateEmployeePersonalStepWidgetState
           ),
         ),
 
-        // Email
         AdminWizardFieldWidget(
           label: 'admin.employeeWizard.email'.tr(context: context),
           child: CustomTextFormField(
@@ -362,7 +355,6 @@ class _AdminCreateEmployeePersonalStepWidgetState
           ),
         ),
 
-        // Employee Code (Generated & Editable)
         AdminWizardFieldWidget(
           label: 'admin.employeeWizard.employeeCode'.tr(context: context),
           child: CustomTextFormField(

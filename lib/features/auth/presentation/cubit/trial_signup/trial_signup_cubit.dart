@@ -38,7 +38,8 @@ class TrialSignupCubit extends SafeCubit<TrialSignupState> {
     final result = await authRepo.createTrialSignup(request);
     result.when(
       success: (signup) => safeEmit(TrialSignupState.success(signup)),
-      failure: (failure) => safeEmit(TrialSignupState.error(failure.messageKey)),
+      failure: (failure) =>
+          safeEmit(TrialSignupState.error(failure.messageKey)),
     );
   }
 }

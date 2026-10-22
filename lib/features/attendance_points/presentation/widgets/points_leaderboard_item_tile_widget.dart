@@ -37,7 +37,6 @@ class PointsLeaderboardItemTileWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Rank
           Container(
             width: 32.r,
             height: 32.r,
@@ -60,7 +59,6 @@ class PointsLeaderboardItemTileWidget extends StatelessWidget {
           ),
           wSpace(12),
 
-          // Name & department
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +96,6 @@ class PointsLeaderboardItemTileWidget extends StatelessWidget {
             ),
           ),
 
-          // Points & streak
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [

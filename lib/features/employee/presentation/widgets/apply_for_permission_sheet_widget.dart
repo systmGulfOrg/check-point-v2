@@ -338,7 +338,6 @@ class _ApplyForPermissionSheetWidgetState
               ),
               hSpace(16),
 
-              // Permit Type
               Text(
                 'leaves.request.type'.tr(context: context),
                 style: AppTextStyles.font13SemiBold,
@@ -384,7 +383,6 @@ class _ApplyForPermissionSheetWidgetState
               ),
               hSpace(14),
 
-              // Date Picker
               Text(
                 'employee.leaves.startDate'.tr(context: context),
                 style: AppTextStyles.font13SemiBold,
@@ -559,7 +557,6 @@ class _ApplyForPermissionSheetWidgetState
                 ],
               ),
 
-              // Duration Badge
               if (duration != null && duration > 0) ...[
                 hSpace(10),
                 Container(
@@ -595,7 +592,6 @@ class _ApplyForPermissionSheetWidgetState
               ],
               hSpace(14),
 
-              // Reason Field
               Text(
                 'employee.leaves.reason'.tr(context: context),
                 style: AppTextStyles.font13SemiBold,
@@ -614,7 +610,6 @@ class _ApplyForPermissionSheetWidgetState
               ),
               hSpace(20),
 
-              // Buttons
               Row(
                 children: [
                   Expanded(

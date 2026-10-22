@@ -18,14 +18,9 @@ class AuthSessionCubit extends SafeCubit<AuthSessionState> {
   Future<bool> logout() async {
     emit(const AuthSessionState.loading());
     try {
-      // Without this, a signed-out device keeps receiving the next signed-in
-      // user's pushes (e.g. on a shared phone). Caught separately: logout
-      // must still succeed even if deregistration throws.
       try {
         await pushTokenRegistrar.stop();
-      } catch (_) {
-        // Best-effort; the repo call inside already logs its own failures.
-      }
+      } catch (_) {}
       await authSessionStorage.disableBiometricLogin();
       await authSessionStorage.clear();
       safeEmit(const AuthSessionState.success());

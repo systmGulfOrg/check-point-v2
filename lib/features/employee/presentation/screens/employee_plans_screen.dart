@@ -100,6 +100,13 @@ class _EmployeePlansScreenState extends State<EmployeePlansScreen> {
                         ),
                       ),
                     ),
+                    EmployeePlansStateError(:final messageKey) => Expanded(
+                      child: AppErrorStateWidget(
+                        messageKey: messageKey,
+                        onRetry: () =>
+                            context.read<EmployeePlansCubit>().loadMyPlans(),
+                      ),
+                    ),
                     _ => Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

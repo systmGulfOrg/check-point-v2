@@ -67,7 +67,6 @@ class ProjectTaskCardWidget extends StatelessWidget {
     if (onMoveStatus == null || boardProject.statuses.isEmpty) return;
 
     if (!isDone) {
-      // Move to done status
       final doneStatus = boardProject.statuses.firstWhere(
         _isTaskDone,
         orElse: () => boardProject.statuses.last,
@@ -76,7 +75,6 @@ class ProjectTaskCardWidget extends StatelessWidget {
         onMoveStatus!(doneStatus.id);
       }
     } else {
-      // Move back to first/to-do status
       final firstStatus = boardProject.statuses.first;
       if (firstStatus.id != currentStatus.id) {
         onMoveStatus!(firstStatus.id);
@@ -96,7 +94,6 @@ class ProjectTaskCardWidget extends StatelessWidget {
     final isDone = _isTaskDone(status);
     final priority = task.priority ?? 'NORMAL';
 
-    // Due date analysis
     DateTime? dueDate;
     bool isOverdue = false;
     bool isDueToday = false;
@@ -139,10 +136,8 @@ class ProjectTaskCardWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header row: Checkbox + Priority + Quick Status Badge + 3-dots Menu
               Row(
                 children: [
-                  // Quick Completion Toggle Button
                   InkWell(
                     onTap: canManage && onMoveStatus != null
                         ? () => _toggleTaskCompletion(isDone, status)
@@ -162,7 +157,6 @@ class ProjectTaskCardWidget extends StatelessWidget {
                     ),
                   ),
 
-                  // Priority Chip
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 8.w,
@@ -181,7 +175,6 @@ class ProjectTaskCardWidget extends StatelessWidget {
                   ),
                   wSpace(6),
 
-                  // Quick Status Chip (1-tap status selector popup menu)
                   if (canManage && onMoveStatus != null)
                     PopupMenuButton<String>(
                       tooltip: 'projects.changeStatus'.tr(context: context),
@@ -279,7 +272,6 @@ class ProjectTaskCardWidget extends StatelessWidget {
 
                   const Spacer(),
 
-                  // Action Menu (Edit / Delete)
                   if (canManage)
                     PopupMenuButton<String>(
                       icon: const Icon(
@@ -336,7 +328,6 @@ class ProjectTaskCardWidget extends StatelessWidget {
               ),
               hSpace(8),
 
-              // Title
               Text(
                 task.title,
                 style: AppTextStyles.font16Bold.copyWith(
@@ -347,7 +338,6 @@ class ProjectTaskCardWidget extends StatelessWidget {
                 ),
               ),
 
-              // Description if available
               if (task.description?.isNotEmpty == true) ...[
                 hSpace(4),
                 Text(
@@ -360,7 +350,6 @@ class ProjectTaskCardWidget extends StatelessWidget {
                 ),
               ],
 
-              // Tags row if available
               if (task.tags.isNotEmpty) ...[
                 hSpace(8),
                 Wrap(
@@ -390,7 +379,6 @@ class ProjectTaskCardWidget extends StatelessWidget {
 
               hSpace(10),
 
-              // Footer: Assignees avatars + Due date (with overdue badge) + Attachments
               Row(
                 children: [
                   if (task.assignees.isNotEmpty ||
@@ -436,7 +424,6 @@ class ProjectTaskCardWidget extends StatelessWidget {
                     wSpace(10),
                   ],
 
-                  // Smart Due Date Indicator
                   if (task.dueDate?.isNotEmpty == true) ...[
                     Container(
                       padding: EdgeInsets.symmetric(

@@ -13,6 +13,7 @@ import 'core/routes/app_router.dart';
 import 'core/routes/routes.dart';
 import 'core/services/local_notification_service.dart';
 import 'core/services/push_notification_service.dart';
+import 'core/services/play_integrity_service.dart';
 import 'core/widgets/custom_snack_bar.dart';
 import 'features/auth/data/repos/auth_repo.dart';
 import 'firebase_options.dart';
@@ -21,19 +22,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
-  // Firebase must be ready before the background handler is registered and
-  // before anything resolves FirebaseMessaging from the service locator.
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
 
   await setupServiceLocator();
   await sl<LocalNotificationService>().initialize();
   await sl<PushNotificationService>().initialize();
+  unawaited(sl<PlayIntegrityService>().prepareIntegrityToken(retries: 2));
 
-  // The backend's shared tenant-access gate runs on every authenticated
-  // request, not just login, so a company can go from usable to blocked
-  // mid-session. The interceptor has no BuildContext of its own, so it
-  // reports the error code here and this does the session reset + redirect.
   AuthTokenInterceptor.onTenantBlocked = (errorCode) {
     unawaited(sl<AuthSessionStorage>().clearTenant());
     final context = AppRouter.navigatorKey.currentContext;
@@ -63,17 +59,8 @@ Future<void> main() async {
   );
 }
 
-/// Set when [_resolveInitialRoute] bounces the user back to the company-code
-/// screen on cold start (a saved tenant turned out blocked). That screen
-/// reads and clears it on its first frame — `main()` runs before any
-/// Navigator/Overlay exists, so there is no BuildContext here to show a
-/// snackbar with.
 String? pendingStartupMessageKey;
 
-/// A saved tenant slug only means this device signed in here before — the
-/// company could have been suspended, expired, or deleted since. Re-verify
-/// it before ever letting a cold start skip the company-code screen, instead
-/// of trusting the cached slug blindly.
 Future<({String route, String? messageKey})> _resolveInitialRoute() async {
   final sessionStorage = sl<AuthSessionStorage>();
   final savedTenantSlug = await sessionStorage.readTenantSlug();
@@ -82,10 +69,6 @@ Future<({String route, String? messageKey})> _resolveInitialRoute() async {
   }
 
   final result = await sl<AuthRepo>().verifyTenant(savedTenantSlug);
-  // A network/server hiccup is not proof the company is gone — fail open to
-  // the login screen rather than force a re-entry of the company code every
-  // time the device launches offline. A real rejection (suspended, expired,
-  // ...) always comes back as one of the errors.tenant* keys.
   final rejectionMessageKey = result.when(
     success: (_) => null,
     failure: (f) =>

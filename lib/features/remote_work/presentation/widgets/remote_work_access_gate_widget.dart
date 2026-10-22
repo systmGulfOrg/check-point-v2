@@ -38,8 +38,6 @@ class RemoteWorkAccessGateWidget extends StatelessWidget {
         canReview: canReview,
         canRequest: canRequest,
         currentEmployeeId: currentEmployeeId,
-        // Admins must be able to open every system tab even before a policy
-        // of that type exists, so they can add the first onsite/hybrid policy.
         availablePolicyTypes: null,
         showOnsite: true,
         showRemote: true,

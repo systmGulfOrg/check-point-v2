@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
@@ -51,6 +52,7 @@ class _AdminCreateCustomerVisitSheetWidgetState
   String? attachedDocName;
   String? attachedDocUrl;
   bool isSubmitting = false;
+  bool isUploadingDoc = false;
 
   @override
   void initState() {
@@ -67,7 +69,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
     attendeeInputController = TextEditingController();
     notesController = TextEditingController();
 
-    // Default creator as attendee - user can remove themselves via 'x' chip
     attendees.add(creatorDisplayName);
     _resolveCurrentUserName();
     _loadSystemEmployees();
@@ -166,6 +167,7 @@ class _AdminCreateCustomerVisitSheetWidgetState
   }
 
   Future<void> _pickDocument() async {
+    final visitsCubit = context.read<AdminCustomerVisitsCubit>();
     try {
       final result = await FilePicker.pickFiles(
         type: FileType.custom,
@@ -178,30 +180,42 @@ class _AdminCreateCustomerVisitSheetWidgetState
           'docx',
           'xls',
           'xlsx',
-          'txt',
         ],
       );
 
-      if (result != null && result.files.isNotEmpty) {
-        final file = result.files.first;
+      if (result == null || result.files.isEmpty) return;
+      final filePath = result.files.single.path;
+      if (filePath == null) return;
+
+      setState(() => isUploadingDoc = true);
+      final uploaded = await visitsCubit.uploadNewVisitDocument(File(filePath));
+      if (!mounted) return;
+      setState(() => isUploadingDoc = false);
+
+      if (uploaded != null) {
         setState(() {
-          attachedDocName = file.name;
-          attachedDocUrl = file.path ?? 'file://${file.name}';
+          attachedDocName = uploaded.documentName;
+          attachedDocUrl = uploaded.documentUrl;
         });
-        if (mounted) {
-          CustomSnackBar.showSuccess(
-            context,
-            message: 'admin.visits.docAttached'.tr(),
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) {
+        CustomSnackBar.showSuccess(
+          context,
+          message: 'admin.visits.docAttached'.tr(),
+        );
+      } else {
         CustomSnackBar.showError(
           context,
-          message: 'حدث خطأ أثناء اختيار الملف'.tr(),
+          message: (visitsCubit.lastErrorKey ?? 'core.errors.loadFailed').tr(
+            context: context,
+          ),
         );
       }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => isUploadingDoc = false);
+      CustomSnackBar.showError(
+        context,
+        message: 'حدث خطأ أثناء اختيار الملف'.tr(),
+      );
     }
   }
 
@@ -335,7 +349,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
               const Divider(color: AppColors.border),
               SizedBox(height: 14.h),
 
-              // Customer Selection if multiple
               if (widget.initialCustomer == null && isLoadingCustomers) ...[
                 const Center(child: CircularProgressIndicator.adaptive()),
                 SizedBox(height: 16.h),
@@ -422,7 +435,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
                 SizedBox(height: 16.h),
               ],
 
-              // Purpose / Title
               Text(
                 'admin.visits.purpose'.tr(context: context),
                 style: AppTextStyles.font12Medium,
@@ -434,7 +446,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
               ),
               SizedBox(height: 16.h),
 
-              // Date & Time Row
               Row(
                 children: [
                   Expanded(
@@ -566,7 +577,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
               ),
               SizedBox(height: 16.h),
 
-              // Attendees / Companions ("مين معايا")
               Text(
                 'admin.visits.attendees'.tr(context: context),
                 style: AppTextStyles.font12Medium,
@@ -715,7 +725,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
               ),
               SizedBox(height: 16.h),
 
-              // Document attachment ("الـ document اللي هرفعها")
               Text(
                 'admin.visits.document'.tr(context: context),
                 style: AppTextStyles.font12Medium,
@@ -787,7 +796,7 @@ class _AdminCreateCustomerVisitSheetWidgetState
                       )
                     : InkWell(
                         key: const ValueKey('doc_upload_button'),
-                        onTap: _pickDocument,
+                        onTap: isUploadingDoc ? null : _pickDocument,
                         borderRadius: BorderRadius.circular(14.r),
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 14.h),
@@ -802,11 +811,20 @@ class _AdminCreateCustomerVisitSheetWidgetState
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.cloud_upload_outlined,
-                                color: AppColors.brandPrimary,
-                                size: 20.r,
-                              ),
+                              if (isUploadingDoc)
+                                SizedBox(
+                                  width: 18.r,
+                                  height: 18.r,
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              else
+                                Icon(
+                                  Icons.cloud_upload_outlined,
+                                  color: AppColors.brandPrimary,
+                                  size: 20.r,
+                                ),
                               SizedBox(width: 8.w),
                               Text(
                                 'admin.visits.uploadDoc'.tr(context: context),
@@ -821,7 +839,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
               ),
               SizedBox(height: 16.h),
 
-              // Notes & Objectives
               Text(
                 'admin.visits.notes'.tr(context: context),
                 style: AppTextStyles.font12Medium,
@@ -834,7 +851,6 @@ class _AdminCreateCustomerVisitSheetWidgetState
               ),
               SizedBox(height: 24.h),
 
-              // Submit Button
               CustomButton(
                 text: 'admin.visits.planVisit'.tr(context: context),
                 isLoading: isSubmitting,

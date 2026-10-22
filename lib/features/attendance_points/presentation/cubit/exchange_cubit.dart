@@ -21,8 +21,6 @@ class ExchangeCubit extends SafeCubit<ExchangeState> {
   }) async {
     emit(const ExchangeState.loading());
 
-    // Use the explicitly provided employeeId (from the loaded summary) or
-    // fall back to reading it from the session storage.
     final resolvedEmployeeId =
         employeeId ?? await sessionStorage.readEmployeeId();
 

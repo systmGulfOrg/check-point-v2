@@ -29,16 +29,11 @@ class LocationService {
     return true;
   }
 
-  /// Returns the current position as a plain [LatLng] for backwards
-  /// compatibility with code that does not yet use integrity checks.
   Future<LatLng?> getCurrentPosition() async {
     final sample = await getCurrentSample();
     return sample?.position;
   }
 
-  /// Returns an enriched [LocationSample] with all metadata needed for
-  /// integrity analysis. Returns null if permission is denied or an error
-  /// occurs.
   Future<LocationSample?> getCurrentSample() async {
     try {
       final hasPermission = await handleLocationPermission();
@@ -56,7 +51,7 @@ class LocationService {
         accuracy: position.accuracy,
         timestampMs: position.timestamp.millisecondsSinceEpoch,
         speed: position.speed < 0 ? 0.0 : position.speed,
-        provider: 'fused', // Geolocator uses the fused provider on Android
+        provider: 'fused',
         isMockFromNative: position.isMocked,
       );
     } catch (_) {

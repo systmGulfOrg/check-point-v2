@@ -38,11 +38,9 @@ class BadgesScreen extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             PointsLoading() => BadgesSkeletonWidget(isArabic: isArabic),
-            PointsError(:final message) => Center(
-              child: Padding(
-                padding: EdgeInsets.all(24.r),
-                child: Text(message, style: AppTextStyles.font14Regular),
-              ),
+            PointsError(:final message) => AppErrorStateWidget(
+              messageKey: message,
+              onRetry: () => context.read<PointsCubit>().loadAllPointsData(),
             ),
             PointsLoaded(:final badges) =>
               badges.isEmpty

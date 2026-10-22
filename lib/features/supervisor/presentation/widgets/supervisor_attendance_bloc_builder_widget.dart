@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -56,13 +55,10 @@ class SupervisorAttendanceBlocBuilderWidget extends StatelessWidget {
                 _ => attendance,
               },
             ),
-          SupervisorAttendanceError(:final messageKey) => Center(
-            child: Text(
-              messageKey.tr(context: context),
-              style: AppTextStyles.font14Regular.copyWith(
-                color: AppColors.error,
-              ),
-            ),
+          SupervisorAttendanceError(:final messageKey) => AppErrorStateWidget(
+            messageKey: messageKey,
+            onRetry: () =>
+                context.read<SupervisorAttendanceCubit>().loadAttendance(),
           ),
           _ => const SupervisorAttendanceListWidget(records: []),
         };

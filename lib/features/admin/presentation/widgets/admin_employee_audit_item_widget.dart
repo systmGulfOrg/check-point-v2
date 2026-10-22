@@ -14,7 +14,6 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
     final before = log.before ?? {};
     final after = log.after ?? {};
 
-    // Ignore meta fields that always change but aren't useful to show as a business change
     final ignoreKeys = {
       'updatedAt',
       'createdAt',
@@ -34,12 +33,10 @@ class AdminEmployeeAuditItemWidget extends StatelessWidget {
       final bVal = before[key];
       final aVal = after[key];
 
-      // Use jsonEncode for deep equality comparison
       final bStr = jsonEncode(bVal);
       final aStr = jsonEncode(aVal);
       if (bStr == aStr) continue;
 
-      // We found a change!
       changes.add(
         Padding(
           padding: EdgeInsets.only(top: 8.h),

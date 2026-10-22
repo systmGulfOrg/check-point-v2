@@ -280,7 +280,6 @@ startxref
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -313,7 +312,6 @@ startxref
               const Divider(color: AppColors.border, height: 1),
               hSpace(12),
 
-              // Content / Preview
               Flexible(
                 child: SingleChildScrollView(
                   child: Column(
@@ -321,7 +319,6 @@ startxref
                       _buildPreview(context),
                       hSpace(12),
 
-                      // Meta info card
                       Container(
                         width: double.infinity,
                         padding: EdgeInsets.all(12.r),
@@ -385,7 +382,6 @@ startxref
 
               hSpace(16),
 
-              // Action buttons
               CustomButton(
                 text: _isPdf
                     ? 'فتح وقراءة ملف PDF'
@@ -414,7 +410,6 @@ startxref
         ? '${AppConfig.baseUrl.replaceFirst(RegExp(r'/+$'), '')}$rawUrl'
         : rawUrl;
 
-    // 1. Local Image File
     if (_isImage &&
         (trimmed.startsWith('/') || trimmed.startsWith('file://'))) {
       try {
@@ -441,7 +436,6 @@ startxref
       } catch (_) {}
     }
 
-    // 2. Base64 Image
     if (_isImage &&
         (trimmed.startsWith('data:image/') || !trimmed.startsWith('http'))) {
       try {
@@ -468,7 +462,6 @@ startxref
       } catch (_) {}
     }
 
-    // 3. Network Image
     if (_isImage &&
         (trimmed.startsWith('http://') || trimmed.startsWith('https://'))) {
       return ClipRRect(
@@ -498,7 +491,6 @@ startxref
       );
     }
 
-    // 4. PDF or other Documents
     return _buildGenericFileCard(context);
   }
 

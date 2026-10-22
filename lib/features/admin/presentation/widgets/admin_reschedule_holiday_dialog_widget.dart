@@ -36,7 +36,7 @@ class AdminRescheduleHolidayDialogWidget extends StatefulWidget {
 
 class _AdminRescheduleHolidayDialogWidgetState
     extends State<AdminRescheduleHolidayDialogWidget> {
-  int activeTab = 0; // 0: Reschedule, 1: Cancel, 2: Exclusions
+  int activeTab = 0;
   late DateTime selectedDate;
   late final TextEditingController noteController;
   late final TextEditingController cancelReasonController;
@@ -195,7 +195,6 @@ class _AdminRescheduleHolidayDialogWidgetState
               const Divider(color: AppColors.border),
               SizedBox(height: 10.h),
 
-              // Holiday Summary Banner
               Container(
                 padding: EdgeInsets.all(12.r),
                 decoration: BoxDecoration(
@@ -232,7 +231,6 @@ class _AdminRescheduleHolidayDialogWidgetState
               ),
               SizedBox(height: 14.h),
 
-              // Segmented Tab Selector
               Container(
                 padding: EdgeInsets.all(3.r),
                 decoration: BoxDecoration(
@@ -267,7 +265,6 @@ class _AdminRescheduleHolidayDialogWidgetState
               ),
               SizedBox(height: 16.h),
 
-              // Tab 0: Reschedule Date
               if (activeTab == 0) ...[
                 Text(
                   'الموعد الجديد بعد الترحيل',
@@ -330,7 +327,6 @@ class _AdminRescheduleHolidayDialogWidgetState
                 ),
                 SizedBox(height: 10.h),
 
-                // Quick Preset Chips
                 Text(
                   'ترحيل سريع إلى:',
                   style: AppTextStyles.font11Medium.copyWith(
@@ -392,7 +388,6 @@ class _AdminRescheduleHolidayDialogWidgetState
                 ),
               ],
 
-              // Tab 1: Cancel Holiday
               if (activeTab == 1) ...[
                 Container(
                   padding: EdgeInsets.all(14.r),
@@ -458,7 +453,6 @@ class _AdminRescheduleHolidayDialogWidgetState
                 ),
               ],
 
-              // Tab 2: Exclusions (Departments & Employees)
               if (activeTab == 2) ...[
                 Text(
                   'تحديد من يستثنى من الإجازة (يكون لديهم عمل عادي)',
@@ -466,7 +460,6 @@ class _AdminRescheduleHolidayDialogWidgetState
                 ),
                 SizedBox(height: 10.h),
 
-                // Department exclusions
                 Text(
                   'استثناء أقسام بالكامل:',
                   style: AppTextStyles.font11Medium.copyWith(
@@ -520,7 +513,6 @@ class _AdminRescheduleHolidayDialogWidgetState
                 ),
                 SizedBox(height: 14.h),
 
-                // Employee exclusions
                 Text(
                   'استثناء موظفين محددين:',
                   style: AppTextStyles.font11Medium.copyWith(
@@ -582,7 +574,6 @@ class _AdminRescheduleHolidayDialogWidgetState
               ],
               SizedBox(height: 20.h),
 
-              // Action Buttons
               Row(
                 children: [
                   if (hasChanges) ...[

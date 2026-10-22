@@ -64,8 +64,6 @@ class AdminBranchesBlocBuilderWidget extends StatelessWidget {
   Widget build(BuildContext context) =>
       BlocBuilder<AdminBranchesCubit, AdminBranchesState>(
         builder: (context, state) => switch (state) {
-          // Avoid a false empty state during the first frame before loading
-          // starts and the API response is available.
           AdminBranchesInitial() => const AdminLocationsSkeletonWidget(),
           AdminBranchesLoading() => const AdminLocationsSkeletonWidget(),
           AdminBranchesError(:final messageKey) => Text(

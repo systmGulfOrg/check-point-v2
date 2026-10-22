@@ -55,7 +55,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loadTenantSlug() async {
-    final slug = await context.read<LoginCubit>().authSessionStorage
+    final slug = await context
+        .read<LoginCubit>()
+        .authSessionStorage
         .readTenantSlug();
     if (!mounted) return;
     setState(() => _tenantSlug = slug);
@@ -231,8 +233,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           size: 20.r,
                           color: AppColors.placeholder,
                         ),
-                        // Keep the password field ergonomic without introducing extra state.
-                        // The visibility toggle stays local to this screen.
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(

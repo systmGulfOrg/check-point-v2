@@ -146,7 +146,6 @@ class _ProjectTaskEditorSheetWidgetState
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Header handle & title
                 Padding(
                   padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 12.h),
                   child: Column(
@@ -186,14 +185,12 @@ class _ProjectTaskEditorSheetWidgetState
 
                 const Divider(height: 1, color: AppColors.border),
 
-                // Scrollable Form Fields
                 Expanded(
                   child: SingleChildScrollView(
                     padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 20.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Task Title Field
                         Text(
                           'projects.taskTitle'.tr(context: context),
                           style: AppTextStyles.font14Bold,
@@ -206,7 +203,6 @@ class _ProjectTaskEditorSheetWidgetState
                         ),
                         hSpace(14),
 
-                        // Description Field
                         Text(
                           'projects.description'.tr(context: context),
                           style: AppTextStyles.font14Bold,
@@ -219,7 +215,6 @@ class _ProjectTaskEditorSheetWidgetState
                         ),
                         hSpace(14),
 
-                        // Start & Due Dates Row
                         Row(
                           children: [
                             Expanded(
@@ -338,7 +333,6 @@ class _ProjectTaskEditorSheetWidgetState
                         ),
                         hSpace(14),
 
-                        // Expected Time Field
                         Text(
                           'projects.expectedMinutes'.tr(context: context),
                           style: AppTextStyles.font14Bold,
@@ -358,7 +352,6 @@ class _ProjectTaskEditorSheetWidgetState
                         ),
                         hSpace(14),
 
-                        // Priority Selector (Modern Segmented Chips)
                         Text(
                           'projects.priority'.tr(context: context),
                           style: AppTextStyles.font14Bold,
@@ -418,7 +411,6 @@ class _ProjectTaskEditorSheetWidgetState
                         ),
                         hSpace(14),
 
-                        // Status Dropdown
                         if (widget.project.statuses.isNotEmpty) ...[
                           Text(
                             'projects.status'.tr(context: context),
@@ -452,7 +444,6 @@ class _ProjectTaskEditorSheetWidgetState
                           hSpace(14),
                         ],
 
-                        // Assignee Multi Select
                         AssigneeMultiSelectWidget(
                           selectedIds: _selectedAssignees,
                           fallbackOptions: widget.assigneeOptions,
@@ -461,7 +452,6 @@ class _ProjectTaskEditorSheetWidgetState
                         ),
                         hSpace(14),
 
-                        // Tags Input
                         Text(
                           'projects.tags'.tr(context: context),
                           style: AppTextStyles.font14Bold,
@@ -483,7 +473,6 @@ class _ProjectTaskEditorSheetWidgetState
 
                 const Divider(height: 1, color: AppColors.border),
 
-                // Bottom Action Buttons
                 Padding(
                   padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 12.h),
                   child: Row(

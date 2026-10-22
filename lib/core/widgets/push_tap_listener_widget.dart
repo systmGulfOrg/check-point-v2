@@ -5,13 +5,6 @@ import 'package:check_point_v2/core/routing/push_route_resolver.dart';
 import 'package:check_point_v2/core/routes/app_router.dart';
 import 'package:check_point_v2/core/services/push_notification_service.dart';
 
-/// Wraps the app and navigates when the user taps a push notification.
-///
-/// A tap that launched the app from a terminated state arrives before the
-/// navigator exists, so this listens for the lifetime of the widget rather
-/// than reading the notifier once; `tappedMessageData` is nulled back out
-/// after navigating so a later rebuild does not re-navigate to the same
-/// screen.
 class PushTapListenerWidget extends StatefulWidget {
   const PushTapListenerWidget({required this.child, super.key});
 
@@ -38,7 +31,7 @@ class _PushTapListenerWidgetState extends State<PushTapListenerWidget> {
     final data = sl<PushNotificationService>().tappedMessageData.value;
     if (data == null) return;
 
-    final route = PushRouteResolver.resolve(data['type'] as String?);
+    final route = PushRouteResolver.resolve(data['type'] as String?, data);
     sl<PushNotificationService>().tappedMessageData.value = null;
     if (route == null) return;
 

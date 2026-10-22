@@ -29,7 +29,6 @@ part 'employee_api_service.g.dart';
 abstract class EmployeeApiService {
   factory EmployeeApiService(Dio dio, {String? baseUrl}) = _EmployeeApiService;
 
-  // Attendance
   @POST(ApiConstants.employeeCheckIn)
   Future<dynamic> checkIn(@Body() EmployeeCheckInRequestBody body);
 
@@ -67,7 +66,6 @@ abstract class EmployeeApiService {
   @GET('${ApiConstants.customers}/customerType/{type}')
   Future<CustomerResponseModel> getCustomersByType(@Path('type') String type);
 
-  // Plans
   @GET('${ApiConstants.plans}/employee/{employeeId}')
   Future<PlansResponseModel> getCustomerPlansForEmployee(
     @Path('employeeId') String employeeId,
@@ -92,7 +90,6 @@ abstract class EmployeeApiService {
   @GET(ApiConstants.feedBackStatus)
   Future<FeedbackStatusesResponseModel> getFeedbackStatuses();
 
-  // Tasks
   @GET('${ApiConstants.tasks}/specificEmployee')
   Future<TasksResponseModel> getEmployeeTasks(
     @Query('employeeId') String employeeId,
@@ -133,7 +130,6 @@ abstract class EmployeeApiService {
   @POST(ApiConstants.removeTaskFromEmployee)
   Future<ResultModel> removeTask(@Body() EmployeeRemoveTaskRequestBody body);
 
-  // Leave Requests
   @POST(ApiConstants.leaveRequests)
   Future<ResultModel> createLeaveRequest(@Body() EmployeeLeaveRequestBody body);
 
@@ -154,7 +150,6 @@ abstract class EmployeeApiService {
   @GET(ApiConstants.leaveTypes)
   Future<LeaveTypesResponseModel> getLeaveTypes();
 
-  // Auth / Password
   @PUT(ApiConstants.employeeChangePassword)
   Future<ResultModel> changePassword(
     @Body() EmployeeChangePasswordRequestBody body,

@@ -58,7 +58,6 @@ class EmployeeLeaveCardWidget extends StatelessWidget {
       ),
     };
 
-    // Determine Stage 2 (Manager) state
     final (managerStatus, managerActor) = switch (status) {
       'rejectedbymanager' => (
         LeaveStepStatus.rejected,
@@ -79,7 +78,6 @@ class EmployeeLeaveCardWidget extends StatelessWidget {
       _ => (LeaveStepStatus.completed, leave.managerName),
     };
 
-    // Determine Stage 3 (HR / Admin) state
     final (hrStatus, hrActor) = switch (status) {
       'rejectedbymanager' => (
         LeaveStepStatus.waiting,

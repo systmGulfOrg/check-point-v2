@@ -17,7 +17,6 @@ class AdminEmployeeProfileSkeletonWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          // Header Card Skeleton
           Container(
             padding: EdgeInsets.all(16.r),
             decoration: BoxDecoration(
@@ -117,7 +116,6 @@ class AdminEmployeeProfileSkeletonWidget extends StatelessWidget {
             ),
           ),
           hSpace(14),
-          // Tab bar placeholder
           Container(
             height: 44.h,
             decoration: BoxDecoration(
@@ -141,7 +139,6 @@ class AdminEmployeeProfileSkeletonWidget extends StatelessWidget {
             ),
           ),
           hSpace(16),
-          // Information Card Skeleton
           const AdminEmployeeProfileInfoCardWidget(
             title: 'Job Information Loading Section',
             icon: Icons.work_outline_rounded,

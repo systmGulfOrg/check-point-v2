@@ -257,7 +257,6 @@ class _AdminEditEmployeeSheetWidgetState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Drag Handle
             Center(
               child: Container(
                 width: 44.w,
@@ -269,7 +268,6 @@ class _AdminEditEmployeeSheetWidgetState
                 ),
               ),
             ),
-            // Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -286,7 +284,6 @@ class _AdminEditEmployeeSheetWidgetState
             const Divider(color: AppColors.border),
             hSpace(10),
 
-            // Scrollable Form Content
             Expanded(
               child: Form(
                 key: _formKey,
@@ -294,7 +291,6 @@ class _AdminEditEmployeeSheetWidgetState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Photo Picker Section
                       Center(
                         child: GestureDetector(
                           onTap: _pickPhoto,
@@ -352,7 +348,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(18),
 
-                      // Full Name
                       AdminWizardFieldWidget(
                         label: 'admin.employees.fullName'.tr(context: context),
                         child: CustomTextFormField(
@@ -377,7 +372,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(12),
 
-                      // Username
                       AdminWizardFieldWidget(
                         label: 'admin.employees.username'.tr(context: context),
                         child: CustomTextFormField(
@@ -402,7 +396,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(12),
 
-                      // Password (Optional on edit)
                       AdminWizardFieldWidget(
                         label: 'admin.employees.passwordOptional'.tr(
                           context: context,
@@ -447,7 +440,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(12),
 
-                      // Position and Employee Code
                       Row(
                         children: [
                           Expanded(
@@ -491,7 +483,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(12),
 
-                      // Phone and Email
                       Row(
                         children: [
                           Expanded(
@@ -535,7 +526,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(12),
 
-                      // Mobile ID (with copy button)
                       AdminWizardFieldWidget(
                         label: 'admin.employees.mobileId'.tr(context: context),
                         required: false,
@@ -572,7 +562,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(14),
 
-                      // Roles Selection
                       Text(
                         'admin.employees.roles'.tr(context: context),
                         style: AppTextStyles.font13SemiBold,
@@ -630,7 +619,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(16),
 
-                      // Work System & Remote Work Policy
                       AdminEmployeeWorkSystemWidget(
                         selectedSystem: _selectedWorkSystem,
                         selectedPolicyId: _selectedRemoteWorkPolicyId,
@@ -643,7 +631,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(16),
 
-                      // Permissions Management Card
                       Container(
                         padding: EdgeInsets.all(14.r),
                         decoration: BoxDecoration(
@@ -743,7 +730,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(16),
 
-                      // Department Dropdown
                       BlocBuilder<AdminDepartmentsCubit, AdminDepartmentsState>(
                         builder: (context, deptState) {
                           final rawDepartments = switch (deptState) {
@@ -805,7 +791,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(12),
 
-                      // Branch Dropdown
                       BlocBuilder<AdminBranchesCubit, AdminBranchesState>(
                         builder: (context, branchState) {
                           final rawBranches = switch (branchState) {
@@ -862,7 +847,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(12),
 
-                      // Direct Manager Dropdown
                       BlocBuilder<AdminEmployeesCubit, AdminEmployeesState>(
                         builder: (context, empState) {
                           final employees = context
@@ -932,7 +916,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(12),
 
-                      // Leave Balance
                       Text(
                         'admin.employees.leaveBalance'.tr(context: context),
                         style: AppTextStyles.font12Medium,
@@ -965,7 +948,6 @@ class _AdminEditEmployeeSheetWidgetState
                       ),
                       hSpace(12),
 
-                      // Action Buttons
                       Row(
                         children: [
                           Expanded(

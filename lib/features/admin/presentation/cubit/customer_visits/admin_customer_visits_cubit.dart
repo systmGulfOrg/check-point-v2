@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_customer_visits_repo.dart';
@@ -30,6 +32,36 @@ class AdminCustomerVisitsCubit extends SafeCubit<AdminCustomerVisitsState> {
   }
 
   String? lastErrorKey;
+
+  Future<({String documentName, String documentUrl})?> uploadVisitDocument({
+    required String visitId,
+    required File file,
+  }) async {
+    final result = await visitsRepo.uploadVisitDocument(
+      visitId: visitId,
+      file: file,
+    );
+    return result.when(
+      success: (uploaded) => uploaded,
+      failure: (failure) {
+        lastErrorKey = failure.messageKey;
+        return null;
+      },
+    );
+  }
+
+  Future<({String documentName, String documentUrl})?> uploadNewVisitDocument(
+    File file,
+  ) async {
+    final result = await visitsRepo.uploadNewVisitDocument(file);
+    return result.when(
+      success: (uploaded) => uploaded,
+      failure: (failure) {
+        lastErrorKey = failure.messageKey;
+        return null;
+      },
+    );
+  }
 
   Future<bool> addVisitPlan(CustomerVisitModel visit) async {
     final previous = state;
