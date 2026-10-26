@@ -111,6 +111,20 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                   },
                 ),
                 SupervisorMoreOptionWidget(
+                  icon: Icons.offline_pin_outlined,
+                  labelKey: 'offline.pendingVerificationTitle',
+                  subtitleKey: 'offline.pendingVerificationTitle',
+                  backgroundColor: AppColors.softYellowBackground,
+                  iconColor: AppColors.warning,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.pendingAttendanceVerification,
+                    );
+                  },
+                ),
+                SupervisorMoreOptionWidget(
                   icon: Icons.home_work_outlined,
                   labelKey: 'supervisor.more.remoteWork',
                   subtitleKey: 'supervisor.more.remoteWorkSubtitle',

@@ -2,6 +2,8 @@ import 'package:check_point_v2/features/ai/presentation/cubit/ai_chat_cubit.dart
 import 'package:check_point_v2/features/ai/presentation/widgets/ai_chat_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_employee_audit_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_audit/admin_employee_audit_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/screens/pending_attendance_verification_screen.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/verification/pending_verification_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -949,6 +951,16 @@ class AppRouter {
           child: BlocProvider<PointsCubit>(
             create: (_) => sl<PointsCubit>()..loadAllPointsData(),
             child: const LeaderboardScreen(),
+          ),
+        );
+      case AppRoutes.pendingAttendanceVerification:
+        return _slideRoute(
+          settings: const RouteSettings(
+            name: AppRoutes.pendingAttendanceVerification,
+          ),
+          child: BlocProvider<PendingVerificationCubit>(
+            create: (_) => sl<PendingVerificationCubit>(),
+            child: const PendingAttendanceVerificationScreen(),
           ),
         );
       case AppRoutes.aiChat:

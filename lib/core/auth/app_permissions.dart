@@ -7,6 +7,7 @@ class AppPermissions {
   static const attendanceEdit = 'attendance.edit';
   static const attendanceDelete = 'attendance.delete';
   static const attendanceApproveCorrection = 'attendance.approve_correction';
+  static const attendanceVerifyOffline = 'attendance.verify_offline';
   static const employeeView = 'employee.view';
   static const employeeCreate = 'employee.create';
   static const employeeEdit = 'employee.edit';
@@ -75,11 +76,13 @@ class AppPermissions {
           leaveHrApprove,
           permitApprove,
           planManage,
+          attendanceVerifyOffline,
         ];
       case 'supervisor':
         return [
           attendanceViewOwn,
           attendanceViewTeam,
+          attendanceVerifyOffline,
           employeeView,
           taskView,
           taskAssign,

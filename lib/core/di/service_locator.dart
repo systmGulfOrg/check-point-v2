@@ -125,6 +125,16 @@ import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requ
 import 'package:check_point_v2/features/supervisor/presentation/cubit/plans/supervisor_plans_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
+import 'package:check_point_v2/core/database/app_database.dart';
+import 'package:check_point_v2/core/connectivity/connectivity_cubit.dart';
+import 'package:check_point_v2/core/network/server_time_anchor_interceptor.dart';
+import 'package:check_point_v2/core/services/attendance_sync_service.dart';
+import 'package:check_point_v2/core/services/device_clock_service.dart';
+import 'package:check_point_v2/features/supervisor/data/repos/offline_verification_repo.dart';
+import 'package:check_point_v2/features/supervisor/data/repos/offline_verification_repo_impl.dart';
+import 'package:check_point_v2/features/supervisor/domain/use_cases/get_pending_verifications_use_case.dart';
+import 'package:check_point_v2/features/supervisor/domain/use_cases/verify_attendance_record_use_case.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/verification/pending_verification_cubit.dart';
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
 import 'package:check_point_v2/core/auth/biometric_auth_service.dart';
 import 'package:check_point_v2/core/network/dio_factory.dart';
@@ -141,8 +151,48 @@ final sl = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<FlutterSecureStorage>(FlutterSecureStorage.new);
+  sl.registerLazySingleton<AppDatabase>(AppDatabase.new);
+  sl.registerLazySingleton<DeviceClockService>(DeviceClockService.new);
+  sl.registerLazySingleton<ServerTimeAnchorInterceptor>(
+    () => ServerTimeAnchorInterceptor(
+      database: sl<AppDatabase>(),
+      deviceClockService: sl<DeviceClockService>(),
+    ),
+  );
   sl.registerLazySingleton<Dio>(
-    () => DioFactory.create(secureStorage: sl<FlutterSecureStorage>()),
+    () => DioFactory.create(
+      secureStorage: sl<FlutterSecureStorage>(),
+      anchorInterceptor: sl<ServerTimeAnchorInterceptor>(),
+    ),
+  );
+  sl.registerLazySingleton<ConnectivityCubit>(
+    () => ConnectivityCubit(
+      database: sl<AppDatabase>(),
+      probeDio: sl<Dio>(instanceName: 'external'),
+    ),
+  );
+  sl.registerLazySingleton<AttendanceSyncService>(
+    () => AttendanceSyncService(
+      database: sl<AppDatabase>(),
+      dio: sl<Dio>(),
+      sessionStorage: sl<AuthSessionStorage>(),
+      localNotificationService: sl<LocalNotificationService>(),
+    ),
+  );
+  sl.registerLazySingleton<OfflineVerificationRepo>(
+    () => OfflineVerificationRepoImpl(dio: sl<Dio>()),
+  );
+  sl.registerLazySingleton<GetPendingVerificationsUseCase>(
+    () => GetPendingVerificationsUseCase(sl<OfflineVerificationRepo>()),
+  );
+  sl.registerLazySingleton<VerifyAttendanceRecordUseCase>(
+    () => VerifyAttendanceRecordUseCase(sl<OfflineVerificationRepo>()),
+  );
+  sl.registerFactory<PendingVerificationCubit>(
+    () => PendingVerificationCubit(
+      getPendingVerificationsUseCase: sl<GetPendingVerificationsUseCase>(),
+      verifyAttendanceRecordUseCase: sl<VerifyAttendanceRecordUseCase>(),
+    ),
   );
   sl.registerLazySingleton<AuthSessionStorage>(
     () => AuthSessionStorage(secureStorage: sl<FlutterSecureStorage>()),

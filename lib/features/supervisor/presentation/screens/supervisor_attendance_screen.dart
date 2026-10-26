@@ -70,10 +70,27 @@ class _SupervisorAttendanceScreenState
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  Image.asset(
-                    AppAssets.logo,
-                    height: 32.h,
-                    fit: BoxFit.contain,
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.offline_pin_outlined,
+                          color: AppColors.brandPrimary,
+                        ),
+                        tooltip: 'offline.pendingVerificationTitle'.tr(
+                          context: context,
+                        ),
+                        onPressed: () => Navigator.pushNamed(
+                          context,
+                          AppRoutes.pendingAttendanceVerification,
+                        ),
+                      ),
+                      Image.asset(
+                        AppAssets.logo,
+                        height: 32.h,
+                        fit: BoxFit.contain,
+                      ),
+                    ],
                   ),
                 ],
               ),
