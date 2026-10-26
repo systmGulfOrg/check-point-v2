@@ -1,9 +1,15 @@
 import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:drift/drift.dart' show OrderingTerm;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
-import 'package:check_point_v2/core/services/attendance_verification_service.dart';
+import 'package:check_point_v2/core/connectivity/connectivity_cubit.dart';
+import 'package:check_point_v2/core/database/app_database.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/services/attendance_sync_service.dart';
+import 'package:check_point_v2/core/services/attendance_verification_service.dart';
+import 'package:check_point_v2/core/services/device_clock_service.dart';
 import 'package:check_point_v2/core/utils/app_date_formatter.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
@@ -104,17 +110,59 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     List<LatLng> targetPolygon = const [],
   }) async {
     emit(const EmployeeAttendanceState.loading());
+    final isOnline = sl.isRegistered<ConnectivityCubit>()
+        ? sl<ConnectivityCubit>().state.isOnline
+        : true;
     final verification = await attendanceVerificationService.verify(
       biometricReason: 'Verify your identity to check in',
       center: targetCenter,
       polygon: targetPolygon,
       requireLocation: area != 'Remote',
+      requirePlayIntegrity: isOnline,
     );
     if (!verification.isAllowed) {
       safeEmit(EmployeeAttendanceState.error(verification.messageKey!));
       return;
     }
     currentLocation = verification.location;
+
+    if (!isOnline) {
+      final clockSnapshot = await sl<DeviceClockService>().getClockSnapshot();
+      final db = sl<AppDatabase>();
+      final latestAnchor = await (db.select(db.timeAnchors)
+            ..orderBy([(tbl) => OrderingTerm.desc(tbl.id)])
+            ..limit(1))
+          .getSingleOrNull();
+
+      await sl<AttendanceSyncService>().enqueue(
+        type: 'in',
+        wallClock: clockSnapshot.wallClock,
+        monotonicMs: clockSnapshot.monotonicMs,
+        bootId: clockSnapshot.bootId,
+        anchorServerTime: latestAnchor?.serverTime,
+        anchorMonotonicMs: latestAnchor?.monotonicMs.toInt(),
+        anchorBootId: latestAnchor?.bootId,
+        latitude: currentLocation?.latitude,
+        longitude: currentLocation?.longitude,
+        accuracyM: verification.sample?.accuracy,
+        mockLocationDetected:
+            verification.sample?.isMockFromNative ?? false,
+        area: area,
+        customerId: customerId ?? selectedTarget?.id?.toString(),
+      );
+
+      final optimisticModel = AdminAttendanceModel(
+        clockInTime: clockSnapshot.wallClock.toIso8601String(),
+        attendanceDate:
+            clockSnapshot.wallClock.toIso8601String().split('T').first,
+        area: area,
+        customerId: customerId ?? selectedTarget?.id?.toString(),
+      );
+      todayAttendance = optimisticModel;
+      safeEmit(EmployeeAttendanceState.checkInSuccess(optimisticModel));
+      return;
+    }
+
     final result = await checkInUseCase(
       area: area,
       customerId: customerId ?? selectedTarget?.id?.toString(),
@@ -154,6 +202,9 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     List<LatLng> targetPolygon = const [],
   }) async {
     emit(const EmployeeAttendanceState.loading());
+    final isOnline = sl.isRegistered<ConnectivityCubit>()
+        ? sl<ConnectivityCubit>().state.isOnline
+        : true;
     final verification = await attendanceVerificationService.verify(
       biometricReason: 'Verify your identity to check out',
       center: targetCenter,
@@ -161,12 +212,52 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
       requireLocation:
           todayAttendance?.area != 'Remote' &&
           employeeProfile?.todayWorkMode != 'remote',
+      requirePlayIntegrity: isOnline,
     );
     if (!verification.isAllowed) {
       safeEmit(EmployeeAttendanceState.error(verification.messageKey!));
       return;
     }
     currentLocation = verification.location;
+
+    if (!isOnline) {
+      final clockSnapshot = await sl<DeviceClockService>().getClockSnapshot();
+      final db = sl<AppDatabase>();
+      final latestAnchor = await (db.select(db.timeAnchors)
+            ..orderBy([(tbl) => OrderingTerm.desc(tbl.id)])
+            ..limit(1))
+          .getSingleOrNull();
+
+      await sl<AttendanceSyncService>().enqueue(
+        type: 'out',
+        wallClock: clockSnapshot.wallClock,
+        monotonicMs: clockSnapshot.monotonicMs,
+        bootId: clockSnapshot.bootId,
+        anchorServerTime: latestAnchor?.serverTime,
+        anchorMonotonicMs: latestAnchor?.monotonicMs.toInt(),
+        anchorBootId: latestAnchor?.bootId,
+        latitude: currentLocation?.latitude,
+        longitude: currentLocation?.longitude,
+        accuracyM: verification.sample?.accuracy,
+        mockLocationDetected:
+            verification.sample?.isMockFromNative ?? false,
+      );
+
+      final optimisticModel = AdminAttendanceModel(
+        id: todayAttendance?.id,
+        employeeId: todayAttendance?.employeeId,
+        employeeName: todayAttendance?.employeeName,
+        clockInTime: todayAttendance?.clockInTime,
+        clockOutTime: clockSnapshot.wallClock.toIso8601String(),
+        attendanceDate: todayAttendance?.attendanceDate ??
+            clockSnapshot.wallClock.toIso8601String().split('T').first,
+        area: todayAttendance?.area,
+      );
+      todayAttendance = optimisticModel;
+      safeEmit(EmployeeAttendanceState.checkOutSuccess(optimisticModel));
+      return;
+    }
+
     final result = await checkOutUseCase(
       selectedImageBase64: selectedImageBase64,
       currentLocation: currentLocation,

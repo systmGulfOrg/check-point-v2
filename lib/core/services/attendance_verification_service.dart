@@ -17,6 +17,7 @@ class AttendanceVerificationResult {
     this.messageKey,
     this.integrityResult,
     this.playIntegrityPackage,
+    this.sample,
   });
 
   final bool isAllowed;
@@ -26,6 +27,7 @@ class AttendanceVerificationResult {
   final LocationIntegrityResult? integrityResult;
 
   final IntegrityTokenPackage? playIntegrityPackage;
+  final LocationSample? sample;
 }
 
 class AttendanceVerificationService {
@@ -133,6 +135,7 @@ class AttendanceVerificationService {
       location: location,
       integrityResult: integrityResult,
       playIntegrityPackage: playIntegrityPackage,
+      sample: sample,
     );
   }
 
