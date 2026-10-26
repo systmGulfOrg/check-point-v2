@@ -1,0 +1,90 @@
+workflows:
+  ios-testflight:
+    name: Checkpoint iOS - TestFlight
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+
+    integrations:
+      # ضع هنا اسم الـ API Key كما سمّيته داخل Codemagic:
+      # Teams > Integrations > Apple Developer Portal / App Store Connect
+      app_store_connect: YOUR_API_KEY_NAME
+
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+
+      groups:
+        - app_store_credentials # اختياري: لأي متغيرات بيئة إضافية
+
+      vars:
+        BUNDLE_ID: "com.systmgulf.checkpoint"
+
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.systmgulf.checkpoint
+
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/Library/Caches/CocoaPods
+
+    triggering:
+      events:
+        - push
+        - tag
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+
+    scripts:
+      - name: Set up .env file
+        script: |
+          if [ -n "$ENV_FILE_BASE64" ]; then
+            echo "$ENV_FILE_BASE64" | base64 --decode > .env
+          elif [ -n "$ENV_FILE" ]; then
+            echo "$ENV_FILE" > .env
+          elif [ ! -f .env ]; then
+            cp .env.example .env
+          fi
+
+      - name: Install Flutter dependencies
+        script: |
+          flutter packages pub get
+
+      - name: Run code generation (build_runner)
+        script: |
+          dart run build_runner build --delete-conflicting-outputs
+
+      - name: Install CocoaPods dependencies
+        script: |
+          cd ios
+          pod install
+          cd ..
+
+      - name: Configure iOS code signing
+        script: |
+          xcode-project use-profiles
+
+      - name: Build signed IPA
+        script: |
+          flutter build ipa --release \
+            --build-number="$BUILD_NUMBER" \
+            --export-options-plist=/Users/builder/export_options.plist
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
+      email:
+        recipients:
+          - support@systmgulf.com
+        notify:
+          success: true
+          failure: true
