@@ -1905,5 +1905,22 @@
   "ai.action_required": "إجراء مقترح يتطلب موافقتك",
   "ai.confirm_action": "تأكيد وتنفيذ",
   "ai.cancel_action": "إلغاء",
-  "ai.action_confirmed": "تم تأكيد الإجراء بنجاح."
+  "ai.action_confirmed": "تم تأكيد الإجراء بنجاح.",
+  "offline.banner": "أنت غير متصل — سيتم إرسال حضورك عند عودة الاتصال",
+  "offline.pendingCount": " (معلّق: {})",
+  "offline.syncing": "جارِ مزامنة الحضور المعلق...",
+  "offline.syncSuccess": "تمت مزامنة الحضور بنجاح",
+  "offline.syncPending": "تم إرسال الحضور وبانتظار اعتماد المشرف",
+  "offline.syncFailed": "فشلت مزامنة الحضور، سيتم إعادة المحاولة",
+  "offline.queuedCheckIn": "تم حفظ الحضور محلياً بنجاح (سيتم الإرسال عند توفر الإنترنت)",
+  "offline.queuedCheckOut": "تم حفظ الانصراف محلياً بنجاح (سيتم الإرسال عند توفر الإنترنت)",
+  "offline.featureNeedsOnline": "هذه الميزة تتطلب اتصالاً بالإنترنت",
+  "offline.pendingVerificationTitle": "اعتماد الحضور بدون إنترنت",
+  "offline.approve": "اعتماد",
+  "offline.reject": "رفض",
+  "offline.reason": "سبب التعليق",
+  "offline.rejectReasonHint": "أدخل سبب الرفض...",
+  "offline.rejectSuccess": "تم رفض السجل بنجاح",
+  "offline.approveSuccess": "تم اعتماد السجل بنجاح",
+  "offline.emptyPending": "لا توجد سجلات حضور بانتظار الاعتماد"
 }

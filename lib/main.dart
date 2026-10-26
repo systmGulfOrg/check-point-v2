@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 
 import 'check_point_app.dart';
 import 'core/auth/auth_session_storage.dart';
+import 'core/connectivity/connectivity_cubit.dart';
 import 'core/di/service_locator.dart';
 import 'core/network/auth_token_interceptor.dart';
 import 'core/routes/app_router.dart';
 import 'core/routes/routes.dart';
+import 'core/services/attendance_sync_service.dart';
 import 'core/services/local_notification_service.dart';
 import 'core/services/push_notification_service.dart';
 import 'core/services/play_integrity_service.dart';
@@ -29,6 +31,14 @@ Future<void> main() async {
   await sl<LocalNotificationService>().initialize();
   await sl<PushNotificationService>().initialize();
   unawaited(sl<PlayIntegrityService>().prepareIntegrityToken(retries: 2));
+
+  // Sync pending attendance when connectivity is restored
+  final connectivityCubit = sl<ConnectivityCubit>();
+  final syncService = sl<AttendanceSyncService>();
+  connectivityCubit.onOnlineRestored = () {
+    unawaited(syncService.syncPending());
+  };
+  unawaited(syncService.syncPending());
 
   AuthTokenInterceptor.onTenantBlocked = (errorCode) {
     unawaited(sl<AuthSessionStorage>().clearTenant());
@@ -68,15 +78,39 @@ Future<({String route, String? messageKey})> _resolveInitialRoute() async {
     return (route: AppRoutes.companyCode, messageKey: null);
   }
 
-  final result = await sl<AuthRepo>().verifyTenant(savedTenantSlug);
-  final rejectionMessageKey = result.when(
-    success: (_) => null,
-    failure: (f) =>
-        f.messageKey.startsWith('errors.tenant') ? f.messageKey : null,
-  );
-  if (rejectionMessageKey != null) {
-    await sessionStorage.clearTenant();
-    return (route: AppRoutes.companyCode, messageKey: rejectionMessageKey);
+  // If a valid, unexpired session exists, restore it straight into the app
+  final token = await sessionStorage.readToken();
+  if (token != null && token.isNotEmpty) {
+    final payload = AuthSessionStorage.decodeJwtPayload(token);
+    final exp = payload?['exp'] as int?;
+    final isNotExpired = exp == null ||
+        DateTime.fromMillisecondsSinceEpoch(exp * 1000).isAfter(DateTime.now());
+    if (isNotExpired) {
+      final role = await sessionStorage.readUserRole();
+      final targetRoute = switch (role?.toLowerCase()) {
+        'admin' => AppRoutes.admin,
+        'supervisor' => AppRoutes.supervisor,
+        _ => AppRoutes.employee,
+      };
+      return (route: targetRoute, messageKey: null);
+    }
+  }
+
+  try {
+    final result = await sl<AuthRepo>()
+        .verifyTenant(savedTenantSlug)
+        .timeout(const Duration(seconds: 3));
+    final rejectionMessageKey = result.when(
+      success: (_) => null,
+      failure: (f) =>
+          f.messageKey.startsWith('errors.tenant') ? f.messageKey : null,
+    );
+    if (rejectionMessageKey != null) {
+      await sessionStorage.clearTenant();
+      return (route: AppRoutes.companyCode, messageKey: rejectionMessageKey);
+    }
+  } catch (_) {
+    // If network times out or offline, proceed without clearing tenant
   }
   return (route: AppRoutes.login, messageKey: null);
 }

@@ -1912,5 +1912,22 @@
   "ai.action_required": "Proposed action requires your confirmation",
   "ai.confirm_action": "Confirm & Execute",
   "ai.cancel_action": "Cancel",
-  "ai.action_confirmed": "Action confirmed successfully."
+  "ai.action_confirmed": "Action confirmed successfully.",
+  "offline.banner": "You are offline — Attendance will sync when online",
+  "offline.pendingCount": " ({} pending)",
+  "offline.syncing": "Syncing pending attendance...",
+  "offline.syncSuccess": "Attendance synced successfully",
+  "offline.syncPending": "Attendance submitted, pending supervisor verification",
+  "offline.syncFailed": "Failed to sync attendance, will retry",
+  "offline.queuedCheckIn": "Check-in saved locally (will sync when online)",
+  "offline.queuedCheckOut": "Check-out saved locally (will sync when online)",
+  "offline.featureNeedsOnline": "This feature requires an internet connection",
+  "offline.pendingVerificationTitle": "Offline Attendance Verification",
+  "offline.approve": "Approve",
+  "offline.reject": "Reject",
+  "offline.reason": "Suspicion Reason",
+  "offline.rejectReasonHint": "Enter reason for rejection...",
+  "offline.rejectSuccess": "Record rejected successfully",
+  "offline.approveSuccess": "Record approved successfully",
+  "offline.emptyPending": "No attendance records pending verification"
 }
