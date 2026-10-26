@@ -767,6 +767,7 @@
   "attendance.moveToLocationNote": "Please move to the selected location. Check-in will be enabled when you arrive.",
   "attendance.myLocation": "My location",
   "attendance.noLocationData": "No attendance location data found.",
+  "attendance.offlineGpsCheckInHint": "You are offline — Your attendance will be recorded with your current location and verified by your supervisor once back online.",
   "attendance.noCustomerVisitToday": "You have no scheduled customer visit today.",
   "attendance.onsiteWorkDayLocationMessage": "Today is an onsite work day. Remote attendance is not available.",
   "attendance.outsideArea": "You are outside the area. Check-in is unavailable.",

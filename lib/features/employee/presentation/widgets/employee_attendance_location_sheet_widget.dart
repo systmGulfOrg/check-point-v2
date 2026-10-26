@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/connectivity/connectivity_cubit.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
@@ -412,7 +413,10 @@ class _EmployeeAttendanceLocationSheetWidgetState
       _showDisabledTypeMessage(type);
       return;
     }
-    if (type != 'Remote' && !isInside) {
+    final isOffline = sl.isRegistered<ConnectivityCubit>()
+        ? !sl<ConnectivityCubit>().state.isOnline
+        : false;
+    if (type != 'Remote' && !isInside && (!isOffline || userLocation == null)) {
       final messageKey = userLocation == null
           ? 'errors.locationUnavailable'
           : targetPoints.isEmpty
@@ -1152,16 +1156,74 @@ class _EmployeeAttendanceLocationSheetWidgetState
                           },
                         ),
                       ] else if (points.isEmpty) ...[
-                        hSpace(20),
-                        Center(
-                          child: state is EmployeeAttendanceStateLoading
-                              ? const CircularProgressIndicator()
-                              : Text(
-                                  'attendance.noLocationData'.tr(),
-                                  style: AppTextStyles.font14SemiBold,
-                                  textAlign: TextAlign.center,
+                        if (userLocation != null) ...[
+                          hSpace(12),
+                          EmployeeAttendanceLocationMapWidget(
+                            isExpanded: isMapExpanded,
+                            mapCenter: userLocation!,
+                            userLocation: userLocation,
+                            targetPoints: const [],
+                            targetCenter: null,
+                            targetType: type,
+                            targetName: branch?.name ?? customer?.name,
+                            onMapCreated: (controller) =>
+                                mapController = controller,
+                            onToggleExpanded: () =>
+                                setState(() => isMapExpanded = !isMapExpanded),
+                          ),
+                          hSpace(10),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 10.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFEF3C7),
+                              borderRadius: BorderRadius.circular(10.r),
+                              border: Border.all(color: const Color(0xFFF59E0B)),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.info_outline,
+                                  color: const Color(0xFFB45309),
+                                  size: 18.sp,
                                 ),
-                        ),
+                                SizedBox(width: 8.w),
+                                Expanded(
+                                  child: Text(
+                                    'attendance.offlineGpsCheckInHint'.tr(),
+                                    style: TextStyle(
+                                      color: const Color(0xFF92400E),
+                                      fontSize: 11.5.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          hSpace(10),
+                          CustomButton(
+                            text: widget.isCheckOut
+                                ? 'employee.home.checkOutAction'.tr()
+                                : 'employee.home.checkInAction'.tr(),
+                            isLoading: state is EmployeeAttendanceStateLoading,
+                            enabled: userLocation != null,
+                            onTap: _submit,
+                          ),
+                        ] else ...[
+                          hSpace(20),
+                          Center(
+                            child: state is EmployeeAttendanceStateLoading
+                                ? const CircularProgressIndicator()
+                                : Text(
+                                    'attendance.noLocationData'.tr(),
+                                    style: AppTextStyles.font14SemiBold,
+                                    textAlign: TextAlign.center,
+                                  ),
+                          ),
+                        ],
                       ] else ...[
                         hSpace(12),
                         EmployeeAttendanceLocationMapWidget(
@@ -1205,7 +1267,10 @@ class _EmployeeAttendanceLocationSheetWidgetState
                               ? 'employee.home.checkOutAction'.tr()
                               : 'employee.home.checkInAction'.tr(),
                           isLoading: state is EmployeeAttendanceStateLoading,
-                          enabled: userLocation != null && isInside,
+                          enabled: userLocation != null &&
+                              (isInside ||
+                                  (sl.isRegistered<ConnectivityCubit>() &&
+                                      !sl<ConnectivityCubit>().state.isOnline)),
                           onTap: _submit,
                         ),
                       ],

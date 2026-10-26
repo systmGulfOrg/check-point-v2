@@ -767,6 +767,7 @@
   "attendance.moveToLocationNote": "لو سمحت روح للموقع المطلوب عشان تقدر تسجل حضورك.",
   "attendance.myLocation": "موقعي",
   "attendance.noLocationData": "لم يتم العثور على بيانات موقع الحضور.",
+  "attendance.offlineGpsCheckInHint": "أنت في وضع عدم الاتصال — سيتم تسجيل حضورك بموقعك الحالي وإرساله للمشرف للاعتماد عند عودة الإنترنت.",
   "attendance.noCustomerVisitToday": "لا توجد زيارة عميل مجدولة لك اليوم.",
   "attendance.onsiteWorkDayLocationMessage": "اليوم يوم عمل من الشركة، الحضور عن بُعد غير متاح.",
   "attendance.outsideArea": "أنت بره النطاق، مش هينفع تسجل حضور",

@@ -8,6 +8,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart'
     as admin_lt;
 import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
@@ -43,6 +44,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
     super.initState();
     context.read<EmployeeAttendanceCubit>().loadAttendanceHistory();
     context.read<LeavesCubit>().loadLeavesData();
+    unawaited(sl<EmployeeAttendanceRepo>().getBranches());
   }
 
   void _showApplyLeaveSheet(BuildContext context) {

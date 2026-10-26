@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -39,12 +40,43 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       final response = await api.getBranchById(branchId);
       final branch = response.value?.list.firstOrNull;
       if (branch != null) {
+        final branchMap = {
+          'id': branch.id,
+          'name': branch.name,
+          'location': branch.location,
+          'description': branch.description,
+          'coordinates': branch.coordinates?.map((c) => {
+            'latitude': c.latitude,
+            'longitude': c.longitude,
+          }).toList(),
+        };
+        await cacheManager.putJson('branch_$branchId', branchMap);
         return ApiResult.success(branch);
       }
       return const ApiResult.failure(
         ApiFailure(messageKey: 'Branch not found'),
       );
     } catch (e) {
+      // 1. Try single cached branch
+      final cached = await cacheManager.getJson('branch_$branchId');
+      if (cached is Map) {
+        try {
+          final branch = BranchModel.fromJson(Map<String, dynamic>.from(cached));
+          return ApiResult.success(branch);
+        } catch (_) {}
+      }
+      // 2. Try looking inside full cached branches list
+      final cachedList = await cacheManager.getJson('branches');
+      if (cachedList is List && cachedList.isNotEmpty) {
+        try {
+          final branches = cachedList
+              .map((item) => BranchModel.fromJson(Map<String, dynamic>.from(item as Map)))
+              .toList();
+          final matching = branches.where((b) => b.id == branchId).firstOrNull;
+          if (matching != null) return ApiResult.success(matching);
+          if (branches.isNotEmpty) return ApiResult.success(branches.first);
+        } catch (_) {}
+      }
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
   }
@@ -66,6 +98,22 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
         }).toList(),
       }).toList();
       await cacheManager.putJson('branches', branchMaps);
+      // Also cache each branch individually by ID
+      for (final b in branches) {
+        if (b.id != null) {
+          final singleMap = {
+            'id': b.id,
+            'name': b.name,
+            'location': b.location,
+            'description': b.description,
+            'coordinates': b.coordinates?.map((c) => {
+              'latitude': c.latitude,
+              'longitude': c.longitude,
+            }).toList(),
+          };
+          await cacheManager.putJson('branch_${b.id}', singleMap);
+        }
+      }
       return ApiResult.success(branches);
     } catch (e) {
       // Fallback to cache if network fails
@@ -94,6 +142,9 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       }
       // Cache employee profile
       await cacheManager.putJson('employee_$employeeId', employee.toJson());
+      if (employee.branchId != null) {
+        unawaited(getBranchById(employee.branchId!));
+      }
       return ApiResult.success(employee);
     } catch (e) {
       // Fallback to cache

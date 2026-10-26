@@ -50,6 +50,9 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     return result.when(
       success: (data) {
         employeeProfile = data;
+        if (data.branchId != null) {
+          sessionStorage.saveBranchId(data.branchId!);
+        }
         return data;
       },
       failure: (_) => null,
@@ -74,6 +77,9 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     emit(const EmployeeAttendanceState.loading());
     final employeeId = await sessionStorage.readUserId();
     int? branchId = await sessionStorage.readBranchId();
+    if (branchId == null && employeeProfile?.branchId != null) {
+      branchId = employeeProfile!.branchId;
+    }
     if (branchId == null && employeeId != null && employeeId.isNotEmpty) {
       final employeeResult = await attendanceRepo.getEmployeeById(employeeId);
       final id = employeeResult.when(
@@ -97,8 +103,17 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     }
     result.when(
       success: (data) => safeEmit(EmployeeAttendanceState.branchesLoaded(data)),
-      failure: (failure) =>
-          safeEmit(EmployeeAttendanceState.error(failure.messageKey)),
+      failure: (failure) {
+        // Offline resilience: if branch cache is missing, construct fallback from profile
+        final fallbackName = employeeProfile?.branchName ?? 'Office';
+        final fallbackBranch = BranchModel(
+          id: branchId ?? employeeProfile?.branchId,
+          name: fallbackName,
+          location: fallbackName,
+          coordinates: const [],
+        );
+        safeEmit(EmployeeAttendanceState.branchesLoaded([fallbackBranch]));
+      },
     );
   }
 

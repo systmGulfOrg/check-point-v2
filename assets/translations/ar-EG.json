@@ -748,6 +748,7 @@
   "attendance.moveToLocationNote": "يرجى التوجه إلى الموقع المحدد حتى يسمح لك التطبيق بتسجيل الحضور.",
   "attendance.myLocation": "موقعي",
   "attendance.noLocationData": "لم يتم العثور على بيانات موقع الحضور.",
+  "attendance.offlineGpsCheckInHint": "أنت أوفلاين — هيتم تسجيل حضورك بموقعك الحالي ومراجعته من المشرف لما النت يرجع.",
   "attendance.noCustomerVisitToday": "معندكش زيارة عميل مجدولة النهارده.",
   "attendance.onsiteWorkDayLocationMessage": "النهارده شغلك من الشركة، الحضور من البيت مش متاح.",
   "attendance.outsideArea": "أنت خارج النطاق، لا يمكن تسجيل الحضور",
