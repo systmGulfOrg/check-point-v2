@@ -166,12 +166,18 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
         customerId: customerId ?? selectedTarget?.id?.toString(),
       );
 
+      final now = clockSnapshot.wallClock.toLocal();
+      final localDateStr =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+      final localTimeStr =
+          '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
+
       final optimisticModel = AdminAttendanceModel(
-        clockInTime: clockSnapshot.wallClock.toIso8601String(),
-        attendanceDate:
-            clockSnapshot.wallClock.toIso8601String().split('T').first,
+        clockInTime: localTimeStr,
+        attendanceDate: localDateStr,
         area: area,
         customerId: customerId ?? selectedTarget?.id?.toString(),
+        status: 'Present',
       );
       todayAttendance = optimisticModel;
       safeEmit(EmployeeAttendanceState.checkInSuccess(optimisticModel));
@@ -258,15 +264,21 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
             verification.sample?.isMockFromNative ?? false,
       );
 
+      final now = clockSnapshot.wallClock.toLocal();
+      final localDateStr =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+      final localTimeStr =
+          '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
+
       final optimisticModel = AdminAttendanceModel(
         id: todayAttendance?.id,
         employeeId: todayAttendance?.employeeId,
         employeeName: todayAttendance?.employeeName,
         clockInTime: todayAttendance?.clockInTime,
-        clockOutTime: clockSnapshot.wallClock.toIso8601String(),
-        attendanceDate: todayAttendance?.attendanceDate ??
-            clockSnapshot.wallClock.toIso8601String().split('T').first,
+        clockOutTime: localTimeStr,
+        attendanceDate: todayAttendance?.attendanceDate ?? localDateStr,
         area: todayAttendance?.area,
+        status: 'Present',
       );
       todayAttendance = optimisticModel;
       safeEmit(EmployeeAttendanceState.checkOutSuccess(optimisticModel));
@@ -329,14 +341,53 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
       success: (data) {
         _allHistoryRecords = data;
         todayAttendance = _findTodayRecord(data);
-        _applyFilters();
       },
       failure: (_) {
-        _allHistoryRecords = [];
-        todayAttendance = null;
-        _applyFilters();
+        // Keep todayAttendance if already set optimistically or offline
       },
     );
+
+    // Overlay pending offline attendance records from Drift SQLite queue
+    try {
+      final db = sl<AppDatabase>();
+      final pendingList = await (db.select(db.pendingAttendanceTable)
+            ..where((tbl) => tbl.status.equals('queued'))
+            ..orderBy([(tbl) => OrderingTerm.asc(tbl.wallClock)]))
+          .get();
+      if (pendingList.isNotEmpty) {
+        final pendingIn = pendingList.where((p) => p.type == 'in').lastOrNull;
+        final pendingOut = pendingList.where((p) => p.type == 'out').lastOrNull;
+        if (pendingIn != null || pendingOut != null) {
+          final now = DateTime.now();
+          final todayDateStr =
+              '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+          final existing = todayAttendance ??
+              AdminAttendanceModel(
+                attendanceDate: todayDateStr,
+                employeeName: employeeProfile?.name,
+              );
+          final inTime = pendingIn != null
+              ? '${pendingIn.wallClock.toLocal().hour.toString().padLeft(2, '0')}:${pendingIn.wallClock.toLocal().minute.toString().padLeft(2, '0')}:${pendingIn.wallClock.toLocal().second.toString().padLeft(2, '0')}'
+              : existing.clockInTime;
+          final outTime = pendingOut != null
+              ? '${pendingOut.wallClock.toLocal().hour.toString().padLeft(2, '0')}:${pendingOut.wallClock.toLocal().minute.toString().padLeft(2, '0')}:${pendingOut.wallClock.toLocal().second.toString().padLeft(2, '0')}'
+              : existing.clockOutTime;
+
+          todayAttendance = AdminAttendanceModel(
+            id: existing.id,
+            employeeId: existing.employeeId,
+            employeeName: existing.employeeName,
+            attendanceDate: existing.attendanceDate ?? todayDateStr,
+            clockInTime: inTime,
+            clockOutTime: outTime,
+            area: pendingIn?.area ?? existing.area,
+            status: 'Present',
+          );
+        }
+      }
+    } catch (_) {}
+
+    _applyFilters();
   }
 
   int get todayOvertimeMinutes {

@@ -324,8 +324,26 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
         itemCount: itemCount,
         index: pageIndex * itemCount,
       );
-      return ApiResult.success(response.value?.list ?? []);
+      final list = response.value?.list ?? [];
+      if (pageIndex == 0 && list.isNotEmpty) {
+        await cacheManager.putJson(
+          'attendance_history_$employeeId',
+          list.map((a) => a.toJson()).toList(),
+        );
+      }
+      return ApiResult.success(list);
     } catch (e) {
+      if (pageIndex == 0) {
+        final cached = await cacheManager.getJson('attendance_history_$employeeId');
+        if (cached is List && cached.isNotEmpty) {
+          try {
+            final list = cached
+                .map((item) => AdminAttendanceModel.fromJson(Map<String, dynamic>.from(item as Map)))
+                .toList();
+            return ApiResult.success(list);
+          } catch (_) {}
+        }
+      }
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
   }

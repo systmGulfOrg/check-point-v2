@@ -123,7 +123,12 @@ class AppDateFormatter {
         rawTime == '00:00:00.0000000') {
       return '--:--';
     }
-    final cleaned = toEnglishDigits(rawTime.trim().split('.').first);
+    var timePart = toEnglishDigits(rawTime.trim().split('.').first);
+    if (timePart.contains('T')) {
+      timePart = timePart.split('T').last;
+    }
+    timePart = timePart.replaceAll('Z', '');
+    final cleaned = timePart.trim();
     final parts = cleaned.split(':');
     final hour = int.tryParse(parts[0]);
     final minute = parts.length >= 2 ? int.tryParse(parts[1]) : 0;
