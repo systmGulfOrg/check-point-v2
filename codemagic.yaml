@@ -5,9 +5,7 @@ workflows:
     instance_type: mac_mini_m2
 
     integrations:
-      # ضع هنا اسم الـ API Key كما سمّيته داخل Codemagic:
-      # Teams > Integrations > Apple Developer Portal / App Store Connect
-      app_store_connect: YOUR_API_KEY_NAME
+      app_store_connect: "Check Point"
 
     environment:
       flutter: stable
