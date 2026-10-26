@@ -1762,6 +1762,7 @@
   "ai.cancel_action": "إلغاء",
   "ai.action_confirmed": "تم تأكيد الإجراء بنجاح.",
   "offline.banner": "أنت غير متصل — هيتم إرسال حضورك لما النت يرجع",
+  "offline.bannerCompact": "أنت غير متصل · الحضور هيتحفظ محلياً",
   "offline.bannerTitle": "أنت غير متصل",
   "offline.bannerSubtitle": "هيتم حفظ الحضور محلياً وإرساله لما النت يرجع",
   "offline.pending": "معلّق",

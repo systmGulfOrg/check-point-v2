@@ -26,7 +26,7 @@ class SupportAppOverlayWidgetState extends State<SupportAppOverlayWidget> {
             position ??
             Offset(
               constraints.maxWidth - buttonSize - 16.w,
-              MediaQuery.paddingOf(context).top + 8.h,
+              constraints.maxHeight - buttonSize - 110.h,
             );
 
         return Stack(

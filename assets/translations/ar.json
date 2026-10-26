@@ -1908,6 +1908,7 @@
   "ai.cancel_action": "إلغاء",
   "ai.action_confirmed": "تم تأكيد الإجراء بنجاح.",
   "offline.banner": "أنت غير متصل — سيتم إرسال حضورك عند عودة الاتصال",
+  "offline.bannerCompact": "أنت غير متصل · الحضور محفوظ محلياً",
   "offline.bannerTitle": "أنت غير متصل",
   "offline.bannerSubtitle": "سيتم حفظ الحضور محلياً وإرساله عند عودة الاتصال",
   "offline.pending": "معلّق",

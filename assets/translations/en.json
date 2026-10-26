@@ -1915,6 +1915,7 @@
   "ai.cancel_action": "Cancel",
   "ai.action_confirmed": "Action confirmed successfully.",
   "offline.banner": "You are offline — Attendance will sync when online",
+  "offline.bannerCompact": "You are offline · Attendance saved locally",
   "offline.bannerTitle": "You are offline",
   "offline.bannerSubtitle": "Attendance saved locally · Syncs when back online",
   "offline.pending": "pending",
