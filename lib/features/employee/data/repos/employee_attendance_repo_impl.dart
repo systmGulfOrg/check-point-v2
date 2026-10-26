@@ -2,6 +2,9 @@ import 'dart:math';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'package:check_point_v2/core/database/app_database.dart';
+import 'package:check_point_v2/core/database/cache_manager.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/core/network/api_failure.dart';
 import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
@@ -23,10 +26,12 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
   EmployeeAttendanceRepoImpl({
     required this.api,
     required this.odooAttendanceService,
-  });
+    CacheManager? cacheManager,
+  }) : cacheManager = cacheManager ?? CacheManager(sl<AppDatabase>());
 
   final EmployeeApiService api;
   final OdooAttendanceService odooAttendanceService;
+  final CacheManager cacheManager;
 
   @override
   Future<ApiResult<BranchModel>> getBranchById(int branchId) async {
@@ -48,8 +53,31 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
   Future<ApiResult<List<BranchModel>>> getBranches() async {
     try {
       final response = await api.getBranches();
-      return ApiResult.success(response.value?.list ?? []);
+      final branches = response.value?.list ?? [];
+      // Cache branches for offline use
+      final branchMaps = branches.map((b) => {
+        'id': b.id,
+        'name': b.name,
+        'location': b.location,
+        'description': b.description,
+        'coordinates': b.coordinates?.map((c) => {
+          'latitude': c.latitude,
+          'longitude': c.longitude,
+        }).toList(),
+      }).toList();
+      await cacheManager.putJson('branches', branchMaps);
+      return ApiResult.success(branches);
     } catch (e) {
+      // Fallback to cache if network fails
+      final cached = await cacheManager.getJson('branches');
+      if (cached is List && cached.isNotEmpty) {
+        try {
+          final branches = cached
+              .map((item) => BranchModel.fromJson(Map<String, dynamic>.from(item as Map)))
+              .toList();
+          return ApiResult.success(branches);
+        } catch (_) {}
+      }
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
   }
@@ -64,8 +92,18 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
           ApiFailure(messageKey: 'errors.employeeUnavailable'),
         );
       }
+      // Cache employee profile
+      await cacheManager.putJson('employee_$employeeId', employee.toJson());
       return ApiResult.success(employee);
     } catch (e) {
+      // Fallback to cache
+      final cached = await cacheManager.getJson('employee_$employeeId');
+      if (cached is Map) {
+        try {
+          final employee = EmployeeModel.fromJson(Map<String, dynamic>.from(cached));
+          return ApiResult.success(employee);
+        } catch (_) {}
+      }
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
   }
@@ -86,8 +124,32 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
   Future<ApiResult<List<CustomerModel>>> getCustomersByType(String type) async {
     try {
       final response = await api.getCustomersByType(type);
-      return ApiResult.success(response.value?.list ?? []);
+      final customers = response.value?.list ?? [];
+      // Cache customers
+      final customerMaps = customers.map((c) => {
+        'id': c.id,
+        'name': c.name,
+        'workesAs': c.workesAs,
+        'location': c.location,
+        'customerType': c.customerType,
+        'coordinates': c.coordinates?.map((coord) => {
+          'latitude': coord.latitude,
+          'longitude': coord.longitude,
+        }).toList(),
+      }).toList();
+      await cacheManager.putJson('customers_$type', customerMaps);
+      return ApiResult.success(customers);
     } catch (e) {
+      // Fallback to cache
+      final cached = await cacheManager.getJson('customers_$type');
+      if (cached is List && cached.isNotEmpty) {
+        try {
+          final customers = cached
+              .map((item) => CustomerModel.fromJson(Map<String, dynamic>.from(item as Map)))
+              .toList();
+          return ApiResult.success(customers);
+        } catch (_) {}
+      }
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
   }
