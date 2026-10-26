@@ -35,10 +35,17 @@ class CheckPointApp extends StatelessWidget {
             builder: (context, child) => BlocProvider.value(
               value: sl<ConnectivityCubit>(),
               child: SupportAppOverlayWidget(
-                child: Column(
+                child: Stack(
                   children: [
-                    const OfflineBannerWidget(),
-                    Expanded(child: child ?? const SizedBox.shrink()),
+                    child ?? const SizedBox.shrink(),
+                    const Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: IgnorePointer(
+                        child: OfflineBannerWidget(),
+                      ),
+                    ),
                   ],
                 ),
               ),
