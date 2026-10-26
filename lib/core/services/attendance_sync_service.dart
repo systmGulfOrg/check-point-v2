@@ -14,6 +14,7 @@ class AttendanceSyncService {
   final Dio dio;
   final AuthSessionStorage sessionStorage;
   final LocalNotificationService? localNotificationService;
+  void Function(OfflineSyncResponse response)? onSyncCompleted;
 
   bool _isSyncing = false;
 
@@ -157,6 +158,8 @@ class AttendanceSyncService {
             ),
           );
         }
+
+        onSyncCompleted?.call(syncResponse);
 
         // Show local notification if items were synced
         if (syncResponse.verified > 0 || syncResponse.pending > 0) {

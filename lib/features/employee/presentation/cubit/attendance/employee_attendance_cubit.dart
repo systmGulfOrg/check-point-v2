@@ -322,6 +322,17 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
   Future<void> loadAttendanceHistory() async {
     emit(const EmployeeAttendanceState.loading());
     final employeeId = await sessionStorage.readUserId() ?? '';
+    final isOnline = sl.isRegistered<ConnectivityCubit>()
+        ? sl<ConnectivityCubit>().state.isOnline
+        : true;
+
+    // If online, flush any pending offline attendance first so server creates the records
+    if (isOnline) {
+      try {
+        await sl<AttendanceSyncService>().syncPending();
+      } catch (_) {}
+    }
+
     if (employeeId.isNotEmpty) {
       final profileResult = await attendanceRepo.getEmployeeById(employeeId);
       profileResult.when(
