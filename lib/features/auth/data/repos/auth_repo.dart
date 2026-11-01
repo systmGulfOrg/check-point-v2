@@ -19,4 +19,5 @@ abstract class AuthRepo {
   Future<ApiResult<TrialSignupModel>> createTrialSignup(
     TrialSignupRequestBody request,
   );
+  Future<ApiResult<void>> deleteMyAccount(String password);
 }

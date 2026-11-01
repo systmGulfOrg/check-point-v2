@@ -424,6 +424,7 @@ Future<void> setupServiceLocator() async {
     () => AuthSessionCubit(
       authSessionStorage: sl<AuthSessionStorage>(),
       pushTokenRegistrar: sl<PushTokenRegistrar>(),
+      authRepo: sl<AuthRepo>(),
     ),
   );
   sl.registerFactory<AuthProfileCubit>(

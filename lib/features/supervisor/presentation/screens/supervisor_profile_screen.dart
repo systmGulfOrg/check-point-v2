@@ -6,6 +6,7 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_profile_card_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_sign_out_button_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_profile_options_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/delete_account_button_widget.dart';
 
 class SupervisorProfileScreen extends StatelessWidget {
   const SupervisorProfileScreen({super.key});
@@ -28,6 +29,8 @@ class SupervisorProfileScreen extends StatelessWidget {
             const SupervisorProfileOptionsWidget(),
             hSpace(20),
             const AdminSettingsSignOutButtonWidget(),
+            hSpace(8),
+            const DeleteAccountButtonWidget(),
           ],
         ),
       ),

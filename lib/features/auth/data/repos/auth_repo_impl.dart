@@ -1,7 +1,10 @@
+import 'package:dio/dio.dart';
+
 import 'package:check_point_v2/core/network/api_failure.dart';
 import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/auth/data/apis/auth_api_service.dart';
+import 'package:check_point_v2/features/auth/data/models/account_deletion/delete_account_request_body.dart';
 import 'package:check_point_v2/features/auth/data/models/account_request/account_request_model.dart';
 import 'package:check_point_v2/features/auth/data/models/account_request/account_request_status_model.dart';
 import 'package:check_point_v2/features/auth/data/models/login/login_request_model.dart';
@@ -119,6 +122,21 @@ class AuthRepoImpl implements AuthRepo {
       return ApiResult.success(signup);
     } catch (error) {
       return ApiResult.failure(ApiFailureMapper.map(error));
+    }
+  }
+
+  @override
+  Future<ApiResult<void>> deleteMyAccount(String password) async {
+    try {
+      await api.deleteMyAccount(DeleteAccountRequestBody(password: password));
+      return const ApiResult.success(null);
+    } catch (error) {
+      final status = error is DioException ? error.response?.statusCode : null;
+      return ApiResult.failure(switch (status) {
+        400 => const ApiFailure(messageKey: 'auth.deleteAccount.wrongPassword'),
+        409 => const ApiFailure(messageKey: 'auth.deleteAccount.lastAdmin'),
+        _ => ApiFailureMapper.map(error),
+      });
     }
   }
 }

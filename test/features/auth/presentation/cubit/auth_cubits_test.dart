@@ -15,6 +15,9 @@ import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubi
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_state.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/request_account/request_account_state.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/session/auth_session_cubit.dart';
+import 'package:check_point_v2/features/auth/presentation/cubit/session/auth_session_state.dart';
+import 'package:check_point_v2/core/network/api_failure.dart';
 import 'package:check_point_v2/core/services/push_token_registrar.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -46,11 +49,22 @@ class _FakeAuthRepo implements AuthRepo {
   Future<ApiResult<bool>> requestDeviceTransfer(
     LoginRequestModel request,
   ) async => const ApiResult.success(true);
-  _FakeAuthRepo({required this.loginResponse});
+  _FakeAuthRepo({
+    required this.loginResponse,
+    this.deleteResult = const ApiResult.success(null),
+  });
 
   final LoginResponseModel loginResponse;
+  final ApiResult<void> deleteResult;
   final loginRequests = <LoginRequestModel>[];
   final accountRequests = <AccountRequestModel>[];
+  final deletePasswords = <String>[];
+
+  @override
+  Future<ApiResult<void>> deleteMyAccount(String password) async {
+    deletePasswords.add(password);
+    return deleteResult;
+  }
 
   @override
   Future<ApiResult<LoginResponseModel>> login(LoginRequestModel request) async {
@@ -119,6 +133,9 @@ class _FakeAuthSessionStorage extends AuthSessionStorage {
   Future<String?> readToken() async => _storage[AuthSessionStorage.tokenKey];
 
   @override
+  Future<void> clear() async => _storage.clear();
+
+  @override
   Future<void> clearAccountRequestDismissal() async {}
 }
 
@@ -134,11 +151,13 @@ class _FakeBiometricAuthService extends BiometricAuthService {
 /// PushTokenRegistrarContract, not the concrete PushTokenRegistrar — so this
 /// fake needs no FirebaseMessaging instance at all.
 class _NoopPushTokenRegistrar implements PushTokenRegistrarContract {
+  int stopCalls = 0;
+
   @override
   Future<void> start() async {}
 
   @override
-  Future<void> stop() async {}
+  Future<void> stop() async => stopCalls++;
 }
 
 void main() {
@@ -284,6 +303,68 @@ void main() {
       expect(repo.accountRequests.single.name, 'Ahmed Mohamed');
       expect(repo.accountRequests.single.mobileId, 'mobile-456');
       expect(repo.accountRequests.single.deviceToken, 'device-token-456');
+    });
+  });
+
+  group('AuthSessionCubit.deleteAccount', () {
+    const anyLogin = LoginResponseModel(id: '1', userName: 'ahmed');
+
+    test('deletes the account, then clears the device session', () async {
+      final repo = _FakeAuthRepo(loginResponse: anyLogin);
+      final storage = _FakeAuthSessionStorage();
+      await storage.saveUserSession(token: 'token-123');
+      final push = _NoopPushTokenRegistrar();
+      final cubit = AuthSessionCubit(
+        authSessionStorage: storage,
+        pushTokenRegistrar: push,
+        authRepo: repo,
+      );
+      addTearDown(cubit.close);
+
+      expectLater(
+        cubit.stream,
+        emitsInOrder([
+          const AuthSessionState.loading(),
+          const AuthSessionState.success(),
+        ]),
+      );
+
+      await cubit.deleteAccount('secret');
+
+      expect(repo.deletePasswords, ['secret']);
+      expect(await storage.readToken(), isNull);
+      expect(push.stopCalls, 1);
+    });
+
+    test('keeps the session and emits the error key when it fails', () async {
+      final repo = _FakeAuthRepo(
+        loginResponse: anyLogin,
+        deleteResult: const ApiResult.failure(
+          ApiFailure(messageKey: 'auth.deleteAccount.wrongPassword'),
+        ),
+      );
+      final storage = _FakeAuthSessionStorage();
+      await storage.saveUserSession(token: 'token-123');
+      final push = _NoopPushTokenRegistrar();
+      final cubit = AuthSessionCubit(
+        authSessionStorage: storage,
+        pushTokenRegistrar: push,
+        authRepo: repo,
+      );
+      addTearDown(cubit.close);
+
+      expectLater(
+        cubit.stream,
+        emitsInOrder([
+          const AuthSessionState.loading(),
+          const AuthSessionState.error('auth.deleteAccount.wrongPassword'),
+        ]),
+      );
+
+      await cubit.deleteAccount('wrong');
+
+      expect(await storage.readToken(), 'token-123');
+      expect(push.stopCalls, 0);
     });
   });
 }

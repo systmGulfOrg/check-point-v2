@@ -15,6 +15,7 @@ import 'package:check_point_v2/features/employee/presentation/widgets/employee_s
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_tile_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_settings_notifications_tile_bloc_selector_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_profile_name_tile_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/delete_account_button_widget.dart';
 
 class EmployeeSettingsScreen extends StatelessWidget {
   const EmployeeSettingsScreen({super.key});
@@ -135,6 +136,8 @@ class EmployeeSettingsScreen extends StatelessWidget {
               ),
               hSpace(24),
               const EmployeeSettingsSignOutButtonWidget(),
+              hSpace(8),
+              const DeleteAccountButtonWidget(),
               hSpace(20),
               Center(
                 child: Text(

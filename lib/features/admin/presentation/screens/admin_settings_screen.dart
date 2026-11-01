@@ -14,6 +14,7 @@ import 'package:check_point_v2/features/auth/presentation/widgets/user_permissio
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_section_card_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_sign_out_button_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_tile_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/delete_account_button_widget.dart';
 
 class AdminSettingsScreen extends StatelessWidget {
   const AdminSettingsScreen({super.key});
@@ -134,6 +135,8 @@ class AdminSettingsScreen extends StatelessWidget {
             ),
             hSpace(24),
             const AdminSettingsSignOutButtonWidget(),
+            hSpace(8),
+            const DeleteAccountButtonWidget(),
             hSpace(20),
             Center(
               child: Text(

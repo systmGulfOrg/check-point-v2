@@ -7,6 +7,7 @@ class ApiConstants {
   static const String accountRequest = '/api/AccountRequest';
   static const String employees = '/api/Employee';
   static const String deleteEmployee = '/api/Auth/DeleteUser';
+  static const String deleteMyAccount = '/api/v2/auth/me';
   static const String departments = '/api/Department';
   static const String branches = '/api/Branch';
   static const String customers = '/api/Customer';
