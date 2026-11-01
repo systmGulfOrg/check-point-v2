@@ -45,13 +45,16 @@ class AdminStatsGridWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Three cards fit one row; four make a 2x2 grid.
+    final cardCount = 3 + (showTasks ? 1 : 0) + (showOnLeave ? 1 : 0);
+    final columns = cardCount == 3 ? 3 : 2;
     return GridView.count(
-      crossAxisCount: 2,
+      crossAxisCount: columns,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 16.w,
-      mainAxisSpacing: 16.h,
-      childAspectRatio: 1.18,
+      crossAxisSpacing: 10.w,
+      mainAxisSpacing: 10.h,
+      childAspectRatio: columns == 3 ? 0.95 : 1.55,
       children: [
         AnimatedListItemWidget(
           index: 0,

@@ -195,7 +195,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {

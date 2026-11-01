@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'employee_quick_action_tile_widget.dart';
 
 class EmployeeHomeQuickActionsWidget extends StatelessWidget {
   const EmployeeHomeQuickActionsWidget({
@@ -19,22 +18,22 @@ class EmployeeHomeQuickActionsWidget extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        EmployeeQuickActionTileWidget(
+        AppQuickActionTileWidget(
           icon: Icons.beach_access_rounded,
           label: 'employee.home.quick.leave'.tr(context: context),
           onTap: onRequestLeave,
         ),
-        EmployeeQuickActionTileWidget(
+        AppQuickActionTileWidget(
           icon: Icons.timer_outlined,
           label: 'employee.home.quick.permit'.tr(context: context),
           onTap: onRequestPermission,
         ),
-        EmployeeQuickActionTileWidget(
+        AppQuickActionTileWidget(
           icon: Icons.more_time_rounded,
           label: 'employee.home.quick.overtime'.tr(context: context),
           onTap: () => Navigator.pushNamed(context, AppRoutes.overtime),
         ),
-        EmployeeQuickActionTileWidget(
+        AppQuickActionTileWidget(
           icon: Icons.swap_horiz_rounded,
           label: 'employee.home.quick.workLocation'.tr(context: context),
           onTap: () => Navigator.pushNamed(context, AppRoutes.remoteWork),

@@ -28,32 +28,26 @@ class AdminStatCardWidget extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(26.r),
+        borderRadius: BorderRadius.circular(16.r),
         child: Container(
-          padding: EdgeInsets.all(14.r),
+          padding: EdgeInsets.all(12.r),
           decoration: BoxDecoration(
             color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(22.r),
-            boxShadow: const [
-              BoxShadow(
-                color: AppColors.shadow,
-                blurRadius: 18,
-                offset: Offset(0, 6),
-              ),
-            ],
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(color: AppColors.border),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                width: 40.r,
-                height: 40.r,
+                width: 32.r,
+                height: 32.r,
                 decoration: BoxDecoration(
                   color: iconBackgroundColor,
-                  borderRadius: BorderRadius.circular(14.r),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
-                child: Icon(icon, color: iconColor, size: 20.r),
+                child: Icon(icon, color: iconColor, size: 18.r),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

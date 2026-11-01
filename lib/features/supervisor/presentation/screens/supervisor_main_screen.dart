@@ -87,6 +87,10 @@ class _SupervisorMainScreenState extends State<SupervisorMainScreen> {
             final authProfileCubit = context.read<AuthProfileCubit>();
             showModalBottomSheet<void>(
               context: context,
+              isScrollControlled: true,
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.sizeOf(context).height * 0.85,
+              ),
               backgroundColor: AppColors.cardBackground,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

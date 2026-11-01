@@ -24,6 +24,7 @@ export 'widgets/custom_button.dart';
 export 'widgets/app_error_state_widget.dart';
 export 'widgets/app_message_widget.dart';
 export 'widgets/app_status_pill_widget.dart';
+export 'widgets/app_quick_action_tile_widget.dart';
 export 'widgets/app_card_container_widget.dart';
 export 'widgets/app_sheet_handle_widget.dart';
 export 'widgets/app_avatar_fallback_initials_widget.dart';

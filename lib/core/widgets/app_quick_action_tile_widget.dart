@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/app/app_spaces.dart';
+import 'package:check_point_v2/core/styles/app_colors.dart';
+import 'package:check_point_v2/core/styles/app_text_styles.dart';
 
-/// Icon tile with a short label under it, for the home quick actions.
-class EmployeeQuickActionTileWidget extends StatelessWidget {
-  const EmployeeQuickActionTileWidget({
+/// Icon tile with a short label under it, for home quick actions.
+class AppQuickActionTileWidget extends StatelessWidget {
+  const AppQuickActionTileWidget({
     required this.icon,
     required this.label,
     required this.onTap,

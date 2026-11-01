@@ -35,7 +35,7 @@ class EmployeeSettingsScreen extends StatelessWidget {
     };
 
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),

@@ -9,8 +9,8 @@ import 'package:check_point_v2/features/employee/presentation/cubit/attendance/e
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_state.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_location_sheet_widget.dart';
-import 'package:check_point_v2/features/admin/presentation/widgets/admin_greeting_widget.dart';
-import 'supervisor_personal_summary_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_header_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_today_card_widget.dart';
 
 class SupervisorPersonalDashboardBlocBuilderWidget extends StatelessWidget {
   const SupervisorPersonalDashboardBlocBuilderWidget({super.key});
@@ -118,7 +118,6 @@ class SupervisorPersonalDashboardBlocBuilderWidget extends StatelessWidget {
             profile?.todayWorkEnd ??
             profile?.workPolicy?.workingHoursEnd ??
             profile?.clockOutTime;
-        final workSystem = profile?.workSystem ?? 'onsite';
         final workMode = profile?.todayWorkMode ?? 'onsite';
         final isLoading = state is EmployeeAttendanceStateLoading;
         final isCheckedIn =
@@ -131,39 +130,37 @@ class SupervisorPersonalDashboardBlocBuilderWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AdminGreetingWidget(
-                greetingKey: 'supervisor.dashboard.greeting',
-                userNameKey: 'supervisor.dashboard.user',
-                userName: profile?.name,
-                dateText: AppDateFormatter.formatFullDate(DateTime.now()),
+              EmployeeHeaderWidget(
+                userName:
+                    profile?.name ??
+                    'employee.home.defaultName'.tr(context: context),
+                imageUrl: profile?.imageUrl,
               ),
-              hSpace(20),
-              SupervisorPersonalSummaryWidget(
-                policyName:
-                    profile?.shiftName ??
-                    profile?.workPolicy?.name ??
-                    'employee.home.defaultPolicy'.tr(context: context),
-                workSystem: workSystem.tr(context: context),
-                workMode: workMode.tr(context: context),
-                workStart: AppDateFormatter.formatTimeString(
-                  workStart,
+              hSpace(16),
+              EmployeeTodayCardWidget(
+                policyText: AppDateFormatter.formatPolicySchedule(
+                  policyName:
+                      profile?.shiftName ??
+                      profile?.workPolicy?.name ??
+                      'employee.home.defaultPolicy'.tr(context: context),
+                  rawStart: workStart,
+                  rawEnd: workEnd,
                   isArabic: isArabic,
                 ),
-                workEnd: AppDateFormatter.formatTimeString(
-                  workEnd,
-                  isArabic: isArabic,
-                ),
-                checkIn: AppDateFormatter.formatTimeString(
+                isOnTime: attendance?.isLate != true,
+                checkInTime: AppDateFormatter.formatTimeString(
                   attendance?.clockInTime,
                   isArabic: isArabic,
                 ),
-                checkOut: AppDateFormatter.formatTimeString(
+                checkOutTime: AppDateFormatter.formatTimeString(
                   attendance?.clockOutTime,
                   isArabic: isArabic,
                 ),
-                leaveBalance: '${profile?.leaveBalance ?? '--'}',
                 isCheckedIn: isCheckedIn,
                 hasCheckedOut: hasCheckedOut,
+                workedHours:
+                    cubit.todayWorkedHoursWithOvertime ?? attendance?.dayHours,
+                workModeText: workMode.tr(context: context),
                 isTodayHoliday: isTodayHoliday,
                 isTodayWeeklyOff: isTodayWeeklyOff,
                 onToggleCheckInOut: () => _toggleCheckInOut(context),

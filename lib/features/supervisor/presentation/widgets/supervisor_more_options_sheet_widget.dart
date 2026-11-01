@@ -7,6 +7,7 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/role_switch_dialog_widget.dart';
 import 'supervisor_more_option_widget.dart';
+import 'supervisor_more_section_widget.dart';
 
 class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
   const SupervisorMoreOptionsSheetWidget({
@@ -80,20 +81,13 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
               ],
             ),
             hSpace(18),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 12.h,
-              crossAxisSpacing: 12.w,
-              childAspectRatio: 1.32,
+            SupervisorMoreSectionWidget(
+              titleKey: 'supervisor.more.sectionTeam',
               children: [
                 SupervisorMoreOptionWidget(
                   icon: Icons.business_center_outlined,
                   labelKey: 'supervisor.more.customers',
                   subtitleKey: 'supervisor.more.customersSubtitle',
-                  backgroundColor: AppColors.softBrandBackground,
-                  iconColor: AppColors.brandPrimary,
                   onTap: () {
                     Navigator.pop(context);
                     onCustomersTap?.call();
@@ -103,8 +97,6 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                   icon: Icons.calendar_month_outlined,
                   labelKey: 'supervisor.more.leaves',
                   subtitleKey: 'supervisor.more.leavesSubtitle',
-                  backgroundColor: AppColors.softGreenBackground,
-                  iconColor: AppColors.success,
                   onTap: () {
                     Navigator.pop(context);
                     onLeavesTap();
@@ -113,9 +105,7 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                 SupervisorMoreOptionWidget(
                   icon: Icons.offline_pin_outlined,
                   labelKey: 'offline.pendingVerificationTitle',
-                  subtitleKey: 'offline.pendingVerificationTitle',
-                  backgroundColor: AppColors.softYellowBackground,
-                  iconColor: AppColors.warning,
+                  subtitleKey: 'supervisor.more.offlineSubtitle',
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(
@@ -128,19 +118,21 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                   icon: Icons.home_work_outlined,
                   labelKey: 'supervisor.more.remoteWork',
                   subtitleKey: 'supervisor.more.remoteWorkSubtitle',
-                  backgroundColor: AppColors.softBlueBackground,
-                  iconColor: AppColors.info,
                   onTap: () {
                     Navigator.pop(context);
                     onRemoteWorkTap();
                   },
                 ),
+              ],
+            ),
+            hSpace(16),
+            SupervisorMoreSectionWidget(
+              titleKey: 'supervisor.more.sectionAccount',
+              children: [
                 SupervisorMoreOptionWidget(
                   icon: Icons.notifications_none_rounded,
                   labelKey: 'supervisor.more.notifications',
                   subtitleKey: 'supervisor.more.notificationsSubtitle',
-                  backgroundColor: AppColors.softBrandBackground,
-                  iconColor: AppColors.brandPrimary,
                   onTap: () {
                     Navigator.pop(context);
                     onNotificationsTap();
@@ -150,8 +142,6 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                   icon: Icons.person_outline_rounded,
                   labelKey: 'supervisor.more.profile',
                   subtitleKey: 'supervisor.more.profileSubtitle',
-                  backgroundColor: AppColors.softYellowBackground,
-                  iconColor: AppColors.warning,
                   onTap: () {
                     Navigator.pop(context);
                     onProfileTap();
@@ -165,8 +155,6 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                     icon: Icons.swap_horiz_rounded,
                     labelKey: 'auth.role.switchRole',
                     subtitleKey: 'auth.role.currentRole',
-                    backgroundColor: AppColors.softBrandBackground,
-                    iconColor: AppColors.brandPrimary,
                     onTap: () {
                       Navigator.pop(context);
                       final state = context.read<AuthProfileCubit>().state;
