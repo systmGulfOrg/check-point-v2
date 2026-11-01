@@ -350,4 +350,20 @@ abstract class AdminApiService {
     @Path('id') String id,
     @Part(name: 'file') File file,
   );
+
+  /// Server-computed attendance stats. With [employeeId] it also returns the
+  /// employee's working/absent/leave/holiday day counts.
+  @GET('/api/v2/attendance/summary')
+  Future<dynamic> getAttendanceSummary({
+    @Query('from') required String from,
+    @Query('to') required String to,
+    @Query('employeeId') String? employeeId,
+  });
+
+  /// Remaining entitlement per leave type, in days, for one employee.
+  @GET('/api/v2/leave-balance')
+  Future<dynamic> getEmployeeLeaveBalance({
+    @Query('employeeId') required String employeeId,
+    @Query('year') int? year,
+  });
 }

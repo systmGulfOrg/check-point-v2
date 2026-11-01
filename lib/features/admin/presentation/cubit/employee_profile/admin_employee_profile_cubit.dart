@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
@@ -23,6 +25,7 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
   final LeavesApiService leavesApiService;
 
   EmployeeModel? employee;
+  String? _employeeId;
   List<AdminAttendanceModel> allAttendance = const [];
   DateTime selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
   List<PendingDeviceModel> devicesHistory = [];
@@ -31,6 +34,7 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
   List<ShortLeaveModel> permissions = [];
 
   Future<void> load(String employeeId, {EmployeeModel? initialEmployee}) async {
+    _employeeId = employeeId;
     if (initialEmployee != null) {
       employee = initialEmployee;
     }
@@ -60,15 +64,10 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
     try {
       final leavesResponse = await adminApiService.getAllLeaveRequests();
       if (leavesResponse.isSuccess == true && leavesResponse.value != null) {
-        final allLeaves = leavesResponse.value!.list;
-        final empName = employee?.name?.trim().toLowerCase();
-        leaveRequests = allLeaves.where((r) {
-          final matchesId = r.employeeId == employeeId;
-          final matchesName =
-              empName != null &&
-              r.employeeName?.trim().toLowerCase() == empName;
-          return matchesId || matchesName;
-        }).toList();
+        // Match by id only: two employees can share a name.
+        leaveRequests = leavesResponse.value!.list
+            .where((r) => r.employeeId == employeeId)
+            .toList();
       }
     } catch (_) {}
 
@@ -87,7 +86,8 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
       failure: (_) {},
     );
 
-    _computeAndEmit();
+    leaveBalances = await _loadLeaveBalances(employeeId);
+    await _computeAndEmit();
   }
 
   void setMonth(DateTime month) {
@@ -95,10 +95,10 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
     final currentMonth = DateTime(DateTime.now().year, DateTime.now().month);
     if (normalized.isAfter(currentMonth)) return;
     selectedMonth = normalized;
-    _computeAndEmit();
+    unawaited(_computeAndEmit());
   }
 
-  void _computeAndEmit() {
+  Future<void> _computeAndEmit() async {
     final currentEmp = employee;
     if (currentEmp == null) return;
 
@@ -115,88 +115,32 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
           !date.isAfter(now);
     }).toList();
 
-    final attendedDates = monthlyRecords
-        .map((record) => record.attendanceDate?.split('T').first)
-        .whereType<String>()
-        .toSet();
+    // The server owns these numbers: absence depends on the employee's shifts,
+    // weekly offs, holidays and approved leaves, which the app does not know.
+    final summary = await _loadMonthSummary(_employeeId);
 
-    final daysInScope =
-        selectedMonth.year == now.year && selectedMonth.month == now.month
-        ? now.day
-        : DateTime(selectedMonth.year, selectedMonth.month + 1, 0).day;
-
-    final totalAnnual = currentEmp.leaveBalance ?? 21;
-    final usedAnnual = leaveRequests
-        .where(
-          (r) =>
-              r.status?.toLowerCase() == 'approved' &&
-              (r.leaveType?.toLowerCase().contains('annual') == true ||
-                  r.leaveType?.toLowerCase().contains('سنوي') == true),
-        )
-        .length;
-    final usedCasual = leaveRequests
-        .where(
-          (r) =>
-              r.status?.toLowerCase() == 'approved' &&
-              (r.leaveType?.toLowerCase().contains('casual') == true ||
-                  r.leaveType?.toLowerCase().contains('عارض') == true),
-        )
-        .length;
-    final usedSick = leaveRequests
-        .where(
-          (r) =>
-              r.status?.toLowerCase() == 'approved' &&
-              (r.leaveType?.toLowerCase().contains('sick') == true ||
-                  r.leaveType?.toLowerCase().contains('مرض') == true),
-        )
-        .length;
-
-    final currentYear = DateTime.now().year;
-    leaveBalances = [
-      LeaveBalanceModel(
-        id: 'annual',
-        leaveTypeId: '1',
-        leaveTypeName: 'Annual Leave',
-        year: currentYear,
-        totalAllocated: totalAnnual,
-        usedBalance: usedAnnual,
-        remainingBalance: (totalAnnual - usedAnnual).clamp(0, totalAnnual),
-        carriedOver: 0,
-      ),
-      LeaveBalanceModel(
-        id: 'casual',
-        leaveTypeId: '2',
-        leaveTypeName: 'Casual Leave',
-        year: currentYear,
-        totalAllocated: 7,
-        usedBalance: usedCasual,
-        remainingBalance: (7 - usedCasual).clamp(0, 7),
-        carriedOver: 0,
-      ),
-      LeaveBalanceModel(
-        id: 'sick',
-        leaveTypeId: '3',
-        leaveTypeName: 'Sick Leave',
-        year: currentYear,
-        totalAllocated: 14,
-        usedBalance: usedSick,
-        remainingBalance: (14 - usedSick).clamp(0, 14),
-        carriedOver: 0,
-      ),
-    ];
-
-    emit(
+    safeEmit(
       AdminEmployeeProfileState.success(
         employee: currentEmp,
         attendance: monthlyRecords,
         selectedMonth: selectedMonth,
-        attendedDays: attendedDates.length,
-        absentDays: (daysInScope - attendedDates.length).clamp(0, daysInScope),
-        lateDays: monthlyRecords.where((item) => item.isLate == true).length,
-        earlyLeaveDays: monthlyRecords
-            .where((item) => item.isEarly == true)
-            .length,
-        totalHours: _totalHours(monthlyRecords),
+        attendedDays:
+            summary?.presentDays ??
+            monthlyRecords
+                .map((r) => r.attendanceDate?.split('T').first)
+                .whereType<String>()
+                .toSet()
+                .length,
+        absentDays: summary?.absentDays ?? 0,
+        lateDays:
+            summary?.lateDays ??
+            monthlyRecords.where((r) => r.isLate == true).length,
+        earlyLeaveDays:
+            summary?.earlyLeaveDays ??
+            monthlyRecords.where((r) => (r.earlyLeaveMinutes ?? 0) > 0).length,
+        totalHours: summary != null
+            ? _formatMinutes(summary.workedMinutes)
+            : _totalHours(monthlyRecords),
         devicesHistory: devicesHistory,
         leaveRequests: leaveRequests,
         leaveBalances: leaveBalances,
@@ -204,6 +148,70 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
       ),
     );
   }
+
+  Future<_MonthSummary?> _loadMonthSummary(String? employeeId) async {
+    if (employeeId == null) return null;
+    final now = DateTime.now();
+    final first = DateTime(selectedMonth.year, selectedMonth.month);
+    final lastOfMonth = DateTime(selectedMonth.year, selectedMonth.month + 1, 0);
+    final last = lastOfMonth.isAfter(now) ? now : lastOfMonth;
+    String ymd(DateTime d) =>
+        '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+    try {
+      final response = await adminApiService.getAttendanceSummary(
+        from: ymd(first),
+        to: ymd(last),
+        employeeId: employeeId,
+      );
+      final value = (response as Map<String, dynamic>)['value'];
+      if (value is! Map<String, dynamic>) return null;
+      int n(String k) => (value[k] as num?)?.toInt() ?? 0;
+      return _MonthSummary(
+        presentDays: n('presentDays'),
+        absentDays: n('absentDays'),
+        lateDays: n('lateCount'),
+        earlyLeaveDays: n('earlyLeaveCount'),
+        workedMinutes: n('totalWorkedMinutes'),
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<List<LeaveBalanceModel>> _loadLeaveBalances(String employeeId) async {
+    final year = DateTime.now().year;
+    try {
+      final response = await adminApiService.getEmployeeLeaveBalance(
+        employeeId: employeeId,
+        year: year,
+      );
+      final value = (response as Map<String, dynamic>)['value'];
+      final rows = value is Map<String, dynamic> ? value['balances'] : null;
+      if (rows is! List) return const [];
+      return rows
+          .whereType<Map<String, dynamic>>()
+          // Unlimited / unpaid types have no entitlement to show a balance for.
+          .where((r) => r['entitlement'] != null)
+          .map(
+            (r) => LeaveBalanceModel(
+              id: r['leaveTypeId']?.toString() ?? '',
+              leaveTypeId: r['leaveTypeId']?.toString() ?? '',
+              leaveTypeName: r['typeName']?.toString() ?? '',
+              year: year,
+              totalAllocated: (r['entitlement'] as num).toInt(),
+              usedBalance: (r['used'] as num?)?.toInt() ?? 0,
+              remainingBalance: (r['remaining'] as num?)?.toInt() ?? 0,
+              carriedOver: 0,
+            ),
+          )
+          .toList();
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  String _formatMinutes(int totalMinutes) =>
+      '${totalMinutes ~/ 60}h ${totalMinutes % 60}m';
 
   String _totalHours(List<AdminAttendanceModel> records) {
     var totalMinutes = 0;
@@ -220,4 +228,20 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
     final remainingMinutes = totalMinutes % 60;
     return '${hours}h ${remainingMinutes}m';
   }
+}
+
+class _MonthSummary {
+  const _MonthSummary({
+    required this.presentDays,
+    required this.absentDays,
+    required this.lateDays,
+    required this.earlyLeaveDays,
+    required this.workedMinutes,
+  });
+
+  final int presentDays;
+  final int absentDays;
+  final int lateDays;
+  final int earlyLeaveDays;
+  final int workedMinutes;
 }
