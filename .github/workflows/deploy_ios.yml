@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       action:
-        description: 'Action: "distribute" (App Store IPA + metadata), "beta" (TestFlight), or "upload_metadata" (screenshots & store text only)'
+        description: 'Action: "beta" (TestFlight), "distribute" (App Store IPA + metadata), or "upload_metadata" (screenshots & store text only)'
         required: true
-        default: 'distribute'
+        default: 'beta'
         type: choice
         options:
-          - distribute
           - beta
+          - distribute
           - upload_metadata
       build_number:
         description: 'Build Number (e.g. 5) - optional for build actions'
@@ -37,13 +37,6 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
           working-directory: ios
-
-      - name: Set up Java 17
-        if: ${{ github.event.inputs.action != 'upload_metadata' }}
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
 
       - name: Set up Flutter
         if: ${{ github.event.inputs.action != 'upload_metadata' }}
@@ -120,6 +113,14 @@ jobs:
             -t ios \
             --apiKey "$APP_STORE_CONNECT_KEY_ID" \
             --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID"
+
+      - name: Upload IPA as GitHub Artifact
+        if: ${{ github.event.inputs.action != 'upload_metadata' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: check_point_v2-ipa
+          path: build/ios/ipa/*.ipa
+          retention-days: 7
 
       - name: Deploy Store Metadata and Screenshots with Fastlane
         if: ${{ always() }}
