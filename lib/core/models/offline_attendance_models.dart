@@ -10,10 +10,10 @@ class OfflineSyncAnchor {
   });
 
   Map<String, dynamic> toJson() => {
-        'serverTime': serverTime.toIso8601String(),
-        'monotonicMs': monotonicMs,
-        'bootId': bootId,
-      };
+    'serverTime': serverTime.toIso8601String(),
+    'monotonicMs': monotonicMs,
+    'bootId': bootId,
+  };
 
   factory OfflineSyncAnchor.fromJson(Map<String, dynamic> json) =>
       OfflineSyncAnchor(
@@ -53,25 +53,29 @@ class OfflineSyncRecord {
   });
 
   Map<String, dynamic> toJson() => {
-        'clientUuid': clientUuid,
-        'type': type,
-        'wallClock': wallClock.toIso8601String(),
-        'monotonicMs': monotonicMs,
-        'bootId': bootId,
-        if (anchor != null) 'anchor': anchor!.toJson(),
-        if (latitude != null) 'latitude': latitude,
-        if (longitude != null) 'longitude': longitude,
-        if (accuracy != null) 'accuracy': accuracy,
-        'mockLocationDetected': mockLocationDetected,
-        if (area != null) 'area': area,
-        if (customerId != null) 'customerId': customerId,
-      };
+    'clientUuid': clientUuid,
+    'type': type,
+    'wallClock': wallClock.toIso8601String(),
+    'monotonicMs': monotonicMs,
+    'bootId': bootId,
+    if (anchor != null) 'anchor': anchor!.toJson(),
+    if (latitude != null) 'latitude': latitude,
+    if (longitude != null) 'longitude': longitude,
+    // Backend schema is .strict() and names this accuracyM.
+    if (accuracy != null) 'accuracyM': accuracy,
+    'mockLocationDetected': mockLocationDetected,
+    if (area != null) 'area': area,
+    if (customerId != null) 'customerId': customerId,
+  };
 }
 
 class OfflineSyncResultItem {
   final String clientUuid;
+
+  /// One of `synced | pending | duplicate | conflict | rejected`, exactly as
+  /// returned by `POST /api/v2/attendance/offline-sync`.
   final String status;
-  final int? attendanceId;
+  final String? attendanceId;
   final List<String> reasons;
 
   const OfflineSyncResultItem({
@@ -81,16 +85,19 @@ class OfflineSyncResultItem {
     this.reasons = const [],
   });
 
-  factory OfflineSyncResultItem.fromJson(Map<String, dynamic> json) =>
-      OfflineSyncResultItem(
-        clientUuid: json['clientUuid'] as String? ?? '',
-        status: json['status'] as String? ?? 'REJECTED',
-        attendanceId: (json['attendanceId'] as num?)?.toInt(),
-        reasons: (json['reasons'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList() ??
-            const [],
-      );
+  factory OfflineSyncResultItem.fromJson(Map<String, dynamic> json) {
+    final reasons = <String>[
+      ...?(json['reasons'] as List<dynamic>?)?.map((e) => e.toString()),
+      if (json['reason'] != null) json['reason'].toString(),
+    ];
+    return OfflineSyncResultItem(
+      clientUuid: json['clientUuid']?.toString() ?? '',
+      status: json['status']?.toString().toLowerCase() ?? 'rejected',
+      // Attendance ids are ULID strings, never numbers.
+      attendanceId: json['attendanceId']?.toString(),
+      reasons: reasons,
+    );
+  }
 }
 
 class OfflineSyncResponse {
@@ -110,22 +117,28 @@ class OfflineSyncResponse {
 
   factory OfflineSyncResponse.fromJson(Map<String, dynamic> json) {
     final value = json['value'] as Map<String, dynamic>? ?? json;
-    final resultsList = (value['results'] as List<dynamic>?)
-            ?.map((e) => OfflineSyncResultItem.fromJson(e as Map<String, dynamic>))
+    final results =
+        (value['results'] as List<dynamic>?)
+            ?.map(
+              (e) => OfflineSyncResultItem.fromJson(e as Map<String, dynamic>),
+            )
             .toList() ??
-        [];
+        const <OfflineSyncResultItem>[];
+    // The server returns only per-record results, so the totals are derived.
+    int count(Set<String> statuses) =>
+        results.where((r) => statuses.contains(r.status)).length;
     return OfflineSyncResponse(
-      total: (value['total'] as num?)?.toInt() ?? 0,
-      verified: (value['verified'] as num?)?.toInt() ?? 0,
-      pending: (value['pending'] as num?)?.toInt() ?? 0,
-      failed: (value['failed'] as num?)?.toInt() ?? 0,
-      results: resultsList,
+      total: results.length,
+      verified: count({'synced', 'duplicate'}),
+      pending: count({'pending'}),
+      failed: count({'conflict', 'rejected'}),
+      results: results,
     );
   }
 }
 
 class PendingAttendanceItem {
-  final int id;
+  final String id;
   final String employeeId;
   final String employeeName;
   final String? employeeCode;
@@ -156,9 +169,11 @@ class PendingAttendanceItem {
   factory PendingAttendanceItem.fromJson(Map<String, dynamic> json) {
     final emp = json['employee'] as Map<String, dynamic>?;
     return PendingAttendanceItem(
-      id: (json['id'] as num).toInt(),
-      employeeId: json['employeeId']?.toString() ?? '',
-      employeeName: emp?['name']?.toString() ??
+      id: json['id']?.toString() ?? '',
+      employeeId:
+          json['employeeId']?.toString() ?? emp?['id']?.toString() ?? '',
+      employeeName:
+          emp?['name']?.toString() ??
           json['employeeName']?.toString() ??
           'Employee',
       employeeCode: emp?['employeeCode']?.toString(),
@@ -174,7 +189,8 @@ class PendingAttendanceItem {
           : null,
       verificationStatus:
           json['verificationStatus']?.toString() ?? 'PENDING_VERIFICATION',
-      verificationReasons: (json['verificationReasons'] as List<dynamic>?)
+      verificationReasons:
+          (json['verificationReasons'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],

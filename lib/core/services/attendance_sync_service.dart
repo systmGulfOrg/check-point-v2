@@ -14,7 +14,15 @@ class AttendanceSyncService {
   final Dio dio;
   final AuthSessionStorage sessionStorage;
   final LocalNotificationService? localNotificationService;
-  void Function(OfflineSyncResponse response)? onSyncCompleted;
+
+  /// The backend accepts at most this many records per request.
+  static const int _batchSize = 50;
+
+  final _syncCompleted = StreamController<OfflineSyncResponse>.broadcast();
+
+  /// Emits after each sync that changed at least one queued record, so screens
+  /// showing today's attendance can reload from the server.
+  Stream<OfflineSyncResponse> get syncCompleted => _syncCompleted.stream;
 
   bool _isSyncing = false;
 
@@ -43,7 +51,9 @@ class AttendanceSyncService {
     String? customerId,
   }) async {
     final clientUuid = UuidHelper.generateV4();
-    await database.into(database.pendingAttendanceTable).insert(
+    await database
+        .into(database.pendingAttendanceTable)
+        .insert(
           PendingAttendanceTableCompanion.insert(
             clientUuid: clientUuid,
             type: type,
@@ -88,102 +98,133 @@ class AttendanceSyncService {
         }
       }
 
-      final pendingRows = await (database.select(database.pendingAttendanceTable)
-            ..where((tbl) => tbl.status.equals('queued'))
-            ..orderBy([(tbl) => OrderingTerm.asc(tbl.createdAt)]))
-          .get();
+      final pendingRows =
+          await (database.select(database.pendingAttendanceTable)
+                ..where((tbl) => tbl.status.equals('queued'))
+                ..orderBy([(tbl) => OrderingTerm.asc(tbl.createdAt)]))
+              .get();
 
       if (pendingRows.isEmpty) {
         return null;
       }
 
-      final records = pendingRows.map((row) {
-        OfflineSyncAnchor? anchor;
-        if (row.anchorServerTime != null &&
-            row.anchorMonotonicMs != null &&
-            row.anchorBootId != null) {
-          anchor = OfflineSyncAnchor(
-            serverTime: row.anchorServerTime!,
-            monotonicMs: row.anchorMonotonicMs!.toInt(),
-            bootId: row.anchorBootId!,
-          );
-        }
-
-        return OfflineSyncRecord(
-          clientUuid: row.clientUuid,
-          type: row.type,
-          wallClock: row.wallClock,
-          monotonicMs: row.monotonicMs.toInt(),
-          bootId: row.bootId,
-          anchor: anchor,
-          latitude: row.latitude,
-          longitude: row.longitude,
-          accuracy: row.accuracyM,
-          mockLocationDetected: row.mockLocationDetected,
-          area: row.area,
-          customerId: row.customerId,
+      final allResults = <OfflineSyncResultItem>[];
+      for (var i = 0; i < pendingRows.length; i += _batchSize) {
+        final batch = pendingRows.skip(i).take(_batchSize).toList();
+        final response = await dio.post(
+          ApiConstants.offlineAttendanceSync,
+          data: {
+            'records': batch.map(_toRecord).map((r) => r.toJson()).toList(),
+          },
         );
-      }).toList();
-
-      final requestData = {
-        'records': records.map((r) => r.toJson()).toList(),
-      };
-
-      final response = await dio.post(
-        ApiConstants.offlineAttendanceSync,
-        data: requestData,
-      );
-
-      if (response.statusCode != null &&
-          response.statusCode! >= 200 &&
-          response.statusCode! < 300) {
-        final syncResponse = OfflineSyncResponse.fromJson(
+        final parsed = OfflineSyncResponse.fromJson(
           response.data as Map<String, dynamic>,
         );
-
-        for (final item in syncResponse.results) {
-          final mappedStatus = switch (item.status) {
-            'VERIFIED' => 'synced',
-            'PENDING_VERIFICATION' => 'pending',
-            'CONFLICT' => 'conflict',
-            _ => 'rejected',
-          };
-
-          await (database.update(database.pendingAttendanceTable)
-                ..where((tbl) => tbl.clientUuid.equals(item.clientUuid)))
-              .write(
+        for (final item in parsed.results) {
+          await (database.update(
+            database.pendingAttendanceTable,
+          )..where((tbl) => tbl.clientUuid.equals(item.clientUuid))).write(
             PendingAttendanceTableCompanion(
-              status: Value(mappedStatus),
-              reason: Value(item.reasons.isNotEmpty ? item.reasons.join(',') : null),
+              status: Value(_localStatus(item.status)),
+              reason: Value(
+                item.reasons.isNotEmpty ? item.reasons.join(',') : null,
+              ),
             ),
           );
         }
-
-        onSyncCompleted?.call(syncResponse);
-
-        // Show local notification if items were synced
-        if (syncResponse.verified > 0 || syncResponse.pending > 0) {
-          final title = syncResponse.pending > 0
-              ? 'مزامنة الحضور: بانتظار الاعتماد'
-              : 'تمت مزامنة الحضور';
-          final body = syncResponse.pending > 0
-              ? 'تم إرسال ${syncResponse.total} سجل، منها ${syncResponse.pending} بانتظار اعتماد المشرف.'
-              : 'تم اعتماد ${syncResponse.verified} سجل حضور بنجاح.';
-
-          await localNotificationService?.showPush(
-            id: 2001,
-            title: title,
-            body: body,
-          );
-        }
-
-        return syncResponse;
+        allResults.addAll(parsed.results);
       }
+
+      final summary = OfflineSyncResponse(
+        total: allResults.length,
+        verified: allResults
+            .where((r) => r.status == 'synced' || r.status == 'duplicate')
+            .length,
+        pending: allResults.where((r) => r.status == 'pending').length,
+        failed: allResults
+            .where((r) => r.status == 'conflict' || r.status == 'rejected')
+            .length,
+        results: allResults,
+      );
+
+      if (summary.total > 0) _syncCompleted.add(summary);
+      await _notifyOutcome(summary);
+      return summary;
     } catch (_) {
-      // Network error or retryable failure - keep queued items for next sync attempt
+      // Network error or retryable failure: rows not acknowledged by the
+      // server stay 'queued' and are retried on the next sync.
     } finally {
       _isSyncing = false;
     }
     return null;
   }
+
+  /// Queued (not yet sent) records captured on [day] in local time, oldest
+  /// first. Records from other days are never shown as today's attendance.
+  Future<List<PendingAttendanceTableData>> queuedForDay(DateTime day) async {
+    final rows =
+        await (database.select(database.pendingAttendanceTable)
+              ..where((tbl) => tbl.status.equals('queued'))
+              ..orderBy([(tbl) => OrderingTerm.asc(tbl.wallClock)]))
+            .get();
+    return rows.where((row) {
+      final local = row.wallClock.toLocal();
+      return local.year == day.year &&
+          local.month == day.month &&
+          local.day == day.day;
+    }).toList();
+  }
+
+  OfflineSyncRecord _toRecord(PendingAttendanceTableData row) {
+    OfflineSyncAnchor? anchor;
+    if (row.anchorServerTime != null &&
+        row.anchorMonotonicMs != null &&
+        row.anchorBootId != null) {
+      anchor = OfflineSyncAnchor(
+        serverTime: row.anchorServerTime!,
+        monotonicMs: row.anchorMonotonicMs!.toInt(),
+        bootId: row.anchorBootId!,
+      );
+    }
+    return OfflineSyncRecord(
+      clientUuid: row.clientUuid,
+      type: row.type,
+      wallClock: row.wallClock,
+      monotonicMs: row.monotonicMs.toInt(),
+      bootId: row.bootId,
+      anchor: anchor,
+      latitude: row.latitude,
+      longitude: row.longitude,
+      accuracy: row.accuracyM,
+      mockLocationDetected: row.mockLocationDetected,
+      area: row.area,
+      customerId: row.customerId,
+    );
+  }
+
+  /// Maps the server's per-record status onto the local queue status.
+  /// `duplicate` means the server already holds this exact record.
+  static String _localStatus(String serverStatus) => switch (serverStatus) {
+    'synced' || 'duplicate' => 'synced',
+    'pending' => 'pending',
+    'conflict' => 'conflict',
+    _ => 'rejected',
+  };
+
+  Future<void> _notifyOutcome(OfflineSyncResponse summary) async {
+    if (summary.verified == 0 && summary.pending == 0) return;
+    final title = summary.pending > 0
+        ? 'مزامنة الحضور: بانتظار الاعتماد'
+        : 'تمت مزامنة الحضور';
+    final body = summary.pending > 0
+        ? 'تم إرسال ${summary.total} سجل، منها ${summary.pending} بانتظار اعتماد المشرف.'
+        : 'تم اعتماد ${summary.verified} سجل حضور بنجاح.';
+    await localNotificationService?.showPush(
+      id: 2001,
+      title: title,
+      body: body,
+    );
+  }
+
+  Future<void> dispose() => _syncCompleted.close();
 }
