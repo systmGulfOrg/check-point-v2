@@ -7,9 +7,9 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Check Point needs access to your photo library so you can attach profile photos and supporting documents to your requests.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Check Point needs access to location to display maps and set geofence areas.</string>
+	<string>Check Point uses your location to confirm you are at your assigned work site when you check in or check out, and to show work sites on the map.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Check Point needs access to location to display maps and set geofence areas.</string>
+	<string>Check Point uses your location to confirm you are at your assigned work site when you check in or check out, and to show work sites on the map.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -61,7 +61,7 @@
 	</dict>
 
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Check Point needs access to location to display maps and set geofence areas.</string>
+	<string>Check Point uses your location to confirm you are at your assigned work site when you check in or check out, and to show work sites on the map.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
