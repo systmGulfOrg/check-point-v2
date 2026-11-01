@@ -51,12 +51,13 @@ class ApiConstants {
   static const String offlineAttendanceSync = '/api/v2/attendance/offline-sync';
   static const String pendingAttendanceVerification =
       '/api/v2/attendance/pending-verification';
-  static String verifyAttendance(int id) =>
+  static String verifyAttendance(String id) =>
       '/api/v2/attendance/$id/verification';
 
   static const String aiAgentBaseUrl = 'http://159.223.150.240:8000';
   static const String aiAgentChat = '$aiAgentBaseUrl/api/agent/chat';
-  static const String aiAgentActionConfirm = '$aiAgentBaseUrl/api/agents/task/confirm';
+  static const String aiAgentActionConfirm =
+      '$aiAgentBaseUrl/api/agents/task/confirm';
 
   static const String aiChat = '/api/v2/ai/chat';
   static const String aiActionConfirm = '/api/v2/ai/action/confirm';

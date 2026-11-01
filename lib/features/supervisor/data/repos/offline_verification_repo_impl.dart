@@ -19,13 +19,17 @@ class OfflineVerificationRepoImpl implements OfflineVerificationRepo {
     try {
       final response = await dio.get(
         ApiConstants.pendingAttendanceVerification,
-        queryParameters: {'page': page, 'limit': limit},
+        queryParameters: {'index': page - 1, 'itemCount': limit},
       );
 
       final body = response.data as Map<String, dynamic>;
       final value = body['value'] as Map<String, dynamic>? ?? body;
-      final items = (value['items'] as List<dynamic>?)
-              ?.map((e) => PendingAttendanceItem.fromJson(e as Map<String, dynamic>))
+      final items =
+          (value['items'] as List<dynamic>?)
+              ?.map(
+                (e) =>
+                    PendingAttendanceItem.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           [];
 
@@ -37,7 +41,7 @@ class OfflineVerificationRepoImpl implements OfflineVerificationRepo {
 
   @override
   Future<ApiResult<void>> verifyAttendance(
-    int id, {
+    String id, {
     required String action,
     String? reason,
   }) async {

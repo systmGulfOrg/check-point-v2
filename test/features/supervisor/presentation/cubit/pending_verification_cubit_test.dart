@@ -11,7 +11,8 @@ import 'package:check_point_v2/features/supervisor/presentation/cubit/verificati
 class FakeOfflineVerificationRepo implements OfflineVerificationRepo {
   final List<PendingAttendanceItem> items = [
     const PendingAttendanceItem(
-      id: 101,
+      // Attendance ids are ULID strings, as the API returns them.
+      id: '01M4ZNCNBVTXR7J6K27P2M0F2V',
       employeeId: 'emp-101',
       employeeName: 'Mohamed Ahmed',
       employeeCode: 'EMP101',
@@ -19,6 +20,8 @@ class FakeOfflineVerificationRepo implements OfflineVerificationRepo {
       verificationReasons: ['CLOCK_DRIFT'],
     ),
   ];
+
+  String? lastAction;
 
   @override
   Future<ApiResult<List<PendingAttendanceItem>>> getPendingVerifications({
@@ -30,10 +33,11 @@ class FakeOfflineVerificationRepo implements OfflineVerificationRepo {
 
   @override
   Future<ApiResult<void>> verifyAttendance(
-    int id, {
+    String id, {
     required String action,
     String? reason,
   }) async {
+    lastAction = action;
     items.removeWhere((i) => i.id == id);
     return const ApiResult.success(null);
   }
@@ -57,21 +61,26 @@ void main() {
     cubit.close();
   });
 
-  test('loadPendingVerifications fetches and emits loaded state with items', () async {
-    expect(cubit.state, const PendingVerificationState.initial());
+  test(
+    'loadPendingVerifications fetches and emits loaded state with items',
+    () async {
+      expect(cubit.state, const PendingVerificationState.initial());
 
-    await cubit.loadPendingVerifications();
+      await cubit.loadPendingVerifications();
 
-    expect(cubit.currentItems.length, 1);
-    expect(cubit.currentItems.first.id, 101);
-  });
+      expect(cubit.currentItems.length, 1);
+      expect(cubit.currentItems.first.id, '01M4ZNCNBVTXR7J6K27P2M0F2V');
+    },
+  );
 
   test('approve removes verified item and emits actionSuccess', () async {
     await cubit.loadPendingVerifications();
     expect(cubit.currentItems.length, 1);
 
-    final success = await cubit.approve(101);
+    final success = await cubit.approve('01M4ZNCNBVTXR7J6K27P2M0F2V');
     expect(success, isTrue);
+    // The API enum is lowercase; 'APPROVE' is rejected with a 400.
+    expect(repo.lastAction, 'approve');
     expect(cubit.currentItems.isEmpty, isTrue);
   });
 
@@ -79,8 +88,12 @@ void main() {
     await cubit.loadPendingVerifications();
     expect(cubit.currentItems.length, 1);
 
-    final success = await cubit.reject(101, reason: 'Mismatch');
+    final success = await cubit.reject(
+      '01M4ZNCNBVTXR7J6K27P2M0F2V',
+      reason: 'Mismatch',
+    );
     expect(success, isTrue);
+    expect(repo.lastAction, 'reject');
     expect(cubit.currentItems.isEmpty, isTrue);
   });
 }

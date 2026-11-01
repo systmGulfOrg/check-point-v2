@@ -7,9 +7,8 @@ class VerifyAttendanceRecordUseCase {
   VerifyAttendanceRecordUseCase(this.repo);
 
   Future<ApiResult<void>> call(
-    int id, {
+    String id, {
     required String action,
     String? reason,
-  }) =>
-      repo.verifyAttendance(id, action: action, reason: reason);
+  }) => repo.verifyAttendance(id, action: action, reason: reason);
 }

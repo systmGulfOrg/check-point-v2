@@ -28,12 +28,16 @@ class PendingVerificationCubit extends SafeCubit<PendingVerificationState> {
     );
   }
 
-  Future<bool> approve(int id) async {
-    final result = await verifyAttendanceRecordUseCase(id, action: 'APPROVE');
+  Future<bool> approve(String id) async {
+    final result = await verifyAttendanceRecordUseCase(id, action: 'approve');
     return result.when(
       success: (_) {
         _currentItems = _currentItems.where((item) => item.id != id).toList();
-        safeEmit(const PendingVerificationState.actionSuccess('offline.approveSuccess'));
+        safeEmit(
+          const PendingVerificationState.actionSuccess(
+            'offline.approveSuccess',
+          ),
+        );
         safeEmit(PendingVerificationState.loaded(_currentItems));
         return true;
       },
@@ -44,16 +48,18 @@ class PendingVerificationCubit extends SafeCubit<PendingVerificationState> {
     );
   }
 
-  Future<bool> reject(int id, {String? reason}) async {
+  Future<bool> reject(String id, {String? reason}) async {
     final result = await verifyAttendanceRecordUseCase(
       id,
-      action: 'REJECT',
+      action: 'reject',
       reason: reason,
     );
     return result.when(
       success: (_) {
         _currentItems = _currentItems.where((item) => item.id != id).toList();
-        safeEmit(const PendingVerificationState.actionSuccess('offline.rejectSuccess'));
+        safeEmit(
+          const PendingVerificationState.actionSuccess('offline.rejectSuccess'),
+        );
         safeEmit(PendingVerificationState.loaded(_currentItems));
         return true;
       },

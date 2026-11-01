@@ -24,15 +24,12 @@ class _PendingAttendanceVerificationScreenState
     context.read<PendingVerificationCubit>().loadPendingVerifications();
   }
 
-  void _showRejectDialog(int id) {
+  void _showRejectDialog(String id) {
     final reasonController = TextEditingController();
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(
-          'offline.reject'.tr(),
-          style: AppTextStyles.font18Bold,
-        ),
+        title: Text('offline.reject'.tr(), style: AppTextStyles.font18Bold),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,15 +55,13 @@ class _PendingAttendanceVerificationScreenState
             child: Text('core.actions.cancel'.tr()),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
             onPressed: () {
               Navigator.of(ctx).pop();
               context.read<PendingVerificationCubit>().reject(
-                    id,
-                    reason: reasonController.text.trim(),
-                  );
+                id,
+                reason: reasonController.text.trim(),
+              );
             },
             child: Text(
               'offline.reject'.tr(),
@@ -81,20 +76,14 @@ class _PendingAttendanceVerificationScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('offline.pendingVerificationTitle'.tr()),
-      ),
+      appBar: AppBar(title: Text('offline.pendingVerificationTitle'.tr())),
       body: BlocConsumer<PendingVerificationCubit, PendingVerificationState>(
         listener: (context, state) {
           state.maybeWhen(
-            error: (msgKey) => CustomSnackBar.showError(
-              context,
-              message: msgKey.tr(),
-            ),
-            actionSuccess: (msgKey) => CustomSnackBar.showSuccess(
-              context,
-              message: msgKey.tr(),
-            ),
+            error: (msgKey) =>
+                CustomSnackBar.showError(context, message: msgKey.tr()),
+            actionSuccess: (msgKey) =>
+                CustomSnackBar.showSuccess(context, message: msgKey.tr()),
             orElse: () {},
           );
         },
@@ -190,10 +179,7 @@ class _PendingAttendanceVerificationScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      item.employeeName,
-                      style: AppTextStyles.font16Bold,
-                    ),
+                    Text(item.employeeName, style: AppTextStyles.font16Bold),
                     if (item.employeeCode != null)
                       Text(
                         item.employeeCode!,

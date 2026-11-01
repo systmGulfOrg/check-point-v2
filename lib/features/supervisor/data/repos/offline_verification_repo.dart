@@ -8,8 +8,8 @@ abstract class OfflineVerificationRepo {
   });
 
   Future<ApiResult<void>> verifyAttendance(
-    int id, {
-    required String action, // 'APPROVE' | 'REJECT'
+    String id, {
+    required String action, // 'approve' | 'reject'
     String? reason,
   });
 }
