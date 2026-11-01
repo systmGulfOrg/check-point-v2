@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/auth_help_support_sheet_widget.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_profile_card_widget.dart';
@@ -45,7 +48,6 @@ class AdminSettingsScreen extends StatelessWidget {
                     color: AppColors.textPrimary,
                   ),
                 ),
-                Image.asset(AppAssets.logo, height: 32.h, fit: BoxFit.contain),
               ],
             ),
             hSpace(20),
@@ -130,6 +132,18 @@ class AdminSettingsScreen extends StatelessWidget {
                   titleKey: 'admin.settings.permissions',
                   valueKey: 'admin.settings.roleBased',
                   onTap: () => showUserPermissionsSheet(context),
+                ),
+                AdminSettingsTileWidget(
+                  icon: Icons.support_agent_rounded,
+                  titleKey: 'employee.settings.support',
+                  valueKey: '',
+                  onTap: () => showAuthHelpSupportSheet(context),
+                ),
+                AdminSettingsTileWidget(
+                  icon: Icons.privacy_tip_outlined,
+                  titleKey: 'auth.companyCode.privacyPolicy',
+                  valueKey: '',
+                  onTap: () => launchUrl(Uri.parse(AppConfig.privacyPolicyUrl)),
                 ),
               ],
             ),

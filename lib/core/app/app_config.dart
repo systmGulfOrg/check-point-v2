@@ -11,6 +11,8 @@ class AppConfig {
     return url;
   }
 
+  static const String privacyPolicyUrl = 'https://systmgulf.com/privacy-policy';
+
   static String get odooBaseUrl =>
       Env.odooBaseUrl.isNotEmpty ? Env.odooBaseUrl : baseUrl;
   static String get odooApiKey => Env.odooApiKey;

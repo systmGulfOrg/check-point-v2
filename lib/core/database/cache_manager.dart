@@ -7,7 +7,9 @@ class CacheManager {
   CacheManager(this._db);
 
   Future<void> put(String key, String json) async {
-    await _db.into(_db.cacheEntries).insertOnConflictUpdate(
+    await _db
+        .into(_db.cacheEntries)
+        .insertOnConflictUpdate(
           CacheEntriesCompanion.insert(
             key: key,
             json: json,
@@ -17,9 +19,9 @@ class CacheManager {
   }
 
   Future<String?> get(String key) async {
-    final entry = await (_db.select(_db.cacheEntries)
-          ..where((tbl) => tbl.key.equals(key)))
-        .getSingleOrNull();
+    final entry = await (_db.select(
+      _db.cacheEntries,
+    )..where((tbl) => tbl.key.equals(key))).getSingleOrNull();
     return entry?.json;
   }
 
@@ -38,7 +40,9 @@ class CacheManager {
   }
 
   Future<void> delete(String key) async {
-    await (_db.delete(_db.cacheEntries)..where((tbl) => tbl.key.equals(key))).go();
+    await (_db.delete(
+      _db.cacheEntries,
+    )..where((tbl) => tbl.key.equals(key))).go();
   }
 
   Future<void> clearAll() async {

@@ -40,7 +40,9 @@ class OfflineBannerWidget extends StatelessWidget {
                             color: const Color(0xF2111827),
                             borderRadius: BorderRadius.circular(20.r),
                             border: Border.all(
-                              color: const Color(0xFFF59E0B).withValues(alpha: 0.5),
+                              color: const Color(
+                                0xFFF59E0B,
+                              ).withValues(alpha: 0.5),
                               width: 1,
                             ),
                             boxShadow: [

@@ -9,11 +9,7 @@ class AiChatCubit extends SafeCubit<AiChatState> {
   AiChatCubit({required this.repo}) : super(const AiChatState());
 
   void startNewChat() {
-    safeEmit(const AiChatState(
-      messages: [],
-      threadId: null,
-      isLoading: false,
-    ));
+    safeEmit(const AiChatState(messages: [], threadId: null, isLoading: false));
   }
 
   Future<void> sendMessage(String text) async {
@@ -28,16 +24,15 @@ class AiChatCubit extends SafeCubit<AiChatState> {
     );
 
     final updatedMessages = [...state.messages, userMsg];
-    safeEmit(state.copyWith(
-      messages: updatedMessages,
-      isLoading: true,
-      errorMessage: null,
-    ));
-
-    final result = await repo.sendMessage(
-      trimmed,
-      threadId: state.threadId,
+    safeEmit(
+      state.copyWith(
+        messages: updatedMessages,
+        isLoading: true,
+        errorMessage: null,
+      ),
     );
+
+    final result = await repo.sendMessage(trimmed, threadId: state.threadId);
 
     result.when(
       success: (data) {
@@ -50,11 +45,13 @@ class AiChatCubit extends SafeCubit<AiChatState> {
           createdAt: DateTime.now(),
         );
 
-        safeEmit(state.copyWith(
-          messages: [...state.messages, botMsg],
-          threadId: data.threadId.isNotEmpty ? data.threadId : state.threadId,
-          isLoading: false,
-        ));
+        safeEmit(
+          state.copyWith(
+            messages: [...state.messages, botMsg],
+            threadId: data.threadId.isNotEmpty ? data.threadId : state.threadId,
+            isLoading: false,
+          ),
+        );
       },
       failure: (failure) {
         final errorMsg = ChatMessageModel(
@@ -66,11 +63,13 @@ class AiChatCubit extends SafeCubit<AiChatState> {
           createdAt: DateTime.now(),
         );
 
-        safeEmit(state.copyWith(
-          messages: [...state.messages, errorMsg],
-          isLoading: false,
-          errorMessage: failure.messageKey,
-        ));
+        safeEmit(
+          state.copyWith(
+            messages: [...state.messages, errorMsg],
+            isLoading: false,
+            errorMessage: failure.messageKey,
+          ),
+        );
       },
     );
   }
@@ -94,16 +93,12 @@ class AiChatCubit extends SafeCubit<AiChatState> {
           return m;
         }).toList();
 
-        safeEmit(state.copyWith(
-          messages: updated,
-          isConfirming: false,
-        ));
+        safeEmit(state.copyWith(messages: updated, isConfirming: false));
       },
       failure: (failure) {
-        safeEmit(state.copyWith(
-          isConfirming: false,
-          errorMessage: failure.messageKey,
-        ));
+        safeEmit(
+          state.copyWith(isConfirming: false, errorMessage: failure.messageKey),
+        );
       },
     );
   }

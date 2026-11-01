@@ -22,31 +22,35 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
     Connectivity? connectivity,
     required AppDatabase database,
     Dio? probeDio,
-  })  : _connectivity = connectivity ?? Connectivity(),
-        _database = database,
-        _probeDio = probeDio ??
-            Dio(
-              BaseOptions(
-                connectTimeout: const Duration(seconds: 3),
-                receiveTimeout: const Duration(seconds: 3),
-                sendTimeout: const Duration(seconds: 3),
-              ),
-            ),
-        super(const ConnectivityState()) {
+  }) : _connectivity = connectivity ?? Connectivity(),
+       _database = database,
+       _probeDio =
+           probeDio ??
+           Dio(
+             BaseOptions(
+               connectTimeout: const Duration(seconds: 3),
+               receiveTimeout: const Duration(seconds: 3),
+               sendTimeout: const Duration(seconds: 3),
+             ),
+           ),
+       super(const ConnectivityState()) {
     _init();
   }
 
   void _init() {
-    _pendingSubscription = (_database.select(_database.pendingAttendanceTable)
-          ..where((tbl) => tbl.status.equals('queued')))
-        .watch()
-        .listen((records) {
-      if (!isClosed) {
-        emit(state.copyWith(pendingCount: records.length));
-      }
-    });
+    _pendingSubscription =
+        (_database.select(_database.pendingAttendanceTable)
+              ..where((tbl) => tbl.status.equals('queued')))
+            .watch()
+            .listen((records) {
+              if (!isClosed) {
+                emit(state.copyWith(pendingCount: records.length));
+              }
+            });
 
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((results) {
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((
+      results,
+    ) {
       checkConnectivity(results);
     });
 
@@ -55,7 +59,9 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
 
   Future<void> checkConnectivity([List<ConnectivityResult>? results]) async {
     final currentResults = results ?? await _connectivity.checkConnectivity();
-    final hasNetworkInterface = currentResults.any((r) => r != ConnectivityResult.none);
+    final hasNetworkInterface = currentResults.any(
+      (r) => r != ConnectivityResult.none,
+    );
 
     if (!hasNetworkInterface) {
       _updateOnlineStatus(false);
@@ -72,12 +78,14 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
     try {
       final probeUrl = '${AppConfig.baseUrl}/health/live';
       final response = await _probeDio.get(probeUrl);
-      return (response.statusCode ?? 0) >= 200 && (response.statusCode ?? 0) < 400;
+      return (response.statusCode ?? 0) >= 200 &&
+          (response.statusCode ?? 0) < 400;
     } catch (_) {
       // Secondary check: internet lookup
       try {
-        final result = await InternetAddress.lookup('google.com')
-            .timeout(const Duration(seconds: 3));
+        final result = await InternetAddress.lookup(
+          'google.com',
+        ).timeout(const Duration(seconds: 3));
         return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
       } catch (_) {
         return false;

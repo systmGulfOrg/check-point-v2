@@ -11,8 +11,7 @@ import 'package:check_point_v2/features/leaves/data/models/leave_balance_model.d
 import 'package:check_point_v2/features/leaves/data/models/leave_request_model.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_state.dart';
-import 'package:check_point_v2/features/leaves/presentation/widgets/leave_balances_list_widget.dart';
-import 'package:check_point_v2/features/leaves/presentation/widgets/leave_request_card_widget.dart';
+import 'package:check_point_v2/features/leaves/presentation/widgets/leave_request_row_widget.dart';
 import 'employee_empty_leaves_card_widget.dart';
 
 class EmployeeHomeLeavesBlocBuilderWidget extends StatelessWidget {
@@ -46,7 +45,7 @@ class EmployeeHomeLeavesBlocBuilderWidget extends StatelessWidget {
           );
         }
 
-        final (balances, requests, isLoading) = state.maybeWhen(
+        final (_, requests, isLoading) = state.maybeWhen(
           success: (balances, types, requests) => (balances, requests, false),
           loading: () =>
               (const <LeaveBalanceModel>[], const <LeaveRequestModel>[], true),
@@ -61,7 +60,7 @@ class EmployeeHomeLeavesBlocBuilderWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'employee.home.leaveBalances'.tr(context: context),
+                  'employee.home.recentRequests'.tr(context: context),
                   style: AppTextStyles.font16Bold,
                 ),
                 hSpace(12),
@@ -81,27 +80,18 @@ class EmployeeHomeLeavesBlocBuilderWidget extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (balances.isNotEmpty) ...[
-              Text(
-                'employee.home.leaveBalances'.tr(context: context),
-                style: AppTextStyles.font16Bold,
-              ),
-              hSpace(10),
-              LeaveBalancesListWidget(balances: balances),
-              hSpace(20),
-            ],
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'employee.home.recentLeaves'.tr(context: context),
+                  'employee.home.recentRequests'.tr(context: context),
                   style: AppTextStyles.font16Bold,
                 ),
                 if (requests.isNotEmpty)
-                  GestureDetector(
-                    onTap: onViewAllLeaves,
+                  TextButton(
+                    onPressed: onViewAllLeaves,
                     child: Text(
-                      'employee.home.viewAll'.tr(context: context),
+                      'employee.home.seeAll'.tr(context: context),
                       style: AppTextStyles.font13SemiBold.copyWith(
                         color: AppColors.brandPrimary,
                       ),
@@ -109,18 +99,27 @@ class EmployeeHomeLeavesBlocBuilderWidget extends StatelessWidget {
                   ),
               ],
             ),
-            hSpace(12),
+            hSpace(8),
             if (requests.isEmpty)
               EmployeeEmptyLeavesCardWidget(onRequestLeave: onRequestLeave)
             else
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: requests.take(3).length,
-                separatorBuilder: (_, _) => hSpace(10),
-                itemBuilder: (context, index) {
-                  return LeaveRequestCardWidget(request: requests[index]);
-                },
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 14.w),
+                decoration: BoxDecoration(
+                  color: AppColors.cardBackground,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: requests.take(3).length,
+                  separatorBuilder: (_, _) =>
+                      const Divider(height: 1, color: AppColors.border),
+                  itemBuilder: (context, index) =>
+                      LeaveRequestRowWidget(request: requests[index]),
+                ),
               ),
           ],
         );

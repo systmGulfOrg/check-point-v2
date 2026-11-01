@@ -153,7 +153,11 @@ class AdminEmployeeProfileCubit extends SafeCubit<AdminEmployeeProfileState> {
     if (employeeId == null) return null;
     final now = DateTime.now();
     final first = DateTime(selectedMonth.year, selectedMonth.month);
-    final lastOfMonth = DateTime(selectedMonth.year, selectedMonth.month + 1, 0);
+    final lastOfMonth = DateTime(
+      selectedMonth.year,
+      selectedMonth.month + 1,
+      0,
+    );
     final last = lastOfMonth.isAfter(now) ? now : lastOfMonth;
     String ymd(DateTime d) =>
         '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';

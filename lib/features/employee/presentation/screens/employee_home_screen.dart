@@ -19,7 +19,7 @@ import 'package:check_point_v2/features/employee/presentation/widgets/employee_a
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_header_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_leaves_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_quick_actions_widget.dart';
-import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_request_shortcuts_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_home_stats_row_bloc_selector_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_today_card_widget.dart';
 import 'package:check_point_v2/features/leaves/data/models/leave_request_body.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';
@@ -27,9 +27,6 @@ import 'package:check_point_v2/features/leaves/presentation/cubit/permit_cubit.d
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_state.dart';
 import 'package:check_point_v2/features/leaves/presentation/widgets/upcoming_holiday_card_bloc_builder_widget.dart';
-import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_cubit.dart';
-import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_state.dart';
-import 'package:check_point_v2/features/attendance_points/presentation/widgets/points_today_card_widget.dart';
 
 class EmployeeHomeScreen extends StatefulWidget {
   const EmployeeHomeScreen({super.key});
@@ -198,7 +195,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.pageBackground,
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
@@ -246,9 +243,10 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                           ),
                         );
                       case EmployeeAttendanceStateError(:final messageKey):
-                        ScaffoldMessenger.of(
+                        CustomSnackBar.show(
                           context,
-                        ).showSnackBar(SnackBar(content: Text(messageKey)));
+                          message: messageKey.tr(context: context),
+                        );
                       default:
                         break;
                     }
@@ -262,7 +260,6 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                         .employeeProfile;
                     final cubit = context.read<EmployeeAttendanceCubit>();
                     final workMode = profile?.todayWorkMode ?? 'onsite';
-                    final workSystem = profile?.workSystem ?? 'onsite';
                     final isCheckedIn =
                         cubit.hasClockIn(attendance) &&
                         !cubit.hasClockOut(attendance);
@@ -328,9 +325,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                         workedHours:
                             cubit.todayWorkedHoursWithOvertime ??
                             attendance?.dayHours,
-                        leaveBalance: profile?.leaveBalance,
                         workModeText: workMode.tr(context: context),
-                        workSystemText: workSystem.tr(context: context),
                         onToggleCheckInOut: _toggleCheckInOut,
                         isTodayHoliday: isTodayHoliday,
                         isTodayWeeklyOff: isTodayWeeklyOff,
@@ -340,31 +335,13 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                     );
                   },
                 ),
-                hSpace(12),
-                const EmployeeHomeRequestShortcutsWidget(),
-                BlocBuilder<PointsCubit, PointsState>(
-                  builder: (context, state) {
-                    if (state is PointsLoaded) {
-                      return Padding(
-                        padding: EdgeInsets.only(top: 16.h),
-                        child: PointsTodayCardWidget(
-                          summary: state.summary,
-                          onTap: () {
-                            Navigator.of(context).pushNamed(AppRoutes.myPoints);
-                          },
-                        ),
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-                hSpace(20),
+                hSpace(16),
                 EmployeeHomeQuickActionsWidget(
                   onRequestLeave: () => _showApplyLeaveSheet(context),
                   onRequestPermission: () => _showApplyPermissionSheet(context),
-                  onCustomerVisitsTap: () =>
-                      Navigator.pushNamed(context, AppRoutes.adminLocations),
                 ),
+                hSpace(12),
+                const EmployeeHomeStatsRowBlocSelectorWidget(),
                 hSpace(20),
                 EmployeeHomeLeavesBlocBuilderWidget(
                   onViewAllLeaves: () =>

@@ -45,10 +45,9 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
           'name': branch.name,
           'location': branch.location,
           'description': branch.description,
-          'coordinates': branch.coordinates?.map((c) => {
-            'latitude': c.latitude,
-            'longitude': c.longitude,
-          }).toList(),
+          'coordinates': branch.coordinates
+              ?.map((c) => {'latitude': c.latitude, 'longitude': c.longitude})
+              .toList(),
         };
         await cacheManager.putJson('branch_$branchId', branchMap);
         return ApiResult.success(branch);
@@ -61,7 +60,9 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       final cached = await cacheManager.getJson('branch_$branchId');
       if (cached is Map) {
         try {
-          final branch = BranchModel.fromJson(Map<String, dynamic>.from(cached));
+          final branch = BranchModel.fromJson(
+            Map<String, dynamic>.from(cached),
+          );
           return ApiResult.success(branch);
         } catch (_) {}
       }
@@ -70,7 +71,11 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       if (cachedList is List && cachedList.isNotEmpty) {
         try {
           final branches = cachedList
-              .map((item) => BranchModel.fromJson(Map<String, dynamic>.from(item as Map)))
+              .map(
+                (item) => BranchModel.fromJson(
+                  Map<String, dynamic>.from(item as Map),
+                ),
+              )
               .toList();
           final matching = branches.where((b) => b.id == branchId).firstOrNull;
           if (matching != null) return ApiResult.success(matching);
@@ -87,16 +92,21 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       final response = await api.getBranches();
       final branches = response.value?.list ?? [];
       // Cache branches for offline use
-      final branchMaps = branches.map((b) => {
-        'id': b.id,
-        'name': b.name,
-        'location': b.location,
-        'description': b.description,
-        'coordinates': b.coordinates?.map((c) => {
-          'latitude': c.latitude,
-          'longitude': c.longitude,
-        }).toList(),
-      }).toList();
+      final branchMaps = branches
+          .map(
+            (b) => {
+              'id': b.id,
+              'name': b.name,
+              'location': b.location,
+              'description': b.description,
+              'coordinates': b.coordinates
+                  ?.map(
+                    (c) => {'latitude': c.latitude, 'longitude': c.longitude},
+                  )
+                  .toList(),
+            },
+          )
+          .toList();
       await cacheManager.putJson('branches', branchMaps);
       // Also cache each branch individually by ID
       for (final b in branches) {
@@ -106,10 +116,9 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
             'name': b.name,
             'location': b.location,
             'description': b.description,
-            'coordinates': b.coordinates?.map((c) => {
-              'latitude': c.latitude,
-              'longitude': c.longitude,
-            }).toList(),
+            'coordinates': b.coordinates
+                ?.map((c) => {'latitude': c.latitude, 'longitude': c.longitude})
+                .toList(),
           };
           await cacheManager.putJson('branch_${b.id}', singleMap);
         }
@@ -121,7 +130,11 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       if (cached is List && cached.isNotEmpty) {
         try {
           final branches = cached
-              .map((item) => BranchModel.fromJson(Map<String, dynamic>.from(item as Map)))
+              .map(
+                (item) => BranchModel.fromJson(
+                  Map<String, dynamic>.from(item as Map),
+                ),
+              )
               .toList();
           return ApiResult.success(branches);
         } catch (_) {}
@@ -151,7 +164,9 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       final cached = await cacheManager.getJson('employee_$employeeId');
       if (cached is Map) {
         try {
-          final employee = EmployeeModel.fromJson(Map<String, dynamic>.from(cached));
+          final employee = EmployeeModel.fromJson(
+            Map<String, dynamic>.from(cached),
+          );
           return ApiResult.success(employee);
         } catch (_) {}
       }
@@ -177,17 +192,25 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       final response = await api.getCustomersByType(type);
       final customers = response.value?.list ?? [];
       // Cache customers
-      final customerMaps = customers.map((c) => {
-        'id': c.id,
-        'name': c.name,
-        'workesAs': c.workesAs,
-        'location': c.location,
-        'customerType': c.customerType,
-        'coordinates': c.coordinates?.map((coord) => {
-          'latitude': coord.latitude,
-          'longitude': coord.longitude,
-        }).toList(),
-      }).toList();
+      final customerMaps = customers
+          .map(
+            (c) => {
+              'id': c.id,
+              'name': c.name,
+              'workesAs': c.workesAs,
+              'location': c.location,
+              'customerType': c.customerType,
+              'coordinates': c.coordinates
+                  ?.map(
+                    (coord) => {
+                      'latitude': coord.latitude,
+                      'longitude': coord.longitude,
+                    },
+                  )
+                  .toList(),
+            },
+          )
+          .toList();
       await cacheManager.putJson('customers_$type', customerMaps);
       return ApiResult.success(customers);
     } catch (e) {
@@ -196,7 +219,11 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       if (cached is List && cached.isNotEmpty) {
         try {
           final customers = cached
-              .map((item) => CustomerModel.fromJson(Map<String, dynamic>.from(item as Map)))
+              .map(
+                (item) => CustomerModel.fromJson(
+                  Map<String, dynamic>.from(item as Map),
+                ),
+              )
               .toList();
           return ApiResult.success(customers);
         } catch (_) {}
@@ -334,11 +361,17 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
       return ApiResult.success(list);
     } catch (e) {
       if (pageIndex == 0) {
-        final cached = await cacheManager.getJson('attendance_history_$employeeId');
+        final cached = await cacheManager.getJson(
+          'attendance_history_$employeeId',
+        );
         if (cached is List && cached.isNotEmpty) {
           try {
             final list = cached
-                .map((item) => AdminAttendanceModel.fromJson(Map<String, dynamic>.from(item as Map)))
+                .map(
+                  (item) => AdminAttendanceModel.fromJson(
+                    Map<String, dynamic>.from(item as Map),
+                  ),
+                )
                 .toList();
             return ApiResult.success(list);
           } catch (_) {}

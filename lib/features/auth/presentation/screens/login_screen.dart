@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/auth_help_support_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_card_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_labeled_field_widget.dart';
@@ -331,6 +332,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         textAlign: TextAlign.center,
                         style: AppTextStyles.font13Regular.copyWith(
                           height: 1.45,
+                        ),
+                      ),
+                      TextButton.icon(
+                        onPressed: () => showAuthHelpSupportSheet(context),
+                        icon: Icon(Icons.support_agent_rounded, size: 18.r),
+                        label: Text(
+                          'auth.login.contactSupport'.tr(context: context),
                         ),
                       ),
                     ],

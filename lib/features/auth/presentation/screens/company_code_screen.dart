@@ -102,7 +102,7 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
   }
 
   Future<void> _launchPrivacy() async {
-    final uri = Uri.parse('https://systmgulf.com/privacy-policy');
+    final uri = Uri.parse(AppConfig.privacyPolicyUrl);
     if (await canLaunchUrl(uri)) await launchUrl(uri);
   }
 

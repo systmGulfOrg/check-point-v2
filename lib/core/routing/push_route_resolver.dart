@@ -4,8 +4,8 @@ class PushRouteResolver {
   const PushRouteResolver._();
 
   static String? resolve(String? type, [Map<String, dynamic>? data]) {
-    final isApproval = data?['target'] == 'approval' ||
-        data?['recipientRole'] == 'approver';
+    final isApproval =
+        data?['target'] == 'approval' || data?['recipientRole'] == 'approver';
 
     switch (type) {
       case 'leave.submitted':

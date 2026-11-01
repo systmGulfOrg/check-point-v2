@@ -29,7 +29,8 @@ class PendingAttendanceTable extends Table {
   RealColumn get accuracyM => real().nullable()();
   TextColumn get area => text().nullable()();
   TextColumn get customerId => text().nullable()();
-  BoolColumn get mockLocationDetected => boolean().withDefault(const Constant(false))();
+  BoolColumn get mockLocationDetected =>
+      boolean().withDefault(const Constant(false))();
   TextColumn get status => text().withDefault(const Constant('queued'))();
   TextColumn get reason => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
