@@ -18,8 +18,6 @@ import 'core/services/push_notification_service.dart';
 import 'core/services/play_integrity_service.dart';
 import 'core/widgets/custom_snack_bar.dart';
 import 'features/auth/data/repos/auth_repo.dart';
-import 'features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -39,14 +37,6 @@ Future<void> main() async {
   final syncService = sl<AttendanceSyncService>();
   connectivityCubit.onOnlineRestored = () {
     unawaited(syncService.syncPending());
-  };
-  syncService.onSyncCompleted = (_) {
-    try {
-      final context = AppRouter.navigatorKey.currentContext;
-      if (context != null && context.mounted) {
-        context.read<EmployeeAttendanceCubit>().loadAttendanceHistory();
-      }
-    } catch (_) {}
   };
   unawaited(syncService.syncPending());
 
@@ -93,7 +83,8 @@ Future<({String route, String? messageKey})> _resolveInitialRoute() async {
   if (token != null && token.isNotEmpty) {
     final payload = AuthSessionStorage.decodeJwtPayload(token);
     final exp = payload?['exp'] as int?;
-    final isNotExpired = exp == null ||
+    final isNotExpired =
+        exp == null ||
         DateTime.fromMillisecondsSinceEpoch(exp * 1000).isAfter(DateTime.now());
     if (isNotExpired) {
       final role = await sessionStorage.readUserRole();

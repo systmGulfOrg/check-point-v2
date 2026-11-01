@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/features/employee/domain/use_cases/resolve_today_attendance.dart';
 import 'package:drift/drift.dart' show OrderingTerm;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -30,7 +33,16 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     required this.checkOutUseCase,
     required this.attendanceVerificationService,
     required this.overtimeRepo,
-  }) : super(const EmployeeAttendanceState.initial());
+  }) : super(const EmployeeAttendanceState.initial()) {
+    // Once queued punches reach the server, show the server's record instead.
+    if (sl.isRegistered<AttendanceSyncService>()) {
+      _syncSubscription = sl<AttendanceSyncService>().syncCompleted.listen(
+        (_) => unawaited(loadAttendanceHistory()),
+      );
+    }
+  }
+
+  StreamSubscription<void>? _syncSubscription;
 
   final EmployeeAttendanceRepo attendanceRepo;
   final AuthSessionStorage sessionStorage;
@@ -144,10 +156,11 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     if (!isOnline) {
       final clockSnapshot = await sl<DeviceClockService>().getClockSnapshot();
       final db = sl<AppDatabase>();
-      final latestAnchor = await (db.select(db.timeAnchors)
-            ..orderBy([(tbl) => OrderingTerm.desc(tbl.id)])
-            ..limit(1))
-          .getSingleOrNull();
+      final latestAnchor =
+          await (db.select(db.timeAnchors)
+                ..orderBy([(tbl) => OrderingTerm.desc(tbl.id)])
+                ..limit(1))
+              .getSingleOrNull();
 
       await sl<AttendanceSyncService>().enqueue(
         type: 'in',
@@ -160,8 +173,7 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
         latitude: currentLocation?.latitude,
         longitude: currentLocation?.longitude,
         accuracyM: verification.sample?.accuracy,
-        mockLocationDetected:
-            verification.sample?.isMockFromNative ?? false,
+        mockLocationDetected: verification.sample?.isMockFromNative ?? false,
         area: area,
         customerId: customerId ?? selectedTarget?.id?.toString(),
       );
@@ -244,10 +256,11 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     if (!isOnline) {
       final clockSnapshot = await sl<DeviceClockService>().getClockSnapshot();
       final db = sl<AppDatabase>();
-      final latestAnchor = await (db.select(db.timeAnchors)
-            ..orderBy([(tbl) => OrderingTerm.desc(tbl.id)])
-            ..limit(1))
-          .getSingleOrNull();
+      final latestAnchor =
+          await (db.select(db.timeAnchors)
+                ..orderBy([(tbl) => OrderingTerm.desc(tbl.id)])
+                ..limit(1))
+              .getSingleOrNull();
 
       await sl<AttendanceSyncService>().enqueue(
         type: 'out',
@@ -260,8 +273,7 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
         latitude: currentLocation?.latitude,
         longitude: currentLocation?.longitude,
         accuracyM: verification.sample?.accuracy,
-        mockLocationDetected:
-            verification.sample?.isMockFromNative ?? false,
+        mockLocationDetected: verification.sample?.isMockFromNative ?? false,
       );
 
       final now = clockSnapshot.wallClock.toLocal();
@@ -348,55 +360,28 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
       success: (requests) => todayOvertimeRequests = requests,
       failure: (_) => todayOvertimeRequests = [],
     );
+    // Online this is the server's list; offline the repo returns its cached
+    // copy. Either way it is the server's view of today.
+    AdminAttendanceModel? serverToday;
     result.when(
       success: (data) {
         _allHistoryRecords = data;
-        todayAttendance = _findTodayRecord(data);
+        serverToday = _findTodayRecord(data);
       },
-      failure: (_) {
-        // Keep todayAttendance if already set optimistically or offline
-      },
+      failure: (_) {},
     );
 
-    // Overlay pending offline attendance records from Drift SQLite queue
+    final now = DateTime.now();
+    var queuedToday = const <PendingAttendanceTableData>[];
     try {
-      final db = sl<AppDatabase>();
-      final pendingList = await (db.select(db.pendingAttendanceTable)
-            ..where((tbl) => tbl.status.equals('queued'))
-            ..orderBy([(tbl) => OrderingTerm.asc(tbl.wallClock)]))
-          .get();
-      if (pendingList.isNotEmpty) {
-        final pendingIn = pendingList.where((p) => p.type == 'in').lastOrNull;
-        final pendingOut = pendingList.where((p) => p.type == 'out').lastOrNull;
-        if (pendingIn != null || pendingOut != null) {
-          final now = DateTime.now();
-          final todayDateStr =
-              '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-          final existing = todayAttendance ??
-              AdminAttendanceModel(
-                attendanceDate: todayDateStr,
-                employeeName: employeeProfile?.name,
-              );
-          final inTime = pendingIn != null
-              ? '${pendingIn.wallClock.toLocal().hour.toString().padLeft(2, '0')}:${pendingIn.wallClock.toLocal().minute.toString().padLeft(2, '0')}:${pendingIn.wallClock.toLocal().second.toString().padLeft(2, '0')}'
-              : existing.clockInTime;
-          final outTime = pendingOut != null
-              ? '${pendingOut.wallClock.toLocal().hour.toString().padLeft(2, '0')}:${pendingOut.wallClock.toLocal().minute.toString().padLeft(2, '0')}:${pendingOut.wallClock.toLocal().second.toString().padLeft(2, '0')}'
-              : existing.clockOutTime;
-
-          todayAttendance = AdminAttendanceModel(
-            id: existing.id,
-            employeeId: existing.employeeId,
-            employeeName: existing.employeeName,
-            attendanceDate: existing.attendanceDate ?? todayDateStr,
-            clockInTime: inTime,
-            clockOutTime: outTime,
-            area: pendingIn?.area ?? existing.area,
-            status: 'Present',
-          );
-        }
-      }
+      queuedToday = await sl<AttendanceSyncService>().queuedForDay(now);
     } catch (_) {}
+
+    todayAttendance = resolveTodayAttendance(
+      serverToday: serverToday,
+      queuedToday: queuedToday,
+      today: now,
+    );
 
     _applyFilters();
   }
@@ -611,5 +596,11 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
         ),
       );
     }
+  }
+
+  @override
+  Future<void> close() async {
+    await _syncSubscription?.cancel();
+    return super.close();
   }
 }
