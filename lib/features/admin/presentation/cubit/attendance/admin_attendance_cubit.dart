@@ -400,7 +400,7 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
   DateTime? _parseDate(String? raw) {
     if (raw == null || raw.trim().isEmpty) return null;
     try {
-      return DateTime.parse(raw);
+      return DateTime.parse(raw).toLocal();
     } catch (_) {
       try {
         final parts = raw.split('-');

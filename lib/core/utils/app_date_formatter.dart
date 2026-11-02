@@ -87,8 +87,9 @@ class AppDateFormatter {
     bool isArabic = true,
     bool fullPeriod = false,
   }) {
-    final hour = date.hour;
-    final minute = date.minute;
+    final local = date.toLocal();
+    final hour = local.hour;
+    final minute = local.minute;
     final isPm = hour >= 12;
     final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
     final mStr = minute.toString().padLeft(2, '0');
@@ -132,15 +133,32 @@ class AppDateFormatter {
         rawTime == '00:00:00.0000000') {
       return '--:--';
     }
-    var timePart = toEnglishDigits(rawTime.trim().split('.').first);
-    if (timePart.contains('T')) {
-      timePart = timePart.split('T').last;
+
+    final trimmed = toEnglishDigits(rawTime.trim());
+    int? hour;
+    int? minute;
+
+    // If ISO timestamp (contains T or Z), convert to local device time
+    if (trimmed.contains('T') || trimmed.endsWith('Z')) {
+      final dt = DateTime.tryParse(trimmed);
+      if (dt != null) {
+        final local = dt.toLocal();
+        hour = local.hour;
+        minute = local.minute;
+      }
     }
-    timePart = timePart.replaceAll('Z', '');
-    final cleaned = timePart.trim();
-    final parts = cleaned.split(':');
-    final hour = int.tryParse(parts[0]);
-    final minute = parts.length >= 2 ? int.tryParse(parts[1]) : 0;
+
+    if (hour == null || minute == null) {
+      var timePart = trimmed.split('.').first;
+      if (timePart.contains('T')) {
+        timePart = timePart.split('T').last;
+      }
+      timePart = timePart.replaceAll('Z', '').trim();
+      final parts = timePart.split(':');
+      hour = int.tryParse(parts[0]);
+      minute = parts.length >= 2 ? int.tryParse(parts[1]) : 0;
+    }
+
     if (hour != null && minute != null) {
       if (use12Hour) {
         final isPm = hour >= 12;
@@ -162,7 +180,7 @@ class AppDateFormatter {
         return '$hStr:$mStr';
       }
     }
-    return cleaned;
+    return trimmed;
   }
 
   static String formatReadableTime(String? rawTime, {bool isArabic = true}) {
@@ -213,7 +231,7 @@ class AppDateFormatter {
     if (rawDate == null || rawDate.trim().isEmpty) return '-';
     final parsed = DateTime.tryParse(toEnglishDigits(rawDate.trim()));
     if (parsed != null) {
-      return formatDate(parsed, pattern: pattern);
+      return formatDate(parsed.toLocal(), pattern: pattern);
     }
     return toEnglishDigits(rawDate.trim().split('T').first.split(' ').first);
   }
