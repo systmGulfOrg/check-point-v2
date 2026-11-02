@@ -112,6 +112,9 @@ class ApiFailureMapper {
               : (message.contains('locked') ||
                     (message.contains('failed') && message.contains('login')))
               ? 'errors.accountLocked'
+              : message.contains('cannot verify your own') ||
+                    message.contains('verify your own attendance')
+              ? 'errors.selfVerificationNotAllowed'
               : 'errors.forbidden',
         ),
         _ when status == 404 => const ApiFailure(messageKey: 'errors.notFound'),

@@ -138,7 +138,12 @@ class _AdminLeaveDecisionSheetWidgetState
                   Expanded(
                     child: CustomButton(
                       text: actionKey.tr(context: context),
-                      onTap: () => Navigator.pop(context),
+                      onTap: () => Navigator.pop(
+                        context,
+                        isRejecting
+                            ? rejectionReasonController.text.trim()
+                            : '',
+                      ),
                       backgroundColor: isRejecting
                           ? AppColors.error
                           : AppColors.brandPrimary,

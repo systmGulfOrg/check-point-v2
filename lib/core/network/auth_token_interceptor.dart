@@ -69,21 +69,55 @@ class AuthTokenInterceptor extends Interceptor {
     handler.next(options);
   }
 
+  // These phrases in 401/403 error bodies indicate an auth/token problem
+  // (not a business-rule denial), so we must clear the stored token.
+  static const _tokenInvalidPhrases = {
+    'invalid or expired token',
+    'invalid token',
+    'expired token',
+    'token expired',
+    'token is invalid',
+    'unauthorized',
+  };
+
+  static bool _isTokenError(DioException err) {
+    final status = err.response?.statusCode;
+    // 401 is always a token/auth issue.
+    if (status == 401) return true;
+    // 403 may be a business-rule denial (e.g. "You cannot verify your own
+    // attendance").  Only treat it as a token error when the body explicitly
+    // mentions token/auth language.
+    if (status == 403) {
+      final payload = err.response?.data;
+      final messages = <String>[
+        if (payload is Map && payload['errors'] is List)
+          ...(payload['errors'] as List).whereType<String>(),
+      ];
+      final combined = messages.join(' ').toLowerCase();
+      return _tokenInvalidPhrases.any(combined.contains);
+    }
+    return false;
+  }
+
   @override
   Future<void> onError(
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
     final status = err.response?.statusCode;
-    if (status == 401 || status == 403) {
+
+    if (_isTokenError(err)) {
       _inMemoryToken = null;
       await secureStorage.delete(key: AppConfig.authTokenKey);
+    }
 
+    if (status == 403) {
       final errorCode = err.response?.headers.value('x-error-code');
       if (errorCode != null && _tenantBlockedCodes.contains(errorCode)) {
         onTenantBlocked?.call(errorCode);
       }
     }
+
     handler.next(err);
   }
 }

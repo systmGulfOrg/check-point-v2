@@ -1,5 +1,4 @@
 import 'package:check_point_v2/core/bloc/safe_cubit.dart';
-
 import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_leave_requests_repo.dart';
@@ -94,6 +93,29 @@ class AdminLeaveRequestsCubit extends SafeCubit<AdminLeaveRequestsState> {
     emit(const AdminLeaveRequestsState.loading());
     final result = await leaveRequestsRepo.approveOrRejectLeaveRequest(
       ChangeRequestLeaveStatus(leaveRequestId: requestId, status: status),
+    );
+    return result.when(
+      success: (_) async {
+        await loadAll();
+        return true;
+      },
+      failure: (failure) {
+        safeEmit(AdminLeaveRequestsState.error(failure.messageKey));
+        return false;
+      },
+    );
+  }
+
+  Future<bool> rejectWithReason({
+    required String ulid,
+    required String action,
+    String? reason,
+  }) async {
+    emit(const AdminLeaveRequestsState.loading());
+    final result = await leaveRequestsRepo.updateLeaveStatusV2(
+      ulid,
+      action,
+      reason,
     );
     return result.when(
       success: (_) async {

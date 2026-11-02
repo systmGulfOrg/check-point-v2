@@ -18,6 +18,7 @@ import '../../data/models/leave_request_body.dart';
 import '../../data/models/leave_request_model.dart';
 import '../widgets/leave_balances_list_widget.dart';
 import '../widgets/leave_request_card_widget.dart';
+import '../widgets/leave_request_buttons_widget.dart';
 import '../widgets/leave_status_filter_widget.dart';
 
 class LeavesDashboardScreen extends StatefulWidget {
@@ -119,10 +120,10 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        centerTitle: false,
         title: Text(
           'leaves.dashboard.title'.tr(context: context),
-          style: AppTextStyles.font18Bold,
+          style: AppTextStyles.font24Bold,
         ),
         backgroundColor: AppColors.white,
         foregroundColor: AppColors.textPrimary,
@@ -225,16 +226,21 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
 
               return SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 100.h),
+                padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 24.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    LeaveRequestButtonsWidget(
+                      onRequestLeave: () => _showApplyLeaveSheet(context),
+                      onRequestPermit: () => _showApplyPermissionSheet(context),
+                    ),
+                    hSpace(20),
                     if (balances.isNotEmpty) ...[
                       Text(
                         'leaves.dashboard.balanceTitle'.tr(context: context),
                         style: AppTextStyles.font16Bold,
                       ),
-                      hSpace(8),
+                      hSpace(10),
                       Padding(
                         padding: EdgeInsets.only(bottom: 16.h),
                         child: LeaveBalancesListWidget(
@@ -261,27 +267,6 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
             },
           ),
         ),
-      ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton.extended(
-            heroTag: 'employeePermissionBtn',
-            onPressed: () => _showApplyPermissionSheet(context),
-            backgroundColor: AppColors.brandSecondary,
-            icon: const Icon(Icons.timer),
-            label: Text('leaves.dashboard.requestPermission'.tr()),
-          ),
-          SizedBox(height: 12.h),
-          FloatingActionButton.extended(
-            heroTag: 'employeeLeaveBtn',
-            onPressed: () => _showApplyLeaveSheet(context),
-            backgroundColor: AppColors.brandPrimary,
-            icon: const Icon(Icons.add),
-            label: Text('leaves.dashboard.requestLeave'.tr()),
-          ),
-        ],
       ),
     );
   }
