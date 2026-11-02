@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/auth_help_support_sheet_widget.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
@@ -77,6 +80,18 @@ class SupervisorProfileOptionsWidget extends StatelessWidget {
             builder: (_) => const LanguageSelectionSheetWidget(),
           );
         },
+      ),
+      (
+        Icons.support_agent_rounded,
+        'employee.settings.support',
+        null,
+        () => showAuthHelpSupportSheet(context),
+      ),
+      (
+        Icons.privacy_tip_outlined,
+        'auth.companyCode.privacyPolicy',
+        null,
+        () => launchUrl(Uri.parse(AppConfig.privacyPolicyUrl)),
       ),
       if (switch (context.watch<AuthProfileCubit>().state) {
         AuthProfileSuccess(:final roles) => roles.length > 1,

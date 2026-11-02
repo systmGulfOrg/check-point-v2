@@ -1180,7 +1180,9 @@ class _EmployeeAttendanceLocationSheetWidgetState
                             decoration: BoxDecoration(
                               color: const Color(0xFFFEF3C7),
                               borderRadius: BorderRadius.circular(10.r),
-                              border: Border.all(color: const Color(0xFFF59E0B)),
+                              border: Border.all(
+                                color: const Color(0xFFF59E0B),
+                              ),
                             ),
                             child: Row(
                               children: [
@@ -1267,7 +1269,8 @@ class _EmployeeAttendanceLocationSheetWidgetState
                               ? 'employee.home.checkOutAction'.tr()
                               : 'employee.home.checkInAction'.tr(),
                           isLoading: state is EmployeeAttendanceStateLoading,
-                          enabled: userLocation != null &&
+                          enabled:
+                              userLocation != null &&
                               (isInside ||
                                   (sl.isRegistered<ConnectivityCubit>() &&
                                       !sl<ConnectivityCubit>().state.isOnline)),

@@ -7,7 +7,6 @@ import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holid
 import 'package:check_point_v2/features/leaves/presentation/widgets/upcoming_holiday_card_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
-import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_top_bar_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_personal_dashboard_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_alert_banner_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_stats_grid_bloc_builder_widget.dart';
@@ -19,34 +18,35 @@ class SupervisorHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: RefreshIndicator(
-        color: AppColors.brandPrimary,
-        onRefresh: () => Future.wait([
-          context.read<SupervisorAttendanceCubit>().loadAttendance(),
-          context.read<SupervisorTeamCubit>().loadTeam(),
-          context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
-        ]),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SupervisorTopBarWidget(),
-              hSpace(16),
-              const UpcomingHolidayCardBlocBuilderWidget(),
-              hSpace(16),
-              const SupervisorPersonalDashboardBlocBuilderWidget(),
-              hSpace(16),
-              const SupervisorRequestsQuickActionsWidget(),
-              hSpace(16),
-              const SupervisorAlertBannerBlocBuilderWidget(),
-              hSpace(20),
-              const SupervisorStatsGridBlocBuilderWidget(),
-              hSpace(20),
-              const SupervisorTeamTodayBlocBuilderWidget(),
-            ],
+    return ColoredBox(
+      color: AppColors.white,
+      child: SafeArea(
+        child: RefreshIndicator(
+          color: AppColors.brandPrimary,
+          onRefresh: () => Future.wait([
+            context.read<SupervisorAttendanceCubit>().loadAttendance(),
+            context.read<SupervisorTeamCubit>().loadTeam(),
+            context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
+          ]),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const UpcomingHolidayCardBlocBuilderWidget(),
+                hSpace(16),
+                const SupervisorPersonalDashboardBlocBuilderWidget(),
+                hSpace(16),
+                const SupervisorRequestsQuickActionsWidget(),
+                hSpace(16),
+                const SupervisorAlertBannerBlocBuilderWidget(),
+                hSpace(20),
+                const SupervisorStatsGridBlocBuilderWidget(),
+                hSpace(20),
+                const SupervisorTeamTodayBlocBuilderWidget(),
+              ],
+            ),
           ),
         ),
       ),

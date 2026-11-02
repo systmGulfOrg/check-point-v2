@@ -37,7 +37,12 @@ class EmployeeSettingsTileWidget extends StatelessWidget {
               ),
             ),
             Text(
-              valueKey.startsWith('admin.') || valueKey.startsWith('employee.')
+              const [
+                    'admin.',
+                    'employee.',
+                    'remoteWork.',
+                    'auth.',
+                  ].any(valueKey.startsWith)
                   ? valueKey.tr(context: context)
                   : valueKey,
               style: AppTextStyles.font13Regular.copyWith(

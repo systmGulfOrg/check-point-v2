@@ -660,6 +660,9 @@ class AppRouter {
               BlocProvider<PointsCubit>(
                 create: (_) => sl<PointsCubit>()..loadAllPointsData(),
               ),
+              BlocProvider<NotificationsCubit>(
+                create: (_) => sl<NotificationsCubit>()..load(),
+              ),
             ],
             child: const SupervisorMainScreen(),
           ),

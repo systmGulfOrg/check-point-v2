@@ -32,7 +32,9 @@ class ServerTimeAnchorInterceptor extends Interceptor {
         if (serverTime != null) {
           try {
             final snapshot = await deviceClockService.getClockSnapshot();
-            await database.into(database.timeAnchors).insert(
+            await database
+                .into(database.timeAnchors)
+                .insert(
                   TimeAnchorsCompanion.insert(
                     serverTime: serverTime.toUtc(),
                     monotonicMs: BigInt.from(snapshot.monotonicMs),

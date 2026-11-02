@@ -10,6 +10,5 @@ class GetPendingVerificationsUseCase {
   Future<ApiResult<List<PendingAttendanceItem>>> call({
     int page = 1,
     int limit = 50,
-  }) =>
-      repo.getPendingVerifications(page: page, limit: limit);
+  }) => repo.getPendingVerifications(page: page, limit: limit);
 }

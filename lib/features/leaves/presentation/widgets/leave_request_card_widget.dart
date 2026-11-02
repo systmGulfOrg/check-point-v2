@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/leaves/presentation/leave_request_labels.dart';
 import '../../data/models/leave_request_model.dart';
 import 'leave_approval_timeline_widget.dart';
 
@@ -16,64 +17,11 @@ class LeaveRequestCardWidget extends StatelessWidget {
   final LeaveRequestModel request;
   final VoidCallback? onDelete;
 
-  String _getTranslatedName(String? name) {
-    if (name == null || name.isEmpty) return 'leaves.request.title'.tr();
-    if (name.startsWith('leaves.dashboard.')) {
-      return name.tr();
-    }
-    final lower = name.toLowerCase().trim();
-    if (lower == 'annual leave' ||
-        lower == 'annual' ||
-        lower == 'إجازة اعتيادية / سنوية') {
-      return 'leaves.dashboard.annualLeave'.tr();
-    }
-    if (lower == 'sick leave' || lower == 'sick' || lower == 'إجازة مرضية') {
-      return 'leaves.dashboard.sickLeave'.tr();
-    }
-    if (lower == 'casual leave' ||
-        lower == 'casual' ||
-        lower == 'إجازة عارضة') {
-      return 'leaves.dashboard.casualLeave'.tr();
-    }
-    return name;
-  }
-
   @override
   Widget build(BuildContext context) {
     final status = request.status.toLowerCase();
 
-    final (statusKey, statusColor, statusBg) = switch (status) {
-      'pending' || 'pendingmanager' => (
-        'leaves.status.pending',
-        AppColors.warningOrange,
-        AppColors.softYellowBackground,
-      ),
-      'pendinghr' => (
-        'leaves.status.pendingHR',
-        AppColors.warningOrange,
-        AppColors.softYellowBackground,
-      ),
-      'approved' || 'approvedbyhr' || 'approvedbymanager' => (
-        'leaves.status.approved',
-        AppColors.success,
-        AppColors.softGreenBackground,
-      ),
-      'rejected' || 'rejectedbymanager' || 'rejectedbyhr' => (
-        'leaves.status.rejected',
-        AppColors.error,
-        AppColors.softRedBackground,
-      ),
-      'cancelled' => (
-        'leaves.status.cancelled',
-        AppColors.placeholder,
-        AppColors.border,
-      ),
-      _ => (
-        'leaves.status.pending',
-        AppColors.warningOrange,
-        AppColors.softYellowBackground,
-      ),
-    };
+    final (statusKey, statusColor, statusBg) = leaveStatusStyle(status);
 
     return Container(
       decoration: BoxDecoration(
@@ -100,7 +48,7 @@ class LeaveRequestCardWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      _getTranslatedName(request.leaveTypeName),
+                      leaveTypeDisplayName(request.leaveTypeName),
                       style: AppTextStyles.font14Bold,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

@@ -242,6 +242,12 @@ abstract class AdminApiService {
     @Body() ChangeRequestLeaveStatus body,
   );
 
+  @PATCH('/api/v2/leave-requests/{ulid}/status')
+  Future<void> updateLeaveStatusV2(
+    @Path('ulid') String ulid,
+    @Body() Map<String, dynamic> body,
+  );
+
   @DELETE('${ApiConstants.leaveRequests}/{id}')
   Future<ResultModel> deleteLeaveRequest(@Path('id') dynamic id);
 

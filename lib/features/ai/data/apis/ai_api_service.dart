@@ -55,8 +55,8 @@ class AiApiService {
       final raw = response.data;
       final Map<String, dynamic> data =
           (raw is Map<String, dynamic> && raw['value'] is Map<String, dynamic>)
-              ? raw['value'] as Map<String, dynamic>
-              : (raw is Map<String, dynamic> ? raw : {});
+          ? raw['value'] as Map<String, dynamic>
+          : (raw is Map<String, dynamic> ? raw : {});
 
       if (data['response'] != null) {
         return AiChatResponseModel.fromJson(data);
@@ -81,9 +81,10 @@ class AiApiService {
 
         final raw = localRes.data;
         final Map<String, dynamic> data =
-            (raw is Map<String, dynamic> && raw['value'] is Map<String, dynamic>)
-                ? raw['value'] as Map<String, dynamic>
-                : (raw is Map<String, dynamic> ? raw : {});
+            (raw is Map<String, dynamic> &&
+                raw['value'] is Map<String, dynamic>)
+            ? raw['value'] as Map<String, dynamic>
+            : (raw is Map<String, dynamic> ? raw : {});
 
         if (data['response'] != null) {
           return AiChatResponseModel.fromJson(data);
@@ -106,10 +107,7 @@ class AiApiService {
     try {
       final response = await _dio.post(
         ApiConstants.aiAgentActionConfirm,
-        data: {
-          'action_id': actionId,
-          'session_id': sessionId ?? 'default',
-        },
+        data: {'action_id': actionId, 'session_id': sessionId ?? 'default'},
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -128,10 +126,7 @@ class AiApiService {
       try {
         final response = await _dio.post(
           ApiConstants.aiActionConfirm,
-          data: {
-            'actionId': actionId,
-            'confirmed': confirmed,
-          },
+          data: {'actionId': actionId, 'confirmed': confirmed},
         );
 
         final raw = response.data;

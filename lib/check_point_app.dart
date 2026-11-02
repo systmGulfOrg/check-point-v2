@@ -8,7 +8,6 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/core/widgets/offline_banner_widget.dart';
 import 'package:check_point_v2/core/widgets/push_tap_listener_widget.dart';
-import 'package:check_point_v2/features/support/presentation/support_app_overlay_widget.dart';
 
 class CheckPointApp extends StatelessWidget {
   const CheckPointApp({required this.initialRoute, super.key});
@@ -34,20 +33,16 @@ class CheckPointApp extends StatelessWidget {
             onGenerateRoute: AppRouter.onGenerateRoute,
             builder: (context, child) => BlocProvider.value(
               value: sl<ConnectivityCubit>(),
-              child: SupportAppOverlayWidget(
-                child: Stack(
-                  children: [
-                    child ?? const SizedBox.shrink(),
-                    const Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      child: IgnorePointer(
-                        child: OfflineBannerWidget(),
-                      ),
-                    ),
-                  ],
-                ),
+              child: Stack(
+                children: [
+                  child ?? const SizedBox.shrink(),
+                  const Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: IgnorePointer(child: OfflineBannerWidget()),
+                  ),
+                ],
               ),
             ),
           ),

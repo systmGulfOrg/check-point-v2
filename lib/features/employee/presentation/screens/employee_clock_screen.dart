@@ -12,14 +12,13 @@ import 'package:check_point_v2/features/employee/presentation/cubit/attendance/e
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_filter_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_record_card_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_record_data.dart';
-import 'package:check_point_v2/features/employee/presentation/widgets/employee_clock_card_widget.dart';
+import 'package:check_point_v2/features/employee/presentation/widgets/employee_today_card_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_attendance_location_sheet_widget.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_state.dart';
 import 'package:check_point_v2/features/leaves/presentation/widgets/upcoming_holiday_card_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_cubit.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/cubit/points_state.dart';
-import 'package:check_point_v2/features/attendance_points/presentation/widgets/points_today_card_widget.dart';
 import 'package:check_point_v2/features/attendance_points/presentation/widgets/points_day_details_sheet_widget.dart';
 
 import '../../../attendance_points/data/models/points_history_model.dart';
@@ -38,7 +37,6 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
       checkIn: '09:00 AM',
       checkOut: '05:00 PM',
       area: 'Main Office',
-      status: 'On Time',
       isLate: false,
       isEarly: false,
     ),
@@ -47,7 +45,6 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
       checkIn: '09:15 AM',
       checkOut: '05:00 PM',
       area: 'Main Office',
-      status: 'Late',
       isLate: true,
       isEarly: false,
     ),
@@ -56,7 +53,6 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
       checkIn: '09:00 AM',
       checkOut: '04:45 PM',
       area: 'Main Office',
-      status: 'Early Leave',
       isLate: false,
       isEarly: true,
     ),
@@ -266,7 +262,11 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
 
                     return Skeletonizer(
                       enabled: state is EmployeeAttendanceStateLoading,
-                      child: EmployeeClockCardWidget(
+                      child: EmployeeTodayCardWidget(
+                        isOnTime: attendance?.isLate != true,
+                        workModeText: (profile?.todayWorkMode ?? 'onsite').tr(
+                          context: context,
+                        ),
                         policyText: policyText,
                         checkInTime: AppDateFormatter.formatTimeString(
                           attendance?.clockInTime,
@@ -288,22 +288,6 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                         holidayName: holidayName,
                       ),
                     );
-                  },
-                ),
-                BlocBuilder<PointsCubit, PointsState>(
-                  builder: (context, state) {
-                    if (state is PointsLoaded) {
-                      return Padding(
-                        padding: EdgeInsets.only(top: 16.h),
-                        child: PointsTodayCardWidget(
-                          summary: state.summary,
-                          onTap: () {
-                            Navigator.of(context).pushNamed(AppRoutes.myPoints);
-                          },
-                        ),
-                      );
-                    }
-                    return const SizedBox.shrink();
                   },
                 ),
                 hSpace(20),
@@ -378,6 +362,9 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                                     date: AppDateFormatter.formatDateString(
                                       item.attendanceDate,
                                     ),
+                                    day: DateTime.tryParse(
+                                      item.attendanceDate ?? '',
+                                    ),
                                     checkIn: AppDateFormatter.formatTimeString(
                                       item.clockInTime,
                                       use12Hour: true,
@@ -387,22 +374,9 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                                       use12Hour: true,
                                     ),
                                     area: item.area,
-                                    status: item.isLate == true
-                                        ? 'Late'
-                                        : (item.isEarly == true
-                                              ? 'Early Leave'
-                                              : 'On Time'),
                                     isLate: item.isLate == true,
                                     isEarly: item.isEarly == true,
                                     rawDate: item.attendanceDate,
-                                    pointsChip: item.isLate == true
-                                        ? '-5'
-                                        : (item.isEarly == true ? '-5' : '+5'),
-                                    pointsColor:
-                                        item.isLate == true ||
-                                            item.isEarly == true
-                                        ? AppColors.error.toARGB32()
-                                        : AppColors.success.toARGB32(),
                                   ),
                                 )
                                 .toList(),

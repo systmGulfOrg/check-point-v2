@@ -1,10 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'employee_attendance_date_block_widget.dart';
 import 'employee_attendance_record_data.dart';
-import 'employee_status_badge_widget.dart';
 
+/// One day of attendance history: date block, in and out times, place, and
+/// whether the day was on time, late or left early.
 class EmployeeAttendanceRecordCardWidget extends StatelessWidget {
   const EmployeeAttendanceRecordCardWidget({required this.record, super.key});
 
@@ -12,127 +15,60 @@ class EmployeeAttendanceRecordCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final (statusKey, color, background) = record.isLate
+        ? (
+            'employee.attendance.statusLate',
+            AppColors.amberDark,
+            AppColors.softYellowBackground,
+          )
+        : record.isEarly
+        ? (
+            'employee.attendance.statusEarly',
+            AppColors.info,
+            AppColors.softBlueBackground,
+          )
+        : (
+            'employee.attendance.statusOnTime',
+            AppColors.success,
+            AppColors.softGreenBackground,
+          );
+    final checkOut = record.checkOut ?? '--:--';
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+      child: Row(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.calendar_today_rounded,
-                    size: 16.r,
-                    color: AppColors.textSecondary,
-                  ),
-                  wSpace(6),
-                  Text(
-                    record.date,
-                    style: AppTextStyles.font14SemiBold.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  if (record.pointsChip != null) ...[
-                    wSpace(6),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 6.w,
-                        vertical: 2.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Color(
-                          record.pointsColor ??
-                              AppColors.brandPrimary.toARGB32(),
-                        ).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(6.r),
-                      ),
-                      child: Text(
-                        record.pointsChip!,
-                        style: AppTextStyles.font11Bold.copyWith(
-                          color: Color(
-                            record.pointsColor ??
-                                AppColors.brandPrimary.toARGB32(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-              EmployeeStatusBadgeWidget(status: record.status),
-            ],
+          EmployeeAttendanceDateBlockWidget(
+            day: record.day,
+            fallback: record.date,
           ),
-          hSpace(8),
-          Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.login_rounded,
-                      size: 16.r,
-                      color: AppColors.success,
-                    ),
-                    wSpace(4),
-                    Text(
-                      'In ${record.checkIn}',
-                      style: AppTextStyles.font13SemiBold.copyWith(
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.logout_rounded,
-                      size: 16.r,
-                      color:
-                          record.checkOut != null && record.checkOut != '--:--'
-                          ? AppColors.brandPrimary
-                          : AppColors.placeholder,
-                    ),
-                    wSpace(4),
-                    Text(
-                      'Out ${record.checkOut ?? '--:--'}',
-                      style: AppTextStyles.font13SemiBold.copyWith(
-                        color:
-                            record.checkOut != null &&
-                                record.checkOut != '--:--'
-                            ? AppColors.textPrimary
-                            : AppColors.placeholder,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          if (record.area != null &&
-              record.area!.isNotEmpty &&
-              record.area != '-') ...[
-            hSpace(6),
-            Row(
+          wSpace(12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.location_on_outlined,
-                  size: 14.r,
-                  color: AppColors.placeholder,
-                ),
-                wSpace(4),
                 Text(
-                  record.area!,
-                  style: AppTextStyles.font12Regular.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+                  '${'employee.attendance.in'.tr(context: context)} ${record.checkIn}  ·  ${'employee.attendance.out'.tr(context: context)} $checkOut',
+                  style: AppTextStyles.font13SemiBold,
                 ),
+                if (record.area != null &&
+                    record.area!.isNotEmpty &&
+                    record.area != '-')
+                  Text(
+                    record.area!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.font12Regular.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
               ],
             ),
-          ],
+          ),
+          AppStatusPillWidget(
+            label: statusKey.tr(context: context),
+            color: color,
+            backgroundColor: background,
+          ),
         ],
       ),
     );

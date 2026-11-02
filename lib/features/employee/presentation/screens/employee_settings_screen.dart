@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/auth_help_support_sheet_widget.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_profile_card_widget.dart';
@@ -39,21 +42,11 @@ class EmployeeSettingsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'employee.settings.title'.tr(context: context),
-                    style: AppTextStyles.font24Bold,
-                  ),
-                  Image.asset(
-                    AppAssets.logo,
-                    height: 32.h,
-                    fit: BoxFit.contain,
-                  ),
-                ],
+              Text(
+                'employee.settings.title'.tr(context: context),
+                style: AppTextStyles.font24Bold,
               ),
-              hSpace(20),
+              hSpace(16),
               const AuthProfileCardWidget(),
               hSpace(20),
               EmployeeSettingsSectionCardWidget(
@@ -66,7 +59,6 @@ class EmployeeSettingsScreen extends StatelessWidget {
                     valueKey: '••••••••',
                     onTap: () => showChangePasswordSheet(context),
                   ),
-                  const EmployeeSettingsNotificationsTileBlocSelectorWidget(),
                   EmployeeSettingsTileWidget(
                     icon: Icons.shield_outlined,
                     titleKey: 'admin.settings.permissions',
@@ -99,7 +91,7 @@ class EmployeeSettingsScreen extends StatelessWidget {
               ),
               hSpace(20),
               EmployeeSettingsSectionCardWidget(
-                sectionTitleKey: 'remoteWork.title',
+                sectionTitleKey: 'employee.settings.sectionWork',
                 tiles: [
                   EmployeeSettingsTileWidget(
                     icon: Icons.home_work_outlined,
@@ -126,6 +118,20 @@ class EmployeeSettingsScreen extends StatelessWidget {
                         builder: (_) => const LanguageSelectionSheetWidget(),
                       );
                     },
+                  ),
+                  const EmployeeSettingsNotificationsTileBlocSelectorWidget(),
+                  EmployeeSettingsTileWidget(
+                    icon: Icons.support_agent_rounded,
+                    titleKey: 'employee.settings.support',
+                    valueKey: '',
+                    onTap: () => showAuthHelpSupportSheet(context),
+                  ),
+                  EmployeeSettingsTileWidget(
+                    icon: Icons.privacy_tip_outlined,
+                    titleKey: 'auth.companyCode.privacyPolicy',
+                    valueKey: '',
+                    onTap: () =>
+                        launchUrl(Uri.parse(AppConfig.privacyPolicyUrl)),
                   ),
                   const EmployeeSettingsTileWidget(
                     icon: Icons.info_outline_rounded,

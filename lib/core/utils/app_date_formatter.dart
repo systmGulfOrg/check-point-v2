@@ -57,6 +57,15 @@ class AppDateFormatter {
     return toEnglishDigits(DateFormat('EEEE, dd MMM yyyy', 'en').format(date));
   }
 
+  /// Weekday and month names in [languageCode], digits kept Latin like the
+  /// rest of the app: "الأحد، 1 نوفمبر 2026" / "Sunday, 1 November 2026".
+  static String formatLongDate(DateTime date, String languageCode) {
+    final pattern = languageCode == 'ar'
+        ? 'EEEE، d MMMM yyyy'
+        : 'EEEE, d MMMM yyyy';
+    return toEnglishDigits(DateFormat(pattern, languageCode).format(date));
+  }
+
   static String formatMediumDate(DateTime date) {
     return toEnglishDigits(DateFormat('dd MMM yyyy', 'en').format(date));
   }

@@ -9,6 +9,14 @@ abstract class AdminLeaveRequestsRepo {
   );
   Future<ApiResult<void>> deleteLeaveRequest(dynamic id);
 
+  /// V2 endpoint — supports action-based approval/rejection with an optional
+  /// rejection reason (e.g. action = 'RejectHR' | 'RejectManager').
+  Future<ApiResult<void>> updateLeaveStatusV2(
+    String ulid,
+    String action,
+    String? reason,
+  );
+
   Future<ApiResult<List<LeaveTypeModel>>> getLeaveTypes();
   Future<ApiResult<void>> addLeaveType(AddLeaveTypeRequestBody body);
   Future<ApiResult<void>> editLeaveType(int id, AddLeaveTypeRequestBody body);

@@ -149,9 +149,35 @@ class AdminLeaveRequestsListWidget extends StatelessWidget {
               cubit.updateStatus(requestId: item.id!, status: 'Approved');
             }
           },
-          onReject: () {
-            if (item.id != null) {
-              cubit.updateStatus(requestId: item.id!, status: 'Rejected');
+          onReject: () async {
+            final reason = await AppRejectReasonDialogWidget.show(
+              context,
+              title: 'leaves.rejection.reason'.tr(context: context),
+              hintText: 'leaves.rejection.reasonHint'.tr(context: context),
+              confirmLabel: 'supervisor.leave.reject'.tr(context: context),
+              validator: (value) {
+                if (value == null || value.trim().length < 5) {
+                  return 'leaves.rejection.reasonRequired'.tr(context: context);
+                }
+                return null;
+              },
+            );
+
+            if (reason != null && reason.trim().isNotEmpty) {
+              final ulid = item.ulid;
+              if (ulid != null && ulid.isNotEmpty) {
+                final statusLower = (item.status ?? '').toLowerCase();
+                final action = statusLower == 'pendingmanager' || statusLower == 'pending'
+                    ? 'RejectManager'
+                    : 'RejectHR';
+                await cubit.rejectWithReason(
+                  ulid: ulid,
+                  action: action,
+                  reason: reason.trim(),
+                );
+              } else if (item.id != null) {
+                await cubit.updateStatus(requestId: item.id!, status: 'Rejected');
+              }
             }
           },
           onDelete: () {

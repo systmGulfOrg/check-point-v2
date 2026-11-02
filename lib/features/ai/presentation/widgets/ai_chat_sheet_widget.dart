@@ -65,19 +65,11 @@ class _AiChatSheetWidgetState extends State<AiChatSheetWidget>
       vsync: this,
       duration: const Duration(milliseconds: 380),
     );
-    _slideAnim = Tween<Offset>(
-      begin: const Offset(0, 0.08),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
-    _fadeAnim = CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeOut,
-    );
+    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.08), end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+        );
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _animController.forward();
   }
 
@@ -149,9 +141,11 @@ class _AiChatSheetWidgetState extends State<AiChatSheetWidget>
                       return ListView.builder(
                         controller: _scrollController,
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        itemCount: state.messages.length + (state.isLoading ? 1 : 0),
+                        itemCount:
+                            state.messages.length + (state.isLoading ? 1 : 0),
                         itemBuilder: (context, index) {
-                          if (index == state.messages.length && state.isLoading) {
+                          if (index == state.messages.length &&
+                              state.isLoading) {
                             return _buildTypingIndicator();
                           }
 
@@ -162,9 +156,10 @@ class _AiChatSheetWidgetState extends State<AiChatSheetWidget>
                             onConfirmAction: () {
                               if (msg.pendingAction != null) {
                                 final actionId = msg.pendingAction!.actionId;
-                                context
-                                    .read<AiChatCubit>()
-                                    .confirmAction(msg.id, actionId);
+                                context.read<AiChatCubit>().confirmAction(
+                                  msg.id,
+                                  actionId,
+                                );
                               }
                             },
                             onCancelAction: () {
@@ -193,9 +188,7 @@ class _AiChatSheetWidgetState extends State<AiChatSheetWidget>
   Widget _buildTopBar(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 10, bottom: 12, left: 16, right: 16),
-      decoration: const BoxDecoration(
-        color: Color(0xFF0F172A),
-      ),
+      decoration: const BoxDecoration(color: Color(0xFF0F172A)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -254,7 +247,9 @@ class _AiChatSheetWidgetState extends State<AiChatSheetWidget>
                             vertical: 1,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.brandPrimary.withValues(alpha: 0.25),
+                            color: AppColors.brandPrimary.withValues(
+                              alpha: 0.25,
+                            ),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Text(
@@ -292,14 +287,22 @@ class _AiChatSheetWidgetState extends State<AiChatSheetWidget>
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.restart_alt_rounded, color: Colors.white70, size: 22),
+                icon: const Icon(
+                  Icons.restart_alt_rounded,
+                  color: Colors.white70,
+                  size: 22,
+                ),
                 tooltip: 'محادثة جديدة',
                 onPressed: () {
                   context.read<AiChatCubit>().startNewChat();
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.close_rounded, color: Colors.white, size: 22),
+                icon: const Icon(
+                  Icons.close_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
                 tooltip: 'إغلاق',
                 onPressed: () => Navigator.of(context).pop(),
               ),
@@ -315,9 +318,7 @@ class _AiChatSheetWidgetState extends State<AiChatSheetWidget>
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(
-          bottom: BorderSide(color: Colors.grey.shade200),
-        ),
+        border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
       ),
       child: Row(
         children: [
@@ -556,9 +557,7 @@ class _AiChatSheetWidgetState extends State<AiChatSheetWidget>
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(
-          top: BorderSide(color: Colors.grey.shade200),
-        ),
+        border: Border(top: BorderSide(color: Colors.grey.shade200)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.06),
@@ -590,10 +589,7 @@ class _AiChatSheetWidgetState extends State<AiChatSheetWidget>
                 ),
                 decoration: const InputDecoration(
                   hintText: 'اسأل المساعد الذكي عن أي شيء...',
-                  hintStyle: TextStyle(
-                    fontSize: 13,
-                    color: Color(0xFF94A3B8),
-                  ),
+                  hintStyle: TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
                   border: InputBorder.none,
                   isDense: true,
                   contentPadding: EdgeInsets.symmetric(vertical: 12),

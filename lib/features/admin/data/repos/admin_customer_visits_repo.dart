@@ -9,6 +9,7 @@ abstract class AdminCustomerVisitsRepo {
   );
   Future<ApiResult<List<CustomerVisitModel>>> getAllVisits();
   Future<ApiResult<void>> addVisitPlan(CustomerVisitModel visit);
+
   /// Uploads [file] as the visit's attachment and returns the stored
   /// (name, url) pair. The url is a real server-hosted link, never a local
   /// device path — never persist [file.path] directly as `documentUrl`.

@@ -26,12 +26,12 @@ class PendingTaskAction {
   }
 
   Map<String, dynamic> toJson() => {
-        'action_type': actionType,
-        'summary': summary,
-        'payload': payload,
-        'proposed_by_employee_id': proposedByEmployeeId,
-        'action_id': actionId,
-      };
+    'action_type': actionType,
+    'summary': summary,
+    'payload': payload,
+    'proposed_by_employee_id': proposedByEmployeeId,
+    'action_id': actionId,
+  };
 }
 
 class PendingActionModel {

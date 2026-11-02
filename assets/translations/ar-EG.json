@@ -1133,6 +1133,7 @@
   "errors.employeeNotFound": "لم يتم العثور على ملف الموظف.",
   "errors.employeeUnavailable": "تعذر تحميل ملف الموظف الخاص بك.",
   "errors.forbidden": "ليس لديك صلاحية لتنفيذ هذه العملية.",
+  "errors.selfVerificationNotAllowed": "لا يمكنك التحقق من سجل حضورك الخاص.",
   "errors.invalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.",
   "errors.locationUnavailable": "الموقع غير متاح. فعّل نظام تحديد الموقع وحاول مرة أخرى.",
   "errors.logoutFailed": "مش قادرين نسجل خروجك. حاول مرة تانية.",

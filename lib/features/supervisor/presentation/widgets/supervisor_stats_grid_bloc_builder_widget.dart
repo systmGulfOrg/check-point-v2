@@ -37,9 +37,8 @@ class SupervisorStatsGridBlocBuilderWidget extends StatelessWidget {
             if (attState case SupervisorAttendanceError(:final messageKey)) {
               return AppErrorStateWidget(
                 messageKey: messageKey,
-                onRetry: () => context
-                    .read<SupervisorAttendanceCubit>()
-                    .loadAttendance(),
+                onRetry: () =>
+                    context.read<SupervisorAttendanceCubit>().loadAttendance(),
               );
             }
             final (presentToday, isAttendanceLoading) = switch (attState) {
