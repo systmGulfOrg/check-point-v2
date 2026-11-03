@@ -45,6 +45,14 @@ mixin _$LeaveRequestModel {
   String? get hrName => throw _privateConstructorUsedError;
   DateTime? get hrActionAt => throw _privateConstructorUsedError;
   String? get hrRejectionReason => throw _privateConstructorUsedError;
+  String? get holdingUntil => throw _privateConstructorUsedError;
+  bool? get isHoldingActive => throw _privateConstructorUsedError;
+  int? get holdingRemainingMinutes => throw _privateConstructorUsedError;
+  String? get adminObjectionNote => throw _privateConstructorUsedError;
+  String? get adminObjectionBy => throw _privateConstructorUsedError;
+  String? get adminObjectionAt => throw _privateConstructorUsedError;
+  bool? get adminsObserverOnly => throw _privateConstructorUsedError;
+  String? get leaveWorkflow => throw _privateConstructorUsedError;
 
   /// Serializes this LeaveRequestModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -88,6 +96,14 @@ abstract class $LeaveRequestModelCopyWith<$Res> {
     String? hrName,
     DateTime? hrActionAt,
     String? hrRejectionReason,
+    String? holdingUntil,
+    bool? isHoldingActive,
+    int? holdingRemainingMinutes,
+    String? adminObjectionNote,
+    String? adminObjectionBy,
+    String? adminObjectionAt,
+    bool? adminsObserverOnly,
+    String? leaveWorkflow,
   });
 }
 
@@ -130,6 +146,14 @@ class _$LeaveRequestModelCopyWithImpl<$Res, $Val extends LeaveRequestModel>
     Object? hrName = freezed,
     Object? hrActionAt = freezed,
     Object? hrRejectionReason = freezed,
+    Object? holdingUntil = freezed,
+    Object? isHoldingActive = freezed,
+    Object? holdingRemainingMinutes = freezed,
+    Object? adminObjectionNote = freezed,
+    Object? adminObjectionBy = freezed,
+    Object? adminObjectionAt = freezed,
+    Object? adminsObserverOnly = freezed,
+    Object? leaveWorkflow = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -229,6 +253,38 @@ class _$LeaveRequestModelCopyWithImpl<$Res, $Val extends LeaveRequestModel>
                 ? _value.hrRejectionReason
                 : hrRejectionReason // ignore: cast_nullable_to_non_nullable
                       as String?,
+            holdingUntil: freezed == holdingUntil
+                ? _value.holdingUntil
+                : holdingUntil // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isHoldingActive: freezed == isHoldingActive
+                ? _value.isHoldingActive
+                : isHoldingActive // ignore: cast_nullable_to_non_nullable
+                      as bool?,
+            holdingRemainingMinutes: freezed == holdingRemainingMinutes
+                ? _value.holdingRemainingMinutes
+                : holdingRemainingMinutes // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            adminObjectionNote: freezed == adminObjectionNote
+                ? _value.adminObjectionNote
+                : adminObjectionNote // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            adminObjectionBy: freezed == adminObjectionBy
+                ? _value.adminObjectionBy
+                : adminObjectionBy // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            adminObjectionAt: freezed == adminObjectionAt
+                ? _value.adminObjectionAt
+                : adminObjectionAt // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            adminsObserverOnly: freezed == adminsObserverOnly
+                ? _value.adminsObserverOnly
+                : adminsObserverOnly // ignore: cast_nullable_to_non_nullable
+                      as bool?,
+            leaveWorkflow: freezed == leaveWorkflow
+                ? _value.leaveWorkflow
+                : leaveWorkflow // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -269,6 +325,14 @@ abstract class _$$LeaveRequestModelImplCopyWith<$Res>
     String? hrName,
     DateTime? hrActionAt,
     String? hrRejectionReason,
+    String? holdingUntil,
+    bool? isHoldingActive,
+    int? holdingRemainingMinutes,
+    String? adminObjectionNote,
+    String? adminObjectionBy,
+    String? adminObjectionAt,
+    bool? adminsObserverOnly,
+    String? leaveWorkflow,
   });
 }
 
@@ -310,6 +374,14 @@ class __$$LeaveRequestModelImplCopyWithImpl<$Res>
     Object? hrName = freezed,
     Object? hrActionAt = freezed,
     Object? hrRejectionReason = freezed,
+    Object? holdingUntil = freezed,
+    Object? isHoldingActive = freezed,
+    Object? holdingRemainingMinutes = freezed,
+    Object? adminObjectionNote = freezed,
+    Object? adminObjectionBy = freezed,
+    Object? adminObjectionAt = freezed,
+    Object? adminsObserverOnly = freezed,
+    Object? leaveWorkflow = freezed,
   }) {
     return _then(
       _$LeaveRequestModelImpl(
@@ -409,6 +481,38 @@ class __$$LeaveRequestModelImplCopyWithImpl<$Res>
             ? _value.hrRejectionReason
             : hrRejectionReason // ignore: cast_nullable_to_non_nullable
                   as String?,
+        holdingUntil: freezed == holdingUntil
+            ? _value.holdingUntil
+            : holdingUntil // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isHoldingActive: freezed == isHoldingActive
+            ? _value.isHoldingActive
+            : isHoldingActive // ignore: cast_nullable_to_non_nullable
+                  as bool?,
+        holdingRemainingMinutes: freezed == holdingRemainingMinutes
+            ? _value.holdingRemainingMinutes
+            : holdingRemainingMinutes // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        adminObjectionNote: freezed == adminObjectionNote
+            ? _value.adminObjectionNote
+            : adminObjectionNote // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        adminObjectionBy: freezed == adminObjectionBy
+            ? _value.adminObjectionBy
+            : adminObjectionBy // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        adminObjectionAt: freezed == adminObjectionAt
+            ? _value.adminObjectionAt
+            : adminObjectionAt // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        adminsObserverOnly: freezed == adminsObserverOnly
+            ? _value.adminsObserverOnly
+            : adminsObserverOnly // ignore: cast_nullable_to_non_nullable
+                  as bool?,
+        leaveWorkflow: freezed == leaveWorkflow
+            ? _value.leaveWorkflow
+            : leaveWorkflow // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -442,6 +546,14 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
     this.hrName,
     this.hrActionAt,
     this.hrRejectionReason,
+    this.holdingUntil,
+    this.isHoldingActive,
+    this.holdingRemainingMinutes,
+    this.adminObjectionNote,
+    this.adminObjectionBy,
+    this.adminObjectionAt,
+    this.adminsObserverOnly,
+    this.leaveWorkflow,
   }) : _timeline = timeline;
 
   factory _$LeaveRequestModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -503,10 +615,26 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
   final DateTime? hrActionAt;
   @override
   final String? hrRejectionReason;
+  @override
+  final String? holdingUntil;
+  @override
+  final bool? isHoldingActive;
+  @override
+  final int? holdingRemainingMinutes;
+  @override
+  final String? adminObjectionNote;
+  @override
+  final String? adminObjectionBy;
+  @override
+  final String? adminObjectionAt;
+  @override
+  final bool? adminsObserverOnly;
+  @override
+  final String? leaveWorkflow;
 
   @override
   String toString() {
-    return 'LeaveRequestModel(id: $id, leaveTypeId: $leaveTypeId, leaveTypeName: $leaveTypeName, employeeId: $employeeId, startDate: $startDate, endDate: $endDate, totalDays: $totalDays, status: $status, reason: $reason, attachmentUrl: $attachmentUrl, createdAt: $createdAt, directManagerId: $directManagerId, directManagerName: $directManagerName, hasDirectManager: $hasDirectManager, rejectionReason: $rejectionReason, timeline: $timeline, managerId: $managerId, managerName: $managerName, managerActionAt: $managerActionAt, managerRejectionReason: $managerRejectionReason, hrId: $hrId, hrName: $hrName, hrActionAt: $hrActionAt, hrRejectionReason: $hrRejectionReason)';
+    return 'LeaveRequestModel(id: $id, leaveTypeId: $leaveTypeId, leaveTypeName: $leaveTypeName, employeeId: $employeeId, startDate: $startDate, endDate: $endDate, totalDays: $totalDays, status: $status, reason: $reason, attachmentUrl: $attachmentUrl, createdAt: $createdAt, directManagerId: $directManagerId, directManagerName: $directManagerName, hasDirectManager: $hasDirectManager, rejectionReason: $rejectionReason, timeline: $timeline, managerId: $managerId, managerName: $managerName, managerActionAt: $managerActionAt, managerRejectionReason: $managerRejectionReason, hrId: $hrId, hrName: $hrName, hrActionAt: $hrActionAt, hrRejectionReason: $hrRejectionReason, holdingUntil: $holdingUntil, isHoldingActive: $isHoldingActive, holdingRemainingMinutes: $holdingRemainingMinutes, adminObjectionNote: $adminObjectionNote, adminObjectionBy: $adminObjectionBy, adminObjectionAt: $adminObjectionAt, adminsObserverOnly: $adminsObserverOnly, leaveWorkflow: $leaveWorkflow)';
   }
 
   @override
@@ -554,7 +682,26 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
             (identical(other.hrActionAt, hrActionAt) ||
                 other.hrActionAt == hrActionAt) &&
             (identical(other.hrRejectionReason, hrRejectionReason) ||
-                other.hrRejectionReason == hrRejectionReason));
+                other.hrRejectionReason == hrRejectionReason) &&
+            (identical(other.holdingUntil, holdingUntil) ||
+                other.holdingUntil == holdingUntil) &&
+            (identical(other.isHoldingActive, isHoldingActive) ||
+                other.isHoldingActive == isHoldingActive) &&
+            (identical(
+                  other.holdingRemainingMinutes,
+                  holdingRemainingMinutes,
+                ) ||
+                other.holdingRemainingMinutes == holdingRemainingMinutes) &&
+            (identical(other.adminObjectionNote, adminObjectionNote) ||
+                other.adminObjectionNote == adminObjectionNote) &&
+            (identical(other.adminObjectionBy, adminObjectionBy) ||
+                other.adminObjectionBy == adminObjectionBy) &&
+            (identical(other.adminObjectionAt, adminObjectionAt) ||
+                other.adminObjectionAt == adminObjectionAt) &&
+            (identical(other.adminsObserverOnly, adminsObserverOnly) ||
+                other.adminsObserverOnly == adminsObserverOnly) &&
+            (identical(other.leaveWorkflow, leaveWorkflow) ||
+                other.leaveWorkflow == leaveWorkflow));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -585,6 +732,14 @@ class _$LeaveRequestModelImpl implements _LeaveRequestModel {
     hrName,
     hrActionAt,
     hrRejectionReason,
+    holdingUntil,
+    isHoldingActive,
+    holdingRemainingMinutes,
+    adminObjectionNote,
+    adminObjectionBy,
+    adminObjectionAt,
+    adminsObserverOnly,
+    leaveWorkflow,
   ]);
 
   /// Create a copy of LeaveRequestModel
@@ -630,6 +785,14 @@ abstract class _LeaveRequestModel implements LeaveRequestModel {
     final String? hrName,
     final DateTime? hrActionAt,
     final String? hrRejectionReason,
+    final String? holdingUntil,
+    final bool? isHoldingActive,
+    final int? holdingRemainingMinutes,
+    final String? adminObjectionNote,
+    final String? adminObjectionBy,
+    final String? adminObjectionAt,
+    final bool? adminsObserverOnly,
+    final String? leaveWorkflow,
   }) = _$LeaveRequestModelImpl;
 
   factory _LeaveRequestModel.fromJson(Map<String, dynamic> json) =
@@ -683,6 +846,22 @@ abstract class _LeaveRequestModel implements LeaveRequestModel {
   DateTime? get hrActionAt;
   @override
   String? get hrRejectionReason;
+  @override
+  String? get holdingUntil;
+  @override
+  bool? get isHoldingActive;
+  @override
+  int? get holdingRemainingMinutes;
+  @override
+  String? get adminObjectionNote;
+  @override
+  String? get adminObjectionBy;
+  @override
+  String? get adminObjectionAt;
+  @override
+  bool? get adminsObserverOnly;
+  @override
+  String? get leaveWorkflow;
 
   /// Create a copy of LeaveRequestModel
   /// with the given fields replaced by the non-null parameter values.

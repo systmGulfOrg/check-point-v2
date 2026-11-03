@@ -117,8 +117,16 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
       return userRole == 'Admin' || userRole == 'Supervisor';
     }();
 
-    final bool canApprove = !isOwnRequest && isPending && isDirectManager;
-    const String approveLabel = 'leaves.approval.approveAsManager';
+    final bool isHoldingActive = request.isHoldingActive ?? false;
+    final bool isObserverOnly = (request.adminsObserverOnly ?? false) &&
+        (userRole == 'Admin' || userRole == 'HR') &&
+        !isDirectManager;
+
+    final bool canApprove =
+        !isOwnRequest && isPending && isDirectManager && !isObserverOnly;
+    final String approveLabel = request.leaveWorkflow == 'direct_manager_only'
+        ? 'اعتماد نهائي'
+        : 'leaves.approval.approveAsManager';
 
     final start = AppDateFormatter.formatDateString(request.startDate);
     final end = AppDateFormatter.formatDateString(request.endDate);
@@ -189,6 +197,44 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
                         ],
                       ),
                     ),
+                    if (isHoldingActive) ...[
+                      hSpace(4),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 3.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.softYellowBackground,
+                          borderRadius: BorderRadius.circular(6.r),
+                          border: Border.all(
+                            color: AppColors.warningOrange.withValues(
+                              alpha: 0.3,
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.hourglass_top_rounded,
+                              size: 13.r,
+                              color: AppColors.warningOrange,
+                            ),
+                            wSpace(4),
+                            Flexible(
+                              child: Text(
+                                'قيد المراجعة الإدارية (متبقي ${request.holdingRemainingMinutes ?? 0} دقيقة)',
+                                style: AppTextStyles.font11Medium.copyWith(
+                                  color: AppColors.brandInk,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                     if (request.reason != null &&
                         request.reason!.isNotEmpty) ...[
                       hSpace(4),
@@ -257,7 +303,69 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
               request: request,
               isOwnRequest: isOwnRequest,
             ),
+            if (isObserverOnly) ...[
+              hSpace(10),
+              Container(
+                padding: EdgeInsets.all(10.r),
+                decoration: BoxDecoration(
+                  color: AppColors.softBrandBackground,
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(
+                    color: AppColors.brandPrimary.withValues(alpha: 0.2),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.visibility_outlined,
+                      size: 16.r,
+                      color: AppColors.brandPrimary,
+                    ),
+                    wSpace(8),
+                    Expanded(
+                      child: Text(
+                        'وضع المراقبة: اعتماد الإجازة محصور بالمدير المباشر حصراً. حساب الإدارة للمتابعة وتدوين الملاحظات.',
+                        style: AppTextStyles.font11Medium.copyWith(
+                          color: AppColors.brandPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             if (canApprove) ...[
+              if (isHoldingActive) ...[
+                hSpace(10),
+                Container(
+                  padding: EdgeInsets.all(10.r),
+                  decoration: BoxDecoration(
+                    color: AppColors.softYellowBackground,
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(
+                      color: AppColors.warningOrange.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.timer_outlined,
+                        size: 16.r,
+                        color: AppColors.warningOrange,
+                      ),
+                      wSpace(8),
+                      Expanded(
+                        child: Text(
+                          'زر الاعتماد سيكون متاحاً بعد انتهاء فترة المراجعة الإدارية (متبقي ${request.holdingRemainingMinutes ?? 0} دقيقة)',
+                          style: AppTextStyles.font11Medium.copyWith(
+                            color: AppColors.brandInk,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               hSpace(12),
               Row(
                 children: [
@@ -271,8 +379,10 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
                   Expanded(
                     child: SupervisorLeaveRequestActionWidget(
                       labelKey: approveLabel,
-                      color: AppColors.success,
-                      onTap: onApprove,
+                      color: isHoldingActive
+                          ? AppColors.placeholder
+                          : AppColors.success,
+                      onTap: isHoldingActive ? null : onApprove,
                     ),
                   ),
                 ],

@@ -30,6 +30,14 @@ class LeaveRequestModel with _$LeaveRequestModel {
     String? hrName,
     DateTime? hrActionAt,
     String? hrRejectionReason,
+    String? holdingUntil,
+    bool? isHoldingActive,
+    int? holdingRemainingMinutes,
+    String? adminObjectionNote,
+    String? adminObjectionBy,
+    String? adminObjectionAt,
+    bool? adminsObserverOnly,
+    String? leaveWorkflow,
   }) = _LeaveRequestModel;
 
   factory LeaveRequestModel.fromJson(Map<String, dynamic> json) =>

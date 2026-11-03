@@ -25,6 +25,12 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
     this.attachmentUrl,
     this.rejectionReason,
     this.isOwnRequest = false,
+    this.holdingUntil,
+    this.isHoldingActive = false,
+    this.holdingRemainingMinutes = 0,
+    this.adminObjectionNote,
+    this.adminsObserverOnly = false,
+    this.leaveWorkflow,
   });
 
   factory LeaveApprovalTimelineWidget.fromModel({
@@ -55,6 +61,12 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
       attachmentUrl: request.attachmentUrl,
       rejectionReason: request.rejectionReason,
       isOwnRequest: isOwnRequest,
+      holdingUntil: request.holdingUntil,
+      isHoldingActive: request.isHoldingActive ?? false,
+      holdingRemainingMinutes: request.holdingRemainingMinutes ?? 0,
+      adminObjectionNote: request.adminObjectionNote,
+      adminsObserverOnly: request.adminsObserverOnly ?? false,
+      leaveWorkflow: request.leaveWorkflow,
     );
   }
 
@@ -82,6 +94,12 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
       attachmentUrl: request.attachmentUrl,
       rejectionReason: request.rejectionReason,
       isOwnRequest: isOwnRequest,
+      holdingUntil: request.holdingUntil,
+      isHoldingActive: request.isHoldingActive ?? false,
+      holdingRemainingMinutes: request.holdingRemainingMinutes ?? 0,
+      adminObjectionNote: request.adminObjectionNote,
+      adminsObserverOnly: request.adminsObserverOnly ?? false,
+      leaveWorkflow: request.leaveWorkflow,
     );
   }
 
@@ -100,6 +118,12 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
   final String? attachmentUrl;
   final String? rejectionReason;
   final bool isOwnRequest;
+  final String? holdingUntil;
+  final bool isHoldingActive;
+  final int holdingRemainingMinutes;
+  final String? adminObjectionNote;
+  final bool adminsObserverOnly;
+  final String? leaveWorkflow;
 
   void _showAttachmentDialog(BuildContext context, String url) {
     AppDocumentViewerDialogWidget.show(
@@ -257,22 +281,84 @@ class LeaveApprovalTimelineWidget extends StatelessWidget {
           status: LeaveStepStatus.completed,
           isLast: false,
         ),
+        if (holdingUntil != null)
+          LeaveTimelineStepWidget(
+            title: 'فترة التعليق والمراجعة الإدارية',
+            actor: isHoldingActive
+                ? 'قيد فترة التعليق الإداري (متبقي $holdingRemainingMinutes دقيقة)'
+                : 'انتهت فترة التعليق الإداري',
+            date: holdingUntil != null ? AppDateFormatter.formatDateString(holdingUntil) : null,
+            status: isHoldingActive ? LeaveStepStatus.inProgress : LeaveStepStatus.completed,
+            isLast: false,
+          ),
         LeaveTimelineStepWidget(
-          title: 'leaves.approval.stage1'.tr(context: context),
-          actor: managerActor,
+          title: leaveWorkflow == 'direct_manager_only'
+              ? 'الاعتماد النهائي (المدير المباشر)'
+              : 'leaves.approval.stage1'.tr(context: context),
+          actor: isHoldingActive && statusLower == 'pending'
+              ? 'في انتظار انتهاء فترة المراجعة الإدارية'
+              : managerActor,
           date: managerActionAt,
           reason: managerRejectionReason,
-          status: managerStatus,
-          isLast: false,
+          status: isHoldingActive && statusLower == 'pending'
+              ? LeaveStepStatus.waiting
+              : managerStatus,
+          isLast: leaveWorkflow == 'direct_manager_only',
         ),
-        LeaveTimelineStepWidget(
-          title: 'leaves.approval.stage2'.tr(context: context),
-          actor: hrActor,
-          date: hrActionAt,
-          reason: hrRejectionReason,
-          status: hrStatus,
-          isLast: true,
-        ),
+        if (leaveWorkflow != 'direct_manager_only')
+          LeaveTimelineStepWidget(
+            title: 'leaves.approval.stage2'.tr(context: context),
+            actor: hrActor,
+            date: hrActionAt,
+            reason: hrRejectionReason,
+            status: hrStatus,
+            isLast: true,
+          ),
+
+        if (adminObjectionNote != null && adminObjectionNote!.isNotEmpty) ...[
+          SizedBox(height: 10.h),
+          Container(
+            padding: EdgeInsets.all(10.r),
+            decoration: BoxDecoration(
+              color: AppColors.softYellowBackground,
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(
+                color: AppColors.warningOrange.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.rate_review_outlined,
+                  size: 16.r,
+                  color: AppColors.warningOrange,
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'ملاحظة / توجيه الإدارة للمدير المباشر',
+                        style: AppTextStyles.font12Bold.copyWith(
+                          color: AppColors.brandInk,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        adminObjectionNote!,
+                        style: AppTextStyles.font12Regular.copyWith(
+                          color: AppColors.brandInk,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
 
         if (!((managerStatus == LeaveStepStatus.rejected &&
                     managerRejectionReason != null &&

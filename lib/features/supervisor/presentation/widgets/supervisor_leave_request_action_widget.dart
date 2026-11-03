@@ -18,17 +18,23 @@ class SupervisorLeaveRequestActionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final text = labelKey.contains('.') ? labelKey.tr(context: context) : labelKey;
+    final isEnabled = onTap != null;
+
     return InkWell(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 9.h),
-        decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: AppColors.border)),
+        decoration: BoxDecoration(
+          color: isEnabled ? Colors.transparent : AppColors.pageBackground,
+          border: const Border(top: BorderSide(color: AppColors.border)),
         ),
         alignment: Alignment.center,
         child: Text(
-          labelKey.tr(context: context),
-          style: AppTextStyles.font13SemiBold.copyWith(color: color),
+          text,
+          style: AppTextStyles.font13SemiBold.copyWith(
+            color: isEnabled ? color : AppColors.placeholder,
+          ),
         ),
       ),
     );

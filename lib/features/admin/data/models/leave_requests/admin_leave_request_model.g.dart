@@ -32,6 +32,14 @@ AdminLeaveRequestModel _$AdminLeaveRequestModelFromJson(
   hrName: json['hrName'] as String?,
   hrActionAt: legacyApiValueToString(json['hrActionAt']),
   hrRejectionReason: json['hrRejectionReason'] as String?,
+  holdingUntil: json['holdingUntil'] as String?,
+  isHoldingActive: json['isHoldingActive'] as bool?,
+  holdingRemainingMinutes: (json['holdingRemainingMinutes'] as num?)?.toInt(),
+  adminObjectionNote: json['adminObjectionNote'] as String?,
+  adminObjectionBy: json['adminObjectionBy'] as String?,
+  adminObjectionAt: json['adminObjectionAt'] as String?,
+  adminsObserverOnly: json['adminsObserverOnly'] as bool?,
+  leaveWorkflow: json['leaveWorkflow'] as String?,
 );
 
 Map<String, dynamic> _$AdminLeaveRequestModelToJson(
@@ -60,6 +68,14 @@ Map<String, dynamic> _$AdminLeaveRequestModelToJson(
   'hrName': instance.hrName,
   'hrActionAt': instance.hrActionAt,
   'hrRejectionReason': instance.hrRejectionReason,
+  'holdingUntil': instance.holdingUntil,
+  'isHoldingActive': instance.isHoldingActive,
+  'holdingRemainingMinutes': instance.holdingRemainingMinutes,
+  'adminObjectionNote': instance.adminObjectionNote,
+  'adminObjectionBy': instance.adminObjectionBy,
+  'adminObjectionAt': instance.adminObjectionAt,
+  'adminsObserverOnly': instance.adminsObserverOnly,
+  'leaveWorkflow': instance.leaveWorkflow,
 };
 
 LeaveRequestsResponseModel _$LeaveRequestsResponseModelFromJson(
