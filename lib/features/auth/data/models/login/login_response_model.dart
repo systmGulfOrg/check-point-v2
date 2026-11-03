@@ -19,6 +19,8 @@ class LoginResponseModel {
     this.tenantStatus,
     this.trialEndsAt,
     this.seatLimit,
+    this.orgModel,
+    this.labelOverrides,
   });
 
   final String? id;
@@ -36,6 +38,10 @@ class LoginResponseModel {
   final String? tenantStatus;
   final DateTime? trialEndsAt;
   final int? seatLimit;
+  final String? orgModel;
+  final Map<String, dynamic>? labelOverrides;
+
+  bool get isContractorWorker => orgModel == 'contractor_worker';
 
   List<String> get allRoles {
     final set = <String>{};

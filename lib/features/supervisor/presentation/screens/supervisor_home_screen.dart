@@ -9,6 +9,7 @@ import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_personal_dashboard_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_alert_banner_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_site_roll_call_card_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_stats_grid_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_team_today_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_requests_quick_actions_widget.dart';
@@ -35,6 +36,8 @@ class SupervisorHomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const UpcomingHolidayCardBlocBuilderWidget(),
+                hSpace(16),
+                const SupervisorSiteRollCallCardWidget(),
                 hSpace(16),
                 const SupervisorPersonalDashboardBlocBuilderWidget(),
                 hSpace(16),

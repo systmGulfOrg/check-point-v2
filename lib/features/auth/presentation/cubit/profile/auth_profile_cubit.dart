@@ -30,6 +30,9 @@ class AuthProfileCubit extends SafeCubit<AuthProfileState> {
       }.toList();
       final name = username.trim();
       var imageUrl = await sessionStorage.readUserImageUrl();
+      final orgModel = await sessionStorage.readOrgModel();
+      final isContractorWorker = orgModel == 'contractor_worker';
+      final labelOverrides = await sessionStorage.readLabelOverrides();
 
       safeEmit(
         AuthProfileState.success(
@@ -40,6 +43,9 @@ class AuthProfileCubit extends SafeCubit<AuthProfileState> {
           permissions: permissions,
           roles: effectiveRoles,
           imageUrl: imageUrl,
+          isContractorWorker: isContractorWorker,
+          orgModel: orgModel,
+          labelOverrides: labelOverrides,
         ),
       );
 
@@ -67,6 +73,9 @@ class AuthProfileCubit extends SafeCubit<AuthProfileState> {
                 permissions: permissions,
                 roles: effectiveRoles,
                 imageUrl: imageUrl,
+                isContractorWorker: isContractorWorker,
+                orgModel: orgModel,
+                labelOverrides: labelOverrides,
               ),
             );
           }
@@ -89,6 +98,9 @@ class AuthProfileCubit extends SafeCubit<AuthProfileState> {
       }.toList();
       final name = username.trim();
       final imageUrl = await sessionStorage.readUserImageUrl();
+      final orgModel = await sessionStorage.readOrgModel();
+      final isContractorWorker = orgModel == 'contractor_worker';
+      final labelOverrides = await sessionStorage.readLabelOverrides();
       safeEmit(
         AuthProfileState.success(
           name: name,
@@ -98,6 +110,9 @@ class AuthProfileCubit extends SafeCubit<AuthProfileState> {
           permissions: permissions,
           roles: roles,
           imageUrl: imageUrl,
+          isContractorWorker: isContractorWorker,
+          orgModel: orgModel,
+          labelOverrides: labelOverrides,
         ),
       );
     } catch (_) {
@@ -119,6 +134,9 @@ class AuthProfileCubit extends SafeCubit<AuthProfileState> {
 
       final roles = await sessionStorage.readUserRoles();
       final imageUrl = await sessionStorage.readUserImageUrl();
+      final orgModel = await sessionStorage.readOrgModel();
+      final isContractorWorker = orgModel == 'contractor_worker';
+      final labelOverrides = await sessionStorage.readLabelOverrides();
 
       await sessionStorage.saveUserSession(
         token: token,
@@ -130,6 +148,8 @@ class AuthProfileCubit extends SafeCubit<AuthProfileState> {
         roles: roles,
         imageUrl: imageUrl,
         permissions: permissions,
+        orgModel: orgModel,
+        labelOverrides: labelOverrides,
       );
 
       safeEmit(
@@ -144,6 +164,9 @@ class AuthProfileCubit extends SafeCubit<AuthProfileState> {
           }.toList(),
           roles: roles,
           imageUrl: imageUrl,
+          isContractorWorker: isContractorWorker,
+          orgModel: orgModel,
+          labelOverrides: labelOverrides,
         ),
       );
     } catch (_) {

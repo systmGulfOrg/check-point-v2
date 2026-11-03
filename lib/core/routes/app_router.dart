@@ -90,6 +90,8 @@ import 'package:check_point_v2/features/notifications/presentation/cubit/notific
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_plans_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_tasks_screen.dart';
 import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_team_screen.dart';
+import 'package:check_point_v2/features/supervisor/presentation/screens/supervisor_worker_roll_call_screen.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/worker_roll_call/supervisor_worker_roll_call_cubit.dart';
 import 'package:check_point_v2/features/remote_work/presentation/cubit/remote_work_cubit.dart';
 import 'package:check_point_v2/features/remote_work/presentation/cubit/employee_work_access_cubit.dart';
 import 'package:check_point_v2/features/projects/presentation/cubit/projects_cubit.dart';
@@ -746,6 +748,17 @@ class AppRouter {
               ),
               body: const SupervisorAttendanceScreen(),
             ),
+          ),
+        );
+
+      case AppRoutes.supervisorWorkerRollCall:
+        return _slideRoute(
+          settings: const RouteSettings(
+            name: AppRoutes.supervisorWorkerRollCall,
+          ),
+          child: BlocProvider<SupervisorWorkerRollCallCubit>(
+            create: (_) => sl<SupervisorWorkerRollCallCubit>(),
+            child: const SupervisorWorkerRollCallScreen(),
           ),
         );
 

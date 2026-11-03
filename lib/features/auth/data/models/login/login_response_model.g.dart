@@ -28,6 +28,8 @@ LoginResponseModel _$LoginResponseModelFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['trialEndsAt'] as String),
       seatLimit: (json['seatLimit'] as num?)?.toInt(),
+      orgModel: json['orgModel'] as String?,
+      labelOverrides: json['labelOverrides'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
@@ -46,4 +48,6 @@ Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
       'tenantStatus': instance.tenantStatus,
       'trialEndsAt': instance.trialEndsAt?.toIso8601String(),
       'seatLimit': instance.seatLimit,
+      'orgModel': instance.orgModel,
+      'labelOverrides': instance.labelOverrides,
     };

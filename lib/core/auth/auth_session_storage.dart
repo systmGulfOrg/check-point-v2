@@ -28,6 +28,8 @@ class AuthSessionStorage {
   static const tenantStatusKey = 'tenant_status';
   static const trialEndsAtKey = 'trial_ends_at';
   static const seatLimitKey = 'seat_limit';
+  static const orgModelKey = 'org_model';
+  static const labelOverridesKey = 'label_overrides';
 
   final FlutterSecureStorage secureStorage;
 
@@ -54,6 +56,8 @@ class AuthSessionStorage {
     String? imageUrl,
     List<String> roles = const [],
     List<String> permissions = const [],
+    String? orgModel,
+    Map<String, dynamic>? labelOverrides,
   }) async {
     _cachedToken = token;
     AuthTokenInterceptor.updateToken(token);
@@ -94,6 +98,15 @@ class AuthSessionStorage {
       key: permissionsKey,
       value: permissions.join(','),
     );
+    if (orgModel != null && orgModel.isNotEmpty) {
+      await secureStorage.write(key: orgModelKey, value: orgModel);
+    }
+    if (labelOverrides != null && labelOverrides.isNotEmpty) {
+      await secureStorage.write(
+        key: labelOverridesKey,
+        value: jsonEncode(labelOverrides),
+      );
+    }
   }
 
   static String? _cachedToken;
@@ -317,6 +330,44 @@ class AuthSessionStorage {
   Future<void> clearAccountRequestDismissal() =>
       secureStorage.delete(key: accountRequestDismissedMobileIdKey);
 
+  Future<void> saveOrgConfig({
+    String? orgModel,
+    Map<String, dynamic>? labelOverrides,
+  }) async {
+    if (orgModel != null && orgModel.isNotEmpty) {
+      await secureStorage.write(key: orgModelKey, value: orgModel);
+    } else {
+      await secureStorage.delete(key: orgModelKey);
+    }
+    if (labelOverrides != null && labelOverrides.isNotEmpty) {
+      await secureStorage.write(
+        key: labelOverridesKey,
+        value: jsonEncode(labelOverrides),
+      );
+    } else {
+      await secureStorage.delete(key: labelOverridesKey);
+    }
+  }
+
+  Future<String?> readOrgModel() => secureStorage.read(key: orgModelKey);
+
+  Future<bool> isContractorWorker() async {
+    final model = await readOrgModel();
+    return model == 'contractor_worker';
+  }
+
+  Future<Map<String, dynamic>?> readLabelOverrides() async {
+    final raw = await secureStorage.read(key: labelOverridesKey);
+    if (raw == null || raw.isEmpty) return null;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is Map<String, dynamic>) return decoded;
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<void> clear() async {
     _cachedToken = null;
     AuthTokenInterceptor.updateToken(null);
@@ -332,6 +383,8 @@ class AuthSessionStorage {
     await secureStorage.delete(key: tenantStatusKey);
     await secureStorage.delete(key: trialEndsAtKey);
     await secureStorage.delete(key: seatLimitKey);
+    await secureStorage.delete(key: orgModelKey);
+    await secureStorage.delete(key: labelOverridesKey);
   }
 
   Future<void> clearTenant() async {

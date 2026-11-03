@@ -8,6 +8,7 @@ import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_clock_in_employee_sheet_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_attendance_permission_gate_widget.dart';
+import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_attendance_site_roll_call_button_widget.dart';
 
 class SupervisorAttendanceScreen extends StatefulWidget {
   const SupervisorAttendanceScreen({super.key});
@@ -72,6 +73,7 @@ class _SupervisorAttendanceScreenState
                   ),
                   Row(
                     children: [
+                      const SupervisorAttendanceSiteRollCallButtonWidget(),
                       IconButton(
                         icon: const Icon(
                           Icons.offline_pin_outlined,

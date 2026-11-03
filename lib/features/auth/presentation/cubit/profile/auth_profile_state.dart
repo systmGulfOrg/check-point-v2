@@ -14,6 +14,9 @@ abstract class AuthProfileState with _$AuthProfileState {
     required List<String> permissions,
     @Default([]) List<String> roles,
     String? imageUrl,
+    @Default(false) bool isContractorWorker,
+    String? orgModel,
+    Map<String, dynamic>? labelOverrides,
   }) = AuthProfileSuccess;
   const factory AuthProfileState.error(String messageKey) = AuthProfileError;
 }
