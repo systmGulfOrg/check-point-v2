@@ -29,6 +29,13 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isContractor = context.select<AuthProfileCubit, bool>(
+      (cubit) => switch (cubit.state) {
+        AuthProfileSuccess(:final isContractorWorker) => isContractorWorker,
+        _ => false,
+      },
+    );
+
     return SafeArea(
       child: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 24.h),
@@ -123,6 +130,19 @@ class SupervisorMoreOptionsSheetWidget extends StatelessWidget {
                     onRemoteWorkTap();
                   },
                 ),
+                if (isContractor)
+                  SupervisorMoreOptionWidget(
+                    icon: Icons.engineering_outlined,
+                    labelKey: 'contractorWorker.rollCall.title',
+                    subtitleKey: 'contractorWorker.rollCall.subtitle',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.supervisorWorkerRollCall,
+                      );
+                    },
+                  ),
               ],
             ),
             hSpace(16),
