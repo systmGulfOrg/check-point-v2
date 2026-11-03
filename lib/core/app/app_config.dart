@@ -3,7 +3,12 @@ import 'package:check_point_v2/core/env/env.dart';
 class AppConfig {
   const AppConfig._();
 
+  static const bool useLocalBackend = true;
+
   static String get baseUrl {
+    if (useLocalBackend) {
+      return 'http://10.0.2.2:4100';
+    }
     final url = Env.baseUrl.trim();
     if (url.isEmpty || url.contains('137.184.223.222')) {
       return 'https://app.checkpoint.systmgulf.com';

@@ -106,7 +106,7 @@ class SupervisorWorkerRollCallHeaderWidget extends StatelessWidget {
         TextField(
           onChanged: onSearchChanged,
           decoration: InputDecoration(
-            hintText: 'search.hint'.tr(context: context),
+            hintText: 'common.search'.tr(context: context),
             prefixIcon: const Icon(Icons.search, size: 20),
             filled: true,
             fillColor: AppColors.white,

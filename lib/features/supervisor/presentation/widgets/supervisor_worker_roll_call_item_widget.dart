@@ -10,6 +10,7 @@ class SupervisorWorkerRollCallItemWidget extends StatelessWidget {
     required this.worker,
     required this.isSelected,
     required this.currentSiteId,
+    this.currentSiteName,
     required this.onToggle,
     super.key,
   });
@@ -17,12 +18,20 @@ class SupervisorWorkerRollCallItemWidget extends StatelessWidget {
   final WorkerDayItemModel worker;
   final bool isSelected;
   final String? currentSiteId;
+  final String? currentSiteName;
   final ValueChanged<bool> onToggle;
 
-  bool get isRecordedOnOtherSite =>
-      worker.attendance?.siteId != null &&
-      currentSiteId != null &&
-      worker.attendance!.siteId != currentSiteId;
+  bool get isRecordedOnOtherSite {
+    final att = worker.attendance;
+    if (att == null || att.siteId == null || currentSiteId == null) return false;
+    if (att.siteId == currentSiteId) return false;
+    if (currentSiteName != null &&
+        att.siteName != null &&
+        att.siteName == currentSiteName) {
+      return false;
+    }
+    return true;
+  }
 
   bool get hasClockOut => worker.attendance?.clockOutTime != null;
 

@@ -15,7 +15,7 @@ class AppColors {
     colors: [brandGradientStart, brandGradientEnd],
   );
 
-  static const Color pageBackground = Color(0xFFF7F2EB);
+  static const Color pageBackground = Color(0xFFFFFFFF);
   static const Color cardBackground = Color(0xFFFFFFFF);
   static const Color fieldBackground = Color(0xFFFFFFFF);
   static const Color softBrandBackground = Color(0xFFFFF1E3);

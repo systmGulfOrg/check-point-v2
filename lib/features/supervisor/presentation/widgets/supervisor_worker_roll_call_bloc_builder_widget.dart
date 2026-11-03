@@ -45,6 +45,7 @@ class SupervisorWorkerRollCallBlocBuilderWidget extends StatelessWidget {
           ),
           SupervisorWorkerRollCallLoaded(
             :final workers,
+            :final sites,
             :final selectedSiteId,
           ) =>
             workers.isEmpty
@@ -67,9 +68,14 @@ class SupervisorWorkerRollCallBlocBuilderWidget extends StatelessWidget {
                     itemCount: workers.length,
                     itemBuilder: (context, index) {
                       final worker = workers[index];
+                      final currentSiteName = sites
+                          .where((s) => s.id?.toString() == selectedSiteId)
+                          .firstOrNull
+                          ?.name;
                       return SupervisorWorkerRollCallItemWidget(
                         worker: worker,
                         currentSiteId: selectedSiteId,
+                        currentSiteName: currentSiteName,
                         isSelected: selectedWorkerIds.contains(worker.id),
                         onToggle: (checked) =>
                             onWorkerToggled(worker.id, checked),

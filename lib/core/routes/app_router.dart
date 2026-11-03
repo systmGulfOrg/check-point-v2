@@ -665,6 +665,9 @@ class AppRouter {
               BlocProvider<NotificationsCubit>(
                 create: (_) => sl<NotificationsCubit>()..load(),
               ),
+              BlocProvider<AuthProfileCubit>(
+                create: (_) => sl<AuthProfileCubit>()..loadProfile(),
+              ),
             ],
             child: const SupervisorMainScreen(),
           ),
