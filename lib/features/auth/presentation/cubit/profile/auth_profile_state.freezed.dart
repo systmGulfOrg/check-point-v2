@@ -29,6 +29,9 @@ mixin _$AuthProfileState {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -45,6 +48,9 @@ mixin _$AuthProfileState {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -61,6 +67,9 @@ mixin _$AuthProfileState {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )?
     success,
     TResult Function(String messageKey)? error,
@@ -165,6 +174,9 @@ class _$AuthProfileInitialImpl implements AuthProfileInitial {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -185,6 +197,9 @@ class _$AuthProfileInitialImpl implements AuthProfileInitial {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -205,6 +220,9 @@ class _$AuthProfileInitialImpl implements AuthProfileInitial {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )?
     success,
     TResult Function(String messageKey)? error,
@@ -311,6 +329,9 @@ class _$AuthProfileLoadingImpl implements AuthProfileLoading {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -331,6 +352,9 @@ class _$AuthProfileLoadingImpl implements AuthProfileLoading {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -351,6 +375,9 @@ class _$AuthProfileLoadingImpl implements AuthProfileLoading {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )?
     success,
     TResult Function(String messageKey)? error,
@@ -419,6 +446,9 @@ abstract class _$$AuthProfileSuccessImplCopyWith<$Res> {
     List<String> permissions,
     List<String> roles,
     String? imageUrl,
+    bool isContractorWorker,
+    String? orgModel,
+    Map<String, dynamic>? labelOverrides,
   });
 }
 
@@ -443,6 +473,9 @@ class __$$AuthProfileSuccessImplCopyWithImpl<$Res>
     Object? permissions = null,
     Object? roles = null,
     Object? imageUrl = freezed,
+    Object? isContractorWorker = null,
+    Object? orgModel = freezed,
+    Object? labelOverrides = freezed,
   }) {
     return _then(
       _$AuthProfileSuccessImpl(
@@ -474,6 +507,18 @@ class __$$AuthProfileSuccessImplCopyWithImpl<$Res>
             ? _value.imageUrl
             : imageUrl // ignore: cast_nullable_to_non_nullable
                   as String?,
+        isContractorWorker: null == isContractorWorker
+            ? _value.isContractorWorker
+            : isContractorWorker // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        orgModel: freezed == orgModel
+            ? _value.orgModel
+            : orgModel // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        labelOverrides: freezed == labelOverrides
+            ? _value._labelOverrides
+            : labelOverrides // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
       ),
     );
   }
@@ -490,8 +535,12 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
     required final List<String> permissions,
     final List<String> roles = const [],
     this.imageUrl,
+    this.isContractorWorker = false,
+    this.orgModel,
+    final Map<String, dynamic>? labelOverrides,
   }) : _permissions = permissions,
-       _roles = roles;
+       _roles = roles,
+       _labelOverrides = labelOverrides;
 
   @override
   final String name;
@@ -520,10 +569,24 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
 
   @override
   final String? imageUrl;
+  @override
+  @JsonKey()
+  final bool isContractorWorker;
+  @override
+  final String? orgModel;
+  final Map<String, dynamic>? _labelOverrides;
+  @override
+  Map<String, dynamic>? get labelOverrides {
+    final value = _labelOverrides;
+    if (value == null) return null;
+    if (_labelOverrides is EqualUnmodifiableMapView) return _labelOverrides;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'AuthProfileState.success(name: $name, userId: $userId, role: $role, username: $username, permissions: $permissions, roles: $roles, imageUrl: $imageUrl)';
+    return 'AuthProfileState.success(name: $name, userId: $userId, role: $role, username: $username, permissions: $permissions, roles: $roles, imageUrl: $imageUrl, isContractorWorker: $isContractorWorker, orgModel: $orgModel, labelOverrides: $labelOverrides)';
   }
 
   @override
@@ -542,7 +605,15 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
             ) &&
             const DeepCollectionEquality().equals(other._roles, _roles) &&
             (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl));
+                other.imageUrl == imageUrl) &&
+            (identical(other.isContractorWorker, isContractorWorker) ||
+                other.isContractorWorker == isContractorWorker) &&
+            (identical(other.orgModel, orgModel) ||
+                other.orgModel == orgModel) &&
+            const DeepCollectionEquality().equals(
+              other._labelOverrides,
+              _labelOverrides,
+            ));
   }
 
   @override
@@ -555,6 +626,9 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
     const DeepCollectionEquality().hash(_permissions),
     const DeepCollectionEquality().hash(_roles),
     imageUrl,
+    isContractorWorker,
+    orgModel,
+    const DeepCollectionEquality().hash(_labelOverrides),
   );
 
   /// Create a copy of AuthProfileState
@@ -581,11 +655,25 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )
     success,
     required TResult Function(String messageKey) error,
   }) {
-    return success(name, userId, role, username, permissions, roles, imageUrl);
+    return success(
+      name,
+      userId,
+      role,
+      username,
+      permissions,
+      roles,
+      imageUrl,
+      isContractorWorker,
+      orgModel,
+      labelOverrides,
+    );
   }
 
   @override
@@ -601,6 +689,9 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -613,6 +704,9 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
       permissions,
       roles,
       imageUrl,
+      isContractorWorker,
+      orgModel,
+      labelOverrides,
     );
   }
 
@@ -629,6 +723,9 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )?
     success,
     TResult Function(String messageKey)? error,
@@ -643,6 +740,9 @@ class _$AuthProfileSuccessImpl implements AuthProfileSuccess {
         permissions,
         roles,
         imageUrl,
+        isContractorWorker,
+        orgModel,
+        labelOverrides,
       );
     }
     return orElse();
@@ -695,6 +795,9 @@ abstract class AuthProfileSuccess implements AuthProfileState {
     required final List<String> permissions,
     final List<String> roles,
     final String? imageUrl,
+    final bool isContractorWorker,
+    final String? orgModel,
+    final Map<String, dynamic>? labelOverrides,
   }) = _$AuthProfileSuccessImpl;
 
   String get name;
@@ -704,6 +807,9 @@ abstract class AuthProfileSuccess implements AuthProfileState {
   List<String> get permissions;
   List<String> get roles;
   String? get imageUrl;
+  bool get isContractorWorker;
+  String? get orgModel;
+  Map<String, dynamic>? get labelOverrides;
 
   /// Create a copy of AuthProfileState
   /// with the given fields replaced by the non-null parameter values.
@@ -796,6 +902,9 @@ class _$AuthProfileErrorImpl implements AuthProfileError {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )
     success,
     required TResult Function(String messageKey) error,
@@ -816,6 +925,9 @@ class _$AuthProfileErrorImpl implements AuthProfileError {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )?
     success,
     TResult? Function(String messageKey)? error,
@@ -836,6 +948,9 @@ class _$AuthProfileErrorImpl implements AuthProfileError {
       List<String> permissions,
       List<String> roles,
       String? imageUrl,
+      bool isContractorWorker,
+      String? orgModel,
+      Map<String, dynamic>? labelOverrides,
     )?
     success,
     TResult Function(String messageKey)? error,

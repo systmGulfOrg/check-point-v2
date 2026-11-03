@@ -62,6 +62,8 @@ class LoginUseCase {
           branchId: data.branchId,
           imageUrl: data.imageUrl,
           permissions: data.permissions ?? const [],
+          orgModel: data.orgModel,
+          labelOverrides: data.labelOverrides,
         );
         await authSessionStorage.saveTrialInfo(
           tenantStatus: data.tenantStatus,

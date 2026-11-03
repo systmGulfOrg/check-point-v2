@@ -14,6 +14,9 @@ import 'package:check_point_v2/features/supervisor/data/models/attendance/superv
 import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart';
 import 'package:check_point_v2/features/employee/data/models/leave_requests/employee_leave_request_body.dart';
 import 'package:check_point_v2/features/supervisor/data/models/tasks/supervisor_update_task_status_request_body.dart';
+import 'package:check_point_v2/features/supervisor/data/models/worker_attendance/record_worker_attendance_request_body.dart';
+import 'package:check_point_v2/features/supervisor/data/models/worker_attendance/record_worker_attendance_response_model.dart';
+import 'package:check_point_v2/features/supervisor/data/models/worker_attendance/worker_day_response_model.dart';
 
 part 'supervisor_api_service.g.dart';
 
@@ -154,4 +157,18 @@ abstract class SupervisorApiService {
 
   @GET('${ApiConstants.employees}/{id}')
   Future<SingleEmployeeResponseModel> getEmployeeById(@Path('id') String id);
+
+  @GET('/api/v2/worker-attendance/day')
+  Future<WorkerDayResponseModel> getWorkerAttendanceDay({
+    @Query('date') required String date,
+    @Query('contractorId') String? contractorId,
+    @Query('search') String? search,
+    @Query('index') int index = 0,
+    @Query('itemCount') int itemCount = 100,
+  });
+
+  @POST('/api/v2/worker-attendance')
+  Future<RecordWorkerAttendanceResponseModel> recordWorkerAttendance(
+    @Body() RecordWorkerAttendanceRequestBody body,
+  );
 }

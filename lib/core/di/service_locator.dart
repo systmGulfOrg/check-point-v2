@@ -120,11 +120,14 @@ import 'package:check_point_v2/features/supervisor/data/repos/supervisor_tasks_r
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_tasks_repo_impl.dart';
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_team_repo.dart';
 import 'package:check_point_v2/features/supervisor/data/repos/supervisor_team_repo_impl.dart';
+import 'package:check_point_v2/features/supervisor/data/repos/supervisor_worker_attendance_repo.dart';
+import 'package:check_point_v2/features/supervisor/data/repos/supervisor_worker_attendance_repo_impl.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/plans/supervisor_plans_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/worker_roll_call/supervisor_worker_roll_call_cubit.dart';
 import 'package:check_point_v2/core/database/app_database.dart';
 import 'package:check_point_v2/core/connectivity/connectivity_cubit.dart';
 import 'package:check_point_v2/core/network/server_time_anchor_interceptor.dart';
@@ -350,6 +353,9 @@ Future<void> setupServiceLocator() async {
       sessionStorage: sl<AuthSessionStorage>(),
     ),
   );
+  sl.registerLazySingleton<SupervisorWorkerAttendanceRepo>(
+    () => SupervisorWorkerAttendanceRepoImpl(api: sl<SupervisorApiService>()),
+  );
   sl.registerLazySingleton<EmployeeAttendanceRepo>(
     () => EmployeeAttendanceRepoImpl(
       api: sl<EmployeeApiService>(),
@@ -541,6 +547,13 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<SupervisorTeamCubit>(
     () => SupervisorTeamCubit(teamRepo: sl<SupervisorTeamRepo>()),
+  );
+  sl.registerFactory<SupervisorWorkerRollCallCubit>(
+    () => SupervisorWorkerRollCallCubit(
+      workerAttendanceRepo: sl<SupervisorWorkerAttendanceRepo>(),
+      employeeAttendanceRepo: sl<EmployeeAttendanceRepo>(),
+      locationService: sl<LocationService>(),
+    ),
   );
   sl.registerFactory<EmployeeAttendanceCubit>(
     () => EmployeeAttendanceCubit(
