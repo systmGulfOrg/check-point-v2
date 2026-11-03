@@ -35,6 +35,14 @@ class AdminLeaveRequestModel {
     this.hrName,
     this.hrActionAt,
     this.hrRejectionReason,
+    this.holdingUntil,
+    this.isHoldingActive,
+    this.holdingRemainingMinutes,
+    this.adminObjectionNote,
+    this.adminObjectionBy,
+    this.adminObjectionAt,
+    this.adminsObserverOnly,
+    this.leaveWorkflow,
   });
 
   final String? ulid;
@@ -65,6 +73,14 @@ class AdminLeaveRequestModel {
   @JsonKey(fromJson: legacyApiValueToString)
   final String? hrActionAt;
   final String? hrRejectionReason;
+  final String? holdingUntil;
+  final bool? isHoldingActive;
+  final int? holdingRemainingMinutes;
+  final String? adminObjectionNote;
+  final String? adminObjectionBy;
+  final String? adminObjectionAt;
+  final bool? adminsObserverOnly;
+  final String? leaveWorkflow;
 
   factory AdminLeaveRequestModel.fromJson(Map<String, dynamic> json) =>
       _$AdminLeaveRequestModelFromJson(json);
