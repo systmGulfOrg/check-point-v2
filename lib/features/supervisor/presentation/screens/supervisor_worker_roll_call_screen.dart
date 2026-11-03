@@ -48,11 +48,18 @@ class _SupervisorWorkerRollCallScreenState
     setState(() {
       _selectedWorkerIds.clear();
       if (selectAll) {
+        final currentSiteName = state.sites
+            .where((s) => s.id?.toString() == state.selectedSiteId)
+            .firstOrNull
+            ?.name;
         for (final w in state.workers) {
+          final isOther = w.attendance?.siteId != null &&
+              w.attendance?.siteId != state.selectedSiteId &&
+              (currentSiteName == null ||
+                  w.attendance?.siteName != currentSiteName);
           if (w.isActive &&
               w.attendance?.clockOutTime == null &&
-              (w.attendance?.siteId == null ||
-                  w.attendance?.siteId == state.selectedSiteId)) {
+              !isOther) {
             _selectedWorkerIds.add(w.id);
           }
         }

@@ -123,6 +123,8 @@ class _FakeAuthSessionStorage extends AuthSessionStorage {
     String? userName,
     String? role,
     String? imageUrl,
+    String? orgModel,
+    Map<String, dynamic>? labelOverrides,
     List<String> roles = const [],
     List<String> permissions = const [],
   }) async {
