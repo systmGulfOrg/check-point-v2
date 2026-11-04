@@ -6,13 +6,15 @@ class EmployeeNavBarWidget extends StatelessWidget {
   const EmployeeNavBarWidget({
     required this.selectedIndex,
     required this.onTabSelected,
+    this.items,
     super.key,
   });
 
   final int selectedIndex;
   final ValueChanged<int> onTabSelected;
+  final List<NavBarItemData>? items;
 
-  static const _items = <NavBarItemData>[
+  static const _defaultItems = <NavBarItemData>[
     NavBarItemData(icon: Icons.home_outlined, labelKey: 'employee.nav.home'),
     NavBarItemData(
       icon: Icons.groups_outlined,
@@ -35,7 +37,7 @@ class EmployeeNavBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomBottomNavBarWidget(
-      items: _items,
+      items: items ?? _defaultItems,
       selectedIndex: selectedIndex,
       onTabSelected: onTabSelected,
     );

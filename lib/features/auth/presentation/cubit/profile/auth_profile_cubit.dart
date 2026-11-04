@@ -33,6 +33,7 @@ class AuthProfileCubit extends SafeCubit<AuthProfileState> {
       final orgModel = await sessionStorage.readOrgModel();
       final isContractorWorker = orgModel == 'contractor_worker';
       final labelOverrides = await sessionStorage.readLabelOverrides();
+      await sessionStorage.readFeatures();
 
       safeEmit(
         AuthProfileState.success(
@@ -101,6 +102,7 @@ class AuthProfileCubit extends SafeCubit<AuthProfileState> {
       final orgModel = await sessionStorage.readOrgModel();
       final isContractorWorker = orgModel == 'contractor_worker';
       final labelOverrides = await sessionStorage.readLabelOverrides();
+      await sessionStorage.readFeatures();
       safeEmit(
         AuthProfileState.success(
           name: name,
@@ -137,6 +139,7 @@ class AuthProfileCubit extends SafeCubit<AuthProfileState> {
       final orgModel = await sessionStorage.readOrgModel();
       final isContractorWorker = orgModel == 'contractor_worker';
       final labelOverrides = await sessionStorage.readLabelOverrides();
+      await sessionStorage.readFeatures();
 
       await sessionStorage.saveUserSession(
         token: token,

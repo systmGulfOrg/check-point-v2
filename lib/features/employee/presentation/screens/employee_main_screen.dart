@@ -22,31 +22,80 @@ class EmployeeMainScreen extends StatefulWidget {
 
 class _EmployeeMainScreenState extends State<EmployeeMainScreen> {
   int _selectedIndex = 0;
-  late final List<Widget Function()> _screenBuilders = [
-    () => const EmployeeHomeScreen(),
-    () => MultiBlocProvider(
-      providers: [
-        BlocProvider<AdminCustomersCubit>(
-          create: (_) => sl<AdminCustomersCubit>()..load(type: 'Customer'),
-        ),
-        BlocProvider<AdminCustomerVisitsCubit>(
-          create: (_) => sl<AdminCustomerVisitsCubit>()..loadAllVisits(),
-        ),
-        BlocProvider<AdminBranchesCubit>(
-          create: (_) => sl<AdminBranchesCubit>()..load(),
-        ),
-      ],
-      child: const AdminLocationsScreen(),
-    ),
-    () => const EmployeeClockScreen(),
-    () => const LeavesDashboardScreen(),
-    () => const EmployeeSettingsScreen(),
-  ];
+  late final List<NavBarItemData> _items;
+  late final List<Widget Function()> _screenBuilders;
   final Map<int, Widget> _loadedScreens = {};
 
   @override
   void initState() {
     super.initState();
+    final storage = sl<AuthSessionStorage>();
+    final hasCustomers = storage.isFeatureEnabled('customer_visits');
+    final hasLeaves = storage.isFeatureEnabled('leave');
+
+    final items = <NavBarItemData>[
+      const NavBarItemData(
+        icon: Icons.home_outlined,
+        labelKey: 'employee.nav.home',
+      ),
+    ];
+    final builders = <Widget Function()>[
+      () => const EmployeeHomeScreen(),
+    ];
+
+    if (hasCustomers) {
+      items.add(
+        const NavBarItemData(
+          icon: Icons.groups_outlined,
+          labelKey: 'employee.nav.customers',
+        ),
+      );
+      builders.add(
+        () => MultiBlocProvider(
+          providers: [
+            BlocProvider<AdminCustomersCubit>(
+              create: (_) => sl<AdminCustomersCubit>()..load(type: 'Customer'),
+            ),
+            BlocProvider<AdminCustomerVisitsCubit>(
+              create: (_) => sl<AdminCustomerVisitsCubit>()..loadAllVisits(),
+            ),
+            BlocProvider<AdminBranchesCubit>(
+              create: (_) => sl<AdminBranchesCubit>()..load(),
+            ),
+          ],
+          child: const AdminLocationsScreen(),
+        ),
+      );
+    }
+
+    items.add(
+      const NavBarItemData(
+        icon: Icons.access_time_rounded,
+        labelKey: 'employee.nav.clock',
+      ),
+    );
+    builders.add(() => const EmployeeClockScreen());
+
+    if (hasLeaves) {
+      items.add(
+        const NavBarItemData(
+          icon: Icons.calendar_today_outlined,
+          labelKey: 'employee.nav.leaves',
+        ),
+      );
+      builders.add(() => const LeavesDashboardScreen());
+    }
+
+    items.add(
+      const NavBarItemData(
+        icon: Icons.settings_outlined,
+        labelKey: 'employee.nav.settings',
+      ),
+    );
+    builders.add(() => const EmployeeSettingsScreen());
+
+    _items = items;
+    _screenBuilders = builders;
     _loadedScreens[0] = _screenBuilders[0]();
   }
 
@@ -61,6 +110,7 @@ class _EmployeeMainScreenState extends State<EmployeeMainScreen> {
       backgroundColor: AppColors.white,
       body: IndexedStack(index: _selectedIndex, children: screens),
       bottomNavigationBar: EmployeeNavBarWidget(
+        items: _items,
         selectedIndex: _selectedIndex,
         onTabSelected: (index) {
           _loadedScreens[index] ??= _screenBuilders[index]();

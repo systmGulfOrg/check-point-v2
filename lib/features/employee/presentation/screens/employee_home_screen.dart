@@ -199,10 +199,13 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            final leavesFuture = sl<AuthSessionStorage>().isFeatureEnabled('leave')
+                ? context.read<LeavesCubit>().loadLeavesData()
+                : Future<void>.value();
             await Future.wait([
               context.read<EmployeeAttendanceCubit>().loadAttendanceHistory(),
               context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
-              context.read<LeavesCubit>().loadLeavesData(),
+              leavesFuture,
             ]);
           },
           child: SingleChildScrollView(
@@ -342,12 +345,14 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                 ),
                 hSpace(12),
                 const EmployeeHomeStatsRowBlocSelectorWidget(),
-                hSpace(20),
-                EmployeeHomeLeavesBlocBuilderWidget(
-                  onViewAllLeaves: () =>
-                      Navigator.pushNamed(context, AppRoutes.leavesDashboard),
-                  onRequestLeave: () => _showApplyLeaveSheet(context),
-                ),
+                if (sl<AuthSessionStorage>().isFeatureEnabled('leave')) ...[
+                  hSpace(20),
+                  EmployeeHomeLeavesBlocBuilderWidget(
+                    onViewAllLeaves: () =>
+                        Navigator.pushNamed(context, AppRoutes.leavesDashboard),
+                    onRequestLeave: () => _showApplyLeaveSheet(context),
+                  ),
+                ],
               ],
             ),
           ),

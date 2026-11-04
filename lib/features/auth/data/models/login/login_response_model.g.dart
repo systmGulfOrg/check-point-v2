@@ -30,6 +30,9 @@ LoginResponseModel _$LoginResponseModelFromJson(Map<String, dynamic> json) =>
       seatLimit: (json['seatLimit'] as num?)?.toInt(),
       orgModel: json['orgModel'] as String?,
       labelOverrides: json['labelOverrides'] as Map<String, dynamic>?,
+      features: (json['features'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
@@ -50,4 +53,5 @@ Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
       'seatLimit': instance.seatLimit,
       'orgModel': instance.orgModel,
       'labelOverrides': instance.labelOverrides,
+      'features': instance.features,
     };
