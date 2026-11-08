@@ -150,10 +150,13 @@ class _FakeEmployeeRepo implements AdminEmployeeRepo {
     required bool permission,
   }) async => const ApiResult.success(null);
   @override
-  Future<ApiResult<List<AccountRequestModel>>> getAccountRequests({
+  Future<ApiResult<AccountRequestsPageModel>> getAccountRequests({
     int page = 0,
     int pageSize = 20,
-  }) async => const ApiResult.success([]);
+    String? status,
+    String? search,
+    bool newestFirst = true,
+  }) async => const ApiResult.success(AccountRequestsPageModel(items: []));
   @override
   Future<ApiResult<void>> approveAccountRequest({
     required int id,

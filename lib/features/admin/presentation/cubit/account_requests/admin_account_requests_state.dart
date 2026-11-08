@@ -11,8 +11,10 @@ abstract class AdminAccountRequestsState with _$AdminAccountRequestsState {
   const factory AdminAccountRequestsState.loading() =
       AdminAccountRequestsStateLoading;
   const factory AdminAccountRequestsState.success(
-    List<AccountRequestModel> requests,
-  ) = AdminAccountRequestsStateSuccess;
+    List<AccountRequestModel> requests, {
+    @Default(false) bool hasMore,
+    @Default(false) bool isLoadingMore,
+  }) = AdminAccountRequestsStateSuccess;
   const factory AdminAccountRequestsState.error(String messageKey) =
       AdminAccountRequestsStateError;
 }

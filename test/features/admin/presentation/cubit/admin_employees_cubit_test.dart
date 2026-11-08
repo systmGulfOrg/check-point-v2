@@ -96,11 +96,14 @@ class _FakeAdminEmployeeRepo implements AdminEmployeeRepo {
   }
 
   @override
-  Future<ApiResult<List<AccountRequestModel>>> getAccountRequests({
+  Future<ApiResult<AccountRequestsPageModel>> getAccountRequests({
     int page = 0,
     int pageSize = 20,
+    String? status,
+    String? search,
+    bool newestFirst = true,
   }) async {
-    return const ApiResult.success([]);
+    return const ApiResult.success(AccountRequestsPageModel(items: []));
   }
 
   @override

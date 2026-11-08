@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -999,7 +1000,11 @@ class _AdminEditEmployeeSheetWidgetState
         return Image.file(file, fit: BoxFit.cover);
       }
       if (_selectedPhotoPath!.startsWith('http')) {
-        return Image.network(_selectedPhotoPath!, fit: BoxFit.cover);
+        return Image(
+          image: CachedNetworkImageProvider(_selectedPhotoPath!),
+          fit: BoxFit.cover,
+          errorBuilder: (_, _, _) => const Icon(Icons.broken_image_outlined),
+        );
       }
     }
     return Container(

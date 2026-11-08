@@ -1997,5 +1997,6 @@
   "contractorWorker.site": "موقع العمل",
   "contractorWorker.worker": "عامل",
   "contractorWorker.contractor": "المقاول",
-  "app.name": "تشك بوينت"
+  "app.name": "تشك بوينت",
+  "admin.requests.loadMore": "عرض المزيد"
 }

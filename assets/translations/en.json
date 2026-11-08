@@ -2004,5 +2004,6 @@
   "contractorWorker.site": "Work Site",
   "contractorWorker.worker": "Worker",
   "contractorWorker.contractor": "Contractor",
-  "app.name": "Check Point"
+  "app.name": "Check Point",
+  "admin.requests.loadMore": "Load more"
 }

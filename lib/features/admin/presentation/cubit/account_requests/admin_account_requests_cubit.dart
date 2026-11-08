@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 
 import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
@@ -10,21 +12,63 @@ class AdminAccountRequestsCubit extends SafeCubit<AdminAccountRequestsState> {
     : super(const AdminAccountRequestsState.initial());
 
   final AdminEmployeeRepo employeeRepo;
+
+  static const int pageSize = 20;
+  static const Duration searchDebounce = Duration(milliseconds: 400);
+
+  /// Loaded rows of the current filter; paging state lives next to it (§15).
   List<AccountRequestModel> allRequests = const [];
+  int page = 0;
+  bool isLoading = false;
+  bool isComplete = false;
   String currentFilter = 'admin.requests.filterPending';
   String currentSearch = '';
   bool newestFirst = true;
+  Timer? searchTimer;
 
-  Future<void> loadRequests() async {
-    emit(const AdminAccountRequestsState.loading());
+  /// The status sent to the server for the selected tab (null = all).
+  String? get statusFilter => switch (currentFilter) {
+    'admin.requests.filterPending' => 'Pending',
+    'admin.requests.filterApproved' => 'Approved',
+    'admin.requests.filterRejected' => 'Rejected',
+    _ => null,
+  };
+
+  /// [newResponse] true: first page (initial load, refresh, filter change).
+  /// false: next page, ignored while loading or when everything is loaded.
+  Future<void> loadRequests({bool newResponse = true}) async {
+    if (!newResponse && (isLoading || isComplete)) return;
+    isLoading = true;
+    if (newResponse) {
+      page = 0;
+      isComplete = false;
+      emit(const AdminAccountRequestsState.loading());
+    } else {
+      emit(
+        AdminAccountRequestsState.success(
+          allRequests,
+          hasMore: true,
+          isLoadingMore: true,
+        ),
+      );
+    }
     final result = await employeeRepo.getAccountRequests(
-      page: 0,
-      pageSize: 100,
+      page: page,
+      pageSize: pageSize,
+      status: statusFilter,
+      search: currentSearch,
+      newestFirst: newestFirst,
     );
+    isLoading = false;
     result.when(
       success: (data) {
-        allRequests = data;
-        _emitFiltered();
+        final rows = data.list;
+        allRequests = newResponse ? rows : [...allRequests, ...rows];
+        isComplete = !(data.hasNext ?? rows.length == pageSize);
+        page++;
+        safeEmit(
+          AdminAccountRequestsState.success(allRequests, hasMore: !isComplete),
+        );
       },
       failure: (failure) {
         safeEmit(AdminAccountRequestsState.error(failure.messageKey));
@@ -32,51 +76,26 @@ class AdminAccountRequestsCubit extends SafeCubit<AdminAccountRequestsState> {
     );
   }
 
-  void setFilter(String filterKey) {
+  Future<void> setFilter(String filterKey) {
     currentFilter = filterKey;
-    _emitFiltered();
+    return loadRequests();
   }
 
   void setSearch(String search) {
     currentSearch = search;
-    _emitFiltered();
+    searchTimer?.cancel();
+    searchTimer = Timer(searchDebounce, loadRequests);
   }
 
-  void setSort({required bool newest}) {
+  Future<void> setSort({required bool newest}) {
     newestFirst = newest;
-    _emitFiltered();
+    return loadRequests();
   }
 
-  void _emitFiltered() {
-    var filtered = List<AccountRequestModel>.from(allRequests);
-
-    if (currentFilter == 'admin.requests.filterPending') {
-      filtered = filtered.where((r) => r.isPending).toList();
-    } else if (currentFilter == 'admin.requests.filterApproved') {
-      filtered = filtered.where((r) => r.isApproved).toList();
-    } else if (currentFilter == 'admin.requests.filterRejected') {
-      filtered = filtered.where((r) => r.isRejected).toList();
-    }
-
-    if (currentSearch.trim().isNotEmpty) {
-      final query = currentSearch.trim().toLowerCase();
-      filtered = filtered.where((r) {
-        final name = (r.name ?? '').toLowerCase();
-        final mobile = (r.mobileId ?? '').toLowerCase();
-        final phone = (r.phone ?? '').toLowerCase();
-        return name.contains(query) ||
-            mobile.contains(query) ||
-            phone.contains(query);
-      }).toList();
-    }
-
-    filtered.sort((a, b) {
-      final dateA = a.createdDate ?? DateTime.fromMillisecondsSinceEpoch(0);
-      final dateB = b.createdDate ?? DateTime.fromMillisecondsSinceEpoch(0);
-      return newestFirst ? dateB.compareTo(dateA) : dateA.compareTo(dateB);
-    });
-
-    safeEmit(AdminAccountRequestsState.success(filtered));
+  @override
+  Future<void> close() {
+    searchTimer?.cancel();
+    return super.close();
   }
 
   Future<String?> approveRequest({
