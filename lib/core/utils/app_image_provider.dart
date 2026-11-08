@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:check_point_v2/core/app/app_config.dart';
@@ -32,7 +33,7 @@ class AppImageProvider {
       if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
         return _cacheProvider(
           cacheKey,
-          ResizeImage(NetworkImage(trimmed), width: 400, height: 400),
+          ResizeImage(CachedNetworkImageProvider(trimmed), width: 400, height: 400),
         );
       }
 
@@ -45,7 +46,7 @@ class AppImageProvider {
         return _cacheProvider(
           cacheKey,
           ResizeImage(
-            NetworkImage('$baseUrl$trimmed'),
+            CachedNetworkImageProvider('$baseUrl$trimmed'),
             width: 400,
             height: 400,
           ),
