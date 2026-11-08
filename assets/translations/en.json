@@ -2047,5 +2047,12 @@
   "leaves.revoke.done": "Leave cancelled. The employee can clock in again.",
   "leaves.revoke.errors.self": "You can't cancel your own leave.",
   "leaves.revoke.errors.notApproved": "Only approved leave can be cancelled.",
-  "leaves.revoke.errors.ended": "This leave has already ended."
+  "leaves.revoke.errors.ended": "This leave has already ended.",
+  "points.cancelReason.holiday": "Cancelled: official holiday",
+  "points.cancelReason.leave": "Cancelled: approved leave",
+  "points.cancelReason.weeklyOff": "Cancelled: weekly day off",
+  "points.cancelReason.permit": "Cancelled: approved permit",
+  "points.cancelReason.dayNotFinished": "Cancelled: the day had not ended",
+  "points.cancelReason.attendanceEdited": "Cancelled: attendance was corrected",
+  "points.cancelReason.other": "Cancelled by the system"
 }

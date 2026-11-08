@@ -293,7 +293,7 @@ class __$$PointsHistoryItemModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PointsHistoryItemModelImpl implements _PointsHistoryItemModel {
+class _$PointsHistoryItemModelImpl extends _PointsHistoryItemModel {
   const _$PointsHistoryItemModelImpl({
     required this.id,
     required this.pointType,
@@ -309,7 +309,8 @@ class _$PointsHistoryItemModelImpl implements _PointsHistoryItemModel {
     this.recomputedAt,
     final Map<String, dynamic>? computationSnapshot,
     required this.createdAt,
-  }) : _computationSnapshot = computationSnapshot;
+  }) : _computationSnapshot = computationSnapshot,
+       super._();
 
   factory _$PointsHistoryItemModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$PointsHistoryItemModelImplFromJson(json);
@@ -428,7 +429,7 @@ class _$PointsHistoryItemModelImpl implements _PointsHistoryItemModel {
   }
 }
 
-abstract class _PointsHistoryItemModel implements PointsHistoryItemModel {
+abstract class _PointsHistoryItemModel extends PointsHistoryItemModel {
   const factory _PointsHistoryItemModel({
     required final String id,
     required final String pointType,
@@ -445,6 +446,7 @@ abstract class _PointsHistoryItemModel implements PointsHistoryItemModel {
     final Map<String, dynamic>? computationSnapshot,
     required final String createdAt,
   }) = _$PointsHistoryItemModelImpl;
+  const _PointsHistoryItemModel._() : super._();
 
   factory _PointsHistoryItemModel.fromJson(Map<String, dynamic> json) =
       _$PointsHistoryItemModelImpl.fromJson;

@@ -2040,5 +2040,12 @@
   "leaves.revoke.done": "تم إلغاء الإجازة، ويمكن للموظف تسجيل الحضور.",
   "leaves.revoke.errors.self": "لا يمكنك إلغاء إجازتك بنفسك.",
   "leaves.revoke.errors.notApproved": "يمكن إلغاء الإجازات المعتمدة فقط.",
-  "leaves.revoke.errors.ended": "انتهت هذه الإجازة بالفعل."
+  "leaves.revoke.errors.ended": "انتهت هذه الإجازة بالفعل.",
+  "points.cancelReason.holiday": "أُلغيت: عطلة رسمية",
+  "points.cancelReason.leave": "أُلغيت: إجازة معتمدة",
+  "points.cancelReason.weeklyOff": "أُلغيت: إجازة أسبوعية",
+  "points.cancelReason.permit": "أُلغيت: إذن معتمد",
+  "points.cancelReason.dayNotFinished": "أُلغيت: اليوم لم ينتهِ بعد",
+  "points.cancelReason.attendanceEdited": "أُلغيت: تم تصحيح الحضور",
+  "points.cancelReason.other": "أُلغيت بواسطة النظام"
 }
