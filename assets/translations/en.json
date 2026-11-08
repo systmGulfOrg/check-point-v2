@@ -2039,5 +2039,13 @@
   "record.permitStatus.Approved": "approved",
   "record.permitStatus.Pending": "pending",
   "record.permitStatus.Rejected": "rejected",
-  "record.permitStatus.Cancelled": "cancelled"
+  "record.permitStatus.Cancelled": "cancelled",
+  "attendance.errors.onApprovedLeave": "You are on approved leave today, so you can't clock in. Ask your manager to cancel the leave if you are working.",
+  "leaves.revoke.action": "Cancel leave",
+  "leaves.revoke.title": "Cancel this approved leave?",
+  "leaves.revoke.reasonHint": "Why is the leave cancelled? The employee will be notified.",
+  "leaves.revoke.done": "Leave cancelled. The employee can clock in again.",
+  "leaves.revoke.errors.self": "You can't cancel your own leave.",
+  "leaves.revoke.errors.notApproved": "Only approved leave can be cancelled.",
+  "leaves.revoke.errors.ended": "This leave has already ended."
 }

@@ -2032,5 +2032,13 @@
   "record.permitStatus.Approved": "معتمد",
   "record.permitStatus.Pending": "قيد المراجعة",
   "record.permitStatus.Rejected": "مرفوض",
-  "record.permitStatus.Cancelled": "ملغي"
+  "record.permitStatus.Cancelled": "ملغي",
+  "attendance.errors.onApprovedLeave": "لديك إجازة معتمدة اليوم، لا يمكنك تسجيل الحضور. اطلب من مديرك إلغاء الإجازة إذا كنت ستعمل.",
+  "leaves.revoke.action": "إلغاء الإجازة",
+  "leaves.revoke.title": "إلغاء هذه الإجازة المعتمدة؟",
+  "leaves.revoke.reasonHint": "سبب إلغاء الإجازة؟ سيتم إشعار الموظف.",
+  "leaves.revoke.done": "تم إلغاء الإجازة، ويمكن للموظف تسجيل الحضور.",
+  "leaves.revoke.errors.self": "لا يمكنك إلغاء إجازتك بنفسك.",
+  "leaves.revoke.errors.notApproved": "يمكن إلغاء الإجازات المعتمدة فقط.",
+  "leaves.revoke.errors.ended": "انتهت هذه الإجازة بالفعل."
 }

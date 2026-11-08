@@ -101,4 +101,14 @@ class SupervisorLeaveRequestsRepoImpl implements SupervisorLeaveRequestsRepo {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
   }
+
+  @override
+  Future<ApiResult<void>> revokeLeaveRequest(String ulid, String reason) async {
+    try {
+      await api.revokeLeave(ulid, {'reason': reason});
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
 }
