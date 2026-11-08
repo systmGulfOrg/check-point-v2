@@ -64,6 +64,14 @@ class EmployeeHomeQuickActionsWidget extends StatelessWidget {
       );
     }
 
+    tiles.add(
+      AppQuickActionTileWidget(
+        icon: Icons.event_note_rounded,
+        label: 'record.title'.tr(context: context),
+        onTap: () => Navigator.pushNamed(context, AppRoutes.employeeRecord),
+      ),
+    );
+
     if (tiles.isEmpty) {
       return const SizedBox.shrink();
     }
