@@ -23,7 +23,7 @@ class CheckPointApp extends StatelessWidget {
         return PushTapListenerWidget(
           child: MaterialApp(
             navigatorKey: AppRouter.navigatorKey,
-            title: 'Check-Point HRM',
+            onGenerateTitle: (_) => 'app.name'.tr(),
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light,
             localizationsDelegates: context.localizationDelegates,
