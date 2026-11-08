@@ -1211,6 +1211,7 @@
   "errors.employeeNotFound": "ملف الموظف مش موجود.",
   "errors.employeeUnavailable": "مش قادرين نحمل بياناتك.",
   "errors.entityTooLarge": "حجم الصورة أو الملف كبير جداً. يرجى اختيار ملف أصغر.",
+  "errors.imageProcessing": "تعذر معالجة هذه الصورة. يرجى اختيار صورة أخرى (JPG أو PNG).",
   "errors.forbidden": "ليس لديك صلاحية لتنفيذ هذه العملية.",
   "errors.selfVerificationNotAllowed": "لا يمكنك التحقق من سجل حضورك الخاص.",
   "errors.invalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.",
@@ -1995,5 +1996,6 @@
   "contractorWorker.badge": "مقاولات وتطوير عقاري",
   "contractorWorker.site": "موقع العمل",
   "contractorWorker.worker": "عامل",
-  "contractorWorker.contractor": "المقاول"
+  "contractorWorker.contractor": "المقاول",
+  "app.name": "تشك بوينت"
 }

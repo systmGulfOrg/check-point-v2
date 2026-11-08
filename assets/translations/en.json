@@ -1211,6 +1211,7 @@
   "errors.employeeNotFound": "Employee profile was not found.",
   "errors.employeeUnavailable": "Your employee profile could not be loaded.",
   "errors.entityTooLarge": "The image or file size is too large. Please select a smaller file.",
+  "errors.imageProcessing": "We couldn't process this photo. Please choose another image (JPG or PNG).",
   "errors.forbidden": "You do not have permission to perform this action.",
   "errors.selfVerificationNotAllowed": "You cannot verify your own attendance record.",
   "errors.invalidCredentials": "Invalid username or password. Please try again.",
@@ -2002,5 +2003,6 @@
   "contractorWorker.badge": "Construction & Real Estate",
   "contractorWorker.site": "Work Site",
   "contractorWorker.worker": "Worker",
-  "contractorWorker.contractor": "Contractor"
+  "contractorWorker.contractor": "Contractor",
+  "app.name": "Check Point"
 }

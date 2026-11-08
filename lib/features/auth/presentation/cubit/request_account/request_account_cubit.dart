@@ -32,18 +32,15 @@ class RequestAccountCubit extends SafeCubit<RequestAccountState> {
         photoPath.isNotEmpty &&
         !photoPath.startsWith('http') &&
         !photoPath.startsWith('data:image')) {
-      try {
-        final file = File(photoPath);
-        if (await file.exists()) {
-          final bytes = await file.readAsBytes();
-          final ext = photoPath.split('.').last.toLowerCase();
-          final mime = ext == 'png' ? 'image/png' : 'image/jpeg';
-          effectivePhoto = await AppImageCompressor.compressAndEncodeBase64(
-            bytes,
-            mimeType: mime,
-          );
-        }
-      } catch (_) {}
+      final file = File(photoPath);
+      final bytes = await file.exists() ? await file.readAsBytes() : null;
+      effectivePhoto = bytes == null
+          ? null
+          : await AppImageCompressor.compressAndEncodeBase64(bytes);
+      if (effectivePhoto == null) {
+        safeEmit(const RequestAccountState.error('errors.imageProcessing'));
+        return;
+      }
     }
 
     final request = AccountRequestModel(
@@ -57,7 +54,7 @@ class RequestAccountCubit extends SafeCubit<RequestAccountState> {
       accountType: accountType,
       siteId: siteId,
       notes: notes,
-      photoPath: effectivePhoto,
+      // Sent once: the server reads imageUrl first; photoPath doubled the body.
       imageUrl: effectivePhoto,
     );
     final result = await authRepo.requestAccount(request);
