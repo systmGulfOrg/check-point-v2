@@ -8,9 +8,9 @@ import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
-import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_state.dart';
 import 'admin_create_customer_visit_sheet_widget.dart';
-import 'admin_customer_visit_card_widget.dart';
+import 'admin_customer_details_overview_tab_widget.dart';
+import 'admin_customer_details_visits_tab_widget.dart';
 
 class AdminCustomerDetailsSheetWidget extends StatefulWidget {
   const AdminCustomerDetailsSheetWidget({
@@ -378,8 +378,15 @@ class _AdminCustomerDetailsSheetWidgetState
 
               Expanded(
                 child: selectedTab == 0
-                    ? _buildVisitsTab(scrollController)
-                    : _buildOverviewTab(scrollController),
+                    ? AdminCustomerDetailsVisitsTabWidget(
+                        customer: widget.customer,
+                        scrollController: scrollController,
+                        isVisitForCurrentUser: _isVisitForCurrentUser,
+                      )
+                    : AdminCustomerDetailsOverviewTabWidget(
+                        customer: widget.customer,
+                        scrollController: scrollController,
+                      ),
               ),
 
               Padding(
@@ -394,166 +401,6 @@ class _AdminCustomerDetailsSheetWidgetState
           ),
         );
       },
-    );
-  }
-
-  Widget _buildVisitsTab(ScrollController scrollController) {
-    return BlocBuilder<AdminCustomerVisitsCubit, AdminCustomerVisitsState>(
-      builder: (context, state) {
-        return state.when(
-          initial: () => const Center(child: CircularProgressIndicator()),
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (message) => Center(
-            child: Text(
-              message.tr(context: context),
-              style: AppTextStyles.font14Regular.copyWith(
-                color: AppColors.error,
-              ),
-            ),
-          ),
-          actionSuccess: (_) => const SizedBox.shrink(),
-          success: (visits) {
-            final visibleVisits = visits.where(_isVisitForCurrentUser).toList();
-            if (visibleVisits.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.all(24.r),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.event_busy_rounded,
-                        size: 48.r,
-                        color: AppColors.placeholder,
-                      ),
-                      SizedBox(height: 12.h),
-                      Text(
-                        'admin.visits.empty'.tr(context: context),
-                        style: AppTextStyles.font14Regular.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-            return ListView.separated(
-              controller: scrollController,
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-              itemCount: visibleVisits.length,
-              separatorBuilder: (_, _) => SizedBox(height: 12.h),
-              itemBuilder: (context, index) {
-                final visit = visibleVisits[index];
-                return AnimatedListItemWidget(
-                  index: index,
-                  child: AdminCustomerVisitCardWidget(
-                    visit: visit,
-                    onRecordOutcome:
-                        (outcome, status, notes, documentName, documentUrl) =>
-                            context
-                                .read<AdminCustomerVisitsCubit>()
-                                .updateVisitOutcome(
-                                  visitId: visit.id ?? '',
-                                  customerId: widget.customer.id ?? '',
-                                  outcome: outcome,
-                                  status: status,
-                                  notes: notes,
-                                  documentName: documentName,
-                                  documentUrl: documentUrl,
-                                ),
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildOverviewTab(ScrollController scrollController) {
-    return ListView(
-      controller: scrollController,
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-      children: [
-        Container(
-          padding: EdgeInsets.all(16.r),
-          decoration: BoxDecoration(
-            color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(14.r),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'البيانات الجغرافية والنطاق',
-                style: AppTextStyles.font14Bold,
-              ),
-              SizedBox(height: 12.h),
-              _buildInfoRow(
-                icon: Icons.title_rounded,
-                label: 'اسم العميل / المؤسسة',
-                value: widget.customer.name ?? '-',
-              ),
-              const Divider(color: AppColors.border),
-              _buildInfoRow(
-                icon: Icons.category_outlined,
-                label: 'طبيعة النشاط / يعمل كـ',
-                value: widget.customer.workesAs ?? '-',
-              ),
-              const Divider(color: AppColors.border),
-              _buildInfoRow(
-                icon: Icons.map_outlined,
-                label: 'العنوان الجغرافي',
-                value: widget.customer.location ?? '-',
-              ),
-              const Divider(color: AppColors.border),
-              _buildInfoRow(
-                icon: Icons.gps_fixed_rounded,
-                label: 'حالة السياج الجغرافي (Geofence)',
-                value: (widget.customer.coordinates?.isNotEmpty ?? false)
-                    ? 'مفعل ومحدد بنقاط جغرافية'
-                    : 'غير محدد',
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInfoRow({
-    required IconData icon,
-    required String label,
-    required String value,
-  }) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 6.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 16.r, color: AppColors.brandPrimary),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: AppTextStyles.font11Medium.copyWith(
-                    color: AppColors.placeholder,
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                Text(value, style: AppTextStyles.font13Medium),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
