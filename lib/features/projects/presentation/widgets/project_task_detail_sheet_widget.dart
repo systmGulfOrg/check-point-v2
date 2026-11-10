@@ -9,8 +9,10 @@ import 'package:check_point_v2/features/admin/data/models/employee/employee_mode
 import 'package:check_point_v2/features/admin/data/repos/admin_employee_repo.dart';
 import 'package:check_point_v2/features/projects/data/models/project_models.dart';
 import 'package:check_point_v2/features/projects/presentation/cubit/projects_cubit.dart';
-import 'package:check_point_v2/features/projects/presentation/cubit/projects_state.dart';
 import 'package:check_point_v2/features/projects/presentation/widgets/assignee_multi_select_widget.dart';
+import 'project_task_activity_log_widget.dart';
+import 'project_task_assignees_list_widget.dart';
+import 'project_task_attachments_list_widget.dart';
 import 'project_task_chip_widget.dart';
 import 'project_task_section_header_widget.dart';
 
@@ -112,20 +114,6 @@ class _ProjectTaskDetailSheetWidgetState
       'NORMAL' => AppColors.softBlueBackground,
       'LOW' => AppColors.pageBackground,
       _ => AppColors.softBlueBackground,
-    };
-  }
-
-  String _formatAuditAction(String? action) {
-    if (action == null || action.isEmpty) return 'projects.activity'.tr();
-    return switch (action) {
-      'task.status_updated' => 'projects.statusUpdated'.tr(context: context),
-      'task.assignees_updated' => 'projects.assigneesUpdated'.tr(
-        context: context,
-      ),
-      'task.tags_updated' => 'projects.tagsUpdated'.tr(context: context),
-      'task.created' => 'projects.taskCreated'.tr(context: context),
-      'task.updated' => 'projects.taskUpdated'.tr(context: context),
-      _ => action.replaceAll('task.', '').replaceAll('_', ' ').toUpperCase(),
     };
   }
 
@@ -343,21 +331,28 @@ class _ProjectTaskDetailSheetWidgetState
                           : null,
                     ),
                     SizedBox(height: 8.h),
-                    _buildAssigneesList(),
+                    ProjectTaskAssigneesListWidget(
+                      assigneeIds: _currentAssigneeIds,
+                      findEmployee: _findEmployee,
+                      getAssigneeName: _getAssigneeName,
+                      getAssigneeImageUrl: _getAssigneeImageUrl,
+                    ),
                     SizedBox(height: 20.h),
                     ProjectTaskSectionHeaderWidget(
                       title: 'projects.attachments'.tr(context: context),
                       icon: Icons.attach_file_rounded,
                     ),
                     SizedBox(height: 8.h),
-                    _buildAttachmentsList(),
+                    ProjectTaskAttachmentsListWidget(
+                      attachments: widget.task.attachments,
+                    ),
                     SizedBox(height: 20.h),
                     ProjectTaskSectionHeaderWidget(
                       title: 'projects.activity'.tr(context: context),
                       icon: Icons.history_rounded,
                     ),
                     SizedBox(height: 8.h),
-                    _buildActivityLogList(),
+                    const ProjectTaskActivityLogWidget(),
                     SizedBox(height: 24.h),
                   ],
                 ),
@@ -366,215 +361,6 @@ class _ProjectTaskDetailSheetWidgetState
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildAssigneesList() {
-    if (_currentAssigneeIds.isEmpty) {
-      return Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(16.r),
-        decoration: BoxDecoration(
-          color: AppColors.pageBackground,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Text(
-          'projects.noAssignees'.tr(context: context),
-          style: AppTextStyles.font13Regular.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-      );
-    }
-
-    return Column(
-      children: _currentAssigneeIds.map((id) {
-        final displayName = _getAssigneeName(id);
-        final imageUrl = _getAssigneeImageUrl(id);
-        final emp = _findEmployee(id);
-        final initial = displayName.trim().isNotEmpty
-            ? displayName.trim()[0].toUpperCase()
-            : '?';
-        final subtitle =
-            emp?.position ?? emp?.email ?? emp?.departmentName ?? id;
-
-        return Container(
-          margin: EdgeInsets.only(bottom: 8.h),
-          decoration: BoxDecoration(
-            color: AppColors.pageBackground,
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: ListTile(
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 14.w,
-              vertical: 4.h,
-            ),
-            leading: AppAvatarWidget(
-              imageUrl: imageUrl,
-              name: displayName,
-              initials: initial,
-              subtitle: subtitle,
-              radius: 20.r,
-              enablePreview: true,
-            ),
-            title: Text(displayName, style: AppTextStyles.font14Bold),
-            subtitle: subtitle != displayName
-                ? Text(
-                    subtitle,
-                    style: AppTextStyles.font12Regular.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  )
-                : null,
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildAttachmentsList() {
-    if (widget.task.attachments.isEmpty) {
-      return Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(16.r),
-        decoration: BoxDecoration(
-          color: AppColors.pageBackground,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Text(
-          'projects.noAttachments'.tr(context: context),
-          style: AppTextStyles.font13Regular.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-      );
-    }
-
-    return Column(
-      children: widget.task.attachments.map((file) {
-        return Container(
-          margin: EdgeInsets.only(bottom: 8.h),
-          decoration: BoxDecoration(
-            color: AppColors.pageBackground,
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: ListTile(
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 14.w,
-              vertical: 4.h,
-            ),
-            leading: Icon(
-              Icons.insert_drive_file_outlined,
-              color: AppColors.brandPrimary,
-            ),
-            title: Text(
-              file.fileName ?? 'File',
-              style: AppTextStyles.font14Bold,
-            ),
-            subtitle: file.fileSize != null
-                ? Text(
-                    '${(file.fileSize! / 1024).toStringAsFixed(1)} KB',
-                    style: AppTextStyles.font12Regular.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  )
-                : null,
-            trailing: Icon(
-              Icons.visibility_outlined,
-              size: 18.r,
-              color: AppColors.brandPrimary,
-            ),
-            onTap: () => AppDocumentViewerDialogWidget.show(
-              context,
-              fileName: file.fileName ?? 'مستند المهمة',
-              fileUrl: file.fileUrl,
-              fileSize: file.fileSize,
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildActivityLogList() {
-    return BlocBuilder<ProjectsCubit, ProjectsState>(
-      builder: (context, state) {
-        final audit = state is ProjectsStateSuccess
-            ? state.audit
-            : const <TaskAuditModel>[];
-
-        if (audit.isEmpty) {
-          return Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(16.r),
-            decoration: BoxDecoration(
-              color: AppColors.pageBackground,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Text(
-              'projects.noActivity'.tr(context: context),
-              style: AppTextStyles.font13Regular.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          );
-        }
-
-        return Column(
-          children: audit.map((item) {
-            final formattedAction = _formatAuditAction(item.action);
-            final dateStr = item.createdAt != null
-                ? AppDateFormatter.formatDateString(item.createdAt)
-                : '';
-            final actor = item.actorName ?? '';
-
-            return Container(
-              margin: EdgeInsets.only(bottom: 8.h),
-              padding: EdgeInsets.all(12.r),
-              decoration: BoxDecoration(
-                color: AppColors.pageBackground,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(8.r),
-                    decoration: BoxDecoration(
-                      color: AppColors.softBrandBackground,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.history_toggle_off_rounded,
-                      size: 16.r,
-                      color: AppColors.brandPrimary,
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(formattedAction, style: AppTextStyles.font13Bold),
-                        if (actor.isNotEmpty || dateStr.isNotEmpty)
-                          SizedBox(height: 2.h),
-                        if (actor.isNotEmpty || dateStr.isNotEmpty)
-                          Text(
-                            '$actor  •  $dateStr',
-                            style: AppTextStyles.font12Regular.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-        );
-      },
     );
   }
 }
