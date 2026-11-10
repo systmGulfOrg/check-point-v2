@@ -149,5 +149,52 @@ void main() {
 
       cubit.close();
     });
+
+    test('recordViolation delegates to repo and returns success', () async {
+      final repo = _FakeDisciplinaryRepo(
+        summaryResult: const ApiResult.success(
+          DisciplinarySummaryModel(
+            month: '2026-11',
+            violationsCount: 0,
+            totalDeductedDays: 0,
+            totalCalculatedAmount: 0,
+            violations: [],
+          ),
+        ),
+      );
+      final cubit = DisciplinaryCubit(repo: repo);
+
+      final result = await cubit.recordViolation(
+        employeeId: 'emp-101',
+        ruleId: 'rule-smoke',
+        notes: 'مخالفة تدخين في مكان العمل',
+      );
+
+      expect(result, isTrue);
+      cubit.close();
+    });
+
+    test('submitAppeal delegates to repo and returns success', () async {
+      final repo = _FakeDisciplinaryRepo(
+        summaryResult: const ApiResult.success(
+          DisciplinarySummaryModel(
+            month: '2026-11',
+            violationsCount: 0,
+            totalDeductedDays: 0,
+            totalCalculatedAmount: 0,
+            violations: [],
+          ),
+        ),
+      );
+      final cubit = DisciplinaryCubit(repo: repo);
+
+      final result = await cubit.submitAppeal(
+        violationId: 'viol-99',
+        reason: 'كنت متواجداً في اجتماع خارجي',
+      );
+
+      expect(result, isTrue);
+      cubit.close();
+    });
   });
 }
