@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -25,11 +26,14 @@ class AppImageViewerDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget imageWidget;
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      imageWidget = Image.network(
-        imageUrl,
+      imageWidget = Image(
+        image: ResizeImage(
+          CachedNetworkImageProvider(imageUrl),
+          width: 1600,
+          height: 1600,
+          policy: ResizeImagePolicy.fit,
+        ),
         fit: BoxFit.contain,
-        cacheWidth: 1600,
-        cacheHeight: 1600,
         errorBuilder: (context, error, stackTrace) => const Icon(
           Icons.broken_image_outlined,
           size: 64,

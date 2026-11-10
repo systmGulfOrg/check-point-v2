@@ -97,7 +97,6 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
             base64Data = await AppImageCompressor.compressAndEncodeBase64(
               file.bytes!,
               maxDimension: 768,
-              mimeType: mimeType,
             );
           } else {
             base64Data = 'data:$mimeType;base64,${base64Encode(file.bytes!)}';
@@ -117,7 +116,6 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
             base64Data = await AppImageCompressor.compressAndEncodeBase64(
               bytes,
               maxDimension: 768,
-              mimeType: mimeType,
             );
           } else {
             base64Data = 'data:$mimeType;base64,${base64Encode(bytes)}';

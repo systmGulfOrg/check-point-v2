@@ -1,3 +1,6 @@
+import 'package:check_point_v2/features/employee_record/data/models/employee_record_args.dart';
+import 'package:check_point_v2/features/employee_record/presentation/cubit/employee_record_cubit.dart';
+import 'package:check_point_v2/features/employee_record/presentation/screens/employee_record_screen.dart';
 import 'package:check_point_v2/features/ai/presentation/cubit/ai_chat_cubit.dart';
 import 'package:check_point_v2/features/ai/presentation/widgets/ai_chat_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_employee_audit_screen.dart';
@@ -924,6 +927,24 @@ class AppRouter {
               project: args.project,
               canManage: args.canManage,
             ),
+          ),
+        );
+      case AppRoutes.employeeRecord:
+        final args = settings.arguments;
+        if (args != null && args is! EmployeeRecordArgs) {
+          return _fadeRoute(
+            settings: settings,
+            child: const Scaffold(
+              body: Center(child: Text('Invalid record arguments')),
+            ),
+          );
+        }
+        final recordArgs = (args as EmployeeRecordArgs?) ?? const EmployeeRecordArgs();
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.employeeRecord),
+          child: BlocProvider<EmployeeRecordCubit>(
+            create: (_) => sl<EmployeeRecordCubit>()..load(forEmployee: recordArgs.employeeId),
+            child: EmployeeRecordScreen(args: recordArgs),
           ),
         );
       case AppRoutes.myPoints:

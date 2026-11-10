@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,7 +69,7 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
                 selectedFilter: cubit.currentFilter,
                 onFilterSelected: (filter) {
                   setState(() {
-                    cubit.setFilter(filter);
+                    unawaited(cubit.setFilter(filter));
                   });
                 },
               ),
@@ -89,7 +91,7 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
                     onTap: () {
                       setState(() {
                         newestFirst = !newestFirst;
-                        cubit.setSort(newest: newestFirst);
+                        unawaited(cubit.setSort(newest: newestFirst));
                       });
                     },
                     borderRadius: BorderRadius.circular(14.r),

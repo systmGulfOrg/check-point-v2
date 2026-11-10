@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
@@ -109,8 +110,8 @@ class AppDocumentPreviewWidget extends StatelessWidget {
           color: AppColors.pageBackground,
           child: InteractiveViewer(
             maxScale: 4.0,
-            child: Image.network(
-              trimmed,
+            child: Image(
+              image: CachedNetworkImageProvider(trimmed),
               fit: BoxFit.contain,
               loadingBuilder: (_, child, progress) {
                 if (progress == null) return child;

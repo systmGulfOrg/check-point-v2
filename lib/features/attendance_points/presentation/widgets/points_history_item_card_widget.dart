@@ -109,6 +109,13 @@ class PointsHistoryItemCardWidget extends StatelessWidget {
               ),
             ],
           ),
+          if (isCancelled && item.cancelReasonKey != null) ...[
+            hSpace(6),
+            Text(
+              item.cancelReasonKey!.tr(context: context),
+              style: AppTextStyles.font12Medium.copyWith(color: AppColors.success),
+            ),
+          ],
           hSpace(8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

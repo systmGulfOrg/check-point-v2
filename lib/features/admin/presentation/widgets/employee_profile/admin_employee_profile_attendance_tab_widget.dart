@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
+import 'package:check_point_v2/features/employee_record/presentation/widgets/employee_record_button_widget.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
@@ -14,6 +15,8 @@ import 'admin_employee_profile_info_card_widget.dart';
 
 class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
   const AdminEmployeeProfileAttendanceTabWidget({
+    required this.employeeId,
+    required this.employeeName,
     required this.attendance,
     required this.selectedMonth,
     required this.attendedDays,
@@ -28,6 +31,8 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
     super.key,
   });
 
+  final String? employeeId;
+  final String? employeeName;
   final List<AdminAttendanceModel> attendance;
   final DateTime selectedMonth;
   final int attendedDays;
@@ -46,6 +51,10 @@ class AdminEmployeeProfileAttendanceTabWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       child: Column(
         children: [
+          if (employeeId != null) ...[
+            EmployeeRecordButtonWidget(employeeId: employeeId!, employeeName: employeeName),
+            hSpace(12),
+          ],
           AdminEmployeeProfileInfoCardWidget(
             title: 'employee.profile.sectionBalances'.tr(context: context),
             icon: Icons.beach_access_rounded,

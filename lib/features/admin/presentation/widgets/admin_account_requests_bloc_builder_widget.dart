@@ -9,6 +9,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/account_request
 import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_state.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_reject_request_dialog_widget.dart';
 import 'admin_account_requests_skeleton_widget.dart';
+import 'admin_account_requests_load_more_widget.dart';
 import 'admin_registration_request_card_widget.dart';
 
 class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
@@ -73,7 +74,11 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
               style: AppTextStyles.font14Regular,
             ),
           ),
-          AdminAccountRequestsStateSuccess(:final requests) =>
+          AdminAccountRequestsStateSuccess(
+            :final requests,
+            :final hasMore,
+            :final isLoadingMore,
+          ) =>
             requests.isEmpty
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 28.h),
@@ -97,6 +102,10 @@ class AdminAccountRequestsBlocBuilderWidget extends StatelessWidget {
                                 ? () => _showDeleteDialog(context, request.id!)
                                 : null,
                           ),
+                        ),
+                      if (hasMore)
+                        AdminAccountRequestsLoadMoreWidget(
+                          isLoading: isLoadingMore,
                         ),
                     ],
                   ),

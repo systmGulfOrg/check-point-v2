@@ -95,6 +95,30 @@ class SupervisorLeaveRequestsBlocBuilderWidget extends StatelessWidget {
               );
             }
           },
+          onRevoke: (req) async {
+            final ulid = req.ulid;
+            if (ulid == null) return;
+            final reason = await AppRejectReasonDialogWidget.show(
+              context,
+              title: 'leaves.revoke.title'.tr(context: context),
+              hintText: 'leaves.revoke.reasonHint'.tr(context: context),
+              confirmLabel: 'leaves.revoke.action'.tr(context: context),
+              validator: (value) {
+                if (value == null || value.trim().length < 10) {
+                  return 'leaves.rejection.reasonRequired'.tr(context: context);
+                }
+                return null;
+              },
+            );
+            if (reason == null || reason.trim().isEmpty) return;
+            final ok = await cubit.revokeRequest(ulid, reason.trim());
+            if (ok && context.mounted) {
+              CustomSnackBar.showSuccess(
+                context,
+                message: 'leaves.revoke.done'.tr(context: context),
+              );
+            }
+          },
           onReject: (req) {
             if (req.ulid != null) {
               _showRejectReasonDialog(

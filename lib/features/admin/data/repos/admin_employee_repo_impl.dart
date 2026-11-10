@@ -143,16 +143,24 @@ class AdminEmployeeRepoImpl implements AdminEmployeeRepo {
   }
 
   @override
-  Future<ApiResult<List<AccountRequestModel>>> getAccountRequests({
+  Future<ApiResult<AccountRequestsPageModel>> getAccountRequests({
     int page = 0,
     int pageSize = 20,
+    String? status,
+    String? search,
+    bool newestFirst = true,
   }) async {
     try {
-      final response = await api.getAccountRequests(
+      final response = await api.getAccountRequestsPage(
         itemCount: pageSize,
         index: page,
+        status: status,
+        search: (search == null || search.trim().isEmpty) ? null : search.trim(),
+        sortDir: newestFirst ? 'desc' : 'asc',
       );
-      return ApiResult.success(response.value?.list ?? []);
+      return ApiResult.success(
+        response.value ?? const AccountRequestsPageModel(items: []),
+      );
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

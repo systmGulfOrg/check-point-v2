@@ -16,6 +16,7 @@ class SupervisorLeaveRequestsListWidget extends StatelessWidget {
     this.currentUserName = '',
     this.onApprove,
     this.onReject,
+    this.onRevoke,
   });
 
   final List<AdminLeaveRequestModel> requests;
@@ -25,6 +26,7 @@ class SupervisorLeaveRequestsListWidget extends StatelessWidget {
   final String currentUserName;
   final ValueChanged<AdminLeaveRequestModel>? onApprove;
   final ValueChanged<AdminLeaveRequestModel>? onReject;
+  final ValueChanged<AdminLeaveRequestModel>? onRevoke;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +70,7 @@ class SupervisorLeaveRequestsListWidget extends StatelessWidget {
             currentUserName: currentUserName,
             onApprove: onApprove != null ? () => onApprove!(request) : null,
             onReject: onReject != null ? () => onReject!(request) : null,
+            onRevoke: onRevoke != null ? () => onRevoke!(request) : null,
           ),
         );
       },

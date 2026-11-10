@@ -20,6 +20,8 @@ class ApiConstants {
   static const String plans = '/api/Plan';
   static const String notifications = '/api/Notification';
   static const String accountRequests = '/api/AccountRequest';
+  static const String accountRequestsV2 = '/api/v2/account-requests';
+  static const String employeeRecord = '/api/v2/employees/{id}/record';
   static const String employeeCheckIn = '/api/Attendance/in';
   static const String employeeCheckInWithoutPlan =
       '/api/Attendance/inWithoutPlan';

@@ -1,3 +1,7 @@
+import 'package:check_point_v2/features/employee_record/data/apis/employee_record_api_service.dart';
+import 'package:check_point_v2/features/employee_record/data/repos/employee_record_repo.dart';
+import 'package:check_point_v2/features/employee_record/data/repos/employee_record_repo_impl.dart';
+import 'package:check_point_v2/features/employee_record/presentation/cubit/employee_record_cubit.dart';
 import 'package:check_point_v2/features/ai/data/apis/ai_api_service.dart';
 import 'package:check_point_v2/features/ai/data/repos/ai_repo.dart';
 import 'package:check_point_v2/features/ai/data/repos/ai_repo_impl.dart';
@@ -264,6 +268,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<AttendancePointsApiService>(
     () => AttendancePointsApiService(sl<Dio>()),
   );
+  sl.registerLazySingleton<EmployeeRecordApiService>(
+    () => EmployeeRecordApiService(sl<Dio>()),
+  );
   sl.registerLazySingleton<EmployeeApiService>(
     () => EmployeeApiService(sl<Dio>()),
   );
@@ -364,6 +371,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<AttendancePointsRepo>(
     () => AttendancePointsRepoImpl(api: sl<AttendancePointsApiService>()),
+  );
+  sl.registerLazySingleton<EmployeeRecordRepo>(
+    () => EmployeeRecordRepoImpl(api: sl<EmployeeRecordApiService>()),
   );
   sl.registerLazySingleton<EmployeeActionRepo>(
     () => EmployeeActionRepoImpl(api: sl<EmployeeApiService>()),
@@ -625,6 +635,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<PointsCubit>(
     () => PointsCubit(pointsRepo: sl<AttendancePointsRepo>()),
+  );
+  sl.registerFactory<EmployeeRecordCubit>(
+    () => EmployeeRecordCubit(recordRepo: sl<EmployeeRecordRepo>()),
   );
   sl.registerFactory<AdminPointsCubit>(
     () => AdminPointsCubit(pointsRepo: sl<AttendancePointsRepo>()),

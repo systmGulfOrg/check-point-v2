@@ -21,21 +21,36 @@ mixin _$AdminAccountRequestsState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<AccountRequestModel> requests) success,
+    required TResult Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )
+    success,
     required TResult Function(String messageKey) error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<AccountRequestModel> requests)? success,
+    TResult? Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )?
+    success,
     TResult? Function(String messageKey)? error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<AccountRequestModel> requests)? success,
+    TResult Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )?
+    success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
@@ -139,7 +154,12 @@ class _$AdminAccountRequestsStateInitialImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<AccountRequestModel> requests) success,
+    required TResult Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )
+    success,
     required TResult Function(String messageKey) error,
   }) {
     return initial();
@@ -150,7 +170,12 @@ class _$AdminAccountRequestsStateInitialImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<AccountRequestModel> requests)? success,
+    TResult? Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )?
+    success,
     TResult? Function(String messageKey)? error,
   }) {
     return initial?.call();
@@ -161,7 +186,12 @@ class _$AdminAccountRequestsStateInitialImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<AccountRequestModel> requests)? success,
+    TResult Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )?
+    success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
@@ -266,7 +296,12 @@ class _$AdminAccountRequestsStateLoadingImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<AccountRequestModel> requests) success,
+    required TResult Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )
+    success,
     required TResult Function(String messageKey) error,
   }) {
     return loading();
@@ -277,7 +312,12 @@ class _$AdminAccountRequestsStateLoadingImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<AccountRequestModel> requests)? success,
+    TResult? Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )?
+    success,
     TResult? Function(String messageKey)? error,
   }) {
     return loading?.call();
@@ -288,7 +328,12 @@ class _$AdminAccountRequestsStateLoadingImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<AccountRequestModel> requests)? success,
+    TResult Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )?
+    success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
@@ -349,7 +394,11 @@ abstract class _$$AdminAccountRequestsStateSuccessImplCopyWith<$Res> {
     $Res Function(_$AdminAccountRequestsStateSuccessImpl) then,
   ) = __$$AdminAccountRequestsStateSuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<AccountRequestModel> requests});
+  $Res call({
+    List<AccountRequestModel> requests,
+    bool hasMore,
+    bool isLoadingMore,
+  });
 }
 
 /// @nodoc
@@ -369,13 +418,25 @@ class __$$AdminAccountRequestsStateSuccessImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? requests = null}) {
+  $Res call({
+    Object? requests = null,
+    Object? hasMore = null,
+    Object? isLoadingMore = null,
+  }) {
     return _then(
       _$AdminAccountRequestsStateSuccessImpl(
         null == requests
             ? _value._requests
             : requests // ignore: cast_nullable_to_non_nullable
                   as List<AccountRequestModel>,
+        hasMore: null == hasMore
+            ? _value.hasMore
+            : hasMore // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isLoadingMore: null == isLoadingMore
+            ? _value.isLoadingMore
+            : isLoadingMore // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -386,8 +447,10 @@ class __$$AdminAccountRequestsStateSuccessImplCopyWithImpl<$Res>
 class _$AdminAccountRequestsStateSuccessImpl
     implements AdminAccountRequestsStateSuccess {
   const _$AdminAccountRequestsStateSuccessImpl(
-    final List<AccountRequestModel> requests,
-  ) : _requests = requests;
+    final List<AccountRequestModel> requests, {
+    this.hasMore = false,
+    this.isLoadingMore = false,
+  }) : _requests = requests;
 
   final List<AccountRequestModel> _requests;
   @override
@@ -398,8 +461,15 @@ class _$AdminAccountRequestsStateSuccessImpl
   }
 
   @override
+  @JsonKey()
+  final bool hasMore;
+  @override
+  @JsonKey()
+  final bool isLoadingMore;
+
+  @override
   String toString() {
-    return 'AdminAccountRequestsState.success(requests: $requests)';
+    return 'AdminAccountRequestsState.success(requests: $requests, hasMore: $hasMore, isLoadingMore: $isLoadingMore)';
   }
 
   @override
@@ -407,12 +477,19 @@ class _$AdminAccountRequestsStateSuccessImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AdminAccountRequestsStateSuccessImpl &&
-            const DeepCollectionEquality().equals(other._requests, _requests));
+            const DeepCollectionEquality().equals(other._requests, _requests) &&
+            (identical(other.hasMore, hasMore) || other.hasMore == hasMore) &&
+            (identical(other.isLoadingMore, isLoadingMore) ||
+                other.isLoadingMore == isLoadingMore));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_requests));
+  int get hashCode => Object.hash(
+    runtimeType,
+    const DeepCollectionEquality().hash(_requests),
+    hasMore,
+    isLoadingMore,
+  );
 
   /// Create a copy of AdminAccountRequestsState
   /// with the given fields replaced by the non-null parameter values.
@@ -432,10 +509,15 @@ class _$AdminAccountRequestsStateSuccessImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<AccountRequestModel> requests) success,
+    required TResult Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )
+    success,
     required TResult Function(String messageKey) error,
   }) {
-    return success(requests);
+    return success(requests, hasMore, isLoadingMore);
   }
 
   @override
@@ -443,10 +525,15 @@ class _$AdminAccountRequestsStateSuccessImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<AccountRequestModel> requests)? success,
+    TResult? Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )?
+    success,
     TResult? Function(String messageKey)? error,
   }) {
-    return success?.call(requests);
+    return success?.call(requests, hasMore, isLoadingMore);
   }
 
   @override
@@ -454,12 +541,17 @@ class _$AdminAccountRequestsStateSuccessImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<AccountRequestModel> requests)? success,
+    TResult Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )?
+    success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success(requests);
+      return success(requests, hasMore, isLoadingMore);
     }
     return orElse();
   }
@@ -505,10 +597,14 @@ class _$AdminAccountRequestsStateSuccessImpl
 abstract class AdminAccountRequestsStateSuccess
     implements AdminAccountRequestsState {
   const factory AdminAccountRequestsStateSuccess(
-    final List<AccountRequestModel> requests,
-  ) = _$AdminAccountRequestsStateSuccessImpl;
+    final List<AccountRequestModel> requests, {
+    final bool hasMore,
+    final bool isLoadingMore,
+  }) = _$AdminAccountRequestsStateSuccessImpl;
 
   List<AccountRequestModel> get requests;
+  bool get hasMore;
+  bool get isLoadingMore;
 
   /// Create a copy of AdminAccountRequestsState
   /// with the given fields replaced by the non-null parameter values.
@@ -602,7 +698,12 @@ class _$AdminAccountRequestsStateErrorImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<AccountRequestModel> requests) success,
+    required TResult Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )
+    success,
     required TResult Function(String messageKey) error,
   }) {
     return error(messageKey);
@@ -613,7 +714,12 @@ class _$AdminAccountRequestsStateErrorImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<AccountRequestModel> requests)? success,
+    TResult? Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )?
+    success,
     TResult? Function(String messageKey)? error,
   }) {
     return error?.call(messageKey);
@@ -624,7 +730,12 @@ class _$AdminAccountRequestsStateErrorImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<AccountRequestModel> requests)? success,
+    TResult Function(
+      List<AccountRequestModel> requests,
+      bool hasMore,
+      bool isLoadingMore,
+    )?
+    success,
     TResult Function(String messageKey)? error,
     required TResult orElse(),
   }) {
