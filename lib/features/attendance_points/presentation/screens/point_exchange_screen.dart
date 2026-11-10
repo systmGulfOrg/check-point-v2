@@ -72,7 +72,10 @@ class _PointExchangeScreenState extends State<PointExchangeScreen> {
           }
         },
         builder: (context, state) {
-          final isLoading = state is ExchangeLoading;
+          final isLoading = switch (state) {
+            ExchangeLoading() => true,
+            _ => false,
+          };
 
           return SingleChildScrollView(
             padding: EdgeInsets.all(16.r),
