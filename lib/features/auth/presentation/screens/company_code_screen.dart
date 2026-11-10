@@ -225,7 +225,10 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
                                 _codeController.text,
                               );
                             },
-                            isLoading: state is TenantLookupLoading,
+                            isLoading: switch (state) {
+                              TenantLookupLoading() => true,
+                              _ => false,
+                            },
                             icon: Icons.arrow_back_ios_new_rounded,
                           ),
                         ),

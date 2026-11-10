@@ -17,7 +17,10 @@ class TenantLookupSubmitButtonWidget extends StatelessWidget {
         builder: (context, state) => CustomButton(
           text: 'auth.companyCode.continueButton'.tr(context: context),
           onTap: onSubmit,
-          isLoading: state is TenantLookupLoading,
+          isLoading: switch (state) {
+            TenantLookupLoading() => true,
+            _ => false,
+          },
         ),
       );
 }

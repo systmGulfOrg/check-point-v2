@@ -17,7 +17,10 @@ class RequestAccountSubmitButtonWidget extends StatelessWidget {
         builder: (context, state) => CustomButton(
           text: 'auth.requestAccess.submit'.tr(context: context),
           onTap: onSubmit,
-          isLoading: state is RequestAccountLoading,
+          isLoading: switch (state) {
+            RequestAccountLoading() => true,
+            _ => false,
+          },
           gradient: AppColors.brandGradient,
           height: 54,
         ),

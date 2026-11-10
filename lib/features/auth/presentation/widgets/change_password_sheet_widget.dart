@@ -56,7 +56,10 @@ class _ChangePasswordSheetWidgetState extends State<ChangePasswordSheetWidget> {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<EmployeeChangePasswordCubit>().state;
-    final isLoading = state is EmployeeChangePasswordStateLoading;
+    final isLoading = switch (state) {
+      EmployeeChangePasswordStateLoading() => true,
+      _ => false,
+    };
 
     return BlocListener<
       EmployeeChangePasswordCubit,
