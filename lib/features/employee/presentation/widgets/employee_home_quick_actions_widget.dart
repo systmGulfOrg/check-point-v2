@@ -72,6 +72,15 @@ class EmployeeHomeQuickActionsWidget extends StatelessWidget {
       ),
     );
 
+    tiles.add(
+      AppQuickActionTileWidget(
+        icon: Icons.gavel_rounded,
+        label: 'سجل الجزاءات',
+        onTap: () =>
+            Navigator.pushNamed(context, AppRoutes.disciplinaryDeductions),
+      ),
+    );
+
     if (tiles.isEmpty) {
       return const SizedBox.shrink();
     }

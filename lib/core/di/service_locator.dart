@@ -2,6 +2,10 @@ import 'package:check_point_v2/features/employee_record/data/apis/employee_recor
 import 'package:check_point_v2/features/employee_record/data/repos/employee_record_repo.dart';
 import 'package:check_point_v2/features/employee_record/data/repos/employee_record_repo_impl.dart';
 import 'package:check_point_v2/features/employee_record/presentation/cubit/employee_record_cubit.dart';
+import 'package:check_point_v2/features/disciplinary/data/apis/disciplinary_api_service.dart';
+import 'package:check_point_v2/features/disciplinary/data/repos/disciplinary_repo_impl.dart';
+import 'package:check_point_v2/features/disciplinary/domain/repos/disciplinary_repo.dart';
+import 'package:check_point_v2/features/disciplinary/presentation/cubit/disciplinary_cubit.dart';
 import 'package:check_point_v2/features/ai/data/apis/ai_api_service.dart';
 import 'package:check_point_v2/features/ai/data/repos/ai_repo.dart';
 import 'package:check_point_v2/features/ai/data/repos/ai_repo_impl.dart';
@@ -287,6 +291,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<ProjectsApiService>(
     () => ProjectsApiService(sl<Dio>()),
   );
+  sl.registerLazySingleton<DisciplinaryApiService>(
+    () => DisciplinaryApiService(sl<Dio>()),
+  );
   sl.registerLazySingleton<AiApiService>(() => AiApiService(sl<Dio>()));
   sl.registerLazySingleton<AiRepo>(() => AiRepoImpl(api: sl<AiApiService>()));
 
@@ -399,6 +406,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<OvertimeRepo>(
     () => OvertimeRepoImpl(api: sl<OvertimeApiService>()),
   );
+  sl.registerLazySingleton<DisciplinaryRepo>(
+    () => DisciplinaryRepoImpl(api: sl<DisciplinaryApiService>()),
+  );
 
   sl.registerLazySingleton<LoginUseCase>(
     () => LoginUseCase(
@@ -477,6 +487,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<OvertimeCubit>(
     () => OvertimeCubit(repo: sl<OvertimeRepo>()),
+  );
+  sl.registerFactory<DisciplinaryCubit>(
+    () => DisciplinaryCubit(repo: sl<DisciplinaryRepo>()),
   );
   sl.registerFactory<ProjectsCubit>(
     () => ProjectsCubit(repo: sl<ProjectsRepo>()),

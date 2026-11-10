@@ -54,4 +54,7 @@ class AppRoutes {
   static const String adminPoints = '/admin/points';
   static const String adminEmployeePoints = '/admin/points/employee';
   static const String aiChat = '/ai/chat';
+
+  static const String disciplinaryDeductions = '/disciplinary/deductions';
+  static const String disciplinaryRecordViolation = '/disciplinary/record';
 }

@@ -84,6 +84,18 @@ class AdminManageScreen extends StatelessWidget {
             ],
             hSpace(10),
             AdminManageCardWidget(
+              icon: Icons.gavel_rounded,
+              iconColor: AppColors.error,
+              iconBackgroundColor: AppColors.error.withValues(alpha: 0.1),
+              titleKey: 'لائحة الجزاءات والمخالفات',
+              subtitleKey: 'رصد مخالفات لائحة السلوك والخصومات',
+              onTap: () => Navigator.pushNamed(
+                context,
+                AppRoutes.disciplinaryRecordViolation,
+              ),
+            ),
+            hSpace(10),
+            AdminManageCardWidget(
               icon: Icons.shield_outlined,
               iconColor: AppColors.info,
               iconBackgroundColor: AppColors.softBlueBackground,

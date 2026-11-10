@@ -1,6 +1,9 @@
 import 'package:check_point_v2/features/employee_record/data/models/employee_record_args.dart';
 import 'package:check_point_v2/features/employee_record/presentation/cubit/employee_record_cubit.dart';
 import 'package:check_point_v2/features/employee_record/presentation/screens/employee_record_screen.dart';
+import 'package:check_point_v2/features/disciplinary/presentation/cubit/disciplinary_cubit.dart';
+import 'package:check_point_v2/features/disciplinary/presentation/screens/employee_deductions_screen.dart';
+import 'package:check_point_v2/features/disciplinary/presentation/screens/admin_record_violation_screen.dart';
 import 'package:check_point_v2/features/ai/presentation/cubit/ai_chat_cubit.dart';
 import 'package:check_point_v2/features/ai/presentation/widgets/ai_chat_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/screens/admin_employee_audit_screen.dart';
@@ -581,6 +584,22 @@ class AppRouter {
           child: BlocProvider<OvertimeCubit>(
             create: (_) => sl<OvertimeCubit>()..load(),
             child: const OvertimeScreen(),
+          ),
+        );
+      case AppRoutes.disciplinaryDeductions:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.disciplinaryDeductions),
+          child: BlocProvider<DisciplinaryCubit>(
+            create: (_) => sl<DisciplinaryCubit>()..loadMyViolations(),
+            child: const EmployeeDeductionsScreen(),
+          ),
+        );
+      case AppRoutes.disciplinaryRecordViolation:
+        return _slideRoute(
+          settings: const RouteSettings(name: AppRoutes.disciplinaryRecordViolation),
+          child: BlocProvider<DisciplinaryCubit>(
+            create: (_) => sl<DisciplinaryCubit>(),
+            child: const AdminRecordViolationScreen(),
           ),
         );
       case AppRoutes.projects:
