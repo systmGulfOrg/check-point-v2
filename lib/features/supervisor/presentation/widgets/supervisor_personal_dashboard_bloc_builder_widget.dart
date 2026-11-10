@@ -119,7 +119,10 @@ class SupervisorPersonalDashboardBlocBuilderWidget extends StatelessWidget {
             profile?.workPolicy?.workingHoursEnd ??
             profile?.clockOutTime;
         final workMode = profile?.todayWorkMode ?? 'onsite';
-        final isLoading = state is EmployeeAttendanceStateLoading;
+        final isLoading = switch (state) {
+          EmployeeAttendanceStateLoading() => true,
+          _ => false,
+        };
         final isCheckedIn =
             cubit.hasClockIn(attendance) && !cubit.hasClockOut(attendance);
         final hasCheckedOut = cubit.hasClockOut(attendance);

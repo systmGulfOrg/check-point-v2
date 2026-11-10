@@ -91,11 +91,16 @@ class _SupervisorWorkerRollCallScreenState
   @override
   Widget build(BuildContext context) {
     final state = context.watch<SupervisorWorkerRollCallCubit>().state;
-    final sites = state is SupervisorWorkerRollCallLoaded ? state.sites : [];
-    final selectedSiteId =
-        state is SupervisorWorkerRollCallLoaded ? state.selectedSiteId : null;
-    final isSubmitting =
-        state is SupervisorWorkerRollCallLoaded && state.isSubmitting;
+    final (sites, selectedSiteId, isSubmitting, workersCount) = switch (state) {
+      SupervisorWorkerRollCallLoaded(
+        :final sites,
+        :final selectedSiteId,
+        :final isSubmitting,
+        :final workers,
+      ) =>
+        (sites, selectedSiteId, isSubmitting, workers.length),
+      _ => (const [], null, false, 0),
+    };
 
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
@@ -155,9 +160,8 @@ class _SupervisorWorkerRollCallScreenState
                   },
                   isAllSelected:
                       _selectedWorkerIds.isNotEmpty &&
-                      state is SupervisorWorkerRollCallLoaded &&
-                      state.workers.isNotEmpty &&
-                      _selectedWorkerIds.length >= state.workers.length,
+                      workersCount > 0 &&
+                      _selectedWorkerIds.length >= workersCount,
                   onSelectAllChanged: _onSelectAll,
                 ),
                 hSpace(12),

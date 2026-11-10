@@ -22,23 +22,31 @@ class SupervisorWorkerRollCallBlocListenerWidget extends StatelessWidget {
       SupervisorWorkerRollCallCubit,
       SupervisorWorkerRollCallState
     >(
-      listenWhen: (prev, current) =>
-          current is SupervisorWorkerRollCallLoaded &&
-          (current.successMessage != null || current.errorMessage != null),
+      listenWhen: (prev, current) => switch (current) {
+        SupervisorWorkerRollCallLoaded(
+          :final successMessage,
+          :final errorMessage,
+        ) =>
+          successMessage != null || errorMessage != null,
+        _ => false,
+      },
       listener: (context, state) {
-        if (state is SupervisorWorkerRollCallLoaded) {
-          if (state.successMessage != null) {
+        if (state case SupervisorWorkerRollCallLoaded(
+          :final successMessage,
+          :final errorMessage,
+        )) {
+          if (successMessage != null) {
             onSuccess();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.successMessage!.tr(context: context)),
+                content: Text(successMessage.tr(context: context)),
                 backgroundColor: AppColors.success,
               ),
             );
-          } else if (state.errorMessage != null) {
+          } else if (errorMessage != null) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.errorMessage!.tr(context: context)),
+                content: Text(errorMessage.tr(context: context)),
                 backgroundColor: AppColors.error,
               ),
             );
