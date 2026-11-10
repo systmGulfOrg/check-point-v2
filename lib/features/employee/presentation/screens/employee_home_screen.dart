@@ -311,7 +311,10 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                     );
 
                     return Skeletonizer(
-                      enabled: state is EmployeeAttendanceStateLoading,
+                      enabled: switch (state) {
+                        EmployeeAttendanceStateLoading() => true,
+                        _ => false,
+                      },
                       child: EmployeeTodayCardWidget(
                         policyText: policyText,
                         isOnTime: attendance?.isLate != true,
