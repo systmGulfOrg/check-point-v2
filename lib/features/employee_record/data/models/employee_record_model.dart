@@ -78,6 +78,13 @@ class RecordDayModel with _$RecordDayModel {
     String? holidayName,
     RecordLeaveModel? leave,
     @Default(<RecordPermitModel>[]) List<RecordPermitModel> permits,
+    double? latitude,
+    double? longitude,
+    double? checkInLatitude,
+    double? checkInLongitude,
+    double? checkOutLatitude,
+    double? checkOutLongitude,
+    @Default(<RecordCoordinateModel>[]) List<RecordCoordinateModel> coordinates,
   }) = _RecordDayModel;
 
   factory RecordDayModel.fromJson(Map<String, dynamic> json) =>
@@ -121,4 +128,18 @@ class RecordPermitModel with _$RecordPermitModel {
 
   factory RecordPermitModel.fromJson(Map<String, dynamic> json) =>
       _$RecordPermitModelFromJson(json);
+}
+
+@freezed
+class RecordCoordinateModel with _$RecordCoordinateModel {
+  const factory RecordCoordinateModel({
+    double? latitude,
+    double? longitude,
+    double? accuracyM,
+    String? kind,
+    String? capturedAt,
+  }) = _RecordCoordinateModel;
+
+  factory RecordCoordinateModel.fromJson(Map<String, dynamic> json) =>
+      _$RecordCoordinateModelFromJson(json);
 }

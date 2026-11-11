@@ -38,6 +38,8 @@ AttendanceCoordinate _$AttendanceCoordinateFromJson(
   latitude: (json['latitude'] as num?)?.toDouble(),
   longitude: (json['longitude'] as num?)?.toDouble(),
   accuracyM: (json['accuracyM'] as num?)?.toDouble(),
+  kind: json['kind'] as String?,
+  capturedAt: json['capturedAt'] as String?,
 );
 
 Map<String, dynamic> _$AttendanceCoordinateToJson(
@@ -46,4 +48,6 @@ Map<String, dynamic> _$AttendanceCoordinateToJson(
   'latitude': instance.latitude,
   'longitude': instance.longitude,
   'accuracyM': instance.accuracyM,
+  'kind': instance.kind,
+  'capturedAt': instance.capturedAt,
 };

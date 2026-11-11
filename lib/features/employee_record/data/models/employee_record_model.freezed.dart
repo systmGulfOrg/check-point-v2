@@ -1074,6 +1074,14 @@ mixin _$RecordDayModel {
   String? get holidayName => throw _privateConstructorUsedError;
   RecordLeaveModel? get leave => throw _privateConstructorUsedError;
   List<RecordPermitModel> get permits => throw _privateConstructorUsedError;
+  double? get latitude => throw _privateConstructorUsedError;
+  double? get longitude => throw _privateConstructorUsedError;
+  double? get checkInLatitude => throw _privateConstructorUsedError;
+  double? get checkInLongitude => throw _privateConstructorUsedError;
+  double? get checkOutLatitude => throw _privateConstructorUsedError;
+  double? get checkOutLongitude => throw _privateConstructorUsedError;
+  List<RecordCoordinateModel> get coordinates =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this RecordDayModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1104,6 +1112,13 @@ abstract class $RecordDayModelCopyWith<$Res> {
     String? holidayName,
     RecordLeaveModel? leave,
     List<RecordPermitModel> permits,
+    double? latitude,
+    double? longitude,
+    double? checkInLatitude,
+    double? checkInLongitude,
+    double? checkOutLatitude,
+    double? checkOutLongitude,
+    List<RecordCoordinateModel> coordinates,
   });
 
   $RecordLeaveModelCopyWith<$Res>? get leave;
@@ -1135,6 +1150,13 @@ class _$RecordDayModelCopyWithImpl<$Res, $Val extends RecordDayModel>
     Object? holidayName = freezed,
     Object? leave = freezed,
     Object? permits = null,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
+    Object? checkInLatitude = freezed,
+    Object? checkInLongitude = freezed,
+    Object? checkOutLatitude = freezed,
+    Object? checkOutLongitude = freezed,
+    Object? coordinates = null,
   }) {
     return _then(
       _value.copyWith(
@@ -1182,6 +1204,34 @@ class _$RecordDayModelCopyWithImpl<$Res, $Val extends RecordDayModel>
                 ? _value.permits
                 : permits // ignore: cast_nullable_to_non_nullable
                       as List<RecordPermitModel>,
+            latitude: freezed == latitude
+                ? _value.latitude
+                : latitude // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            longitude: freezed == longitude
+                ? _value.longitude
+                : longitude // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            checkInLatitude: freezed == checkInLatitude
+                ? _value.checkInLatitude
+                : checkInLatitude // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            checkInLongitude: freezed == checkInLongitude
+                ? _value.checkInLongitude
+                : checkInLongitude // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            checkOutLatitude: freezed == checkOutLatitude
+                ? _value.checkOutLatitude
+                : checkOutLatitude // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            checkOutLongitude: freezed == checkOutLongitude
+                ? _value.checkOutLongitude
+                : checkOutLongitude // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            coordinates: null == coordinates
+                ? _value.coordinates
+                : coordinates // ignore: cast_nullable_to_non_nullable
+                      as List<RecordCoordinateModel>,
           )
           as $Val,
     );
@@ -1223,6 +1273,13 @@ abstract class _$$RecordDayModelImplCopyWith<$Res>
     String? holidayName,
     RecordLeaveModel? leave,
     List<RecordPermitModel> permits,
+    double? latitude,
+    double? longitude,
+    double? checkInLatitude,
+    double? checkInLongitude,
+    double? checkOutLatitude,
+    double? checkOutLongitude,
+    List<RecordCoordinateModel> coordinates,
   });
 
   @override
@@ -1254,6 +1311,13 @@ class __$$RecordDayModelImplCopyWithImpl<$Res>
     Object? holidayName = freezed,
     Object? leave = freezed,
     Object? permits = null,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
+    Object? checkInLatitude = freezed,
+    Object? checkInLongitude = freezed,
+    Object? checkOutLatitude = freezed,
+    Object? checkOutLongitude = freezed,
+    Object? coordinates = null,
   }) {
     return _then(
       _$RecordDayModelImpl(
@@ -1301,6 +1365,34 @@ class __$$RecordDayModelImplCopyWithImpl<$Res>
             ? _value._permits
             : permits // ignore: cast_nullable_to_non_nullable
                   as List<RecordPermitModel>,
+        latitude: freezed == latitude
+            ? _value.latitude
+            : latitude // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        longitude: freezed == longitude
+            ? _value.longitude
+            : longitude // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        checkInLatitude: freezed == checkInLatitude
+            ? _value.checkInLatitude
+            : checkInLatitude // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        checkInLongitude: freezed == checkInLongitude
+            ? _value.checkInLongitude
+            : checkInLongitude // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        checkOutLatitude: freezed == checkOutLatitude
+            ? _value.checkOutLatitude
+            : checkOutLatitude // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        checkOutLongitude: freezed == checkOutLongitude
+            ? _value.checkOutLongitude
+            : checkOutLongitude // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        coordinates: null == coordinates
+            ? _value._coordinates
+            : coordinates // ignore: cast_nullable_to_non_nullable
+                  as List<RecordCoordinateModel>,
       ),
     );
   }
@@ -1321,7 +1413,16 @@ class _$RecordDayModelImpl extends _RecordDayModel {
     this.holidayName,
     this.leave,
     final List<RecordPermitModel> permits = const <RecordPermitModel>[],
+    this.latitude,
+    this.longitude,
+    this.checkInLatitude,
+    this.checkInLongitude,
+    this.checkOutLatitude,
+    this.checkOutLongitude,
+    final List<RecordCoordinateModel> coordinates =
+        const <RecordCoordinateModel>[],
   }) : _permits = permits,
+       _coordinates = coordinates,
        super._();
 
   factory _$RecordDayModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -1368,8 +1469,29 @@ class _$RecordDayModelImpl extends _RecordDayModel {
   }
 
   @override
+  final double? latitude;
+  @override
+  final double? longitude;
+  @override
+  final double? checkInLatitude;
+  @override
+  final double? checkInLongitude;
+  @override
+  final double? checkOutLatitude;
+  @override
+  final double? checkOutLongitude;
+  final List<RecordCoordinateModel> _coordinates;
+  @override
+  @JsonKey()
+  List<RecordCoordinateModel> get coordinates {
+    if (_coordinates is EqualUnmodifiableListView) return _coordinates;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_coordinates);
+  }
+
+  @override
   String toString() {
-    return 'RecordDayModel(date: $date, dayType: $dayType, status: $status, clockIn: $clockIn, clockOut: $clockOut, workedMinutes: $workedMinutes, lateMinutes: $lateMinutes, earlyLeaveMinutes: $earlyLeaveMinutes, holidayName: $holidayName, leave: $leave, permits: $permits)';
+    return 'RecordDayModel(date: $date, dayType: $dayType, status: $status, clockIn: $clockIn, clockOut: $clockOut, workedMinutes: $workedMinutes, lateMinutes: $lateMinutes, earlyLeaveMinutes: $earlyLeaveMinutes, holidayName: $holidayName, leave: $leave, permits: $permits, latitude: $latitude, longitude: $longitude, checkInLatitude: $checkInLatitude, checkInLongitude: $checkInLongitude, checkOutLatitude: $checkOutLatitude, checkOutLongitude: $checkOutLongitude, coordinates: $coordinates)';
   }
 
   @override
@@ -1392,7 +1514,23 @@ class _$RecordDayModelImpl extends _RecordDayModel {
             (identical(other.holidayName, holidayName) ||
                 other.holidayName == holidayName) &&
             (identical(other.leave, leave) || other.leave == leave) &&
-            const DeepCollectionEquality().equals(other._permits, _permits));
+            const DeepCollectionEquality().equals(other._permits, _permits) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
+            (identical(other.checkInLatitude, checkInLatitude) ||
+                other.checkInLatitude == checkInLatitude) &&
+            (identical(other.checkInLongitude, checkInLongitude) ||
+                other.checkInLongitude == checkInLongitude) &&
+            (identical(other.checkOutLatitude, checkOutLatitude) ||
+                other.checkOutLatitude == checkOutLatitude) &&
+            (identical(other.checkOutLongitude, checkOutLongitude) ||
+                other.checkOutLongitude == checkOutLongitude) &&
+            const DeepCollectionEquality().equals(
+              other._coordinates,
+              _coordinates,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1410,6 +1548,13 @@ class _$RecordDayModelImpl extends _RecordDayModel {
     holidayName,
     leave,
     const DeepCollectionEquality().hash(_permits),
+    latitude,
+    longitude,
+    checkInLatitude,
+    checkInLongitude,
+    checkOutLatitude,
+    checkOutLongitude,
+    const DeepCollectionEquality().hash(_coordinates),
   );
 
   /// Create a copy of RecordDayModel
@@ -1442,6 +1587,13 @@ abstract class _RecordDayModel extends RecordDayModel {
     final String? holidayName,
     final RecordLeaveModel? leave,
     final List<RecordPermitModel> permits,
+    final double? latitude,
+    final double? longitude,
+    final double? checkInLatitude,
+    final double? checkInLongitude,
+    final double? checkOutLatitude,
+    final double? checkOutLongitude,
+    final List<RecordCoordinateModel> coordinates,
   }) = _$RecordDayModelImpl;
   const _RecordDayModel._() : super._();
 
@@ -1477,6 +1629,20 @@ abstract class _RecordDayModel extends RecordDayModel {
   RecordLeaveModel? get leave;
   @override
   List<RecordPermitModel> get permits;
+  @override
+  double? get latitude;
+  @override
+  double? get longitude;
+  @override
+  double? get checkInLatitude;
+  @override
+  double? get checkInLongitude;
+  @override
+  double? get checkOutLatitude;
+  @override
+  double? get checkOutLongitude;
+  @override
+  List<RecordCoordinateModel> get coordinates;
 
   /// Create a copy of RecordDayModel
   /// with the given fields replaced by the non-null parameter values.
@@ -1944,4 +2110,268 @@ abstract class _RecordPermitModel implements RecordPermitModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RecordPermitModelImplCopyWith<_$RecordPermitModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+RecordCoordinateModel _$RecordCoordinateModelFromJson(
+  Map<String, dynamic> json,
+) {
+  return _RecordCoordinateModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RecordCoordinateModel {
+  double? get latitude => throw _privateConstructorUsedError;
+  double? get longitude => throw _privateConstructorUsedError;
+  double? get accuracyM => throw _privateConstructorUsedError;
+  String? get kind => throw _privateConstructorUsedError;
+  String? get capturedAt => throw _privateConstructorUsedError;
+
+  /// Serializes this RecordCoordinateModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of RecordCoordinateModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $RecordCoordinateModelCopyWith<RecordCoordinateModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RecordCoordinateModelCopyWith<$Res> {
+  factory $RecordCoordinateModelCopyWith(
+    RecordCoordinateModel value,
+    $Res Function(RecordCoordinateModel) then,
+  ) = _$RecordCoordinateModelCopyWithImpl<$Res, RecordCoordinateModel>;
+  @useResult
+  $Res call({
+    double? latitude,
+    double? longitude,
+    double? accuracyM,
+    String? kind,
+    String? capturedAt,
+  });
+}
+
+/// @nodoc
+class _$RecordCoordinateModelCopyWithImpl<
+  $Res,
+  $Val extends RecordCoordinateModel
+>
+    implements $RecordCoordinateModelCopyWith<$Res> {
+  _$RecordCoordinateModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of RecordCoordinateModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? latitude = freezed,
+    Object? longitude = freezed,
+    Object? accuracyM = freezed,
+    Object? kind = freezed,
+    Object? capturedAt = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            latitude: freezed == latitude
+                ? _value.latitude
+                : latitude // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            longitude: freezed == longitude
+                ? _value.longitude
+                : longitude // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            accuracyM: freezed == accuracyM
+                ? _value.accuracyM
+                : accuracyM // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            kind: freezed == kind
+                ? _value.kind
+                : kind // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            capturedAt: freezed == capturedAt
+                ? _value.capturedAt
+                : capturedAt // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$RecordCoordinateModelImplCopyWith<$Res>
+    implements $RecordCoordinateModelCopyWith<$Res> {
+  factory _$$RecordCoordinateModelImplCopyWith(
+    _$RecordCoordinateModelImpl value,
+    $Res Function(_$RecordCoordinateModelImpl) then,
+  ) = __$$RecordCoordinateModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    double? latitude,
+    double? longitude,
+    double? accuracyM,
+    String? kind,
+    String? capturedAt,
+  });
+}
+
+/// @nodoc
+class __$$RecordCoordinateModelImplCopyWithImpl<$Res>
+    extends
+        _$RecordCoordinateModelCopyWithImpl<$Res, _$RecordCoordinateModelImpl>
+    implements _$$RecordCoordinateModelImplCopyWith<$Res> {
+  __$$RecordCoordinateModelImplCopyWithImpl(
+    _$RecordCoordinateModelImpl _value,
+    $Res Function(_$RecordCoordinateModelImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of RecordCoordinateModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? latitude = freezed,
+    Object? longitude = freezed,
+    Object? accuracyM = freezed,
+    Object? kind = freezed,
+    Object? capturedAt = freezed,
+  }) {
+    return _then(
+      _$RecordCoordinateModelImpl(
+        latitude: freezed == latitude
+            ? _value.latitude
+            : latitude // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        longitude: freezed == longitude
+            ? _value.longitude
+            : longitude // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        accuracyM: freezed == accuracyM
+            ? _value.accuracyM
+            : accuracyM // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        kind: freezed == kind
+            ? _value.kind
+            : kind // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        capturedAt: freezed == capturedAt
+            ? _value.capturedAt
+            : capturedAt // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RecordCoordinateModelImpl implements _RecordCoordinateModel {
+  const _$RecordCoordinateModelImpl({
+    this.latitude,
+    this.longitude,
+    this.accuracyM,
+    this.kind,
+    this.capturedAt,
+  });
+
+  factory _$RecordCoordinateModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RecordCoordinateModelImplFromJson(json);
+
+  @override
+  final double? latitude;
+  @override
+  final double? longitude;
+  @override
+  final double? accuracyM;
+  @override
+  final String? kind;
+  @override
+  final String? capturedAt;
+
+  @override
+  String toString() {
+    return 'RecordCoordinateModel(latitude: $latitude, longitude: $longitude, accuracyM: $accuracyM, kind: $kind, capturedAt: $capturedAt)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RecordCoordinateModelImpl &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
+            (identical(other.accuracyM, accuracyM) ||
+                other.accuracyM == accuracyM) &&
+            (identical(other.kind, kind) || other.kind == kind) &&
+            (identical(other.capturedAt, capturedAt) ||
+                other.capturedAt == capturedAt));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    latitude,
+    longitude,
+    accuracyM,
+    kind,
+    capturedAt,
+  );
+
+  /// Create a copy of RecordCoordinateModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RecordCoordinateModelImplCopyWith<_$RecordCoordinateModelImpl>
+  get copyWith =>
+      __$$RecordCoordinateModelImplCopyWithImpl<_$RecordCoordinateModelImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RecordCoordinateModelImplToJson(this);
+  }
+}
+
+abstract class _RecordCoordinateModel implements RecordCoordinateModel {
+  const factory _RecordCoordinateModel({
+    final double? latitude,
+    final double? longitude,
+    final double? accuracyM,
+    final String? kind,
+    final String? capturedAt,
+  }) = _$RecordCoordinateModelImpl;
+
+  factory _RecordCoordinateModel.fromJson(Map<String, dynamic> json) =
+      _$RecordCoordinateModelImpl.fromJson;
+
+  @override
+  double? get latitude;
+  @override
+  double? get longitude;
+  @override
+  double? get accuracyM;
+  @override
+  String? get kind;
+  @override
+  String? get capturedAt;
+
+  /// Create a copy of RecordCoordinateModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$RecordCoordinateModelImplCopyWith<_$RecordCoordinateModelImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
