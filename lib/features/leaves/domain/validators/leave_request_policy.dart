@@ -9,8 +9,14 @@ class LeaveRequestPolicy {
     required String? shiftEnd,
     required int? allowedLateMinutes,
     required int requestedDurationMinutes,
+    bool enforceLateArrivalNotice = false,
+    int lateArrivalNoticeMinutes = 60,
+    bool enforceGracePeriod = false,
+    bool enforceEarlyDepartureDeadline = false,
+    int earlyDepartureDeadlinePercent = 50,
   }) {
-    if (permitType == 'LateArrival' &&
+    if (enforceGracePeriod &&
+        permitType == 'LateArrival' &&
         allowedLateMinutes != null &&
         requestedDurationMinutes > allowedLateMinutes) {
       return 'permissions.request.lateArrivalDuration';
@@ -18,15 +24,19 @@ class LeaveRequestPolicy {
     if (!_isSameDay(selectedDate, now) || shiftStart == null) return null;
     final start = _minutesFromHm(shiftStart);
     if (start == null) return null;
-    if (permitType == 'LateArrival' &&
-        _minutesSinceMidnight(now) > start - 60) {
+    if (enforceLateArrivalNotice &&
+        permitType == 'LateArrival' &&
+        _minutesSinceMidnight(now) > start - lateArrivalNoticeMinutes) {
       return 'permissions.request.lateArrivalDeadline';
     }
-    if (permitType == 'EarlyDeparture' && shiftEnd != null) {
+    if (enforceEarlyDepartureDeadline &&
+        permitType == 'EarlyDeparture' &&
+        shiftEnd != null) {
       final end = _minutesFromHm(shiftEnd);
       if (end == null) return null;
       final shiftLength = end >= start ? end - start : end + 1440 - start;
-      final deadline = start + (shiftLength / 2).ceil();
+      final deadline =
+          start + (shiftLength * (earlyDepartureDeadlinePercent / 100)).ceil();
       if (_minutesSinceMidnight(now) > deadline) {
         return 'permissions.request.earlyDepartureDeadline';
       }

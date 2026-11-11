@@ -382,4 +382,12 @@ abstract class AdminApiService {
     @Query('employeeId') required String employeeId,
     @Query('year') int? year,
   });
+
+  @GET('/api/v2/company/approval-config')
+  Future<Map<String, dynamic>> getApprovalConfig();
+
+  @PUT('/api/v2/company/approval-config')
+  Future<Map<String, dynamic>> updateApprovalConfig(
+    @Body() Map<String, dynamic> body,
+  );
 }

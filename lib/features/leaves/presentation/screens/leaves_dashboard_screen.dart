@@ -106,6 +106,15 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
               context,
               message: 'permissions.request.success'.tr(),
             );
+          } else if (!success && context.mounted) {
+            final errorKey = permitCubit.state.maybeWhen(
+              error: (msg) => msg,
+              orElse: () => 'errors.unknown',
+            );
+            CustomSnackBar.showError(
+              context,
+              message: errorKey.tr(),
+            );
           }
         },
       ),

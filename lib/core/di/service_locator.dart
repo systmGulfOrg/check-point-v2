@@ -62,6 +62,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_
 import 'package:check_point_v2/features/admin/presentation/cubit/deleted_employees/admin_deleted_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/plans/admin_plans_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/company_rules/admin_company_rules_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/subscription/admin_subscription_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
@@ -530,6 +531,11 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<AdminShiftsPoliciesCubit>(
     () => AdminShiftsPoliciesCubit(
+      shiftsPoliciesRepo: sl<AdminShiftsPoliciesRepo>(),
+    ),
+  );
+  sl.registerFactory<AdminCompanyRulesCubit>(
+    () => AdminCompanyRulesCubit(
       shiftsPoliciesRepo: sl<AdminShiftsPoliciesRepo>(),
     ),
   );

@@ -1,6 +1,7 @@
 import 'package:check_point_v2/core/network/api_failure_mapper.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/company_approval_config_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/police_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
 import 'admin_shifts_policies_repo.dart';
@@ -124,6 +125,32 @@ class AdminShiftsPoliciesRepoImpl implements AdminShiftsPoliciesRepo {
     try {
       await api.removeAssignPolicy(body);
       return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<CompanyApprovalConfigModel>> getApprovalConfig() async {
+    try {
+      final response = await api.getApprovalConfig();
+      final data = (response['data'] as Map<String, dynamic>?) ?? response;
+      final model = CompanyApprovalConfigModel.fromJson(data);
+      return ApiResult.success(model);
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<CompanyApprovalConfigModel>> updateApprovalConfig(
+    CompanyApprovalConfigModel config,
+  ) async {
+    try {
+      final response = await api.updateApprovalConfig(config.toJson());
+      final data = (response['data'] as Map<String, dynamic>?) ?? response;
+      final model = CompanyApprovalConfigModel.fromJson(data);
+      return ApiResult.success(model);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

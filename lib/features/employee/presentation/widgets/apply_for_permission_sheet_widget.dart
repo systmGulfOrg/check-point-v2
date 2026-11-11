@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/features/leaves/domain/validators/leave_request_policy.dart';
 import 'package:check_point_v2/features/leaves/data/models/short_leave_request_body.dart';
 
 class ApplyForPermissionSheetWidget extends StatefulWidget {
@@ -222,32 +221,6 @@ class _ApplyForPermissionSheetWidgetState
       CustomSnackBar.showError(
         context,
         message: 'permissions.request.invalidTimeRange'.tr(context: context),
-      );
-      return;
-    }
-
-    final timingError = LeaveRequestPolicy.validatePermissionTiming(
-      permitType: _selectedPermitType,
-      selectedDate: _selectedDate,
-      now: DateTime.now(),
-      shiftStart: widget.shiftStart,
-      shiftEnd: widget.shiftEnd,
-      allowedLateMinutes: widget.allowedLateMinutes,
-      requestedDurationMinutes: duration,
-    );
-    if (timingError != null) {
-      CustomSnackBar.showError(
-        context,
-        message: timingError.tr(context: context),
-      );
-      return;
-    }
-
-    if (_selectedDate.weekday == DateTime.friday ||
-        _selectedDate.weekday == DateTime.saturday) {
-      CustomSnackBar.showError(
-        context,
-        message: 'لا يمكن تقديم طلب إذن في يوم عطلة أسبوعية',
       );
       return;
     }

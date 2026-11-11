@@ -83,6 +83,15 @@ class _SupervisorLeaveManagementScreenState
             );
             context.read<SupervisorLeaveRequestsCubit>().loadRequests();
             context.read<LeavesCubit>().loadLeavesData();
+          } else if (!success && context.mounted) {
+            final errorKey = permitCubit.state.maybeWhen(
+              error: (msg) => msg,
+              orElse: () => 'errors.unknown',
+            );
+            CustomSnackBar.showError(
+              context,
+              message: errorKey.tr(),
+            );
           }
         },
       ),
