@@ -261,7 +261,10 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                     );
 
                     return Skeletonizer(
-                      enabled: state is EmployeeAttendanceStateLoading,
+                      enabled: switch (state) {
+                        EmployeeAttendanceStateLoading() => true,
+                        _ => false,
+                      },
                       child: EmployeeTodayCardWidget(
                         isOnTime: attendance?.isLate != true,
                         workModeText: (profile?.todayWorkMode ?? 'onsite').tr(
@@ -320,7 +323,7 @@ class _EmployeeClockScreenState extends State<EmployeeClockScreen> {
                       EmployeeAttendanceState
                     >(
                       builder: (context, state) {
-                        if (state is EmployeeAttendanceStateLoading) {
+                        if (state case EmployeeAttendanceStateLoading()) {
                           return Skeletonizer(
                             enabled: true,
                             child: Container(

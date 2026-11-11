@@ -3,6 +3,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
+import 'admin_customer_visit_action_badge_widget.dart';
 
 class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
   const AdminCustomerVisitLogsSheetWidget({required this.visit, super.key});
@@ -36,63 +37,6 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
       return 'تم تعديل موعد الزيارة إلى $formattedNewSchedule';
     }
     return details;
-  }
-
-  Widget _buildActionBadge(BuildContext context, String action) {
-    Color bg;
-    Color fg;
-    String label;
-    IconData icon;
-
-    switch (action.toLowerCase()) {
-      case 'created':
-        bg = AppColors.softBlueBackground;
-        fg = AppColors.info;
-        label = 'إنشاء الزيارة';
-        icon = Icons.add_circle_outline_rounded;
-      case 'rescheduled':
-        bg = AppColors.softYellowBackground;
-        fg = AppColors.amberStatus;
-        label = 'تعديل الموعد';
-        icon = Icons.edit_calendar_rounded;
-      case 'visited':
-        bg = AppColors.softGreenBackground;
-        fg = AppColors.success;
-        label = 'تسجيل الحضور';
-        icon = Icons.location_on_rounded;
-      case 'completed':
-        bg = AppColors.softGreenBackground;
-        fg = AppColors.success;
-        label = 'تسجيل التقرير';
-        icon = Icons.assignment_turned_in_rounded;
-      case 'cancelled':
-        bg = AppColors.softRedBackground;
-        fg = AppColors.error;
-        label = 'إلغاء الزيارة';
-        icon = Icons.cancel_outlined;
-      default:
-        bg = AppColors.pageBackground;
-        fg = AppColors.textSecondary;
-        label = 'تحديث البيانات';
-        icon = Icons.history_rounded;
-    }
-
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: fg.withValues(alpha: 0.2)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14.r, color: fg),
-          SizedBox(width: 6.w),
-          Text(label, style: AppTextStyles.font12Bold.copyWith(color: fg)),
-        ],
-      ),
-    );
   }
 
   @override
@@ -216,7 +160,7 @@ class AdminCustomerVisitLogsSheetWidget extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _buildActionBadge(context, action),
+                            AdminCustomerVisitActionBadgeWidget(action: action),
                             if (log.timestamp != null)
                               Text(
                                 _formatTimestamp(log.timestamp),

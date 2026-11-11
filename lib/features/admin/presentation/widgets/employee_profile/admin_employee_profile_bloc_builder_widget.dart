@@ -124,6 +124,8 @@ class _AdminEmployeeProfileBlocBuilderWidgetState
                       children: [
                         AdminEmployeeProfileJobTabWidget(employee: employee),
                         AdminEmployeeProfileAttendanceTabWidget(
+                          employeeId: employee.id,
+                          employeeName: employee.name,
                           attendance: attendance,
                           selectedMonth: selectedMonth,
                           attendedDays: attendedDays,

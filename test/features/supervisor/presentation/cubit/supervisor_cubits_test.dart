@@ -1,3 +1,4 @@
+import 'package:check_point_v2/core/network/api_failure.dart';
 import 'package:local_auth/local_auth.dart';
 
 import 'package:check_point_v2/core/auth/biometric_auth_service.dart';
@@ -140,6 +141,16 @@ class _FakeSupervisorLeaveRequestsRepo implements SupervisorLeaveRequestsRepo {
     String status,
     String? reason,
   ) async => const ApiResult.success(null);
+
+  final revoked = <(String, String)>[];
+  ApiFailure? revokeFailure;
+
+  @override
+  Future<ApiResult<void>> revokeLeaveRequest(String ulid, String reason) async {
+    if (revokeFailure != null) return ApiResult.failure(revokeFailure!);
+    revoked.add((ulid, reason));
+    return const ApiResult.success(null);
+  }
 }
 
 class _FakeSupervisorTasksRepo implements SupervisorTasksRepo {
@@ -254,6 +265,38 @@ void main() {
         expect(success, isTrue);
       },
     );
+
+    test('SupervisorLeaveRequestsCubit revokes an approved leave and reloads', () async {
+      final repo = _FakeSupervisorLeaveRequestsRepo();
+      final cubit = SupervisorLeaveRequestsCubit(
+        leaveRequestsRepo: repo,
+        sessionStorage: _FakeAuthSessionStorage(),
+      );
+
+      final ok = await cubit.revokeRequest('ulid-1', 'Employee came back early');
+
+      expect(ok, isTrue);
+      expect(repo.revoked.single, ('ulid-1', 'Employee came back early'));
+      expect(cubit.state, isA<SupervisorLeaveRequestsSuccess>());
+    });
+
+    test('SupervisorLeaveRequestsCubit surfaces the revoke error key', () async {
+      final repo = _FakeSupervisorLeaveRequestsRepo()
+        ..revokeFailure = const ApiFailure(messageKey: 'leaves.revoke.errors.ended');
+      final cubit = SupervisorLeaveRequestsCubit(
+        leaveRequestsRepo: repo,
+        sessionStorage: _FakeAuthSessionStorage(),
+      );
+      final states = <SupervisorLeaveRequestsState>[];
+      final sub = cubit.stream.listen(states.add);
+
+      final ok = await cubit.revokeRequest('ulid-1', 'Employee came back early');
+      await Future<void>.delayed(Duration.zero);
+      await sub.cancel();
+
+      expect(ok, isFalse);
+      expect(states, contains(const SupervisorLeaveRequestsState.error('leaves.revoke.errors.ended')));
+    });
 
     test('SupervisorTasksCubit loads and adds task', () async {
       final repo = _FakeSupervisorTasksRepo();

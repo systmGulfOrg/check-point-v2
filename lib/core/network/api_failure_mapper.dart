@@ -33,6 +33,14 @@ class ApiFailureMapper {
     return ApiFailure(messageKey: fallbackMessageKey);
   }
 
+  /// API error codes the app branches on -> localization keys.
+  static const Map<String, String> errorCodeKeys = {
+    'ERR_ON_APPROVED_LEAVE': 'attendance.errors.onApprovedLeave',
+    'ERR_SELF_REVOKE': 'leaves.revoke.errors.self',
+    'ERR_LEAVE_NOT_APPROVED': 'leaves.revoke.errors.notApproved',
+    'ERR_LEAVE_ENDED': 'leaves.revoke.errors.ended',
+  };
+
   static ApiFailure map(Object error) {
     if (error is DioException) {
       final response = error.response;
@@ -47,6 +55,9 @@ class ApiFailureMapper {
               item['errorMessage'] as String,
       ];
       final message = messages.join(' ').toLowerCase();
+      // Stable machine codes from the API (AGENTS §2.3), sent as x-error-code.
+      final codeKey = errorCodeKeys[response?.headers.value('x-error-code')];
+      if (codeKey != null) return ApiFailure(messageKey: codeKey);
       if (message.contains('overtime must be at least')) {
         return const ApiFailure(messageKey: 'overtime.minDuration');
       }

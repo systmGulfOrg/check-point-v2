@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/company_approval_config_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/police_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_shifts_policies_repo.dart';
@@ -69,6 +70,15 @@ class _FakeShiftsPoliciesRepo implements AdminShiftsPoliciesRepo {
   Future<ApiResult<void>> removeAssignPolicy(
     RemoveAssignPolicyRequestBody body,
   ) async => const ApiResult.success(null);
+
+  @override
+  Future<ApiResult<CompanyApprovalConfigModel>> getApprovalConfig() async =>
+      const ApiResult.success(CompanyApprovalConfigModel());
+
+  @override
+  Future<ApiResult<CompanyApprovalConfigModel>> updateApprovalConfig(
+    CompanyApprovalConfigModel config,
+  ) async => ApiResult.success(config);
 }
 
 void main() {

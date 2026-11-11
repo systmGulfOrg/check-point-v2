@@ -131,6 +131,16 @@ abstract class AdminApiService {
     @Query('index') int index = 0,
   });
 
+  /// Server-side paging, status filter and search; URLs only (no base64).
+  @GET(ApiConstants.accountRequestsV2)
+  Future<AccountRequestsResponseModel> getAccountRequestsPage({
+    @Query('itemCount') int itemCount = 20,
+    @Query('index') int index = 0,
+    @Query('status') String? status,
+    @Query('search') String? search,
+    @Query('sortDir') String sortDir = 'desc',
+  });
+
   @PUT('${ApiConstants.accountRequests}/{id}')
   Future<ResultModel> updateAccountRequest(
     @Path('id') int id,
@@ -372,4 +382,12 @@ abstract class AdminApiService {
     @Query('employeeId') required String employeeId,
     @Query('year') int? year,
   });
+
+  @GET('/api/v2/company/approval-config')
+  Future<Map<String, dynamic>> getApprovalConfig();
+
+  @PUT('/api/v2/company/approval-config')
+  Future<Map<String, dynamic>> updateApprovalConfig(
+    @Body() Map<String, dynamic> body,
+  );
 }

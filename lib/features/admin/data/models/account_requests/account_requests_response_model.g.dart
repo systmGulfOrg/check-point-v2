@@ -28,12 +28,13 @@ AccountRequestsPageModel _$AccountRequestsPageModelFromJson(
       ?.map((e) => AccountRequestModel.fromJson(e as Map<String, dynamic>))
       .toList(),
   totalCount: (json['totalCount'] as num?)?.toInt(),
+  hasNext: json['hasNext'] as bool?,
 );
 
 AccountRequestModel _$AccountRequestModelFromJson(
   Map<String, dynamic> json,
 ) => AccountRequestModel(
-  id: (json['id'] as num?)?.toInt(),
+  id: (AccountRequestModel._readLegacyId(json, 'id') as num?)?.toInt(),
   name: json['name'] as String?,
   mobileId: json['mobileId'] as String?,
   phone: json['phone'] as String?,
@@ -52,4 +53,5 @@ AccountRequestModel _$AccountRequestModelFromJson(
           AccountRequestModel._readCreatedDate(json, 'createdDate') as String,
         ),
   createdEmployeeId: json['createdEmployeeId'] as String?,
+  imageThumbUrl: json['imageThumbUrl'] as String?,
 );

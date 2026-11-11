@@ -30,6 +30,10 @@ class AuthSessionStorage {
   static const seatLimitKey = 'seat_limit';
   static const orgModelKey = 'org_model';
   static const labelOverridesKey = 'label_overrides';
+  static const featuresKey = 'enabled_features';
+
+  static bool _featuresLoaded = false;
+  static Set<String> _cachedFeatures = <String>{};
 
   final FlutterSecureStorage secureStorage;
 
@@ -58,6 +62,7 @@ class AuthSessionStorage {
     List<String> permissions = const [],
     String? orgModel,
     Map<String, dynamic>? labelOverrides,
+    List<String>? features,
   }) async {
     _cachedToken = token;
     AuthTokenInterceptor.updateToken(token);
@@ -106,6 +111,9 @@ class AuthSessionStorage {
         key: labelOverridesKey,
         value: jsonEncode(labelOverrides),
       );
+    }
+    if (features != null) {
+      await saveFeatures(features);
     }
   }
 
@@ -368,8 +376,38 @@ class AuthSessionStorage {
     }
   }
 
+  Future<void> saveFeatures(List<String> features) async {
+    _cachedFeatures = features.map((f) => f.trim().toLowerCase()).toSet();
+    _featuresLoaded = true;
+    await secureStorage.write(key: featuresKey, value: features.join(','));
+  }
+
+  Future<Set<String>> readFeatures() async {
+    if (_featuresLoaded) {
+      return _cachedFeatures;
+    }
+    final raw = await secureStorage.read(key: featuresKey);
+    if (raw == null) {
+      return const {};
+    }
+    _cachedFeatures = raw
+        .split(',')
+        .map((f) => f.trim().toLowerCase())
+        .where((f) => f.isNotEmpty)
+        .toSet();
+    _featuresLoaded = true;
+    return _cachedFeatures;
+  }
+
+  bool isFeatureEnabled(String featureKey) {
+    if (!_featuresLoaded) return true;
+    return _cachedFeatures.contains(featureKey.trim().toLowerCase());
+  }
+
   Future<void> clear() async {
     _cachedToken = null;
+    _featuresLoaded = false;
+    _cachedFeatures.clear();
     AuthTokenInterceptor.updateToken(null);
     await secureStorage.delete(key: tokenKey);
     await secureStorage.delete(key: userIdKey);
@@ -385,6 +423,7 @@ class AuthSessionStorage {
     await secureStorage.delete(key: seatLimitKey);
     await secureStorage.delete(key: orgModelKey);
     await secureStorage.delete(key: labelOverridesKey);
+    await secureStorage.delete(key: featuresKey);
   }
 
   Future<void> clearTenant() async {

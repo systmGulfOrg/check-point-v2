@@ -10,6 +10,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
+import 'admin_record_visit_status_option_widget.dart';
 
 class AdminRecordVisitOutcomeDialogWidget extends StatefulWidget {
   const AdminRecordVisitOutcomeDialogWidget({
@@ -197,16 +198,20 @@ class _AdminRecordVisitOutcomeDialogWidgetState
             SizedBox(height: 8.h),
             Row(
               children: [
-                _buildStatusOption(
-                  'completed',
-                  'admin.visits.statusCompleted',
-                  AppColors.success,
+                AdminRecordVisitStatusOptionWidget(
+                  statusKey: 'completed',
+                  labelKey: 'admin.visits.statusCompleted',
+                  activeColor: AppColors.success,
+                  isSelected: selectedStatus == 'completed',
+                  onTap: () => setState(() => selectedStatus = 'completed'),
                 ),
                 SizedBox(width: 8.w),
-                _buildStatusOption(
-                  'cancelled',
-                  'admin.visits.statusCancelled',
-                  AppColors.error,
+                AdminRecordVisitStatusOptionWidget(
+                  statusKey: 'cancelled',
+                  labelKey: 'admin.visits.statusCancelled',
+                  activeColor: AppColors.error,
+                  isSelected: selectedStatus == 'cancelled',
+                  onTap: () => setState(() => selectedStatus = 'cancelled'),
                 ),
               ],
             ),
@@ -359,41 +364,6 @@ class _AdminRecordVisitOutcomeDialogWidgetState
               onTap: _handleSubmit,
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatusOption(
-    String statusKey,
-    String labelKey,
-    Color activeColor,
-  ) {
-    final isSelected = selectedStatus == statusKey;
-    return Expanded(
-      child: InkWell(
-        onTap: () => setState(() => selectedStatus = statusKey),
-        borderRadius: BorderRadius.circular(10.r),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: EdgeInsets.symmetric(vertical: 8.h),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? activeColor.withValues(alpha: 0.12)
-                : AppColors.cardBackground,
-            border: Border.all(
-              color: isSelected ? activeColor : AppColors.border,
-              width: isSelected ? 1.5 : 1,
-            ),
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            labelKey.tr(context: context),
-            style: AppTextStyles.font12Bold.copyWith(
-              color: isSelected ? activeColor : AppColors.textSecondary,
-            ),
-          ),
         ),
       ),
     );

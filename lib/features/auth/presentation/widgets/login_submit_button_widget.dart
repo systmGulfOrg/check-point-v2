@@ -24,7 +24,10 @@ class LoginSubmitButtonWidget extends StatelessWidget {
           : 'auth.login.submit'.tr(context: context),
       enabled: rateLimitSeconds == 0,
       onTap: onSubmit,
-      isLoading: state is LoginLoading,
+      isLoading: switch (state) {
+        LoginLoading() => true,
+        _ => false,
+      },
     ),
   );
 }

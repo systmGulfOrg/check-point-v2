@@ -21,6 +21,7 @@ class LoginResponseModel {
     this.seatLimit,
     this.orgModel,
     this.labelOverrides,
+    this.features,
   });
 
   final String? id;
@@ -40,6 +41,7 @@ class LoginResponseModel {
   final int? seatLimit;
   final String? orgModel;
   final Map<String, dynamic>? labelOverrides;
+  final List<String>? features;
 
   bool get isContractorWorker => orgModel == 'contractor_worker';
 

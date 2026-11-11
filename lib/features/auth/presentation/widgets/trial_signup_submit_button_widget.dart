@@ -17,7 +17,10 @@ class TrialSignupSubmitButtonWidget extends StatelessWidget {
         builder: (context, state) => CustomButton(
           text: 'auth.trialSignup.submit'.tr(context: context),
           onTap: onSubmit,
-          isLoading: state is TrialSignupLoading,
+          isLoading: switch (state) {
+            TrialSignupLoading() => true,
+            _ => false,
+          },
         ),
       );
 }

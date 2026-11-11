@@ -60,7 +60,7 @@ class AdminRegistrationRequestCardWidget extends StatelessWidget {
           Row(
             children: [
               AppAvatarWidget(
-                imageUrl: request.photo,
+                imageUrl: request.thumb,
                 name: name,
                 subtitle: request.mobileId,
                 radius: 24.r,

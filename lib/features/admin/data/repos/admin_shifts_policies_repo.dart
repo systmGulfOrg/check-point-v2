@@ -1,4 +1,5 @@
 import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/company_approval_config_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/police_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
 
@@ -24,5 +25,10 @@ abstract class AdminShiftsPoliciesRepo {
   Future<ApiResult<void>> assignPolicy(AssignPoliceRequestBody body);
   Future<ApiResult<void>> removeAssignPolicy(
     RemoveAssignPolicyRequestBody body,
+  );
+
+  Future<ApiResult<CompanyApprovalConfigModel>> getApprovalConfig();
+  Future<ApiResult<CompanyApprovalConfigModel>> updateApprovalConfig(
+    CompanyApprovalConfigModel config,
   );
 }

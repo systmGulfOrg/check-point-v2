@@ -56,17 +56,20 @@ class SupportTicketDialogWidgetState extends State<SupportTicketDialogWidget> {
   Widget build(BuildContext context) {
     return BlocConsumer<SupportTicketCubit, SupportTicketState>(
       listener: (context, state) {
-        if (state is SupportTicketSuccess) {
-          Navigator.pop(context);
-          CustomSnackBar.showSuccess(
-            context,
-            message: 'support.successMessage'.tr(context: context),
-          );
-        } else if (state is SupportTicketFailure) {
-          CustomSnackBar.showError(
-            context,
-            message: 'support.errorMessage'.tr(context: context),
-          );
+        switch (state) {
+          case SupportTicketSuccess():
+            Navigator.pop(context);
+            CustomSnackBar.showSuccess(
+              context,
+              message: 'support.successMessage'.tr(context: context),
+            );
+          case SupportTicketFailure():
+            CustomSnackBar.showError(
+              context,
+              message: 'support.errorMessage'.tr(context: context),
+            );
+          case _:
+            break;
         }
       },
       builder: (context, state) {

@@ -14,6 +14,7 @@ import 'package:check_point_v2/features/auth/presentation/widgets/change_passwor
 import 'package:check_point_v2/features/auth/presentation/widgets/edit_profile_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/role_switch_dialog_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/user_permissions_sheet_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_permit_rules_sheet_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_section_card_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_sign_out_button_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_tile_widget.dart';
@@ -132,6 +133,12 @@ class AdminSettingsScreen extends StatelessWidget {
                   titleKey: 'admin.settings.permissions',
                   valueKey: 'admin.settings.roleBased',
                   onTap: () => showUserPermissionsSheet(context),
+                ),
+                AdminSettingsTileWidget(
+                  icon: Icons.tune_rounded,
+                  titleKey: 'admin.settings.rulesSettings',
+                  valueKey: 'admin.settings.manage',
+                  onTap: () => AdminPermitRulesSheetWidget.show(context),
                 ),
                 AdminSettingsTileWidget(
                   icon: Icons.support_agent_rounded,

@@ -44,13 +44,17 @@ class SupervisorQuickAttendanceBlocBuilderWidget extends StatelessWidget {
           backgroundColor: isCheckOut
               ? AppColors.error
               : AppColors.brandPrimary,
-          isLoading: state is EmployeeAttendanceStateLoading,
+          isLoading: switch (state) {
+            EmployeeAttendanceStateLoading() => true,
+            _ => false,
+          },
           onTap: () {
             if (isHoliday) {
-              final holidayName =
-                  (holidayState is UpcomingHolidayStateLoaded
-                      ? holidayState.todayHoliday?.name
-                      : null) ??
+              final holidayName = switch (holidayState) {
+                UpcomingHolidayStateLoaded(:final todayHoliday) =>
+                  todayHoliday?.name,
+                _ => null,
+              } ??
                   profile?.todayHoliday?.arabicName ??
                   profile?.todayHoliday?.name ??
                   '';

@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +12,7 @@ import 'package:check_point_v2/core/styles/app_colors.dart';
 import 'package:check_point_v2/core/styles/app_text_styles.dart';
 import 'package:check_point_v2/core/widgets/custom_button.dart';
 import 'package:check_point_v2/core/widgets/custom_snack_bar.dart';
+import 'app_document_preview_widget.dart';
 
 class AppDocumentViewerDialogWidget extends StatelessWidget {
   const AppDocumentViewerDialogWidget({
@@ -316,7 +315,15 @@ startxref
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      _buildPreview(context),
+                      AppDocumentPreviewWidget(
+                        fileUrl: fileUrl,
+                        isImage: _isImage,
+                        fileName: _cleanName,
+                        extension: _extension,
+                        formattedSize: _formatSize(),
+                        icon: _icon,
+                        iconColor: _iconColor,
+                      ),
                       hSpace(12),
 
                       Container(
@@ -396,140 +403,6 @@ startxref
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildPreview(BuildContext context) {
-    if (fileUrl == null || fileUrl!.isEmpty) {
-      return _buildGenericFileCard(context);
-    }
-
-    final rawUrl = fileUrl!.trim();
-    final trimmed = rawUrl.startsWith('/api/')
-        ? '${AppConfig.baseUrl.replaceFirst(RegExp(r'/+$'), '')}$rawUrl'
-        : rawUrl;
-
-    if (_isImage &&
-        (trimmed.startsWith('/') || trimmed.startsWith('file://'))) {
-      try {
-        final path = trimmed.replaceFirst('file://', '');
-        final file = File(path);
-        if (file.existsSync()) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(12.r),
-            child: Container(
-              constraints: BoxConstraints(maxHeight: 260.h),
-              width: double.infinity,
-              color: AppColors.pageBackground,
-              child: InteractiveViewer(
-                maxScale: 4.0,
-                child: Image.file(
-                  file,
-                  fit: BoxFit.contain,
-                  errorBuilder: (_, _, _) => _buildGenericFileCard(context),
-                ),
-              ),
-            ),
-          );
-        }
-      } catch (_) {}
-    }
-
-    if (_isImage &&
-        (trimmed.startsWith('data:image/') || !trimmed.startsWith('http'))) {
-      try {
-        final cleanBase64 = trimmed.contains(',')
-            ? trimmed.split(',').last
-            : trimmed;
-        final bytes = base64Decode(cleanBase64.trim());
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(12.r),
-          child: Container(
-            constraints: BoxConstraints(maxHeight: 260.h),
-            width: double.infinity,
-            color: AppColors.pageBackground,
-            child: InteractiveViewer(
-              maxScale: 4.0,
-              child: Image.memory(
-                Uint8List.fromList(bytes),
-                fit: BoxFit.contain,
-                errorBuilder: (_, _, _) => _buildGenericFileCard(context),
-              ),
-            ),
-          ),
-        );
-      } catch (_) {}
-    }
-
-    if (_isImage &&
-        (trimmed.startsWith('http://') || trimmed.startsWith('https://'))) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(12.r),
-        child: Container(
-          constraints: BoxConstraints(maxHeight: 260.h),
-          width: double.infinity,
-          color: AppColors.pageBackground,
-          child: InteractiveViewer(
-            maxScale: 4.0,
-            child: Image.network(
-              trimmed,
-              fit: BoxFit.contain,
-              loadingBuilder: (_, child, progress) {
-                if (progress == null) return child;
-                return Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(32.r),
-                    child: const CircularProgressIndicator.adaptive(),
-                  ),
-                );
-              },
-              errorBuilder: (_, _, _) => _buildGenericFileCard(context),
-            ),
-          ),
-        ),
-      );
-    }
-
-    return _buildGenericFileCard(context);
-  }
-
-  Widget _buildGenericFileCard(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 28.h, horizontal: 16.w),
-      decoration: BoxDecoration(
-        color: AppColors.pageBackground,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(16.r),
-            decoration: BoxDecoration(
-              color: _iconColor.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(_icon, size: 44.r, color: _iconColor),
-          ),
-          hSpace(12),
-          Text(
-            _cleanName,
-            style: AppTextStyles.font14Bold,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          hSpace(4),
-          Text(
-            '${_extension.toUpperCase()} • ${_formatSize()}',
-            style: AppTextStyles.font12Regular.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
       ),
     );
   }

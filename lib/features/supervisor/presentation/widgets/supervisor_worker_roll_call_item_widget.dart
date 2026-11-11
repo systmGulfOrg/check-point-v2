@@ -65,7 +65,7 @@ class SupervisorWorkerRollCallItemWidget extends StatelessWidget {
             backgroundColor: AppColors.softBlueBackground,
             backgroundImage:
                 worker.imageUrl != null && worker.imageUrl!.isNotEmpty
-                ? NetworkImage(worker.imageUrl!)
+                ? AppImageProvider.resolve(worker.imageUrl)
                 : null,
             child: worker.imageUrl == null || worker.imageUrl!.isEmpty
                 ? const Icon(Icons.person, color: AppColors.brandPrimary)

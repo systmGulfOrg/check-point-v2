@@ -6,6 +6,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_help_support_sheet_widget.dart';
 import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
@@ -89,19 +90,21 @@ class EmployeeSettingsScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              hSpace(20),
-              EmployeeSettingsSectionCardWidget(
-                sectionTitleKey: 'employee.settings.sectionWork',
-                tiles: [
-                  EmployeeSettingsTileWidget(
-                    icon: Icons.home_work_outlined,
-                    titleKey: 'remoteWork.title',
-                    valueKey: 'remoteWork.manageRequest',
-                    onTap: () =>
-                        Navigator.pushNamed(context, AppRoutes.remoteWork),
-                  ),
-                ],
-              ),
+              if (sl<AuthSessionStorage>().isFeatureEnabled('remote_work')) ...[
+                hSpace(20),
+                EmployeeSettingsSectionCardWidget(
+                  sectionTitleKey: 'employee.settings.sectionWork',
+                  tiles: [
+                    EmployeeSettingsTileWidget(
+                      icon: Icons.home_work_outlined,
+                      titleKey: 'remoteWork.title',
+                      valueKey: 'remoteWork.manageRequest',
+                      onTap: () =>
+                          Navigator.pushNamed(context, AppRoutes.remoteWork),
+                    ),
+                  ],
+                ),
+              ],
               hSpace(20),
               EmployeeSettingsSectionCardWidget(
                 sectionTitleKey: 'employee.settings.sectionSystem',

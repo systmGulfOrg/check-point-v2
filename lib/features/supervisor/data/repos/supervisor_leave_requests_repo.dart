@@ -18,4 +18,7 @@ abstract class SupervisorLeaveRequestsRepo {
     String action,
     String? reason,
   );
+
+  /// Revokes an approved leave (manager or HR; never your own).
+  Future<ApiResult<void>> revokeLeaveRequest(String ulid, String reason);
 }

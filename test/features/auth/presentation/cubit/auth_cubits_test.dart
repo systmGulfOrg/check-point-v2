@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
+import 'package:check_point_v2/core/utils/app_image_compressor.dart';
 import 'package:check_point_v2/core/network/api_result.dart';
 import 'package:check_point_v2/core/network/device_identity_provider.dart';
 import 'package:check_point_v2/core/auth/auth_session_storage.dart';
@@ -127,6 +131,7 @@ class _FakeAuthSessionStorage extends AuthSessionStorage {
     Map<String, dynamic>? labelOverrides,
     List<String> roles = const [],
     List<String> permissions = const [],
+    List<String>? features,
   }) async {
     _storage[AuthSessionStorage.tokenKey] = token;
   }
@@ -305,6 +310,59 @@ void main() {
       expect(repo.accountRequests.single.name, 'Ahmed Mohamed');
       expect(repo.accountRequests.single.mobileId, 'mobile-456');
       expect(repo.accountRequests.single.deviceToken, 'device-token-456');
+    });
+  });
+
+  group('RequestAccountCubit photo', () {
+    final originalEncoder = AppImageCompressor.encodeJpeg;
+    late File photo;
+
+    setUp(() async {
+      photo = File('${Directory.systemTemp.createTempSync('req-photo').path}/me.jpg')
+        ..writeAsBytesSync(List.filled(2048, 9));
+    });
+
+    tearDown(() => AppImageCompressor.encodeJpeg = originalEncoder);
+
+    RequestAccountCubit build(_FakeAuthRepo repo) => RequestAccountCubit(
+          authRepo: repo,
+          deviceIdentityProvider: _FakeDeviceIdentityProvider(
+            fakeMobileId: 'mobile-456',
+            fakeDeviceToken: 'device-token-456',
+          ),
+          authSessionStorage: AuthSessionStorage(
+            secureStorage: const FlutterSecureStorage(),
+          ),
+        );
+
+    test('sends the compressed JPEG once, in imageUrl only', () async {
+      AppImageCompressor.encodeJpeg = (_, _, _) async => Uint8List.fromList([1, 2, 3]);
+      final repo = _FakeAuthRepo(loginResponse: const LoginResponseModel(id: '1'));
+      final cubit = build(repo);
+      addTearDown(cubit.close);
+
+      await cubit.submit(name: 'Ahmed', photoPath: photo.path);
+
+      expect(repo.accountRequests.single.imageUrl, 'data:image/jpeg;base64,AQID');
+      expect(repo.accountRequests.single.photoPath, isNull);
+    });
+
+    test('emits errors.imageProcessing and sends nothing when the photo cannot be processed', () async {
+      AppImageCompressor.encodeJpeg = (_, _, _) async => throw PlatformException(code: 'decode');
+      final repo = _FakeAuthRepo(loginResponse: const LoginResponseModel(id: '1'));
+      final cubit = build(repo);
+      addTearDown(cubit.close);
+
+      expectLater(
+        cubit.stream,
+        emitsInOrder([
+          const RequestAccountState.loading(),
+          const RequestAccountState.error('errors.imageProcessing'),
+        ]),
+      );
+      await cubit.submit(name: 'Ahmed', photoPath: photo.path);
+
+      expect(repo.accountRequests, isEmpty);
     });
   });
 

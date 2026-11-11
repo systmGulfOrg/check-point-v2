@@ -8,9 +8,7 @@ import 'package:check_point_v2/core/core.dart';
 import '../../data/models/points_summary_model.dart';
 import '../cubit/points_cubit.dart';
 import '../cubit/points_state.dart';
-import '../widgets/points_action_button_widget.dart';
-import '../widgets/points_balances_grid_widget.dart';
-import '../widgets/points_level_progress_card_widget.dart';
+import '../widgets/my_points_content_widget.dart';
 
 class MyPointsScreen extends StatefulWidget {
   const MyPointsScreen({super.key});
@@ -64,9 +62,9 @@ class _MyPointsScreenState extends State<MyPointsScreen> {
       body: BlocBuilder<PointsCubit, PointsState>(
         builder: (context, state) {
           return switch (state) {
-            PointsLoading() => Skeletonizer(
+            PointsLoading() => const Skeletonizer(
               enabled: true,
-              child: _buildPointsContent(context, _dummySummary),
+              child: MyPointsContentWidget(summary: _dummySummary),
             ),
             PointsError(:final message) => Center(
               child: Padding(
@@ -99,88 +97,11 @@ class _MyPointsScreenState extends State<MyPointsScreen> {
             ),
             PointsLoaded(:final summary) => RefreshIndicator(
               onRefresh: () => context.read<PointsCubit>().loadAllPointsData(),
-              child: _buildPointsContent(context, summary),
+              child: MyPointsContentWidget(summary: summary),
             ),
             _ => const SizedBox.shrink(),
           };
         },
-      ),
-    );
-  }
-
-  Widget _buildPointsContent(BuildContext context, PointsSummaryModel summary) {
-    return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.all(16.r),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          PointsLevelProgressCardWidget(summary: summary),
-          hSpace(16),
-
-          PointsBalancesGridWidget(balances: summary.balances),
-          hSpace(20),
-
-          Row(
-            children: [
-              Expanded(
-                child: PointsActionButtonWidget(
-                  title: 'points.exchangeTitle'.tr(context: context),
-                  icon: Icons.swap_horiz_rounded,
-                  color: AppColors.brandPrimary,
-                  onTap: () async {
-                    await Navigator.of(
-                      context,
-                    ).pushNamed(AppRoutes.pointExchange, arguments: summary);
-                    if (context.mounted) {
-                      context.read<PointsCubit>().loadAllPointsData();
-                    }
-                  },
-                ),
-              ),
-              wSpace(12),
-              Expanded(
-                child: PointsActionButtonWidget(
-                  title: 'points.historyTitle'.tr(context: context),
-                  icon: Icons.history_rounded,
-                  color: AppColors.textPrimary,
-                  onTap: () {
-                    Navigator.of(context).pushNamed(AppRoutes.pointsHistory);
-                  },
-                ),
-              ),
-            ],
-          ),
-          hSpace(12),
-          Row(
-            children: [
-              Expanded(
-                child: PointsActionButtonWidget(
-                  title: 'points.badgesTitle'.tr(context: context),
-                  icon: Icons.military_tech_rounded,
-                  color: AppColors.warningOrange,
-                  onTap: () {
-                    Navigator.of(context).pushNamed(AppRoutes.pointsBadges);
-                  },
-                ),
-              ),
-              wSpace(12),
-              Expanded(
-                child: PointsActionButtonWidget(
-                  title: 'points.leaderboardTitle'.tr(context: context),
-                  icon: Icons.leaderboard_rounded,
-                  color: AppColors.info,
-                  onTap: () {
-                    Navigator.of(
-                      context,
-                    ).pushNamed(AppRoutes.pointsLeaderboard);
-                  },
-                ),
-              ),
-            ],
-          ),
-          hSpace(24),
-        ],
       ),
     );
   }

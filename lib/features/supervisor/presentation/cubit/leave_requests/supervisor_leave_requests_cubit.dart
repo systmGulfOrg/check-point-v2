@@ -260,4 +260,26 @@ class SupervisorLeaveRequestsCubit
       },
     );
   }
+
+  /// Cancels an approved leave; the employee can clock in again that day.
+  Future<bool> revokeRequest(String ulid, String reason) async {
+    emit(const SupervisorLeaveRequestsState.loading());
+    final result = await leaveRequestsRepo.revokeLeaveRequest(ulid, reason);
+    return result.when(
+      success: (_) async {
+        await loadRequests();
+        return true;
+      },
+      failure: (failure) {
+        safeEmit(SupervisorLeaveRequestsState.error(failure.messageKey));
+        safeEmit(
+          SupervisorLeaveRequestsState.success(
+            requests: _filteredRequests,
+            statusFilter: statusFilter,
+          ),
+        );
+        return false;
+      },
+    );
+  }
 }

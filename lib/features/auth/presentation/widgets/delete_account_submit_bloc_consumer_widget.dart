@@ -20,10 +20,13 @@ class DeleteAccountSubmitBlocConsumerWidget extends StatelessWidget {
   Widget build(BuildContext context) =>
       BlocConsumer<AuthSessionCubit, AuthSessionState>(
         listener: (context, state) {
-          if (state is AuthSessionSuccess) Navigator.pop(context, true);
+          if (state case AuthSessionSuccess()) Navigator.pop(context, true);
         },
         builder: (context, state) {
-          final isLoading = state is AuthSessionLoading;
+          final isLoading = switch (state) {
+            AuthSessionLoading() => true,
+            _ => false,
+          };
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [

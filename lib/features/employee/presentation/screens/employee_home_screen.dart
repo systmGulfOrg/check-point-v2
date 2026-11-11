@@ -108,6 +108,15 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
               message: 'permissions.request.success'.tr(),
             );
             context.read<LeavesCubit>().loadLeavesData();
+          } else if (!success && context.mounted) {
+            final errorKey = permitCubit.state.maybeWhen(
+              error: (msg) => msg,
+              orElse: () => 'errors.unknown',
+            );
+            CustomSnackBar.showError(
+              context,
+              message: errorKey.tr(),
+            );
           }
         },
       ),
@@ -199,10 +208,13 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            final leavesFuture = sl<AuthSessionStorage>().isFeatureEnabled('leave')
+                ? context.read<LeavesCubit>().loadLeavesData()
+                : Future<void>.value();
             await Future.wait([
               context.read<EmployeeAttendanceCubit>().loadAttendanceHistory(),
               context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
-              context.read<LeavesCubit>().loadLeavesData(),
+              leavesFuture,
             ]);
           },
           child: SingleChildScrollView(
@@ -308,7 +320,10 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                     );
 
                     return Skeletonizer(
-                      enabled: state is EmployeeAttendanceStateLoading,
+                      enabled: switch (state) {
+                        EmployeeAttendanceStateLoading() => true,
+                        _ => false,
+                      },
                       child: EmployeeTodayCardWidget(
                         policyText: policyText,
                         isOnTime: attendance?.isLate != true,
@@ -342,12 +357,14 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                 ),
                 hSpace(12),
                 const EmployeeHomeStatsRowBlocSelectorWidget(),
-                hSpace(20),
-                EmployeeHomeLeavesBlocBuilderWidget(
-                  onViewAllLeaves: () =>
-                      Navigator.pushNamed(context, AppRoutes.leavesDashboard),
-                  onRequestLeave: () => _showApplyLeaveSheet(context),
-                ),
+                if (sl<AuthSessionStorage>().isFeatureEnabled('leave')) ...[
+                  hSpace(20),
+                  EmployeeHomeLeavesBlocBuilderWidget(
+                    onViewAllLeaves: () =>
+                        Navigator.pushNamed(context, AppRoutes.leavesDashboard),
+                    onRequestLeave: () => _showApplyLeaveSheet(context),
+                  ),
+                ],
               ],
             ),
           ),

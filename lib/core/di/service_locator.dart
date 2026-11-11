@@ -1,3 +1,11 @@
+import 'package:check_point_v2/features/employee_record/data/apis/employee_record_api_service.dart';
+import 'package:check_point_v2/features/employee_record/data/repos/employee_record_repo.dart';
+import 'package:check_point_v2/features/employee_record/data/repos/employee_record_repo_impl.dart';
+import 'package:check_point_v2/features/employee_record/presentation/cubit/employee_record_cubit.dart';
+import 'package:check_point_v2/features/disciplinary/data/apis/disciplinary_api_service.dart';
+import 'package:check_point_v2/features/disciplinary/data/repos/disciplinary_repo_impl.dart';
+import 'package:check_point_v2/features/disciplinary/domain/repos/disciplinary_repo.dart';
+import 'package:check_point_v2/features/disciplinary/presentation/cubit/disciplinary_cubit.dart';
 import 'package:check_point_v2/features/ai/data/apis/ai_api_service.dart';
 import 'package:check_point_v2/features/ai/data/repos/ai_repo.dart';
 import 'package:check_point_v2/features/ai/data/repos/ai_repo_impl.dart';
@@ -54,6 +62,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_
 import 'package:check_point_v2/features/admin/presentation/cubit/deleted_employees/admin_deleted_employees_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/leave_requests/admin_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/plans/admin_plans_cubit.dart';
+import 'package:check_point_v2/features/admin/presentation/cubit/company_rules/admin_company_rules_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/shifts_policies/admin_shifts_policies_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/subscription/admin_subscription_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/tasks/admin_tasks_cubit.dart';
@@ -264,6 +273,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<AttendancePointsApiService>(
     () => AttendancePointsApiService(sl<Dio>()),
   );
+  sl.registerLazySingleton<EmployeeRecordApiService>(
+    () => EmployeeRecordApiService(sl<Dio>()),
+  );
   sl.registerLazySingleton<EmployeeApiService>(
     () => EmployeeApiService(sl<Dio>()),
   );
@@ -279,6 +291,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<ProjectsApiService>(
     () => ProjectsApiService(sl<Dio>()),
+  );
+  sl.registerLazySingleton<DisciplinaryApiService>(
+    () => DisciplinaryApiService(sl<Dio>()),
   );
   sl.registerLazySingleton<AiApiService>(() => AiApiService(sl<Dio>()));
   sl.registerLazySingleton<AiRepo>(() => AiRepoImpl(api: sl<AiApiService>()));
@@ -365,6 +380,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<AttendancePointsRepo>(
     () => AttendancePointsRepoImpl(api: sl<AttendancePointsApiService>()),
   );
+  sl.registerLazySingleton<EmployeeRecordRepo>(
+    () => EmployeeRecordRepoImpl(api: sl<EmployeeRecordApiService>()),
+  );
   sl.registerLazySingleton<EmployeeActionRepo>(
     () => EmployeeActionRepoImpl(api: sl<EmployeeApiService>()),
   );
@@ -388,6 +406,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<OvertimeRepo>(
     () => OvertimeRepoImpl(api: sl<OvertimeApiService>()),
+  );
+  sl.registerLazySingleton<DisciplinaryRepo>(
+    () => DisciplinaryRepoImpl(api: sl<DisciplinaryApiService>()),
   );
 
   sl.registerLazySingleton<LoginUseCase>(
@@ -468,6 +489,9 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<OvertimeCubit>(
     () => OvertimeCubit(repo: sl<OvertimeRepo>()),
   );
+  sl.registerFactory<DisciplinaryCubit>(
+    () => DisciplinaryCubit(repo: sl<DisciplinaryRepo>()),
+  );
   sl.registerFactory<ProjectsCubit>(
     () => ProjectsCubit(repo: sl<ProjectsRepo>()),
   );
@@ -507,6 +531,11 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<AdminShiftsPoliciesCubit>(
     () => AdminShiftsPoliciesCubit(
+      shiftsPoliciesRepo: sl<AdminShiftsPoliciesRepo>(),
+    ),
+  );
+  sl.registerFactory<AdminCompanyRulesCubit>(
+    () => AdminCompanyRulesCubit(
       shiftsPoliciesRepo: sl<AdminShiftsPoliciesRepo>(),
     ),
   );
@@ -625,6 +654,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<PointsCubit>(
     () => PointsCubit(pointsRepo: sl<AttendancePointsRepo>()),
+  );
+  sl.registerFactory<EmployeeRecordCubit>(
+    () => EmployeeRecordCubit(recordRepo: sl<EmployeeRecordRepo>()),
   );
   sl.registerFactory<AdminPointsCubit>(
     () => AdminPointsCubit(pointsRepo: sl<AttendancePointsRepo>()),

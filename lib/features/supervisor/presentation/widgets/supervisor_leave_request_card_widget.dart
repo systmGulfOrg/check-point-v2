@@ -18,6 +18,7 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
     this.currentUserName = '',
     this.onApprove,
     this.onReject,
+    this.onRevoke,
   });
 
   final AdminLeaveRequestModel request;
@@ -28,6 +29,9 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
   final String currentUserName;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
+
+  /// Cancel an approved leave (manager / HR).
+  final VoidCallback? onRevoke;
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +128,11 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
 
     final bool canApprove =
         !isOwnRequest && isPending && isDirectManager && !isObserverOnly;
+    // The server re-checks scope, self-revoke and "already ended".
+    final bool canRevoke = onRevoke != null &&
+        !isOwnRequest &&
+        status == 'approved' &&
+        (isDirectManager || userRole == 'Admin' || userRole == 'HR');
     final String approveLabel = request.leaveWorkflow == 'direct_manager_only'
         ? 'اعتماد نهائي'
         : 'leaves.approval.approveAsManager';
@@ -332,6 +341,14 @@ class SupervisorLeaveRequestCardWidget extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+            ],
+            if (canRevoke) ...[
+              hSpace(12),
+              SupervisorLeaveRequestActionWidget(
+                labelKey: 'leaves.revoke.action',
+                color: AppColors.error,
+                onTap: onRevoke,
               ),
             ],
             if (canApprove) ...[

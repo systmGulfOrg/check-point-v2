@@ -74,6 +74,13 @@ abstract class SupervisorApiService {
     @Body() ChangeRequestLeaveStatus body,
   );
 
+  /// Manager/HR cancels an approved leave so the employee can clock in.
+  @POST('/api/v2/leave-requests/{ulid}/revoke')
+  Future<void> revokeLeave(
+    @Path('ulid') String ulid,
+    @Body() Map<String, dynamic> body,
+  );
+
   @PATCH('/api/v2/leave-requests/{ulid}/status')
   Future<void> updateLeaveStatusV2(
     @Path('ulid') String ulid,

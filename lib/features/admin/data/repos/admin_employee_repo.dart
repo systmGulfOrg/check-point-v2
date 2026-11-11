@@ -44,9 +44,12 @@ abstract class AdminEmployeeRepo {
     required bool permission,
   });
 
-  Future<ApiResult<List<AccountRequestModel>>> getAccountRequests({
+  Future<ApiResult<AccountRequestsPageModel>> getAccountRequests({
     int page = 0,
     int pageSize = 20,
+    String? status,
+    String? search,
+    bool newestFirst = true,
   });
 
   Future<ApiResult<void>> approveAccountRequest({
