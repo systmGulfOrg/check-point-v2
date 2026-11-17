@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
@@ -394,7 +394,7 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
       }
     }).toList();
 
-    emit(AdminAttendanceState.success(filtered));
+    safeEmit(AdminAttendanceState.success(filtered));
   }
 
   DateTime? _parseDate(String? raw) {
@@ -421,6 +421,8 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
     String? clockInTime,
     String? clockOutTime,
     String? status,
+    String? area,
+    String? location,
     String? reason,
   }) async {
     emit(const AdminAttendanceState.loading());
@@ -429,6 +431,8 @@ class AdminAttendanceCubit extends SafeCubit<AdminAttendanceState> {
       clockInTime: clockInTime,
       clockOutTime: clockOutTime,
       status: status,
+      area: area,
+      location: location,
       reason: reason,
     );
     return result.when(

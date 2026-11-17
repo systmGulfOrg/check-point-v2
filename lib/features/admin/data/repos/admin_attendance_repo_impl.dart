@@ -1,5 +1,4 @@
-import 'package:check_point_v2/core/network/api_failure_mapper.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'admin_attendance_repo.dart';
@@ -30,6 +29,8 @@ class AdminAttendanceRepoImpl implements AdminAttendanceRepo {
     String? clockInTime,
     String? clockOutTime,
     String? status,
+    String? area,
+    String? location,
     String? reason,
   }) async {
     try {
@@ -37,6 +38,8 @@ class AdminAttendanceRepoImpl implements AdminAttendanceRepo {
         'clockInTime': ?clockInTime,
         'clockOutTime': ?clockOutTime,
         'status': ?status,
+        'area': ?area,
+        'location': ?location,
         if (reason != null && reason.isNotEmpty) 'reason': reason,
       });
       return const ApiResult.success(null);

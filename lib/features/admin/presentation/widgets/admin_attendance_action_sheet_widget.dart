@@ -34,8 +34,10 @@ class _AdminAttendanceActionSheetWidgetState
 
   late final TextEditingController checkInController;
   late final TextEditingController checkOutController;
+  late final TextEditingController locationController;
   late final TextEditingController reasonController;
   late String selectedStatus;
+  late String selectedArea;
 
   bool get isDeleting => widget.action == AdminAttendanceAction.delete;
 
@@ -52,7 +54,19 @@ class _AdminAttendanceActionSheetWidgetState
         : '';
     checkInController = TextEditingController(text: initialCheckIn);
     checkOutController = TextEditingController(text: initialCheckOut);
+    locationController = TextEditingController(
+      text: widget.record.location ?? '',
+    );
     reasonController = TextEditingController();
+    selectedArea =
+        const [
+          'Office',
+          'Remote',
+          'CustomerSite',
+          'Field',
+        ].contains(widget.record.area)
+        ? widget.record.area
+        : 'Office';
     final statusSuffix = widget.record.statusKey.split('.').last;
     selectedStatus =
         const [
@@ -72,6 +86,7 @@ class _AdminAttendanceActionSheetWidgetState
   void dispose() {
     checkInController.dispose();
     checkOutController.dispose();
+    locationController.dispose();
     reasonController.dispose();
     super.dispose();
   }
@@ -118,6 +133,10 @@ class _AdminAttendanceActionSheetWidgetState
           ? checkOut
           : null,
       status: selectedStatus,
+      area: selectedArea,
+      location: locationController.text.trim().isNotEmpty
+          ? locationController.text.trim()
+          : null,
       reason: reason,
     );
   }
@@ -282,6 +301,41 @@ class _AdminAttendanceActionSheetWidgetState
                       ),
                       onChanged: (value) => setState(
                         () => selectedStatus = value ?? selectedStatus,
+                      ),
+                    ),
+                    hSpace(16),
+                    Text(
+                      'admin.attendance.areaLabel'.tr(context: context),
+                      style: AppTextStyles.font12Medium,
+                    ),
+                    hSpace(8),
+                    DropdownButtonFormField<String>(
+                      initialValue: selectedArea,
+                      decoration: const InputDecoration(),
+                      items: [
+                        for (final area in const [
+                          'Office',
+                          'Remote',
+                          'CustomerSite',
+                          'Field',
+                        ])
+                          DropdownMenuItem(
+                            value: area,
+                            child: Text(
+                              'admin.attendance.area.$area'.tr(
+                                context: context,
+                              ),
+                            ),
+                          ),
+                      ],
+                      onChanged: (value) =>
+                          setState(() => selectedArea = value ?? selectedArea),
+                    ),
+                    hSpace(16),
+                    CustomTextFormField(
+                      controller: locationController,
+                      hintText: 'admin.attendance.locationHint'.tr(
+                        context: context,
                       ),
                     ),
                     hSpace(16),
