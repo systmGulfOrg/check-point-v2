@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../../data/models/ai_chat_models.dart';
 import '../../data/repos/ai_repo.dart';
 import 'ai_chat_state.dart';
@@ -12,9 +12,17 @@ class AiChatCubit extends SafeCubit<AiChatState> {
     safeEmit(const AiChatState(messages: [], threadId: null, isLoading: false));
   }
 
+  Future<void> loadSettings() async {
+    final result = await repo.getSettings();
+    result.when(
+      success: (value) => safeEmit(state.copyWith(aiEnabled: value.enabled)),
+      failure: (_) {},
+    );
+  }
+
   Future<void> sendMessage(String text) async {
     final trimmed = text.trim();
-    if (trimmed.isEmpty || state.isLoading) return;
+    if (trimmed.isEmpty || state.isLoading || !state.aiEnabled) return;
 
     final userMsg = ChatMessageModel(
       id: 'msg_u_${DateTime.now().millisecondsSinceEpoch}',

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../cubit/ai_chat_cubit.dart';
 import '../cubit/ai_chat_state.dart';
 import 'ai_active_agents_bar_widget.dart';
@@ -51,6 +51,7 @@ class _AiChatSheetWidgetState extends State<AiChatSheetWidget>
         );
     _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _animController.forward();
+    context.read<AiChatCubit>().loadSettings();
   }
 
   @override

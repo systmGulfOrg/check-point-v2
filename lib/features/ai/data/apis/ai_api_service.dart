@@ -1,21 +1,44 @@
 import 'package:dio/dio.dart';
-import 'package:check_point_v2/core/network/api_constants.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../models/ai_chat_models.dart';
 
 class AiApiService {
-  final Dio _dio;
-  static String aiApiKey = 'test-api-key-123';
+  final Dio dio;
 
-  AiApiService(this._dio);
+  AiApiService({required this.dio});
+
+  Future<AiSettingsModel> getSettings() async {
+    final response = await dio.get(ApiConstants.aiSettings);
+    final raw = response.data as Map<String, dynamic>;
+    return AiSettingsModel.fromJson(
+      (raw['value'] as Map<String, dynamic>?) ?? raw,
+    );
+  }
+
+  Future<AiSettingsModel> updateSettings({
+    required bool enabled,
+    String? apiKey,
+  }) async {
+    final response = await dio.put(
+      ApiConstants.aiSettings,
+      data: {
+        'enabled': enabled,
+        if (apiKey != null && apiKey.trim().isNotEmpty) 'apiKey': apiKey.trim(),
+      },
+    );
+    final raw = response.data as Map<String, dynamic>;
+    return AiSettingsModel.fromJson(
+      (raw['value'] as Map<String, dynamic>?) ?? raw,
+    );
+  }
 
   Future<AiChatResponseModel> sendMessage(
     String message, {
     String? threadId,
   }) async {
-    // 1. Primary: Direct connection to AI Agent backend (http://159.223.150.240:8000/api/agent/chat)
     try {
-      final response = await _dio.post(
-        ApiConstants.aiAgentChat,
+      final response = await dio.post(
+        ApiConstants.aiChat,
         data: {
           'message': message,
           'query': message,
@@ -28,28 +51,8 @@ class AiApiService {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'X-API-Key': aiApiKey,
           },
         ),
-      );
-
-      final raw = response.data;
-      if (raw is Map<String, dynamic> && raw['response'] != null) {
-        return AiChatResponseModel.fromJson(raw);
-      }
-    } catch (_) {
-      // Continue to fallbacks if remote agent has error or network unreachable
-    }
-
-    // 2. Secondary: Fallback to main API gateway (/api/v2/ai/chat)
-    try {
-      final response = await _dio.post(
-        ApiConstants.aiChat,
-        data: {
-          'message': message,
-          if (threadId != null && threadId.isNotEmpty) 'threadId': threadId,
-          if (threadId != null && threadId.isNotEmpty) 'sessionId': threadId,
-        },
       );
 
       final raw = response.data;
@@ -61,41 +64,10 @@ class AiApiService {
       if (data['response'] != null) {
         return AiChatResponseModel.fromJson(data);
       }
+      throw StateError('AI gateway returned an invalid response');
     } catch (_) {
-      // 3. Fallback to local dev server (10.0.2.2:4100) if available
-      try {
-        final localDio = Dio(
-          BaseOptions(
-            connectTimeout: const Duration(seconds: 4),
-            receiveTimeout: const Duration(seconds: 10),
-            headers: Map<String, dynamic>.from(_dio.options.headers),
-          ),
-        );
-        final localRes = await localDio.post(
-          'http://10.0.2.2:4100/api/v2/ai/chat',
-          data: {
-            'message': message,
-            if (threadId != null && threadId.isNotEmpty) 'threadId': threadId,
-          },
-        );
-
-        final raw = localRes.data;
-        final Map<String, dynamic> data =
-            (raw is Map<String, dynamic> &&
-                raw['value'] is Map<String, dynamic>)
-            ? raw['value'] as Map<String, dynamic>
-            : (raw is Map<String, dynamic> ? raw : {});
-
-        if (data['response'] != null) {
-          return AiChatResponseModel.fromJson(data);
-        }
-      } catch (_) {
-        // Fall through
-      }
+      rethrow;
     }
-
-    // 4. Smart client fallback
-    return _buildSmartClientFallback(message, threadId);
   }
 
   Future<Map<String, dynamic>> confirmAction(
@@ -105,14 +77,13 @@ class AiApiService {
   }) async {
     // 1. Direct to AI agent confirm endpoint
     try {
-      final response = await _dio.post(
-        ApiConstants.aiAgentActionConfirm,
+      final response = await dio.post(
+        ApiConstants.aiActionConfirm,
         data: {'action_id': actionId, 'session_id': sessionId ?? 'default'},
         options: Options(
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'X-API-Key': aiApiKey,
           },
         ),
       );
@@ -122,21 +93,7 @@ class AiApiService {
         return raw;
       }
     } catch (_) {
-      // 2. Fallback to API gateway
-      try {
-        final response = await _dio.post(
-          ApiConstants.aiActionConfirm,
-          data: {'actionId': actionId, 'confirmed': confirmed},
-        );
-
-        final raw = response.data;
-        if (raw is Map<String, dynamic>) {
-          if (raw['value'] is Map<String, dynamic>) {
-            return raw['value'] as Map<String, dynamic>;
-          }
-          return raw;
-        }
-      } catch (_) {}
+      rethrow;
     }
 
     return {'success': true, 'message': 'تم تأكيد الإجراء بنجاح.'};

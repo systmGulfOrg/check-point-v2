@@ -6,6 +6,7 @@ class AiChatState {
   final bool isLoading;
   final bool isConfirming;
   final String? errorMessage;
+  final bool aiEnabled;
 
   const AiChatState({
     this.messages = const [],
@@ -13,6 +14,7 @@ class AiChatState {
     this.isLoading = false,
     this.isConfirming = false,
     this.errorMessage,
+    this.aiEnabled = true,
   });
 
   AiChatState copyWith({
@@ -21,6 +23,7 @@ class AiChatState {
     bool? isLoading,
     bool? isConfirming,
     String? errorMessage,
+    bool? aiEnabled,
   }) {
     return AiChatState(
       messages: messages ?? this.messages,
@@ -28,6 +31,7 @@ class AiChatState {
       isLoading: isLoading ?? this.isLoading,
       isConfirming: isConfirming ?? this.isConfirming,
       errorMessage: errorMessage,
+      aiEnabled: aiEnabled ?? this.aiEnabled,
     );
   }
 }
