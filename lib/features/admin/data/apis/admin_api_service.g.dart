@@ -2202,12 +2202,12 @@ class _AdminApiService implements AdminApiService {
   }
 
   @override
-  Future<Map<String, dynamic>> getApprovalConfig() async {
+  Future<CompanyApprovalConfigModel> getApprovalConfig() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<Map<String, dynamic>>(
+    final _options = _setStreamType<CompanyApprovalConfigModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -2218,12 +2218,9 @@ class _AdminApiService implements AdminApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Map<String, dynamic> _value;
+    late CompanyApprovalConfigModel _value;
     try {
-      _value = _result.data!.map(
-        (k, dynamic v) =>
-            MapEntry(k, dynamic.fromJson(v as Map<String, dynamic>)),
-      );
+      _value = CompanyApprovalConfigModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -2232,7 +2229,7 @@ class _AdminApiService implements AdminApiService {
   }
 
   @override
-  Future<Map<String, dynamic>> updateApprovalConfig(
+  Future<CompanyApprovalConfigModel> updateApprovalConfig(
     Map<String, dynamic> body,
   ) async {
     final _extra = <String, dynamic>{};
@@ -2240,7 +2237,7 @@ class _AdminApiService implements AdminApiService {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body);
-    final _options = _setStreamType<Map<String, dynamic>>(
+    final _options = _setStreamType<CompanyApprovalConfigModel>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -2251,12 +2248,9 @@ class _AdminApiService implements AdminApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Map<String, dynamic> _value;
+    late CompanyApprovalConfigModel _value;
     try {
-      _value = _result.data!.map(
-        (k, dynamic v) =>
-            MapEntry(k, dynamic.fromJson(v as Map<String, dynamic>)),
-      );
+      _value = CompanyApprovalConfigModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
