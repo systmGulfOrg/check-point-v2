@@ -15,7 +15,9 @@ class AiChatCubit extends SafeCubit<AiChatState> {
   Future<void> loadSettings() async {
     final result = await repo.getSettings();
     result.when(
-      success: (value) => safeEmit(state.copyWith(aiEnabled: value.enabled)),
+      success: (value) => safeEmit(
+        state.copyWith(aiEnabled: value.enabled && value.apiKeyConfigured),
+      ),
       failure: (_) {},
     );
   }
