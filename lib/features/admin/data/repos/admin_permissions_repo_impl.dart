@@ -1,6 +1,4 @@
-import 'package:check_point_v2/core/network/api_failure_mapper.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
-import 'package:check_point_v2/core/network/api_failure.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/models/permissions/admin_permission_employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/permissions/admin_permission_user_model.dart';
@@ -24,15 +22,6 @@ class AdminPermissionsRepoImpl implements AdminPermissionsRepo {
                 .whereType<Map<String, dynamic>>()
                 .where((item) => item['user'] is Map<String, dynamic>)
                 .map(AdminPermissionEmployeeModel.fromJson)
-                .where((e) {
-                  final name = e.name.toLowerCase().trim();
-                  final code = e.employeeCode?.toLowerCase().trim() ?? '';
-                  final email = e.email?.toLowerCase().trim() ?? '';
-                  return name != 'demo administrator' &&
-                      name != 'admin' &&
-                      !email.startsWith('admin@') &&
-                      code != 'emp-0001';
-                })
                 .toList()
           : <AdminPermissionEmployeeModel>[];
       return ApiResult.success(employees);

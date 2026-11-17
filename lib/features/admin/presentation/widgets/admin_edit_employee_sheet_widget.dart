@@ -10,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
@@ -53,7 +52,6 @@ class _AdminEditEmployeeSheetWidgetState
   late final TextEditingController _phoneController;
   late final TextEditingController _emailController;
   late final TextEditingController _employeeCodeController;
-  late final TextEditingController _leaveBalanceController;
 
   String? _selectedPhotoPath;
   String? _photoBase64;
@@ -90,9 +88,6 @@ class _AdminEditEmployeeSheetWidgetState
     _employeeCodeController = TextEditingController(
       text: emp.employeeCode ?? '',
     );
-    _leaveBalanceController = TextEditingController(
-      text: '${emp.leaveBalance ?? 21}',
-    );
 
     _selectedRoles = emp.allRoles.toSet();
     if (_selectedRoles.isEmpty) _selectedRoles.add('Employee');
@@ -123,7 +118,6 @@ class _AdminEditEmployeeSheetWidgetState
     _phoneController.dispose();
     _emailController.dispose();
     _employeeCodeController.dispose();
-    _leaveBalanceController.dispose();
     super.dispose();
   }
 
@@ -236,7 +230,6 @@ class _AdminEditEmployeeSheetWidgetState
         remoteWorkPolicyId: _selectedRemoteWorkPolicyId,
         canAddAttendance: _canAddAttendance,
         canAddPlan: _canAddPlan,
-        leaveBalance: int.tryParse(_leaveBalanceController.text.trim()),
       ),
     );
     if (mounted) {
@@ -916,17 +909,6 @@ class _AdminEditEmployeeSheetWidgetState
                         },
                       ),
                       hSpace(12),
-
-                      Text(
-                        'admin.employees.leaveBalance'.tr(context: context),
-                        style: AppTextStyles.font12Medium,
-                      ),
-                      hSpace(6),
-                      CustomTextFormField(
-                        controller: _leaveBalanceController,
-                        hintText: '21',
-                        keyboardType: TextInputType.number,
-                      ),
 
                       hSpace(8),
                       Center(

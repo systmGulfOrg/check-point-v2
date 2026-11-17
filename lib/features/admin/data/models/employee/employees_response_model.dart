@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'employee_model.dart';
-import 'package:check_point_v2/core/utils/legacy_api_response_helpers.dart';
+import 'package:check_point_v2/core/core.dart';
 
 part 'employees_response_model.g.dart';
 
@@ -38,14 +38,7 @@ class EmployeesPageModel {
   final bool? hasNextPage;
   final bool? hasPreviousPage;
 
-  List<EmployeeModel> get list => (items ?? data ?? const [])
-      .where(
-        (e) =>
-            e.userName?.toLowerCase() != 'admin' &&
-            e.name?.toLowerCase() != 'demo administrator' &&
-            e.employeeCode?.toLowerCase() != 'emp-0001',
-      )
-      .toList();
+  List<EmployeeModel> get list => items ?? data ?? const [];
 
   factory EmployeesPageModel.fromJson(Map<String, dynamic> json) =>
       _$EmployeesPageModelFromJson(json);

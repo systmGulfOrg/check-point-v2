@@ -79,12 +79,6 @@ class AdminEmployeeProfileJobTabWidget extends StatelessWidget {
                 value: employee.resolvedJoinDate,
                 icon: Icons.event_available_outlined,
               ),
-              AdminEmployeeProfileInfoRowWidget(
-                label: 'employee.profile.sectionBalances'.tr(context: context),
-                value:
-                    '${employee.leaveBalance ?? 21} ${'employee.profile.days'.tr(context: context)}',
-                icon: Icons.beach_access_outlined,
-              ),
             ],
           ),
 

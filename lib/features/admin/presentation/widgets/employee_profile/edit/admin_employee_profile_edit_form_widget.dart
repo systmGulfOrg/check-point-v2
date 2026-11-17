@@ -10,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
@@ -58,7 +57,6 @@ class _AdminEmployeeProfileEditFormWidgetState
   late final TextEditingController _employeeCodeController;
   late final TextEditingController _positionController;
   late final TextEditingController _mobileIdController;
-  late final TextEditingController _leaveBalanceController;
 
   String? _selectedPhotoPath;
   String? _photoBase64;
@@ -95,9 +93,6 @@ class _AdminEmployeeProfileEditFormWidgetState
     );
     _positionController = TextEditingController(text: emp.position ?? '');
     _mobileIdController = TextEditingController(text: emp.mobileId ?? '');
-    _leaveBalanceController = TextEditingController(
-      text: '${emp.leaveBalance ?? 21}',
-    );
 
     _selectedDepartmentId = emp.departmentId;
     _selectedBranchId = emp.branchId;
@@ -129,7 +124,6 @@ class _AdminEmployeeProfileEditFormWidgetState
     _employeeCodeController.dispose();
     _positionController.dispose();
     _mobileIdController.dispose();
-    _leaveBalanceController.dispose();
     super.dispose();
   }
 
@@ -243,7 +237,6 @@ class _AdminEmployeeProfileEditFormWidgetState
         customPermissions: _selectedPermissions.toList(),
         canAddAttendance: _canAddAttendance,
         canAddPlan: _canAddPlan,
-        leaveBalance: int.tryParse(_leaveBalanceController.text.trim()),
       );
 
       await widget.onSave(body);
@@ -759,21 +752,6 @@ class _AdminEmployeeProfileEditFormWidgetState
               hSpace(16),
 
               hSpace(12),
-
-              AdminWizardFieldWidget(
-                label: 'admin.employees.leaveBalance'.tr(context: context),
-                required: false,
-                child: CustomTextFormField(
-                  controller: _leaveBalanceController,
-                  hintText: '21',
-                  keyboardType: TextInputType.number,
-                  prefixIcon: Icon(
-                    Icons.event_available_outlined,
-                    size: 20.r,
-                    color: AppColors.placeholder,
-                  ),
-                ),
-              ),
             ],
           ),
           hSpace(20),
