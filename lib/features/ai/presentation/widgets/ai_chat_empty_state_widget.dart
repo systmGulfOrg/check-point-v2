@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:check_point_v2/core/styles/app_colors.dart';
+import 'package:check_point_v2/core/core.dart';
 
 class AiChatEmptyStateWidget extends StatelessWidget {
-  const AiChatEmptyStateWidget({
-    super.key,
-    required this.onSelectPrompt,
-  });
+  const AiChatEmptyStateWidget({super.key, required this.onSelectPrompt});
 
   final void Function(String prompt) onSelectPrompt;
 

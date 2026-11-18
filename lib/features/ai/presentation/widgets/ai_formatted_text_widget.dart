@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:check_point_v2/core/styles/app_colors.dart';
+import 'package:check_point_v2/core/core.dart';
 
 class AiFormattedTextWidget extends StatelessWidget {
   const AiFormattedTextWidget({

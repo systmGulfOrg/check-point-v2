@@ -1,5 +1,4 @@
-import 'package:check_point_v2/core/network/api_failure_mapper.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../../domain/repos/disciplinary_repo.dart';
 import '../apis/disciplinary_api_service.dart';
 import '../models/disciplinary_models.dart';
@@ -13,10 +12,16 @@ class DisciplinaryRepoImpl implements DisciplinaryRepo {
     String? month,
   }) async {
     try {
-      final response = await api.getMyViolations(month: month)
-          as Map<String, dynamic>;
-      final value = response['value'] as Map<String, dynamic>;
-      return ApiResult.success(DisciplinarySummaryModel.fromJson(value));
+      final response = await api.getMyViolations(month: month);
+      final dynamic raw = response is Map<String, dynamic>
+          ? (response['value'] ?? response['data'] ?? response)
+          : response;
+      if (raw is Map<String, dynamic>) {
+        return ApiResult.success(DisciplinarySummaryModel.fromJson(raw));
+      }
+      return ApiResult.failure(
+        const ApiFailure(messageKey: 'core.errors.somethingWentWrong'),
+      );
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AiAgentChipWidget extends StatelessWidget {
-  const AiAgentChipWidget({
-    super.key,
-    required this.name,
-  });
+  const AiAgentChipWidget({super.key, required this.name});
 
   final String name;
 

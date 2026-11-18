@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../widgets/disciplinary_violations_bloc_builder_widget.dart';
 
 class EmployeeDeductionsScreen extends StatelessWidget {
@@ -7,8 +8,12 @@ class EmployeeDeductionsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.pageBackground,
       appBar: AppBar(
-        title: const Text('سجل الجزاءات والخصومات'),
+        title: Text(
+          'سجل الجزاءات والخصومات',
+          style: AppTextStyles.font18Bold,
+        ),
         centerTitle: true,
       ),
       body: const DisciplinaryViolationsBlocBuilderWidget(),

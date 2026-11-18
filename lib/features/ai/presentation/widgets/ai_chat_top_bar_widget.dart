@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:check_point_v2/core/styles/app_colors.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../cubit/ai_chat_cubit.dart';
 
 class AiChatTopBarWidget extends StatelessWidget {

@@ -68,12 +68,19 @@ class AiSettingsWidgetState extends State<AiSettingsWidget> {
                   child: ElevatedButton(
                     onPressed: state.saving || controller.text.trim().isEmpty
                         ? null
-                        : () {
-                            context.read<AiSettingsCubit>().save(
-                              enabled: enabled,
-                              apiKey: controller.text,
+                        : () async {
+                            final key = controller.text.trim();
+                            await context.read<AiSettingsCubit>().save(
+                              enabled: true,
+                              apiKey: key,
                             );
                             controller.clear();
+                            if (context.mounted) {
+                              CustomSnackBar.showSuccess(
+                                context,
+                                message: 'تم حفظ وتفعيل مفتاح الذكاء الاصطناعي بنجاح',
+                              );
+                            }
                           },
                     child: Text('admin.settings.aiSave'.tr()),
                   ),

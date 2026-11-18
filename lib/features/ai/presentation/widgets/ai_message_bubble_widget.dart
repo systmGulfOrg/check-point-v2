@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:check_point_v2/core/styles/app_colors.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../../data/models/ai_chat_models.dart';
 import 'ai_formatted_text_widget.dart';
 import 'ai_pending_action_card_widget.dart';

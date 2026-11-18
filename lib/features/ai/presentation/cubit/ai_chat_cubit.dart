@@ -24,7 +24,16 @@ class AiChatCubit extends SafeCubit<AiChatState> {
 
   Future<void> sendMessage(String text) async {
     final trimmed = text.trim();
-    if (trimmed.isEmpty || state.isLoading || !state.aiEnabled) return;
+    if (trimmed.isEmpty || state.isLoading) return;
+    if (!state.aiEnabled) {
+      safeEmit(
+        state.copyWith(
+          errorMessage:
+              'خدمة المساعد الذكي غير مفعّلة. يرجى تفعيل الذكاء الاصطناعي وإدخال المفتاح من الإعدادات.',
+        ),
+      );
+      return;
+    }
 
     final userMsg = ChatMessageModel(
       id: 'msg_u_${DateTime.now().millisecondsSinceEpoch}',
