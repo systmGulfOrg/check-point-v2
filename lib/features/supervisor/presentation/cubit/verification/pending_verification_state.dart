@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:check_point_v2/core/models/offline_attendance_models.dart';
+import 'package:check_point_v2/core/core.dart';
 
 part 'pending_verification_state.freezed.dart';
 

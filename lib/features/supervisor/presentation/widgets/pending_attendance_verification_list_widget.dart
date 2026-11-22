@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/models/offline_attendance_models.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/pending_attendance_verification_card_widget.dart';
 
 class PendingAttendanceVerificationListWidget extends StatelessWidget {

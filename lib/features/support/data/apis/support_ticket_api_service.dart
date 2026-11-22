@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:check_point_v2/core/network/api_constants.dart';
+import 'package:check_point_v2/core/core.dart';
 
 /// API service for submitting support tickets, feedback and bug reports.
 class SupportTicketApiService {

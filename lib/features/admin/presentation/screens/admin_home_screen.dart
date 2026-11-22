@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/admin_leave_request_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/attendance/admin_attendance_cubit.dart';

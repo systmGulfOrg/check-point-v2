@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_request_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_locations_repo.dart';
 import 'admin_branches_state.dart';

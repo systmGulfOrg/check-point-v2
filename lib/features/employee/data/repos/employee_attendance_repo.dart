@@ -1,6 +1,6 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';

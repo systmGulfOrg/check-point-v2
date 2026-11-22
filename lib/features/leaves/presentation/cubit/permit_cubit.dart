@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 
 import '../../data/models/short_leave_request_body.dart';
 import '../../domain/repos/leaves_repo.dart';

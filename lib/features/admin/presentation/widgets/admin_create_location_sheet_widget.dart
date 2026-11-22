@@ -5,7 +5,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/services/location_link_parser.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_request_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_request_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';

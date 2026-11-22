@@ -3,16 +3,16 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/app/app_config.dart';
+import 'package:check_point_v2/core/bloc/safe_cubit.dart';
 import 'package:check_point_v2/core/database/app_database.dart';
 import 'connectivity_state.dart';
 
-class ConnectivityCubit extends Cubit<ConnectivityState> {
-  final Connectivity _connectivity;
-  final AppDatabase _database;
-  final Dio _probeDio;
+class ConnectivityCubit extends SafeCubit<ConnectivityState> {
+  final Connectivity connectivity;
+  final AppDatabase database;
+  final Dio probeDio;
 
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   StreamSubscription<List<PendingAttendanceTableData>>? _pendingSubscription;
@@ -20,11 +20,10 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
 
   ConnectivityCubit({
     Connectivity? connectivity,
-    required AppDatabase database,
+    required this.database,
     Dio? probeDio,
-  }) : _connectivity = connectivity ?? Connectivity(),
-       _database = database,
-       _probeDio =
+  }) : connectivity = connectivity ?? Connectivity(),
+       probeDio =
            probeDio ??
            Dio(
              BaseOptions(
@@ -39,16 +38,14 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
 
   void _init() {
     _pendingSubscription =
-        (_database.select(_database.pendingAttendanceTable)
+        (database.select(database.pendingAttendanceTable)
               ..where((tbl) => tbl.status.equals('queued')))
             .watch()
             .listen((records) {
-              if (!isClosed) {
-                emit(state.copyWith(pendingCount: records.length));
-              }
+              safeEmit(state.copyWith(pendingCount: records.length));
             });
 
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((
+    _connectivitySubscription = connectivity.onConnectivityChanged.listen((
       results,
     ) {
       checkConnectivity(results);
@@ -58,7 +55,7 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
   }
 
   Future<void> checkConnectivity([List<ConnectivityResult>? results]) async {
-    final currentResults = results ?? await _connectivity.checkConnectivity();
+    final currentResults = results ?? await connectivity.checkConnectivity();
     final hasNetworkInterface = currentResults.any(
       (r) => r != ConnectivityResult.none,
     );
@@ -68,16 +65,16 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
       return;
     }
 
-    emit(state.copyWith(isChecking: true));
+    safeEmit(state.copyWith(isChecking: true));
     final isReachable = await _probeServer();
-    emit(state.copyWith(isChecking: false));
+    safeEmit(state.copyWith(isChecking: false));
     _updateOnlineStatus(isReachable);
   }
 
   Future<bool> _probeServer() async {
     try {
       final probeUrl = '${AppConfig.baseUrl}/health/live';
-      final response = await _probeDio.get(probeUrl);
+      final response = await probeDio.get(probeUrl);
       return (response.statusCode ?? 0) >= 200 &&
           (response.statusCode ?? 0) < 400;
     } catch (_) {
@@ -94,11 +91,10 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
   }
 
   void _updateOnlineStatus(bool online) {
-    if (isClosed) return;
     final wasOffline = !state.isOnline;
-    emit(state.copyWith(isOnline: online));
+    final didEmit = safeEmit(state.copyWith(isOnline: online));
 
-    if (wasOffline && online) {
+    if (didEmit && wasOffline && online) {
       onOnlineRestored?.call();
     }
   }

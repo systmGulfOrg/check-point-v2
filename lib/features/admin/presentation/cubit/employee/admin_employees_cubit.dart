@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 
 import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/edit_employee_request_body.dart';

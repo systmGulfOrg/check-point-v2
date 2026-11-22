@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:check_point_v2/core/utils/legacy_api_response_helpers.dart';
+import 'package:check_point_v2/core/core.dart';
 
 part 'customer_visit_model.g.dart';
 

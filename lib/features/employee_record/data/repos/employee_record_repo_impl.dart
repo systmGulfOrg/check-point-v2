@@ -1,6 +1,4 @@
-import 'package:check_point_v2/core/network/api_failure.dart';
-import 'package:check_point_v2/core/network/api_failure_mapper.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../apis/employee_record_api_service.dart';
 import '../models/employee_record_model.dart';
 import 'employee_record_repo.dart';

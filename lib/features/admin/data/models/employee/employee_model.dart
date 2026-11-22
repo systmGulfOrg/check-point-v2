@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:check_point_v2/core/utils/legacy_api_json_converters.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'employee_holiday_models.dart';
 import 'employee_work_policy_model.dart';
 

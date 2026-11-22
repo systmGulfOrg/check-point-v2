@@ -1,5 +1,4 @@
-import 'package:check_point_v2/core/network/api_failure_mapper.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../apis/attendance_points_api_service.dart';
 import '../models/points_summary_model.dart';
 import '../models/points_history_model.dart';

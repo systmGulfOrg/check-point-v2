@@ -1,19 +1,10 @@
 import 'dart:async';
 
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/employee/domain/use_cases/resolve_today_attendance.dart';
 import 'package:drift/drift.dart' show OrderingTerm;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:check_point_v2/core/auth/auth_session_storage.dart';
-import 'package:check_point_v2/core/connectivity/connectivity_cubit.dart';
-import 'package:check_point_v2/core/database/app_database.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
-import 'package:check_point_v2/core/services/attendance_sync_service.dart';
-import 'package:check_point_v2/core/services/attendance_verification_service.dart';
-import 'package:check_point_v2/core/services/device_clock_service.dart';
-import 'package:check_point_v2/core/utils/app_date_formatter.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
@@ -201,6 +192,7 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
       customerId: customerId ?? selectedTarget?.id?.toString(),
       locationLabel: locationLabel,
       currentLocation: currentLocation,
+      sample: verification.sample,
       selectedImageBase64: selectedImageBase64,
     );
 
@@ -300,6 +292,7 @@ class EmployeeAttendanceCubit extends SafeCubit<EmployeeAttendanceState> {
     final result = await checkOutUseCase(
       selectedImageBase64: selectedImageBase64,
       currentLocation: currentLocation,
+      sample: verification.sample,
     );
 
     result.when(

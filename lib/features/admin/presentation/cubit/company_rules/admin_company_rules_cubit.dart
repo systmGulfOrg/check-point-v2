@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/company_approval_config_model.dart';
 import 'package:check_point_v2/features/admin/data/repos/admin_shifts_policies_repo.dart';
 import 'admin_company_rules_state.dart';

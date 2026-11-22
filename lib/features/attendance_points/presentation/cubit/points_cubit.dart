@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../../data/models/points_summary_model.dart';
 import '../../data/models/points_history_model.dart';
 import '../../data/models/points_badge_model.dart';

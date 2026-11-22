@@ -4,7 +4,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import '../../data/models/remote_work_policy_model.dart';
 import '../../data/repos/remote_work_repo.dart';

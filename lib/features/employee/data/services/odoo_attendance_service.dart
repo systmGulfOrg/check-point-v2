@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import 'package:check_point_v2/core/app/app_config.dart';
+import 'package:check_point_v2/core/core.dart';
 
 class OdooAttendanceService {
   OdooAttendanceService({required this.dio});

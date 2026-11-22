@@ -5,7 +5,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/features/employee_record/presentation/widgets/employee_record_button_widget.dart';
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/employee_model.dart';
 import 'employee_detail_info_item_widget.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';

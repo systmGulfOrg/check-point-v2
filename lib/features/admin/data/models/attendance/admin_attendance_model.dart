@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'package:check_point_v2/core/utils/legacy_api_json_converters.dart';
-import 'package:check_point_v2/core/utils/legacy_api_response_helpers.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_in_request_body.dart';
 
 part 'admin_attendance_model.g.dart';
@@ -41,6 +40,8 @@ class AdminAttendanceModel {
     this.checkOutLatitude,
     this.checkOutLongitude,
     this.coordinates,
+    this.integrityVerdict,
+    this.riskScore,
   });
 
   final int? id;
@@ -79,6 +80,8 @@ class AdminAttendanceModel {
   final double? checkOutLatitude;
   final double? checkOutLongitude;
   final List<AttendanceCoordinate>? coordinates;
+  final String? integrityVerdict;
+  final double? riskScore;
 
   factory AdminAttendanceModel.fromJson(Map<String, dynamic> json) =>
       _$AdminAttendanceModelFromJson(json);

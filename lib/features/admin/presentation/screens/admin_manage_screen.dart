@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_manage_card_widget.dart';
 
 class AdminManageScreen extends StatelessWidget {

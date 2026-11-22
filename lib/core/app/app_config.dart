@@ -3,7 +3,12 @@ import 'package:check_point_v2/core/env/env.dart';
 class AppConfig {
   const AppConfig._();
 
-  static const bool useLocalBackend = true;
+  /// Use the local Android-emulator backend only when explicitly requested.
+  /// Release builds default to the configured backend server.
+  static const bool useLocalBackend = bool.fromEnvironment(
+    'USE_LOCAL_BACKEND',
+    defaultValue: false,
+  );
 
   static String get baseUrl {
     if (useLocalBackend) {

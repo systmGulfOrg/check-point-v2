@@ -52,8 +52,10 @@ void main() {
   setUp(() {
     repo = FakeOfflineVerificationRepo();
     cubit = PendingVerificationCubit(
-      getPendingVerificationsUseCase: GetPendingVerificationsUseCase(repo),
-      verifyAttendanceRecordUseCase: VerifyAttendanceRecordUseCase(repo),
+      getPendingVerificationsUseCase: GetPendingVerificationsUseCase(
+        repo: repo,
+      ),
+      verifyAttendanceRecordUseCase: VerifyAttendanceRecordUseCase(repo: repo),
     );
   });
 

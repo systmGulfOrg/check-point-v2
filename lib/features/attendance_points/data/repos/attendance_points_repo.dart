@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../models/points_summary_model.dart';
 import '../models/points_history_model.dart';
 import '../models/points_exchange_model.dart';

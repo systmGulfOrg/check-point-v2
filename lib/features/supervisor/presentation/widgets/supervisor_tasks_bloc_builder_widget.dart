@@ -8,7 +8,6 @@ import 'package:check_point_v2/features/admin/data/models/tasks/admin_task_model
 import 'package:check_point_v2/features/supervisor/data/models/tasks/supervisor_update_task_status_request_body.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_state.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'supervisor_edit_task_sheet_widget.dart';
 import 'supervisor_tasks_list_widget.dart';

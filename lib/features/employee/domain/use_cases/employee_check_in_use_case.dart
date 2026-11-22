@@ -1,7 +1,6 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:check_point_v2/core/auth/auth_session_storage.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/employee/data/models/attendance/employee_check_in_request_body.dart';
 import 'package:check_point_v2/features/employee/data/repos/employee_attendance_repo.dart';
@@ -20,6 +19,7 @@ class EmployeeCheckInUseCase {
     String? customerId,
     String? locationLabel,
     LatLng? currentLocation,
+    LocationSample? sample,
     String? selectedImageBase64,
   }) async {
     final employeeId = await sessionStorage.readUserId() ?? '';
@@ -30,10 +30,23 @@ class EmployeeCheckInUseCase {
       'Remote' => 'Remote',
       _ => 'Office',
     };
+
+    String? deviceUuid;
+    try {
+      if (sl.isRegistered<DeviceIdentityProvider>()) {
+        deviceUuid = sl<DeviceIdentityProvider>().mobileId;
+      }
+    } catch (_) {}
+
+    final nowIso = DateTime.now().toUtc().toIso8601String();
+
     final requestBody = EmployeeCheckInRequestBody(
       employeeIdd: employeeId,
       area: apiArea,
       customerId: customerId,
+      deviceUuid: deviceUuid,
+      capturedWallClock: nowIso,
+      mockLocationDetected: sample?.isMockFromNative,
       location:
           locationLabel ??
           (currentLocation != null
@@ -44,6 +57,12 @@ class EmployeeCheckInUseCase {
               AttendanceCoordinate(
                 latitude: currentLocation.latitude,
                 longitude: currentLocation.longitude,
+                accuracyM: sample?.accuracy,
+                provider: sample?.provider,
+                speed: sample?.speed,
+                isMock: sample?.isMockFromNative,
+                capturedWallClock: nowIso,
+                kind: 'in',
               ),
             ]
           : null,

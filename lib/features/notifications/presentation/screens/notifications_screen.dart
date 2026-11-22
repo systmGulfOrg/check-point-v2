@@ -1,8 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import 'package:check_point_v2/core/styles/app_colors.dart';
-import 'package:check_point_v2/core/styles/app_text_styles.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../widgets/notifications_bloc_builder_widget.dart';
 
 class NotificationsScreen extends StatelessWidget {

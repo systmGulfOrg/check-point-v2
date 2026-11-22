@@ -13,6 +13,9 @@ class EmployeeCheckOutRequestBody {
     this.note,
     this.coordinates,
     this.mockLocationDetected,
+    this.deviceUuid,
+    this.capturedWallClock,
+    this.integrityVerdict,
   });
 
   final String employeeId;
@@ -21,6 +24,9 @@ class EmployeeCheckOutRequestBody {
   final String? note;
   final bool? mockLocationDetected;
   final List<AttendanceCoordinate>? coordinates;
+  final String? deviceUuid;
+  final String? capturedWallClock;
+  final String? integrityVerdict;
 
   factory EmployeeCheckOutRequestBody.fromJson(Map<String, dynamic> json) =>
       _$EmployeeCheckOutRequestBodyFromJson(json);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';

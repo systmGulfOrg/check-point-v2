@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/tasks/supervisor_tasks_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
 import 'supervisor_create_task_sheet_widget.dart';
