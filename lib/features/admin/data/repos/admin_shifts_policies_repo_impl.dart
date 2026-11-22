@@ -1,5 +1,4 @@
-import 'package:check_point_v2/core/network/api_failure_mapper.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/apis/admin_api_service.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/company_approval_config_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/police_model.dart';
@@ -134,9 +133,7 @@ class AdminShiftsPoliciesRepoImpl implements AdminShiftsPoliciesRepo {
   Future<ApiResult<CompanyApprovalConfigModel>> getApprovalConfig() async {
     try {
       final response = await api.getApprovalConfig();
-      final data = (response['data'] as Map<String, dynamic>?) ?? response;
-      final model = CompanyApprovalConfigModel.fromJson(data);
-      return ApiResult.success(model);
+      return ApiResult.success(response);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
@@ -148,9 +145,7 @@ class AdminShiftsPoliciesRepoImpl implements AdminShiftsPoliciesRepo {
   ) async {
     try {
       final response = await api.updateApprovalConfig(config.toJson());
-      final data = (response['data'] as Map<String, dynamic>?) ?? response;
-      final model = CompanyApprovalConfigModel.fromJson(data);
-      return ApiResult.success(model);
+      return ApiResult.success(response);
     } catch (e) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

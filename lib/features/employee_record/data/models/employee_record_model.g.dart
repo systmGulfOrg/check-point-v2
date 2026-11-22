@@ -115,6 +115,20 @@ _$RecordDayModelImpl _$$RecordDayModelImplFromJson(Map<String, dynamic> json) =>
               )
               .toList() ??
           const <RecordPermitModel>[],
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
+      checkInLatitude: (json['checkInLatitude'] as num?)?.toDouble(),
+      checkInLongitude: (json['checkInLongitude'] as num?)?.toDouble(),
+      checkOutLatitude: (json['checkOutLatitude'] as num?)?.toDouble(),
+      checkOutLongitude: (json['checkOutLongitude'] as num?)?.toDouble(),
+      coordinates:
+          (json['coordinates'] as List<dynamic>?)
+              ?.map(
+                (e) =>
+                    RecordCoordinateModel.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          const <RecordCoordinateModel>[],
     );
 
 Map<String, dynamic> _$$RecordDayModelImplToJson(
@@ -131,6 +145,13 @@ Map<String, dynamic> _$$RecordDayModelImplToJson(
   'holidayName': instance.holidayName,
   'leave': instance.leave,
   'permits': instance.permits,
+  'latitude': instance.latitude,
+  'longitude': instance.longitude,
+  'checkInLatitude': instance.checkInLatitude,
+  'checkInLongitude': instance.checkInLongitude,
+  'checkOutLatitude': instance.checkOutLatitude,
+  'checkOutLongitude': instance.checkOutLongitude,
+  'coordinates': instance.coordinates,
 };
 
 _$RecordLeaveModelImpl _$$RecordLeaveModelImplFromJson(
@@ -164,4 +185,24 @@ Map<String, dynamic> _$$RecordPermitModelImplToJson(
   'durationMinutes': instance.durationMinutes,
   'startTime': instance.startTime,
   'endTime': instance.endTime,
+};
+
+_$RecordCoordinateModelImpl _$$RecordCoordinateModelImplFromJson(
+  Map<String, dynamic> json,
+) => _$RecordCoordinateModelImpl(
+  latitude: (json['latitude'] as num?)?.toDouble(),
+  longitude: (json['longitude'] as num?)?.toDouble(),
+  accuracyM: (json['accuracyM'] as num?)?.toDouble(),
+  kind: json['kind'] as String?,
+  capturedAt: json['capturedAt'] as String?,
+);
+
+Map<String, dynamic> _$$RecordCoordinateModelImplToJson(
+  _$RecordCoordinateModelImpl instance,
+) => <String, dynamic>{
+  'latitude': instance.latitude,
+  'longitude': instance.longitude,
+  'accuracyM': instance.accuracyM,
+  'kind': instance.kind,
+  'capturedAt': instance.capturedAt,
 };

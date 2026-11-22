@@ -298,7 +298,21 @@ class LeavesRepoImpl implements LeavesRepo {
   @override
   Future<ApiResult<List<ShortLeaveModel>>> getShortLeaves() async {
     try {
-      return ApiResult.success(await api.getShortLeaves());
+      final res = await api.getShortLeaves();
+      List<dynamic> list = [];
+      if (res is List) {
+        list = res;
+      } else if (res is Map<String, dynamic>) {
+        if (res['value'] is List) {
+          list = res['value'] as List<dynamic>;
+        } else if (res['data'] is List) {
+          list = res['data'] as List<dynamic>;
+        }
+      }
+      final items = list
+          .map((i) => ShortLeaveModel.fromJson(i as Map<String, dynamic>))
+          .toList();
+      return ApiResult.success(items);
     } catch (e, _) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }
@@ -319,7 +333,11 @@ class LeavesRepoImpl implements LeavesRepo {
         if (body.reason != null && body.reason!.isNotEmpty)
           'reason': body.reason,
       };
-      return ApiResult.success(await api.submitShortLeaveRequest(jsonBody));
+      final res = await api.submitShortLeaveRequest(jsonBody);
+      final json = (res is Map<String, dynamic> && res['value'] is Map<String, dynamic>)
+          ? res['value'] as Map<String, dynamic>
+          : (res is Map<String, dynamic> ? res : <String, dynamic>{});
+      return ApiResult.success(ShortLeaveModel.fromJson(json));
     } catch (e, _) {
       return ApiResult.failure(ApiFailureMapper.map(e));
     }

@@ -143,3 +143,22 @@ class ChatMessageModel {
     );
   }
 }
+
+class AiSettingsModel {
+  final bool enabled;
+  final bool apiKeyConfigured;
+  final String? apiKeyMasked;
+
+  const AiSettingsModel({
+    required this.enabled,
+    required this.apiKeyConfigured,
+    this.apiKeyMasked,
+  });
+
+  factory AiSettingsModel.fromJson(Map<String, dynamic> json) =>
+      AiSettingsModel(
+        enabled: json['enabled'] != false,
+        apiKeyConfigured: json['apiKeyConfigured'] == true,
+        apiKeyMasked: json['apiKeyMasked']?.toString(),
+      );
+}

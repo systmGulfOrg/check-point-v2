@@ -2,6 +2,20 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'disciplinary_models.g.dart';
 
+double _parseDouble(dynamic val, [double fallback = 0.0]) {
+  if (val == null) return fallback;
+  if (val is num) return val.toDouble();
+  if (val is String) return double.tryParse(val) ?? fallback;
+  return fallback;
+}
+
+double? _parseDoubleNullable(dynamic val) {
+  if (val == null) return null;
+  if (val is num) return val.toDouble();
+  if (val is String) return double.tryParse(val);
+  return null;
+}
+
 @JsonSerializable(createToJson: false)
 class DisciplinaryViolationModel {
   const DisciplinaryViolationModel({
@@ -46,6 +60,34 @@ class DisciplinaryViolationModel {
   final String? appealReason;
   final String? appealStatus;
 
+  bool get isWarning =>
+      penaltyType == 'WARNING_ONLY' ||
+      (calculatedAmount == 0 && (deductedDays == null || deductedDays == 0));
+
+  String formattedPenaltyText([String currency = 'EGP']) {
+    if (penaltyType == 'WARNING_ONLY') {
+      return requiresWrittenWarning ? 'إنذار كتابي رسمي' : 'تنبيه إداري شفوي';
+    }
+    final formattedAmt = calculatedAmount.toStringAsFixed(
+      calculatedAmount.truncateToDouble() == calculatedAmount ? 0 : 2,
+    );
+    if (deductedDays != null && deductedDays! > 0) {
+      final daysText = deductedDays == 1
+          ? 'يوم واحد'
+          : deductedDays == 2
+              ? 'يومان'
+              : '$deductedDays يوم';
+      if (calculatedAmount > 0) {
+        return 'خصم $daysText ($formattedAmt $currency)';
+      }
+      return 'خصم $daysText';
+    }
+    if (calculatedAmount > 0) {
+      return 'خصم $formattedAmt $currency';
+    }
+    return requiresWrittenWarning ? 'إنذار كتابي' : 'تنبيه إداري';
+  }
+
   factory DisciplinaryViolationModel.fromJson(Map<String, dynamic> json) {
     final rule = json['rule'];
     final employee = json['employee'];
@@ -69,9 +111,9 @@ class DisciplinaryViolationModel {
       id: json['id'] as String? ?? '',
       occurrenceIndex: json['occurrenceIndex'] as int? ?? 1,
       penaltyType: json['penaltyType'] as String? ?? 'FRACTION_OF_DAY',
-      penaltyValue: (json['penaltyValue'] as num?)?.toDouble() ?? 0.0,
-      deductedDays: (json['deductedDays'] as num?)?.toDouble(),
-      calculatedAmount: (json['calculatedAmount'] as num?)?.toDouble() ?? 0.0,
+      penaltyValue: _parseDouble(json['penaltyValue']),
+      deductedDays: _parseDoubleNullable(json['deductedDays']),
+      calculatedAmount: _parseDouble(json['calculatedAmount']),
       requiresAdminReview: json['requiresAdminReview'] as bool? ?? false,
       requiresWrittenWarning: json['requiresWrittenWarning'] as bool? ?? false,
       status: json['status'] as String? ?? 'APPROVED',
@@ -103,6 +145,7 @@ class DisciplinarySummaryModel {
     required this.totalDeductedDays,
     required this.totalCalculatedAmount,
     required this.violations,
+    this.currency = 'EGP',
   });
 
   final String month;
@@ -110,6 +153,7 @@ class DisciplinarySummaryModel {
   final double totalDeductedDays;
   final double totalCalculatedAmount;
   final List<DisciplinaryViolationModel> violations;
+  final String currency;
 
   factory DisciplinarySummaryModel.fromJson(Map<String, dynamic> json) {
     final vList = json['violations'];
@@ -122,11 +166,14 @@ class DisciplinarySummaryModel {
 
     return DisciplinarySummaryModel(
       month: json['month'] as String? ?? '',
-      violationsCount: json['violationsCount'] as int? ?? 0,
-      totalDeductedDays:
-          (json['totalDeductedDays'] as num?)?.toDouble() ?? 0.0,
-      totalCalculatedAmount:
-          (json['totalCalculatedAmount'] as num?)?.toDouble() ?? 0.0,
+      currency: json['currency'] as String? ?? 'EGP',
+      violationsCount: json['violationsCount'] is int
+          ? json['violationsCount'] as int
+          : (json['violationsCount'] is String
+              ? int.tryParse(json['violationsCount'] as String) ?? 0
+              : (json['violationsCount'] as num?)?.toInt() ?? 0),
+      totalDeductedDays: _parseDouble(json['totalDeductedDays']),
+      totalCalculatedAmount: _parseDouble(json['totalCalculatedAmount']),
       violations: items,
     );
   }
@@ -186,13 +233,17 @@ class DisciplinaryPreviewModel {
 
   factory DisciplinaryPreviewModel.fromJson(Map<String, dynamic> json) {
     return DisciplinaryPreviewModel(
-      occurrenceIndex: json['occurrenceIndex'] as int? ?? 1,
+      occurrenceIndex: json['occurrenceIndex'] is int
+          ? json['occurrenceIndex'] as int
+          : (json['occurrenceIndex'] is String
+              ? int.tryParse(json['occurrenceIndex'] as String) ?? 1
+              : (json['occurrenceIndex'] as num?)?.toInt() ?? 1),
       penaltyType: json['penaltyType'] as String? ?? 'FRACTION_OF_DAY',
-      penaltyValue: (json['penaltyValue'] as num?)?.toDouble() ?? 0.0,
-      deductedDays: (json['deductedDays'] as num?)?.toDouble() ?? 0.0,
-      calculatedAmount: (json['calculatedAmount'] as num?)?.toDouble() ?? 0.0,
+      penaltyValue: _parseDouble(json['penaltyValue']),
+      deductedDays: _parseDouble(json['deductedDays']),
+      calculatedAmount: _parseDouble(json['calculatedAmount']),
       requiresAdminReview: json['requiresAdminReview'] as bool? ?? false,
-      dayWage: (json['dayWage'] as num?)?.toDouble() ?? 0.0,
+      dayWage: _parseDouble(json['dayWage']),
       labelAr: json['labelAr'] as String? ?? '',
     );
   }

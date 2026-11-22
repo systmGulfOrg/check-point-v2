@@ -9,6 +9,7 @@ class AdminAttendanceRecordData {
     required this.checkIn,
     required this.checkOut,
     required this.area,
+    this.location,
     required this.totalHours,
     required this.statusKey,
     required this.statusColor,
@@ -22,6 +23,7 @@ class AdminAttendanceRecordData {
   final String checkIn;
   final String checkOut;
   final String area;
+  final String? location;
   final String totalHours;
   final String statusKey;
   final Color statusColor;

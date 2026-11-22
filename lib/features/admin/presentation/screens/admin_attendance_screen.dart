@@ -345,6 +345,7 @@ class _AdminAttendanceScreenState extends State<AdminAttendanceScreen> {
                                   area: item.area?.trim().isNotEmpty == true
                                       ? item.area!
                                       : '-',
+                                  location: item.checkInAddress,
                                   totalHours: _formatTotalHours(
                                     dayHours: item.dayHours,
                                     totalHours: item.totalHours,

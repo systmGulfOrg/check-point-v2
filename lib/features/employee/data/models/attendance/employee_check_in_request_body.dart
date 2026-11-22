@@ -34,11 +34,19 @@ class EmployeeCheckInRequestBody {
 
 @JsonSerializable()
 class AttendanceCoordinate {
-  const AttendanceCoordinate({this.latitude, this.longitude, this.accuracyM});
+  const AttendanceCoordinate({
+    this.latitude,
+    this.longitude,
+    this.accuracyM,
+    this.kind,
+    this.capturedAt,
+  });
 
   final double? latitude;
   final double? longitude;
   final double? accuracyM;
+  final String? kind;
+  final String? capturedAt;
 
   factory AttendanceCoordinate.fromJson(Map<String, dynamic> json) =>
       _$AttendanceCoordinateFromJson(json);

@@ -1,5 +1,4 @@
-import 'package:check_point_v2/core/network/api_failure_mapper.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../apis/ai_api_service.dart';
 import '../models/ai_chat_models.dart';
 import 'ai_repo.dart';
@@ -8,6 +7,29 @@ class AiRepoImpl implements AiRepo {
   final AiApiService api;
 
   AiRepoImpl({required this.api});
+
+  @override
+  Future<ApiResult<AiSettingsModel>> getSettings() async {
+    try {
+      return ApiResult.success(await api.getSettings());
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<ApiResult<AiSettingsModel>> updateSettings({
+    required bool enabled,
+    String? apiKey,
+  }) async {
+    try {
+      return ApiResult.success(
+        await api.updateSettings(enabled: enabled, apiKey: apiKey),
+      );
+    } catch (e) {
+      return ApiResult.failure(ApiFailureMapper.map(e));
+    }
+  }
 
   @override
   Future<ApiResult<AiChatResponseModel>> sendMessage(

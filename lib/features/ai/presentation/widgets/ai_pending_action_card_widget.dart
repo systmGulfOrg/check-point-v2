@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:check_point_v2/core/styles/app_colors.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../../data/models/ai_chat_models.dart';
 
 class AiPendingActionCardWidget extends StatelessWidget {
@@ -18,9 +18,8 @@ class AiPendingActionCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final summary = pendingAction.summary ??
-        pendingAction.action?.summary ??
-        'إجراء مقترح';
+    final summary =
+        pendingAction.summary ?? pendingAction.action?.summary ?? 'إجراء مقترح';
 
     return Container(
       padding: const EdgeInsets.all(10),

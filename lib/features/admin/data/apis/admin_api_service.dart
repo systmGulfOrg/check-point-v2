@@ -4,7 +4,7 @@ import 'package:check_point_v2/features/admin/data/models/audit/audit_log_model.
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import 'package:check_point_v2/core/network/api_constants.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/data/models/login/result_model.dart';
 import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/employee/add_employee_request_body.dart';
@@ -23,6 +23,7 @@ import 'package:check_point_v2/features/admin/data/models/employee/edit_employee
 import 'package:check_point_v2/features/admin/data/models/employee/employees_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/police_model.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/shift_model.dart';
+import 'package:check_point_v2/features/admin/data/models/shifts_policies/company_approval_config_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
 import 'package:check_point_v2/features/admin/data/models/device/pending_device_model.dart';
 
@@ -384,10 +385,10 @@ abstract class AdminApiService {
   });
 
   @GET('/api/v2/company/approval-config')
-  Future<Map<String, dynamic>> getApprovalConfig();
+  Future<CompanyApprovalConfigModel> getApprovalConfig();
 
   @PUT('/api/v2/company/approval-config')
-  Future<Map<String, dynamic>> updateApprovalConfig(
+  Future<CompanyApprovalConfigModel> updateApprovalConfig(
     @Body() Map<String, dynamic> body,
   );
 }

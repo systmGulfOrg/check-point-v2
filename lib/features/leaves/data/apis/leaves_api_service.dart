@@ -50,10 +50,10 @@ abstract class LeavesApiService {
   Future<dynamic> deleteLeaveRequest(@Path('id') dynamic id);
 
   @GET('/api/v1/leaves/permissions/requests')
-  Future<List<ShortLeaveModel>> getShortLeaves();
+  Future<dynamic> getShortLeaves();
 
   @POST('/api/v1/leaves/permissions/request')
-  Future<ShortLeaveModel> submitShortLeaveRequest(
+  Future<dynamic> submitShortLeaveRequest(
     @Body() Map<String, dynamic> body,
   );
 }

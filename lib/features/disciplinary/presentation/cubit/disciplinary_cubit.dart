@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../../domain/repos/disciplinary_repo.dart';
 import '../../data/models/disciplinary_models.dart';
 import 'disciplinary_state.dart';
@@ -9,10 +9,22 @@ class DisciplinaryCubit extends SafeCubit<DisciplinaryState> {
 
   final DisciplinaryRepo repo;
   DisciplinarySummaryModel? currentSummary;
+  DateTime currentMonth = DateTime(DateTime.now().year, DateTime.now().month);
 
-  Future<void> loadMyViolations({String? month}) async {
+  bool get canGoNext {
+    final now = DateTime.now();
+    return currentMonth.year < now.year ||
+        (currentMonth.year == now.year && currentMonth.month < now.month);
+  }
+
+  Future<void> loadMyViolations({DateTime? forMonth}) async {
+    if (forMonth != null) {
+      currentMonth = DateTime(forMonth.year, forMonth.month);
+    }
+    final monthStr =
+        '${currentMonth.year}-${currentMonth.month.toString().padLeft(2, '0')}';
     emit(const DisciplinaryState.loading());
-    final result = await repo.getMyViolations(month: month);
+    final result = await repo.getMyViolations(month: monthStr);
     if (isClosed) return;
     result.when(
       success: (summary) {
@@ -21,6 +33,14 @@ class DisciplinaryCubit extends SafeCubit<DisciplinaryState> {
       },
       failure: (f) => safeEmit(DisciplinaryState.error(f.messageKey)),
     );
+  }
+
+  Future<void> previousMonth() =>
+      loadMyViolations(forMonth: DateTime(currentMonth.year, currentMonth.month - 1));
+
+  Future<void> nextMonth() {
+    if (!canGoNext) return Future.value();
+    return loadMyViolations(forMonth: DateTime(currentMonth.year, currentMonth.month + 1));
   }
 
   Future<bool> submitAppeal({
@@ -35,11 +55,10 @@ class DisciplinaryCubit extends SafeCubit<DisciplinaryState> {
     );
     return result.when(
       success: (_) async {
-        await loadMyViolations(month: currentSummary?.month);
+        await loadMyViolations(forMonth: currentMonth);
         return true;
       },
       failure: (f) {
-        safeEmit(DisciplinaryState.error(f.messageKey));
         return false;
       },
     );

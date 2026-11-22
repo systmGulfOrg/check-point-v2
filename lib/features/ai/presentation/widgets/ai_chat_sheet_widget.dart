@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../cubit/ai_chat_cubit.dart';
 import '../cubit/ai_chat_state.dart';
 import 'ai_active_agents_bar_widget.dart';
@@ -51,6 +51,7 @@ class _AiChatSheetWidgetState extends State<AiChatSheetWidget>
         );
     _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _animController.forward();
+    context.read<AiChatCubit>().loadSettings();
   }
 
   @override
@@ -103,9 +104,52 @@ class _AiChatSheetWidgetState extends State<AiChatSheetWidget>
               children: [
                 const AiChatTopBarWidget(),
                 const AiActiveAgentsBarWidget(),
+                BlocBuilder<AiChatCubit, AiChatState>(
+                  buildWhen: (prev, curr) => prev.aiEnabled != curr.aiEnabled,
+                  builder: (context, state) {
+                    if (state.aiEnabled) return const SizedBox.shrink();
+                    return Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.softYellowBackground,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: AppColors.warningOrange.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.info_outline_rounded,
+                            size: 16,
+                            color: AppColors.warningOrange,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'خدمة المساعد الذكي غير مفعّلة حالياً. يرجى تفعيلها من إعدادات الشركة.',
+                              style: AppTextStyles.font11Medium.copyWith(
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
                 Expanded(
                   child: BlocConsumer<AiChatCubit, AiChatState>(
                     listener: (context, state) {
+                      if (state.errorMessage != null &&
+                          state.errorMessage!.isNotEmpty) {
+                        CustomSnackBar.showError(
+                          context,
+                          message: state.errorMessage!,
+                        );
+                      }
                       _scrollToBottom();
                     },
                     builder: (context, state) {

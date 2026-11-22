@@ -39,6 +39,8 @@ class FakeAdminAttendanceRepo implements AdminAttendanceRepo {
     String? clockInTime,
     String? clockOutTime,
     String? status,
+    String? area,
+    String? location,
     String? reason,
   }) async => const ApiResult.success(null);
 

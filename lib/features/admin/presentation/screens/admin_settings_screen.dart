@@ -7,7 +7,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_help_support_sheet_widget.dart';
-import 'package:check_point_v2/core/widgets/language_selection_sheet_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_profile_card_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/change_password_sheet_widget.dart';
@@ -19,6 +18,7 @@ import 'package:check_point_v2/features/admin/presentation/widgets/admin_setting
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_sign_out_button_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_settings_tile_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/delete_account_button_widget.dart';
+import 'package:check_point_v2/features/ai/presentation/widgets/ai_settings_widget.dart';
 
 class AdminSettingsScreen extends StatelessWidget {
   const AdminSettingsScreen({super.key});
@@ -53,6 +53,8 @@ class AdminSettingsScreen extends StatelessWidget {
             ),
             hSpace(20),
             const AuthProfileCardWidget(),
+            hSpace(20),
+            const AiSettingsWidget(),
             hSpace(20),
             AdminSettingsSectionCardWidget(
               sectionTitleKey: 'admin.settings.sectionAccount',

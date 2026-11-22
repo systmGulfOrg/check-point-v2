@@ -10,6 +10,7 @@ import 'package:check_point_v2/features/ai/data/apis/ai_api_service.dart';
 import 'package:check_point_v2/features/ai/data/repos/ai_repo.dart';
 import 'package:check_point_v2/features/ai/data/repos/ai_repo_impl.dart';
 import 'package:check_point_v2/features/ai/presentation/cubit/ai_chat_cubit.dart';
+import 'package:check_point_v2/features/ai/presentation/cubit/ai_settings_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/employee_audit/admin_employee_audit_cubit.dart';
 import 'package:check_point_v2/features/support/data/apis/support_ticket_api_service.dart';
 import 'package:dio/dio.dart';
@@ -195,10 +196,10 @@ Future<void> setupServiceLocator() async {
     () => OfflineVerificationRepoImpl(dio: sl<Dio>()),
   );
   sl.registerLazySingleton<GetPendingVerificationsUseCase>(
-    () => GetPendingVerificationsUseCase(sl<OfflineVerificationRepo>()),
+    () => GetPendingVerificationsUseCase(repo: sl<OfflineVerificationRepo>()),
   );
   sl.registerLazySingleton<VerifyAttendanceRecordUseCase>(
-    () => VerifyAttendanceRecordUseCase(sl<OfflineVerificationRepo>()),
+    () => VerifyAttendanceRecordUseCase(repo: sl<OfflineVerificationRepo>()),
   );
   sl.registerFactory<PendingVerificationCubit>(
     () => PendingVerificationCubit(
@@ -295,7 +296,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<DisciplinaryApiService>(
     () => DisciplinaryApiService(sl<Dio>()),
   );
-  sl.registerLazySingleton<AiApiService>(() => AiApiService(sl<Dio>()));
+  sl.registerLazySingleton<AiApiService>(() => AiApiService(dio: sl<Dio>()));
   sl.registerLazySingleton<AiRepo>(() => AiRepoImpl(api: sl<AiApiService>()));
 
   sl.registerLazySingleton<SupportTicketApiService>(
@@ -668,4 +669,7 @@ Future<void> setupServiceLocator() async {
     ),
   );
   sl.registerFactory<AiChatCubit>(() => AiChatCubit(repo: sl<AiRepo>()));
+  sl.registerFactory<AiSettingsCubit>(
+    () => AiSettingsCubit(repo: sl<AiRepo>()),
+  );
 }

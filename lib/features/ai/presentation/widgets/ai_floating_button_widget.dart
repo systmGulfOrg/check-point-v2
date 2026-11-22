@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:check_point_v2/core/styles/app_colors.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'ai_chat_sheet_widget.dart';
 
 class AiFloatingButtonWidget extends StatelessWidget {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../../data/models/disciplinary_models.dart';
 
 class DisciplinarySummaryCardWidget extends StatelessWidget {
@@ -7,101 +8,144 @@ class DisciplinarySummaryCardWidget extends StatelessWidget {
 
   final DisciplinarySummaryModel summary;
 
+  String _formatCurrency(String currency) {
+    if (currency.toUpperCase() == 'SAR') return 'ر.س';
+    if (currency.toUpperCase() == 'EGP') return 'ج.م';
+    if (currency.toUpperCase() == 'AED') return 'د.إ';
+    if (currency.toUpperCase() == 'USD') return '\$';
+    return currency;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10.r,
-            offset: Offset(0, 4.h),
-          ),
-        ],
-      ),
+    final currencyLabel = _formatCurrency(summary.currency);
+    final hasViolations = summary.violationsCount > 0;
+
+    return AppCardContainerWidget(
+      padding: EdgeInsets.all(16.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'ملخص خصومات الشهر (${summary.month})',
-                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: Colors.red.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Text(
-                  '${summary.violationsCount} مخالفات',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
+              Row(
+                children: [
+                  Container(
+                    width: 36.r,
+                    height: 36.r,
+                    decoration: BoxDecoration(
+                      color: hasViolations
+                          ? AppColors.softRedBackground
+                          : AppColors.softGreenBackground,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      hasViolations
+                          ? Icons.gavel_rounded
+                          : Icons.verified_user_rounded,
+                      size: 20.r,
+                      color: hasViolations ? AppColors.error : AppColors.success,
+                    ),
                   ),
-                ),
+                  wSpace(10),
+                  Text(
+                    'ملخص الجزاءات والخصومات',
+                    style: AppTextStyles.font14Bold,
+                  ),
+                ],
+              ),
+              AppStatusPillWidget(
+                label: hasViolations
+                    ? '${summary.violationsCount} ${summary.violationsCount == 1 ? 'مخالفة' : 'مخالفات'}'
+                    : 'سجل نظيف',
+                color: hasViolations ? AppColors.error : AppColors.success,
+                backgroundColor: hasViolations
+                    ? AppColors.softRedBackground
+                    : AppColors.softGreenBackground,
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          hSpace(16),
           Row(
             children: [
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.all(12.w),
+                  padding: EdgeInsets.all(12.r),
                   decoration: BoxDecoration(
-                    color: Colors.amber.withValues(alpha: 0.08),
+                    color: AppColors.softOrangeLightBackground,
                     borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: AppColors.brandPrimary.withValues(alpha: 0.15),
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'الأيام المخصومة',
-                        style: TextStyle(fontSize: 11.sp, color: Colors.grey[600]),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.calendar_today_rounded,
+                            size: 14.r,
+                            color: AppColors.brandPrimary,
+                          ),
+                          wSpace(4),
+                          Text(
+                            'الأيام المخصومة',
+                            style: AppTextStyles.font11Medium.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 4.h),
+                      hSpace(6),
                       Text(
-                        '${summary.totalDeductedDays} يوم',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.amber[900],
+                        summary.totalDeductedDays == 0
+                            ? '0 يوم'
+                            : '${summary.totalDeductedDays} يوم',
+                        style: AppTextStyles.font16Bold.copyWith(
+                          color: AppColors.brandPrimaryDark,
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              SizedBox(width: 12.w),
+              wSpace(12),
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.all(12.w),
+                  padding: EdgeInsets.all(12.r),
                   decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.08),
+                    color: AppColors.softRedBackground.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: AppColors.error.withValues(alpha: 0.15),
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'القيمة المالية',
-                        style: TextStyle(fontSize: 11.sp, color: Colors.grey[600]),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.account_balance_wallet_outlined,
+                            size: 14.r,
+                            color: AppColors.error,
+                          ),
+                          wSpace(4),
+                          Text(
+                            'القيمة المالية',
+                            style: AppTextStyles.font11Medium.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 4.h),
+                      hSpace(6),
                       Text(
-                        '${summary.totalCalculatedAmount} ر.س',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red[800],
+                        '${summary.totalCalculatedAmount.toStringAsFixed(summary.totalCalculatedAmount.truncateToDouble() == summary.totalCalculatedAmount ? 0 : 2)} $currencyLabel',
+                        style: AppTextStyles.font16Bold.copyWith(
+                          color: AppColors.error,
                         ),
                       ),
                     ],

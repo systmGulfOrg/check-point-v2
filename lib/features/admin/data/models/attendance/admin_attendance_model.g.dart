@@ -34,6 +34,15 @@ AdminAttendanceModel _$AdminAttendanceModelFromJson(
   checkOutMockLocation: json['checkOutMockLocation'] as bool?,
   earlyLeaveMinutes: (json['earlyLeaveMinutes'] as num?)?.toInt(),
   workedMinutes: (json['workedMinutes'] as num?)?.toInt(),
+  latitude: (json['latitude'] as num?)?.toDouble(),
+  longitude: (json['longitude'] as num?)?.toDouble(),
+  checkInLatitude: (json['checkInLatitude'] as num?)?.toDouble(),
+  checkInLongitude: (json['checkInLongitude'] as num?)?.toDouble(),
+  checkOutLatitude: (json['checkOutLatitude'] as num?)?.toDouble(),
+  checkOutLongitude: (json['checkOutLongitude'] as num?)?.toDouble(),
+  coordinates: (json['coordinates'] as List<dynamic>?)
+      ?.map((e) => AttendanceCoordinate.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$AdminAttendanceModelToJson(
@@ -64,6 +73,13 @@ Map<String, dynamic> _$AdminAttendanceModelToJson(
   'checkOutMockLocation': instance.checkOutMockLocation,
   'earlyLeaveMinutes': instance.earlyLeaveMinutes,
   'workedMinutes': instance.workedMinutes,
+  'latitude': instance.latitude,
+  'longitude': instance.longitude,
+  'checkInLatitude': instance.checkInLatitude,
+  'checkInLongitude': instance.checkInLongitude,
+  'checkOutLatitude': instance.checkOutLatitude,
+  'checkOutLongitude': instance.checkOutLongitude,
+  'coordinates': instance.coordinates,
 };
 
 AttendanceResponseModel _$AttendanceResponseModelFromJson(
