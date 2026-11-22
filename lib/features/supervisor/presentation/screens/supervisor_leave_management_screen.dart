@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_leave_sheet_widget.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_permission_sheet_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart';
@@ -88,11 +87,13 @@ class _SupervisorLeaveManagementScreenState
               error: (msg) => msg,
               orElse: () => 'errors.unknown',
             );
+            final trMsg = errorKey.tr();
             CustomSnackBar.showError(
               context,
-              message: errorKey.tr(),
+              message: trMsg.isNotEmpty && trMsg != errorKey ? trMsg : errorKey,
             );
           }
+          return success;
         },
       ),
     );

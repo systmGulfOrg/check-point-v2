@@ -5,7 +5,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/leave_requests/leave_type_model.dart'
     as admin_lt;
 import 'package:check_point_v2/features/employee/presentation/widgets/apply_for_leave_sheet_widget.dart';
@@ -111,11 +110,13 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
               error: (msg) => msg,
               orElse: () => 'errors.unknown',
             );
+            final trMsg = errorKey.tr();
             CustomSnackBar.showError(
               context,
-              message: errorKey.tr(),
+              message: trMsg.isNotEmpty && trMsg != errorKey ? trMsg : errorKey,
             );
           }
+          return success;
         },
       ),
     );

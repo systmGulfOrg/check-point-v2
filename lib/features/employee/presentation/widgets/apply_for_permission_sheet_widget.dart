@@ -15,7 +15,7 @@ class ApplyForPermissionSheetWidget extends StatefulWidget {
     super.key,
   });
 
-  final Future<void> Function(ShortLeaveRequestBody body) onSubmit;
+  final Future<bool> Function(ShortLeaveRequestBody body) onSubmit;
   final bool isLoading;
   final String? shiftStart;
   final String? shiftEnd;
@@ -51,6 +51,26 @@ class _ApplyForPermissionSheetWidgetState
       _selectedDate,
       pattern: 'dd/MM/yyyy',
     );
+    _initTimesForType(_selectedPermitType);
+  }
+
+  void _initTimesForType(String type) {
+    if (type == 'LateArrival') {
+      _startTime = _parseTime(widget.shiftStart) ?? const TimeOfDay(hour: 9, minute: 0);
+      final lateMins = (widget.allowedLateMinutes != null && widget.allowedLateMinutes! > 0)
+          ? widget.allowedLateMinutes!
+          : 60;
+      _endTime = _timeFromMinutes(_minutes(_startTime!) + lateMins);
+    } else if (type == 'EarlyDeparture') {
+      _endTime = _parseTime(widget.shiftEnd) ?? const TimeOfDay(hour: 17, minute: 0);
+      final earlyMins = (widget.allowedLateMinutes != null && widget.allowedLateMinutes! > 0)
+          ? widget.allowedLateMinutes!
+          : 60;
+      _startTime = _timeFromMinutes(_minutes(_endTime!) - earlyMins);
+    } else {
+      _startTime = TimeOfDay.now();
+      _endTime = _timeFromMinutes(_minutes(_startTime!) + 60);
+    }
   }
 
   @override
@@ -79,10 +99,6 @@ class _ApplyForPermissionSheetWidgetState
   }
 
   Future<void> _selectTime(bool isStart) async {
-    if ((_selectedPermitType == 'LateArrival' && isStart) ||
-        (_selectedPermitType == 'EarlyDeparture' && !isStart)) {
-      return;
-    }
     final time = await showTimePicker(
       context: context,
       initialTime: isStart
@@ -90,24 +106,6 @@ class _ApplyForPermissionSheetWidgetState
           : (_endTime ?? TimeOfDay.now()),
     );
     if (time != null && mounted) {
-      final windowStart = _permissionWindowStart();
-      final windowEnd = _permissionWindowEnd();
-      if (_selectedPermitType != 'TemporaryExit' &&
-          windowStart != null &&
-          windowEnd != null) {
-        final selectedMinutes = time.hour * 60 + time.minute;
-        final startMinutes = windowStart.hour * 60 + windowStart.minute;
-        final endMinutes = windowEnd.hour * 60 + windowEnd.minute;
-        if (selectedMinutes < startMinutes || selectedMinutes > endMinutes) {
-          CustomSnackBar.showError(
-            context,
-            message: 'permissions.request.outsideShiftWindow'.tr(
-              context: context,
-            ),
-          );
-          return;
-        }
-      }
       setState(() {
         if (isStart) {
           _startTime = time;
@@ -146,7 +144,7 @@ class _ApplyForPermissionSheetWidgetState
   int _minutes(TimeOfDay time) => time.hour * 60 + time.minute;
 
   TimeOfDay? _timeFromMinutes(int minutes) {
-    final normalized = minutes % 1440;
+    final normalized = (minutes % 1440 + 1440) % 1440;
     return TimeOfDay(hour: normalized ~/ 60, minute: normalized % 60);
   }
 
@@ -171,18 +169,10 @@ class _ApplyForPermissionSheetWidgetState
   }
 
   TimeOfDay? _resolvedStartTime() {
-    if (_selectedPermitType == 'TemporaryExit') return _startTime;
-    if (_selectedPermitType == 'LateArrival') {
-      return _permissionWindowStart();
-    }
     return _startTime ?? _permissionWindowStart();
   }
 
   TimeOfDay? _resolvedEndTime() {
-    if (_selectedPermitType == 'TemporaryExit') return _endTime;
-    if (_selectedPermitType == 'EarlyDeparture') {
-      return _permissionWindowEnd();
-    }
     return _endTime ?? _permissionWindowEnd();
   }
 
@@ -237,8 +227,8 @@ class _ApplyForPermissionSheetWidgetState
     );
 
     try {
-      await widget.onSubmit(body);
-      if (mounted) {
+      final success = await widget.onSubmit(body);
+      if (success && mounted) {
         Navigator.pop(context);
       }
     } catch (_) {
@@ -346,8 +336,7 @@ class _ApplyForPermissionSheetWidgetState
                       if (val != null) {
                         setState(() {
                           _selectedPermitType = val;
-                          _startTime = _permissionWindowStart();
-                          _endTime = _permissionWindowEnd();
+                          _initTimesForType(val);
                         });
                       }
                     },

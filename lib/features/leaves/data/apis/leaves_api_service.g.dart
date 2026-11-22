@@ -266,23 +266,12 @@ class _LeavesApiService implements LeavesApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<ShortLeaveModel> _value;
-    try {
-      _value = _result.data!
-          .map(
-            (dynamic i) => ShortLeaveModel.fromJson(i as Map<String, dynamic>),
-          )
-          .toList();
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
+    final _result = await _dio.fetch(_options);
+    return _result.data;
   }
 
   @override
-  Future<ShortLeaveModel> submitShortLeaveRequest(
+  Future<dynamic> submitShortLeaveRequest(
     Map<String, dynamic> body,
   ) async {
     final _extra = <String, dynamic>{};
@@ -290,7 +279,7 @@ class _LeavesApiService implements LeavesApiService {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body);
-    final _options = _setStreamType<ShortLeaveModel>(
+    final _options = _setStreamType<dynamic>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -300,15 +289,8 @@ class _LeavesApiService implements LeavesApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ShortLeaveModel _value;
-    try {
-      _value = ShortLeaveModel.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
+    final _result = await _dio.fetch(_options);
+    return _result.data;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
