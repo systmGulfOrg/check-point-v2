@@ -17,6 +17,9 @@ EmployeeCheckOutRequestBody _$EmployeeCheckOutRequestBodyFromJson(
       ?.map((e) => AttendanceCoordinate.fromJson(e as Map<String, dynamic>))
       .toList(),
   mockLocationDetected: json['mockLocationDetected'] as bool?,
+  deviceUuid: json['deviceUuid'] as String?,
+  capturedWallClock: json['capturedWallClock'] as String?,
+  integrityVerdict: json['integrityVerdict'] as String?,
 );
 
 Map<String, dynamic> _$EmployeeCheckOutRequestBodyToJson(
@@ -28,4 +31,7 @@ Map<String, dynamic> _$EmployeeCheckOutRequestBodyToJson(
   'note': instance.note,
   'mockLocationDetected': instance.mockLocationDetected,
   'coordinates': instance.coordinates,
+  'deviceUuid': instance.deviceUuid,
+  'capturedWallClock': instance.capturedWallClock,
+  'integrityVerdict': instance.integrityVerdict,
 };

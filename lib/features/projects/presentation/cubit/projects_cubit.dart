@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../../data/models/project_models.dart';
 import '../../data/repos/projects_repo.dart';
 import 'projects_state.dart';

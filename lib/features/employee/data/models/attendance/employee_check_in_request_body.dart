@@ -13,6 +13,9 @@ class EmployeeCheckInRequestBody {
     this.coordinates,
     this.employeeImage,
     this.mockLocationDetected,
+    this.deviceUuid,
+    this.capturedWallClock,
+    this.integrityVerdict,
   });
 
   @JsonKey(name: 'employeeId')
@@ -25,6 +28,9 @@ class EmployeeCheckInRequestBody {
   final List<AttendanceCoordinate>? coordinates;
   final String? employeeImage;
   final bool? mockLocationDetected;
+  final String? deviceUuid;
+  final String? capturedWallClock;
+  final String? integrityVerdict;
 
   factory EmployeeCheckInRequestBody.fromJson(Map<String, dynamic> json) =>
       _$EmployeeCheckInRequestBodyFromJson(json);
@@ -38,6 +44,16 @@ class AttendanceCoordinate {
     this.latitude,
     this.longitude,
     this.accuracyM,
+    this.provider,
+    this.satellitesCount,
+    this.speed,
+    this.altitude,
+    this.isMock,
+    this.wifiFingerprint,
+    this.cellTowers,
+    this.elapsedRealtimeMs,
+    this.capturedWallClock,
+    this.deviceStatus,
     this.kind,
     this.capturedAt,
   });
@@ -45,6 +61,16 @@ class AttendanceCoordinate {
   final double? latitude;
   final double? longitude;
   final double? accuracyM;
+  final String? provider;
+  final int? satellitesCount;
+  final double? speed;
+  final double? altitude;
+  final bool? isMock;
+  final dynamic wifiFingerprint;
+  final dynamic cellTowers;
+  final int? elapsedRealtimeMs;
+  final String? capturedWallClock;
+  final dynamic deviceStatus;
   final String? kind;
   final String? capturedAt;
 

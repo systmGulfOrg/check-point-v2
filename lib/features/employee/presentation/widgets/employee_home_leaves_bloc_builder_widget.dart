@@ -5,8 +5,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/connectivity/connectivity_cubit.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/leaves/data/models/leave_balance_model.dart';
 import 'package:check_point_v2/features/leaves/data/models/leave_request_model.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/leaves_cubit.dart';

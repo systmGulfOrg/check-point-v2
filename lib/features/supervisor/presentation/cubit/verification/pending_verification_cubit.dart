@@ -1,5 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
-import 'package:check_point_v2/core/models/offline_attendance_models.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/supervisor/domain/use_cases/get_pending_verifications_use_case.dart';
 import 'package:check_point_v2/features/supervisor/domain/use_cases/verify_attendance_record_use_case.dart';
 import 'pending_verification_state.dart';

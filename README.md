@@ -137,6 +137,10 @@ flutter run \
   --dart-define=ENV=dev \
   --dart-define=MOBILE_ID=desktop-device \
   --dart-define=DEVICE_TOKEN=desktop-device-token
+
+For Android emulator development against the local API, explicitly add
+`--dart-define=USE_LOCAL_BACKEND=true`. Android builds otherwise use the
+configured backend server by default.
 ```
 
 Do not commit API keys, tokens, credentials, or environment files. Use `--dart-define` for environment-specific values.

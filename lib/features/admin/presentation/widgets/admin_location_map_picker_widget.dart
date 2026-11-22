@@ -6,10 +6,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
-import 'package:check_point_v2/core/services/google_places_service.dart';
-import 'package:check_point_v2/core/services/location_link_parser.dart';
-import 'package:check_point_v2/core/services/location_service.dart';
 import 'admin_full_map_picker_dialog_widget.dart';
 import 'admin_location_map_controls_widget.dart';
 import 'admin_location_search_bar_widget.dart';

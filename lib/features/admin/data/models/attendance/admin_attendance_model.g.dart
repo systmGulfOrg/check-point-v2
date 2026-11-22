@@ -43,6 +43,8 @@ AdminAttendanceModel _$AdminAttendanceModelFromJson(
   coordinates: (json['coordinates'] as List<dynamic>?)
       ?.map((e) => AttendanceCoordinate.fromJson(e as Map<String, dynamic>))
       .toList(),
+  integrityVerdict: json['integrityVerdict'] as String?,
+  riskScore: (json['riskScore'] as num?)?.toDouble(),
 );
 
 Map<String, dynamic> _$AdminAttendanceModelToJson(
@@ -80,6 +82,8 @@ Map<String, dynamic> _$AdminAttendanceModelToJson(
   'checkOutLatitude': instance.checkOutLatitude,
   'checkOutLongitude': instance.checkOutLongitude,
   'coordinates': instance.coordinates,
+  'integrityVerdict': instance.integrityVerdict,
+  'riskScore': instance.riskScore,
 };
 
 AttendanceResponseModel _$AttendanceResponseModelFromJson(

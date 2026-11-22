@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/trial_signup/trial_signup_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/trial_signup/trial_signup_state.dart';
 

@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/data/models/trial_signup/trial_signup_request_body.dart';
 import 'package:check_point_v2/features/auth/data/repos/auth_repo.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/trial_signup/trial_signup_state.dart';

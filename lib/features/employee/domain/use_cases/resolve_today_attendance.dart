@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/database/app_database.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 
 /// Decides what the "today" attendance card shows.

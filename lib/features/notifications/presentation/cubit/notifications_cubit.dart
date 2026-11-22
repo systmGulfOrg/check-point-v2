@@ -1,5 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
-import 'package:check_point_v2/core/utils/app_logger.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../../domain/repos/notifications_repo.dart';
 import 'notifications_state.dart';
 

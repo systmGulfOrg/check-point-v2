@@ -1,9 +1,6 @@
 import 'package:dio/dio.dart';
 
-import 'package:check_point_v2/core/models/offline_attendance_models.dart';
-import 'package:check_point_v2/core/network/api_constants.dart';
-import 'package:check_point_v2/core/network/api_failure_mapper.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'offline_verification_repo.dart';
 
 class OfflineVerificationRepoImpl implements OfflineVerificationRepo {

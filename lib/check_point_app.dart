@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
-import 'package:check_point_v2/core/connectivity/connectivity_cubit.dart';
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
-import 'package:check_point_v2/core/widgets/offline_banner_widget.dart';
-import 'package:check_point_v2/core/widgets/push_tap_listener_widget.dart';
 
 class CheckPointApp extends StatelessWidget {
   const CheckPointApp({required this.initialRoute, super.key});

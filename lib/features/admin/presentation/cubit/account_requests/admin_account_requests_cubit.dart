@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 
 import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/account_requests/approve_account_request_body.dart';

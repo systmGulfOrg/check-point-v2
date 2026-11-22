@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/subscription/seat_request_model.dart';
 import 'package:check_point_v2/features/admin/data/models/subscription/subscription_summary_model.dart';
 

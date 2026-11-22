@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/employee/presentation/widgets/employee_nav_bar_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/customer_visits/admin_customer_visits_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_customers_cubit.dart';

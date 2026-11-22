@@ -6,17 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'check_point_app.dart';
-import 'core/auth/auth_session_storage.dart';
-import 'core/connectivity/connectivity_cubit.dart';
-import 'core/di/service_locator.dart';
-import 'core/network/auth_token_interceptor.dart';
-import 'core/routes/app_router.dart';
-import 'core/routes/routes.dart';
-import 'core/services/attendance_sync_service.dart';
-import 'core/services/local_notification_service.dart';
-import 'core/services/push_notification_service.dart';
-import 'core/services/play_integrity_service.dart';
-import 'core/widgets/custom_snack_bar.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'features/auth/data/repos/auth_repo.dart';
 import 'firebase_options.dart';
 

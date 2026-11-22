@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'app_document_generic_file_card_widget.dart';
 
 class AppDocumentPreviewWidget extends StatelessWidget {
   const AppDocumentPreviewWidget({

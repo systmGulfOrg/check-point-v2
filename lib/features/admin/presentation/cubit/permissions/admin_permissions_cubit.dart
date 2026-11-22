@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 
 import '../../../data/models/permissions/admin_permission_employee_model.dart';
 import '../../../data/models/permissions/admin_permissions_catalogue_model.dart';

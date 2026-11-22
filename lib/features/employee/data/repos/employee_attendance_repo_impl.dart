@@ -3,12 +3,7 @@ import 'dart:math';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:check_point_v2/core/database/app_database.dart';
-import 'package:check_point_v2/core/database/cache_manager.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
-import 'package:check_point_v2/core/network/api_failure.dart';
-import 'package:check_point_v2/core/network/api_failure_mapper.dart';
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/attendance/admin_attendance_model.dart';
 import 'package:check_point_v2/features/admin/data/models/plans/admin_plan_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
@@ -28,7 +23,7 @@ class EmployeeAttendanceRepoImpl implements EmployeeAttendanceRepo {
     required this.api,
     required this.odooAttendanceService,
     CacheManager? cacheManager,
-  }) : cacheManager = cacheManager ?? CacheManager(sl<AppDatabase>());
+  }) : cacheManager = cacheManager ?? CacheManager(db: sl<AppDatabase>());
 
   final EmployeeApiService api;
   final OdooAttendanceService odooAttendanceService;

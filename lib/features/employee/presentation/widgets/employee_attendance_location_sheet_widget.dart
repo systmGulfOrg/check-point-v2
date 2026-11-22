@@ -8,8 +8,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'package:check_point_v2/core/connectivity/connectivity_cubit.dart';
-import 'package:check_point_v2/core/di/service_locator.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/branch_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_response_model.dart';
 import 'package:check_point_v2/features/admin/data/models/locations/customer_visit_model.dart';
@@ -507,6 +505,10 @@ class _EmployeeAttendanceLocationSheetWidgetState
                       targets,
                     _ => const <CustomerModel>[],
                   };
+                  final isLoading = switch (state) {
+                    EmployeeAttendanceStateLoading() => true,
+                    _ => false,
+                  };
                   switch (state) {
                     case EmployeeAttendanceStateBranchesLoaded(:final branches):
                       availableBranches = branches;
@@ -982,7 +984,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
                           text: widget.isCheckOut
                               ? 'employee.home.checkOutAction'.tr()
                               : 'employee.home.checkInAction'.tr(),
-                          isLoading: state is EmployeeAttendanceStateLoading,
+                          isLoading: isLoading,
                           enabled: true,
                           onTap: _submit,
                         ),
@@ -1210,14 +1212,14 @@ class _EmployeeAttendanceLocationSheetWidgetState
                             text: widget.isCheckOut
                                 ? 'employee.home.checkOutAction'.tr()
                                 : 'employee.home.checkInAction'.tr(),
-                            isLoading: state is EmployeeAttendanceStateLoading,
+                            isLoading: isLoading,
                             enabled: userLocation != null,
                             onTap: _submit,
                           ),
                         ] else ...[
                           hSpace(20),
                           Center(
-                            child: state is EmployeeAttendanceStateLoading
+                            child: isLoading
                                 ? const CircularProgressIndicator()
                                 : Text(
                                     'attendance.noLocationData'.tr(),
@@ -1268,7 +1270,7 @@ class _EmployeeAttendanceLocationSheetWidgetState
                           text: widget.isCheckOut
                               ? 'employee.home.checkOutAction'.tr()
                               : 'employee.home.checkInAction'.tr(),
-                          isLoading: state is EmployeeAttendanceStateLoading,
+                          isLoading: isLoading,
                           enabled:
                               userLocation != null &&
                               (isInside ||

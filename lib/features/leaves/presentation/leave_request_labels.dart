@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
 
-import 'package:check_point_v2/core/styles/app_colors.dart';
+import 'package:check_point_v2/core/core.dart';
 
 /// Display name for a leave type as the API sends it (English, Arabic or a
 /// translation key).

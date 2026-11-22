@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:check_point_v2/core/routes/routes.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart';
 import 'supervisor_alert_banner_widget.dart';
 

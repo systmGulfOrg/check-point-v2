@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/bloc/safe_cubit.dart';
+import 'package:check_point_v2/core/core.dart';
 
 import 'package:check_point_v2/features/leaves/data/models/official_holiday_model.dart';
 import 'package:check_point_v2/features/leaves/domain/repos/leaves_repo.dart';

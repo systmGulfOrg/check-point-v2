@@ -1,4 +1,4 @@
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../models/employee_record_model.dart';
 
 abstract class EmployeeRecordRepo {

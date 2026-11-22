@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import '../models/project_models.dart';
 
 abstract class ProjectsRepo {

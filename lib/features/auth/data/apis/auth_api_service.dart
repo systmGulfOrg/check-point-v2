@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import 'package:check_point_v2/core/network/api_constants.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/data/models/account_deletion/delete_account_request_body.dart';
 import 'package:check_point_v2/features/auth/data/models/account_request/account_request_model.dart';
 import 'package:check_point_v2/features/auth/data/models/account_request/account_request_status_model.dart';

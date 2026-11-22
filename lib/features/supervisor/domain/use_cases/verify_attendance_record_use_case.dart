@@ -1,10 +1,10 @@
-import 'package:check_point_v2/core/network/api_result.dart';
+import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/supervisor/data/repos/offline_verification_repo.dart';
 
 class VerifyAttendanceRecordUseCase {
   final OfflineVerificationRepo repo;
 
-  VerifyAttendanceRecordUseCase(this.repo);
+  VerifyAttendanceRecordUseCase({required this.repo});
 
   Future<ApiResult<void>> call(
     String id, {
