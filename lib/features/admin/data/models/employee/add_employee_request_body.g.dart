@@ -36,6 +36,9 @@ AddEmployeeRequestBody _$AddEmployeeRequestBodyFromJson(
       ?.map((e) => e as String)
       .toList(),
   imageUrl: json['imageUrl'] as String?,
+  employmentType: json['employmentType'] as String?,
+  hireDate: json['hireDate'] as String?,
+  birthDate: json['birthDate'] as String?,
 );
 
 Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
@@ -64,4 +67,7 @@ Map<String, dynamic> _$AddEmployeeRequestBodyToJson(
   'managerId': instance.managerId,
   'customPermissions': instance.customPermissions,
   'imageUrl': instance.imageUrl,
+  'employmentType': instance.employmentType,
+  'hireDate': instance.hireDate,
+  'birthDate': instance.birthDate,
 };

@@ -59,10 +59,14 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
   String? phoneErrorText;
   String? emailErrorText;
   String? positionErrorText;
+  String? hireDateErrorText;
 
   int currentStep = 0;
   final Set<String> selectedRoles = {'Employee'};
   final Set<String> selectedPermissions = {};
+  String selectedEmploymentType = 'EMPLOYED';
+  DateTime? selectedHireDate;
+  late final TextEditingController hireDateController;
   int? selectedDepartmentId;
   int? selectedBranchId;
   String? selectedDirectManagerId;
@@ -108,6 +112,7 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
     final randomDigits = 1000 + Random().nextInt(9000);
     employeeCodeController = TextEditingController(text: 'EMP-$randomDigits');
     positionController = TextEditingController();
+    hireDateController = TextEditingController();
     selectedPhotoPath = req?.photo;
   }
 
@@ -128,7 +133,28 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
     emailController.dispose();
     employeeCodeController.dispose();
     positionController.dispose();
+    hireDateController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickHireDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: selectedHireDate ?? now,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        selectedHireDate = picked;
+        hireDateController.text = AppDateFormatter.formatDate(
+          picked,
+          pattern: 'yyyy-MM-dd',
+        );
+        hireDateErrorText = null;
+      });
+    }
   }
 
   void _navigateToErrorField(String? rawError) {
@@ -331,6 +357,22 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
         );
         return false;
       }
+      if (selectedHireDate == null) {
+        setState(() {
+          hireDateErrorText = 'admin.employeeWizard.hireDateRequired'.tr(
+            context: context,
+          );
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'admin.employeeWizard.hireDateRequired'.tr(context: context),
+            ),
+            backgroundColor: AppColors.error,
+          ),
+        );
+        return false;
+      }
     }
     if (step == 2) {
       if (selectedDepartmentId == null || selectedBranchId == null) {
@@ -453,6 +495,10 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
         managerId: selectedDirectManagerId,
         customPermissions: selectedPermissions.toList(),
         imageUrl: compressedPhoto,
+        employmentType: selectedEmploymentType,
+        hireDate: selectedHireDate != null
+            ? AppDateFormatter.formatYearMonthDay(selectedHireDate!)
+            : null,
       );
 
       final employeesCubit = context.read<AdminEmployeesCubit>();
@@ -607,6 +653,12 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           setState(() => selectedRemoteWorkPolicyId = val),
                       selectedPermissionsCount: selectedPermissions.length,
                       onManagePermissionsPressed: _openPermissionsDialog,
+                      selectedEmploymentType: selectedEmploymentType,
+                      onEmploymentTypeChanged: (val) =>
+                          setState(() => selectedEmploymentType = val),
+                      hireDateController: hireDateController,
+                      hireDateErrorText: hireDateErrorText,
+                      onPickHireDate: _pickHireDate,
                     ),
                     2 => AdminCreateEmployeeOrganizationStepWidget(
                       selectedDepartmentId: selectedDepartmentId,
@@ -677,6 +729,8 @@ class _AdminCreateEmployeeScreenState extends State<AdminCreateEmployeeScreen> {
                           branchName: branch?.name,
                           directManagerName: manager?.name ?? manager?.userName,
                           selectedPermissionsCount: selectedPermissions.length,
+                          employmentType: selectedEmploymentType,
+                          hireDate: hireDateController.text,
                         );
                       },
                     ),

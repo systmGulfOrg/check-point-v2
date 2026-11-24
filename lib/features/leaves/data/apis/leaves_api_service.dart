@@ -7,7 +7,6 @@ import '../../../admin/data/models/leave_requests/leave_type_model.dart'
     show LeaveTypesResponseModel;
 import '../models/leave_balance_model.dart';
 import '../models/official_holiday_model.dart';
-import '../models/short_leave_model.dart';
 
 part 'leaves_api_service.g.dart';
 

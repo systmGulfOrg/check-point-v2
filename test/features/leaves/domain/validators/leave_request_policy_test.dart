@@ -13,6 +13,7 @@ void main() {
         shiftEnd: '17:00',
         allowedLateMinutes: 30,
         requestedDurationMinutes: 30,
+        enforceEarlyDepartureDeadline: true,
       );
 
       expect(result, 'permissions.request.earlyDepartureDeadline');
@@ -27,6 +28,7 @@ void main() {
         shiftEnd: '17:00',
         allowedLateMinutes: 30,
         requestedDurationMinutes: 30,
+        enforceLateArrivalNotice: true,
       );
 
       expect(result, 'permissions.request.lateArrivalDeadline');
@@ -41,6 +43,7 @@ void main() {
         shiftEnd: '17:00',
         allowedLateMinutes: 30,
         requestedDurationMinutes: 31,
+        enforceGracePeriod: true,
       );
 
       expect(result, 'permissions.request.lateArrivalDuration');
