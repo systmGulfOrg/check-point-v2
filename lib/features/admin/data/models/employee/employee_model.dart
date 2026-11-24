@@ -59,6 +59,7 @@ class EmployeeModel {
     this.contractStatus,
     this.joinDate,
     this.hireDate,
+    this.employmentType,
     this.contractEndDate,
     this.personalEmail,
     this.secondaryPhone,
@@ -138,6 +139,7 @@ class EmployeeModel {
   final String? contractStatus;
   final String? joinDate;
   final String? hireDate;
+  final String? employmentType;
   final String? contractEndDate;
   final String? personalEmail;
   final String? secondaryPhone;
@@ -173,6 +175,7 @@ class EmployeeModel {
   String get resolvedContractStatus =>
       contractStatus ?? (canAddAttendance == true ? 'Active' : 'Inactive');
   String get resolvedJoinDate => joinDate ?? hireDate ?? '-';
+  bool get isTrainee => employmentType?.toUpperCase() == 'TRAINEE';
   String get resolvedNationalId => nationalId ?? passportNumber ?? '-';
   String get resolvedEmergencyName => emergencyContactName ?? '-';
   String get resolvedEmergencyRelation => emergencyContactRelation ?? '-';

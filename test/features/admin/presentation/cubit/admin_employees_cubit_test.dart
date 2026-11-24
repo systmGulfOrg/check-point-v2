@@ -60,6 +60,8 @@ class _FakeAdminEmployeeRepo implements AdminEmployeeRepo {
         name: body.name,
         userName: body.username,
         role: body.role,
+        employmentType: body.employmentType,
+        hireDate: body.hireDate,
       ),
     );
     return const ApiResult.success(null);
@@ -181,6 +183,33 @@ void main() {
       final error = await cubit.addEmployee(body);
       expect(error, isNull);
       expect(repo.employees, hasLength(3));
+    });
+
+    test('addEmployee with TRAINEE and hireDate maps properly and resolves isTrainee', () async {
+      final repo = _FakeAdminEmployeeRepo();
+      final cubit = AdminEmployeesCubit(employeeRepo: repo);
+      addTearDown(cubit.close);
+
+      const body = AddEmployeeRequestBody(
+        name: 'Trainee Omar',
+        username: 'omar',
+        password: 'pass',
+        position: 'Intern',
+        mobileId: 'm456',
+        role: 'Employee',
+        departmentId: 1,
+        branchId: 1,
+        employmentType: 'TRAINEE',
+        hireDate: '2026-11-01',
+      );
+
+      final error = await cubit.addEmployee(body);
+      expect(error, isNull);
+      final added = repo.employees.last;
+      expect(added.name, 'Trainee Omar');
+      expect(added.employmentType, 'TRAINEE');
+      expect(added.isTrainee, isTrue);
+      expect(added.hireDate, '2026-11-01');
     });
   });
 }

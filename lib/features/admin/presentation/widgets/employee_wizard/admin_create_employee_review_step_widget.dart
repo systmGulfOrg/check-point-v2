@@ -20,6 +20,8 @@ class AdminCreateEmployeeReviewStepWidget extends StatelessWidget {
     required this.branchName,
     required this.directManagerName,
     required this.selectedPermissionsCount,
+    this.employmentType = 'EMPLOYED',
+    this.hireDate,
     super.key,
   });
 
@@ -37,6 +39,8 @@ class AdminCreateEmployeeReviewStepWidget extends StatelessWidget {
   final String? branchName;
   final String? directManagerName;
   final int selectedPermissionsCount;
+  final String employmentType;
+  final String? hireDate;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +64,14 @@ class AdminCreateEmployeeReviewStepWidget extends StatelessWidget {
       ('admin.employeeWizard.reviewName'.tr(context: context), name),
       ('admin.employeeWizard.reviewUsername'.tr(context: context), username),
       ('admin.employeeWizard.reviewPosition'.tr(context: context), position),
+      (
+        'admin.employeeWizard.employmentType'.tr(context: context),
+        employmentType == 'TRAINEE'
+            ? 'admin.employeeWizard.trainee'.tr(context: context)
+            : 'admin.employeeWizard.employed'.tr(context: context),
+      ),
+      if (hireDate != null && hireDate!.isNotEmpty)
+        ('admin.employeeWizard.hireDate'.tr(context: context), hireDate!),
       ('admin.employeeWizard.reviewMobileId'.tr(context: context), mobileId),
       (
         'admin.employeeWizard.reviewPhone'.tr(context: context),

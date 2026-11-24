@@ -18,6 +18,11 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
     required this.onWorkPolicyChanged,
     required this.selectedPermissionsCount,
     required this.onManagePermissionsPressed,
+    required this.selectedEmploymentType,
+    required this.onEmploymentTypeChanged,
+    required this.hireDateController,
+    required this.onPickHireDate,
+    this.hireDateErrorText,
     this.positionFocusNode,
     this.positionErrorText,
     this.onPositionChanged,
@@ -34,6 +39,11 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
   final ValueChanged<String?> onWorkPolicyChanged;
   final int selectedPermissionsCount;
   final VoidCallback onManagePermissionsPressed;
+  final String selectedEmploymentType;
+  final ValueChanged<String> onEmploymentTypeChanged;
+  final TextEditingController hireDateController;
+  final VoidCallback onPickHireDate;
+  final String? hireDateErrorText;
   final FocusNode? positionFocusNode;
   final String? positionErrorText;
   final ValueChanged<String>? onPositionChanged;
@@ -70,6 +80,156 @@ class AdminCreateEmployeeWorkStepWidget extends StatelessWidget {
             ),
           ),
         ),
+
+        // Employment Type Selection
+        Text(
+          'admin.employeeWizard.employmentType'.tr(context: context),
+          style: AppTextStyles.font13SemiBold,
+        ),
+        hSpace(8),
+        Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () => onEmploymentTypeChanged('EMPLOYED'),
+                borderRadius: BorderRadius.circular(12.r),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                  decoration: BoxDecoration(
+                    color: selectedEmploymentType == 'EMPLOYED'
+                        ? AppColors.softBlueBackground
+                        : AppColors.pageBackground,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: selectedEmploymentType == 'EMPLOYED'
+                          ? AppColors.brandPrimary
+                          : AppColors.border,
+                      width: selectedEmploymentType == 'EMPLOYED' ? 1.5 : 1,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.badge_outlined,
+                            size: 18.r,
+                            color: selectedEmploymentType == 'EMPLOYED'
+                                ? AppColors.brandPrimary
+                                : AppColors.placeholder,
+                          ),
+                          wSpace(6),
+                          Expanded(
+                            child: Text(
+                              'admin.employeeWizard.employed'.tr(context: context),
+                              style: AppTextStyles.font13Bold.copyWith(
+                                color: selectedEmploymentType == 'EMPLOYED'
+                                    ? AppColors.brandPrimary
+                                    : AppColors.brandInk,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      hSpace(4),
+                      Text(
+                        'admin.employeeWizard.employedDesc'.tr(context: context),
+                        style: AppTextStyles.font11Regular.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            wSpace(10),
+            Expanded(
+              child: InkWell(
+                onTap: () => onEmploymentTypeChanged('TRAINEE'),
+                borderRadius: BorderRadius.circular(12.r),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                  decoration: BoxDecoration(
+                    color: selectedEmploymentType == 'TRAINEE'
+                        ? AppColors.softBlueBackground
+                        : AppColors.pageBackground,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: selectedEmploymentType == 'TRAINEE'
+                          ? AppColors.brandPrimary
+                          : AppColors.border,
+                      width: selectedEmploymentType == 'TRAINEE' ? 1.5 : 1,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.school_outlined,
+                            size: 18.r,
+                            color: selectedEmploymentType == 'TRAINEE'
+                                ? AppColors.brandPrimary
+                                : AppColors.placeholder,
+                          ),
+                          wSpace(6),
+                          Expanded(
+                            child: Text(
+                              'admin.employeeWizard.trainee'.tr(context: context),
+                              style: AppTextStyles.font13Bold.copyWith(
+                                color: selectedEmploymentType == 'TRAINEE'
+                                    ? AppColors.brandPrimary
+                                    : AppColors.brandInk,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      hSpace(4),
+                      Text(
+                        'admin.employeeWizard.traineeDesc'.tr(context: context),
+                        style: AppTextStyles.font11Regular.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        hSpace(16),
+
+        // Hire Date Field
+        AdminWizardFieldWidget(
+          label: 'admin.employeeWizard.hireDate'.tr(context: context),
+          child: InkWell(
+            onTap: onPickHireDate,
+            child: IgnorePointer(
+              child: CustomTextFormField(
+                hintText: 'YYYY-MM-DD',
+                controller: hireDateController,
+                errorText: hireDateErrorText,
+                prefixIcon: Icon(
+                  Icons.calendar_today_outlined,
+                  size: 18.r,
+                  color: AppColors.placeholder,
+                ),
+                validator: AppValidators.required(
+                  message: 'admin.employeeWizard.hireDateRequired'.tr(
+                    context: context,
+                  ),
+                  context: context,
+                ),
+              ),
+            ),
+          ),
+        ),
+        hSpace(16),
 
         Text(
           'admin.employeeWizard.roles'.tr(context: context),

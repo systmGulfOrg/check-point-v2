@@ -13,10 +13,12 @@ class ApplyForLeaveSheetWidget extends StatefulWidget {
   const ApplyForLeaveSheetWidget({
     required this.onSubmit,
     this.leaveTypes = const [],
+    this.hireDate,
     super.key,
   });
 
   final List<LeaveTypeModel> leaveTypes;
+  final String? hireDate;
   final void Function({
     required String startDate,
     required String endDate,
@@ -649,6 +651,25 @@ class _ApplyForLeaveSheetWidgetState extends State<ApplyForLeaveSheetWidget> {
                       onTap: () {
                         if (!(_formKey.currentState?.validate() ?? false)) {
                           return;
+                        }
+                        if (widget.hireDate != null && _startDate != null) {
+                          final hireDateTime = DateTime.tryParse(widget.hireDate!);
+                          if (hireDateTime != null) {
+                            final probationEnd = DateTime(
+                              hireDateTime.year,
+                              hireDateTime.month + 3,
+                              hireDateTime.day,
+                            );
+                            if (_startDate!.isBefore(probationEnd)) {
+                              CustomSnackBar.showError(
+                                context,
+                                message: 'leaves.probationPeriodCannotRequest'.tr(
+                                  context: context,
+                                ),
+                              );
+                              return;
+                            }
+                          }
                         }
                         if ((selectedType?.requiresAttachment ?? false) &&
                             _attachedFileName == null) {

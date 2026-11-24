@@ -39,12 +39,21 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
   }
 
   Future<void> _showApplyLeaveSheet(BuildContext context) async {
+    final profile = context.read<EmployeeAttendanceCubit>().employeeProfile;
+    if (profile?.isTrainee == true) {
+      CustomSnackBar.showError(
+        context,
+        message: 'leaves.traineeCannotRequest'.tr(context: context),
+      );
+      return;
+    }
     final cubit = context.read<LeavesCubit>();
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.transparent,
       builder: (_) => ApplyForLeaveSheetWidget(
+        hireDate: profile?.hireDate,
         leaveTypes: cubit.leaveTypes
             .map(
               (t) => admin_lt.LeaveTypeModel(
@@ -233,6 +242,7 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
 
               final balances = (_cachedBalances ?? []).cast<dynamic>();
               final requests = _cachedRequests ?? [];
+              final profile = context.watch<EmployeeAttendanceCubit>().employeeProfile;
 
               return SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -240,6 +250,37 @@ class _LeavesDashboardScreenState extends State<LeavesDashboardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if (profile?.isTrainee == true) ...[
+                      Container(
+                        padding: EdgeInsets.all(12.r),
+                        margin: EdgeInsets.only(bottom: 16.h),
+                        decoration: BoxDecoration(
+                          color: AppColors.softBlueBackground,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: AppColors.brandPrimary.withValues(alpha: 0.3),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline_rounded,
+                              color: AppColors.brandPrimary,
+                              size: 20.r,
+                            ),
+                            wSpace(10),
+                            Expanded(
+                              child: Text(
+                                'leaves.traineeBanner'.tr(context: context),
+                                style: AppTextStyles.font12Medium.copyWith(
+                                  color: AppColors.brandInk,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                     LeaveRequestButtonsWidget(
                       onRequestLeave: () => _showApplyLeaveSheet(context),
                       onRequestPermit: () => _showApplyPermissionSheet(context),

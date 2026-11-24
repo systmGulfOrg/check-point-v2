@@ -68,6 +68,7 @@ EditEmployeeRequestBody _$EditEmployeeRequestBodyFromJson(
   customPermissions: (json['customPermissions'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
+  employmentType: json['employmentType'] as String?,
 );
 
 Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
@@ -80,6 +81,7 @@ Map<String, dynamic> _$EditEmployeeRequestBodyToJson(
   if (instance.mobileId case final value?) 'mobileId': value,
   if (instance.imageUrl case final value?) 'imageUrl': value,
   if (instance.customPermissions case final value?) 'customPermissions': value,
+  if (instance.employmentType case final value?) 'employmentType': value,
   if (instance.role case final value?) 'role': value,
   if (instance.roles case final value?) 'roles': value,
   if (instance.departmentId case final value?) 'departmentId': value,

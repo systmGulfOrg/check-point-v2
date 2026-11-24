@@ -251,12 +251,12 @@ class _LeavesApiService implements LeavesApiService {
   }
 
   @override
-  Future<List<ShortLeaveModel>> getShortLeaves() async {
+  Future<dynamic> getShortLeaves() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<ShortLeaveModel>>(
+    final _options = _setStreamType<dynamic>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -267,13 +267,12 @@ class _LeavesApiService implements LeavesApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch(_options);
-    return _result.data;
+    final _value = _result.data;
+    return _value;
   }
 
   @override
-  Future<dynamic> submitShortLeaveRequest(
-    Map<String, dynamic> body,
-  ) async {
+  Future<dynamic> submitShortLeaveRequest(Map<String, dynamic> body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -290,7 +289,8 @@ class _LeavesApiService implements LeavesApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch(_options);
-    return _result.data;
+    final _value = _result.data;
+    return _value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

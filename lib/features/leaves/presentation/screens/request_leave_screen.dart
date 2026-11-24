@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/employee/presentation/cubit/attendance/employee_attendance_cubit.dart';
 import '../../data/models/leave_request_body.dart';
 import '../cubit/leaves_cubit.dart';
 import '../cubit/leaves_state.dart';
@@ -142,6 +143,14 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
   }
 
   void _submit(List<dynamic> types) {
+    final profile = context.read<EmployeeAttendanceCubit>().employeeProfile;
+    if (profile?.isTrainee == true) {
+      CustomSnackBar.showError(
+        context,
+        message: 'leaves.traineeCannotRequest'.tr(context: context),
+      );
+      return;
+    }
     if (_selectedLeaveTypeId == null) {
       CustomSnackBar.showError(
         context,
@@ -155,6 +164,26 @@ class _RequestLeaveScreenState extends State<RequestLeaveScreen> {
         message: 'employee.leaves.dateRequired'.tr(context: context),
       );
       return;
+    }
+
+    if (profile?.hireDate != null) {
+      final hireDateTime = DateTime.tryParse(profile!.hireDate!);
+      if (hireDateTime != null) {
+        final probationEnd = DateTime(
+          hireDateTime.year,
+          hireDateTime.month + 3,
+          hireDateTime.day,
+        );
+        if (_startDate!.isBefore(probationEnd)) {
+          CustomSnackBar.showError(
+            context,
+            message: 'leaves.probationPeriodCannotRequest'.tr(
+              context: context,
+            ),
+          );
+          return;
+        }
+      }
     }
 
     final selectedType = types

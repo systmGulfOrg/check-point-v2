@@ -58,6 +58,7 @@ class EditEmployeeRequestBody {
     this.documents,
     this.imageUrl,
     this.customPermissions,
+    this.employmentType,
   });
 
   final String? name;
@@ -68,6 +69,7 @@ class EditEmployeeRequestBody {
   final String? mobileId;
   final String? imageUrl;
   final List<String>? customPermissions;
+  final String? employmentType;
   final String? role;
   final List<String>? roles;
   final int? departmentId;
