@@ -7,6 +7,7 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/admin/data/models/shifts_policies/company_approval_config_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/company_rules/admin_company_rules_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/company_rules/admin_company_rules_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_permit_rules_content_widget.dart';
 
 class AdminPermitRulesSheetWidget extends StatefulWidget {
   const AdminPermitRulesSheetWidget({super.key});
@@ -132,10 +133,60 @@ class _AdminPermitRulesSheetWidgetState
                 child: CircularProgressIndicator.adaptive(),
               ),
             ),
-            success: (config) =>
-                _buildContent(context, config, isUpdating: false),
-            updating: (currentConfig) =>
-                _buildContent(context, currentConfig, isUpdating: true),
+            success: (config) {
+              _populateFromConfig(config);
+              return AdminPermitRulesContentWidget(
+                isUpdating: false,
+                lateNoticeController: _lateNoticeController,
+                earlyPercentController: _earlyPercentController,
+                enforceLateNotice: _enforceLateNotice,
+                enforceGracePeriod: _enforceGracePeriod,
+                enforceEarlyDeparture: _enforceEarlyDeparture,
+                allowWeekends: _allowWeekends,
+                allowHolidays: _allowHolidays,
+                forceCasualSameDay: _forceCasualSameDay,
+                onLateNoticeChanged: (v) =>
+                    setState(() => _enforceLateNotice = v),
+                onGracePeriodChanged: (v) =>
+                    setState(() => _enforceGracePeriod = v),
+                onEarlyDepartureChanged: (v) =>
+                    setState(() => _enforceEarlyDeparture = v),
+                onAllowWeekendsChanged: (v) =>
+                    setState(() => _allowWeekends = v),
+                onAllowHolidaysChanged: (v) =>
+                    setState(() => _allowHolidays = v),
+                onForceCasualSameDayChanged: (v) =>
+                    setState(() => _forceCasualSameDay = v),
+                onSave: () => _save(config),
+              );
+            },
+            updating: (currentConfig) {
+              _populateFromConfig(currentConfig);
+              return AdminPermitRulesContentWidget(
+                isUpdating: true,
+                lateNoticeController: _lateNoticeController,
+                earlyPercentController: _earlyPercentController,
+                enforceLateNotice: _enforceLateNotice,
+                enforceGracePeriod: _enforceGracePeriod,
+                enforceEarlyDeparture: _enforceEarlyDeparture,
+                allowWeekends: _allowWeekends,
+                allowHolidays: _allowHolidays,
+                forceCasualSameDay: _forceCasualSameDay,
+                onLateNoticeChanged: (v) =>
+                    setState(() => _enforceLateNotice = v),
+                onGracePeriodChanged: (v) =>
+                    setState(() => _enforceGracePeriod = v),
+                onEarlyDepartureChanged: (v) =>
+                    setState(() => _enforceEarlyDeparture = v),
+                onAllowWeekendsChanged: (v) =>
+                    setState(() => _allowWeekends = v),
+                onAllowHolidaysChanged: (v) =>
+                    setState(() => _allowHolidays = v),
+                onForceCasualSameDayChanged: (v) =>
+                    setState(() => _forceCasualSameDay = v),
+                onSave: () => _save(currentConfig),
+              );
+            },
             error: (messageKey) => Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -159,290 +210,6 @@ class _AdminPermitRulesSheetWidgetState
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildContent(
-    BuildContext context,
-    CompanyApprovalConfigModel config, {
-    required bool isUpdating,
-  }) {
-    _populateFromConfig(config);
-
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 44.r,
-                height: 44.r,
-                decoration: BoxDecoration(
-                  color: AppColors.brandPrimary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(
-                  Icons.tune_rounded,
-                  color: AppColors.brandPrimary,
-                  size: 24.r,
-                ),
-              ),
-              wSpace(12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'admin.rules.title'.tr(),
-                      style: AppTextStyles.font16Bold.copyWith(
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    hSpace(2),
-                    Text(
-                      'admin.rules.subtitle'.tr(),
-                      style: AppTextStyles.font11Regular.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.close_rounded),
-                color: AppColors.textSecondary,
-              ),
-            ],
-          ),
-          hSpace(20),
-
-          // Section 1: Late Arrival Rules
-          _buildSectionHeader('admin.rules.lateArrivalHeader'.tr()),
-          hSpace(8),
-          _buildSwitchCard(
-            title: 'admin.rules.lateArrivalNoticeTitle'.tr(),
-            subtitle: 'admin.rules.lateArrivalNoticeSubtitle'.tr(),
-            value: _enforceLateNotice,
-            onChanged: isUpdating
-                ? null
-                : (v) => setState(() => _enforceLateNotice = v),
-          ),
-          if (_enforceLateNotice) ...[
-            hSpace(8),
-            _buildNumberField(
-              controller: _lateNoticeController,
-              label: 'admin.rules.noticeMinutesLabel'.tr(),
-              suffix: 'common.minutes'.tr(),
-              enabled: !isUpdating,
-            ),
-          ],
-          hSpace(10),
-          _buildSwitchCard(
-            title: 'admin.rules.graceLimitTitle'.tr(),
-            subtitle: 'admin.rules.graceLimitSubtitle'.tr(),
-            value: _enforceGracePeriod,
-            onChanged: isUpdating
-                ? null
-                : (v) => setState(() => _enforceGracePeriod = v),
-          ),
-          hSpace(20),
-
-          // Section 2: Early Departure Rules
-          _buildSectionHeader('admin.rules.earlyDepartureHeader'.tr()),
-          hSpace(8),
-          _buildSwitchCard(
-            title: 'admin.rules.earlyDepartureRatioTitle'.tr(),
-            subtitle: 'admin.rules.earlyDepartureRatioSubtitle'.tr(),
-            value: _enforceEarlyDeparture,
-            onChanged: isUpdating
-                ? null
-                : (v) => setState(() => _enforceEarlyDeparture = v),
-          ),
-          if (_enforceEarlyDeparture) ...[
-            hSpace(8),
-            _buildNumberField(
-              controller: _earlyPercentController,
-              label: 'admin.rules.ratioPercentLabel'.tr(),
-              suffix: '%',
-              enabled: !isUpdating,
-            ),
-          ],
-          hSpace(20),
-
-          // Section 3: Holidays & Days Off
-          _buildSectionHeader('admin.rules.workingDaysHeader'.tr()),
-          hSpace(8),
-          _buildSwitchCard(
-            title: 'admin.rules.allowWeekendsTitle'.tr(),
-            subtitle: 'admin.rules.allowWeekendsSubtitle'.tr(),
-            value: _allowWeekends,
-            onChanged: isUpdating
-                ? null
-                : (v) => setState(() => _allowWeekends = v),
-          ),
-          hSpace(10),
-          _buildSwitchCard(
-            title: 'admin.rules.allowHolidaysTitle'.tr(),
-            subtitle: 'admin.rules.allowHolidaysSubtitle'.tr(),
-            value: _allowHolidays,
-            onChanged: isUpdating
-                ? null
-                : (v) => setState(() => _allowHolidays = v),
-          ),
-          hSpace(20),
-
-          // Section 4: Leaves
-          _buildSectionHeader('admin.rules.leavesHeader'.tr()),
-          hSpace(8),
-          _buildSwitchCard(
-            title: 'admin.rules.forceSameDayCasualTitle'.tr(),
-            subtitle: 'admin.rules.forceSameDayCasualSubtitle'.tr(),
-            value: _forceCasualSameDay,
-            onChanged: isUpdating
-                ? null
-                : (v) => setState(() => _forceCasualSameDay = v),
-          ),
-          hSpace(24),
-
-          // Save button
-          ElevatedButton(
-            onPressed: isUpdating ? null : () => _save(config),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.brandPrimary,
-              foregroundColor: AppColors.white,
-              padding: EdgeInsets.symmetric(vertical: 14.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-            ),
-            child: isUpdating
-                ? SizedBox(
-                    width: 20.r,
-                    height: 20.r,
-                    child: const CircularProgressIndicator.adaptive(
-                      strokeWidth: 2,
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(AppColors.white),
-                    ),
-                  )
-                : Text(
-                    'admin.rules.saveButton'.tr(),
-                    style: AppTextStyles.font14Bold.copyWith(
-                      color: AppColors.white,
-                    ),
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title) {
-    return Text(
-      title,
-      style: AppTextStyles.font13SemiBold.copyWith(
-        color: AppColors.textPrimary,
-      ),
-    );
-  }
-
-  Widget _buildSwitchCard({
-    required String title,
-    required String subtitle,
-    required bool value,
-    required ValueChanged<bool>? onChanged,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-      decoration: BoxDecoration(
-        color: AppColors.fieldBackground,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppTextStyles.font13Medium.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                hSpace(2),
-                Text(
-                  subtitle,
-                  style: AppTextStyles.font11Regular.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          wSpace(12),
-          Switch.adaptive(
-            value: value,
-            onChanged: onChanged,
-            activeTrackColor: AppColors.brandPrimary,
-            activeThumbColor: AppColors.white,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNumberField({
-    required TextEditingController controller,
-    required String label,
-    required String suffix,
-    required bool enabled,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: AppColors.fieldBackground,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              label,
-              style: AppTextStyles.font12Medium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ),
-          wSpace(12),
-          SizedBox(
-            width: 70.w,
-            child: TextFormField(
-              controller: controller,
-              enabled: enabled,
-              keyboardType: TextInputType.number,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.font13SemiBold,
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                  borderSide: const BorderSide(color: AppColors.border),
-                ),
-                suffixText: suffix,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
