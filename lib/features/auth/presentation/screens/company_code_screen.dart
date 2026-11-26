@@ -8,6 +8,7 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/tenant_lookup/tenant_lookup_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/tenant_lookup/tenant_lookup_state.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_card_widget.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/auth_footer_links_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/auth_shell_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/brand_header_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/widgets/start_trial_banner_widget.dart';
@@ -291,7 +292,7 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
                 hSpace(20),
 
                 // ── Footer links ──
-                _FooterLinksWidget(
+                AuthFooterLinksWidget(
                   onPrivacy: _launchPrivacy,
                   onTerms: _launchTerms,
                   onSupport: _launchSupport,
@@ -302,82 +303,6 @@ class _CompanyCodeScreenState extends State<CompanyCodeScreen>
           ),
         ),
       ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Footer links widget
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _FooterLinksWidget extends StatelessWidget {
-  const _FooterLinksWidget({
-    required this.onPrivacy,
-    required this.onTerms,
-    required this.onSupport,
-  });
-
-  final VoidCallback onPrivacy;
-  final VoidCallback onTerms;
-  final VoidCallback onSupport;
-
-  @override
-  Widget build(BuildContext context) {
-    final linkStyle = AppTextStyles.font11Regular.copyWith(
-      color: AppColors.placeholder,
-    );
-    final dot = Text(' • ', style: linkStyle);
-
-    return Column(
-      children: [
-        Wrap(
-          alignment: WrapAlignment.center,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: onPrivacy,
-              child: Text(
-                'auth.companyCode.privacyPolicy'.tr(context: context),
-                style: linkStyle.copyWith(decoration: TextDecoration.underline),
-              ),
-            ),
-            dot,
-            GestureDetector(
-              onTap: onTerms,
-              child: Text(
-                'auth.companyCode.termsOfService'.tr(context: context),
-                style: linkStyle.copyWith(decoration: TextDecoration.underline),
-              ),
-            ),
-            dot,
-            GestureDetector(
-              onTap: onSupport,
-              child: Text(
-                'auth.companyCode.supportLink'.tr(context: context),
-                style: linkStyle.copyWith(decoration: TextDecoration.underline),
-              ),
-            ),
-          ],
-        ),
-        hSpace(6),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.lock_outline_rounded,
-              size: 11.r,
-              color: AppColors.placeholder,
-            ),
-            wSpace(4),
-            Text(
-              'auth.companyCode.sslSecure'.tr(context: context),
-              style: AppTextStyles.font11Regular.copyWith(
-                color: AppColors.placeholder,
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

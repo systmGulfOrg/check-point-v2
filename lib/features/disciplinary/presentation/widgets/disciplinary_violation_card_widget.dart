@@ -4,6 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:check_point_v2/core/core.dart';
 import '../../data/models/disciplinary_models.dart';
 import 'disciplinary_appeal_dialog_widget.dart';
+import 'disciplinary_violation_status_badge_widget.dart';
 
 class DisciplinaryViolationCardWidget extends StatelessWidget {
   const DisciplinaryViolationCardWidget({
@@ -161,7 +162,9 @@ class DisciplinaryViolationCardWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatusBadge(context),
+                DisciplinaryViolationStatusBadgeWidget(
+                  status: violation.status,
+                ),
                 if (!violation.hasPendingAppeal &&
                     (violation.status == 'APPROVED' ||
                         violation.status == 'DEDUCTED_IN_PAYROLL'))
@@ -213,30 +216,6 @@ class DisciplinaryViolationCardWidget extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildStatusBadge(BuildContext context) {
-    final (label, color, bg) = switch (violation.status) {
-      'APPROVED' => ('معتمد', AppColors.success, AppColors.softGreenBackground),
-      'DEDUCTED_IN_PAYROLL' => (
-        'مخصوم بالراتب',
-        AppColors.brandInk,
-        AppColors.softBrandBackground
-      ),
-      'WAIVED' => ('معفى إدارياً', AppColors.textSecondary, AppColors.border),
-      'CANCELLED_BY_APPEAL' => (
-        'ملغي بتظلم',
-        AppColors.info,
-        AppColors.softBlueBackground
-      ),
-      _ => ('قيد الاعتماد', AppColors.warning, AppColors.softYellowBackground),
-    };
-
-    return AppStatusPillWidget(
-      label: label,
-      color: color,
-      backgroundColor: bg,
     );
   }
 

@@ -12,6 +12,7 @@ import 'package:check_point_v2/features/supervisor/presentation/screens/pending_
 import 'package:check_point_v2/features/supervisor/presentation/cubit/verification/pending_verification_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:check_point_v2/features/admin/data/models/account_requests/account_requests_response_model.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/account_requests/admin_account_requests_cubit.dart';
@@ -47,6 +48,7 @@ import 'package:check_point_v2/features/admin/presentation/screens/admin_shifts_
 import 'package:check_point_v2/features/admin/presentation/screens/admin_devices_screen.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/pending_devices/admin_pending_devices_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_attendance_employee_directory_listener_widget.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_full_map_picker_dialog_widget.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/session/auth_session_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
@@ -146,10 +148,10 @@ class AppRouter {
     },
   );
 
-  static Route<void> _slideRoute({
+  static Route<T> _slideRoute<T>({
     required Widget child,
     required RouteSettings settings,
-  }) => PageRouteBuilder<void>(
+  }) => PageRouteBuilder<T>(
     settings: settings,
     transitionDuration: AppMotion.routeEnter,
     reverseTransitionDuration: AppMotion.routeExit,
@@ -1054,6 +1056,18 @@ class AppRouter {
                 ),
               ),
             ),
+          ),
+        );
+      case AppRoutes.adminFullMapPicker:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final initialPoints =
+            (args?['initialPoints'] as List<LatLng>?) ?? const <LatLng>[];
+        final initialAddress = (args?['initialAddress'] as String?) ?? '';
+        return _slideRoute<Map<String, dynamic>>(
+          settings: const RouteSettings(name: AppRoutes.adminFullMapPicker),
+          child: AdminFullMapPickerDialogWidget(
+            initialPoints: initialPoints,
+            initialAddress: initialAddress,
           ),
         );
       default:

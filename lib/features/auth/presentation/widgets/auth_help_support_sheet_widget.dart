@@ -4,6 +4,7 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:check_point_v2/core/core.dart';
+import 'package:check_point_v2/features/auth/presentation/widgets/auth_help_option_tile_widget.dart';
 import 'package:check_point_v2/features/support/presentation/support_ticket_dialog_widget.dart';
 
 /// Shows the Help & Support bottom sheet from the company code screen.
@@ -13,12 +14,12 @@ void showAuthHelpSupportSheet(BuildContext context) {
     context: navigatorContext,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => const _AuthHelpSupportSheet(),
+    builder: (_) => const AuthHelpSupportSheetWidget(),
   );
 }
 
-class _AuthHelpSupportSheet extends StatelessWidget {
-  const _AuthHelpSupportSheet();
+class AuthHelpSupportSheetWidget extends StatelessWidget {
+  const AuthHelpSupportSheetWidget({super.key});
 
   Future<void> _launchEmail(BuildContext context) async {
     final uri = Uri(
@@ -75,7 +76,7 @@ class _AuthHelpSupportSheet extends StatelessWidget {
                   hSpace(20),
 
                   // Contact support
-                  _HelpOptionTile(
+                  AuthHelpOptionTileWidget(
                     icon: Icons.mail_outline_rounded,
                     labelKey: 'auth.companyCode.contactSupport',
                     onTap: () {
@@ -85,7 +86,7 @@ class _AuthHelpSupportSheet extends StatelessWidget {
                   ),
 
                   // Send feedback
-                  _HelpOptionTile(
+                  AuthHelpOptionTileWidget(
                     icon: Icons.chat_bubble_outline_rounded,
                     labelKey: 'auth.companyCode.sendFeedback',
                     onTap: () {
@@ -95,7 +96,7 @@ class _AuthHelpSupportSheet extends StatelessWidget {
                   ),
 
                   // Report bug
-                  _HelpOptionTile(
+                  AuthHelpOptionTileWidget(
                     icon: Icons.bug_report_outlined,
                     labelKey: 'auth.companyCode.reportBug',
                     onTap: () {
@@ -129,57 +130,6 @@ class _AuthHelpSupportSheet extends StatelessWidget {
                   hSpace(8),
                 ],
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _HelpOptionTile extends StatelessWidget {
-  const _HelpOptionTile({
-    required this.icon,
-    required this.labelKey,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String labelKey;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12.r),
-      child: Padding(
-        padding: EdgeInsetsDirectional.symmetric(
-          horizontal: 4.w,
-          vertical: 14.h,
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 40.r,
-              height: 40.r,
-              decoration: BoxDecoration(
-                color: AppColors.softBrandBackground,
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Icon(icon, size: 20.r, color: AppColors.brandPrimary),
-            ),
-            wSpace(14),
-            Expanded(
-              child: Text(
-                labelKey.tr(context: context),
-                style: AppTextStyles.font14SemiBold,
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 14.r,
-              color: AppColors.placeholder,
             ),
           ],
         ),

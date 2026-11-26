@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +19,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_branches_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_employee_avatar_preview_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_employee_work_system_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_permissions_picker_dialog_widget.dart';
 import 'package:check_point_v2/features/admin/presentation/widgets/admin_wizard_field_widget.dart';
@@ -307,7 +306,14 @@ class _AdminEditEmployeeSheetWidgetState
                                     ),
                                   ],
                                 ),
-                                child: ClipOval(child: _buildAvatarImage()),
+                                child: ClipOval(
+                                  child: AdminEmployeeAvatarPreviewWidget(
+                                    photoPath: _selectedPhotoPath,
+                                    fallbackBackgroundColor:
+                                        AppColors.softBrandBackground,
+                                    fallbackIconSize: 48.r,
+                                  ),
+                                ),
                               ),
                               Positioned(
                                 bottom: 0,
@@ -964,38 +970,4 @@ class _AdminEditEmployeeSheetWidgetState
       ),
     ),
   );
-
-  Widget _buildAvatarImage() {
-    if (_selectedPhotoPath != null) {
-      if (_selectedPhotoPath!.startsWith('data:image') ||
-          _selectedPhotoPath!.length > 300) {
-        try {
-          final clean = _selectedPhotoPath!.contains(',')
-              ? _selectedPhotoPath!.split(',').last
-              : _selectedPhotoPath!;
-          final bytes = base64Decode(clean);
-          return Image.memory(bytes, fit: BoxFit.cover);
-        } catch (_) {}
-      }
-      final file = File(_selectedPhotoPath!);
-      if (file.existsSync()) {
-        return Image.file(file, fit: BoxFit.cover);
-      }
-      if (_selectedPhotoPath!.startsWith('http')) {
-        return Image(
-          image: CachedNetworkImageProvider(_selectedPhotoPath!),
-          fit: BoxFit.cover,
-          errorBuilder: (_, _, _) => const Icon(Icons.broken_image_outlined),
-        );
-      }
-    }
-    return Container(
-      color: AppColors.softBrandBackground,
-      child: Icon(
-        Icons.person_rounded,
-        size: 48.r,
-        color: AppColors.placeholder,
-      ),
-    );
-  }
 }

@@ -8,6 +8,7 @@ import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_
 import 'package:check_point_v2/features/admin/presentation/cubit/employee/admin_employees_state.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_cubit.dart';
 import 'package:check_point_v2/features/admin/presentation/cubit/locations/admin_departments_state.dart';
+import 'package:check_point_v2/features/admin/presentation/widgets/admin_reschedule_holiday_tab_button_widget.dart';
 import 'package:check_point_v2/features/leaves/data/models/official_holiday_model.dart';
 
 class AdminRescheduleHolidayDialogWidget extends StatefulWidget {
@@ -240,24 +241,27 @@ class _AdminRescheduleHolidayDialogWidgetState
                 child: Row(
                   children: [
                     Expanded(
-                      child: _buildTabButton(
-                        index: 0,
+                      child: AdminRescheduleHolidayTabButtonWidget(
+                        isSelected: activeTab == 0,
                         title: 'ترحيل الموعد',
                         icon: Icons.calendar_month_outlined,
+                        onTap: () => setState(() => activeTab = 0),
                       ),
                     ),
                     Expanded(
-                      child: _buildTabButton(
-                        index: 1,
+                      child: AdminRescheduleHolidayTabButtonWidget(
+                        isSelected: activeTab == 1,
                         title: 'إلغاء الإجازة',
                         icon: Icons.cancel_outlined,
+                        onTap: () => setState(() => activeTab = 1),
                       ),
                     ),
                     Expanded(
-                      child: _buildTabButton(
-                        index: 2,
+                      child: AdminRescheduleHolidayTabButtonWidget(
+                        isSelected: activeTab == 2,
                         title: 'استثناءات',
                         icon: Icons.group_outlined,
+                        onTap: () => setState(() => activeTab = 2),
                       ),
                     ),
                   ],
@@ -610,55 +614,6 @@ class _AdminRescheduleHolidayDialogWidgetState
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTabButton({
-    required int index,
-    required String title,
-    required IconData icon,
-  }) {
-    final isSelected = activeTab == index;
-    return InkWell(
-      onTap: () => setState(() => activeTab = index),
-      borderRadius: BorderRadius.circular(10.r),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8.h),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.white : AppColors.transparent,
-          borderRadius: BorderRadius.circular(10.r),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 15.r,
-              color: isSelected
-                  ? AppColors.brandPrimary
-                  : AppColors.placeholder,
-            ),
-            SizedBox(width: 4.w),
-            Text(
-              title,
-              style: AppTextStyles.font10Bold.copyWith(
-                color: isSelected
-                    ? AppColors.brandPrimary
-                    : AppColors.textSecondary,
-              ),
-            ),
-          ],
         ),
       ),
     );

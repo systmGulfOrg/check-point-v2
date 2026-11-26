@@ -1,11 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 
 import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/projects/data/models/project_models.dart';
 import 'package:check_point_v2/features/projects/presentation/cubit/projects_cubit.dart';
-import 'package:check_point_v2/features/projects/presentation/widgets/project_task_card_widget.dart';
+import 'package:check_point_v2/features/projects/presentation/widgets/project_board_tasks_list_widget.dart';
 
 class ProjectBoardListViewWidget extends StatelessWidget {
   const ProjectBoardListViewWidget({
@@ -59,64 +58,34 @@ class ProjectBoardListViewWidget extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                _buildTasksList(context, tasks),
+                ProjectBoardTasksListWidget(
+                  boardProject: boardProject,
+                  tasks: tasks,
+                  cubit: cubit,
+                  canManage: canManage,
+                  onTaskTap: onTaskTap,
+                  onEditTask: onEditTask,
+                  onDeleteTask: onDeleteTask,
+                ),
                 ...statuses.map((status) {
                   final filtered = tasks
                       .where((t) => t.statusId == status.id)
                       .toList();
-                  return _buildTasksList(context, filtered);
+                  return ProjectBoardTasksListWidget(
+                    boardProject: boardProject,
+                    tasks: filtered,
+                    cubit: cubit,
+                    canManage: canManage,
+                    onTaskTap: onTaskTap,
+                    onEditTask: onEditTask,
+                    onDeleteTask: onDeleteTask,
+                  );
                 }),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildTasksList(
-    BuildContext context,
-    List<ProjectTaskModel> tasksList,
-  ) {
-    if (tasksList.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(24.r),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.assignment_outlined,
-                size: 48.r,
-                color: AppColors.placeholder,
-              ),
-              hSpace(10),
-              Text(
-                'projects.noTasks'.tr(context: context),
-                style: AppTextStyles.font14Regular.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    return ListView.builder(
-      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
-      itemCount: tasksList.length,
-      itemBuilder: (context, index) {
-        final task = tasksList[index];
-        return ProjectTaskCardWidget(
-          task: task,
-          boardProject: boardProject,
-          canManage: canManage,
-          onTap: () => onTaskTap(task),
-          onMoveStatus: (statusId) => cubit.moveTask(task.id, statusId),
-          onEdit: () => onEditTask(task),
-          onDelete: () => onDeleteTask(task),
-        );
-      },
     );
   }
 }

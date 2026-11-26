@@ -6,7 +6,6 @@ import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:check_point_v2/core/core.dart';
-import 'admin_full_map_picker_dialog_widget.dart';
 import 'admin_location_map_controls_widget.dart';
 import 'admin_location_search_bar_widget.dart';
 import 'admin_location_suggestions_list_widget.dart';
@@ -233,14 +232,13 @@ class _AdminLocationMapPickerWidgetState
   }
 
   Future<void> _expandMap() async {
-    final result = await Navigator.push<Map<String, dynamic>>(
+    final result = await Navigator.pushNamed<Map<String, dynamic>>(
       context,
-      MaterialPageRoute(
-        builder: (_) => AdminFullMapPickerDialogWidget(
-          initialPoints: _points,
-          initialAddress: widget.initialAddress,
-        ),
-      ),
+      AppRoutes.adminFullMapPicker,
+      arguments: <String, dynamic>{
+        'initialPoints': _points,
+        'initialAddress': widget.initialAddress,
+      },
     );
 
     if (result != null && mounted) {

@@ -24,6 +24,7 @@ class AppRoutes {
   static const String supervisorTeam = '/supervisor/team';
   static const String adminDepartments = '/admin/departments';
   static const String adminLocations = '/admin/locations';
+  static const String adminFullMapPicker = '/admin/locations/map-picker';
   static const String adminShiftsPolicies = '/admin/shifts-policies';
   static const String adminPermissions = '/admin/permissions';
   static const String adminPermissionDetails = '/admin/permissions/details';
