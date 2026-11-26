@@ -6,8 +6,12 @@ import 'package:check_point_v2/core/core.dart';
 import 'package:check_point_v2/features/auth/presentation/cubit/profile/auth_profile_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/cubit/upcoming_holiday/upcoming_holiday_cubit.dart';
 import 'package:check_point_v2/features/leaves/presentation/widgets/upcoming_holiday_card_bloc_builder_widget.dart';
+import 'package:check_point_v2/features/notifications/presentation/cubit/notifications_cubit.dart';
+import 'package:check_point_v2/features/remote_work/presentation/cubit/remote_work_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/attendance/supervisor_attendance_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/leave_requests/supervisor_leave_requests_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/cubit/team/supervisor_team_cubit.dart';
+import 'package:check_point_v2/features/supervisor/presentation/cubit/verification/pending_verification_cubit.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_personal_dashboard_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_alert_banner_bloc_builder_widget.dart';
 import 'package:check_point_v2/features/supervisor/presentation/widgets/supervisor_site_roll_call_card_widget.dart';
@@ -28,6 +32,10 @@ class SupervisorHomeScreen extends StatelessWidget {
           onRefresh: () => Future.wait([
             context.read<SupervisorAttendanceCubit>().loadAttendance(),
             context.read<SupervisorTeamCubit>().loadTeam(),
+            context.read<SupervisorLeaveRequestsCubit>().loadLeaveRequests(),
+            context.read<RemoteWorkCubit>().load(),
+            context.read<PendingVerificationCubit>().loadPendingVerifications(),
+            context.read<NotificationsCubit>().load(),
             context.read<UpcomingHolidayCubit>().loadUpcomingHoliday(),
             context.read<AuthProfileCubit>().loadProfile(),
           ]),

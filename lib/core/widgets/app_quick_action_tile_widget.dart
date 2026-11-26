@@ -11,12 +11,14 @@ class AppQuickActionTileWidget extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onTap,
+    this.badgeCount = 0,
     super.key,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+  final int badgeCount;
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +30,47 @@ class AppQuickActionTileWidget extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 6.h),
           child: Column(
             children: [
-              Container(
-                width: 52.r,
-                height: 52.r,
-                decoration: BoxDecoration(
-                  color: AppColors.softBrandBackground,
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Icon(icon, color: AppColors.brandPrimary, size: 24.r),
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    width: 52.r,
+                    height: 52.r,
+                    decoration: BoxDecoration(
+                      color: AppColors.softBrandBackground,
+                      borderRadius: BorderRadius.circular(16.r),
+                    ),
+                    child: Icon(icon, color: AppColors.brandPrimary, size: 24.r),
+                  ),
+                  if (badgeCount > 0)
+                    PositionedDirectional(
+                      top: -5.h,
+                      end: -5.w,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6.w,
+                          vertical: 2.h,
+                        ),
+                        constraints: BoxConstraints(minWidth: 20.r),
+                        decoration: BoxDecoration(
+                          color: AppColors.error,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: AppColors.white,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Text(
+                          badgeCount > 99 ? '99+' : '$badgeCount',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.font10Bold.copyWith(
+                            color: AppColors.white,
+                            height: 1.2,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
               hSpace(6),
               Text(
