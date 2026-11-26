@@ -9,6 +9,8 @@ class NotificationModel with _$NotificationModel {
     required String id,
     required String title,
     required String body,
+    String? type,
+    String? key,
     @Default(<String, dynamic>{}) Map<String, dynamic> data,
     DateTime? readAt,
     required DateTime createdAt,

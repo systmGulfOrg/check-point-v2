@@ -12,6 +12,32 @@ class NotificationsListWidget extends StatelessWidget {
 
   final List<NotificationModel> notifications;
 
+  Future<void> _handleNotificationTap(
+    BuildContext context,
+    NotificationModel notification,
+  ) async {
+    if (notification.readAt == null) {
+      context.read<NotificationsCubit>().markRead(notification.id);
+    }
+
+    var isAdmin = false;
+    if (sl.isRegistered<AuthSessionStorage>()) {
+      final roles = await sl<AuthSessionStorage>().readUserRoles();
+      isAdmin = roles.any(
+        (r) => r.toLowerCase() == 'admin' || r.toLowerCase() == 'hr',
+      );
+    }
+
+    final route = PushRouteResolver.resolve(
+      notification.type,
+      notification.data,
+      notification.key,
+      isAdmin,
+    );
+    if (route == null || !context.mounted) return;
+    await Navigator.pushNamed(context, route);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -25,10 +51,7 @@ class NotificationsListWidget extends StatelessWidget {
           titleKey: notification.title,
           messageKey: notification.body,
           isWarning: notification.readAt == null,
-          onTap: notification.readAt == null
-              ? () =>
-                    context.read<NotificationsCubit>().markRead(notification.id)
-              : null,
+          onTap: () => _handleNotificationTap(context, notification),
         );
       },
     );
