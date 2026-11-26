@@ -370,6 +370,16 @@ class AppRouter {
               BlocProvider<AdminPendingDevicesCubit>(
                 create: (_) => sl<AdminPendingDevicesCubit>()..loadDevices(),
               ),
+              BlocProvider<RemoteWorkCubit>(
+                create: (_) => sl<RemoteWorkCubit>()..load(),
+              ),
+              BlocProvider<PendingVerificationCubit>(
+                create: (_) =>
+                    sl<PendingVerificationCubit>()..loadPendingVerifications(),
+              ),
+              BlocProvider<NotificationsCubit>(
+                create: (_) => sl<NotificationsCubit>()..load(),
+              ),
             ],
             child: const AdminMainScreen(),
           ),
@@ -686,6 +696,13 @@ class AppRouter {
               ),
               BlocProvider<NotificationsCubit>(
                 create: (_) => sl<NotificationsCubit>()..load(),
+              ),
+              BlocProvider<RemoteWorkCubit>(
+                create: (_) => sl<RemoteWorkCubit>()..load(),
+              ),
+              BlocProvider<PendingVerificationCubit>(
+                create: (_) =>
+                    sl<PendingVerificationCubit>()..loadPendingVerifications(),
               ),
               BlocProvider<AuthProfileCubit>(
                 create: (_) => sl<AuthProfileCubit>()..loadProfile(),
