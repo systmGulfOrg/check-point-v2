@@ -72,6 +72,15 @@ class ApiFailureMapper {
           message.contains('does not allow onsite work')) {
         return const ApiFailure(messageKey: 'remoteWork.invalidRequestDay');
       }
+      if (message.contains('already scheduled as on-site')) {
+        return const ApiFailure(messageKey: 'remoteWork.alreadyOnsite');
+      }
+      if (message.contains('already scheduled as remote')) {
+        return const ApiFailure(messageKey: 'remoteWork.alreadyRemote');
+      }
+      if (message.contains('a remote work request already exists')) {
+        return const ApiFailure(messageKey: 'remoteWork.alreadyExists');
+      }
       if ((message.contains('device') || message.contains('devise')) &&
           message.contains('access') &&
           message.contains('login')) {
