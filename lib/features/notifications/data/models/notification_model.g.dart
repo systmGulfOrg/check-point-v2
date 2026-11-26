@@ -12,6 +12,8 @@ _$NotificationModelImpl _$$NotificationModelImplFromJson(
   id: json['id'] as String,
   title: json['title'] as String,
   body: json['body'] as String,
+  type: json['type'] as String?,
+  key: json['key'] as String?,
   data: json['data'] as Map<String, dynamic>? ?? const <String, dynamic>{},
   readAt: json['readAt'] == null
       ? null
@@ -25,6 +27,8 @@ Map<String, dynamic> _$$NotificationModelImplToJson(
   'id': instance.id,
   'title': instance.title,
   'body': instance.body,
+  'type': instance.type,
+  'key': instance.key,
   'data': instance.data,
   'readAt': instance.readAt?.toIso8601String(),
   'createdAt': instance.createdAt.toIso8601String(),

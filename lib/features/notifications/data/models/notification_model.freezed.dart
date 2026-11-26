@@ -24,6 +24,8 @@ mixin _$NotificationModel {
   String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
+  String? get type => throw _privateConstructorUsedError;
+  String? get key => throw _privateConstructorUsedError;
   Map<String, dynamic> get data => throw _privateConstructorUsedError;
   DateTime? get readAt => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -49,6 +51,8 @@ abstract class $NotificationModelCopyWith<$Res> {
     String id,
     String title,
     String body,
+    String? type,
+    String? key,
     Map<String, dynamic> data,
     DateTime? readAt,
     DateTime createdAt,
@@ -73,6 +77,8 @@ class _$NotificationModelCopyWithImpl<$Res, $Val extends NotificationModel>
     Object? id = null,
     Object? title = null,
     Object? body = null,
+    Object? type = freezed,
+    Object? key = freezed,
     Object? data = null,
     Object? readAt = freezed,
     Object? createdAt = null,
@@ -91,6 +97,14 @@ class _$NotificationModelCopyWithImpl<$Res, $Val extends NotificationModel>
                 ? _value.body
                 : body // ignore: cast_nullable_to_non_nullable
                       as String,
+            type: freezed == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            key: freezed == key
+                ? _value.key
+                : key // ignore: cast_nullable_to_non_nullable
+                      as String?,
             data: null == data
                 ? _value.data
                 : data // ignore: cast_nullable_to_non_nullable
@@ -122,6 +136,8 @@ abstract class _$$NotificationModelImplCopyWith<$Res>
     String id,
     String title,
     String body,
+    String? type,
+    String? key,
     Map<String, dynamic> data,
     DateTime? readAt,
     DateTime createdAt,
@@ -145,6 +161,8 @@ class __$$NotificationModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? title = null,
     Object? body = null,
+    Object? type = freezed,
+    Object? key = freezed,
     Object? data = null,
     Object? readAt = freezed,
     Object? createdAt = null,
@@ -163,6 +181,14 @@ class __$$NotificationModelImplCopyWithImpl<$Res>
             ? _value.body
             : body // ignore: cast_nullable_to_non_nullable
                   as String,
+        type: freezed == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        key: freezed == key
+            ? _value.key
+            : key // ignore: cast_nullable_to_non_nullable
+                  as String?,
         data: null == data
             ? _value._data
             : data // ignore: cast_nullable_to_non_nullable
@@ -187,6 +213,8 @@ class _$NotificationModelImpl implements _NotificationModel {
     required this.id,
     required this.title,
     required this.body,
+    this.type,
+    this.key,
     final Map<String, dynamic> data = const <String, dynamic>{},
     this.readAt,
     required this.createdAt,
@@ -201,6 +229,10 @@ class _$NotificationModelImpl implements _NotificationModel {
   final String title;
   @override
   final String body;
+  @override
+  final String? type;
+  @override
+  final String? key;
   final Map<String, dynamic> _data;
   @override
   @JsonKey()
@@ -217,7 +249,7 @@ class _$NotificationModelImpl implements _NotificationModel {
 
   @override
   String toString() {
-    return 'NotificationModel(id: $id, title: $title, body: $body, data: $data, readAt: $readAt, createdAt: $createdAt)';
+    return 'NotificationModel(id: $id, title: $title, body: $body, type: $type, key: $key, data: $data, readAt: $readAt, createdAt: $createdAt)';
   }
 
   @override
@@ -228,6 +260,8 @@ class _$NotificationModelImpl implements _NotificationModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.body, body) || other.body == body) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.key, key) || other.key == key) &&
             const DeepCollectionEquality().equals(other._data, _data) &&
             (identical(other.readAt, readAt) || other.readAt == readAt) &&
             (identical(other.createdAt, createdAt) ||
@@ -241,6 +275,8 @@ class _$NotificationModelImpl implements _NotificationModel {
     id,
     title,
     body,
+    type,
+    key,
     const DeepCollectionEquality().hash(_data),
     readAt,
     createdAt,
@@ -268,6 +304,8 @@ abstract class _NotificationModel implements NotificationModel {
     required final String id,
     required final String title,
     required final String body,
+    final String? type,
+    final String? key,
     final Map<String, dynamic> data,
     final DateTime? readAt,
     required final DateTime createdAt,
@@ -282,6 +320,10 @@ abstract class _NotificationModel implements NotificationModel {
   String get title;
   @override
   String get body;
+  @override
+  String? get type;
+  @override
+  String? get key;
   @override
   Map<String, dynamic> get data;
   @override

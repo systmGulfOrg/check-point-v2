@@ -87,6 +87,55 @@ void main() {
       );
     });
 
+    test('resolves team checkin based on admin vs supervisor role', () {
+      expect(
+        PushRouteResolver.resolve('attendance.team_checkin'),
+        AppRoutes.supervisorAttendance,
+      );
+      expect(
+        PushRouteResolver.resolve('attendance.team_checkin', null, null, true),
+        AppRoutes.adminAttendance,
+      );
+    });
+
+    test('falls back to notification i18n key when type is null', () {
+      expect(
+        PushRouteResolver.resolve(
+          null,
+          null,
+          'notifications.remote.created.title',
+        ),
+        AppRoutes.remoteWork,
+      );
+      expect(
+        PushRouteResolver.resolve(
+          null,
+          const {'target': 'approval'},
+          'notifications.leave.submitted.title',
+        ),
+        AppRoutes.supervisorLeaveManagement,
+      );
+    });
+
+    test('resolves device, offline, points, and disciplinary types', () {
+      expect(
+        PushRouteResolver.resolve('device.pending'),
+        AppRoutes.adminPendingDevices,
+      );
+      expect(
+        PushRouteResolver.resolve('attendance.offline_pending'),
+        AppRoutes.pendingAttendanceVerification,
+      );
+      expect(
+        PushRouteResolver.resolve('points.red'),
+        AppRoutes.myPoints,
+      );
+      expect(
+        PushRouteResolver.resolve('disciplinary.violation_logged'),
+        AppRoutes.disciplinaryDeductions,
+      );
+    });
+
     test('returns null for unknown types', () {
       expect(PushRouteResolver.resolve(null), isNull);
       expect(PushRouteResolver.resolve('unknown.type'), isNull);
